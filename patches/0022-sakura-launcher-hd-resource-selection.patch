@@ -1,0 +1,195 @@
+diff --git a/launcher/CMakeLists.txt b/launcher/CMakeLists.txt
+index bcef409..aae6780 100644
+--- a/launcher/CMakeLists.txt
++++ b/launcher/CMakeLists.txt
+@@ -20,7 +20,7 @@ set(LAUNCHER_GAME_EXE "${GAME_EXE}")
+ set(LAUNCHER_APP_ID "${APP_ID}")
+ set(LAUNCHER_HOME_ENV "${HOME_ENV}")
+ set(LAUNCHER_DISCLAIMER "${DISCLAIMER}")
+-set(LAUNCHER_PORT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/description.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_saves.cpp)
++set(LAUNCHER_PORT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/description.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_saves.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_hd.cpp)
+ # The game's version (its repository's VERSION, shown under its name) and, when its game.cfg names one
+ # (update_repo = owner/name), the GitHub repository whose releases the launcher updates itself from
+ # (recomp-common/launcher/src/update.h: the release carries an update-<system>.txt for each download)
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+index 947ae35..0e641a9 100644
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -6,6 +6,7 @@
+ 
+ #include "launcher.h"
+ #include "sakura_saves.h"
++#include "sakura_hd.h"
+ #include <stdexcept>
+ 
+ #include "../../port/bindings.h"
+@@ -252,8 +253,9 @@ const launcher::Description& launcher::describe() {
+             return std::string();
+         };
+         d.arguments = arguments;
+-        d.extra_home = DrawSakuraSaves;
+-        d.shutdown = ShutdownSakuraSaves;
++        d.extra_home = [](launcher::PageContext& page) {DrawSakuraHd(page);DrawSakuraSaves(page);};
++        d.extra_home_busy = SakuraHdBusy;
++        d.shutdown = [] {ShutdownSakuraHd();ShutdownSakuraSaves();};
+         d.saves_folder = true;
+         // (a custom soundtrack's files and discs: port/soundtrack.h)
+         static const std::string soundtrack_detail =
+diff --git a/launcher/src/sakura_hd.cpp b/launcher/src/sakura_hd.cpp
+new file mode 100644
+index 0000000..fd3e93b
+--- /dev/null
++++ b/launcher/src/sakura_hd.cpp
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#include "sakura_hd.h"
++#include "game_process.h"
++#include "layout.h"
++#include "ui.h"
++#include <array>
++#include <fstream>
++#include <memory>
++#include <mutex>
++namespace {
++struct HdState {
++    std::mutex mutex;
++    bool dialog=false,closed=false,finished=false,error=false;
++    std::string pending,submitted,message;
++    std::array<char,4096> source{};
++    std::unique_ptr<GameProcess> worker;
++    std::filesystem::path log;
++};
++std::shared_ptr<HdState> state;
++void PickedHd(void* userdata,const char* const* files,int) {
++    std::unique_ptr<std::shared_ptr<HdState>> owner(static_cast<std::shared_ptr<HdState>*>(userdata));
++    const auto one=*owner;std::lock_guard<std::mutex> lock(one->mutex);
++    if(!one->closed && files && files[0])one->pending=files[0];
++    one->dialog=false;
++}
++std::string ResourceRoot(const char* value) {
++    auto root=std::filesystem::u8path(value).lexically_normal();std::error_code error;
++    if(!root.has_filename() && root!=root.root_path())root=root.parent_path();
++    if(root.filename()=="WALL" && std::filesystem::is_directory(root,error))root=root.parent_path();
++    if(root.filename()=="SAKURA1" && std::filesystem::is_directory(root/"WALL",error))root=root.parent_path();
++    return root.u8string();
++}
++}
++void ShutdownSakuraHd() {
++    if(!state)return;
++    {std::lock_guard<std::mutex> lock(state->mutex);state->closed=true;}
++    state->worker.reset();state.reset();
++}
++bool SakuraHdBusy() {return state && state->worker && state->worker->running();}
++void DrawSakuraHd(launcher::PageContext& page) {
++    if(!state) {
++        state=std::make_shared<HdState>();
++        const auto configured=page.prefs.get("sakura","pc_assets");
++        SDL_strlcpy(state->source.data(),configured.c_str(),state->source.size());
++    }
++    auto& s=*state;bool dialog=false;
++    {
++        std::lock_guard<std::mutex> lock(s.mutex);dialog=s.dialog;
++        if(!s.pending.empty()) {
++            if(s.pending.size()<s.source.size())SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());
++            else {s.message="La ruta seleccionada es demasiado larga.";s.error=true;}
++            s.pending.clear();
++        }
++    }
++    const bool running=s.worker && s.worker->running();
++    if(s.worker && !running && !s.finished) {
++        s.finished=true;s.error=s.worker->exit_code()!=0;
++        if(!s.error) {
++            const auto previous=page.prefs.get("sakura","pc_assets");
++            page.prefs.set("sakura","pc_assets",s.submitted);
++            if(!page.prefs.save()) {
++                page.prefs.set("sakura","pc_assets",previous);s.error=true;
++                s.message="Los fondos están preparados, pero no se pudo guardar la selección.";
++            } else s.message="19 fondos verificados y preparados para Saturn. Puedes jugar en modo mejorado.";
++        } else {
++            s.message="No se pudieron preparar los 19 fondos. Usa la carpeta extraída que contiene SAKURA1/WALL.";
++            std::ifstream input(s.log,std::ios::binary);std::array<char,2048> details{};
++            input.read(details.data(),details.size()-1);
++            if(input.gcount()>0)s.message+='\n'+std::string(details.data(),static_cast<size_t>(input.gcount()));
++        }
++    }
++    const auto& p=ui::palette();
++    ui::gap(24);ui::text("MOD HD · SATURN",ui::Font::Semibold,ui::size::kDetail,p.secondary);ui::gap(10);
++    {
++        layout::Card card(page.width);
++        layout::row(page.width,"Fondos de tu versión PC","Añade los fondos extendidos al modo mejorado de Saturn. Necesitas tus recursos PC extraídos; no se ejecuta la versión PC.",150,36,[&] {
++            if(ui::button("Elegir carpeta…",ui::Kind::Secondary,150,!running && !dialog && !page.playing)) {
++                {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
++                SDL_ShowOpenFolderDialog(PickedHd,new std::shared_ptr<HdState>(state),page.window,nullptr,false);
++            }
++        });
++        layout::inset_separator(page.width);
++        layout::row(page.width,"Carpeta de recursos","Selecciona la carpeta que contiene SAKURA1, o pega su ruta.",270,36,[&] {
++            ImGui::BeginDisabled(running || dialog || page.playing);
++            ui::text_field("##sakura-hd-source",s.source.data(),s.source.size(),"Carpeta extraída de PC",270);
++            ImGui::EndDisabled();
++        });
++        layout::row(page.width,running?"Preparando fondos…":"Verificar y preparar","Comprueba los 19 originales y prepara su caché. Los discos y tus partidas permanecen intactos.",150,36,[&] {
++            if(ui::button("Preparar mod HD",ui::Kind::Primary,150,s.source[0] && !running && !dialog && !page.playing)) {
++                s.submitted=ResourceRoot(s.source.data());s.finished=false;s.error=false;s.message.clear();
++                std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
++                s.log=page.folder/"logs"/"hd-backgrounds.log";s.worker=std::make_unique<GameProcess>();
++                if(!s.worker->start(page.program_folder/"sakura.exe",{"--prepare-pc-backgrounds",s.submitted,
++                                       (page.folder/"cache"/"backgrounds").u8string()},page.folder,s.message,s.log)) {
++                    s.worker.reset();s.finished=true;s.error=true;
++                }
++            }
++        });
++        if(!page.prefs.get("sakura","pc_assets").empty()) {
++            layout::inset_separator(page.width);
++            layout::row(page.width,"Usar fondos PC HD","Solo afecta al modo mejorado. Puedes volver a los fondos Saturn en cualquier momento.",150,36,[&] {
++                int selected=page.settings.get("features","pc_hd_backgrounds")=="1"?1:0;
++                ImGui::BeginDisabled(page.playing);
++                if(ui::dropdown("##sakura-hd-enable",{"Activados","Desactivados"},selected,150)) {
++                    const auto previous=page.settings.get("features","pc_hd_backgrounds");
++                    page.settings.set("features","pc_hd_backgrounds",std::to_string(selected));
++                    if(!page.settings.save()) {page.settings.set("features","pc_hd_backgrounds",previous);s.error=true;s.message="No se pudo guardar la opción de fondos HD.";}
++                }
++                ImGui::EndDisabled();
++            });
++        }
++        card.end();
++    }
++    if(running) {ui::gap(10);ui::text("Verificando recursos y preparando fondos en paralelo…",ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);}
++    if(!s.message.empty()) {ui::gap(10);ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.error?p.danger:p.success,page.width);}
++}
+diff --git a/launcher/src/sakura_hd.h b/launcher/src/sakura_hd.h
+new file mode 100644
+index 0000000..d1f07e2
+--- /dev/null
++++ b/launcher/src/sakura_hd.h
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "launcher.h"
++void DrawSakuraHd(launcher::PageContext& page);
++void ShutdownSakuraHd();
++bool SakuraHdBusy();
+diff --git a/recomp-common/launcher/src/app.cpp b/recomp-common/launcher/src/app.cpp
+index 48308d1..81bcc0c 100644
+--- a/recomp-common/launcher/src/app.cpp
++++ b/recomp-common/launcher/src/app.cpp
+@@ -524,6 +524,7 @@ App::~App() {
+ }
+ 
+ bool App::busy() const {
++    if(about_.extra_home_busy && about_.extra_home_busy())return true;
+     if (title_capture_.running()) return true;
+     for (const launcher::CustomPage& page : about_.pages) {
+         if (page.busy && page.busy()) {
+diff --git a/recomp-common/launcher/src/launcher.h b/recomp-common/launcher/src/launcher.h
+index d08c6c4..b7a1770 100644
+--- a/recomp-common/launcher/src/launcher.h
++++ b/recomp-common/launcher/src/launcher.h
+@@ -126,6 +126,7 @@ struct Description {
+     // The port's own pages (none: the launcher's three)
+     std::vector<CustomPage> pages;
+     void (*extra_home)(PageContext&) = nullptr;
++    bool (*extra_home_busy)() = nullptr;
+     void (*shutdown)() = nullptr;
+     // false: no Game page (and no game file, check or Display card): the port's pages have Play
+     bool game_page = true;
