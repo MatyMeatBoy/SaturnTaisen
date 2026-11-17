@@ -29,7 +29,8 @@
       "patches/0023-satrecomp-correct-macl-48bit-accumulator.patch",
       "patches/0024-sakura-dialogue-ink-bounds-and-clipping.patch",
       "patches/0025-sakura-validated-hd-portrait-pack.patch",
-      "patches/0026-sakura-optional-integer-scene-zoom.patch"
+      "patches/0026-sakura-optional-integer-scene-zoom.patch",
+      "patches/0027-sakura-compact-zoom-margins.patch"
     ]
   }
 }

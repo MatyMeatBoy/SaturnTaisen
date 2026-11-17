@@ -1,0 +1,41 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 160639c..079944a 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -537,10 +537,10 @@ int RunWindowed(Port &port) {
+                             if(IsOldPictureShadow(x,y,planes.source[y*320+x]))zoomForeground[y*320+x]=0;
+                         SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+                         const SDL_FRect imageCrop{16,8,288,144};
+-                        const SDL_FRect imageTarget{float(zoom.picture.x),0,float(zoom.picture.w),float(zoom.picture.h)};
++                        const SDL_FRect imageTarget{float(zoom.picture.x),float(zoom.picture.y),float(zoom.picture.w),float(zoom.picture.h)};
+                         // Shadow belongs to the enlarged image. Draw it first so the dialogue
+                         // and its ornaments always cover it wherever the two layers meet.
+-                        const SDL_FRect shadow{imageTarget.x+zoom.shadow,float(zoom.shadow),imageTarget.w,imageTarget.h};
++                        const SDL_FRect shadow{imageTarget.x+zoom.shadow,imageTarget.y+zoom.shadow,imageTarget.w,imageTarget.h};
+                         SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+                         SDL_SetRenderDrawColor(renderer,80,80,80,166);
+                         SDL_RenderFillRect(renderer,&shadow);
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index 346c364..124a0b7 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -21,12 +21,15 @@ inline SceneZoomLayout FitSceneZoom(int width,int height,int dialogueWidth,int d
+     if(width<=0 || height<=0 || dialogueWidth<=0 || dialogueLines<=0 || groupLines<=0)return {};
+     const int boxScale=std::min(width/dialogueWidth,height/groupLines);
+     if(boxScale<1)return {};
+-    const int gap=std::max(1,boxScale/3);
+-    const int pictureScale=std::min(width/296,(height-dialogueLines*boxScale-gap)/148);
++    const int gap=std::max(2,boxScale);
++    const int margin=2*boxScale;
++    const int pictureScale=std::min(width/296,(height-dialogueLines*boxScale-gap-2*margin)/144);
+     if(pictureScale<1)return {};
+     const int shadow=4*pictureScale;
+-    return {true,{(width-288*pictureScale)/2,0,288*pictureScale,144*pictureScale,pictureScale},
+-        {(width-dialogueWidth*boxScale)/2,height-dialogueLines*boxScale,dialogueWidth*boxScale,dialogueLines*boxScale,boxScale},shadow,gap};
++    // Compact the visible blocks; the image shadow may extend behind the dialogue.
++    const int top=(height-144*pictureScale-dialogueLines*boxScale-gap)/2;
++    return {true,{(width-288*pictureScale)/2,top,288*pictureScale,144*pictureScale,pictureScale},
++        {(width-dialogueWidth*boxScale)/2,top+144*pictureScale+gap,dialogueWidth*boxScale,dialogueLines*boxScale,boxScale},shadow,gap};
+ }
+ struct SceneLayout {
+     bool recognized=false,movieOnly=false;

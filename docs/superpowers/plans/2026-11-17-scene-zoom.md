@@ -10,3 +10,8 @@ Verificar primero layout puro en 720p,1080p,1440p,2160p y ultrawide; luego captu
 Ajustes > Pantalla > Visualización de escena: Original / Zoom. Original es el valor por defecto y conserva el grupo conjunto. Zoom usa imagen 288×144 arriba, sombra de cuatro píxeles nativos y diálogo con escala independiente al fondo de la ventana. En 2560×1440: imagen ×7 (2016×1008), sombra28, separación2 y diálogo ×6 (1836×402, y1038). La sombra se dibuja antes del diálogo, que mantiene prioridad visual. Se retira exclusivamente el resto nativo de sombra de imagen identificado en la capa3, x20–307,y153–155; el marco y sombra propios de la caja se conservan.
 
 Se exige escena reconocida, sin arte superior fuera del rectángulo seguro; las demás conservan composición conjunta. Geometría probada a720p,1080p,1440p,2160p y ultrawide. Captura real1440p compara imagen nativa exacta entre ×6/×7 y máscara de texto idéntica a ×6. La corrección de sombra cambia únicamente (482,1038)–(2156,1056) frente a la captura previa.
+
+
+## Ajuste de márgenes aprobado por dirección visual
+
+Zoom compacta ahora los dos bloques visibles y centra el conjunto verticalmente. La separación es una unidad de la escala del diálogo (mínimo2 píxeles); la sombra de imagen puede pasar detrás de la caja. Al calcular la escala se reserva margen exterior, manteniendo escalas enteras y sin recortar. En2560×1440 mantiene imagen×7 y diálogo×6: margen superior12, imageny12–1020, separación6, diálogoy1026–1428, margen inferior12. Original no cambia. Geometría verificada en720p/1080p/1440p/2160p/ultrawide y ancho2044; captura real y prueba de igualdad de píxeles de imagen y tinta del texto correctas.

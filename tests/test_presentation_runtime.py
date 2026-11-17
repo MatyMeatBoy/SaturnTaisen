@@ -34,16 +34,16 @@ class PresentationRuntimeTests(unittest.TestCase):
                                    env=env,capture_output=True,timeout=30)
                 self.assertEqual(run.returncode,0,run.stderr.decode(errors='replace'))
                 with Image.open(shot) as image:shots.append(image.convert('RGBA'))
-                if mode:self.assertIn(b'scale=7 dialogue=1836x402 scale=6 y=1038 shadow=28',run.stderr)
+                if mode:self.assertIn(b'scale=7 dialogue=1836x402 scale=6 y=1026 shadow=28',run.stderr)
             original,zoom=shots
             native=original.crop((404,84,2132,948)).resize((288,144),Image.Resampling.NEAREST)
             self.assertEqual(native.resize((2016,1008),Image.Resampling.NEAREST).tobytes(),
-                             zoom.crop((272,0,2288,1008)).tobytes())
+                             zoom.crop((272,12,2288,1020)).tobytes())
             # The translucent box reveals a different part of the background after moving.
             # Compare the black dialogue ink, rather than requiring that background to match.
             def ink(image):return bytes(max(pixel[:3])<32 for pixel in image.getdata())
             self.assertEqual(ink(original.crop((644,996,2132,1284))),
-                             ink(zoom.crop((644,1080,2132,1368))))
+                             ink(zoom.crop((644,1068,2132,1356))))
 
     def test_multicore_preparation_keeps_scene_identical_and_prepares_future_themes(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:
