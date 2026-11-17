@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import subprocess
+import shutil
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,15 +29,39 @@ def dependency():
             raise RuntimeError('Dependency has local edits and a different commit; refusing checkout')
         run('git', '-C', DEP, 'fetch', '--depth', '1', 'origin', spec['commit'])
         run('git', '-C', DEP, 'checkout', '--detach', spec['commit'])
-    for name in spec['patches']:
-        patch = ROOT / name
-        check = subprocess.run(['git', '-C', str(DEP), 'apply', '--check', str(patch)], capture_output=True)
-        if check.returncode == 0:
-            run('git', '-C', DEP, 'apply', patch)
-        else:
-            applied = subprocess.run(['git', '-C', str(DEP), 'apply', '--reverse', '--check', str(patch)], capture_output=True)
-            if applied.returncode:
-                raise RuntimeError(f'Dependency patch is neither applicable nor already applied: {name}')
+    # Later patches may edit context introduced by earlier ones. Validate the
+    # composed tree, not each patch reversed against the final working tree.
+    import tempfile
+    with tempfile.TemporaryDirectory(prefix='dependency-index-') as folder:
+        env=os.environ.copy()
+        env['GIT_INDEX_FILE']=str(Path(folder)/'index')
+        def git(*args,check=True):
+            return subprocess.run(['git','-C',str(DEP),*map(str,args)],env=env,
+                                  capture_output=True,check=check)
+        git('read-tree',spec['commit'])
+        trees=[git('write-tree').stdout.decode().strip()]
+        for name in spec['patches']:
+            git('apply','--cached','--whitespace=nowarn',ROOT/name)
+            trees.append(git('write-tree').stdout.decode().strip())
+        if git('diff','--quiet','--no-ext-diff',check=False).returncode==0:
+            return
+        for installed in range(len(trees)-2,-1,-1):
+            git('read-tree',trees[installed])
+            if git('diff','--quiet','--no-ext-diff',check=False).returncode:
+                continue
+            # --check refuses colliding new files and preserves local edits.
+            for name in spec['patches'][installed:]:
+                patch=ROOT/name
+                result=git('apply','--check',patch,check=False)
+                if result.returncode:
+                    raise RuntimeError('Dependency has conflicting local edits: '+name)
+                run('git','-C',DEP,'apply',patch)
+            git('read-tree',trees[-1])
+            if git('diff','--quiet','--no-ext-diff',check=False).returncode:
+                raise RuntimeError('Dependency does not match composed patch tree')
+            return
+        raise RuntimeError('Dependency has local edits outside the recorded patch stack; preserve them and record a new patch first')
+
 
 
 def build(toolchain: Path, env):
@@ -49,6 +74,9 @@ def build(toolchain: Path, env):
         f'-DWORK_DIR={WORK.as_posix()}', f'-DCMAKE_PREFIX_PATH={toolchain.as_posix()}',
         '-DSATRECOMP_REFERENCE=OFF', env=env)
     run(toolchain / 'bin/cmake.exe', '--build', BUILD, '--parallel', '6', env=env)
+    artwork=ROOT/'assets/generated/backgrounds'
+    if artwork.is_dir():
+        shutil.copytree(artwork,BUILD/'art/backgrounds',dirs_exist_ok=True)
 
 
 def main():
@@ -76,7 +104,7 @@ def main():
                    ('renderer.cpp', 'regs.cpp', 'layers.cpp', 'vdp1.cpp', 'raster.cpp')]
         run(args.toolchain / 'bin/clang++.exe', '-std=c++20', '-O2',
             ROOT / 'tests/test_vdp2_color.cpp', *sources,
-            '-I', DEP / 'video', '-I', DEP / 'runtime', '-o', executable, env=env)
+            '-I', DEP / 'video', '-I', DEP / 'runtime', '-lz', '-o', executable, env=env)
         run(executable, env=env)
         return
     if args.action == 'check-disc':

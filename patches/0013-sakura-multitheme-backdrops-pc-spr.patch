@@ -1,0 +1,321 @@
+diff --git a/port/backdrop.h b/port/backdrop.h
+new file mode 100644
+index 0000000..588a7d3
+--- /dev/null
++++ b/port/backdrop.h
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <SDL3/SDL.h>
++#include <array>
++#include <span>
++#include <cstdint>
++#include <filesystem>
++#include <fstream>
++namespace port {
++// Import master art into one native-density 16:9 grid; presentation only uses integer multiples.
++inline SDL_Surface* NormalizeBackdrop(SDL_Surface* master,std::span<const uint8_t> kabe) {
++    if(!master || kabe.size()<512) return nullptr;
++    auto* logical=SDL_CreateSurface(416,234,SDL_PIXELFORMAT_ABGR8888);
++    if(!logical) return nullptr;
++    SDL_SetSurfaceBlendMode(master,SDL_BLENDMODE_NONE);
++    if(!SDL_BlitSurfaceScaled(master,nullptr,logical,nullptr,SDL_SCALEMODE_NEAREST)) {SDL_DestroySurface(logical);return nullptr;}
++    std::array<uint32_t,256> palette;
++    for(size_t i=0;i<256;i++) {
++        const uint16_t word=uint16_t(kabe[i*2])<<8|kabe[i*2+1];
++        palette[i]=0xFF000000u|((word&31)<<3)|(((word>>5)&31)<<11)|(((word>>10)&31)<<19);
++    }
++    for(int y=0;y<logical->h;y++) {
++        auto* row=reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(logical->pixels)+y*logical->pitch);
++        for(int x=0;x<logical->w;x++) {
++            const uint32_t pixel=row[x];int best=200000;uint32_t color=palette[0];
++            for(const auto candidate:palette) {
++                const int r=int(pixel&255)-int(candidate&255),g=int((pixel>>8)&255)-int((candidate>>8)&255),b=int((pixel>>16)&255)-int((candidate>>16)&255);
++                const int distance=r*r+g*g+b*b;
++                if(distance<best) {best=distance;color=candidate;if(!distance)break;}
++            }
++            row[x]=color;
++        }
++    }
++    return logical;
++}
++inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::path& file,std::span<const uint8_t> kabe,const std::filesystem::path& cacheDir) {
++    std::ifstream input(file,std::ios::binary);if(!input) return nullptr;
++    uint64_t hash=14695981039346656037ull;
++    char buffer[65536];
++    while(input.read(buffer,sizeof(buffer)) || input.gcount()) for(std::streamsize i=0;i<input.gcount();i++) hash=(hash^static_cast<uint8_t>(buffer[i]))*1099511628211ull;
++    for(size_t i=0;i<512 && i<kabe.size();i++)hash=(hash^kabe[i])*1099511628211ull;
++    std::filesystem::path cache;
++    SDL_Surface* logical=nullptr;
++    if(!cacheDir.empty()) {
++        cache=cacheDir/(file.stem().string()+"-grid416-v1-"+std::to_string(hash)+".png");
++        logical=SDL_LoadPNG(cache.string().c_str());
++        if(logical && (logical->w!=416 || logical->h!=234)) {SDL_DestroySurface(logical);logical=nullptr;}
++    }
++    if(!logical) {
++        auto* master=SDL_LoadPNG(file.string().c_str());
++        logical=NormalizeBackdrop(master,kabe);if(master) SDL_DestroySurface(master);
++        if(!logical) return nullptr;
++        if(!cache.empty()) {
++            std::error_code error;std::filesystem::create_directories(cacheDir,error);
++            if(!error) SDL_SavePNG(logical,cache.string().c_str());
++        }
++    }
++    auto* texture=SDL_CreateTextureFromSurface(renderer,logical);SDL_DestroySurface(logical);
++    if(texture)SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_NEAREST);
++    return texture;
++}
++
++}
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index ee4a94d..4b9fcf9 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -7,6 +7,8 @@
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
+ #include "glyph_text.h"
++#include "kabe.h"
++#include "backdrop.h"
+ #include <map>
+ #include "../video/renderer.h"
+ #include <filesystem>
+@@ -161,7 +163,9 @@ int RunWindowed(Port &port) {
+     const int windowWidth = port.gpu ? static_cast<int>(240.0f * static_cast<float>(scale) * port.gpu->Aspect() + 0.5f) : 320 * scale;
+     SDL_Window *window = nullptr;
+     SDL_Renderer *renderer = nullptr;
+-    SDL_Texture *floral=nullptr,*foreground=nullptr;
++    struct Backdrop {uint64_t palette=0;SDL_Texture* texture=nullptr;};
++    std::vector<Backdrop> backdrops;
++    SDL_Texture *foreground=nullptr;
+     SakuraUi sakuraUi;
+     Shading shading;
+     bool shaded = false;
+@@ -222,20 +226,27 @@ int RunWindowed(Port &port) {
+             return false;
+         }
+         if (!sakuraUi.Open(window,renderer,port.opt.settingsPath)) return false;
+-        for (const auto& folder : {std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
+-            if (auto* surface=SDL_LoadPNG((folder/"art"/"floral-day.png").string().c_str())) {
+-                floral=SDL_CreateTextureFromSurface(renderer,surface); SDL_DestroySurface(surface);
+-                if (floral) {SDL_SetTextureScaleMode(floral,SDL_SCALEMODE_NEAREST);break;}
+-            }
++        for(const auto& name:port.discFiles.Names()) if(name.find("KABE")!=std::string::npos && name.ends_with(".BIN")) {
++            std::vector<uint8_t> data;std::vector<uint32_t> pixels;
++            if(!port.discFiles.Read(name,data) || !DecodeKabe(data,pixels)) continue;
++            const auto id=std::filesystem::path(name).stem().string();
++            SDL_Texture* texture=nullptr;
++            for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++                const auto cacheDir=port.opt.settingsPath.empty()?std::filesystem::path():std::filesystem::path(port.opt.settingsPath).parent_path()/"cache"/"backgrounds";
++                texture=LoadBackdrop(renderer,folder/"art"/"backgrounds"/(id+".png"),data,cacheDir);
++                if(texture) break;
++            }
++            if(texture) backdrops.push_back({AtlasFingerprint(std::span<const uint8_t>(data.data(),512)),texture});
+         }
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
+     };
+     auto closeWindow = [&]() {
+         sakuraUi.Close();
+-        if (floral) SDL_DestroyTexture(floral);
++        for(auto& backdrop:backdrops) SDL_DestroyTexture(backdrop.texture);
++        backdrops.clear();
+         if (foreground) SDL_DestroyTexture(foreground);
+-        floral=foreground=nullptr;
++        foreground=nullptr;
+         if (shaded) {
+             shading.Close();
+         } else if (port.gpu) {
+@@ -384,10 +395,14 @@ int RunWindowed(Port &port) {
+             }
+         }
+         bool enhanced=false;
++        SDL_Texture* floral=nullptr;
++        if(port.videoRenderer) {
++            const auto palette=port.videoRenderer->BackgroundPaletteFingerprint();
++            for(const auto& backdrop:backdrops) if(backdrop.palette==palette) {floral=backdrop.texture;break;}
++        }
+         if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             const auto scene=AnalyzePresentation(planes.source,planes.width,planes.height);
+-            // Exact observed day-theme corner: other palettes/fades retain native composition.
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
+                 if(!traced && planes.source.size()==320*224) {
+@@ -401,8 +416,7 @@ int RunWindowed(Port &port) {
+                     }
+                 }
+             }
+-            const bool day=!softwareShown.empty() && (softwareShown[0]&0xFFFFFF)==0x9BE8C9;
+-            if (scene.recognized && day && planes.width==texW && planes.height==texH) {
++            if (scene.recognized && planes.width==texW && planes.height==texH) {
+                 float bgw=0,bgh=0; SDL_GetTextureSize(floral,&bgw,&bgh);
+                 const auto cover=CoverInteger(wide,high,static_cast<int>(bgw),static_cast<int>(bgh));
+                 const SDL_FRect bg{static_cast<float>(cover.x),static_cast<float>(cover.y),static_cast<float>(cover.w),static_cast<float>(cover.h)};
+diff --git a/port/main.cpp b/port/main.cpp
+index 01f73b8..01b1d8c 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -6,6 +6,7 @@
+ #include "pictures.h"
+ #include "port.h"
+ #include "kabe.h"
++#include "pc_spr.h"
+ 
+ #include "png_write.h"
+ #include "hle_bios.h"
+@@ -1394,7 +1395,24 @@ int main(int argc, char **argv) {
+             }
+             return argv[++i];
+         };
+-        if (a == "--bios") {
++        if (a == "--export-pc-spr") {
++            const auto input=next(),output=next();
++            std::ifstream stream(input,std::ios::binary|std::ios::ate);
++            if(!stream || stream.tellg()<0 || stream.tellg()>64*1024*1024) {
++                fprintf(stderr,"Cannot read bounded PC sprite input\n");return 1;
++            }
++            std::vector<uint8_t> data(static_cast<size_t>(stream.tellg()));stream.seekg(0);
++            if(!stream.read(reinterpret_cast<char*>(data.data()),data.size()))return 1;
++            std::vector<port::PcSprite> images;std::string message;
++            if(!port::DecodePcSprites(data,images,message)) {fprintf(stderr,"%s\n",message.c_str());return 1;}
++            std::error_code error;std::filesystem::create_directories(output,error);if(error)return 1;
++            for(const auto& image:images) {
++                const auto file=std::filesystem::path(output)/(std::filesystem::path(input).stem().string()+"-"+std::to_string(image.index)+".png");
++                WritePng(file.string().c_str(),image.pixels.data(),image.width,image.height);
++                printf("%u %ux%u format=%02X %s\n",image.index,image.width,image.height,image.format,file.string().c_str());
++            }
++            return images.empty()?1:0;
++        } else if (a == "--bios") {
+             o.biosPath = next();
+         } else if (a == "--disc") {
+             o.discPath = next();
+diff --git a/port/pc_spr.h b/port/pc_spr.h
+new file mode 100644
+index 0000000..bd8a51e
+--- /dev/null
++++ b/port/pc_spr.h
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <cstdint>
++#include <cstring>
++#include <span>
++#include <string>
++#include <vector>
++namespace port {
++struct PcSprite {unsigned index=0,width=0,height=0,format=0;std::vector<uint32_t> pixels;};
++inline bool DecodePcSprites(std::span<const uint8_t> data,std::vector<PcSprite>& images,std::string& error) {
++    images.clear();
++    auto fail=[&](const char* message){images.clear();error=message;return false;};
++    if(data.size()<32 || std::memcmp(data.data(),"SEGA SPRED",10))return fail("Unknown SPRED signature");
++    auto word=[&](size_t at){return uint32_t(data[at])<<8|data[at+1];};
++    auto longword=[&](size_t at){return word(at)<<16|word(at+2);};
++    struct Chunk {size_t offset=0,size=0;};Chunk palette,bitmaps;
++    for(size_t at=16;at+16<=data.size();at+=16) {
++        const size_t offset=longword(at),size=longword(at+4);const auto index=longword(at+8);
++        if(!offset || !size)break;
++        if(offset>data.size() || size>data.size()-offset || index>=14)return fail("Invalid SPRED chunk extent");
++        if(index==1)palette={offset,size};if(index==2)bitmaps={offset,size};
++        if(at+16>=offset)break;
++    }
++    if(bitmaps.size<16)return fail("Missing SPRED image table");
++    const auto count=word(bitmaps.offset);const size_t tableBytes=16+count*16;
++    if(!count || count>4096 || tableBytes>bitmaps.size)return fail("Invalid SPRED image count");
++    std::vector<uint32_t> colors;
++    if(palette.size>=16) {
++        const bool wide=word(palette.offset+2)==4;const size_t step=wide?4:2;
++        for(size_t at=palette.offset+16;at+step<=palette.offset+palette.size;at+=step) {
++            if(wide)colors.push_back((uint32_t(data[at])<<24)|data[at+1]|(uint32_t(data[at+2])<<8)|(uint32_t(data[at+3])<<16));
++            else {const auto c=word(at);colors.push_back(0xFF000000u|((c&31)*255/31)|(((c>>5)&31)*255/31<<8)|(((c>>10)&31)*255/31<<16));}
++        }
++        if(!colors.empty())colors[0]&=0xFFFFFF;
++    }
++    constexpr unsigned bits[]={4,4,8,8,8,16,24,32};
++    size_t totalPixels=0;
++    for(unsigned index=0;index<count;index++) {
++        const size_t at=bitmaps.offset+16+index*16;
++        const auto width=word(at),height=word(at+2),format=word(at+4),bank=word(at+6);
++        const size_t relative=longword(at+8),size=longword(at+12);
++        if(!width || !height || !size)continue;
++        if(width>4096 || height>4096 || (format&15)>=8 || format>255)return fail("Unsupported SPRED dimensions/format");
++        const size_t pixelCount=size_t(width)*height;
++        if(pixelCount>64*1024*1024-totalPixels)return fail("SPRED decoded image budget exceeded");
++        totalPixels+=pixelCount;
++        const size_t start=tableBytes+relative;
++        if(start>bitmaps.size || size>bitmaps.size-start)return fail("SPRED image exceeds chunk");
++        const unsigned bpp=bits[format&15];const size_t need=(size_t(width)*height*bpp+7)/8;
++        const auto compressed=data.subspan(bitmaps.offset+start,size);
++        std::vector<uint8_t> raw;raw.reserve(need);
++        if(format>>4) {
++            uint8_t ring[4096]={};unsigned write=0xFEE,flags=0,left=0;size_t cursor=0;
++            while(raw.size()<need) {
++                if(!left) {if(cursor>=compressed.size())return fail("Truncated SPRED control byte");flags=compressed[cursor++];left=8;}
++                const bool literal=flags&1;flags>>=1;left--;
++                if(literal) {
++                    if(cursor>=compressed.size())return fail("Truncated SPRED literal");
++                    const auto value=compressed[cursor++];raw.push_back(value);ring[write]=value;write=(write+1)&4095;
++                } else {
++                    if(compressed.size()-cursor<2)return fail("Truncated SPRED match");
++                    const unsigned a=compressed[cursor++],b=compressed[cursor++];unsigned read=a|((b>>4)<<8),length=(b&15)+3;
++                    if(length>need-raw.size())return fail("SPRED match exceeds output");
++                    while(length--) {const auto value=ring[read];read=(read+1)&4095;raw.push_back(value);ring[write]=value;write=(write+1)&4095;}
++                }
++            }
++        } else {if(compressed.size()<need)return fail("Short raw SPRED image");raw.assign(compressed.begin(),compressed.begin()+need);}
++        PcSprite image{index,width,height,format,{}};image.pixels.reserve(size_t(width)*height);
++        for(size_t pixel=0;pixel<size_t(width)*height;pixel++) {
++            uint32_t color=0;
++            if(bpp==4 || bpp==8) {
++                const unsigned value=bpp==8?raw[pixel]:(raw[pixel/2]>>(pixel&1?0:4))&15;
++                const size_t entry=size_t(bank)*(bpp==4?16:256)+value;
++                if(entry>=colors.size())return fail("SPRED palette index exceeds palette");color=colors[entry];
++            } else if(bpp==16) {
++                // PC/PSP SPRED direct pixels: little-endian RGB555, high bit not opacity.
++                const unsigned c=raw[pixel*2]|(unsigned(raw[pixel*2+1])<<8);
++                color=0xFF000000u|(((c>>10)&31)*255/31)|(((c>>5)&31)*255/31<<8)|((c&31)*255/31<<16);
++            } else return fail("24/32-bit direct SPRED needs verified channel mapping");
++            image.pixels.push_back(color);
++        }
++        images.push_back(std::move(image));
++    }
++    error.clear();return true;
++}
++}
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index 54c4801..35cb224 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -30,7 +30,7 @@ inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int wi
+         text+=layer==0 && x>=56 && x<285 && y>=165 && y<204;
+         frame+=layer==0 && y>=153;
+     }
+-    if(floral<1000 || picture<20000 || frame<100 || right<left || bottom<top) return {};
++    if(floral<1000 || (picture<1000 || picture+actor<20000) || frame<100 || right<left || bottom<top) return {};
+     return {true,movie>30000 && actor==0 && text==0,left,top,right-left+1,bottom-top+1};
+ }
+ }
+diff --git a/video/renderer.h b/video/renderer.h
+index 4dbb217..1eb1592 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -63,6 +63,19 @@ public:
+         if(address>=0x80000 || size>0x80000-address) return {};
+         return {m_mem.vram1+address,size};
+     }
++    uint64_t BackgroundPaletteFingerprint() const {
++        const auto& bg=m_regs2.bgParams[4];
++        const uint32 name=bg.twoWordChar?Vram2Long(bg.pageBaseAddresses[0]):Vram2Word(bg.pageBaseAddresses[0]);
++        const uint32 palette=bg.twoWordChar?((name>>16)&0x7F)<<4:((name>>12)&7)<<8;
++        const uint32 base=bg.cramOffset+(palette&0x700);
++        uint64_t hash=14695981039346656037ull;
++        for(uint32 i=0;i<256;i++) {
++            const uint16 word=CramWord(((base+i)*2)&0xFFE);
++            hash=(hash^static_cast<uint8>(word>>8))*1099511628211ull;
++            hash=(hash^static_cast<uint8>(word))*1099511628211ull;
++        }
++        return hash;
++    }
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
+ 

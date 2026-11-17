@@ -1,0 +1,140 @@
+{
+  "source": "Owner PC SPRED WALL resources",
+  "count": 19,
+  "all_native_decodes_succeeded": true,
+  "resources": [
+    {
+      "file": "KABE0100.SPR",
+      "sha256": "1570fd64b83780f413f8ef4e28ed23e8c30e4b0c4404488afc61af7f1d2dc8ea",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0101.SPR",
+      "sha256": "0019352751f6dc11c43274fb262996235edc10d83426d8cd6836bb8777978860",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0200.SPR",
+      "sha256": "937f33657ddec98a806554dd64bf05fb6778a7d7ea709070ccb245b456015219",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0201.SPR",
+      "sha256": "8264b8e8fefd8f8fcf40f201e5b390bf01de4800d9297ee36a44cee976997232",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0300.SPR",
+      "sha256": "245ca564192b521edaf4894d55cd3d0121b47058334828d8fcff2eb119392b9c",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0301.SPR",
+      "sha256": "1c7f6e6cff7a7347b0265259dd59f92811338356c9240cb26eab35a93dc698f3",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0400.SPR",
+      "sha256": "31d85c3e0b694c8068142eb233acc7709864f1463e838356a69a325c22814b85",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0401.SPR",
+      "sha256": "47722ada8de94addddc54a4f728763b305126ea845121efd00a1b058a1b713b1",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0500.SPR",
+      "sha256": "21fa4419f69202ace5ace7cfbb41cf0f44a3a6d4fbe1ed7bbd9c3ff7244c0053",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0501.SPR",
+      "sha256": "06359c4093d1e55fd83f502a9b94b437504ee4d3418a187500e3c4cd728a235d",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0600.SPR",
+      "sha256": "3cc3ce46e8c9559bd21a409f9750dc143f03199cf752fd285f193fb0ab346167",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0601.SPR",
+      "sha256": "ecdbae6b89c46020002647f5d93b0ab571a249a2e8f71fa78ff9f10732f2065a",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0700.SPR",
+      "sha256": "c15dc32636146e09791fb408e884f192b2827a97adf6039e75096477ddbed694",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0701.SPR",
+      "sha256": "306505b4a43b5b11278c1f94c0c4a61f2d29e27cf45d25c3ee18f75516130d41",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0800.SPR",
+      "sha256": "f958e13267c9bdd8eb278568b9f22645e41c5b1c6f5189ce10dae70109b2007e",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0801.SPR",
+      "sha256": "df046b2eba3d99d79c762fd5da38907c6de123b5a301cb439c22ff723ebf88eb",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0900.SPR",
+      "sha256": "49cbf1c82a063c0178178e829152436559c969963178c636f67d841270beb6c0",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE0901.SPR",
+      "sha256": "a17a3c7892a92c21dd2643ffbb94436ad9a59acaaa0761c31b96ece1e2340cf4",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    },
+    {
+      "file": "KABE1000.SPR",
+      "sha256": "4f8988192898d6fbe89697e3c16961ba32bdc70211ec6d8983fa23877e7fe328",
+      "image": 0,
+      "width": 640,
+      "height": 480
+    }
+  ]
+}

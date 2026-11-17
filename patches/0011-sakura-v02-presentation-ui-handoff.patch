@@ -1,0 +1,1001 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,6 +22,22 @@
+ 
+ find_package(SDL3 REQUIRED CONFIG)
+ find_package(ZLIB REQUIRED)
++
++# Window-resolution Sakura UI shares pinned ImGui and embedded Inter with the launcher.
++include(FetchContent)
++FetchContent_Declare(imgui URL https://github.com/ocornut/imgui/archive/refs/tags/v1.92.9b.tar.gz URL_HASH SHA256=21d8a0a565e85dce943e375db00812c2f3f0ab21f3f0f7964e364a63422d7f99 DOWNLOAD_EXTRACT_TIMESTAMP ON)
++FetchContent_Declare(inter URL https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip URL_HASH SHA256=9883fdd4a49d4fb66bd8177ba6625ef9a64aa45899767dde3d36aa425756b11e DOWNLOAD_EXTRACT_TIMESTAMP ON)
++FetchContent_MakeAvailable(imgui inter)
++add_library(sakura_ui STATIC port/sakura_ui.cpp recomp-common/launcher/src/ui.cpp
++    ${imgui_SOURCE_DIR}/imgui.cpp ${imgui_SOURCE_DIR}/imgui_draw.cpp ${imgui_SOURCE_DIR}/imgui_tables.cpp ${imgui_SOURCE_DIR}/imgui_widgets.cpp
++    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
++target_include_directories(sakura_ui PRIVATE ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends)
++target_compile_definitions(sakura_ui PRIVATE IMGUI_DEFINE_MATH_OPERATORS IMGUI_DISABLE_OBSOLETE_FUNCTIONS IMGUI_DISABLE_DEMO_WINDOWS IMGUI_DISABLE_DEBUG_TOOLS)
++target_link_libraries(sakura_ui PRIVATE SDL3::SDL3)
++set(SAKURA_FONTS "${CMAKE_CURRENT_BINARY_DIR}/sakura_fonts.cpp")
++add_custom_command(OUTPUT "${SAKURA_FONTS}" COMMAND "${CMAKE_COMMAND}" -DOUT=${SAKURA_FONTS} -DREGULAR=${inter_SOURCE_DIR}/extras/ttf/Inter-Regular.ttf -DSEMIBOLD=${inter_SOURCE_DIR}/extras/ttf/Inter-SemiBold.ttf -P "${CMAKE_CURRENT_SOURCE_DIR}/recomp-common/launcher/embed_fonts.cmake" DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/recomp-common/launcher/embed_fonts.cmake" VERBATIM)
++target_sources(sakura_ui PRIVATE "${SAKURA_FONTS}")
++
+ 
+ # Translated game code: work/<game>/gen/blocks_*.cpp, written by tools/recomp.py.
+ # Without it the game still builds and runs everything in the interpreter.
+@@ -55,7 +71,7 @@
+ )
+ target_compile_definitions(${GAME} PRIVATE SATRECOMP_OWN_MACHINE "SATRECOMP_COMBOS=\"${GAME_COMBOS}\"")
+ target_include_directories(${GAME} PRIVATE runtime port "${WORK_DIR}/gen")
+-target_link_libraries(${GAME} PRIVATE SDL3::SDL3 ZLIB::ZLIB)
++target_link_libraries(${GAME} PRIVATE SDL3::SDL3 ZLIB::ZLIB sakura_ui)
+ target_compile_options(${GAME} PRIVATE -Wno-unused-parameter)
+ 
+ # The reference build (-DSATRECOMP_REFERENCE=ON, 'make ref'): the same game code on the Ymir hardware model,
+@@ -115,6 +131,6 @@
+         ${REF_GEN_SOURCES}
+     )
+     target_include_directories(${GAME}-ref PRIVATE runtime port "${WORK_DIR}/gen-ref" third_party/Ymir/libs/ymir-core/src)
+-    target_link_libraries(${GAME}-ref PRIVATE ymir::ymir-core SDL3::SDL3 ZLIB::ZLIB)
++    target_link_libraries(${GAME}-ref PRIVATE ymir::ymir-core SDL3::SDL3 ZLIB::ZLIB sakura_ui)
+     target_compile_options(${GAME}-ref PRIVATE -Wno-unused-parameter)
+ endif ()
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -4,11 +4,16 @@
+ #include "bindings.h"
+ #include "game.h"
+ #include "hud.h"
++#include "sakura_ui.h"
++#include "presentation_layout.h"
++#include "../video/renderer.h"
++#include <filesystem>
+ #include "png_write.h"
+ #include "port.h"
+ #include "shading.h"
+ 
+ #include "../video/gpu.h"
++#include "../recomp-common/launch_ready.h"
+ 
+ #include <SDL3/SDL.h>
+ 
+@@ -154,6 +159,8 @@
+     const int windowWidth = port.gpu ? static_cast<int>(240.0f * static_cast<float>(scale) * port.gpu->Aspect() + 0.5f) : 320 * scale;
+     SDL_Window *window = nullptr;
+     SDL_Renderer *renderer = nullptr;
++    SDL_Texture *floral=nullptr,*foreground=nullptr;
++    SakuraUi sakuraUi;
+     Shading shading;
+     bool shaded = false;
+     int shownShader = satrecomp::FeatureValue("display_shader");
+@@ -212,10 +219,21 @@
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
+         }
++        if (!sakuraUi.Open(window,renderer,port.opt.settingsPath)) return false;
++        for (const auto& folder : {std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++            if (auto* surface=SDL_LoadPNG((folder/"art"/"floral-day.png").string().c_str())) {
++                floral=SDL_CreateTextureFromSurface(renderer,surface); SDL_DestroySurface(surface);
++                if (floral) {SDL_SetTextureScaleMode(floral,SDL_SCALEMODE_NEAREST);break;}
++            }
++        }
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
+     };
+     auto closeWindow = [&]() {
++        sakuraUi.Close();
++        if (floral) SDL_DestroyTexture(floral);
++        if (foreground) SDL_DestroyTexture(foreground);
++        floral=foreground=nullptr;
+         if (shaded) {
+             shading.Close();
+         } else if (port.gpu) {
+@@ -285,6 +303,11 @@
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
+ 
+     std::string windowShot;
++    bool announcedReady = false;
++    bool choiceInputBlocked=false;
++    bool choosing=port.opt.moviePlay.empty() && getenv("SATRECOMP_SKIP_CHOOSER")==nullptr;
++    int presentationChoice=satrecomp::FeatureValue("presentation_mode");
++    auto acceptChoice=[&]() {satrecomp::SetFeatureValue("presentation_mode",presentationChoice);choosing=false;choiceInputBlocked=true;};
+ 
+     // The picture shown in an OpenGL window through the preset (`shade` false: the menu, only fitted, smoothly)
+     auto showShaded = [&](const uint32_t *pixels, uint32_t width, uint32_t height, bool shade) {
+@@ -303,6 +326,49 @@
+         int wide = 0, high = 0;
+         SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);
+         DrawSakuraFrame(renderer, wide, high);
++        bool enhanced=false;
++        if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
++            const auto& planes=port.videoRenderer->PresentationFrame();
++            const auto scene=AnalyzePresentation(planes.source,planes.width,planes.height);
++            // Exact observed day-theme corner: other palettes/fades retain native composition.
++            if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
++                static bool traced=false;
++                if(!traced && planes.source.size()==320*224) {
++                    traced=true;
++                    for(int layer=0;layer<7;layer++) {
++                        int count=0,left=320,right=-1,top=224,bottom=-1;
++                        for(int y=0;y<224;y++)for(int x=0;x<320;x++) if(planes.source[y*320+x]==layer) {
++                            count++;left=std::min(left,x);right=std::max(right,x);top=std::min(top,y);bottom=std::max(bottom,y);
++                        }
++                        fprintf(stderr,"presentation layer %d count=%d bbox=%d,%d-%d,%d\n",layer,count,left,top,right,bottom);
++                    }
++                }
++            }
++            const bool day=!softwareShown.empty() && (softwareShown[0]&0xFFFFFF)==0x9BE8C9;
++            if (scene.recognized && day && planes.width==texW && planes.height==texH) {
++                float bgw=0,bgh=0; SDL_GetTextureSize(floral,&bgw,&bgh);
++                const auto cover=CoverInteger(wide,high,static_cast<int>(bgw),static_cast<int>(bgh));
++                const SDL_FRect bg{static_cast<float>(cover.x),static_cast<float>(cover.y),static_cast<float>(cover.w),static_cast<float>(cover.h)};
++                SDL_RenderTexture(renderer,floral,nullptr,&bg);
++                SDL_FRect crop{static_cast<float>(scene.x),static_cast<float>(scene.y),static_cast<float>(scene.w),static_cast<float>(scene.h)};
++                SDL_Texture* content=foreground;
++                if (scene.movieOnly) { crop={16,8,288,144}; content=texture; }
++                else {
++                    if (!foreground) {
++                        foreground=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,320,224);
++                        SDL_SetTextureBlendMode(foreground,SDL_BLENDMODE_BLEND);
++                        SDL_SetTextureScaleMode(foreground,SDL_SCALEMODE_NEAREST);
++                    }
++                    content=foreground;
++                    SDL_UpdateTexture(content,nullptr,planes.foreground.data(),320*sizeof(uint32_t));
++                }
++                const auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
++                const SDL_FRect target{static_cast<float>(fit.x),static_cast<float>(fit.y),static_cast<float>(fit.w),static_cast<float>(fit.h)};
++                SDL_RenderTexture(renderer,content,&crop,&target);
++                enhanced=true;
++            }
++        }
++        if (!enhanced) {
+         if (texture) {
+             const int scaling = satrecomp::FeatureValue("display_scaling");
+             SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
+@@ -313,6 +379,12 @@
+             SDL_RenderFillRect(renderer,&edge);
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
+         }
++        }
++        if (choosing && sakuraUi.Active()) { if(sakuraUi.Choice(presentationChoice)) acceptChoice(); }
++        else if (port.menu.IsOpen() && sakuraUi.Active()) {
++            const unsigned action=sakuraUi.Draw(port.menu);
++            if (action) port.MenuAct(port.menu.Press(action));
++        }
+         if (!windowShot.empty()) {
+             if (SDL_Surface* surface=SDL_RenderReadPixels(renderer,nullptr)) {
+                 SDL_SavePNG(surface,windowShot.c_str());
+@@ -320,7 +392,9 @@
+             }
+             windowShot.clear();
+         }
+-        SDL_RenderPresent(renderer);
++        if (SDL_RenderPresent(renderer) && !announcedReady) {
++            announcedReady = recomp::PublishLaunchReady(port.opt.readyFile);
++        }
+     };
+     shading.keepLast = !testSteps.empty(); // (for SATRECOMP_WINDOW_KEYS' SHOT)
+ 
+@@ -432,6 +506,8 @@
+                          {"F8", SDL_SCANCODE_F8},  {"F9", SDL_SCANCODE_F9},       {"F10", SDL_SCANCODE_F10},       {"F11", SDL_SCANCODE_F11}, {"F12", SDL_SCANCODE_F12}};
+             if (step.what == "QUIT") {
+                 running = false;
++            } else if (step.what.rfind("CHOICE=",0)==0) {
++                presentationChoice=step.what.back()=='1'?1:0;acceptChoice();
+             } else if (step.what.rfind("FEATURE=", 0) == 0) {
+                 const size_t equals = step.what.find('=', 8);
+                 if (equals != std::string::npos) {
+@@ -473,6 +549,13 @@
+             }
+         }
+         while (SDL_PollEvent(&ev)) {
++            sakuraUi.Event(ev);
++            if(choosing && ev.type==SDL_EVENT_KEY_DOWN) {
++                if(ev.key.scancode==SDL_SCANCODE_LEFT || ev.key.scancode==SDL_SCANCODE_UP) presentationChoice=0;
++                if(ev.key.scancode==SDL_SCANCODE_RIGHT || ev.key.scancode==SDL_SCANCODE_DOWN) presentationChoice=1;
++                if(ev.key.scancode==SDL_SCANCODE_RETURN || ev.key.scancode==SDL_SCANCODE_SPACE) acceptChoice();
++                continue;
++            }
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_KEY_DOWN:
+@@ -588,6 +671,16 @@
+             if (both) {
+                 menuPressed = 0;
+             }
++            if(choosing) {
++                if(menuPressed&(recomp::kMenuLeft|recomp::kMenuUp)) presentationChoice=0;
++                if(menuPressed&(recomp::kMenuRight|recomp::kMenuDown)) presentationChoice=1;
++                if(menuPressed&recomp::kMenuConfirm) acceptChoice();
++                heldAtClose=pads[0];pads[0]=pads[1]=0;
++            }
++            if(choiceInputBlocked) {
++                heldAtClose=pads[0];pads[0]=pads[1]=0;
++                if(menuNow==0 && previousPad==0) choiceInputBlocked=false;
++            }
+             if (port.menu.IsOpen()) {
+                 if (menuPressed) {
+                     port.MenuAct(port.menu.Press(menuPressed));
+@@ -629,12 +722,15 @@
+             silent = port.menu.muted;
+             SDL_SetAudioStreamGain(audio.stream, silent ? 0.0f : 1.0f);
+         }
++        if(choosing) {
++            showSoftware(); SDL_Delay(8); nextFrame=SDL_GetTicksNS(); continue;
++        }
+         if (port.menu.IsOpen()) {
+             // The game's picture as it was, with the menu over it
+             if (menuDirty) {
+                 menuDirty = false;
+                 menuPicture = menuBase;
+-                port.menu.Draw(menuPicture.data(), static_cast<int>(menuWidth), static_cast<int>(menuHeight));
++                if (!sakuraUi.Active()) port.menu.Draw(menuPicture.data(), static_cast<int>(menuWidth), static_cast<int>(menuHeight));
+                 if (port.gpu && !shaded) {
+                     port.gpu->SetOverlay(menuPicture.data(), menuWidth, menuHeight);
+                 } else if (texture && texW == menuWidth && texH == menuHeight) {
+diff --git a/port/main.cpp b/port/main.cpp
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -102,7 +102,7 @@
+ // launcher's own) and the menu, as the game's are
+ static void RegisterPortFeatures() {
+     satrecomp::Game &game = satrecomp::TheGame();
+-    game.features.push_back({"run_ahead", "Game", "Run-ahead",
++    game.features.push_back({"run_ahead", "Juego", "Run-ahead",
+                              "Shows the game a frame or two further on than it is, so that what you press is seen sooner (input lag "
+                              "taken away). The game runs exactly as without it; it takes two or three times the processor.",
+                              0, {"Off", "1 frame", "2 frames"}});
+@@ -117,6 +117,9 @@
+     game.features.push_back({"display_shape", "Pantalla", "Píxeles originales",
+                              "Se conserva el tamaño relativo de los píxeles. Sin estiramiento fraccional.",
+                              0, {"Original"}});
++    game.features.push_back({"presentation_mode", "Pantalla", "Presentación",
++                             "Original conserva la composición Saturn. Mejorado amplía escenas reconocidas sin deformar píxeles ni recortar texto.",
++                             0, {"Original (4:3)", "Mejorado (widescreen)"}});
+     // (custom_soundtrack: soundtrack.h; for a game whose sources name its music)
+     if (!game.songs.empty()) {
+         game.features.push_back({"custom_soundtrack", "Sound", "Custom soundtrack",
+@@ -125,7 +128,7 @@
+                                  "disc named in its soundtrack.ini. The game's volume and fades apply to it.",
+                                  satrecomp::kFeatureEnhanced});
+     }
+-    game.features.push_back({"window_size", "Display", "Window size",
++    game.features.push_back({"window_size", "Pantalla", "Tamaño de ventana",
+                              "How large the window opens, in times 240 lines (it can be made any size by dragging its "
+                              "edges; full screen is on the launcher's first page and F11).",
+                              0, {"3x", "2x", "4x", "5x", "6x"}});
+@@ -572,6 +575,7 @@
+ 
+     // The picture: drawn by the GPU, or in software at the original resolution
+     videoRenderer = &sat.Video();
++    videoRenderer->CapturePresentation(!opt.headless);
+     using Mode = satrecomp::video::Renderer::Mode;
+     const auto onFrame = [this](uint32_t *pixels, uint32_t width, uint32_t height) {
+         std::lock_guard lock(fbMutex);
+@@ -1420,6 +1424,8 @@
+             o.stateLoad = next();
+         } else if (a == "--settings") {
+             o.settingsPath = next();
++        } else if (a == "--ready-file") {
++            o.readyFile = next();
+         } else if (a == "--dump-decode") {
+             return satrecomp::DumpDecodeTable(next()) ? 0 : 1;
+         } else if (a == "--record-blocks") {
+diff --git a/port/menu.cpp b/port/menu.cpp
+--- a/port/menu.cpp
++++ b/port/menu.cpp
+@@ -47,9 +47,9 @@
+     }
+     config.groups.push_back({{recomp::MenuRow::Pages}, {recomp::MenuRow::Speed}, {recomp::MenuRow::Mute}});
+     if (withStates) {
+-        config.groups.back().push_back({recomp::MenuRow::Action, kSetResetPoint, "Set reset point",
++        config.groups.back().push_back({recomp::MenuRow::Action, kSetResetPoint, "Marcar punto de práctica",
+                                         "Keeps the game as it is now as the point to practise from (F2)."});
+-        config.groups.back().push_back({recomp::MenuRow::Action, kGoToResetPoint, "Go to reset point",
++        config.groups.back().push_back({recomp::MenuRow::Action, kGoToResetPoint, "Volver al punto de práctica",
+                                         "Goes back to the reset point (F3, or the right stick's click)."});
+     }
+     if (satrecomp::TheGame().exportPictures) {
+@@ -69,7 +69,7 @@
+     }
+     config.groups.push_back({});
+     if (withStates) {
+-        config.groups.back().push_back({recomp::MenuRow::Action, kResetGame, "Reset game",
++        config.groups.back().push_back({recomp::MenuRow::Action, kResetGame, "Reiniciar juego",
+                                         "Starts the game again, as when it was switched on. Your saves are kept."});
+     }
+     config.groups.back().push_back({recomp::MenuRow::Quit});
+diff --git a/port/menu.h b/port/menu.h
+--- a/port/menu.h
++++ b/port/menu.h
+@@ -54,6 +54,8 @@
+         m_menu.Note(text);
+     }
+     // Over a picture of 32-bit pixels (red in the low byte)
++    recomp::Menu::Snapshot View() const { return m_menu.View(); }
++    void Select(int index) { m_menu.Select(index); }
+     void Draw(uint32_t *pixels, int width, int height) const {
+         m_menu.Draw(pixels, width, height);
+     }
+diff --git a/port/port.h b/port/port.h
+--- a/port/port.h
++++ b/port/port.h
+@@ -66,6 +66,7 @@
+     float aspect = 4.0f / 3.0f; // the picture's shape; wider than 4:3 is widescreen (gpu only)
+     std::string features;     // comma-separated feature names
+     std::string settingsPath; // settings.ini with the player's feature choices (written when one is changed in the game)
++    std::string readyFile; // launcher handshake: first successfully presented window
+     std::string stateSave, stateLoad; // tests: "FRAME:path": save or load a state when that frame is reached
+     std::string dumpRam;      // prefix: write <prefix>high.bin / low.bin (work RAM) at exit
+     uint64_t frames = 0;      // stop after this many frames (0 = run until closed)
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+new file mode 100644
+--- /dev/null
++++ b/port/presentation_layout.h
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "integer_viewport.h"
++#include <cstdint>
++#include <vector>
++namespace port {
++inline IntegerViewport CoverInteger(int width,int height,int columns,int lines) {
++    if(width<=0 || height<=0 || columns<=0 || lines<=0) return {};
++    const int k=std::max({1,1+(width-1)/columns,1+(height-1)/lines});
++    return {(width-columns*k)/2,(height-lines*k)/2,columns*k,lines*k,k};
++}
++struct SceneLayout {
++    bool recognized=false,movieOnly=false;
++    int x=0,y=0,w=0,h=0;
++};
++inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int width,int height) {
++    if(width!=320 || height!=224 || source.size()!=320*224) return {};
++    int floral=0,picture=0,movie=0,actor=0,text=0,frame=0;
++    int left=320,right=-1,top=224,bottom=-1;
++    for(int y=0;y<224;y++) for(int x=0;x<320;x++) {
++        const int layer=source[y*320+x];
++        floral+=layer==5;
++        if(layer<5) {left=std::min(left,x);right=std::max(right,x);top=std::min(top,y);bottom=std::max(bottom,y);}
++        const bool inside=x>=16 && x<304 && y>=8 && y<152;
++        if(layer==1 || layer==2) {
++            if(!inside) return {}; // different screen layout
++            picture++; movie+=layer==1;
++        }
++        actor+=inside && layer==0;
++        text+=layer==0 && x>=56 && x<285 && y>=165 && y<204;
++        frame+=layer==0 && y>=153;
++    }
++    if(floral<1000 || picture<20000 || frame<100 || right<left || bottom<top) return {};
++    return {true,movie>30000 && actor==0 && text==0,left,top,right-left+1,bottom-top+1};
++}
++}
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+new file mode 100644
+--- /dev/null
++++ b/port/sakura_ui.cpp
+@@ -0,0 +1,124 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#include "sakura_ui.h"
++#include "../recomp-common/launcher/src/ui.h"
++#include <imgui_impl_sdl3.h>
++#include <imgui_impl_sdlrenderer3.h>
++#include <algorithm>
++#include <filesystem>
++#include "../recomp-common/launcher/src/presentation_cards.h"
++#include <cmath>
++namespace port {
++bool SakuraUi::Open(SDL_Window* window,SDL_Renderer* renderer,const std::string& settings) {
++    this->renderer=renderer;
++    IMGUI_CHECKVERSION(); ImGui::CreateContext();
++    ImGui::GetIO().IniFilename=nullptr;
++    ui::set_dark(false); ui::apply_style(1); ui::load_fonts();
++    if (!ImGui_ImplSDL3_InitForSDLRenderer(window,renderer)) { ImGui::DestroyContext(); return false; }
++    if (!ImGui_ImplSDLRenderer3_Init(renderer)) {
++        ImGui_ImplSDL3_Shutdown(); ImGui::DestroyContext(); return false;
++    }
++    for(int i=0;i<2;i++) for(const auto& folder:{std::filesystem::path(settings).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++        previews[i]=sakura::Preview(renderer,(folder/"art"/(i?"presentation-enhanced.png":"presentation-original.png")).string());
++        if(previews[i]) break;
++    }
++    active=true; return true;
++}
++void SakuraUi::Close() {
++    if (!active) return;
++    for(auto*& texture:previews) {if(texture) SDL_DestroyTexture(texture);texture=nullptr;}
++    ImGui_ImplSDLRenderer3_Shutdown(); ImGui_ImplSDL3_Shutdown(); ImGui::DestroyContext();
++    active=false;
++}
++void SakuraUi::Event(const SDL_Event& event) {
++    if (active) ImGui_ImplSDL3_ProcessEvent(&event);
++}
++bool SakuraUi::Choice(int& selection) {
++    if(!active) return false;
++    ImGui_ImplSDLRenderer3_NewFrame(); ImGui_ImplSDL3_NewFrame(); ImGui::NewFrame();
++    ui::begin_frame(ImGui::GetIO().DeltaTime);
++    const auto size=ImGui::GetIO().DisplaySize; const auto& p=ui::palette();
++    const float width=std::min(1000.0f,size.x-32),height=std::min(660.0f,size.y-24);
++    ImGui::SetNextWindowPos((size-ImVec2(width,height))*.5f); ImGui::SetNextWindowSize({width,height});
++    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding,28); ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{26,22});
++    ImGui::Begin("Elige tu aventura",nullptr,ImGuiWindowFlags_NoDecoration|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoMove);
++    ui::text("BIENVENIDO A LA COMPAÑÍA IMPERIAL",ui::Font::Semibold,12,p.accent);
++    ui::gap(8); ui::text("Tu aventura, a tu manera",ui::Font::Semibold,30,p.primary);
++    ui::text("Elige cómo quieres descubrir Sakura Wars",ui::Font::Regular,15,p.secondary);
++    ui::gap(22);
++    sakura::ModeCards(selection,width-52,previews[0],previews[1]);
++    ui::gap(16);
++    const bool accepted=ui::button("Comenzar la función",ui::Kind::Primary,230,true,46);
++    ui::gap(12);
++    ui::text("← → Elegir   ·   Enter / A Confirmar   ·   Puedes cambiarlo después con Start + Select",ui::Font::Regular,12,p.secondary,width-52);
++    ImGui::End(); ImGui::PopStyleVar(2); ImGui::Render();
++    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
++    return accepted;
++}
++unsigned SakuraUi::Draw(Menu& menu) {
++    if (!active) return 0;
++    ImGui_ImplSDLRenderer3_NewFrame(); ImGui_ImplSDL3_NewFrame(); ImGui::NewFrame();
++    ui::begin_frame(ImGui::GetIO().DeltaTime);
++    const auto view=menu.View(); const auto& p=ui::palette();
++    const auto size=ImGui::GetIO().DisplaySize;
++    auto* backdrop=ImGui::GetBackgroundDrawList();
++    backdrop->AddRectFilled({0,0},size,IM_COL32(42,16,30,155));
++    const float width=std::min(870.0f,size.x-40), height=std::min(700.0f,size.y-32);
++    ImGui::SetNextWindowPos((size-ImVec2(width,height))*.5f);
++    ImGui::SetNextWindowSize({width,height});
++    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding,26);
++    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{28,22});
++    ImGui::Begin("Sakura settings",nullptr,ImGuiWindowFlags_NoDecoration|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoMove);
++    ui::text("SAKURA WARS  /  SATURNTAISENFIRST",ui::Font::Semibold,11,p.accent);
++    ui::gap(7); ui::text(view.title.c_str(),ui::Font::Semibold,29,p.primary);
++    ui::text("Un respiro antes de volver al escenario",ui::Font::Regular,13,p.secondary);
++    ui::gap(18);
++    unsigned pressed=0;
++    const bool compact=width<650;
++    const float listWidth=compact?width-56:(width-76)*.58f;
++    ImGui::BeginChild("choices",{listWidth,height-187},ImGuiChildFlags_None);
++    for (size_t i=0;i<view.items.size();i++) {
++        const auto& item=view.items[i];
++        if (item.divider && i) ui::gap(9);
++        ImGui::PushID(static_cast<int>(i));
++        const auto pos=ImGui::GetCursorScreenPos(); const bool selected=static_cast<int>(i)==view.selected;
++        const float rowWidth=ImGui::GetContentRegionAvail().x;
++        if (ImGui::InvisibleButton("row",{rowWidth,44})) {
++            menu.Select(static_cast<int>(i)); pressed=recomp::kMenuConfirm;
++        }
++        auto* draw=ImGui::GetWindowDrawList();
++        draw->AddRectFilled(pos,pos+ImVec2(rowWidth,44),selected?p.primary:ImGui::IsItemHovered()?p.control_hover:p.surface,17);
++        if (selected) draw->AddRect(pos,pos+ImVec2(rowWidth,44),p.accent,17,2);
++        ImGui::SetCursorScreenPos(pos+ImVec2(15,11));
++        ui::text(item.title.c_str(),ui::Font::Semibold,15,selected?p.primary_text:p.text);
++        if (!item.value.empty()) {
++            auto textSize=ui::text_size(item.value.c_str(),ui::Font::Regular,12);
++            ImGui::SetCursorScreenPos(pos+ImVec2(std::max(15.0f,rowWidth-textSize.x-16),27));
++            ui::text(item.value.c_str(),ui::Font::Regular,12,selected?p.primary_text:p.secondary);
++        }
++        ImGui::SetCursorScreenPos(pos+ImVec2(0,49));
++        if (selected && lastSelected!=view.selected) ImGui::SetScrollHereY(.5f);
++        ImGui::PopID();
++    }
++    ImGui::EndChild();
++    lastSelected=view.selected;
++    std::string description=view.note;
++    if (description.empty() && view.selected>=0 && view.selected<static_cast<int>(view.items.size()))
++        description=view.items[view.selected].description;
++    if (!compact) {
++        ImGui::SameLine(0,22);
++        ImGui::BeginChild("detail",{0,height-187},ImGuiChildFlags_None);
++        ui::text("COMPAÑÍA IMPERIAL",ui::Font::Semibold,12,p.accent);
++        ui::gap(16);
++        ui::text(description.c_str(),ui::Font::Regular,16,p.text,ImGui::GetContentRegionAvail().x);
++        ui::gap(24);
++        ui::text("Tus cambios se conservan al volver al juego.",ui::Font::Regular,12,p.secondary,ImGui::GetContentRegionAvail().x);
++        ImGui::EndChild();
++    }
++    ui::gap(12);
++    ui::text("↑ ↓ Elegir     ← → Ajustar     Enter / A Confirmar     Esc / Start + Select Volver",ui::Font::Regular,12,p.secondary,width-56);
++    ImGui::End(); ImGui::PopStyleVar(2);
++    ImGui::Render();
++    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
++    return pressed;
++}
++}
+diff --git a/port/sakura_ui.h b/port/sakura_ui.h
+new file mode 100644
+--- /dev/null
++++ b/port/sakura_ui.h
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "menu.h"
++#include <SDL3/SDL.h>
++namespace port {
++class SakuraUi {
++public:
++    bool Open(SDL_Window*,SDL_Renderer*,const std::string& settings);
++    void Close();
++    void Event(const SDL_Event&);
++    unsigned Draw(Menu&);
++    bool Choice(int& selection);
++    bool Active() const { return active; }
++private:
++    bool active=false;
++    SDL_Renderer* renderer=nullptr;
++    SDL_Texture* previews[2]={nullptr,nullptr};
++    int lastSelected=-1;
++};
++}
+diff --git a/recomp-common/launch_ready.h b/recomp-common/launch_ready.h
+new file mode 100644
+--- /dev/null
++++ b/recomp-common/launch_ready.h
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <filesystem>
++#include <fstream>
++#include <string>
++namespace recomp {
++inline bool LaunchReady(const std::filesystem::path& file) {
++    if (file.empty()) return false;
++    std::ifstream input(file,std::ios::binary);
++    std::string value((std::istreambuf_iterator<char>(input)),{});
++    return value=="SaturnTaisenFirst:presented:1\n";
++}
++inline bool PublishLaunchReady(const std::filesystem::path& file) {
++    if (file.empty()) return true;
++    const auto pending=std::filesystem::path(file.string()+".tmp");
++    { std::ofstream output(pending,std::ios::binary|std::ios::trunc);
++      output<<"SaturnTaisenFirst:presented:1\n";
++      output.close(); if (!output) return false; }
++    std::error_code error;
++    std::filesystem::rename(pending,file,error);
++    if (error) std::filesystem::remove(pending,error);
++    return LaunchReady(file);
++}
++}
+diff --git a/recomp-common/launcher/src/app.cpp b/recomp-common/launcher/src/app.cpp
+--- a/recomp-common/launcher/src/app.cpp
++++ b/recomp-common/launcher/src/app.cpp
+@@ -28,6 +28,8 @@
+ #include "online.h"
+ #include "steam.h"
+ #include "ui.h"
++#include "presentation_cards.h"
++#include "../../launch_ready.h"
+ 
+ using launcher::FileCheck;
+ using layout::Card;
+@@ -508,6 +510,7 @@
+ }
+ 
+ App::~App() {
++    for (auto* texture:mode_previews_) if(texture) SDL_DestroyTexture(texture);
+     if (about_.shutdown) about_.shutdown();
+     for (auto* texture : artwork_) if (texture) SDL_DestroyTexture(texture);
+     for (auto& one : slots_) {
+@@ -1091,7 +1094,12 @@
+     try { arguments=arguments_for(prefs_, target); }
+     catch (const std::exception& error) { one.play_error=error.what(); return; }
+     arguments.insert(arguments.end(), extra.begin(), extra.end());
+-    one.game.start(one.program(), arguments, one.folder, one.play_error, one.folder / "logs" / "game.log");
++    if (interactive_ && !collection_) {
++        one.ready_file = one.folder / "logs" / ("launch-" + std::to_string(SDL_GetPerformanceCounter()) + ".ready");
++        arguments.insert(arguments.end(), {"--ready-file", one.ready_file.string()});
++    }
++    if (!one.game.start(one.program(), arguments, one.folder, one.play_error, one.folder / "logs" / "game.log"))
++        one.ready_file.clear();
+ }
+ 
+ bool App::toggle_on(const Slot& one, const launcher::Toggle& toggle) const {
+@@ -1313,6 +1321,19 @@
+     // and kept
+     for (size_t which = 0; which < slots_.size(); which++) {
+         Slot& one = *slots_[which];
++        if (!one.ready_file.empty()) {
++            if (one.game.running() && recomp::LaunchReady(one.ready_file)) {
++                std::error_code ignored;
++                std::filesystem::remove(one.ready_file, ignored);
++                one.ready_file.clear();
++                SDL_Event quit{}; quit.type=SDL_EVENT_QUIT; SDL_PushEvent(&quit);
++            } else if (!one.game.running()) {
++                std::error_code ignored;
++                std::filesystem::remove(one.ready_file, ignored);
++                one.ready_file.clear();
++                one.play_error="El juego terminó antes de abrir correctamente (código " + std::to_string(one.game.exit_code()) + "). Consulta logs/game.log.";
++            }
++        }
+         if (one.was_running && !one.game.running()) {
+             one.settings.load();
+             after_game(one);
+@@ -2832,6 +2853,22 @@
+ void App::game_page(float width) {
+     layout::heading("Sakura Wars", about_.file_intro, width);
+     sakura_art(width);
++    if (!previews_tried_) {
++        previews_tried_=true;
++        for(int i=0;i<2;i++) for(const auto& folder:{slots_[0]->folder,std::filesystem::path(SDL_GetBasePath())}) {
++            mode_previews_[i]=sakura::Preview(SDL_GetRenderer(window_),(folder/"art"/(i?"presentation-enhanced.png":"presentation-original.png")).string());
++            if(mode_previews_[i]) break;
++        }
++    }
++    int presentation=slots_[0]->settings.get("features","presentation_mode")=="1"?1:0;
++    ui::text("ELIGE TU PRESENTACIÓN",Font::Semibold,13,ui::palette().primary);
++    ui::gap(10);
++    if(sakura::ModeCards(presentation,width,mode_previews_[0],mode_previews_[1])) {
++        slots_[0]->settings.set("features","presentation_mode",std::to_string(presentation));
++        slots_[0]->settings.save();
++    }
++    ui::text("Podrás confirmarlo al iniciar y cambiarlo desde el menú del juego.",Font::Regular,12,ui::palette().secondary,width);
++    ui::gap(18);
+     bool ready = play_button(0, width);
+     ui::gap(28);
+ #ifdef LAUNCHER_UPDATE_REPO
+diff --git a/recomp-common/launcher/src/app.h b/recomp-common/launcher/src/app.h
+--- a/recomp-common/launcher/src/app.h
++++ b/recomp-common/launcher/src/app.h
+@@ -91,6 +91,7 @@
+         std::vector<int> values_before;  // its features' values when it was started (a collection's: what its menu changed)
+         GameProcess game;                // its program, while it runs (a collection's games can run at once)
+         bool was_running = false;
++        std::filesystem::path ready_file;
+         std::string play_error;          // why it did not start, or ""
+         // What another game's menu changed of a feature they share while this one was running: set when it
+         // ends, unless its own menu changed the same feature
+@@ -294,6 +295,8 @@
+ 
+     const launcher::Collection* collection_ = nullptr;  // a collection's launcher's (a port's: none)
+     SDL_Window* window_;
++    SDL_Texture* mode_previews_[2]={nullptr,nullptr};
++    bool previews_tried_=false;
+     SDL_Texture* artwork_[1] = {nullptr};
+     bool artwork_tried_ = false;
+     GameProcess title_capture_;
+diff --git a/recomp-common/launcher/src/presentation_cards.h b/recomp-common/launcher/src/presentation_cards.h
+new file mode 100644
+--- /dev/null
++++ b/recomp-common/launcher/src/presentation_cards.h
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "ui.h"
++#include <SDL3/SDL.h>
++#include <algorithm>
++namespace sakura {
++inline bool ModeCards(int& choice,float width,SDL_Texture* original,SDL_Texture* enhanced) {
++    const auto& p=ui::palette();
++    const bool stacked=width<520;
++    const float gap=ui::px(14), cardWidth=stacked?width:(width-gap)*.5f;
++    bool changed=false;
++    for(int i=0;i<2;i++) {
++        if(i && !stacked) ImGui::SameLine(0,gap);
++        ImGui::PushID(i);
++        ImGui::BeginGroup();
++        const auto at=ImGui::GetCursorScreenPos();
++        const float previewHeight=cardWidth*9/16, height=previewHeight+ui::px(96);
++        if(ImGui::InvisibleButton("presentation",{cardWidth,height},ImGuiButtonFlags_EnableNav)) {choice=i;changed=true;}
++        auto* draw=ImGui::GetWindowDrawList();
++        draw->AddRectFilled(at+ImVec2(0,4),at+ImVec2(cardWidth,height+4),IM_COL32(70,25,42,18),22);
++        draw->AddRectFilled(at,at+ImVec2(cardWidth,height),p.surface,22);
++        draw->AddRect(at,at+ImVec2(cardWidth,height),choice==i?p.primary:p.separator,22,choice==i?3:1);
++        const auto begin=at+ImVec2(10,10), end=at+ImVec2(cardWidth-10,previewHeight);
++        draw->AddRectFilled(begin,end,p.control,14);
++        auto* texture=i?enhanced:original;
++        if(texture) {
++            float w=0,h=0; SDL_GetTextureSize(texture,&w,&h);
++            const float scale=std::min((end.x-begin.x)/w,(end.y-begin.y)/h);
++            const ImVec2 size(w*scale,h*scale), start=(begin+end-size)*.5f;
++            draw->AddImage(ImTextureRef((ImTextureID)(intptr_t)texture),start,start+size);
++        } else {
++            const float innerWidth=(end.y-begin.y)*(i?16.0f/9:4.0f/3);
++            const ImVec2 box(std::min(innerWidth,end.x-begin.x-20),end.y-begin.y-16);
++            const auto start=(begin+end-box)*.5f;
++            draw->AddRectFilled(start,start+box,p.primary,8);
++            draw->AddText(start+ImVec2(12,12),p.primary_text,i?"16:9":"4:3");
++        }
++        ImGui::SetCursorScreenPos(at+ImVec2(18,previewHeight+12));
++        ui::text(i?"Mejorado · widescreen":"Original · 4:3",ui::Font::Semibold,16,p.primary);
++        ImGui::SetCursorScreenPos(at+ImVec2(18,previewHeight+37));
++        ui::text(i?"Más espacio, escala entera y fondo floral":"Composición Saturn y píxeles originales",ui::Font::Regular,12,p.secondary,cardWidth-36);
++        ImGui::SetCursorScreenPos(at+ImVec2(18,previewHeight+66));
++        ui::text(choice==i?"SELECCIONADO":"ELEGIR",ui::Font::Semibold,10,choice==i?p.primary:p.accent);
++        ImGui::SetCursorScreenPos(at+ImVec2(0,height+8));
++        ImGui::EndGroup(); ImGui::PopID();
++    }
++    return changed;
++}
++inline SDL_Texture* Preview(SDL_Renderer* renderer,const std::string& path) {
++    auto* surface=SDL_LoadPNG(path.c_str()); if(!surface) return nullptr;
++    auto* texture=SDL_CreateTextureFromSurface(renderer,surface); SDL_DestroySurface(surface);
++    if(texture) SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_NEAREST);
++    return texture;
++}
++}
+diff --git a/recomp-common/menu.cpp b/recomp-common/menu.cpp
+--- a/recomp-common/menu.cpp
++++ b/recomp-common/menu.cpp
+@@ -293,54 +293,46 @@
+     return {};
+ }
+ 
+-void Menu::Draw(uint32_t *pixels, int width, int height) const {
+-    static constexpr Color white{255, 255, 255, 255}, dim{160, 164, 176, 255}, on{110, 220, 120, 255};
+-    if (m_rows.empty()) {
+-        return;
+-    }
+-    const Canvas canvas{pixels, width, height};
+-    // Sizes in font dots: d for the small text, 2d for the rows
+-    const float d = static_cast<float>(std::max(height / 300, 1));
+-    const float pad = 8 * d;
+-    const float panelWidth = std::min(150 * kCharWidth * d / 2, width * 0.9f); // 75 small characters, if there is room
+-    const float inner = panelWidth - 2 * pad;
+-    // A row's words: its title, its value (and the value's colour) and its description
+-    const auto Describe = [&](const Row &row, std::string &title, std::string &value, Color &valueColor, std::string &rowDescription) {
+-        title = "Resume";
+-        rowDescription = "Back to the game.";
++Menu::Item Menu::DescribeRow(const Row& row) const {
++    Item item;
++    auto &title=item.title, &value=item.value, &rowDescription=item.description;
++    static constexpr Color dim{160,164,176,255}, on{110,220,120,255};
++    Color valueColor{};
++        title = "Volver al juego";
++        rowDescription = "Continúa tu aventura desde donde la dejaste.";
+         switch (row.kind) {
+         case kRowSave:
+-            title = "Save state";
+-            rowDescription = "Keeps the game as it is now in the slot.";
++            title = "Guardar estado";
++            rowDescription = "Guarda una instantánea del juego en la ranura seleccionada.";
+             break;
+         case kRowLoad:
+-            title = "Load state";
+-            rowDescription = "Goes back to the game kept in the slot.";
++            title = "Cargar estado";
++            rowDescription = "Restaura la instantánea de la ranura seleccionada.";
+             break;
+         case kRowSlot:
+-            title = "Slot";
++            title = "Ranura";
+             value = std::to_string(m_slot);
+             rowDescription = "Left/Right: the slot (1-9) that Save state and Load state use.";
+             break;
+         case kRowSpeed:
+-            title = "Speed";
++            title = "Velocidad";
+             value = m_config.speeds[static_cast<size_t>(m_speed)];
+             valueColor = m_speed == m_config.normalSpeed ? dim : on;
+             rowDescription = m_config.speedDescription;
+             break;
+         case kRowMute:
+-            title = "Mute";
+-            value = m_config.muted() ? "On" : "Off";
++            title = "Silenciar";
++            value = m_config.muted() ? "Sí" : "No";
+             valueColor = m_config.muted() ? on : dim;
+-            rowDescription = "Switches the game's sound off, and on again.";
++            rowDescription = "Activa o silencia el sonido del juego.";
+             break;
+         case kRowAction:
+             title = m_first[row.index].title;
+             rowDescription = m_first[row.index].description;
+             break;
+         case kRowQuit:
+-            title = "Quit game";
+-            rowDescription = "Closes the game.";
++            title = "Salir del juego";
++            rowDescription = "Cierra el juego. Recuerda guardar tu partida antes de salir.";
+             break;
+         case kRowCommand: {
+             const MenuCommand &command = m_config.commands[row.index];
+@@ -368,7 +360,7 @@
+             break;
+         }
+         case kRowBack:
+-            title = "Back";
++            title = "Atrás";
+             rowDescription = Parent(m_page).empty() ? "To the first page (Left does the same)." : "To the " + Parent(m_page) + " page (Left does the same).";
+             break;
+         case kRowFeature: {
+@@ -377,7 +369,7 @@
+             title = feature.title;
+             rowDescription = feature.description;
+             if (feature.choices.empty()) {
+-                value = chosen ? "On" : "Off";
++                value = chosen ? "Sí" : "No";
+             } else {
+                 value = feature.choices[static_cast<size_t>(std::clamp(chosen, 0, static_cast<int>(feature.choices.size()) - 1))];
+             }
+@@ -386,6 +378,33 @@
+         }
+         default: break;
+         }
++    item.divider=row.divider;
++    return item;
++}
++Menu::Snapshot Menu::View() const {
++    Snapshot view; view.title=m_page.empty()?"Compañía Imperial":m_page;
++    view.note=m_note; view.selected=m_selected;
++    for (const auto& row:m_rows) view.items.push_back(DescribeRow(row));
++    return view;
++}
++void Menu::Select(int index) {
++    m_selected=std::clamp(index,0,std::max(0,static_cast<int>(m_rows.size())-1));
++}
++
++void Menu::Draw(uint32_t *pixels, int width, int height) const {
++    static constexpr Color white{255, 255, 255, 255}, dim{160, 164, 176, 255}, on{110, 220, 120, 255};
++    if (m_rows.empty()) {
++        return;
++    }
++    const Canvas canvas{pixels, width, height};
++    // Sizes in font dots: d for the small text, 2d for the rows
++    const float d = static_cast<float>(std::max(height / 300, 1));
++    const float pad = 8 * d;
++    const float panelWidth = std::min(150 * kCharWidth * d / 2, width * 0.9f); // 75 small characters, if there is room
++    const float inner = panelWidth - 2 * pad;
++    // A row's words: its title, its value (and the value's colour) and its description
++    const auto Describe = [&](const Row& row, std::string& title, std::string& value, Color& color, std::string& description) {
++        const auto item=DescribeRow(row); title=item.title; value=item.value; description=item.description;
+     };
+     // (the hint is one line unless the picture is a narrow one)
+     const std::string hint = "Up/Down: choose   Left/Right or " + m_config.confirmName + ": change   " + m_config.closeName + ": close";
+diff --git a/recomp-common/menu.h b/recomp-common/menu.h
+--- a/recomp-common/menu.h
++++ b/recomp-common/menu.h
+@@ -109,6 +109,11 @@
+ 
+ class Menu {
+ public:
++    struct Item { std::string title, value, description; bool divider=false; };
++    struct Snapshot { std::string title, note; std::vector<Item> items; int selected=0; };
++    Snapshot View() const;
++    void Select(int index);
++
+     struct Chosen {
+         enum Kind { None, Save, Load, Quit, Action, Command } kind = None;
+         int id = 0; // Action: the row's id. Command: its place in MenuConfig::commands.
+@@ -155,6 +160,7 @@
+         std::string page;     // the page a row leads to
+         bool divider = false; // a line above it: the first of a group of rows
+     };
++    Item DescribeRow(const Row& row) const;
+     void Fill();
+     const MenuPage *PageOf(const std::string &name) const;
+     std::string Parent(const std::string &page) const;
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -3,6 +3,7 @@
+ #include "renderer.h"
+ 
+ #include "../runtime/state.h"
++#include "../port/png_write.h"
+ 
+ #include <algorithm>
+ #include <cstdio>
+@@ -12,6 +13,15 @@
+ #include <set>
+ 
+ namespace satrecomp::video {
++
++namespace {
++struct LayerProbe {
++    std::vector<uint32> image[6], mask[6];
++    uint32 width=0,height=0;
++    bool done=false;
++};
++LayerProbe probe;
++}
+ 
+ Renderer::Renderer(const Memory &memory)
+     : m_mem(memory) {}
+@@ -231,6 +241,12 @@
+ }
+ 
+ void Renderer::BeginFrame() {
++    if (m_capturePresentation) {
++        m_presentation.width=m_width; m_presentation.height=m_height;
++        m_presentation.foreground.assign(static_cast<size_t>(m_width)*m_height,0);
++        m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
++    }
++
+     LayersBeginFrame();
+ }
+ 
+@@ -474,6 +490,26 @@
+             }
+         }
+     }
++    if (getenv("SATRECOMP_LAYER_PROBE") && !probe.done && y<m_height) {
++        if (probe.width!=width || probe.height!=m_height) {
++            probe.width=width;probe.height=m_height;
++            for (unsigned layer=0;layer<6;layer++) {
++                probe.image[layer].assign(static_cast<size_t>(width)*m_height,0);
++                probe.mask[layer].assign(static_cast<size_t>(width)*m_height,0);
++            }
++        }
++        for (unsigned layer=0;layer<6;layer++) {
++            const auto& colors=layer==0?m_sprite.color:m_layer[layer].color;
++            const auto& priorities=layer==0?m_sprite.priority:m_layer[layer].priority;
++            const bool enabled=state2.layerEnabled[layer];
++            for (uint32 x=0;x<width;x++) {
++                const size_t at=static_cast<size_t>(y)*width+x;
++                const bool visible=enabled && x<priorities.size() && priorities[x]!=0;
++                probe.image[layer][at]=visible?colors[x]:0;
++                probe.mask[layer][at]=visible?0x00FFFFFF:0;
++            }
++        }
++    }
+     const LayerLine *layers = m_layer;
+     const bool spriteWindow = regs2.spriteParams.useSpriteWindow;
+     const auto normal = static_cast<uint8>(SpriteSpecial::Normal);
+@@ -514,10 +550,14 @@
+             }
+             return value;
+         };
++        uint32 presentationSource=top;
+         const bool calcTop = top == kSprites ? m_sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
+                            : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
+                              regs2.specialColorCalcMode[top - kRBG0] == 0 && !regs2.bgParams[top - kRBG0].lineColorScreenEnable;
+         if (calcTop && !regs2.colorCalcExtended && !m_colorCalcWindow[x]) {
++            // NBG3 can be the nominal top while colour calculation reveals the video below.
++            // Preserve the final mixed pixel but classify its visible content, not merely priority.
++            if(top==5 && second<5) presentationSource=second;
+             Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
+             const uint32 ratioLayer = regs2.colorCalcUseSecondRatio ? second : top;
+             const uint32 ratio = ratioLayer == kSprites ? m_sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
+@@ -540,6 +580,11 @@
+             }
+         }
+         out[x] = color.u32;
++        if (m_capturePresentation && y<m_presentation.height) {
++            const size_t at=static_cast<size_t>(y)*width+x;
++            m_presentation.source[at]=static_cast<uint8>(presentationSource);
++            m_presentation.foreground[at]=presentationSource<5 ? color.u32|0xFF000000 : 0;
++        }
+     }
+ }
+ 
+@@ -553,6 +598,14 @@
+         return;
+     }
+     const uint32 width = m_width, height = m_height;
++    if (const char* prefix=getenv("SATRECOMP_LAYER_PROBE"); prefix && !probe.done && probe.width==m_width && probe.height==m_height) {
++        for (unsigned layer=0;layer<6;layer++) {
++            const std::string stem=std::string(prefix)+"-layer"+std::to_string(layer);
++            WritePng((stem+".png").c_str(),probe.image[layer].data(),probe.width,probe.height);
++            WritePng((stem+"-mask.png").c_str(),probe.mask[layer].data(),probe.width,probe.height);
++        }
++        probe.done=true;
++    }
+     m_frames++;
+     if (m_check) {
+         const uint32 *reference = m_ref->Picture();
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -53,6 +53,15 @@
+ 
+ class Renderer final {
+ public:
++    // Host metadata excluded from guest serialization and hashes.
++    struct Presentation {
++        uint32 width=0,height=0;
++        std::vector<uint32> foreground;
++        std::vector<uint8> source;
++    };
++    const Presentation& PresentationFrame() const { return m_presentation; }
++    void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
++
+     explicit Renderer(const Memory &memory);
+ 
+     // How the picture is made:
+@@ -146,6 +155,8 @@
+     }
+ 
+ private:
++    Presentation m_presentation;
++    bool m_capturePresentation=false;
+     Memory m_mem;
+     uint16 m_raw2[0x100] = {}; // the VDP2's registers as written
+     Vdp1Regs m_regs1;

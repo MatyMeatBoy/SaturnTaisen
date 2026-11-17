@@ -1,0 +1,29 @@
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+index ac3fe19..d56e7c8 100644
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -222,7 +222,7 @@ const launcher::Description& launcher::describe() {
+     static const Description about = [] {
+         Description d;
+         d.original = "en Sega Saturn";
+-        d.subtitle = "Compañía Imperial · v0.1";
++        d.subtitle = "Compañía Imperial";
+         d.features_name = "Opciones";
+         d.features_intro = "Píxeles originales, marco adaptable y ajustes compartidos con el juego.";
+         d.presets = false;
+diff --git a/recomp-common/launcher/src/main.cpp b/recomp-common/launcher/src/main.cpp
+index f328136..5d8b81c 100644
+--- a/recomp-common/launcher/src/main.cpp
++++ b/recomp-common/launcher/src/main.cpp
+@@ -279,7 +279,11 @@ int main(int argc, char** argv) {
+             page_id = argv[++i];
+         }
+     }
++#ifdef LAUNCHER_VERSION
++    SDL_SetAppMetadata(LAUNCHER_GAME_NAME, LAUNCHER_VERSION, LAUNCHER_APP_ID ".launcher");
++#else
+     SDL_SetAppMetadata(LAUNCHER_GAME_NAME, "0.1", LAUNCHER_APP_ID ".launcher");
++#endif
+     if (!prepare_folders(screenshot_prefix.empty())) {  // (portable mode's folder; pictures for a test ask nothing)
+         SDL_Quit();
+         return 1;

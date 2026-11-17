@@ -1,0 +1,322 @@
+[
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE00.BIN",
+    "lba": 159056,
+    "bytes": 76672,
+    "sha256": "a86918224a0976b8a9fae13ebf62839c9ff83aec5895e3fc21218a37f4689a38",
+    "palette_fingerprint": "0x48291f6f1c8a4707"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE01.BIN",
+    "lba": 159094,
+    "bytes": 76672,
+    "sha256": "4f5735d285ab8251af613ad28f37f5b238f32141ff96e82d83a0fac3b796db67",
+    "palette_fingerprint": "0xa2ef9118359e712a"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE10.BIN",
+    "lba": 159132,
+    "bytes": 76672,
+    "sha256": "06c139ecb8094a97c04b333ade1aa837e0b1f7163a272993ca41a7ba5f52a281",
+    "palette_fingerprint": "0x6688775dec062951"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE11.BIN",
+    "lba": 159170,
+    "bytes": 76672,
+    "sha256": "017f8cd97491f5c0b429346a221cb150f3ce1e927982e0e73bd64d16617058fb",
+    "palette_fingerprint": "0x9bd13e9d3f86ccc3"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE20.BIN",
+    "lba": 159208,
+    "bytes": 76672,
+    "sha256": "a1022b5cd5fda50a4028cef2aa69377a5aa32116310a8f53e85b8fae2cdf96fb",
+    "palette_fingerprint": "0xbfbc05d2643941d2"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE21.BIN",
+    "lba": 159246,
+    "bytes": 76672,
+    "sha256": "795f8eebcfc9346769cbab4751a3bb3ef4ebbc639a0b2768fe7b227352fb8ce8",
+    "palette_fingerprint": "0x76e4e0e27d721e3b"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE30.BIN",
+    "lba": 159284,
+    "bytes": 76672,
+    "sha256": "cb8b1da8501cbfa27d4f7f49eb5c47137387cd7140c754c9f0912f050e600e65",
+    "palette_fingerprint": "0x8bedf9e0eef92449"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE31.BIN",
+    "lba": 159322,
+    "bytes": 76672,
+    "sha256": "81acd8a54c1b87b7c89b3f8b657dfc7fdb4465e7eff1a7f2358ff8b8910f1e0e",
+    "palette_fingerprint": "0xdfec97d3afa34924"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE40.BIN",
+    "lba": 159360,
+    "bytes": 76672,
+    "sha256": "69e23045d8920164bb2fb78a3a57c38514d412a6cf9fa3b19a234c62112ff433",
+    "palette_fingerprint": "0x50dce741934153ca"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE41.BIN",
+    "lba": 159398,
+    "bytes": 76672,
+    "sha256": "6ec10bd241c23073eaaff84ba69b525cedf7ce1c008e64ba7ab4ebb4261d75c9",
+    "palette_fingerprint": "0xe6e2445d68203f26"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE50.BIN",
+    "lba": 159436,
+    "bytes": 76672,
+    "sha256": "0603c321afaed878a15522865bd2e9e120320d57fe37f215ad35eddc84d3a941",
+    "palette_fingerprint": "0x391659e179da92e2"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE51.BIN",
+    "lba": 159474,
+    "bytes": 76672,
+    "sha256": "96ab242fd7dd21f9d91c6a45299bb15b3db746e2dba3e667b5608d5cf268121f",
+    "palette_fingerprint": "0x83d7b011856d5490"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE60.BIN",
+    "lba": 159512,
+    "bytes": 76672,
+    "sha256": "50f1b5b128a7e11c50481ab01ace8b6b91f68606016977b3ef603af613b15b76",
+    "palette_fingerprint": "0x731bbd22ce4b2e76"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE61.BIN",
+    "lba": 159550,
+    "bytes": 76672,
+    "sha256": "86b094c1bc0719d6bd749a271298fb996e93d0396d2f936619f09c31536d747b",
+    "palette_fingerprint": "0x3ca1e6f7bfdc128a"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE70.BIN",
+    "lba": 159588,
+    "bytes": 76672,
+    "sha256": "82079d4c209a93ddfb125fb78ab9e05f5b510b18ac1bb8df6c0a85b02557d447",
+    "palette_fingerprint": "0xfd9f9ac96bb06b0e"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE71.BIN",
+    "lba": 159626,
+    "bytes": 76672,
+    "sha256": "12abb94720dba5bf7e235c9dc6407c39b285ae0cfc0a53e2a9d4cfd962826adf",
+    "palette_fingerprint": "0x226e609c0b281364"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE80.BIN",
+    "lba": 159664,
+    "bytes": 76672,
+    "sha256": "e5e11f33d208c79ff604be612b5efc41622df21297052a7941087a35ac1f54a9",
+    "palette_fingerprint": "0x7f1cc8bf4644b7da"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE81.BIN",
+    "lba": 159702,
+    "bytes": 76672,
+    "sha256": "94f9fc92bbef6c7d42445b6dae5f400cefd7aea48d996b61b874cb06324ade25",
+    "palette_fingerprint": "0x7624f0f2ec863714"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE90.BIN",
+    "lba": 159740,
+    "bytes": 76672,
+    "sha256": "02335d6d875d953822a264bd7aae20d62be8be8e619ff594cd706987c229e2dc",
+    "palette_fingerprint": "0x597457e2ddf27e9f"
+  },
+  {
+    "profile": "disc1",
+    "file": "/SAKURA1/KABE91.BIN",
+    "lba": 159778,
+    "bytes": 76672,
+    "sha256": "02335d6d875d953822a264bd7aae20d62be8be8e619ff594cd706987c229e2dc",
+    "palette_fingerprint": "0x597457e2ddf27e9f"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE00.BIN",
+    "lba": 135887,
+    "bytes": 76672,
+    "sha256": "a86918224a0976b8a9fae13ebf62839c9ff83aec5895e3fc21218a37f4689a38",
+    "palette_fingerprint": "0x48291f6f1c8a4707"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE01.BIN",
+    "lba": 135925,
+    "bytes": 76672,
+    "sha256": "4f5735d285ab8251af613ad28f37f5b238f32141ff96e82d83a0fac3b796db67",
+    "palette_fingerprint": "0xa2ef9118359e712a"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE10.BIN",
+    "lba": 135963,
+    "bytes": 76672,
+    "sha256": "06c139ecb8094a97c04b333ade1aa837e0b1f7163a272993ca41a7ba5f52a281",
+    "palette_fingerprint": "0x6688775dec062951"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE11.BIN",
+    "lba": 136001,
+    "bytes": 76672,
+    "sha256": "017f8cd97491f5c0b429346a221cb150f3ce1e927982e0e73bd64d16617058fb",
+    "palette_fingerprint": "0x9bd13e9d3f86ccc3"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE20.BIN",
+    "lba": 136039,
+    "bytes": 76672,
+    "sha256": "a1022b5cd5fda50a4028cef2aa69377a5aa32116310a8f53e85b8fae2cdf96fb",
+    "palette_fingerprint": "0xbfbc05d2643941d2"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE21.BIN",
+    "lba": 136077,
+    "bytes": 76672,
+    "sha256": "795f8eebcfc9346769cbab4751a3bb3ef4ebbc639a0b2768fe7b227352fb8ce8",
+    "palette_fingerprint": "0x76e4e0e27d721e3b"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE30.BIN",
+    "lba": 136115,
+    "bytes": 76672,
+    "sha256": "cb8b1da8501cbfa27d4f7f49eb5c47137387cd7140c754c9f0912f050e600e65",
+    "palette_fingerprint": "0x8bedf9e0eef92449"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE31.BIN",
+    "lba": 136153,
+    "bytes": 76672,
+    "sha256": "81acd8a54c1b87b7c89b3f8b657dfc7fdb4465e7eff1a7f2358ff8b8910f1e0e",
+    "palette_fingerprint": "0xdfec97d3afa34924"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE40.BIN",
+    "lba": 136191,
+    "bytes": 76672,
+    "sha256": "69e23045d8920164bb2fb78a3a57c38514d412a6cf9fa3b19a234c62112ff433",
+    "palette_fingerprint": "0x50dce741934153ca"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE41.BIN",
+    "lba": 136229,
+    "bytes": 76672,
+    "sha256": "6ec10bd241c23073eaaff84ba69b525cedf7ce1c008e64ba7ab4ebb4261d75c9",
+    "palette_fingerprint": "0xe6e2445d68203f26"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE50.BIN",
+    "lba": 136267,
+    "bytes": 76672,
+    "sha256": "0603c321afaed878a15522865bd2e9e120320d57fe37f215ad35eddc84d3a941",
+    "palette_fingerprint": "0x391659e179da92e2"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE51.BIN",
+    "lba": 136305,
+    "bytes": 76672,
+    "sha256": "96ab242fd7dd21f9d91c6a45299bb15b3db746e2dba3e667b5608d5cf268121f",
+    "palette_fingerprint": "0x83d7b011856d5490"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE60.BIN",
+    "lba": 136343,
+    "bytes": 76672,
+    "sha256": "50f1b5b128a7e11c50481ab01ace8b6b91f68606016977b3ef603af613b15b76",
+    "palette_fingerprint": "0x731bbd22ce4b2e76"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE61.BIN",
+    "lba": 136381,
+    "bytes": 76672,
+    "sha256": "86b094c1bc0719d6bd749a271298fb996e93d0396d2f936619f09c31536d747b",
+    "palette_fingerprint": "0x3ca1e6f7bfdc128a"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE70.BIN",
+    "lba": 136419,
+    "bytes": 76672,
+    "sha256": "82079d4c209a93ddfb125fb78ab9e05f5b510b18ac1bb8df6c0a85b02557d447",
+    "palette_fingerprint": "0xfd9f9ac96bb06b0e"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE71.BIN",
+    "lba": 136457,
+    "bytes": 76672,
+    "sha256": "12abb94720dba5bf7e235c9dc6407c39b285ae0cfc0a53e2a9d4cfd962826adf",
+    "palette_fingerprint": "0x226e609c0b281364"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE80.BIN",
+    "lba": 136495,
+    "bytes": 76672,
+    "sha256": "e5e11f33d208c79ff604be612b5efc41622df21297052a7941087a35ac1f54a9",
+    "palette_fingerprint": "0x7f1cc8bf4644b7da"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE81.BIN",
+    "lba": 136533,
+    "bytes": 76672,
+    "sha256": "94f9fc92bbef6c7d42445b6dae5f400cefd7aea48d996b61b874cb06324ade25",
+    "palette_fingerprint": "0x7624f0f2ec863714"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE90.BIN",
+    "lba": 136571,
+    "bytes": 76672,
+    "sha256": "02335d6d875d953822a264bd7aae20d62be8be8e619ff594cd706987c229e2dc",
+    "palette_fingerprint": "0x597457e2ddf27e9f"
+  },
+  {
+    "profile": "disc2",
+    "file": "/SAKURA1/KABE91.BIN",
+    "lba": 136609,
+    "bytes": 76672,
+    "sha256": "02335d6d875d953822a264bd7aae20d62be8be8e619ff594cd706987c229e2dc",
+    "palette_fingerprint": "0x597457e2ddf27e9f"
+  }
+]

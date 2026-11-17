@@ -1,0 +1,405 @@
+{
+  "date": "2026-11-17",
+  "method": "built-in image_gen; native PC references, paired day/night layout",
+  "backgrounds": [
+    {
+      "id": "KABE0100",
+      "file": "KABE0100-v1.png",
+      "sha256": "3e05f66b3eb470361db942ea79c50b24f96ec689efe53d514a69ef6c93f61555",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "1570fd64b83780f413f8ef4e28ed23e8c30e4b0c4404488afc61af7f1d2dc8ea",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0101",
+      "file": "KABE0101-v1.png",
+      "sha256": "5d3fa338391f43bb4c6bc331c24596de166d07c2072f9bc64e63671ed6186cc5",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "0019352751f6dc11c43274fb262996235edc10d83426d8cd6836bb8777978860",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0200",
+      "file": "KABE0200-v1.png",
+      "sha256": "5ba7022a96fd623bfc468fca5ee8a8cc79724750d09f5f1bc0caa27a1aa9ef8c",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "937f33657ddec98a806554dd64bf05fb6778a7d7ea709070ccb245b456015219",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0201",
+      "file": "KABE0201-v1.png",
+      "sha256": "b89e4d947c5c4f802284eea4a1d9d20f9397e64bc70cf0e4c2492a0d17644867",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "8264b8e8fefd8f8fcf40f201e5b390bf01de4800d9297ee36a44cee976997232",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0300",
+      "file": "KABE0300-v1.png",
+      "sha256": "43a34e4635d07c3f3a52c2b81e5c605994c32dbb494630cba772e3a613d5e95b",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "245ca564192b521edaf4894d55cd3d0121b47058334828d8fcff2eb119392b9c",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0301",
+      "file": "KABE0301-v1.png",
+      "sha256": "bff17c27f27d8b2af4ff004b04ee895eb9f77d0f239dabb4912931415dce4288",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "1c7f6e6cff7a7347b0265259dd59f92811338356c9240cb26eab35a93dc698f3",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0400",
+      "file": "KABE0400-v1.png",
+      "sha256": "6cebf0027057284c0c2f1cb77bba1210cd1b46fb148009fc9a904d8876381a54",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "31d85c3e0b694c8068142eb233acc7709864f1463e838356a69a325c22814b85",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0401",
+      "file": "KABE0401-v1.png",
+      "sha256": "ef3dd833707b2b8990f930d7f4c636e29242516fd596706c03a2db8b94bb55ab",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "47722ada8de94addddc54a4f728763b305126ea845121efd00a1b058a1b713b1",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0500",
+      "file": "KABE0500-v1.png",
+      "sha256": "0a67c96a1dc0ec8161eb74f2cc2a8f8b8646782d7d343de084f8eae7e5564587",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "21fa4419f69202ace5ace7cfbb41cf0f44a3a6d4fbe1ed7bbd9c3ff7244c0053",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0501",
+      "file": "KABE0501-v1.png",
+      "sha256": "972d31cd12bf485b1d8c60b25bd74289ba2e7b516026473a074a5ea991d80313",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "06359c4093d1e55fd83f502a9b94b437504ee4d3418a187500e3c4cd728a235d",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0600",
+      "file": "KABE0600-v1.png",
+      "sha256": "724224936f6d4b5da47fbb38c10dd9750ddfe341a4c3a178e7661ccfc82bd4f8",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "3cc3ce46e8c9559bd21a409f9750dc143f03199cf752fd285f193fb0ab346167",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0601",
+      "file": "KABE0601-v1.png",
+      "sha256": "0b3ed3e02e891fb7a4cd8d489462e1a45a96f2d94713b4acd23a6dd9ac192ce7",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "ecdbae6b89c46020002647f5d93b0ab571a249a2e8f71fa78ff9f10732f2065a",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0700",
+      "file": "KABE0700-v1.png",
+      "sha256": "d65d439a55f01440840eced6295cb26b7a439c38109c055526aab05f673d8c55",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "c15dc32636146e09791fb408e884f192b2827a97adf6039e75096477ddbed694",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0701",
+      "file": "KABE0701-v1.png",
+      "sha256": "7dba36349aae24d74f42e707578930815726b887816b5915a8230d4ca7c3a8a2",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "306505b4a43b5b11278c1f94c0c4a61f2d29e27cf45d25c3ee18f75516130d41",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0800",
+      "file": "KABE0800-v1.png",
+      "sha256": "fd6e53fc4a20ab3414a320e19084bee3bd16312cac2eccefba6e890c5496df8a",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "f958e13267c9bdd8eb278568b9f22645e41c5b1c6f5189ce10dae70109b2007e",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0801",
+      "file": "KABE0801-v1.png",
+      "sha256": "b206842b9ed6e954d363b6ff81543dc39fcf7e50698a114f53259c183f13af7b",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "df046b2eba3d99d79c762fd5da38907c6de123b5a301cb439c22ff723ebf88eb",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0900",
+      "file": "KABE0900-v1.png",
+      "sha256": "1896b9a183701a086b8e05854badba6e9fb3a2a9b6ec07902fa18fa557772b3c",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "49cbf1c82a063c0178178e829152436559c969963178c636f67d841270beb6c0",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE0901",
+      "file": "KABE0901-v1.png",
+      "sha256": "0131b80edb950d360f071ec33d117192a34e4a78f9dfa877c6dcb8fb0898b75e",
+      "master_size": [
+        1671,
+        941
+      ],
+      "source_spred_sha256": "a17a3c7892a92c21dd2643ffbb94436ad9a59acaaa0761c31b96ece1e2340cf4",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    },
+    {
+      "id": "KABE1000",
+      "file": "KABE1000-v1.png",
+      "sha256": "30d9d63886d4c143f8bea4d30ef7ce7fdfb78e8789220f320d3b8aeb525e6ba6",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_spred_sha256": "4f8988192898d6fbe89697e3c16961ba32bdc70211ec6d8983fa23877e7fe328",
+      "source_image": 0,
+      "source_size": [
+        640,
+        480
+      ],
+      "requested_logical_grid": [
+        864,
+        486
+      ],
+      "status": "preliminary; palette/layout review and PC runtime integer-grid integration pending",
+      "exact_source_pixel_preservation_verified": false
+    }
+  ]
+}

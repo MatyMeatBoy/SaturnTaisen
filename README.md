@@ -10,6 +10,8 @@
 
 Un regreso al Teatro Imperial con los píxeles de Saturn, una presentación cuidada y la traducción inglesa suministrada por el propietario. Repositorio privado de **MatyMeatBoy**.
 
+**Rama de desarrollo: 0.2.0-dev.** Añade selección Original/Mejorado, composición panorámica por capas, menú Sakura a resolución de ventana y fuente nítida opcional. Se han generado extensiones decorativas preliminares para las 20 variantes Saturn y las 19 de PC. Las de PC aún requieren integración; su presencia no implica que la versión PC, su traducción o el pack HD completo sean jugables. La última publicación sigue siendo v0.1.0.
+
 **v0.1 es una versión de desarrollo.** Están verificados el arranque, 119.781 fotogramas continuos de exploración AOT, guardado/carga del episodio 1 y cargas de partidas públicas del episodio 8 y Finale en el disco 2. La entrada al primer combate coincide con la referencia durante 3.001 frames repetidos, y 9.001 más llegan a su primer campo jugable en AOT. La campaña completa, todas las batallas y la transición automática real de discos todavía no están validadas.
 
 El launcher usa una temática de cerezos inspirada en NewSnapRecomp, solo la captura local de la pantalla de título e importación de partidas en copias separadas. El juego se centra con **escala entera y nearest**, con un marco adaptable. [Notas de la v0.1](docs/releases/0.1.md) · [Diseño](docs/superpowers/specs/2026-11-17-v01-launcher.md) · [Validación](docs/research/runtime-validation.json) · [Formatos de partidas](docs/research/save-import.md).

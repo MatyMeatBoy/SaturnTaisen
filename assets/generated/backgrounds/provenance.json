@@ -1,0 +1,268 @@
+{
+  "date": "2026-11-17",
+  "original_references": "local/art/v02/kabe-originals (not distributed)",
+  "user_preference": "KABE00 uses first, denser-flower proposal selected by user",
+  "alias": "Original KABE90 and KABE91 are byte-identical; generated91 is the same file as90",
+  "backgrounds": [
+    {
+      "id": "KABE00",
+      "file": "KABE00.png",
+      "sha256": "3730b7f5a09b05e60954ca70d7009a634ff612bb3c0b9801b584e7daab9ce502",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "a86918224a0976b8a9fae13ebf62839c9ff83aec5895e3fc21218a37f4689a38",
+      "source_palette_fingerprint": "0x48291f6f1c8a4707",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE01",
+      "file": "KABE01.png",
+      "sha256": "3263794e4cd80324b71089ffb5f7e8645bc1a4473a8e72ab3490bf1e9b4c7e64",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "4f5735d285ab8251af613ad28f37f5b238f32141ff96e82d83a0fac3b796db67",
+      "source_palette_fingerprint": "0xa2ef9118359e712a",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE10",
+      "file": "KABE10.png",
+      "sha256": "c90856f1cd6289b213a77141c9db860e3e4dda0f5b7b707a22cc0f36b30d57fa",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "06c139ecb8094a97c04b333ade1aa837e0b1f7163a272993ca41a7ba5f52a281",
+      "source_palette_fingerprint": "0x6688775dec062951",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE11",
+      "file": "KABE11.png",
+      "sha256": "4014fa804d917c9a2baaa25318068b3b479a5e82d36e08494878dbb6a22391cd",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "017f8cd97491f5c0b429346a221cb150f3ce1e927982e0e73bd64d16617058fb",
+      "source_palette_fingerprint": "0x9bd13e9d3f86ccc3",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE20",
+      "file": "KABE20.png",
+      "sha256": "3ef03ac8ba31c41716dadb5eef3c752db1f75bdc61bfd47c4dce68138e81786e",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "a1022b5cd5fda50a4028cef2aa69377a5aa32116310a8f53e85b8fae2cdf96fb",
+      "source_palette_fingerprint": "0xbfbc05d2643941d2",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE21",
+      "file": "KABE21.png",
+      "sha256": "49fe19c968183d94649e4f1387a3152b7464efce7fe2407be44ceebfd95e50af",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "795f8eebcfc9346769cbab4751a3bb3ef4ebbc639a0b2768fe7b227352fb8ce8",
+      "source_palette_fingerprint": "0x76e4e0e27d721e3b",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE30",
+      "file": "KABE30.png",
+      "sha256": "3866fa9377f1a814d3437d9930aa2df0b922f8437059179d79e0786ce686ad13",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "cb8b1da8501cbfa27d4f7f49eb5c47137387cd7140c754c9f0912f050e600e65",
+      "source_palette_fingerprint": "0x8bedf9e0eef92449",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE31",
+      "file": "KABE31.png",
+      "sha256": "947051c973bf7796390cab371626838fd20ded452ec0827d8357bac618351e83",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "81acd8a54c1b87b7c89b3f8b657dfc7fdb4465e7eff1a7f2358ff8b8910f1e0e",
+      "source_palette_fingerprint": "0xdfec97d3afa34924",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE40",
+      "file": "KABE40.png",
+      "sha256": "a6e0f4c705c41037d551c0d900abaf1d0e4b1354ccbd280e5336220d4bb7ccc3",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "69e23045d8920164bb2fb78a3a57c38514d412a6cf9fa3b19a234c62112ff433",
+      "source_palette_fingerprint": "0x50dce741934153ca",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE41",
+      "file": "KABE41.png",
+      "sha256": "869faa22d960cbb70810e972b55434d7a66714d7d13b936cd32f342d0ae4ffef",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "6ec10bd241c23073eaaff84ba69b525cedf7ce1c008e64ba7ab4ebb4261d75c9",
+      "source_palette_fingerprint": "0xe6e2445d68203f26",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE50",
+      "file": "KABE50.png",
+      "sha256": "927b540e50a6196294c1b1891c795535af84add58a7c68b374503f4ed46d4474",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "0603c321afaed878a15522865bd2e9e120320d57fe37f215ad35eddc84d3a941",
+      "source_palette_fingerprint": "0x391659e179da92e2",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE51",
+      "file": "KABE51.png",
+      "sha256": "2d81033d0adad807a0be6da3df673baf14a67826da1ef8dcfd65e2fd5e9ba9ea",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "96ab242fd7dd21f9d91c6a45299bb15b3db746e2dba3e667b5608d5cf268121f",
+      "source_palette_fingerprint": "0x83d7b011856d5490",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE60",
+      "file": "KABE60.png",
+      "sha256": "b36b60ef64a07008037cba853b536c9a120f0649ec717d6efeed52fbc08971ed",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "50f1b5b128a7e11c50481ab01ace8b6b91f68606016977b3ef603af613b15b76",
+      "source_palette_fingerprint": "0x731bbd22ce4b2e76",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE61",
+      "file": "KABE61.png",
+      "sha256": "07a47ef7862dc5a5b0a0612706c19be81ff5a650fcf37ae742b53efbb7a08580",
+      "master_size": [
+        1671,
+        941
+      ],
+      "source_kabe_sha256": "86b094c1bc0719d6bd749a271298fb996e93d0396d2f936619f09c31536d747b",
+      "source_palette_fingerprint": "0x3ca1e6f7bfdc128a",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE70",
+      "file": "KABE70.png",
+      "sha256": "2d9efa9753f3d5fd99f564b50bca6f2a2c1835c768c2a19ff2b773e8c35aa69f",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "82079d4c209a93ddfb125fb78ab9e05f5b510b18ac1bb8df6c0a85b02557d447",
+      "source_palette_fingerprint": "0xfd9f9ac96bb06b0e",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE71",
+      "file": "KABE71.png",
+      "sha256": "a7ab59e8bab748dc4ff6c02696ace2fc9a4e694a346b6d3e86e34a8fdb36547f",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "12abb94720dba5bf7e235c9dc6407c39b285ae0cfc0a53e2a9d4cfd962826adf",
+      "source_palette_fingerprint": "0x226e609c0b281364",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE80",
+      "file": "KABE80.png",
+      "sha256": "e40666b248eb2e2002789dfaf563f854fc01d226b63452516f5e630d93392343",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "e5e11f33d208c79ff604be612b5efc41622df21297052a7941087a35ac1f54a9",
+      "source_palette_fingerprint": "0x7f1cc8bf4644b7da",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE81",
+      "file": "KABE81.png",
+      "sha256": "89a42a8f63a4f67bd0f9067daf8cdd2d23479b0a8cc6b0f0a4d80354651ed452",
+      "master_size": [
+        1671,
+        941
+      ],
+      "source_kabe_sha256": "94f9fc92bbef6c7d42445b6dae5f400cefd7aea48d996b61b874cb06324ade25",
+      "source_palette_fingerprint": "0x7624f0f2ec863714",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE90",
+      "file": "KABE90.png",
+      "sha256": "c6f02f426d98f0fd741519a3afeaae5d7ccd106c59507ff95e99c21513bb5854",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "02335d6d875d953822a264bd7aae20d62be8be8e619ff594cd706987c229e2dc",
+      "source_palette_fingerprint": "0x597457e2ddf27e9f",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    },
+    {
+      "id": "KABE91",
+      "file": "KABE91.png",
+      "sha256": "c6f02f426d98f0fd741519a3afeaae5d7ccd106c59507ff95e99c21513bb5854",
+      "master_size": [
+        1672,
+        941
+      ],
+      "source_kabe_sha256": "02335d6d875d953822a264bd7aae20d62be8be8e619ff594cd706987c229e2dc",
+      "source_palette_fingerprint": "0x597457e2ddf27e9f",
+      "method": "built-in image_gen, native extracted reference; night variants use generated day layout plus native night palette",
+      "status": "generated preliminary; runtime integer-grid integration and per-scene QA in progress"
+    }
+  ]
+}

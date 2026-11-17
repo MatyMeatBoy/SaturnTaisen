@@ -1,0 +1,109 @@
+diff --git a/port/backdrop.h b/port/backdrop.h
+index cf5a41f..b35f844 100644
+--- a/port/backdrop.h
++++ b/port/backdrop.h
+@@ -65,14 +65,17 @@ inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::p
+             if(!error) SDL_SavePNG(logical,cache.string().c_str());
+         }
+     }
++    auto* rgba=SDL_ConvertSurface(logical,SDL_PIXELFORMAT_ABGR8888);
++    SDL_DestroySurface(logical);
++    if(!rgba)return nullptr;
+     if(pixels) {
+-        auto* rgba=SDL_ConvertSurface(logical,SDL_PIXELFORMAT_ABGR8888);
+-        if(!rgba) {SDL_DestroySurface(logical);return nullptr;}
+         pixels->resize(size_t(rgba->w)*rgba->h);
+         for(int y=0;y<rgba->h;y++)std::memcpy(pixels->data()+size_t(y)*rgba->w,static_cast<uint8_t*>(rgba->pixels)+y*rgba->pitch,size_t(rgba->w)*4);
+-        SDL_DestroySurface(rgba);
+     }
+-    auto* texture=SDL_CreateTextureFromSurface(renderer,logical);SDL_DestroySurface(logical);
++    // Updates during fades use ABGR bytes; do not let the renderer choose another format.
++    auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,rgba->w,rgba->h);
++    if(texture && !SDL_UpdateTexture(texture,nullptr,rgba->pixels,rgba->pitch)) {SDL_DestroyTexture(texture);texture=nullptr;}
++    SDL_DestroySurface(rgba);
+     if(texture)SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_NEAREST);
+     return texture;
+ }
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 31e6b54..6c93657 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -163,7 +163,12 @@ int RunWindowed(Port &port) {
+     const int windowWidth = port.gpu ? static_cast<int>(240.0f * static_cast<float>(scale) * port.gpu->Aspect() + 0.5f) : 320 * scale;
+     SDL_Window *window = nullptr;
+     SDL_Renderer *renderer = nullptr;
+-    struct Backdrop {uint64_t palette=0;SDL_Texture* texture=nullptr;std::vector<uint32_t> pixels;std::array<int16_t,3> offset{};};
++    struct Backdrop {
++        uint64_t palette=0;SDL_Texture* texture=nullptr;
++        std::vector<uint32_t> pixels;std::array<int16_t,3> offset{};
++        std::vector<std::filesystem::path> files;std::filesystem::path cacheDir;std::vector<uint8_t> nativePalette;
++        bool attempted=false;
++    };
+     std::vector<Backdrop> backdrops;
+     SDL_Texture *foreground=nullptr;
+     SakuraUi sakuraUi;
+@@ -230,14 +235,18 @@ int RunWindowed(Port &port) {
+             std::vector<uint8_t> data;std::vector<uint32_t> pixels;
+             if(!port.discFiles.Read(name,data) || !DecodeKabe(data,pixels)) continue;
+             const auto id=std::filesystem::path(name).stem().string();
+-            SDL_Texture* texture=nullptr;
+-            std::vector<uint32_t> backdropPixels;
++            Backdrop backdrop;
++            backdrop.palette=AtlasFingerprint(std::span<const uint8_t>(data.data(),512));
++            // Identical palettes identify the same theme; 90 and91 are native aliases.
++            if(std::any_of(backdrops.begin(),backdrops.end(),[&](const auto& item){return item.palette==backdrop.palette;}))continue;
++            backdrop.nativePalette.assign(data.begin(),data.begin()+512);
++            backdrop.cacheDir=port.opt.settingsPath.empty()?std::filesystem::path():std::filesystem::path(port.opt.settingsPath).parent_path()/"cache"/"backgrounds";
+             for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
+-                const auto cacheDir=port.opt.settingsPath.empty()?std::filesystem::path():std::filesystem::path(port.opt.settingsPath).parent_path()/"cache"/"backgrounds";
+-                texture=LoadBackdrop(renderer,folder/"art"/"backgrounds"/(id+".png"),data,cacheDir,&backdropPixels);
+-                if(texture) break;
++                const auto file=folder/"art"/"backgrounds"/(id+".png");
++                std::error_code error;
++                if(std::filesystem::is_regular_file(file,error))backdrop.files.push_back(file);
+             }
+-            if(texture) backdrops.push_back({AtlasFingerprint(std::span<const uint8_t>(data.data(),512)),texture,std::move(backdropPixels),{}});
++            if(!backdrop.files.empty())backdrops.push_back(std::move(backdrop));
+         }
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
+@@ -404,9 +413,17 @@ int RunWindowed(Port &port) {
+         }
+         bool enhanced=false;
+         SDL_Texture* floral=nullptr;
+-        if(port.videoRenderer) {
++        if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto palette=port.videoRenderer->BackgroundPaletteFingerprint();
+             for(auto& backdrop:backdrops) if(backdrop.palette==palette) {
++                if(!backdrop.attempted) {
++                    backdrop.attempted=true;
++                    for(const auto& file:backdrop.files) {
++                        backdrop.texture=LoadBackdrop(renderer,file,backdrop.nativePalette,backdrop.cacheDir,&backdrop.pixels);
++                        if(backdrop.texture)break;
++                    }
++                }
++                if(!backdrop.texture)break; // retain the native composition on an unavailable asset
+                 const auto offset=port.videoRenderer->BackgroundColorOffset();
+                 if(offset!=backdrop.offset) {
+                     std::vector<uint32_t> shifted;shifted.reserve(backdrop.pixels.size());
+diff --git a/port/pc_spr.h b/port/pc_spr.h
+index bd8a51e..03fcdb0 100644
+--- a/port/pc_spr.h
++++ b/port/pc_spr.h
+@@ -10,7 +10,7 @@ struct PcSprite {unsigned index=0,width=0,height=0,format=0;std::vector<uint32_t
+ inline bool DecodePcSprites(std::span<const uint8_t> data,std::vector<PcSprite>& images,std::string& error) {
+     images.clear();
+     auto fail=[&](const char* message){images.clear();error=message;return false;};
+-    if(data.size()<32 || std::memcmp(data.data(),"SEGA SPRED",10))return fail("Unknown SPRED signature");
++    if(data.size()<32 || std::memcmp(data.data(),"SEGA SPRED 02.0M",16))return fail("Unsupported SPRED version");
+     auto word=[&](size_t at){return uint32_t(data[at])<<8|data[at+1];};
+     auto longword=[&](size_t at){return word(at)<<16|word(at+2);};
+     struct Chunk {size_t offset=0,size=0;};Chunk palette,bitmaps;
+@@ -41,6 +41,7 @@ inline bool DecodePcSprites(std::span<const uint8_t> data,std::vector<PcSprite>&
+         const size_t relative=longword(at+8),size=longword(at+12);
+         if(!width || !height || !size)continue;
+         if(width>4096 || height>4096 || (format&15)>=8 || format>255)return fail("Unsupported SPRED dimensions/format");
++        if((format>>4)>1)return fail("Unsupported SPRED compression method");
+         const size_t pixelCount=size_t(width)*height;
+         if(pixelCount>64*1024*1024-totalPixels)return fail("SPRED decoded image budget exceeded");
+         totalPixels+=pixelCount;

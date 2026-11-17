@@ -40,3 +40,14 @@
 !/VERSION
 !/docs/releases/
 !/docs/releases/*.md
+!/assets/
+/assets/**
+!/assets/generated/
+!/assets/generated/backgrounds/
+!/assets/generated/backgrounds/*.png
+!/assets/generated/backgrounds/*.json
+!/assets/generated/backgrounds/*.md
+!/assets/generated/pc-backgrounds/
+!/assets/generated/pc-backgrounds/*.png
+!/assets/generated/pc-backgrounds/*.json
+!/assets/generated/pc-backgrounds/*.md

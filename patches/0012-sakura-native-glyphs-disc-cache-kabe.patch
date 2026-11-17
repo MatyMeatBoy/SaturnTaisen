@@ -1,0 +1,555 @@
+diff --git a/port/disc_image.cpp b/port/disc_image.cpp
+--- a/port/disc_image.cpp
++++ b/port/disc_image.cpp
+@@ -3,6 +3,9 @@
+ #include "disc_image.h"
+ 
+ #include <cstring>
++#include <algorithm>
++#include <chrono>
++#include <cstdlib>
+ #include <filesystem>
+ #include <fstream>
+ #include <sstream>
+@@ -10,6 +13,10 @@
+ namespace port {
+ 
+ DiscImage::~DiscImage() {
++    std::lock_guard lock(m_ioMutex);
++    if(getenv("SATRECOMP_DISC_IO_STATS")) fprintf(stderr,"disc host I/O: requests=%llu hits=%llu reads=%llu bytes=%llu us=%llu cache=%d\n",
++        (unsigned long long)m_stats.requests,(unsigned long long)m_stats.cacheHits,(unsigned long long)m_stats.hostReads,
++        (unsigned long long)m_stats.hostBytes,(unsigned long long)(m_stats.hostNanoseconds/1000),m_cacheEnabled);
+     for (FILE *f : m_files) {
+         if (f) {
+             fclose(f);
+@@ -18,6 +25,10 @@
+ }
+ 
+ bool DiscImage::Open(const std::string &path) {
++    std::lock_guard lock(m_ioMutex);
++    for(auto& block:m_cache) {block.file=-1;block.bytes.clear();block.stamp=0;}
++    m_stats={};m_cacheClock=0;
++    const char* cache=getenv("SATRECOMP_DISC_CACHE");m_cacheEnabled=!cache || std::strcmp(cache,"0")!=0;
+     for (FILE *f : m_files) if (f) fclose(f);
+     m_files.clear();
+     m_tracks.clear();
+@@ -199,29 +210,54 @@
+     return true;
+ }
+ 
++bool DiscImage::ReadAt(int file,uint64_t offset,uint8_t* out,size_t count) const {
++    if(file<0 || static_cast<size_t>(file)>=m_files.size() || !out) return false;
++    m_stats.requests++;
++    auto read=[&](uint64_t at,uint8_t* target,size_t size) {
++        const auto start=std::chrono::steady_clock::now();
++        size_t got=0;
++        if(fseeko(m_files[file],static_cast<off_t>(at),SEEK_SET)==0) got=fread(target,1,size,m_files[file]);
++        m_stats.hostReads++;m_stats.hostBytes+=got;
++        m_stats.hostNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
++        return got;
++    };
++    if(!m_cacheEnabled) return read(offset,out,count)==count;
++    constexpr uint64_t blockSize=65536;
++    while(count) {
++        const uint64_t base=offset-offset%blockSize;
++        CacheBlock* hit=nullptr;
++        for(auto& block:m_cache) if(block.file==file && block.offset==base) {hit=&block;break;}
++        if(hit) m_stats.cacheHits++;
++        else {
++            hit=&*std::min_element(m_cache.begin(),m_cache.end(),[](const auto& a,const auto& b){return a.stamp<b.stamp;});
++            hit->file=file;hit->offset=base;hit->bytes.resize(blockSize);
++            const size_t got=read(base,hit->bytes.data(),blockSize);hit->bytes.resize(got);
++        }
++        hit->stamp=++m_cacheClock;
++        const size_t within=static_cast<size_t>(offset-base);
++        if(within>=hit->bytes.size()) return false;
++        const size_t take=std::min(count,hit->bytes.size()-within);
++        std::memcpy(out,hit->bytes.data()+within,take);
++        count-=take;offset+=take;out+=take;
++    }
++    return true;
++}
++
+ bool DiscImage::ReadRaw(const Track &track, uint32_t sector, uint8_t *out) const {
+-    if (track.file < 0 || track.startFAD + sector > track.endFAD) {
+-        return false;
+-    }
+-    FILE *f = m_files[static_cast<size_t>(track.file)];
+-    if (fseeko(f, static_cast<off_t>(track.fileOffset + static_cast<uint64_t>(sector) * track.sectorSize), SEEK_SET) != 0) {
+-        return false;
+-    }
+-    if (track.sectorSize == 2352) {
+-        return fread(out, 1, 2352, f) == 2352;
+-    }
+-    memset(out, 0, 2352);
+-    return fread(out + 16, 1, 2048, f) == 2048;
++    std::lock_guard lock(m_ioMutex);
++    if(track.endFAD<track.startFAD || sector>track.endFAD-track.startFAD || !out) return false;
++    const uint64_t at=track.fileOffset+static_cast<uint64_t>(sector)*track.sectorSize;
++    if(track.sectorSize==2352) return ReadAt(track.file,at,out,2352);
++    if(track.sectorSize!=2048) return false;
++    std::memset(out,0,2352);return ReadAt(track.file,at,out+16,2048);
+ }
+ 
+ bool DiscImage::ReadUserData(uint32_t fad, uint8_t *out) const {
++    std::lock_guard lock(m_ioMutex);
+     for (const Track &track : m_tracks) {
+-        if (track.audio || fad < track.startFAD || fad > track.endFAD) {
+-            continue;
+-        }
+-        FILE *f = m_files[static_cast<size_t>(track.file)];
+-        const uint64_t at = track.fileOffset + static_cast<uint64_t>(fad - track.startFAD) * track.sectorSize + track.userOffset;
+-        return fseeko(f, static_cast<off_t>(at), SEEK_SET) == 0 && fread(out, 1, 2048, f) == 2048;
++        if (track.audio || fad < track.startFAD || fad > track.endFAD) continue;
++        const uint64_t at=track.fileOffset+static_cast<uint64_t>(fad-track.startFAD)*track.sectorSize+track.userOffset;
++        return ReadAt(track.file,at,out,2048);
+     }
+     return false;
+ }
+diff --git a/port/disc_image.h b/port/disc_image.h
+--- a/port/disc_image.h
++++ b/port/disc_image.h
+@@ -5,6 +5,8 @@
+ #pragma once
+ 
+ #include <cstdint>
++#include <array>
++#include <mutex>
+ #include <cstdio>
+ #include <string>
+ #include <vector>
+@@ -24,6 +26,8 @@
+         uint64_t fileOffset = 0;  // of the sector at startFAD
+     };
+ 
++    struct IoStats { uint64_t requests=0,cacheHits=0,hostReads=0,hostBytes=0,hostNanoseconds=0; };
++    IoStats Stats() const { std::lock_guard lock(m_ioMutex);return m_stats; }
+     ~DiscImage();
+     bool Open(const std::string &path);
+     const std::vector<Track> &Tracks() const {
+@@ -39,6 +43,14 @@
+     bool ReadRaw(const Track &track, uint32_t sector, uint8_t *out) const;
+ 
+ private:
++    // Host-only read-ahead; CD commands, interrupts and guest timing are untouched.
++    struct CacheBlock { int file=-1; uint64_t offset=0,stamp=0; std::vector<uint8_t> bytes; };
++    bool ReadAt(int file,uint64_t offset,uint8_t* out,size_t count) const;
++    mutable std::mutex m_ioMutex;
++    mutable std::array<CacheBlock,4> m_cache;
++    mutable uint64_t m_cacheClock=0;
++    mutable IoStats m_stats;
++    bool m_cacheEnabled=true;
+     std::vector<Track> m_tracks;
+     std::vector<FILE *> m_files;
+     uint32_t m_leadOut = 150;
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -6,6 +6,8 @@
+ #include "hud.h"
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
++#include "glyph_text.h"
++#include <map>
+ #include "../video/renderer.h"
+ #include <filesystem>
+ #include "png_write.h"
+@@ -302,6 +304,15 @@
+     std::vector<uint32_t> frameCopy;
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
+ 
++    std::vector<uint8_t> englishAtlas;
++    for(const auto& name:port.discFiles.Names()) if(name.ends_with("KNJ.BIN")) {
++        std::vector<uint8_t> bytes;
++        if(port.discFiles.Read(name,bytes) && KnownEnglishAtlas(bytes)) englishAtlas=std::move(bytes);
++        break; // fail closed for another translation/Japanese font, never guess its encoding
++    }
++    sakuraUi.SetGameAtlas(englishAtlas);
++    std::vector<uint32_t> hdNative,hdForeground;
++    std::vector<UiTextLine> hdLines;
+     std::string windowShot;
+     bool announcedReady = false;
+     bool choiceInputBlocked=false;
+@@ -326,6 +337,52 @@
+         int wide = 0, high = 0;
+         SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);
+         DrawSakuraFrame(renderer, wide, high);
++        const auto baseFit=FitInteger(wide,high,texW,texH);
++        auto textFit=baseFit;int textCropX=0,textCropY=0;
++        hdLines.clear();hdNative.clear();hdForeground.clear();
++        if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
++            const auto& planes=port.videoRenderer->PresentationFrame();
++            if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
++                struct TextRow {std::map<int,char> chars;std::vector<size_t> ink;bool valid=true;};
++                std::map<int,TextRow> rows;
++                int localX=0,localY=0;
++                auto coordinate=[](uint16_t value){return static_cast<int>((value&0x1FFF)^0x1000)-0x1000;};
++                for(const auto& cmd:port.videoRenderer->LastCommands()) {
++                    const int type=cmd.words[0]&15;
++                    if(type==10) {localX=coordinate(cmd.words[6]);localY=coordinate(cmd.words[7]);continue;}
++                    if(type!=0 || (cmd.words[0]&0x30) || cmd.words[2]!=0x80 || cmd.words[3]!=0xC510 || cmd.words[5]!=0x210) continue;
++                    const int x=coordinate(cmd.words[6])+localX,y=coordinate(cmd.words[7])+localY;
++                    if(x<56 || x+16>304 || y<160 || y>196) continue;
++                    auto& row=rows[y];
++                    const auto tile=port.videoRenderer->SpriteBytes(static_cast<uint32_t>(cmd.words[4])*8,128);
++                    const char letter=DecodeGlyph(englishAtlas,tile);
++                    if(!letter || row.chars.count(x)) {row.valid=false;continue;}
++                    row.chars[x]=letter;
++                    for(int py=0;py<16;py++)for(int px=0;px<16;px++) {
++                        const uint8_t packed=tile[py*8+px/2];
++                        const int index=px&1?packed&15:packed>>4;
++                        if(!index) continue;
++                        const size_t at=(y+py)*320+x+px;
++                        if(planes.source[at]!=0) row.valid=false;
++                        row.ink.push_back(at);
++                    }
++                }
++                hdNative=softwareShown;hdForeground=planes.foreground;
++                for(auto& [y,row]:rows) if(row.valid && !row.chars.empty()) {
++                    UiTextLine line;line.x=row.chars.begin()->first;line.y=y;
++                    int previous=line.x-8;
++                    for(auto [x,letter]:row.chars) {
++                        if((x-previous)%8) {row.valid=false;break;}
++                        for(int gap=previous+8;gap<x;gap+=8)line.text+=' ';
++                        line.text+=letter;previous=x;
++                    }
++                    if(!row.valid) continue;
++                    for(auto at:row.ink) hdNative[at]=hdForeground[at]=planes.underSprites[at];
++                    hdLines.push_back(std::move(line));
++                }
++                if(!hdLines.empty()) SDL_UpdateTexture(texture,nullptr,hdNative.data(),320*sizeof(uint32_t));
++            }
++        }
+         bool enhanced=false;
+         if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+@@ -360,10 +417,20 @@
+                         SDL_SetTextureScaleMode(foreground,SDL_SCALEMODE_NEAREST);
+                     }
+                     content=foreground;
+-                    SDL_UpdateTexture(content,nullptr,planes.foreground.data(),320*sizeof(uint32_t));
++                    SDL_UpdateTexture(content,nullptr,hdLines.empty()?planes.foreground.data():hdForeground.data(),320*sizeof(uint32_t));
+                 }
+                 const auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
++                textFit=fit;textCropX=static_cast<int>(crop.x);textCropY=static_cast<int>(crop.y);
+                 const SDL_FRect target{static_cast<float>(fit.x),static_cast<float>(fit.y),static_cast<float>(fit.w),static_cast<float>(fit.h)};
++                if(scene.movieOnly) {
++                    // Native video shadow: four source pixels right/down, tied to the new rectangle.
++                    const float offset=4.0f*fit.scale;
++                    const SDL_FRect shadow{target.x+offset,target.y+offset,target.w,target.h};
++                    SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
++                    SDL_SetRenderDrawColor(renderer,80,80,80,166);
++                    SDL_RenderFillRect(renderer,&shadow);
++                    SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
++                }
+                 SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
+             }
+@@ -380,6 +447,8 @@
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
+         }
+         }
++        if(!choosing && !port.menu.IsOpen() && !hdLines.empty())
++            sakuraUi.GameText(hdLines,textFit.x,textFit.y,textFit.scale,textCropX,textCropY);
+         if (choosing && sakuraUi.Active()) { if(sakuraUi.Choice(presentationChoice)) acceptChoice(); }
+         else if (port.menu.IsOpen() && sakuraUi.Active()) {
+             const unsigned action=sakuraUi.Draw(port.menu);
+diff --git a/port/glyph_text.h b/port/glyph_text.h
+new file mode 100644
+--- /dev/null
++++ b/port/glyph_text.h
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <cstdint>
++#include <cstring>
++#include <span>
++namespace port {
++inline uint64_t AtlasFingerprint(std::span<const uint8_t> data) {
++    uint64_t hash=14695981039346656037ull;
++    for(auto byte:data) hash=(hash^byte)*1099511628211ull;
++    return hash;
++}
++inline bool KnownEnglishAtlas(std::span<const uint8_t> atlas) {
++    return atlas.size()==32768 && AtlasFingerprint(atlas)==0xA6A05DFF441E0C60ull;
++}
++inline char DecodeGlyph(std::span<const uint8_t> atlas,std::span<const uint8_t> tile) {
++    if(atlas.size()!=32768 || tile.size()!=128) return 0;
++    char result=0;
++    for(int ascii=32;ascii<=126;ascii++) if(std::memcmp(atlas.data()+(ascii-1)*128,tile.data(),128)==0) {
++        if(result) return 0; // ambiguous bitmap: leave native text intact
++        result=static_cast<char>(ascii);
++    }
++    return result;
++}
++}
+diff --git a/port/kabe.h b/port/kabe.h
+new file mode 100644
+--- /dev/null
++++ b/port/kabe.h
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <cstdint>
++#include <span>
++#include <vector>
++namespace port {
++// KABE: RGB555 palette, 40x28 two-word names, then 8-bit 8x8 tiles.
++inline bool DecodeKabe(std::span<const uint8_t> data,std::vector<uint32_t>& pixels) {
++    if(data.size()!=76672) return false;
++    constexpr size_t tiles=0x1380;
++    pixels.assign(320*224,0);
++    for(int cy=0;cy<28;cy++)for(int cx=0;cx<40;cx++) {
++        const size_t at=512+(cy*40+cx)*4;
++        const uint32_t name=(uint32_t(data[at])<<24)|(uint32_t(data[at+1])<<16)|(uint32_t(data[at+2])<<8)|data[at+3];
++        const size_t address=tiles+(name&0x7FFF)*32;
++        if(address+64>data.size() || (name&0x00700000)) return false;
++        for(int y=0;y<8;y++)for(int x=0;x<8;x++) {
++            const int sx=name&0x40000000?7-x:x,sy=name&0x80000000?7-y:y;
++            const size_t palette=data[address+sy*8+sx]*2;
++            const uint16_t color=uint16_t(data[palette])<<8|data[palette+1];
++            pixels[(cy*8+y)*320+cx*8+x]=0xFF000000u|((color&31)<<3)|(((color>>5)&31)<<11)|(((color>>10)&31)<<19);
++        }
++    }
++    return true;
++}
++}
+diff --git a/port/main.cpp b/port/main.cpp
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -5,6 +5,7 @@
+ #include "hud.h"
+ #include "pictures.h"
+ #include "port.h"
++#include "kabe.h"
+ 
+ #include "png_write.h"
+ #include "hle_bios.h"
+@@ -120,6 +121,9 @@
+     game.features.push_back({"presentation_mode", "Pantalla", "Presentación",
+                              "Original conserva la composición Saturn. Mejorado amplía escenas reconocidas sin deformar píxeles ni recortar texto.",
+                              0, {"Original (4:3)", "Mejorado (widescreen)"}});
++    game.features.push_back({"text_style", "Pantalla", "Texto de diálogos",
++                             "Nítido redibuja los glifos ingleses reconocidos a resolución de ventana. Las fuentes desconocidas y otros textos conservan el original.",
++                             0, {"Nítido", "Original"}});
+     // (custom_soundtrack: soundtrack.h; for a game whose sources name its music)
+     if (!game.songs.empty()) {
+         game.features.push_back({"custom_soundtrack", "Sound", "Custom soundtrack",
+@@ -1424,6 +1428,8 @@
+             o.stateLoad = next();
+         } else if (a == "--settings") {
+             o.settingsPath = next();
++        } else if (a == "--export-backgrounds") {
++            o.exportBackgrounds = next();
+         } else if (a == "--ready-file") {
+             o.readyFile = next();
+         } else if (a == "--dump-decode") {
+@@ -1498,6 +1504,24 @@
+         Usage(argv[0]);
+         return 2;
+     }
++    if(!o.exportBackgrounds.empty()) {
++        if(!p.discFiles.Open(o.discPath)) {fprintf(stderr,"Cannot read disc for background export\n");return 1;}
++        std::error_code error;std::filesystem::create_directories(o.exportBackgrounds,error);
++        if(error) return 1;
++        std::vector<uint32_t> gallery(1600*896,0xFF000000);int count=0;
++        for(const auto& name:p.discFiles.Names()) if(name.find("KABE")!=std::string::npos && name.ends_with(".BIN")) {
++            std::vector<uint8_t> data;std::vector<uint32_t> pixels;
++            if(!p.discFiles.Read(name,data) || !port::DecodeKabe(data,pixels)) {fprintf(stderr,"Invalid KABE: %s\n",name.c_str());return 1;}
++            const auto file=std::filesystem::path(o.exportBackgrounds)/(std::filesystem::path(name).stem().string()+".png");
++            WritePng(file.string().c_str(),pixels.data(),320,224);
++            if(count<20) for(int y=0;y<224;y++) std::copy_n(pixels.data()+y*320,320,gallery.data()+((count/5)*224+y)*1600+(count%5)*320);
++            count++;
++        }
++        const auto galleryFile=std::filesystem::path(o.exportBackgrounds)/"catalog.png";
++        WritePng(galleryFile.string().c_str(),gallery.data(),1600,896);
++        fprintf(stderr,"Exported %d original KABE backgrounds locally\n",count);
++        return count==20?0:1;
++    }
+     if (o.video.empty()) p.opt.video = "software"; // validated native-resolution Sakura renderer
+     try {
+         if (!p.Init()) return 1;
+diff --git a/port/port.h b/port/port.h
+--- a/port/port.h
++++ b/port/port.h
+@@ -66,6 +66,7 @@
+     float aspect = 4.0f / 3.0f; // the picture's shape; wider than 4:3 is widescreen (gpu only)
+     std::string features;     // comma-separated feature names
+     std::string settingsPath; // settings.ini with the player's feature choices (written when one is changed in the game)
++    std::string exportBackgrounds; // read-only KABE extraction from owner disc
+     std::string readyFile; // launcher handshake: first successfully presented window
+     std::string stateSave, stateLoad; // tests: "FRAME:path": save or load a state when that frame is reached
+     std::string dumpRam;      // prefix: write <prefix>high.bin / low.bin (work RAM) at exit
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+--- a/port/sakura_ui.cpp
++++ b/port/sakura_ui.cpp
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-3.0-only
+ #include "sakura_ui.h"
++#include "glyph_text.h"
+ #include "../recomp-common/launcher/src/ui.h"
+ #include <imgui_impl_sdl3.h>
+ #include <imgui_impl_sdlrenderer3.h>
+@@ -13,6 +14,16 @@
+     IMGUI_CHECKVERSION(); ImGui::CreateContext();
+     ImGui::GetIO().IniFilename=nullptr;
+     ui::set_dark(false); ui::apply_style(1); ui::load_fonts();
++#ifdef _WIN32
++    // The translation's FontSettings.png specifies Consolas, height 13, offset Y=-2.
++    // Use the installed Windows font; never redistribute Microsoft's font file.
++    if(const char* windows=getenv("WINDIR")) {
++        const auto file=std::filesystem::path(windows)/"Fonts"/"consola.ttf";
++        std::error_code error;
++        if(std::filesystem::is_regular_file(file,error))
++            gameFont=ImGui::GetIO().Fonts->AddFontFromFileTTF(file.string().c_str(),13.0f);
++    }
++#endif
+     if (!ImGui_ImplSDL3_InitForSDLRenderer(window,renderer)) { ImGui::DestroyContext(); return false; }
+     if (!ImGui_ImplSDLRenderer3_Init(renderer)) {
+         ImGui_ImplSDL3_Shutdown(); ImGui::DestroyContext(); return false;
+@@ -27,7 +38,7 @@
+     if (!active) return;
+     for(auto*& texture:previews) {if(texture) SDL_DestroyTexture(texture);texture=nullptr;}
+     ImGui_ImplSDLRenderer3_Shutdown(); ImGui_ImplSDL3_Shutdown(); ImGui::DestroyContext();
+-    active=false;
++    active=false;gameFont=nullptr;
+ }
+ void SakuraUi::Event(const SDL_Event& event) {
+     if (active) ImGui_ImplSDL3_ProcessEvent(&event);
+@@ -53,6 +64,50 @@
+     ImGui::End(); ImGui::PopStyleVar(2); ImGui::Render();
+     ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
+     return accepted;
++}
++void SakuraUi::SetGameAtlas(std::span<const uint8_t> atlas) {
++    if(!KnownEnglishAtlas(atlas)) return;
++    for(int c=32;c<=126;c++) {
++        auto& box=glyphBounds[c-32];box={16,16,-1,-1};
++        for(int y=0;y<16;y++)for(int x=0;x<16;x++) {
++            const auto byte=atlas[(c-1)*128+y*8+x/2];
++            if(!(x&1?byte&15:byte>>4)) continue;
++            box[0]=std::min(box[0],x);box[1]=std::min(box[1],y);
++            box[2]=std::max(box[2],x);box[3]=std::max(box[3],y);
++        }
++    }
++}
++void SakuraUi::GameText(const std::vector<UiTextLine>& lines,int x,int y,int scale,int cropX,int cropY) {
++    if(!active || !gameFont || lines.empty()) return;
++    ImGui_ImplSDLRenderer3_NewFrame();ImGui_ImplSDL3_NewFrame();ImGui::NewFrame();
++    auto* draw=ImGui::GetForegroundDrawList();
++    const float fontSize=13.0f*scale;
++    ImGui::PushFont(gameFont,fontSize);
++    for(const auto& line:lines) {
++        for(size_t index=0;index<line.text.size();index++) {
++            const unsigned char code=line.text[index];
++            if(code<32 || code>126) continue;
++            const auto& box=glyphBounds[code-32];if(box[2]<box[0]) continue;
++            const char letter[2]={static_cast<char>(code),0};
++            const auto* glyph=gameFont->GetFontBaked(fontSize)->FindGlyph(code);
++            if(!glyph || glyph->X1<=glyph->X0 || glyph->Y1<=glyph->Y0) continue;
++            const ImVec2 origin(static_cast<float>(x+(line.x+static_cast<int>(index)*8-cropX)*scale),
++                                static_cast<float>(y+(line.y-cropY)*scale));
++            const int first=draw->VtxBuffer.Size;
++            draw->AddText(gameFont,fontSize,origin,IM_COL32(24,24,24,255),letter);
++            // Preserve each native glyph's exact ink box, baseline and 8-pixel advance.
++            // Only the font raster is high resolution; game pixels remain integer-scaled.
++            const float sx=static_cast<float>((box[2]-box[0]+1)*scale)/(glyph->X1-glyph->X0);
++            const float sy=static_cast<float>((box[3]-box[1]+1)*scale)/(glyph->Y1-glyph->Y0);
++            for(int v=first;v<draw->VtxBuffer.Size;v++) {
++                auto& at=draw->VtxBuffer[v].pos;
++                at.x=origin.x+box[0]*scale+(at.x-origin.x-glyph->X0)*sx;
++                at.y=origin.y+box[1]*scale+(at.y-origin.y-glyph->Y0)*sy;
++            }
++        }
++    }
++    ImGui::PopFont();
++    ImGui::Render();ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
+ }
+ unsigned SakuraUi::Draw(Menu& menu) {
+     if (!active) return 0;
+diff --git a/port/sakura_ui.h b/port/sakura_ui.h
+--- a/port/sakura_ui.h
++++ b/port/sakura_ui.h
+@@ -2,7 +2,11 @@
+ #pragma once
+ #include "menu.h"
+ #include <SDL3/SDL.h>
++#include <span>
++#include <array>
++struct ImFont;
+ namespace port {
++struct UiTextLine { int x=0,y=0;std::string text; };
+ class SakuraUi {
+ public:
+     bool Open(SDL_Window*,SDL_Renderer*,const std::string& settings);
+@@ -10,10 +14,15 @@
+     void Event(const SDL_Event&);
+     unsigned Draw(Menu&);
+     bool Choice(int& selection);
++    void SetGameAtlas(std::span<const uint8_t> atlas);
++    void GameText(const std::vector<UiTextLine>&,int x,int y,int scale,int cropX,int cropY);
++    bool HasGameFont() const { return gameFont!=nullptr; }
+     bool Active() const { return active; }
+ private:
+     bool active=false;
+     SDL_Renderer* renderer=nullptr;
++    ImFont* gameFont=nullptr;
++    std::array<std::array<int,4>,95> glyphBounds{};
+     SDL_Texture* previews[2]={nullptr,nullptr};
+     int lastSelected=-1;
+ };
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -244,6 +244,7 @@
+     if (m_capturePresentation) {
+         m_presentation.width=m_width; m_presentation.height=m_height;
+         m_presentation.foreground.assign(static_cast<size_t>(m_width)*m_height,0);
++        m_presentation.underSprites.assign(static_cast<size_t>(m_width)*m_height,0);
+         m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
+     }
+ 
+@@ -584,6 +585,25 @@
+             const size_t at=static_cast<size_t>(y)*width+x;
+             m_presentation.source[at]=static_cast<uint8>(presentationSource);
+             m_presentation.foreground[at]=presentationSource<5 ? color.u32|0xFF000000 : 0;
++            Color888 under=color;
++            if(top==kSprites) {
++                uint32 a=kBack,b=kBack,pa=0,pb=0;
++                for(uint32 layer=kRBG0;layer<=5;layer++) if(state2.layerEnabled[layer]) {
++                    const uint32 priority=layers[layer].priority[x];
++                    if(priority>pa) {b=a;pb=pa;a=layer;pa=priority;}
++                    else if(priority>pb) {b=layer;pb=priority;}
++                }
++                under=a==kBack?back:Color888{.u32=layers[a].color[x]};
++                if(a!=kBack && regs2.bgParams[a-kRBG0].colorCalcEnable && !regs2.colorCalcExtended &&
++                   regs2.specialColorCalcMode[a-kRBG0]==0 && !regs2.bgParams[a-kRBG0].lineColorScreenEnable && !m_colorCalcWindow[x]) {
++                    const Color888 below=b==kBack?back:Color888{.u32=layers[b].color[x]};
++                    const uint32 ratio=regs2.colorCalcRatio[regs2.colorCalcUseSecondRatio?b:a];
++                    auto mix=[&](uint32 c,uint32 d){return regs2.colorCalcAdd?std::min(c+d,255u):(c*(31u-ratio)+d*(ratio+1u))>>5;};
++                    under.u32=mix(under.r,below.r)|(mix(under.g,below.g)<<8)|(mix(under.b,below.b)<<16);
++                }
++                under=applyOffset(under,a);
++            }
++            m_presentation.underSprites[at]=under.u32|0xFF000000;
+         }
+     }
+ }
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -56,9 +56,13 @@
+     // Host metadata excluded from guest serialization and hashes.
+     struct Presentation {
+         uint32 width=0,height=0;
+-        std::vector<uint32> foreground;
++        std::vector<uint32> foreground,underSprites;
+         std::vector<uint8> source;
+     };
++    std::span<const uint8> SpriteBytes(uint32 address,size_t size) const {
++        if(address>=0x80000 || size>0x80000-address) return {};
++        return {m_mem.vram1+address,size};
++    }
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
+ 

@@ -29,6 +29,13 @@ int main() {
     reg(0x110,1);reg(0x114,32);
     if(draw(1,15)!=0x7c009c){fprintf(stderr,"post-blend offset failed: %06x\n",pixel);return 1;}
     reg(0x110,0);
+    // Decorative extension observes NBG3's signed 9-bit offset, including bank B.
+    reg(0x110,8);reg(0x112,8);reg(0x11a,0x100);reg(0x11c,0x1ff);reg(0x11e,255);
+    if(renderer.BackgroundColorOffset()!=std::array<int16_t,3>{-256,-1,255}) {
+        fprintf(stderr,"background extension offset selection/sign failed\n");return 1;
+    }
+    reg(0x110,0);reg(0x112,0);
+    if(renderer.BackgroundColorOffset()!=std::array<int16_t,3>{})return 1;
     // VDP1 direct RGB blue over NBG0 red, sprite priority 3.
     fb1[0]=0xfc;fb1[1]=0;reg(0xf0,3);reg(0xe0,0x0320);reg(0x100,15);
     if(draw(0x40,0)!=0x7c007c){fprintf(stderr,"sprite RGB blend failed: %06x\n",pixel);return 1;}

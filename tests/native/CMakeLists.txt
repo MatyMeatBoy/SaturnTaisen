@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 project(sakura_machine_tests LANGUAGES CXX)
+find_package(ZLIB REQUIRED)
 set(CMAKE_CXX_STANDARD 20)
 get_filename_component(DEP "${CMAKE_CURRENT_SOURCE_DIR}/../../local/deps/satrecomp" ABSOLUTE)
 set(CORE
@@ -11,5 +12,6 @@ set(CORE
     recomp-common/settings.cpp)
 list(TRANSFORM CORE PREPEND "${DEP}/")
 add_executable(machine-tests machine_tests.cpp test_blocks.cpp ${CORE})
+target_link_libraries(machine-tests PRIVATE ZLIB::ZLIB)
 target_compile_definitions(machine-tests PRIVATE SATRECOMP_OWN_MACHINE)
 target_include_directories(machine-tests PRIVATE "${DEP}/runtime" "${DEP}/machine")

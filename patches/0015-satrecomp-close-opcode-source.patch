@@ -1,0 +1,14 @@
+diff --git a/tools/recomp.py b/tools/recomp.py
+index eec19c5..d320826 100755
+--- a/tools/recomp.py
++++ b/tools/recomp.py
+@@ -53,7 +53,8 @@ def own_tables(ops_h):
+     """The decode table from satrecomp's own instruction list (machine/sh2_ops.h): the names of the kinds of
+     instruction, the kind of every opcode (as itself and as a delay slot instruction) and its nominal cycles.
+     The same as the reference machine's table."""
+-    text = open(ops_h).read()
++    with open(ops_h, encoding="utf-8") as source:
++        text = source.read()
+     m = re.search(r"enum class Op\s*:\s*\w+\s*\{(.*?)\};", text, re.S)
+     names = [n.strip() for n in m.group(1).replace("\n", " ").split(",") if n.strip()]
+     patterns = [(names.index(n), int(mask, 16), int(match, 16))

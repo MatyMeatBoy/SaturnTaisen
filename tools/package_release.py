@@ -37,6 +37,26 @@ def digest(path):
     return result.hexdigest()
 
 
+def generated_backgrounds(folder):
+    """Only manifest-pinned generated art may pass the package's resource gate."""
+    folder=Path(folder)
+    data=json.loads((folder/'provenance.json').read_text(encoding='utf-8'))
+    result={}
+    for row in data['backgrounds']:
+        name=row['file']
+        if not re.fullmatch(r'KABE[0-9][01]\.png',name) or name in result:
+            raise RuntimeError('Invalid/duplicate generated background identity')
+        file=folder/name
+        if file.is_symlink() or not file.is_file() or digest(file)!=row['sha256']:
+            raise RuntimeError('Generated background checksum mismatch: '+name)
+        if file.read_bytes()[:8]!=b'\x89PNG\r\n\x1a\n':
+            raise RuntimeError('Generated background is not a PNG: '+name)
+        result[name]=file
+    if not result:
+        raise RuntimeError('Empty generated background manifest')
+    return result
+
+
 def package(destination,toolchain,archive=True):
     destination=destination.resolve()
     destination.mkdir(parents=True,exist_ok=False)
@@ -100,16 +120,30 @@ def package(destination,toolchain,archive=True):
         for pattern in patterns:
             for source in (ROOT/folder).glob(pattern):
                 shutil.copy2(source,target/source.name)
+    generated=generated_backgrounds(ROOT/'assets/generated/backgrounds')
+    art=destination/'art/backgrounds'
+    art.mkdir(parents=True)
+    allowed_art={}
+    for name,source in generated.items():
+        shutil.copy2(source,art/name)
+        allowed_art['art/backgrounds/'+name]=digest(source)
+    for name in ('provenance.json','PROMPTS.md'):
+        source=ROOT/'assets/generated/backgrounds'/name
+        if source.is_file():shutil.copy2(source,art/name)
     (destination/'portable.txt').write_text('',encoding='ascii')
-    (destination/'LEEME.md').write_text('''# SaturnTaisenFirst 0.1 · Desarrollo
+    version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
+    (destination/'LEEME.md').write_text(f'''# SaturnTaisenFirst {version} · Desarrollo
 
 1. Descomprime la carpeta en un lugar donde puedas guardar archivos.
 2. Abre **SaturnTaisenFirst.exe** y elige tu archivo `.cue` (con sus pistas al lado) o `.iso` de Sakura Wars 1 para Saturn.
 3. Para inglés, utiliza tus discos ya parcheados con la traducción v2.1. No se incluyen discos, BIOS ni parches binarios.
 4. La captura del título se prepara localmente a partir de tu disco. No necesita descargar imágenes.
 5. Pulsa **Jugar**. F11 cambia pantalla completa; Esc/F1 o Start+Select abre los ajustes.
+6. Elige presentación Original o Mejorada en el launcher y al iniciar el juego. La fuente nítida se puede cambiar en ajustes; su disponibilidad depende de los recursos de la traducción y la fuente del sistema.
 
 El juego usa exclusivamente escala entera, sin suavizado, y un marco adaptable. Los dos discos se pueden seleccionar manualmente; el cambio automático de disco aún está pendiente.
+
+El modo mejorado amplía en enteros las escenas reconocidas sobre fondos decorativos generados. Conserva la composición original cuando no reconoce la escena. Los fondos generados son preliminares. La ejecución PC, su traducción y el pack HD de recursos PC están en desarrollo y no forman parte de las funciones jugables verificadas.
 
 **Partidas:** importa desde la sección Tus partidas. Se crea una copia separada y puedes activarla o volver a tu partida habitual. Los originales no se modifican. Guarda el nombre original al importar un archivo individual de SSF.
 
@@ -122,13 +156,16 @@ Esta versión no certifica toda la campaña ni todos los mandos. Consulta las no
     for file in sorted(destination.rglob('*')):
         if not file.is_file():
             continue
-        if file.suffix.casefold() in forbidden:
+        relative=file.relative_to(destination).as_posix()
+        generated_match=relative in allowed_art and digest(file)==allowed_art[relative]
+        if file.suffix.casefold() in forbidden and not generated_match:
             raise RuntimeError(f'Unexpected game/resource file in package: {file}')
         files.append({'path':file.relative_to(destination).as_posix(),'bytes':file.stat().st_size,'sha256':digest(file)})
     manifest={'version':(ROOT/'VERSION').read_text().strip(),
               'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
               'source_dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),
-              'dlls':sorted(copied),'files':files,'game_assets_included':False}
+              'dlls':sorted(copied),'files':files,'game_assets_included':False,
+              'generated_backgrounds':allowed_art}
     (destination/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8',newline='\n')
     if archive:
         target=destination.parent/(destination.name+'.zip')

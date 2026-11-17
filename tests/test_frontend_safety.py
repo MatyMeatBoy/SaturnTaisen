@@ -34,6 +34,30 @@ class FrontendTests(unittest.TestCase):
     def test_integer_scaling_native_modes_and_all_window_shapes(self):
         self.fixture('integer_viewport')
 
+    def test_launch_ready_requires_complete_atomic_acknowledgement(self):
+        self.fixture('launch_ready')
+
+    def test_modern_menu_view_preserves_existing_actions_and_selection(self):
+        self.fixture('menu_view',[DEP/'recomp-common/menu.cpp'])
+
+    def test_presentation_keeps_subtitles_overhang_and_integer_cover(self):
+        self.fixture('presentation_layout')
+
+    def test_disc_cache_bounds_concurrent_reads_and_reopen_invalidation(self):
+        self.fixture('disc_cache',[DEP/'port/disc_image.cpp'])
+
+    def test_glyph_decoder_rejects_unknown_atlas_and_ambiguous_tiles(self):
+        self.fixture('glyph_text')
+
+    def test_kabe_decoder_validates_tiles_and_palette(self):
+        self.fixture('kabe')
+
+    def test_background_import_uses_one_grid_and_native_palette(self):
+        self.fixture('backdrop')
+
+    def test_pc_sprite_decoder_colors_and_corrupt_input(self):
+        self.fixture('pc_spr')
+
     def test_launcher_child_outlives_observer_without_freed_memory_access(self):
         self.fixture('launcher_lifetime',[DEP/'recomp-common/launcher/src/game_process.cpp'])
 
