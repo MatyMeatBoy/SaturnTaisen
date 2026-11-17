@@ -1,0 +1,24 @@
+{
+  "scope": "chapter1 investigation; full episode and campaign remain unverified",
+  "fixture_sha256": "ab5dbeb1e5f65f44d95f9ec9c895672ff0443de46ed55e8529b056958f3ac8ea",
+  "movie": "tests/battle-first-attack.movie",
+  "reference": "same SDK machine with SH2 interpreter; not an independent emulator",
+  "compared_frames": 1200,
+  "all_frame_hashes_equal": true,
+  "final_rgb_equal": true,
+  "production_interpreted_blocks": 0,
+  "observed": [
+    "tutorial advances",
+    "normal attack effect and removal of one enemy",
+    "defend and change of turn",
+    "enemy-phase camera movement",
+    "movement preview, confirm and cancel"
+  ],
+  "pending": [
+    "battle victory",
+    "episode ending",
+    "continuous new-game-to-episode-ending route",
+    "native save and Continue at episode end",
+    "full campaign and disc transition"
+  ]
+}
