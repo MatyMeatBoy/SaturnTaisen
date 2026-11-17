@@ -17,6 +17,34 @@ STATE=ROOT/'local/work/sakura/iris-correct-room-3000.state'
 @unittest.skipUnless(Image is not None and STATE.is_file() and (BUILD/'art/backgrounds/KABE01.png').is_file(),
                      'requires owner-supplied local scene and generated background')
 class PresentationRuntimeTests(unittest.TestCase):
+    def test_scene_zoom_keeps_native_picture_and_dialogue_at_independent_integer_scales(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:
+            folder=Path(directory);shots=[]
+            for mode in (0,1):
+                profile=folder/str(mode);profile.mkdir();shot=profile/'scene.png'
+                settings=profile/'settings.ini'
+                settings.write_text(f'[features]\npresentation_mode=1\nscene_view={mode}\ntext_style=0\npc_hd_portraits=1\n',encoding='utf-8')
+                backup=profile/'backup.bin';backup.write_bytes((ROOT/'local/work/sakura/prebattle-immutable-seed.bin').read_bytes())
+                env={k:v for k,v in os.environ.items() if not k.startswith('SATRECOMP_')}
+                env.update(PATH='C:/msys64/clang64/bin;'+env.get('PATH',''),SATRECOMP_WINDOW_HIDDEN='1',
+                           SATRECOMP_BACKGROUND_WORKERS='0',SATRECOMP_PRESENTATION_TRACE='1',
+                           SATRECOMP_WINDOW_KEYS=f'2:SIZE=2560x1440,3:CHOICE=1,8:WINDOWSHOT={shot.as_posix()},12:QUIT')
+                run=subprocess.run([str(BUILD/'sakura.exe'),'--disc',str(ROOT/'local/prepared/disc1/game.cue'),
+                                    '--state-load','0:'+str(STATE),'--settings',str(settings),'--backup',str(backup),'--mute'],
+                                   env=env,capture_output=True,timeout=30)
+                self.assertEqual(run.returncode,0,run.stderr.decode(errors='replace'))
+                with Image.open(shot) as image:shots.append(image.convert('RGBA'))
+                if mode:self.assertIn(b'scale=7 dialogue=1836x402 scale=6 y=1038 shadow=28',run.stderr)
+            original,zoom=shots
+            native=original.crop((404,84,2132,948)).resize((288,144),Image.Resampling.NEAREST)
+            self.assertEqual(native.resize((2016,1008),Image.Resampling.NEAREST).tobytes(),
+                             zoom.crop((272,0,2288,1008)).tobytes())
+            # The translucent box reveals a different part of the background after moving.
+            # Compare the black dialogue ink, rather than requiring that background to match.
+            def ink(image):return bytes(max(pixel[:3])<32 for pixel in image.getdata())
+            self.assertEqual(ink(original.crop((644,996,2132,1284))),
+                             ink(zoom.crop((644,1080,2132,1368))))
+
     def test_multicore_preparation_keeps_scene_identical_and_prepares_future_themes(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:
             folder=Path(directory);images=[]
