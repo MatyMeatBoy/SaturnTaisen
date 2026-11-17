@@ -1,0 +1,113 @@
+{
+  "date": "2026-11-17",
+  "checkouts": [
+    {
+      "repository": "callumjenkins/saturn-recomp",
+      "commit": "032fd3bc8a6c3e5d23853f53b951aa1446a9dfc1",
+      "url": "https://github.com/callumjenkins/saturn-recomp/tree/032fd3bc8a6c3e5d23853f53b951aa1446a9dfc1",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "mattkuhnQAAI/sfiii-native",
+      "commit": "f9456e8bde3be3b74c655e872bdbc4a1c34d4b0f",
+      "url": "https://github.com/mattkuhnQAAI/sfiii-native/tree/f9456e8bde3be3b74c655e872bdbc4a1c34d4b0f",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "MatyMeatBoy/ReKHCoM",
+      "commit": "6c1951273fc2ccf79369cead1ba207e7297b931d",
+      "url": "https://github.com/MatyMeatBoy/ReKHCoM/tree/6c1951273fc2ccf79369cead1ba207e7297b931d",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "NoahSteam/RomHackingTools",
+      "commit": "4a7d53f7b8d0eefc7f5ec573c13f173c6c4f7925",
+      "url": "https://github.com/NoahSteam/RomHackingTools/tree/4a7d53f7b8d0eefc7f5ec573c13f173c6c4f7925",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "omegakatana92/Blast-Wind-Recomp",
+      "commit": "a783311be7f692f2fc8af60d8945d91c35f741fe",
+      "url": "https://github.com/omegakatana92/Blast-Wind-Recomp/tree/a783311be7f692f2fc8af60d8945d91c35f741fe",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "omegakatana92/Hyper-Duel-Recomp-",
+      "commit": "cfe7c04ad5d46bbfcb74b4203e779f40b4d769ac",
+      "url": "https://github.com/omegakatana92/Hyper-Duel-Recomp-/tree/cfe7c04ad5d46bbfcb74b4203e779f40b4d769ac",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "RetroAchievements/rcheevos",
+      "commit": "a1ba160cd1b710aa54d3f8d4a1943c2adb0ff96e",
+      "url": "https://github.com/RetroAchievements/rcheevos/tree/a1ba160cd1b710aa54d3f8d4a1943c2adb0ff96e",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "tmcleroy/fighters-megamix-recomp",
+      "commit": "12302706853742ee965dcdb4547c99e560f5143c",
+      "url": "https://github.com/tmcleroy/fighters-megamix-recomp/tree/12302706853742ee965dcdb4547c99e560f5143c",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "tmcleroy/fighting-vipers-recomp",
+      "commit": "b4b1942e68e6dcd00f8bb2c0fa551a7ed28553bb",
+      "url": "https://github.com/tmcleroy/fighting-vipers-recomp/tree/b4b1942e68e6dcd00f8bb2c0fa551a7ed28553bb",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "tmcleroy/satrecomp",
+      "commit": "67a5fd456609f702817c08164e77e1420dc91138",
+      "url": "https://github.com/tmcleroy/satrecomp/tree/67a5fd456609f702817c08164e77e1420dc91138",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "vs-sr-dev/pc-albertodyssey",
+      "commit": "45d25d632b9f701eb4e72ab0ec9b801e15f41153",
+      "url": "https://github.com/vs-sr-dev/pc-albertodyssey/tree/45d25d632b9f701eb4e72ab0ec9b801e15f41153",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "vs-sr-dev/pc-deepfear",
+      "commit": "c3d3e4aed34678139e97b5cb83c4fd7b0cf1d343",
+      "url": "https://github.com/vs-sr-dev/pc-deepfear/tree/c3d3e4aed34678139e97b5cb83c4fd7b0cf1d343",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "vs-sr-dev/pc-dodonpachi",
+      "commit": "f2dd6ddd59ff97eb810c799ba6b075dc50d8dda2",
+      "url": "https://github.com/vs-sr-dev/pc-dodonpachi/tree/f2dd6ddd59ff97eb810c799ba6b075dc50d8dda2",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "vs-sr-dev/pc-dragonballlegend",
+      "commit": "e285495ca3159e24f9752a0e7f15a0a7c9bf13e0",
+      "url": "https://github.com/vs-sr-dev/pc-dragonballlegend/tree/e285495ca3159e24f9752a0e7f15a0a7c9bf13e0",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "vs-sr-dev/pc-virtualhydlide",
+      "commit": "74e8e8abfc5a23623dab610cc207e26bbf9d0ec9",
+      "url": "https://github.com/vs-sr-dev/pc-virtualhydlide/tree/74e8e8abfc5a23623dab610cc207e26bbf9d0ec9",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "vs-sr-dev/pc-xjapan",
+      "commit": "f9566055d4407d09c7d65a77bee3dc2934c77111",
+      "url": "https://github.com/vs-sr-dev/pc-xjapan/tree/f9566055d4407d09c7d65a77bee3dc2934c77111",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "vs-sr-dev/saturnkit",
+      "commit": "3e03fb9f838b229d959f9f15f31b49fafbce4c04",
+      "url": "https://github.com/vs-sr-dev/saturnkit/tree/3e03fb9f838b229d959f9f15f31b49fafbce4c04",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    },
+    {
+      "repository": "yifengling0/pal-saturn-recomp",
+      "commit": "5281ab9f3805f65369c925cb72793ca2c05bc553",
+      "url": "https://github.com/yifengling0/pal-saturn-recomp/tree/5281ab9f3805f65369c925cb72793ca2c05bc553",
+      "scope": "source/docs inspected selectively, not gameplay validated"
+    }
+  ]
+}

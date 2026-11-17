@@ -1,0 +1,150 @@
+{
+  "date": "2026-11-17",
+  "tool": "vs-sr-dev/saturnkit@3e03fb9f838b229d959f9f15f31b49fafbce4c04",
+  "read_only": true,
+  "patch_applied": false,
+  "discs": [
+    {
+      "disc": 1,
+      "cue": "Sakura Taisen (Japan) (Disc 1) (6M)/Sakura Taisen (Japan) (Disc 1) (6M)/Sakura Taisen (Japan) (Disc 1) (6M).cue",
+      "header_report": "hardware   SEGA SEGASATURN\nmaker      SEGA ENTERPRISES\nproduct    GS-9037  version V1.005  date 19960901\ndevice     CD-1/2\nareas      JT  (Japan, Asia NTSC)\nperipheral JM  (control pad, mouse)\ntitle      SAKURA TAISEN\nIP size    0x8000\nstacks     master 0x00000000  slave 0x00000000\n1st read   at 0x06004000, size whole file\narea block 0x0E04  'For JAPAN.'",
+      "volume_id": "SAKURA_CD1",
+      "volume_size_sectors": 272651,
+      "data_track_sectors": 270373,
+      "file_count": 1785,
+      "first_read": {
+        "path": "/SAKURA",
+        "lba": 63,
+        "bytes": 391712,
+        "sha256": "1729cd8701fa8da30b203d0bf97e47e2dc9cf06b50ca91589ea760fe0cb8ff87"
+      },
+      "tracks": [
+        {
+          "number": 1,
+          "mode": "MODE1/2352",
+          "lba": 0,
+          "frames": 270373,
+          "pregap": 0,
+          "gap": 0
+        },
+        {
+          "number": 2,
+          "mode": "AUDIO",
+          "lba": 270523,
+          "frames": 2128,
+          "pregap": 150,
+          "gap": 0
+        }
+      ],
+      "input_sha256": {
+        "Sakura Taisen (Japan) (Disc 1) (6M) (Track 1).bin": "98892052bc069767171e2db2fc2bce45760163b11412f35037a22ed398d9ea58",
+        "Sakura Taisen (Japan) (Disc 1) (6M) (Track 2).bin": "e349cec54ec2b2891ee77aa7726c35e93873c9e46b2a689331ac463b20c8004e"
+      },
+      "extensions": {
+        "": 96,
+        ".BIN": 1530,
+        ".DAT": 7,
+        ".SH2": 2,
+        ".CPK": 1,
+        ".SE": 15,
+        ".ALL": 48,
+        ".SD2": 1,
+        ".ADP": 39,
+        ".PCM": 6,
+        ".FNT": 13,
+        ".DRV": 1,
+        ".SND": 15,
+        ".GCG": 8,
+        ".TXT": 3
+      },
+      "executables_candidates": [
+        {
+          "path": "/SAKURA",
+          "bytes": 391712,
+          "lba": 63
+        },
+        {
+          "path": "/SAKURA1/LOGO.SH2",
+          "bytes": 243200,
+          "lba": 125256
+        },
+        {
+          "path": "/SAKURA1/LPCHK.SH2",
+          "bytes": 12396,
+          "lba": 125375
+        }
+      ]
+    },
+    {
+      "disc": 2,
+      "cue": "Sakura Taisen (Japan) (Disc 2) (6M)/Sakura Taisen (Japan) (Disc 2) (6M)/Sakura Taisen (Japan) (Disc 2) (6M).cue",
+      "header_report": "hardware   SEGA SEGASATURN\nmaker      SEGA ENTERPRISES\nproduct    GS-9037  version V1.005  date 19960901\ndevice     CD-2/2\nareas      JT  (Japan, Asia NTSC)\nperipheral JM  (control pad, mouse)\ntitle      SAKURA TAISEN\nIP size    0x8000\nstacks     master 0x00000000  slave 0x00000000\n1st read   at 0x06004000, size whole file\narea block 0x0E04  'For JAPAN.'",
+      "volume_id": "SAKURA_CD2",
+      "volume_size_sectors": 264989,
+      "data_track_sectors": 262711,
+      "file_count": 1785,
+      "first_read": {
+        "path": "/SAKURA",
+        "lba": 63,
+        "bytes": 392024,
+        "sha256": "ecbcbda739362745daac4a334e3d3d26ae8ac327ca6a66d52763416d22cdba93"
+      },
+      "tracks": [
+        {
+          "number": 1,
+          "mode": "MODE1/2352",
+          "lba": 0,
+          "frames": 262711,
+          "pregap": 0,
+          "gap": 0
+        },
+        {
+          "number": 2,
+          "mode": "AUDIO",
+          "lba": 262861,
+          "frames": 2128,
+          "pregap": 150,
+          "gap": 0
+        }
+      ],
+      "input_sha256": {
+        "Sakura Taisen (Japan) (Disc 2) (6M) (Track 1).bin": "fd6e744cff48dbb1858da0b82fd923324efdd2f83b764904cbbf3e84f840b794",
+        "Sakura Taisen (Japan) (Disc 2) (6M) (Track 2).bin": "ea9f57afebf8749900314ee82eedbc0e641f44baa1a08bbe6da820d1109047f0"
+      },
+      "extensions": {
+        "": 96,
+        ".BIN": 1528,
+        ".DAT": 7,
+        ".SH2": 2,
+        ".CPK": 3,
+        ".SE": 15,
+        ".ALL": 48,
+        ".SD2": 1,
+        ".ADP": 39,
+        ".PCM": 6,
+        ".FNT": 13,
+        ".DRV": 1,
+        ".SND": 15,
+        ".GCG": 8,
+        ".TXT": 3
+      },
+      "executables_candidates": [
+        {
+          "path": "/SAKURA",
+          "bytes": 392024,
+          "lba": 63
+        },
+        {
+          "path": "/SAKURA1/LOGO.SH2",
+          "bytes": 243200,
+          "lba": 102087
+        },
+        {
+          "path": "/SAKURA1/LPCHK.SH2",
+          "bytes": 12396,
+          "lba": 102206
+        }
+      ]
+    }
+  ]
+}

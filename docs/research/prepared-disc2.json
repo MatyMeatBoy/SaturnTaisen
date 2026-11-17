@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "translation": "supplied-v2_1",
+  "inputs": {
+    "Sakura Taisen (Japan) (Disc 2) (6M).cue": "1b683a786a62d6be27e1a3ea140373e5b9fe65a128eed9d11ee958a26c27f685",
+    "Sakura Taisen (Japan) (Disc 2) (6M) (Track 1).bin": "fd6e744cff48dbb1858da0b82fd923324efdd2f83b764904cbbf3e84f840b794",
+    "Sakura Taisen (Japan) (Disc 2) (6M) (Track 2).bin": "ea9f57afebf8749900314ee82eedbc0e641f44baa1a08bbe6da820d1109047f0",
+    "SW_Eng_Disc2_v2_1.xdelta": "985e795dc185b6123bf9d1765776de1bbcfbbee2c084bbff610e7c816535d86a",
+    "SW_Eng_Disc2_v2_1.cue": "412029db4f96f21236841636540b0fe4552f14ab4939447468674698a36c6f2e"
+  },
+  "input_data_sectors": 262711,
+  "output_data_sectors": 263149,
+  "removed_embedded_audio_pregap_sectors": 150,
+  "product": "GS-9037",
+  "version": "V1.005",
+  "disc": "CD-2/2",
+  "ra_hash": "c306c094d0177459b31f411cd4cd44a9",
+  "xdelta_sha256": "732980d52f9220dc81817ccdd0c295eadce8a0048a24c2a771a73f791ac824e9",
+  "xdelta_output_checksums_verified": true,
+  "outputs": {
+    "game.cue": "412029db4f96f21236841636540b0fe4552f14ab4939447468674698a36c6f2e",
+    "Track 01.iso": "fb813e8fe15caf03887321a5ceacb32d5d8822801fba460af726a59a6753770b",
+    "Track 02.wav": "20dd422829f14d41bb37d16b64ecf8c8a922d1acf2a850d0755c9fb5ff889cb8"
+  }
+}

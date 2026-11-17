@@ -1,6 +1,6 @@
 # SaturnTaisenFirst — diseño propuesto
 
-Estado: borrador para revisión. La vía de recompilación estática Saturn fue elegida por el usuario; el runtime concreto aún no se ha elegido.
+Estado: diseño aprobado por el usuario el 17/11/2026, con ampliaciones posteriores incorporadas abajo. Se autoriza continuar hasta completar el recomp. El runtime concreto se decide con pruebas.
 
 ## Intención y alcance
 
@@ -35,6 +35,24 @@ El marco ocupa únicamente el área exterior al juego. Propuesta inicial: marco 
 Un solo perfil de juego agrupa ambas imágenes traducidas y una memoria de respaldo persistente compartida. Los identificadores de recursos incluyen el disco para evitar colisiones entre archivos con el mismo nombre.
 
 Primero observar en la referencia el cambio real. Después detectar la solicitud mediante estado o función conocida y realizar el montaje y, si el juego lo requiere, la continuación/reinicialización correspondiente. No fusionar ciegamente las ISO ni cambiar disco por tiempo transcurrido. Preservar guardados de forma atómica, mantener copia antes de una migración y restaurar al volver a abrir el programa el disco correcto.
+
+## Ajustes, mandos y modificaciones — requisitos añadidos
+
+Launcher y menú de pausa ingame comparten configuración persistente: imagen, escala, marco, audio, controles, mods y logros. Start + Select abre/cierra el menú; Select es una acción del port, no un botón inventado del Saturn. Reservar la combinación, dispararla una sola vez hasta liberar y evitar que botones mantenidos al cerrar alcancen al juego. Incluir atajo de teclado, navegación completa por mando y reconexión sin teclas retenidas.
+
+Soporte general mediante SDL para Xbox, PlayStation, Nintendo, mandos genéricos y todos los modelos M30 que expongan entradas accesibles en PC. Perfiles automáticos Saturn para dispositivos/modos reconocidos; remapeo y asistente para desconocidos. Los ajustes del usuario prevalecen. No identificar un M30 únicamente por un nombre Xbox genérico. Tuplas GUID/VID/PID/transporte/modo con procedencia y confianza; perfiles elegibles manualmente cuando el modo oculta el modelo. Mantener etiquetas Saturn A/B/C y X/Y/Z, L/R, Start, y Select del port. Contemplar cruceta como hat o ejes y C/Z o L/R como botones o ejes con histéresis. El propietario tiene M30 Bluetooth pero no disponible para validación física.
+
+Traducción inglesa y packs compatibles instalados estarán activados por defecto y se podrán desactivar. Mantener preparaciones japonesa e inglesa separadas, con identidad y código generado de cada variante. No aplicar un código recompilado de otra variante sobre una imagen distinta. Cambios que alteran código/recursos requieren reinicio seguro. Buscar mods HD y mejoras existentes en fuentes de autores; evaluar cobertura, versión, licencia e impacto en memoria/RA. No presentar un shader, un port de PC o un pack de otro juego como mod HD verificado de Sakura Saturn. El marco original sigue disponible.
+
+## RetroAchievements y logros locales — requisitos añadidos
+
+Set oficial https://retroachievements.org/game/16546 (68 logros al consultar el 17/11/2026). Usar exactamente sus identificadores, condiciones, títulos, descripciones y badges: ningún reto propio. Pestaña Logros en launcher e ingame, filtro/progreso y avisos con badge, título y descripción al desbloquear, similares en función a ReKHCoM.
+
+Login opcional, softcore forzado por rc_client; nunca solicitar contraseñas en el chat ni guardarlas. Windows protege el token con DPAPI. Separar cuenta y progreso local. Descargar/cachear el catálogo oficial y badges con versión/procedencia y usar rcheevos para evaluar offline la misma definición. El primer uso totalmente offline necesita un catálogo legítimamente disponible localmente; no prometer descarga sin conexión. Sin catálogo, informar indisponibilidad sin inventar logros.
+
+Los logros offline se guardan localmente de forma atómica por juego/variante/usuario local. Separar evaluación real de previews, run-ahead y regresiones; estos últimos no conceden logros. No reenviar automáticamente premios históricos al conectar otra cuenta ni simular una sesión online offline. La cola/reintento de una sesión online usa solo el flujo admitido por rc_client. Guardar/restaurar estado de evaluación junto al estado del juego, reiniciar del modo adecuado ante reset y notificar cambio de disco mediante rc_client_begin_change_media.
+
+El mapa oficial Saturn de rcheevos aplana WRAM-L en 0x000000–0x0FFFFF y WRAM-H en 0x100000–0x1FFFFF. Leer de las memorias reales del runtime con límites y orden de bytes correctos, no de direcciones del host. do_frame se ejecuta una vez por frame lógico real, nunca por frame de presentación. Los dos hashes de los dumps originales coinciden con los registrados en RA; repetir identificación y comprobar las referencias de memoria después del parche. No forzar el game ID ni sustituir hashes para ocultar incompatibilidad.
 
 ## Validación
 
