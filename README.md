@@ -9,7 +9,7 @@
   <a href="LICENSE"><img alt="GPL-3.0-only" src="https://img.shields.io/badge/licencia-GPL--3.0--only-646464?style=flat-square"></a>
 </p>
 
-Un regreso al Teatro Imperial con el código SH-2 recompilado, píxeles enteros y mejoras opcionales de presentación. Proyecto de **MatyMeatBoy**.
+Un regreso al Teatro Imperial con el código SH-2 recompilado, píxeles enteros y mejoras opcionales de presentación. Proyecto público de **MatyMeatBoy**.
 
 **La v0.1.2 es una prerelease de prueba, no el juego completo certificado.** El nombre de este checkpoint fue solicitado para probar en otro PC; la [v0.1.5 anterior](docs/releases/v0.1.5.md) se conserva intacta. No está verificado todavía el capítulo 1 de principio a fin ni la campaña completa. [Alcance y validación de esta entrega](docs/releases/v0.1.2.md).
 
