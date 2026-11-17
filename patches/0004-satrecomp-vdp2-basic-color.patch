@@ -1,0 +1,127 @@
+diff --git a/video/regs.cpp b/video/regs.cpp
+index b4ae00e..96282f2 100644
+--- a/video/regs.cpp
++++ b/video/regs.cpp
+@@ -93,9 +93,15 @@ void Vdp2Regs::Decode(const uint16 *raw) {
+         bg.shadowEnable = Bit(raw[SDCTL], n);
+         bg.lineColorScreenEnable = Bit(raw[LNCLEN], n);
+         bg.colorCalcEnable = Bit(raw[CCCTL], n);
++        specialColorCalcMode[kScreenOfBit[n]] = Bits(raw[0xEE / 2], n * 2, n * 2 + 1);
++        colorCalcRatio[kScreenOfBit[n] + 1] = Bits(raw[0x108 / 2 + n / 2], (n & 1) * 8, (n & 1) * 8 + 4);
+         bg.priorityMode = static_cast<PriorityMode>(Bits(raw[SFPRMD], n * 2, n * 2 + 1));
+     }
+     mosaicH = Bits(raw[MZCTL], 8, 11) + 1;
++    colorCalcRatio[6] = Bits(raw[0x10E / 2], 8, 12);
++    colorCalcAdd = Bit(raw[CCCTL], 8);
++    colorCalcUseSecondRatio = Bit(raw[CCCTL], 9);
++    colorCalcExtended = Bit(raw[CCCTL], 10);
+     mosaicV = Bits(raw[MZCTL], 12, 15) + 1;
+     for (uint32 i = 0; i < 8; i++) {
+         specialFunctionCodes[0].colorMatches[i] = Bit(raw[SFCODE], i);
+diff --git a/video/regs.h b/video/regs.h
+index d571b30..82345f5 100644
+--- a/video/regs.h
++++ b/video/regs.h
+@@ -131,6 +131,9 @@ struct Vdp2Regs {
+     SpriteParams spriteParams;
+     LineBackScreenParams lineScreenParams, backScreenParams;
+     std::array<bool, 7> colorOffsetEnable{}, colorOffsetSelect{}; // sprites, RBG0, NBG0..3, back
++    std::array<uint8, 7> colorCalcRatio{};
++    std::array<uint8, 5> specialColorCalcMode{};
++    bool colorCalcAdd = false, colorCalcUseSecondRatio = false, colorCalcExtended = false;
+     std::array<ColorOffset, 2> colorOffset;
+     struct {
+         std::array<bool, 8> colorMatches{};
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 2702309..19031c5 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -369,8 +369,8 @@ bool Renderer::SpriteLine(uint32 y) {
+ 
+ // One line of the picture from the layers' lines: for every pixel, the layer with the highest priority that
+ // has a pixel there (priority 0: none); between equals, sprites before RBG0 before NBG0..NBG3; the back screen
+-// where there is none. Then sprite shadows. Lines that need colour calculation or colour offset are left to
+-// the reference for now.
++// where there is none. Basic two-screen colour calculation, then colour offset and sprite shadows.
++// Special/extended calculations and sprite ratio selection still require the reference.
+ void Renderer::ComposeLine(uint32 y) {
+     const Vdp2Regs &regs2 = m_regs2;
+     const Vdp2Regs &state2 = m_regs2;
+@@ -382,9 +382,11 @@ void Renderer::ComposeLine(uint32 y) {
+     uint32 *out = &m_framebuffer[y * width];
+     m_lines++;
+ 
+-    bool supported = !regs2.spriteParams.colorCalcEnable && !regs2.backScreenParams.colorCalcEnable;
++    bool supported = !regs2.spriteParams.colorCalcEnable && !regs2.backScreenParams.colorCalcEnable && !regs2.colorCalcExtended &&
++                     !(regs2.colorCalcUseSecondRatio && state2.layerEnabled[kSprites]);
+     for (uint32 i = 0; i < 5; i++) {
+-        supported = supported && !regs2.bgParams[i].colorCalcEnable;
++        supported = supported && (!regs2.bgParams[i].colorCalcEnable ||
++                                  (regs2.specialColorCalcMode[i] == 0 && !regs2.bgParams[i].lineColorScreenEnable));
+     }
+     if (!supported) {
+         if (m_check) {
+@@ -447,6 +449,7 @@ void Renderer::ComposeLine(uint32 y) {
+     for (uint32 x = 0; x < width; x++) {
+         uint32 top = kBack;
+         uint32 topPriority = 0;
++        uint32 second = kBack, secondPriority = 0;
+         if (state2.layerEnabled[kSprites] && m_sprite.special[x] == normal) {
+             // (a shadow pixel is not shown itself: it darkens what is below)
+             top = m_sprite.priority[x] ? static_cast<uint32>(kSprites) : top;
+@@ -458,12 +461,40 @@ void Renderer::ComposeLine(uint32 y) {
+             }
+             const uint8 priority = layers[layer].priority[x];
+             if (priority > topPriority) { // (earlier layers win ties)
++                second = top;
++                secondPriority = topPriority;
+                 top = layer;
+                 topPriority = priority;
++            } else if (priority > secondPriority) {
++                second = layer;
++                secondPriority = priority;
+             }
+         }
+         Color888 color = top == kBack ? back : top == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[top].color[x]};
+ 
++        // Colour offset follows colour calculation and uses the top screen selection.
++        auto applyOffset = [&](Color888 value, uint32 layer) {
++          if (regs2.colorOffsetEnable[layer]) {
++            const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[layer]];
++            if (offset.nonZero) {
++                auto shift = [](uint32 channel, uint32 by) { return static_cast<uint32>(std::clamp<sint32>(static_cast<sint32>(channel) + bit::sign_extend<9>(by), 0, 255)); };
++                value.u32 = shift(value.r, offset.r) | (shift(value.g, offset.g) << 8) | (shift(value.b, offset.b) << 16);
++            }
++          }
++          return value;
++        };
++        if (top >= kRBG0 && top <= 5u && regs2.bgParams[top - kRBG0].colorCalcEnable &&
++            regs2.specialColorCalcMode[top - kRBG0] == 0 && !regs2.colorCalcExtended &&
++            !regs2.bgParams[top - kRBG0].lineColorScreenEnable &&
++            !(regs2.colorCalcUseSecondRatio && second == kSprites)) {
++            Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
++            const uint32 ratio = regs2.colorCalcRatio[regs2.colorCalcUseSecondRatio ? second : top];
++            auto mix = [&](uint32 a, uint32 b) {
++                return regs2.colorCalcAdd ? std::min(a + b, 255u) : (a * (31u - ratio) + b * (ratio + 1u)) >> 5;
++            };
++            color.u32 = mix(color.r, below.r) | (mix(color.g, below.g) << 8) | (mix(color.b, below.b) << 16);
++        }
++        color = applyOffset(color, top);
+         // Sprite shadow: a shadow pixel of the sprite layer halves the brightness of the layer shown, if
+         // that layer takes shadows
+         const bool normalShadow = m_sprite.special[x] == static_cast<uint8>(SpriteSpecial::Shadow);
+@@ -476,14 +507,6 @@ void Renderer::ComposeLine(uint32 y) {
+                 color.u32 = (color.u32 >> 1) & 0x7F7F7F7F;
+             }
+         }
+-        // Colour offset: an amount added to (or taken from) each channel of the layer shown, for fades
+-        if (regs2.colorOffsetEnable[top]) {
+-            const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[top]];
+-            if (offset.nonZero) {
+-                auto shift = [](uint32 channel, uint32 by) { return static_cast<uint32>(std::clamp<sint32>(static_cast<sint32>(channel) + bit::sign_extend<9>(by), 0, 255)); };
+-                color.u32 = shift(color.r, offset.r) | (shift(color.g, offset.g) << 8) | (shift(color.b, offset.b) << 16);
+-            }
+-        }
+         out[x] = color.u32;
+     }
+ }

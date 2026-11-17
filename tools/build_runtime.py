@@ -53,7 +53,7 @@ def build(toolchain: Path, env):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['build', 'discover', 'recompile', 'run', 'check-disc'])
+    parser.add_argument('action', choices=['build', 'discover', 'recompile', 'run', 'check-disc', 'check-video'])
     parser.add_argument('--toolchain', type=Path, default=Path('C:/msys64/clang64'))
     parser.add_argument('--disc', type=Path, default=ROOT / 'local/prepared/disc1/game.cue')
     parser.add_argument('--frames', type=int, default=600)
@@ -63,6 +63,15 @@ def main():
     dependency()
     env = os.environ.copy()
     env['PATH'] = str(args.toolchain / 'bin') + os.pathsep + env.get('PATH', '')
+    if args.action == 'check-video':
+        executable = ROOT / 'local/vdp2-color-test.exe'
+        sources = [DEP / 'video' / name for name in
+                   ('renderer.cpp', 'regs.cpp', 'layers.cpp', 'vdp1.cpp', 'raster.cpp')]
+        run(args.toolchain / 'bin/clang++.exe', '-std=c++20', '-O2',
+            ROOT / 'tests/test_vdp2_color.cpp', *sources,
+            '-I', DEP / 'video', '-I', DEP / 'runtime', '-o', executable, env=env)
+        run(executable, env=env)
+        return
     if args.action == 'check-disc':
         executable = ROOT / 'local/disc-image-test.exe'
         run(args.toolchain / 'bin/clang++.exe', '-std=c++20', ROOT / 'tests/test_disc_image.cpp',

@@ -6,7 +6,8 @@
     "patches": [
       "patches/0001-satrecomp-cue-wave-gaps.patch",
       "patches/0002-satrecomp-strict-native.patch",
-      "patches/0003-satrecomp-native-interrupt-shadow.patch"
+      "patches/0003-satrecomp-native-interrupt-shadow.patch",
+      "patches/0004-satrecomp-vdp2-basic-color.patch"
     ]
   }
 }
