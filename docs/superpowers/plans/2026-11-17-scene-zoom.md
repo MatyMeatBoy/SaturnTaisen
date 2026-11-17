@@ -20,3 +20,8 @@ Zoom compacta ahora los dos bloques visibles y centra el conjunto verticalmente.
 ## Desplazamiento inferior
 
 El conjunto Zoom baja hasta tres unidades de escala del diálogo, limitado por el borde inferior. En1440p baja18 píxeles: margen superior30, imageny30–1038, separación6 y diálogoy1044–1446. Solo se permite ocultar una fila nativa inferior cuando la procedencia del framebuffer confirma que contiene sombra/fondo; si hay contenido o marco, el descenso se limita al borde de la pantalla. Se conservan escalas×7/×6 y Original. Geometría y comparación real de imagen/texto verificadas; captura local lowered.png.
+
+
+## Separación final de diálogo
+
+Se baja solo el diálogo media unidad de su escala (3 píxeles en1440p), sin mover la imagen. La separación pasa de6 a9; la caja empieza eny1047. El runtime identifica hasta dos filas finales que sean exclusivamente sombra/fondo y limita el desplazamiento para proteger marco y contenido. Imageny30, escalas×7/×6 y modo Original conservados. Fixture geométrico y comparación real de imagen/tinta correctos; captura dialogue-lowered.png.

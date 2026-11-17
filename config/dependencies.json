@@ -31,7 +31,8 @@
       "patches/0025-sakura-validated-hd-portrait-pack.patch",
       "patches/0026-sakura-optional-integer-scene-zoom.patch",
       "patches/0027-sakura-compact-zoom-margins.patch",
-      "patches/0028-sakura-lower-zoom-group.patch"
+      "patches/0028-sakura-lower-zoom-group.patch",
+      "patches/0029-sakura-nudge-zoom-dialogue-down.patch"
     ]
   }
 }
