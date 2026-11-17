@@ -30,10 +30,24 @@ NC10 exports 94 nonempty image entries successfully. Do not treat its body image
 
 The public [Sakura Taisen PSP translation tools](https://github.com/snake7594/sakura-taisen-1-2-psp-korean) provide primary format research for SPRED headers, palettes and the ring-buffer compression. PC observations above were checked against the owner's files; PSP behavior is not assumed to prove every PC composition rule. No code from that project was incorporated into the decoder.
 
-PC script mapping, English reinsertion, playable PC compatibility and the Saturn HD resource compositor remain pending. No extracted original artwork or full scripts are included in the repository.
+PC script mapping, English reinsertion, playable PC compatibility and the full Saturn HD resource compositor remain pending. No extracted original artwork or full scripts are included in the repository.
 
 ## Additional inspection
 
 All19 native PC WALL KABE resources decode successfully; every one contains a640×480 image. The exceptional EV19S03 image chunk contains readable authoring/export comments and bitmap names where the usual entry table is expected. Its layout remains unsupported; this observation does not justify bypassing bounds checks.
 
-The historical [Iwakura PC project announcement](https://iwakuraproductions.wordpress.com/2014/09/01/the-sakura-wars-pc-fan-translation-project/) documents English reinsertion in2014 and names cj_iwakura, EsperKnight and Nezumi. It does not provide a verified reinsertion tool for this2006 Japanese dump, nor establish current PC compatibility.
+The historical [Iwakura PC project announcement](https://iwakuraproductions.wordpress.com/2014/09/01/the-sakura-wars-pc-fan-translation-project/) documents English reinsertion in2014 and names cj_iwakura, EsperKnight and Nezumi. It does not provide a verified reinsertion tool for this Japanese dump, nor establish current PC compatibility.
+
+## Experimental background integration after v0.1.5
+
+The development runtime accepts `--pc-assets EXTRACTED_PC_RESOURCE_ROOT`. The supplied Japanese PC KABE resources can supply the corresponding decorative theme in enhanced Saturn scenes. Each source must match its recorded size and FNV64 identity before SPRED decoding; unknown or modified files fall back to Saturn. This is an accidental-mismatch guard, not cryptographic authentication. The initial English font option stays independent.
+
+Generated PC masters are normalized onto864×486, using only colors observed in the matching native640×480 PC image. The generated art is still preliminary and does not preserve the original center bit-for-bit. Rendering uses integer cover and carries the same native color offsets during fades. Disabling Fondos PC HD selects the Saturn background.
+
+`--prepare-pc-backgrounds ROOT CACHE_DIRECTORY` validates and caches the19 unique native PC decorative sources without starting the game. All19 succeeded locally. An interactive night scene was inspected; tests confirm that disabled or modified-source PC data selects the same Saturn exterior pixels as the fallback. This is not a PC game executable path, HD character/video replacement or PC text translation. The public launcher import flow for PC media is still pending. These additions are subsequent development and are not in the immutable v0.1.5 package.
+
+## PC executable follow-up
+
+Read-only LLVM inspection identifies ADVcore.exe as PE32/i386. Visible imports include DirectDrawCreate, DirectInputCreateA and dynamic GetProcAddress; the visible table is not evidence of the complete game API or font renderer. No CreateFont/TextOut API names were found in this static image. PC script storage and executable compatibility remain unresolved. No installer, game executable or legacy driver has been executed during this resource work.
+
+The [DxWnd project discussion](https://sourceforge.net/p/dxwnd/discussion/general/thread/379615954b/) records developer observations of ADVcore spawning copies and helper DLLs in temporary folders. This is evidence from another installation, not confirmation for this dump, but future PC launch supervision must account for child processes rather than assuming the original PID owns the final game window. The [official chronology](https://sakura-taisen.com/archives/game/nenpyou/index.html) distinguishes the original PC and later DVD editions; media timestamps alone do not identify the commercial release date.

@@ -20,7 +20,8 @@
       "patches/0014-sakura-presentation-fades.patch",
       "patches/0015-satrecomp-close-opcode-source.patch",
       "patches/0016-sakura-lazy-background-textures.patch",
-      "patches/0017-sakura-development-version-labels.patch"
+      "patches/0017-sakura-development-version-labels.patch",
+      "patches/0018-sakura-owner-pc-background-integration.patch"
     ]
   }
 }

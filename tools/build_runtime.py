@@ -78,6 +78,8 @@ def build(toolchain: Path, env):
     if not artwork.is_dir():artwork=ROOT/'art/backgrounds' # portable source package
     if artwork.is_dir():
         shutil.copytree(artwork,BUILD/'art/backgrounds',dirs_exist_ok=True)
+    pc_artwork=ROOT/'assets/generated/pc-backgrounds'
+    if pc_artwork.is_dir():shutil.copytree(pc_artwork,BUILD/'art/pc-backgrounds',dirs_exist_ok=True)
 
 
 def main():

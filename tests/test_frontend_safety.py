@@ -58,6 +58,9 @@ class FrontendTests(unittest.TestCase):
     def test_pc_sprite_decoder_colors_and_corrupt_input(self):
         self.fixture('pc_spr')
 
+    def test_pc_background_grid_palette_and_explicit_identity(self):
+        self.fixture('pc_backdrop')
+
     def test_launcher_child_outlives_observer_without_freed_memory_access(self):
         self.fixture('launcher_lifetime',[DEP/'recomp-common/launcher/src/game_process.cpp'])
 
