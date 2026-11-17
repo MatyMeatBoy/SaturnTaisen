@@ -3,16 +3,18 @@
 #include <vector>
 int main() {
     for(auto [w,h]: {std::pair{1280,720},std::pair{1920,1080},std::pair{2560,1440},std::pair{3840,2160},std::pair{3440,1440},std::pair{2044,1440}}) {
-        auto zoom=port::FitSceneZoom(w,h,306,67,212);
+        auto zoom=port::FitSceneZoom(w,h,306,67,212,true);
         assert(zoom.valid && zoom.picture.y>0);
         assert(zoom.picture.w==288*zoom.picture.scale && zoom.picture.h==144*zoom.picture.scale);
         assert(zoom.dialogue.w==306*zoom.dialogue.scale);
         assert(zoom.dialogue.y==zoom.picture.y+zoom.picture.h+zoom.gap);
-        assert(zoom.dialogue.y+zoom.dialogue.h<h);
+        assert(zoom.dialogue.y+zoom.dialogue.h<=h+zoom.dialogue.scale);
         assert(zoom.picture.x+zoom.picture.w+zoom.shadow<=w);
     }
-    auto zoom=port::FitSceneZoom(2560,1440,306,67,212);
-    assert(zoom.picture.scale==7 && zoom.dialogue.scale==6 && zoom.shadow==28 && zoom.gap==6 && zoom.picture.y==12 && zoom.dialogue.y==1026);
+    auto zoom=port::FitSceneZoom(2560,1440,306,67,212,true);
+    assert(zoom.picture.scale==7 && zoom.dialogue.scale==6 && zoom.shadow==28 && zoom.gap==6 && zoom.picture.y==30 && zoom.dialogue.y==1044);
+    auto noClip=port::FitSceneZoom(2560,1440,306,67,212);
+    assert(noClip.dialogue.y+noClip.dialogue.h<=1440 && noClip.picture.y==24);
     assert(!port::FitSceneZoom(100,100,306,67,212).valid);
     assert(port::IsOldPictureShadow(20,153,3));
     assert(port::IsOldPictureShadow(307,155,3));

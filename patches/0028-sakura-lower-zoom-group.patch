@@ -1,0 +1,41 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 079944a..6f4db97 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -530,7 +530,12 @@ int RunWindowed(Port &port) {
+                     if(planes.source[y*320+x]<3 && (x<16 || x>=304 || y<8 || y>=152)) {zoomSafe=false;break;}
+                 }
+                 if(!scene.movieOnly && zoomSafe && satrecomp::FeatureValue("scene_view")==1) {
+-                    const auto zoom=FitSceneZoom(wide,high,scene.w,scene.y+scene.h-153,scene.h);
++                    bool shadowOnly=true;
++                    for(int x=scene.x;x<scene.x+scene.w;x++) {
++                        const auto layer=planes.source[(scene.y+scene.h-1)*320+x];
++                        if(layer!=3 && layer<5) {shadowOnly=false;break;}
++                    }
++                    const auto zoom=FitSceneZoom(wide,high,scene.w,scene.y+scene.h-153,scene.h,shadowOnly);
+                     if(zoom.valid) {
+                         zoomForeground=hdLines.empty()?planes.foreground:hdForeground;
+                         for(int y=153;y<156;y++)for(int x=20;x<308;x++)
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index 124a0b7..bc773cf 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -17,7 +17,7 @@ struct SceneZoomLayout {
+     IntegerViewport picture{},dialogue{};
+     int shadow=0,gap=0;
+ };
+-inline SceneZoomLayout FitSceneZoom(int width,int height,int dialogueWidth,int dialogueLines,int groupLines) {
++inline SceneZoomLayout FitSceneZoom(int width,int height,int dialogueWidth,int dialogueLines,int groupLines,bool clipShadow=false) {
+     if(width<=0 || height<=0 || dialogueWidth<=0 || dialogueLines<=0 || groupLines<=0)return {};
+     const int boxScale=std::min(width/dialogueWidth,height/groupLines);
+     if(boxScale<1)return {};
+@@ -27,7 +27,8 @@ inline SceneZoomLayout FitSceneZoom(int width,int height,int dialogueWidth,int d
+     if(pictureScale<1)return {};
+     const int shadow=4*pictureScale;
+     // Compact the visible blocks; the image shadow may extend behind the dialogue.
+-    const int top=(height-144*pictureScale-dialogueLines*boxScale-gap)/2;
++    const int centered=(height-144*pictureScale-dialogueLines*boxScale-gap)/2;
++    const int top=centered+std::min(3*boxScale,centered+(clipShadow?boxScale:0));
+     return {true,{(width-288*pictureScale)/2,top,288*pictureScale,144*pictureScale,pictureScale},
+         {(width-dialogueWidth*boxScale)/2,top+144*pictureScale+gap,dialogueWidth*boxScale,dialogueLines*boxScale,boxScale},shadow,gap};
+ }

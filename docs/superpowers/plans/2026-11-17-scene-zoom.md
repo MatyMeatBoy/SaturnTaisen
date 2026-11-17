@@ -15,3 +15,8 @@ Se exige escena reconocida, sin arte superior fuera del rectángulo seguro; las 
 ## Ajuste de márgenes aprobado por dirección visual
 
 Zoom compacta ahora los dos bloques visibles y centra el conjunto verticalmente. La separación es una unidad de la escala del diálogo (mínimo2 píxeles); la sombra de imagen puede pasar detrás de la caja. Al calcular la escala se reserva margen exterior, manteniendo escalas enteras y sin recortar. En2560×1440 mantiene imagen×7 y diálogo×6: margen superior12, imageny12–1020, separación6, diálogoy1026–1428, margen inferior12. Original no cambia. Geometría verificada en720p/1080p/1440p/2160p/ultrawide y ancho2044; captura real y prueba de igualdad de píxeles de imagen y tinta del texto correctas.
+
+
+## Desplazamiento inferior
+
+El conjunto Zoom baja hasta tres unidades de escala del diálogo, limitado por el borde inferior. En1440p baja18 píxeles: margen superior30, imageny30–1038, separación6 y diálogoy1044–1446. Solo se permite ocultar una fila nativa inferior cuando la procedencia del framebuffer confirma que contiene sombra/fondo; si hay contenido o marco, el descenso se limita al borde de la pantalla. Se conservan escalas×7/×6 y Original. Geometría y comparación real de imagen/texto verificadas; captura local lowered.png.
