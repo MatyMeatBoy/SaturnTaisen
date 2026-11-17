@@ -12,7 +12,7 @@
     "0007-satrecomp-disc-reader-epoch.patch": "a6dd3f6a5196e9407acbbad976343d914f74549fbb95ef8c4210135bd9bfdca4",
     "0008-satrecomp-incremental-generation.patch": "fa12a97bbecd921180c598b50d181dcf8751d11639127c4ca7a1e4b2299d3a62"
   },
-  "guest_blocks": 307553,
+  "guest_blocks": 406725,
   "frames": 30000,
   "measurements": [
     {
@@ -63,7 +63,7 @@
   ],
   "video_tests": "Synthetic actual renderer: background/sprite blend, additive, endpoint, ratio selector, all four sprite gates, colour-calculation windows, post-blend offset",
   "measurement_guest_blocks": 8487,
-  "current_executable_sha256": "c4cf457904fb40af469d3270bc36bfac1bd77d63ae1f8f47372c43297568fc23",
+  "current_executable_sha256": "00270072dd2236b81fd63ab412b547cd621d13861a661b31e16da2367a96a491",
   "profile_checks": {
     "english-disc1": {
       "frames": 4200,
@@ -197,6 +197,25 @@
           "first_difference": null
         }
       ]
+    },
+    "disc2_loads_disc1_save": {
+      "frames": 9098,
+      "state_frame": 9000,
+      "guest_blocks": 406725,
+      "matches_interpreter_state_except_sound_host_pointer": true,
+      "differing_bytes_before_pointer_normalization": 3,
+      "observed": "original change Disc2 to Disc1 and restart warning",
+      "automatic_transition_implemented": false,
+      "scope": "Original wrong-disc warning only; no automatic media switch yet"
+    },
+    "logo_expansion": {
+      "before_blocks": 307553,
+      "after_blocks": 406725,
+      "cpp_files_total": 1017,
+      "cpp_files_written": 250,
+      "native_generated": 406725,
+      "skipped": 0,
+      "ownership_evidence": "LOGO bodies match actual Continue/wrong-disc code; shared first64 bytes do not distinguish ENDING"
     }
   },
   "current_build_checks": {
@@ -212,16 +231,17 @@
   "profile_checks_guest_blocks": 16767,
   "current_profile_checks": {
     "english-disc2": {
-      "frames": 1800,
-      "guest_blocks": 307553,
+      "frames": 9098,
+      "guest_blocks": 406725,
       "strict_native_default": true,
       "interpreted": 0,
       "single_stepped": 0,
-      "host_calls": 0
+      "host_calls": 0,
+      "scope": "cold boot and original wrong-disc warning with disc1 saved game"
     },
     "japanese-disc1": {
       "frames": 1800,
-      "guest_blocks": 307553,
+      "guest_blocks": 406725,
       "strict_native_default": true,
       "interpreted": 0,
       "single_stepped": 0,
@@ -229,7 +249,7 @@
     },
     "japanese-disc2": {
       "frames": 1800,
-      "guest_blocks": 307553,
+      "guest_blocks": 406725,
       "strict_native_default": true,
       "interpreted": 0,
       "single_stepped": 0,
