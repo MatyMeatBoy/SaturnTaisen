@@ -1,7 +1,7 @@
 <h1 align="center">🌸 SaturnTaisenFirst</h1>
 <p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Recompilación estática para Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases"><img alt="Versión 0.1 alpha" src="https://img.shields.io/badge/versi%C3%B3n-0.1_alpha-9a4564?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases"><img alt="Versión 0.1.5 checkpoint" src="https://img.shields.io/badge/versi%C3%B3n-0.1.5_checkpoint-9a4564?style=flat-square"></a>
   <img alt="Plataforma Windows x64" src="https://img.shields.io/badge/plataforma-Windows_x64-77445b?style=flat-square">
   <a href="docs/research/runtime-validation.json"><img alt="SH-2: AOT estática" src="https://img.shields.io/badge/SH--2-AOT_est%C3%A1tica-bf914d?style=flat-square"></a>
   <a href="LICENSE"><img alt="Licencia GPL-3.0-only" src="https://img.shields.io/badge/licencia-GPL--3.0--only-5d755d?style=flat-square"></a>
@@ -10,7 +10,7 @@
 
 Un regreso al Teatro Imperial con los píxeles de Saturn, una presentación cuidada y la traducción inglesa suministrada por el propietario. Repositorio privado de **MatyMeatBoy**.
 
-**Rama de desarrollo: 0.2.0-dev.** Añade selección Original/Mejorado, composición panorámica por capas, menú Sakura a resolución de ventana y fuente nítida opcional. Se han generado extensiones decorativas preliminares para las 20 variantes Saturn y las 19 de PC. Las de PC aún requieren integración; su presencia no implica que la versión PC, su traducción o el pack HD completo sean jugables. La última publicación sigue siendo v0.1.0.
+**v0.1.5 es un checkpoint de desarrollo hacia v0.2.** Añade selección Original/Mejorado, composición panorámica por capas, menú Sakura a resolución de ventana y fuente nítida opcional. Se han generado extensiones decorativas preliminares para las 20 variantes Saturn y las 19 de PC. Las de PC aún requieren integración; su presencia no implica que la versión PC, su traducción o el pack HD completo sean jugables. Consulta las [notas del checkpoint](docs/releases/v0.1.5.md).
 
 **v0.1 es una versión de desarrollo.** Están verificados el arranque, 119.781 fotogramas continuos de exploración AOT, guardado/carga del episodio 1 y cargas de partidas públicas del episodio 8 y Finale en el disco 2. La entrada al primer combate coincide con la referencia durante 3.001 frames repetidos, y 9.001 más llegan a su primer campo jugable en AOT. La campaña completa, todas las batallas y la transición automática real de discos todavía no están validadas.
 

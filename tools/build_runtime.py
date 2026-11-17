@@ -75,6 +75,7 @@ def build(toolchain: Path, env):
         '-DSATRECOMP_REFERENCE=OFF', env=env)
     run(toolchain / 'bin/cmake.exe', '--build', BUILD, '--parallel', '6', env=env)
     artwork=ROOT/'assets/generated/backgrounds'
+    if not artwork.is_dir():artwork=ROOT/'art/backgrounds' # portable source package
     if artwork.is_dir():
         shutil.copytree(artwork,BUILD/'art/backgrounds',dirs_exist_ok=True)
 

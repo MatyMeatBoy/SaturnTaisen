@@ -120,7 +120,9 @@ def package(destination,toolchain,archive=True):
         for pattern in patterns:
             for source in (ROOT/folder).glob(pattern):
                 shutil.copy2(source,target/source.name)
-    generated=generated_backgrounds(ROOT/'assets/generated/backgrounds')
+    art_source=ROOT/'assets/generated/backgrounds'
+    if not art_source.is_dir():art_source=ROOT/'art/backgrounds'
+    generated=generated_backgrounds(art_source)
     art=destination/'art/backgrounds'
     art.mkdir(parents=True)
     allowed_art={}
@@ -128,7 +130,7 @@ def package(destination,toolchain,archive=True):
         shutil.copy2(source,art/name)
         allowed_art['art/backgrounds/'+name]=digest(source)
     for name in ('provenance.json','PROMPTS.md'):
-        source=ROOT/'assets/generated/backgrounds'/name
+        source=art_source/name
         if source.is_file():shutil.copy2(source,art/name)
     (destination/'portable.txt').write_text('',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
