@@ -36,7 +36,8 @@
       "patches/0030-sakura-final-zoom-pixel-alignment.patch",
       "patches/0031-sakura-optional-full-hd-preload.patch",
       "patches/0032-sakura-limit-presentation-to-16x9.patch",
-      "patches/0033-sakura-m30-controller-profiles-and-ui-copy.patch"
+      "patches/0033-sakura-m30-controller-profiles-and-ui-copy.patch",
+      "patches/0034-sakura-portable-hd-discovery-v012.patch"
     ]
   }
 }

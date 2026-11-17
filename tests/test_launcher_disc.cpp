@@ -50,5 +50,20 @@ int main(int argc,char** argv) {
     const auto arguments=about.arguments(launch);
     auto video=std::find(arguments.begin(),arguments.end(),"--video");
     assert(video!=arguments.end() && *(video+1)=="software");
+    const auto second=folder.parent_path()/"disc2";std::filesystem::create_directories(second);
+    std::filesystem::copy_file(iso,second/"Track 01.iso");
+    std::filesystem::copy_file(cue,second/"game.cue");
+    write("V1.005","CD-1/2");
+    const auto paired=about.arguments(launch);
+    const auto extra=std::find(paired.begin(),paired.end(),"--extra-disc");
+    assert(extra!=paired.end() && std::filesystem::equivalent(*(extra+1),second/"game.cue"));
+    // A relocated portable bundle resolves HD resources beside its program, without old-PC paths.
+    const auto hd=root/"relocated bundle"/"hd-resources";
+    std::filesystem::create_directories(hd/"SAKURA1/WALL");
+    assert(PortableHdRoot({},hd.parent_path())==hd);
+    assert(PortableHdRoot(root/"missing-old-drive",hd.parent_path())==hd);
+    const auto explicitRoot=root/"custom-hd";std::filesystem::create_directories(explicitRoot);
+    assert(PortableHdRoot(explicitRoot,hd.parent_path())==explicitRoot);
+    assert(PortableHdRoot({},root/"empty-program").empty());
     std::puts("Launcher finds prepared discs with SDL paths and rejects unknown revisions");
 }

@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import shutil
 import unittest
 from PIL import Image,ImageChops
 ROOT=Path(__file__).resolve().parents[1]
@@ -27,6 +28,25 @@ class PortraitRuntimeTests(unittest.TestCase):
                             '--pc-assets',str(pc_root),'--settings',str(settings),'--backup',str(backup),'--mute'],env=env,capture_output=True,timeout=30)
         self.assertEqual(run.returncode,0,run.stderr.decode(errors='replace'))
         with Image.open(shot) as image:return image.convert('RGB'),run.stderr
+
+    @unittest.skipUnless((ROOT/'local/work/v012-prepared-hd/hd-pack.stfp').is_file(),'requires a local processed-only export')
+    def test_processed_only_pack_matches_originals_without_any_pc_spr_files(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:
+            folder=Path(directory);prepared=folder/'hd-resources'
+            shutil.copytree(ROOT/'local/work/v012-prepared-hd',prepared)
+            self.assertFalse(list(prepared.rglob('*.SPR')))
+            raw_profile=folder/'raw';shutil.copytree(ROOT/'local/profiles/v02-dev/mods',raw_profile/'mods')
+            project=json.loads(PROJECT.read_text(encoding='utf-8'))
+            original=Path(project['source']['path']).parent.parent.parent
+            raw,_=self.capture(raw_profile,original,2560,1440,True,True)
+            ready,log=self.capture(folder/'ready',prepared,2560,1440,True,True)
+            self.assertIn(b'source=prepared',log)
+            self.assertIn(b'HD preload: backgrounds=38/38 portrait_variants=382',log)
+            self.assertEqual(raw.tobytes(),ready.tobytes())
+            receipt=prepared/'hd-pack.stfp';data=bytearray(receipt.read_bytes());data[0]^=1;receipt.write_bytes(data)
+            fallback,_=self.capture(folder/'invalid',prepared,2560,1440,True,True)
+            native,_=self.capture(folder/'native',folder/'missing',2560,1440,True,True)
+            self.assertEqual(fallback.tobytes(),native.tobytes())
 
     def test_verified_portraits_use_integer_density_and_corrupt_resources_fall_back(self):
         from hd_matching import export_pack

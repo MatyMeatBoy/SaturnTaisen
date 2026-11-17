@@ -62,3 +62,12 @@ Pendiente próximo: activar y validar el pack de retratos en el perfil de desarr
 
 
 Checkpoint de prueba solicitado en20 minutos: build0.2-dev para probar capítulo1, sin declarar capítulo/campaña completos. Añadidos límite16:9 (bandas en superficies más anchas), precarga de todos los recursos HD habilitados, perfiles M30 Bluetooth/2.4G con override XInput y bindings explícitos prioritarios, copia de menús revisada e inventario nativoNC con enlace exacto de Iris. Verificación final:82 pruebas en148,379s, build nativo y launcher correctos. Precarga real:38/38 fondos y382 variantes de191 retratos sin fallos. Los cuerpos PC conservarán una sola escala basada en altura y eje cabeza/torso; su base sin ojos/boca no se publica como reemplazo terminado. Táctico16:9/HUD y extensiones PixelGen v1 ancladas al mapa siguen pendientes; pruebaGPU temporal restaurada y excluida de producción. Accesos locales y perfil independiente en docs/releases/v0.2-chapter1-preview.md.
+
+
+## Checkpoint portátil 0.1.2
+
+- OptiPort 58843a2: README y badges con alcance real, sin porcentajes de estabilidad.
+- 88 pruebas aprobadas; HD procesado idéntico a originales y fallback de corrupción validado.
+- Launcher detecta disco y recursos preparados junto al ejecutable; traslado sin toolchain probado a 1440p.
+- Entrega personal autorizada: únicamente disco 1 inglés y recursos HD procesados; nunca publicar ese ZIP. Release Git sin entradas originales.
+- Pendientes: prueba RX 6900 XT/M30 físicos, capítulo 1 continuo completo, cuerpos HD, táctico 16:9 y transición natural de discos.

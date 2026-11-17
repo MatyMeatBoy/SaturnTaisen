@@ -34,6 +34,9 @@ class FrontendTests(unittest.TestCase):
     def test_m30_profiles_detect_both_families_and_preserve_user_bindings(self):
         self.fixture('controller_profiles')
 
+    def test_prepared_hd_receipt_rejects_wrong_hashes_and_invalid_extents(self):
+        self.fixture('prepared_hd')
+
     def test_integer_scaling_native_modes_and_all_window_shapes(self):
         self.fixture('integer_viewport')
 

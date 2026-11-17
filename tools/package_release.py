@@ -139,6 +139,8 @@ def package(destination,toolchain,archive=True):
         for name,source in generated_backgrounds(pc_art_source,pc=True).items():
             shutil.copy2(source,pc_art/name);allowed_art['art/pc-backgrounds/'+name]=digest(source)
         shutil.copy2(pc_art_source/'provenance.json',pc_art/'provenance.json')
+    (destination/'Jugar.bat').write_text('@echo off\nsetlocal\nset "SATURN_TAISEN_FIRST_HOME=%~dp0user"\nset "SATRECOMP_HD_STATS=1"\nset "SATRECOMP_BACKGROUND_STATS=1"\nif not exist "%~dp0user" mkdir "%~dp0user"\nif not exist "%~dp0user\\settings.ini" if exist "%~dp0personal-defaults.ini" copy /y "%~dp0personal-defaults.ini" "%~dp0user\\settings.ini" >nul\nstart "" /d "%~dp0" "%~dp0SaturnTaisenFirst.exe"\n',encoding='ascii')
+    (destination/'Ver logs.bat').write_text('@echo off\nif not exist "%~dp0user\\logs" mkdir "%~dp0user\\logs"\nstart "" "%~dp0user\\logs"\n',encoding='ascii')
     (destination/'portable.txt').write_text('',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
     (destination/'LEEME.md').write_text(f'''# SaturnTaisenFirst {version} · Desarrollo
