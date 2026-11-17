@@ -55,6 +55,12 @@ class FrontendTests(unittest.TestCase):
     def test_background_import_uses_one_grid_and_native_palette(self):
         self.fixture('backdrop')
 
+    def test_background_cache_validates_payload_and_atomic_replacement(self):
+        self.fixture('background_cache')
+
+    def test_palette_acceleration_preserves_exact_colors_and_tie_order(self):
+        self.fixture('palette_match')
+
     def test_pc_sprite_decoder_colors_and_corrupt_input(self):
         self.fixture('pc_spr')
 
