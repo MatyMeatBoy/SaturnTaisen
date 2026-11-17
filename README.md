@@ -8,7 +8,7 @@
   <img alt="Estado: desarrollo" src="https://img.shields.io/badge/estado-en_desarrollo-d1a0ad?style=flat-square">
 </p>
 
-Un regreso al Teatro Imperial con los píxeles de Saturn, una presentación cuidada y la traducción inglesa suministrada por el propietario. Repositorio privado de **MatyMeatBoy**.
+Un regreso al Teatro Imperial con los píxeles de Saturn, una presentación cuidada y la traducción inglesa suministrada por el propietario. Proyecto público de **MatyMeatBoy**.
 
 **v0.1.5 es un checkpoint de desarrollo hacia v0.2.** Añade selección Original/Mejorado, composición panorámica por capas, menú Sakura a resolución de ventana y fuente nítida opcional. Se han generado extensiones decorativas preliminares para las 20 variantes Saturn y las 19 de PC. Las de PC aún requieren integración; su presencia no implica que la versión PC, su traducción o el pack HD completo sean jugables. Consulta las [notas del checkpoint](docs/releases/v0.1.5.md).
 
@@ -22,7 +22,7 @@ El launcher usa una temática de cerezos inspirada en NewSnapRecomp, solo la cap
 - Incorporar localmente los dos discos y la traducción inglesa.
 - Integrar la transición entre discos y conservar las partidas.
 - Escalar únicamente en enteros, conservar los píxeles originales y rellenar el espacio restante con un marco adaptable.
-- Repositorio privado bajo MatyMeatBoy.
+- Repositorio público bajo MatyMeatBoy.
 - Ajustes compartidos entre launcher y menú ingame (Start + Select).
 - Mandos generales y perfiles automáticos Saturn para modelos reconocidos, incluidos M30.
 - Logros oficiales RetroAchievements 1:1, online softcore y offline local, con pestaña y avisos con badge.
