@@ -1,0 +1,1174 @@
+--- a/launcher/CMakeLists.txt
++++ b/launcher/CMakeLists.txt
+@@ -20,7 +20,7 @@
+ set(LAUNCHER_APP_ID "${APP_ID}")
+ set(LAUNCHER_HOME_ENV "${HOME_ENV}")
+ set(LAUNCHER_DISCLAIMER "${DISCLAIMER}")
+-set(LAUNCHER_PORT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/description.cpp)
++set(LAUNCHER_PORT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/description.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_saves.cpp)
+ # The game's version (its repository's VERSION, shown under its name) and, when its game.cfg names one
+ # (update_repo = owner/name), the GitHub repository whose releases the launcher updates itself from
+ # (recomp-common/launcher/src/update.h: the release carries an update-<system>.txt for each download)
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -5,6 +5,8 @@
+ // The game identifies itself through LAUNCHER_* definitions (from games/<id>/game.cfg).
+ 
+ #include "launcher.h"
++#include "sakura_saves.h"
++#include <stdexcept>
+ 
+ #include "../../port/bindings.h"
+ 
+@@ -160,11 +162,11 @@
+         check.result = Result::NotUsable;
+         check.message = "This disc is a different game (" + trimmed(header + 0x60, 112) + "), not " LAUNCHER_GAME_NAME ".";
+     } else if (version != LAUNCHER_DISC_VERSION) {
+-        check.result = Result::Usable;
+-        check.message = LAUNCHER_GAME_NAME ", but another release (" + version + ") than the known one: parts of it will run slower.";
++        check.result = Result::NotUsable;
++        check.message = "Esta revisión (" + version + ") aún no está validada para la recompilación.";
+     } else {
+         check.result = Result::Good;
+-        check.message = LAUNCHER_DISC_NAME ", verified.";
++        check.message = std::string("Sakura Wars · Disco ") + header[0x3B] + "/2 · Cabecera compatible.";
+     }
+     if (check.result != Result::NotUsable && std::strlen(LAUNCHER_EXTRA_DISC_PRODUCT) > 0) {
+         check.message += find_extra_disc(path).empty()
+@@ -176,7 +178,20 @@
+ 
+ // What the game is started with: the player's disc image (read only) and their saves folder.
+ std::vector<std::string> arguments(const launcher::Launch& launch) {
+-    std::vector<std::string> args = {"--disc", launch.file, "--backup", (launch.folder / "saves" / "backup.bin").string(),
++    auto backup=launch.folder/"saves"/"backup.bin";
++    recomp::Ini prefs(launch.folder/"launcher.ini");prefs.load();
++    const auto imported=prefs.get("sakura","backup");
++    if (!imported.empty()) {
++        std::error_code error;
++        const auto root=std::filesystem::weakly_canonical(launch.folder/"imports",error);
++        const auto selected=std::filesystem::weakly_canonical(std::filesystem::path(imported),error);
++        std::ifstream input(selected,std::ios::binary);
++        char header[16]{};input.read(header,16);
++        if (error || selected.parent_path()!=root || !input || std::memcmp(header,"BackUpRam Format",16)!=0 || std::filesystem::file_size(selected,error)!=32768 || error)
++            throw std::runtime_error("La copia importada no está disponible o es inválida. Vuelve a tu partida habitual o impórtala de nuevo.");
++        backup=selected;
++    }
++    std::vector<std::string> args = {"--disc", launch.file, "--backup", backup.string(),
+                                      "--settings", (launch.folder / "settings.ini").string()};
+     if (const std::string extra = find_extra_disc(launch.file); !extra.empty()) {
+         args.push_back("--extra-disc");
+@@ -185,12 +200,8 @@
+     if (launch.on("fullscreen")) {
+         args.push_back("--fullscreen");
+     }
+-    if (!launch.on("high_resolution")) {
+-        args.push_back("--video");
+-        args.push_back("software");
+-    } else if (launch.on("widescreen")) {
+-        args.push_back("--widescreen");
+-    }
++    args.push_back("--video");
++    args.push_back("software");
+     return args;
+ }
+ 
+@@ -210,16 +221,35 @@
+ const launcher::Description& launcher::describe() {
+     static const Description about = [] {
+         Description d;
+-        d.original = "on the Saturn";
+-        d.file_heading = "GAME DISC";
+-        d.file_intro = "Choose your own copy of the game (a disc image). It stays where it is: the launcher only reads it. Pictures you "
+-                       "export from the in-game menu (Export pictures) go to the pictures folder of YOUR FILES, below.";
+-        d.file_empty = "No game disc chosen. Drop its .cue file on this window or choose it.";
++        d.original = "en Sega Saturn";
++        d.subtitle = "Compañía Imperial · v0.1";
++        d.features_name = "Opciones";
++        d.features_intro = "Píxeles originales, marco adaptable y ajustes compartidos con el juego.";
++        d.presets = false;
++        d.file_heading = "TU DISCO DE SAKURA WARS";
++        d.file_intro = "La Compañía Imperial te espera. Tu aventura, tus partidas y los píxeles originales de Saturn.";
++        d.file_empty = "Elige tu disco o arrastra aquí su archivo .cue.";
+         d.file_not_set_up = "The game isn't set up yet. Open the launcher (without --play) once to choose your game disc.";
+         d.file_filter = {"Saturn disc image", "cue;iso"};
+         d.file_key = "disc";
+         d.check = check_disc;
++        d.find_nearby = [](const std::filesystem::path& program) {
++            auto folder=program;
++            if (folder.filename().empty()) folder=folder.parent_path();
++            for (int i=0;i<4;i++) {
++                for (const char* candidate : {"local/prepared/disc1/game.cue", "game/disc1/game.cue", "disc1/game.cue"}) {
++                    auto path=folder/candidate;
++                    std::error_code error;
++                    if (std::filesystem::is_regular_file(path,error) && check_disc(path.string()).usable()) return path.string();
++                }
++                if (folder.parent_path()==folder) break;
++                folder=folder.parent_path();
++            }
++            return std::string();
++        };
+         d.arguments = arguments;
++        d.extra_home = DrawSakuraSaves;
++        d.shutdown = ShutdownSakuraSaves;
+         d.saves_folder = true;
+         // (a custom soundtrack's files and discs: port/soundtrack.h)
+         static const std::string soundtrack_detail =
+@@ -231,12 +261,7 @@
+             "in the game's own folder.";
+         if (LAUNCHER_CUSTOM_SOUNDTRACK) // (only a game that has one: game.cfg's custom_soundtrack)
+             d.folders = {{"soundtrack", "Custom soundtrack", soundtrack_detail.c_str(), "--soundtrack"}};
+-        d.display = {
+-            // (a window unless asked, as in the other ports; in SteamOS's Game Mode the other way round)
+-            {"fullscreen", "Full screen", "F11 switches while playing.", console_session(), nullptr},
+-            {"high_resolution", "High resolution", "Polygons drawn at the window's resolution. Off: the original's.", true, nullptr},
+-            {"widescreen", "Widescreen", "16:9: fights show more at the sides. Needs high resolution.", false, "high_resolution"},
+-        };
++        d.display = {{"fullscreen", "Pantalla completa", "F11 cambia entre ventana y pantalla completa. La escala del juego siempre es entera.", console_session(), nullptr}};
+         d.bindings = port::BindingTable();
+         d.controls_heading = "WHILE PLAYING";
+         d.controls = {{"Keys", "Esc or F1: menu (save states, cheats, training aids, quit)   F11: full screen. On a gamepad: Back (Select), alone or with Start, or a stick's click opens and closes the menu. (A button given to the game above does only that.)"}};
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -20,6 +20,33 @@
+ namespace port {
+ 
+ namespace {
++
++    void DrawSakuraFrame(SDL_Renderer* renderer, int width, int height) {
++        SDL_SetRenderDrawColor(renderer, 242, 224, 216, 255);
++        SDL_RenderClear(renderer);
++        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
++        SDL_SetRenderDrawColor(renderer, 166, 110, 91, 22);
++        const int step = std::max(48, height / 6);
++        for (int x=-height; x<width; x+=step)
++            SDL_RenderLine(renderer, static_cast<float>(x), 0, static_cast<float>(x+height), static_cast<float>(height));
++        const float radius = std::clamp(height * 0.024f, 10.0f, 40.0f);
++        for (int corner=0; corner<4; corner++) {
++            const float cx = width * (corner&1 ? 0.94f : 0.06f);
++            const float cy = height * (corner&2 ? 0.90f : 0.10f);
++            SDL_SetRenderDrawColor(renderer, 146, 63, 89, 64);
++            for (int petal=0; petal<5; petal++) {
++                const float angle=petal * 1.256637f;
++                SDL_FPoint points[25];
++                for (int n=0;n<=24;n++) {
++                    const float a=n*6.283185f/24;
++                    const float along=radius*(1.0f+std::cos(a)), across=radius*.50f*std::sin(a);
++                    points[n]={cx+along*std::cos(angle)-across*std::sin(angle),cy+along*std::sin(angle)+across*std::cos(angle)};
++                }
++                SDL_RenderLines(renderer, points, 25);
++            }
++        }
++        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
++    }
+ 
+     struct Audio {
+         SDL_AudioStream *stream = nullptr;
+@@ -141,11 +168,12 @@
+         }
+         flags |= SDL_WINDOW_RESIZABLE | (port.gpu || shade ? SDL_WINDOW_HIGH_PIXEL_DENSITY : 0) | (shade ? SDL_WINDOW_OPENGL : 0) |
+                  (testHidden ? SDL_WINDOW_HIDDEN : 0);
+-        window = SDL_CreateWindow("satrecomp", width, height, flags);
++        window = SDL_CreateWindow("SaturnTaisenFirst 0.1", width, height, flags);
+         if (!window) {
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
+         }
++        SDL_SetWindowMinimumSize(window, 704, 512);
+         shaded = false;
+         if (shade) {
+             if (shading.Open(window, error) && shading.Load(preset, error)) {
+@@ -256,6 +284,8 @@
+     std::vector<uint32_t> frameCopy;
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
+ 
++    std::string windowShot;
++
+     // The picture shown in an OpenGL window through the preset (`shade` false: the menu, only fitted, smoothly)
+     auto showShaded = [&](const uint32_t *pixels, uint32_t width, uint32_t height, bool shade) {
+         int wide = 0, high = 0;
+@@ -270,16 +300,25 @@
+         if (!renderer) {
+             return;
+         }
+-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+-        SDL_RenderClear(renderer);
++        int wide = 0, high = 0;
++        SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);
++        DrawSakuraFrame(renderer, wide, high);
+         if (texture) {
+-            int wide = 0, high = 0;
+-            SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);
+             const int scaling = satrecomp::FeatureValue("display_scaling");
+-            SDL_SetTextureScaleMode(texture, scaling == 2 ? SDL_SCALEMODE_LINEAR : SDL_SCALEMODE_NEAREST);
++            SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
+             const SDL_FRect where = satrecomp::video::FitPicture(wide, high, static_cast<float>(texW), static_cast<float>(texH), 4.0f / 3.0f, scaling,
+                                                                  satrecomp::FeatureValue("display_shape"));
++            SDL_FRect edge{where.x-3,where.y-3,where.w+6,where.h+6};
++            SDL_SetRenderDrawColor(renderer,129,65,76,255);
++            SDL_RenderFillRect(renderer,&edge);
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
++        }
++        if (!windowShot.empty()) {
++            if (SDL_Surface* surface=SDL_RenderReadPixels(renderer,nullptr)) {
++                SDL_SavePNG(surface,windowShot.c_str());
++                SDL_DestroySurface(surface);
++            }
++            windowShot.clear();
+         }
+         SDL_RenderPresent(renderer);
+     };
+@@ -398,6 +437,12 @@
+                 if (equals != std::string::npos) {
+                     satrecomp::SetFeatureValue(step.what.substr(8, equals - 8).c_str(), atoi(step.what.c_str() + equals + 1));
+                 }
++            } else if (step.what.rfind("WINDOWSHOT=",0)==0) {
++                windowShot=step.what.substr(11);
++            } else if (step.what.rfind("SIZE=",0)==0) {
++                int w=0,h=0;
++                if (sscanf(step.what.c_str()+5,"%dx%d",&w,&h)==2 && w>0 && h>0 && w<=8192 && h<=8192)
++                    SDL_SetWindowSize(window,w,h);
+             } else if (step.what.rfind("SHOT=", 0) == 0) {
+                 // (shaded: what the preset drew, as the window shows it)
+                 std::vector<uint32_t> drawn;
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -111,26 +111,12 @@
+                              satrecomp::kFeatureFirstPage});
+     // (the Display page: how the picture is fitted to the window, video/gpu.h SetFit; the first choice of each
+     // is how the port always drew it)
+-    game.features.push_back({"display_scaling", "Display", "Scaling",
+-                             "Sharp: as large as fits. Whole pixels: as tall as a whole number of the Saturn's lines fits, "
+-                             "a border round it. Smooth: with high resolution off, the Saturn's picture softened up to the "
+-                             "size (with it on, polygons are drawn at the window's size either way).",
+-                             0, {"Sharp", "Whole pixels", "Smooth"}});
+-    game.features.push_back({"display_shape", "Display", "Picture shape",
+-                             "4:3: as a television showed it (16:9 in widescreen). Square pixels: each pixel as wide as it "
+-                             "is tall, a little wider. Fill: the whole window or screen, stretched to it.",
+-                             0, {"4:3", "Square pixels", "Fill"}});
+-    // (display_shader: Port::ShaderPreset, shading.h; the presets are in shaders/ beside the program, kShaderPresets,
+-    // made with librashader by tools/librashader.sh)
+-    game.features.push_back({"display_shader", "Display", "Shader",
+-                             "The picture drawn through one of RetroArch's shaders, at the Saturn's own resolution. CRT: a "
+-                             "curved television. CRT Lottes and CRT Guest: flat screens, sharp and bright. CRT Royale: the "
+-                             "closest to a real screen's glass and the slowest. CRT Light: lines and a faint mask, for a slow "
+-                             "computer. Scanlines: the lines alone, light, strong, as an OSSC draws them, or dark. xBRZ and "
+-                             "ScaleFX: the pixels' edges made smooth lines and curves. Your own: the first .slangp preset in "
+-                             "the shaders folder beside the game's settings. The picture's shape stays as set.",
+-                             0, {"Off", "CRT", "CRT Lottes", "CRT Royale", "CRT Guest", "CRT Light", "Scanlines, light",
+-                                 "Scanlines, strong", "Scanlines, OSSC", "Scanlines, dark", "xBRZ", "ScaleFX", "Your own"}});
++    game.features.push_back({"display_scaling", "Pantalla", "Escala del juego",
++                             "Solo multiplicadores enteros, centrado y sin suavizado. El marco se adapta al espacio restante.",
++                             0, {"Entera · automática"}});
++    game.features.push_back({"display_shape", "Pantalla", "Píxeles originales",
++                             "Se conserva el tamaño relativo de los píxeles. Sin estiramiento fraccional.",
++                             0, {"Original"}});
+     // (custom_soundtrack: soundtrack.h; for a game whose sources name its music)
+     if (!game.songs.empty()) {
+         game.features.push_back({"custom_soundtrack", "Sound", "Custom soundtrack",
+@@ -1506,7 +1492,11 @@
+         Usage(argv[0]);
+         return 2;
+     }
+-    if (!p.Init()) {
++    if (o.video.empty()) p.opt.video = "software"; // validated native-resolution Sakura renderer
++    try {
++        if (!p.Init()) return 1;
++    } catch (const std::exception& error) {
++        fprintf(stderr,"Cannot start SaturnTaisenFirst: %s\n",error.what());
+         return 1;
+     }
+ 
+--- a/recomp-common/launcher/src/app.cpp
++++ b/recomp-common/launcher/src/app.cpp
+@@ -54,6 +54,18 @@
+ }
+ constexpr float kContentMaxWidth = 720.0f;
+ constexpr size_t kAnyGame = static_cast<size_t>(-1);  // (a file or folder for whichever game takes it)
++
++void sakura_flower(ImDrawList* draw, ImVec2 center, float radius, ImU32 color) {
++    for (int petal=0;petal<5;petal++) {
++        const float angle=petal*1.256637f;
++        const ImVec2 along(std::cos(angle)*radius,std::sin(angle)*radius);
++        const ImVec2 across(-std::sin(angle)*radius*.48f,std::cos(angle)*radius*.48f);
++        const ImVec2 tip=center+along*1.4f;
++        draw->AddBezierCubic(center,center+along*.35f+across,tip+across*.5f,tip,color,ui::px(1));
++        draw->AddBezierCubic(tip,tip-across*.5f,center+along*.35f-across,center,color,ui::px(1));
++    }
++    draw->AddCircleFilled(center,ui::px(3),color);
++}
+ 
+ void wake();
+ 
+@@ -380,7 +392,9 @@
+         std::filesystem::create_directories(target->folder / "saves", error);
+     }
+     std::filesystem::create_directories(target->folder / "logs", error);
+-    std::vector<std::string> arguments = arguments_for(prefs, *target);
++    std::vector<std::string> arguments;
++    try { arguments=arguments_for(prefs, *target); }
++    catch (const std::exception& error) { say(SDL_MESSAGEBOX_ERROR,target->name,error.what()); return 1; }
+     arguments.insert(arguments.end(), extra.begin(), extra.end());
+     if (!game.start(program_path(target->exe), arguments, target->folder, message, target->folder / "logs" / "game.log")) {
+         say(SDL_MESSAGEBOX_ERROR, target->name, message);
+@@ -494,6 +508,8 @@
+ }
+ 
+ App::~App() {
++    if (about_.shutdown) about_.shutdown();
++    for (auto* texture : artwork_) if (texture) SDL_DestroyTexture(texture);
+     for (auto& one : slots_) {
+         if (one->checker.joinable()) {
+             one->checker.join();
+@@ -505,6 +521,7 @@
+ }
+ 
+ bool App::busy() const {
++    if (title_capture_.running()) return true;
+     for (const launcher::CustomPage& page : about_.pages) {
+         if (page.busy && page.busy()) {
+             return true;
+@@ -1070,7 +1087,9 @@
+     target.file_section = one.file_section;
+     target.video_section = one.video_section;
+     target.folder = one.folder;
+-    std::vector<std::string> arguments = arguments_for(prefs_, target);
++    std::vector<std::string> arguments;
++    try { arguments=arguments_for(prefs_, target); }
++    catch (const std::exception& error) { one.play_error=error.what(); return; }
+     arguments.insert(arguments.end(), extra.begin(), extra.end());
+     one.game.start(one.program(), arguments, one.folder, one.play_error, one.folder / "logs" / "game.log");
+ }
+@@ -1105,7 +1124,7 @@
+     one.features.clear();
+     one.features_error.clear();
+     if (!one.has_program()) {
+-        one.features_error = "The game program wasn't found next to the launcher.";
++        one.features_error = "Falta el programa del juego junto al launcher.";
+         return;
+     }
+     one.features = recomp::ParseFeatureList(GameProcess::output_of(one.program(), {"--list-features"}));
+@@ -1326,6 +1345,10 @@
+     ImGui::GetWindowDrawList()->AddRectFilled(viewport->Pos, viewport->Pos + ImVec2(px(sidebar_width()), height), p.sidebar);
+     ImGui::GetWindowDrawList()->AddRectFilled(viewport->Pos + ImVec2(px(sidebar_width()) - 1.0f, 0), viewport->Pos + ImVec2(px(sidebar_width()), height),
+                                               p.separator);
++    auto* theme=ImGui::GetWindowDrawList();
++    sakura_flower(theme,viewport->Pos+ImVec2(px(74),height-px(120)),px(48),ui::fade(p.primary,.12f));
++    sakura_flower(theme,viewport->Pos+ImVec2(px(175),height-px(220)),px(25),ui::fade(p.accent,.20f));
++    theme->AddLine(viewport->Pos+ImVec2(px(24),px(92)),viewport->Pos+ImVec2(px(sidebar_width()-24),px(92)),ui::fade(p.accent,.35f),px(1));
+     sidebar(height);
+     ImGui::SetCursorScreenPos(viewport->Pos + ImVec2(px(sidebar_width()), 0));
+     page(viewport->Size.x - px(sidebar_width()), height);
+@@ -1429,7 +1452,7 @@
+     ImGui::SetCursorScreenPos(ImVec2(origin.x + px(24), ImGui::GetCursorScreenPos().y));
+     ui::text("Version " LAUNCHER_VERSION, Font::Regular, ui::size::kSmall, p.tertiary);
+ #endif
+-    const char* own[] = {"Game", about_.features_name, "Controllers", "Games", "", "Multi game", "Online", "", ""};
++    const char* own[] = {"Inicio", about_.features_name, "Mandos", "Games", "", "Multi game", "Online", "", ""};
+     float fixed = static_cast<float>(fixed_pages());
+     float top = std::max(collection_ ? px(108) : px(100), ImGui::GetCursorScreenPos().y - origin.y + px(24));
+     float step = px(38);
+@@ -1743,7 +1766,7 @@
+     }
+     ImVec2 row_top = ImGui::GetCursorScreenPos();
+     row(width, shown.c_str(), status.c_str(), 130.0f, 36.0f, [&] {
+-        if (ui::button("Choose…", Kind::Secondary, 130.0f, !one.checking)) {
++        if (ui::button("Elegir…", Kind::Secondary, 130.0f, !one.checking)) {
+             // (the system's file dialog wants a mouse or a keyboard)
+             if (ui::gamepad_in_use()) {
+                 open_browser(which, false);
+@@ -1772,7 +1795,7 @@
+     Slot& one = *slots_[which];
+     if (!one.about->display.empty()) {
+         ui::gap(24);
+-        ui::text("DISPLAY", Font::Semibold, ui::size::kDetail, p.secondary);
++        ui::text("PANTALLA", Font::Semibold, ui::size::kDetail, p.secondary);
+         ui::gap(10);
+         Card display(width);
+         bool first = true;
+@@ -1793,15 +1816,15 @@
+     }
+     if (one.about->mute_argument || !one.about->folders.empty()) {
+         ui::gap(24);
+-        ui::text("SOUND", Font::Semibold, ui::size::kDetail, p.secondary);
++        ui::text("SONIDO", Font::Semibold, ui::size::kDetail, p.secondary);
+         ui::gap(10);
+         Card sound(width);
+         bool first = true;
+         if (one.about->mute_argument) {
+             first = false;
+             bool muted = prefs_.get("audio", "muted") == "1";
+-            row(width, "Muted",
+-                collection_ ? "Start the games with no sound. A game's menu switches it back on." : "Start the game with no sound. The game's menu switches it back on.",
++            row(width, "Iniciar en silencio",
++                collection_ ? "Start the games with no sound. A game's menu switches it back on." : "Empieza sin sonido. Puedes activarlo desde el menú del juego.",
+                 42.0f, 24.0f, [&] {
+                     if (ui::toggle("##muted", muted)) {
+                         prefs_.set("audio", "muted", muted ? "0" : "1");
+@@ -1825,7 +1848,7 @@
+                     }
+                     ImGui::SameLine(0.0f, px(10));
+                 }
+-                if (ui::button("Choose…", Kind::Secondary, 130.0f)) {
++                if (ui::button("Elegir…", Kind::Secondary, 130.0f)) {
+                     // (the system's folder dialog wants a mouse or a keyboard)
+                     if (ui::gamepad_in_use()) {
+                         open_browser(which, true);
+@@ -1865,7 +1888,7 @@
+         ui::text(summary.c_str(), Font::Regular, ui::size::kDetail, p.secondary);
+         ui::gap(12);
+     }
+-    if (ui::button(one.game.running() ? "Playing…###play" : "Play###play", Kind::Primary, 200.0f, ready, 48.0f)) {
++    if (ui::button(one.game.running() ? "Playing…###play" : "Jugar###play", Kind::Primary, 200.0f, ready, 48.0f)) {
+         play(which);
+     }
+     // With a gamepad in hand the ring starts on Play, once there is a game to play
+@@ -1877,7 +1900,7 @@
+     }
+     if (!have_program) {
+         ui::gap(10);
+-        ui::text("The game program wasn't found next to the launcher.", Font::Regular, ui::size::kDetail, p.danger, width);
++        ui::text("Falta el programa del juego junto al launcher.", Font::Regular, ui::size::kDetail, p.danger, width);
+     } else if (!one.play_error.empty()) {
+         ui::gap(10);
+         ui::text(one.play_error.c_str(), Font::Regular, ui::size::kDetail, p.danger, width);
+@@ -2711,14 +2734,111 @@
+     card.end();
+ }
+ 
++void App::prepare_title_art() {
++    if (title_pending_ && !title_capture_.running()) {
++        title_pending_=false;
++        std::error_code error;
++        auto destination=folder_/"art"/"title.png";
++        if (title_capture_.exit_code()==0 && std::filesystem::is_regular_file(title_candidate_,error)) {
++            if (!std::filesystem::exists(destination,error)) std::filesystem::rename(title_candidate_,destination,error);
++            title_failed_=bool(error);
++            artwork_tried_=false;
++        } else title_failed_=true;
++        // These are this capture's newly created cache files, never player saves.
++        for (const auto& path : {title_candidate_,title_movie_,title_backup_}) {
++            std::error_code ignored;
++            std::filesystem::remove(path,ignored);
++        }
++        return;
++    }
++    if (artwork_[0] || title_pending_ || title_failed_ || slots_.empty() || !slots_[0]->has_program()) return;
++    std::error_code existing_error;
++    if (std::filesystem::exists(folder_/"art"/"title.png",existing_error)) {title_failed_=true;return;}
++    auto& slot=*slots_[0];
++    {
++        std::lock_guard<std::mutex> lock(mutex_);
++        if (slot.checking || !slot.file.usable()) return;
++    }
++    std::error_code error;
++    std::filesystem::create_directories(folder_/"art",error);
++    if (error) {title_failed_=true;return;}
++    std::filesystem::create_directories(folder_/"cache",error);
++    if (error) {title_failed_=true;return;}
++    const auto prefix=folder_/"cache"/("title-"+std::to_string(SDL_GetTicksNS())+"-");
++    title_movie_=prefix;title_movie_+="input.movie";
++    title_backup_=prefix;title_backup_+="backup.bin";
++    title_candidate_=prefix;title_candidate_+="001500.png";
++    {
++        std::ofstream movie(title_movie_,std::ios::binary);
++        movie << "650 0800 0\n655 0 0\n";
++        if (!movie) {title_failed_=true;return;}
++    }
++    const std::vector<std::string> arguments={"--disc",slot.file_path,"--headless","--frames","1501","--video","software",
++        "--movie",title_movie_.string(),"--backup",title_backup_.string(),"--shot-every","1500:"+prefix.string()};
++    std::string message;
++    title_pending_=title_capture_.start(slot.program(),arguments,folder_,message,folder_/"cache"/"title-capture.log");
++    title_failed_=!title_pending_;
++}
++
++void App::sakura_art(float width) {
++    if (!artwork_tried_) {
++        artwork_tried_ = true;
++        const char* files[] = {"title.png"};
++        auto* renderer = SDL_GetRenderer(window_);
++        for (int i=0; i<1; i++) {
++            auto path = folder_ / "art" / files[i];
++            std::error_code error;
++            if (!std::filesystem::is_regular_file(path,error)) path=program_folder_ / "art" / files[i];
++            if (SDL_Surface* surface = SDL_LoadPNG(path.string().c_str())) {
++                artwork_[i] = SDL_CreateTextureFromSurface(renderer, surface);
++                SDL_DestroySurface(surface);
++                if (artwork_[i]) SDL_SetTextureScaleMode(artwork_[i], SDL_SCALEMODE_NEAREST);
++            }
++        }
++    }
++    prepare_title_art();
++    const auto& p = ui::palette();
++    const ImVec2 at = ImGui::GetCursorScreenPos();
++    const bool pair = false;
++    const float gap=px(16), pad=px(12), imageW=(width-pad*2-(pair?gap:0))/(pair?2:1);
++    const float imageH=std::min(px(208),imageW*0.7f), h=imageH+pad*2;
++    auto* draw=ImGui::GetWindowDrawList();
++    draw->AddRectFilled(at+ImVec2(0,px(4)),at+ImVec2(width,h+px(4)),IM_COL32(86,38,52,18),px(24));
++    draw->AddRectFilled(at,at+ImVec2(width,h),p.surface,px(24));
++    for (int i=0;i<(pair?2:1);i++) {
++        const ImVec2 begin=at+ImVec2(pad+i*(imageW+gap),pad), end=begin+ImVec2(imageW,imageH);
++        draw->AddRectFilled(begin,end,p.control,px(16));
++        if (artwork_[i]) {
++            float sourceW=1,sourceH=1;
++            SDL_GetTextureSize(artwork_[i],&sourceW,&sourceH);
++            const float factor=std::min(imageW/sourceW,imageH/sourceH);
++            const ImVec2 size(sourceW*factor,sourceH*factor);
++            const ImVec2 picture=begin+ImVec2((imageW-size.x)*.5f,(imageH-size.y)*.5f);
++            draw->AddImageRounded(ImTextureRef((ImTextureID)(intptr_t)artwork_[i]),picture,picture+size,ImVec2(0,0),ImVec2(1,1),IM_COL32_WHITE,px(16));
++        }
++        else {
++            draw->AddCircleFilled(begin+ImVec2(imageW*.8f,imageH*.2f),px(52),p.accent_soft);
++            draw->AddText(begin+ImVec2(px(16),imageH*.48f),p.primary,title_pending_?"Preparando el título…":"SAKURA WARS");
++        }
++    }
++    if (!pair) {
++        sakura_flower(draw,at+ImVec2(width*.12f,h*.45f),px(27),ui::fade(p.primary,.18f));
++        sakura_flower(draw,at+ImVec2(width*.88f,h*.55f),px(27),ui::fade(p.accent,.35f));
++    }
++    ImGui::Dummy(ImVec2(width,h));
++    ui::gap(20);
++}
++
+ void App::game_page(float width) {
+-    layout::heading(LAUNCHER_GAME_NAME, about_.file_intro, width);
++    layout::heading("Sakura Wars", about_.file_intro, width);
++    sakura_art(width);
+     bool ready = play_button(0, width);
+     ui::gap(28);
+ #ifdef LAUNCHER_UPDATE_REPO
+     update_card(width, true);
+ #endif
+     file_card(0, width);
++    if (about_.extra_home) { auto page=context(width); about_.extra_home(page); }
+     display_cards(0, width);
+     play_cards(0, width, ready);
+     files_card(width);
+@@ -2819,7 +2939,7 @@
+                 play(which);
+             }
+             ImGui::SameLine(0.0f, px(10));
+-            if (ui::button("Choose…", Kind::Secondary, 110.0f, !one.checking)) {
++            if (ui::button("Elegir…", Kind::Secondary, 110.0f, !one.checking)) {
+                 if (ui::gamepad_in_use()) {
+                     open_browser(which, false);
+                 } else {
+@@ -2862,7 +2982,7 @@
+     // (a collection's games each have a folder beside its own)
+     const std::filesystem::path where = !portable.empty() && !home ? portable : folder_;
+     ui::gap(36);
+-    ui::text("YOUR FILES", Font::Semibold, ui::size::kDetail, p.secondary);
++    ui::text("TUS ARCHIVOS", Font::Semibold, ui::size::kDetail, p.secondary);
+     ui::gap(10);
+     Card card(width);
+ #ifdef __ANDROID__
+--- a/recomp-common/launcher/src/app.h
++++ b/recomp-common/launcher/src/app.h
+@@ -202,6 +202,8 @@
+     Page own_page(int index, size_t* which = nullptr) const;
+     launcher::PageContext context(float width);
+     void game_page(float width);
++    void sakura_art(float width);
++    void prepare_title_art();
+     void library_page(float width);
+     void title_page(size_t which, float width);
+     void series_page(size_t which, float width);  // a series' page (`which`: one of its games)
+@@ -292,6 +294,11 @@
+ 
+     const launcher::Collection* collection_ = nullptr;  // a collection's launcher's (a port's: none)
+     SDL_Window* window_;
++    SDL_Texture* artwork_[1] = {nullptr};
++    bool artwork_tried_ = false;
++    GameProcess title_capture_;
++    bool title_pending_=false, title_failed_=false;
++    std::filesystem::path title_candidate_, title_movie_, title_backup_;
+     int page_ = 0;
+     std::filesystem::path folder_;          // the player's (a collection's: its own, with its launcher.ini)
+     recomp::Ini prefs_;     // launcher.ini: where each game's file is, the Display switches
+--- a/recomp-common/launcher/src/game_process.cpp
++++ b/recomp-common/launcher/src/game_process.cpp
+@@ -24,6 +24,12 @@
+ #endif
+ 
+ GameProcess::~GameProcess() {
++    {
++        // Finish any in-flight notification before App/SDL teardown. The waiter
++        // may outlive this observer and owns its own shared status, never `this`.
++        std::lock_guard<std::mutex> lock(state_->notification);
++        state_->notify=false;
++    }
+     if (waiter_.joinable()) {
+         waiter_.detach();
+     }
+@@ -43,7 +49,7 @@
+ 
+ bool GameProcess::start(const std::filesystem::path& program, const std::vector<std::string>& args, const std::filesystem::path& folder, std::string& error,
+                         const std::filesystem::path& log) {
+-    if (running_) {
++    if (state_->running) {
+         error = "The game is already running.";
+         return false;
+     }
+@@ -88,8 +94,8 @@
+         error = "The game could not be started.";
+         return false;
+     }
+-    running_ = true;
+-    waiter_ = std::thread([this] {
++    state_->running = true;
++    waiter_ = std::thread([state = state_] {
+         JNIEnv* env = static_cast<JNIEnv*>(SDL_GetAndroidJNIEnv());  // (SDL attaches the thread)
+         jint result = kStillRunning;
+         while (result == kStillRunning) {
+@@ -105,11 +111,14 @@
+             env->DeleteLocalRef(activity_class);
+             env->DeleteLocalRef(activity);
+         }
+-        exit_code_ = result;
+-        running_ = false;
+-        SDL_Event event{};
+-        event.type = SDL_EVENT_USER;
+-        SDL_PushEvent(&event);  // redraw the launcher
++        state->exit_code = result;
++        state->running = false;
++        std::lock_guard<std::mutex> lock(state->notification);
++        if (state->notify) {
++            SDL_Event event{};
++            event.type = SDL_EVENT_USER;
++            SDL_PushEvent(&event);
++        }  // redraw the launcher
+     });
+     return true;
+ }
+@@ -139,7 +148,7 @@
+ 
+ bool GameProcess::start(const std::filesystem::path& program, const std::vector<std::string>& args, const std::filesystem::path& folder, std::string& error,
+                         const std::filesystem::path& log) {
+-    if (running_) {
++    if (state_->running) {
+         error = "The game is already running.";
+         return false;
+     }
+@@ -176,15 +185,18 @@
+         error = "The game could not be started (" + std::to_string(result) + ").";
+         return false;
+     }
+-    running_ = true;
+-    waiter_ = std::thread([this, pid] {
++    state_->running = true;
++    waiter_ = std::thread([state = state_, pid] {
+         int status = 0;
+         waitpid(pid, &status, 0);
+-        exit_code_ = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
+-        running_ = false;
+-        SDL_Event event{};
+-        event.type = SDL_EVENT_USER;
+-        SDL_PushEvent(&event);  // redraw the launcher
++        state->exit_code = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
++        state->running = false;
++        std::lock_guard<std::mutex> lock(state->notification);
++        if (state->notify) {
++            SDL_Event event{};
++            event.type = SDL_EVENT_USER;
++            SDL_PushEvent(&event);
++        }  // redraw the launcher
+     });
+     return true;
+ }
+@@ -250,7 +262,7 @@
+ 
+ bool GameProcess::start(const std::filesystem::path& program, const std::vector<std::string>& args, const std::filesystem::path& folder, std::string& error,
+                         const std::filesystem::path& log) {
+-    if (running_) {
++    if (state_->running) {
+         error = "The game is already running.";
+         return false;
+     }
+@@ -273,7 +285,7 @@
+         }
+     }
+     PROCESS_INFORMATION process{};
+-    BOOL started = CreateProcessW(program.wstring().c_str(), line.data(), nullptr, nullptr, output != INVALID_HANDLE_VALUE, 0, nullptr, directory.c_str(),
++    BOOL started = CreateProcessW(program.wstring().c_str(), line.data(), nullptr, nullptr, output != INVALID_HANDLE_VALUE, CREATE_NO_WINDOW, nullptr, directory.c_str(),
+                                   &startup, &process);
+     if (output != INVALID_HANDLE_VALUE) {
+         CloseHandle(output);
+@@ -283,18 +295,21 @@
+         return false;
+     }
+     CloseHandle(process.hThread);
+-    running_ = true;
++    state_->running = true;
+     HANDLE handle = process.hProcess;
+-    waiter_ = std::thread([this, handle] {
++    waiter_ = std::thread([state = state_, handle] {
+         WaitForSingleObject(handle, INFINITE);
+         DWORD code = 0;
+         GetExitCodeProcess(handle, &code);
+         CloseHandle(handle);
+-        exit_code_ = static_cast<int>(code);
+-        running_ = false;
+-        SDL_Event event{};
+-        event.type = SDL_EVENT_USER;
+-        SDL_PushEvent(&event);  // redraw the launcher
++        state->exit_code = static_cast<int>(code);
++        state->running = false;
++        std::lock_guard<std::mutex> lock(state->notification);
++        if (state->notify) {
++            SDL_Event event{};
++            event.type = SDL_EVENT_USER;
++            SDL_PushEvent(&event);
++        }  // redraw the launcher
+     });
+     return true;
+ }
+--- a/recomp-common/launcher/src/game_process.h
++++ b/recomp-common/launcher/src/game_process.h
+@@ -7,6 +7,8 @@
+ #include <filesystem>
+ #include <string>
+ #include <thread>
++#include <memory>
++#include <mutex>
+ #include <vector>
+ 
+ class GameProcess {
+@@ -16,13 +18,18 @@
+     // Its output (stdout and stderr) goes to `log` when given.
+     bool start(const std::filesystem::path& program, const std::vector<std::string>& args, const std::filesystem::path& folder, std::string& error,
+                const std::filesystem::path& log = {});
+-    bool running() const { return running_; }
+-    int exit_code() const { return exit_code_; }
++    bool running() const { return state_->running; }
++    int exit_code() const { return state_->exit_code; }
+     // Runs `program args...` and returns its standard output (for --list-features).
+     static std::string output_of(const std::filesystem::path& program, const std::vector<std::string>& args);
+ 
+ private:
+     std::thread waiter_;
+-    std::atomic<bool> running_{false};
+-    std::atomic<int> exit_code_{0};
++    struct State {
++        std::atomic<bool> running{false};
++        std::atomic<int> exit_code{0};
++        std::mutex notification;
++        bool notify=true; // protected by notification, including SDL_PushEvent
++    };
++    std::shared_ptr<State> state_=std::make_shared<State>();
+ };
+--- a/recomp-common/launcher/src/launcher.h
++++ b/recomp-common/launcher/src/launcher.h
+@@ -125,6 +125,8 @@
+ 
+     // The port's own pages (none: the launcher's three)
+     std::vector<CustomPage> pages;
++    void (*extra_home)(PageContext&) = nullptr;
++    void (*shutdown)() = nullptr;
+     // false: no Game page (and no game file, check or Display card): the port's pages have Play
+     bool game_page = true;
+ 
+--- a/recomp-common/launcher/src/layout.h
++++ b/recomp-common/launcher/src/layout.h
+@@ -28,10 +28,11 @@
+         const ui::Palette& p = ui::palette();
+         ImVec2 end(start_.x + width_, ImGui::GetCursorScreenPos().y);
+         list_->ChannelsSetCurrent(0);
+-        list_->AddRectFilled(start_, end, p.surface, ui::px(14));
++        list_->AddRectFilled(start_ + ImVec2(0,ui::px(3)), end + ImVec2(0,ui::px(3)), IM_COL32(75,32,48,14), ui::px(24));
++        list_->AddRectFilled(start_, end, p.surface, ui::px(24));
+         if (highlight_) {
+-            list_->AddRectFilled(start_, end, p.accent_soft, ui::px(14));
+-            list_->AddRect(start_, end, p.accent, ui::px(14), std::max(1.0f, ui::px(1.5f)));
++            list_->AddRectFilled(start_, end, p.accent_soft, ui::px(24));
++            list_->AddRect(start_, end, p.accent, ui::px(24), std::max(1.0f, ui::px(1.5f)));
+         }
+         list_->ChannelsMerge();
+     }
+--- a/recomp-common/launcher/src/main.cpp
++++ b/recomp-common/launcher/src/main.cpp
+@@ -70,7 +70,7 @@
+ 
+ // Dark unless the system says light: where it says nothing (Steam's Gaming Mode, which has no desktop to ask; a
+ // desktop with no preference) the launcher matches Steam's own dark look
+-bool system_dark() {
++[[maybe_unused]] bool system_dark() {
+     return SDL_GetSystemTheme() != SDL_SYSTEM_THEME_LIGHT;
+ }
+ 
+@@ -336,8 +336,9 @@
+     ImGui_ImplSDLRenderer3_Init(renderer);
+     ImGui_ImplSDL3_SetGamepadMode(ImGui_ImplSDL3_GamepadMode_AutoAll);
+ 
+-    ui::set_dark(system_dark());
++    ui::set_dark(false);
+     ui::apply_style(SDL_GetWindowDisplayScale(window));
++    { // App, its textures and worker callbacks must end before SDL shuts down.
+     App app(window);
+     if (!page_id.empty()) {
+         app.set_page(page_id);
+@@ -379,7 +380,7 @@
+                 running = false;
+             }
+             if (event.type == SDL_EVENT_SYSTEM_THEME_CHANGED) {
+-                ui::set_dark(system_dark());
++                ui::set_dark(false);
+                 ui::apply_style(ui::scale());
+             }
+             ui::request_frames(3);
+@@ -445,6 +446,7 @@
+         }
+         SDL_RenderPresent(renderer);
+     }
++    }
+     ImGui_ImplSDLRenderer3_Shutdown();
+     ImGui_ImplSDL3_Shutdown();
+     ImGui::DestroyContext();
+--- a/recomp-common/launcher/src/ui.cpp
++++ b/recomp-common/launcher/src/ui.cpp
+@@ -16,11 +16,11 @@
+ namespace {
+ 
+ constexpr Palette kLight = {
+-    IM_COL32(255, 255, 255, 255), IM_COL32(245, 245, 247, 255), IM_COL32(245, 245, 247, 255), IM_COL32(29, 29, 31, 255),
+-    IM_COL32(110, 110, 115, 255), IM_COL32(174, 174, 178, 255), IM_COL32(229, 229, 234, 255), IM_COL32(237, 237, 240, 255),
+-    IM_COL32(227, 227, 232, 255), IM_COL32(214, 214, 220, 255), IM_COL32(29, 29, 31, 255),    IM_COL32(58, 58, 60, 255),
+-    IM_COL32(255, 255, 255, 255), IM_COL32(224, 40, 125, 255),  IM_COL32(224, 40, 125, 36),   IM_COL32(215, 0, 21, 255),
+-    IM_COL32(36, 138, 61, 255),   IM_COL32(0, 0, 0, 72),
++    IM_COL32(247,240,228,255), IM_COL32(239,216,220,255), IM_COL32(255,252,245,255), IM_COL32(71,37,49,255),
++    IM_COL32(117,82,87,255), IM_COL32(151,116,120,255), IM_COL32(225,205,199,255), IM_COL32(244,230,222,255),
++    IM_COL32(236,211,209,255), IM_COL32(224,190,194,255), IM_COL32(127,45,73,255), IM_COL32(155,61,89,255),
++    IM_COL32(255,249,237,255), IM_COL32(160,99,44,255), IM_COL32(214,160,76,40), IM_COL32(174,48,60,255),
++    IM_COL32(67,116,79,255), IM_COL32(66,25,43,55),
+ };
+ 
+ constexpr Palette kDark = {
+@@ -144,7 +144,7 @@
+     style.ScrollbarPadding = 2.0f;
+     style.GrabMinSize = 32.0f;
+     style.WindowRounding = 0.0f;
+-    style.FrameRounding = 10.0f;
++    style.FrameRounding = 18.0f;
+     style.ScaleAllSizes(value);
+     style.FontScaleDpi = value;
+     style.FontSizeBase = size::kBody;
+@@ -366,14 +366,14 @@
+     ImGuiID popup = id + 7;
+     bool open = ImGui::IsPopupOpen(popup, ImGuiPopupFlags_None);
+     float hover = animate(id + 1, hovered || open ? 1.0f : 0.0f, 22.0f);
+-    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(p.control, p.control_hover, hover), px(10));
++    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(p.control, p.control_hover, hover), px(18));
+     push_font(Font::Regular, size::kBody);
+     const char* current = index >= 0 && index < static_cast<int>(labels.size()) ? labels[static_cast<size_t>(index)].c_str() : "";
+     float line = ImGui::GetFontSize();
+     window->DrawList->AddText(ImVec2(rect.Min.x + px(14), std::round(rect.Min.y + (box.y - line) * 0.5f)), p.text, current);
+     pop_font();
+     chevron(ImVec2(rect.Max.x - px(18), rect.Min.y + box.y * 0.5f), px(8), p.secondary, true);
+-    focus_ring(rect, id, px(10));
++    focus_ring(rect, id, px(18));
+     if (pressed) {
+         ImGui::OpenPopupEx(popup);
+         g_values[popup + 1] = 0.0f;
+@@ -416,7 +416,7 @@
+     ImGuiID id = window->GetID(id_text);
+     bool active = ImGui::GetActiveID() == id;
+     float hover = animate(id + 1, active || ImGui::IsMouseHoveringRect(rect.Min, rect.Max) ? 1.0f : 0.0f, 22.0f);
+-    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(p.control, p.control_hover, hover), px(10));
++    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(p.control, p.control_hover, hover), px(18));
+     // (a magnifying glass at the left, the field after it, and a cross that empties it at the right)
+     ImVec2 glass(rect.Min.x + px(19), rect.Min.y + box.y * 0.5f - px(1));
+     window->DrawList->AddCircle(glass, px(5), p.secondary, 0, px(1.6f));
+@@ -440,7 +440,7 @@
+     }
+     ImGui::PopStyleColor(4);
+     pop_font();
+-    focus_ring(rect, id, px(10));
++    focus_ring(rect, id, px(18));
+     if (buffer[0] != '\0') {
+         ImRect clear(ImVec2(rect.Max.x - px(34), rect.Min.y), rect.Max);
+         ImGuiID clear_id = id + 2;
+@@ -472,7 +472,7 @@
+     ImGuiID id = window->GetID(id_text);
+     bool active = ImGui::GetActiveID() == id;
+     float hover = animate(id + 1, active || ImGui::IsMouseHoveringRect(rect.Min, rect.Max) ? 1.0f : 0.0f, 22.0f);
+-    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(p.control, p.control_hover, hover), px(10));
++    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(p.control, p.control_hover, hover), px(18));
+     push_font(Font::Regular, size::kBody);
+     float line = ImGui::GetFontSize();
+     ImGui::SetCursorScreenPos(ImVec2(rect.Min.x + px(12), std::round(rect.Min.y + (box.y - line) * 0.5f)));
+@@ -491,7 +491,7 @@
+     }
+     ImGui::PopStyleColor(4);
+     pop_font();
+-    focus_ring(rect, id, px(10));
++    focus_ring(rect, id, px(18));
+     ImGui::SetCursorScreenPos(origin);
+     ImGui::ItemSize(rect);
+     return changed;
+@@ -508,7 +508,7 @@
+     const Palette& p = palette();
+     float hover = animate(id + 1, hovered && !active ? 1.0f : 0.0f, 22.0f);
+     float on = animate(id + 2, active ? 1.0f : 0.0f, 18.0f);
+-    window->DrawList->AddRectFilled(rect.Min, rect.Max, fade(p.control, hover * 0.6f), px(10));
++    window->DrawList->AddRectFilled(rect.Min, rect.Max, fade(p.control, hover * 0.6f), px(18));
+     Font font = on > 0.5f ? Font::Semibold : Font::Regular;
+     float chevron = fold >= 0 ? px(22) : 0.0f;
+     std::string shown = fit_end(label, font, size::kBody, box.x - px(16) - px(indent) - chevron);  // (a long name in a narrow sidebar)
+@@ -565,7 +565,7 @@
+     const Palette& p = palette();
+     float hover = animate(id + 1, hovered ? 1.0f : 0.0f, 22.0f);
+     float focus = animate(id + 2, capturing ? 1.0f : 0.0f, 20.0f);
+-    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(mix(p.control, p.control_hover, hover), p.accent_soft, focus), px(10));
++    window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(mix(p.control, p.control_hover, hover), p.accent_soft, focus), px(18));
+     if (focus > 0.01f) {
+         window->DrawList->AddRect(rect.Min, rect.Max, fade(p.accent, focus), px(10), px(1.5f));
+     }
+@@ -575,7 +575,7 @@
+     ImVec4 clip(rect.Min.x, rect.Min.y, rect.Max.x - px(8), rect.Max.y);
+     window->DrawList->AddText(nullptr, 0.0f, at, capturing ? p.accent : p.text, label, nullptr, 0.0f, &clip);
+     pop_font();
+-    focus_ring(rect, id, px(10));
++    focus_ring(rect, id, px(18));
+     return pressed;
+ }
+ 
+--- a/runtime/backup.cpp
++++ b/runtime/backup.cpp
+@@ -5,6 +5,8 @@
+ #include <algorithm>
+ #include <cstdio>
+ #include <cstring>
++#include <cerrno>
++#include <stdexcept>
+ 
+ namespace satrecomp::bup {
+ 
+@@ -33,14 +35,24 @@
+ void BackupMemory::Open(const std::string &path, size_t size) {
+     m_path = path;
+     m_image.assign(size, 0);
++    if (path.empty()) { Format(); return; }
+     if (FILE *f = fopen(path.c_str(), "rb")) {
+         const size_t got = fread(m_image.data(), 1, m_image.size(), f);
+-        (void)got;
++        const bool extra = fgetc(f) != EOF;
++        const bool failed = ferror(f) != 0;
+         fclose(f);
+-    }
+-    if (!IsHeaderValid()) {
+-        Format();
+-    }
++        if (got != size || extra || failed || !IsHeaderValid()) {
++            m_path.clear(); // never overwrite an existing invalid image with a blank one
++            throw std::runtime_error("Invalid backup image; original file left unchanged: " + path);
++        }
++        return;
++    }
++    const int error=errno;
++    m_path.clear();
++    if (error != ENOENT)
++        throw std::runtime_error("Cannot read backup image; original file left unchanged: " + path);
++    m_path=path;
++    Format();
+ }
+ 
+ void BackupMemory::Save() const {
+--- a/video/gpu.cpp
++++ b/video/gpu.cpp
+@@ -1,3 +1,4 @@
++#include "../port/integer_viewport.h"
+ // SPDX-License-Identifier: GPL-3.0-only
+ // Copyright (C) 2026 Tommy McLeroy. Part of satrecomp: https://github.com/tmcleroy/satrecomp
+ #include "gpu.h"
+@@ -776,29 +777,10 @@
+ }
+ 
+ SDL_FRect FitPicture(int width, int height, float columns, float lines, float aspect, int scaling, int shape) {
+-    // The picture's shape: its own; with square pixels, as many times wider than tall as it has columns for
+-    // lines (352 x 224 is 11:7; interlaced 704 x 448 the same); or the window's
+-    const float window = height > 0 ? static_cast<float>(width) / static_cast<float>(height) : aspect;
+-    const float ratio = shape == 1 ? columns / lines : shape == 2 ? window : aspect;
+-    SDL_FRect where{};
+-    if (scaling == 1) {
+-        // (as many of the window's rows to one of the picture's as fits with the picture's width too)
+-        const int rows = static_cast<int>(lines > 300.0f ? lines / 2.0f : lines);
+-        for (int by = height / std::max(rows, 1); by >= 1; by--) {
+-            where.h = static_cast<float>(by * rows);
+-            where.w = shape == 2 ? static_cast<float>(width) : std::round(where.h * ratio);
+-            if (where.w <= static_cast<float>(width)) {
+-                where.x = std::floor((static_cast<float>(width) - where.w) / 2.0f);
+-                where.y = std::floor((static_cast<float>(height) - where.h) / 2.0f);
+-                return where;
+-            }
+-        }
+-    }
+-    where.w = std::min(static_cast<float>(width), std::round(static_cast<float>(height) * ratio));
+-    where.h = shape == 2 ? static_cast<float>(height) : std::round(where.w / ratio);
+-    where.x = std::floor((static_cast<float>(width) - where.w) / 2.0f);
+-    where.y = std::floor((static_cast<float>(height) - where.h) / 2.0f);
+-    return where;
++    // Sakura's presentation contract: a whole number of output pixels for every
++    // native pixel in both axes, including interlaced modes. No fractional fallback.
++    const auto r = port::FitInteger(width, height, static_cast<int>(columns), static_cast<int>(lines));
++    return {static_cast<float>(r.x),static_cast<float>(r.y),static_cast<float>(r.w),static_cast<float>(r.h)};
+ }
+ 
+ SDL_FRect Gpu::Fit(int width, int height) const {
+--- /dev/null
++++ b/port/integer_viewport.h
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <algorithm>
++namespace port {
++struct IntegerViewport { int x=0, y=0, w=0, h=0, scale=0; };
++inline IntegerViewport FitInteger(int width, int height, int columns, int lines) {
++    if (width<=0 || height<=0 || columns<=0 || lines<=0) return {};
++    const int by=std::max(1,std::min(width/columns,height/lines));
++    const int w=columns*by, h=lines*by;
++    return {(width-w)/2,(height-h)/2,w,h,by};
++}
++}
+--- /dev/null
++++ b/launcher/src/sakura_saves.h
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "launcher.h"
++void DrawSakuraSaves(launcher::PageContext& page);
++void ShutdownSakuraSaves();
+--- /dev/null
++++ b/launcher/src/sakura_saves.cpp
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// Import creates a new managed copy. Original files and ordinary saves stay intact.
++#include "sakura_saves.h"
++#include "game_process.h"
++#include "layout.h"
++#include "ui.h"
++#include <array>
++#include <fstream>
++#include <memory>
++#include <mutex>
++
++namespace {
++struct ImportState {
++    std::mutex mutex;
++    std::string pending;
++    bool dialog=false, closed=false;
++    std::array<char,2048> source{};
++    std::unique_ptr<GameProcess> worker;
++    std::filesystem::path output, log;
++    bool finished=false, success=false, message_error=false;
++    std::string message;
++    int format=0;
++};
++std::shared_ptr<ImportState> state;
++
++void picked(void* userdata,const char* const* files,int) {
++    std::unique_ptr<std::shared_ptr<ImportState>> owner(static_cast<std::shared_ptr<ImportState>*>(userdata));
++    auto one=*owner;
++    std::lock_guard<std::mutex> lock(one->mutex);
++    if (!one->closed && files && files[0]) one->pending=files[0];
++    one->dialog=false;
++}
++}
++
++void ShutdownSakuraSaves() {
++    if (!state) return;
++    {
++        std::lock_guard<std::mutex> lock(state->mutex);
++        state->closed=true;
++    }
++    state->worker.reset(); // disables notifications before App/SDL teardown
++    state.reset(); // a pending dialog callback owns its own shared reference
++}
++
++void DrawSakuraSaves(launcher::PageContext& page) {
++    if (!state) state=std::make_shared<ImportState>();
++    auto& s=*state;
++    bool dialog=false;
++    {
++        std::lock_guard<std::mutex> lock(s.mutex);
++        if (!s.pending.empty()) {
++            SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());
++            s.pending.clear();
++        }
++        dialog=s.dialog;
++    }
++    const auto& p=ui::palette();
++    const bool running=s.worker && s.worker->running();
++    if (s.worker && !running && !s.finished) {
++        s.finished=true;
++        std::error_code error;
++        s.success=s.worker->exit_code()==0 && std::filesystem::file_size(s.output,error)==32768 && !error;
++        s.message_error=!s.success;
++        s.message=s.success?"Partida importada. Puedes usar esta copia en el próximo inicio.":"No se pudo importar este archivo.";
++        if (!s.success) {
++            std::ifstream log(s.log);
++            std::string line;
++            while (std::getline(log,line) && s.message.size()<4096) s.message+='\n'+line;
++        }
++    }
++    ui::gap(24);
++    ui::text("TUS PARTIDAS",ui::Font::Semibold,ui::size::kDetail,p.secondary);
++    ui::gap(10);
++    layout::Card card(page.width);
++    layout::row(page.width,"Importar desde un emulador","BUP, SAROO, memoria de Mednafen/Beetle, SSF y Yabause/Kronos. Se crea una copia; tu archivo original no cambia.",140,36,[&] {
++        if (ui::button("Elegir archivo…",ui::Kind::Secondary,140,!running && !dialog && !page.playing)) {
++            {
++                std::lock_guard<std::mutex> lock(s.mutex);
++                s.dialog=true;
++            }
++            static const SDL_DialogFileFilter filters[]={{"Partidas Saturn","bup;sro;bkr;bcr;bin;srm"},{"Todos los archivos","*"}};
++            SDL_ShowOpenFileDialog(picked,new std::shared_ptr<ImportState>(state),page.window,filters,2,nullptr,false);
++        }
++    });
++    layout::inset_separator(page.width);
++    layout::row(page.width,"Archivo de origen","También puedes pegar la ruta completa.",260,36,[&] {
++        ui::text_field("##save-source",s.source.data(),s.source.size(),"Ruta de la partida",260);
++    });
++    layout::row(page.width,"Formato","SSF individual: usa su nombre original, por ejemplo SAKURA___01.bin.",220,36,[&] {
++        ui::dropdown("##save-format",{"Detectar automáticamente","SSF · archivo individual"},s.format,220);
++    });
++    layout::row(page.width,running?"Importando…":"Crear una copia","La partida habitual queda guardada por separado.",140,36,[&] {
++        const auto helper=page.program_folder/"import-saves.exe";
++        if (ui::button("Importar",ui::Kind::Primary,140,s.source[0] && !running && !dialog && !page.playing)) {
++            std::error_code error;
++            const auto folder=page.folder/"imports";
++            std::filesystem::create_directories(folder,error);
++            s.output=folder/("partida-"+std::to_string(SDL_GetTicksNS())+".bin");
++            s.log=s.output;s.log.replace_extension("log");
++            s.finished=false;s.success=false;s.message_error=false;s.message.clear();
++            s.worker=std::make_unique<GameProcess>();
++            std::vector<std::string> arguments={s.source.data(),"--output",s.output.string()};
++            if (s.format) {arguments.push_back("--format");arguments.push_back("ssf-single");}
++            if (error || !s.worker->start(helper,arguments,page.folder,s.message,s.log)) {
++                s.finished=true;
++                s.message_error=true;
++                if (error) s.message="No se puede crear la carpeta de importación: "+error.message();
++            }
++        }
++    });
++    card.end();
++    if (!s.message.empty()) {
++        ui::gap(10);
++        ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.message_error?p.danger:p.success,page.width);
++    }
++    std::error_code output_error;
++    if (s.success && std::filesystem::is_regular_file(s.output,output_error)) {
++        ui::gap(12);
++        if (ui::button("Usar esta partida",ui::Kind::Primary,180,!page.playing)) {
++            page.prefs.set("sakura","backup",s.output.string());
++            if (!page.prefs.save()) {s.message="No se pudo guardar la selección de partida.";s.message_error=true;}
++        }
++    }
++    if (!page.prefs.get("sakura","backup").empty()) {
++        ui::gap(10);
++        ui::text("Usando una copia importada",ui::Font::Semibold,ui::size::kDetail,p.success);
++        ui::gap(8);
++        if (ui::button("Volver a mi partida habitual",ui::Kind::Secondary,230,!page.playing)) {
++            page.prefs.set("sakura","backup","");
++            page.prefs.save();
++        }
++    }
++}

@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 import subprocess
 import unittest
+import tempfile
+import hashlib
 
 ROOT = Path(__file__).resolve().parents[1]
 EXE = ROOT / 'local/build/machine-tests/machine-tests.exe'
@@ -10,6 +12,20 @@ EXE = ROOT / 'local/build/machine-tests/machine-tests.exe'
 
 @unittest.skipUnless(EXE.is_file(), 'requires the local synthetic machine test build')
 class MachineTests(unittest.TestCase):
+    def test_invalid_existing_backup_is_rejected_without_reformatting(self):
+        cases = [b'not a Saturn backup', b'x' * 32768,
+                 b'BackUpRam Format' + b'\0' * 100,
+                 b'BackUpRam Format' + b'\0' * (65536 - 16)]
+        with tempfile.TemporaryDirectory(dir=ROOT / 'local') as directory:
+            for i, data in enumerate(cases):
+                with self.subTest(case=i):
+                    path=Path(directory)/'supplied.bin'
+                    path.write_bytes(data)
+                    result=self.run_machine('backup-open',str(path))
+                    self.assertEqual(hashlib.sha256(path.read_bytes()).digest(),hashlib.sha256(data).digest(),
+                                     'existing save was modified while opening')
+                    self.assertEqual(result.returncode,4,result.stderr)
+
     def run_machine(self, *args, strict=True, reference=False):
         env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
         env['PATH'] = 'C:/msys64/clang64/bin' + os.pathsep + env.get('PATH', '')

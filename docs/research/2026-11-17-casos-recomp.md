@@ -39,12 +39,12 @@ Fuentes oficiales: [rcheevos](https://github.com/RetroAchievements/rcheevos), `s
 [Manual M30](https://manual.8bitdo.com/m30/m30_windows.html) y [FAQ oficial](https://support.8bitdo.com/faq/m30-bluetooth-controller.html): las etiquetas f√≠sicas de sus seis botones no equivalen a una disposici√≥n Xbox; cruceta configurable como stick. Los perfiles deben distinguir modos y conservar remapeo manual. No se dispone de validaci√≥n f√≠sica de mandos aqu√≠.
 
 
-## RegresiÛn de overlays y cachÈ SH-2
+## Regresi√≥n de overlays y cach√© SH-2
 
-Una prueba sintÈtica con dos traducciones del mismo PC detectÛ un tercer contenido sin recompilar que ejecutaba la traducciÛn anterior. Se reprodujo en WRAM alta y baja: la retenciÛn de bucles ignoraba CCR.CE. El parche 0009 limita esa retenciÛn a P0 con cachÈ activada y la invalida al desactivar CE, reiniciar el CPU, escribir CCR.CP o purgar una lÌnea coincidente. Las pruebas comprueban tambiÈn que una escritura del otro SH-2 conserva el bucle antes de purgar y que purgar otra lÌnea no lo elimina. Se cubren escrituras de 8/16/32 bits y CP que se borra tras escribirlo.
+Una prueba sint√©tica con dos traducciones del mismo PC detect√≥ un tercer contenido sin recompilar que ejecutaba la traducci√≥n anterior. Se reprodujo en WRAM alta y baja: la retenci√≥n de bucles ignoraba CCR.CE. El parche 0009 limita esa retenci√≥n a P0 con cach√© activada y la invalida al desactivar CE, reiniciar el CPU, escribir CCR.CP o purgar una l√≠nea coincidente. Las pruebas comprueban tambi√©n que una escritura del otro SH-2 conserva el bucle antes de purgar y que purgar otra l√≠nea no lo elimina. Se cubren escrituras de 8/16/32 bits y CP que se borra tras escribirlo.
 
-Referencia primaria: [SH7604 Hardware Manual, secciÛn 8](https://antime.kapsi.fi/sega/files/sh7604.pdf), CCR 0xFFFFFE92, ·reas P0/P1 y purga asociativa. Esto corrige la heurÌstica de retenciÛn existente; todavÌa no implementa una cachÈ completa con tags, reemplazo y temporizaciÛn. Las pruebas sintÈticas no prueban por sÌ solas la fidelidad de toda la campaÒa.
+Referencia primaria: [SH7604 Hardware Manual, secci√≥n 8](https://antime.kapsi.fi/sega/files/sh7604.pdf), CCR 0xFFFFFE92, √°reas P0/P1 y purga asociativa. Esto corrige la heur√≠stica de retenci√≥n existente; todav√≠a no implementa una cach√© completa con tags, reemplazo y temporizaci√≥n. Las pruebas sint√©ticas no prueban por s√≠ solas la fidelidad de toda la campa√±a.
 
-## Packs gr·ficos
+## Packs gr√°ficos
 
-La b˙squeda del 17 de noviembre no identificÛ un pack HD verificable para Sakura Wars 1 de Saturn. No se integra un supuesto pack por asociaciÛn con otra plataforma o entrega. La [publicaciÛn del autor del parche inglÈs](https://segaxtreme.net/resources/sakura-wars-english-patch.96/) indica que la ediciÛn SSP 2.1.1 conserva el contenido de la traducciÛn y cambia el formato de aplicaciÛn; no constituye una mejora HD.
+La b√∫squeda del 17 de noviembre no identific√≥ un pack HD verificable para Sakura Wars 1 de Saturn. No se integra un supuesto pack por asociaci√≥n con otra plataforma o entrega. La [publicaci√≥n del autor del parche ingl√©s](https://segaxtreme.net/resources/sakura-wars-english-patch.96/) indica que la edici√≥n SSP 2.1.1 conserva el contenido de la traducci√≥n y cambia el formato de aplicaci√≥n; no constituye una mejora HD.

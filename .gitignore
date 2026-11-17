@@ -34,3 +34,9 @@
 !/config/
 /config/**
 !/config/*.json
+
+!/LICENSE
+!/THIRD_PARTY_NOTICES.md
+!/VERSION
+!/docs/releases/
+!/docs/releases/*.md

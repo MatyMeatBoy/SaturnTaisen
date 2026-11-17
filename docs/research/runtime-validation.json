@@ -11,9 +11,10 @@
     "0006-satrecomp-strict-bios.patch": "0f91ed1c33d4dbf9f2b0f6d6d82c2c693fa546c5da2b1a7634ff6c4ada6f0c6f",
     "0007-satrecomp-disc-reader-epoch.patch": "a6dd3f6a5196e9407acbbad976343d914f74549fbb95ef8c4210135bd9bfdca4",
     "0008-satrecomp-incremental-generation.patch": "fa12a97bbecd921180c598b50d181dcf8751d11639127c4ca7a1e4b2299d3a62",
-    "0009-satrecomp-native-cache-control.patch": "59847ca5915e1256ed80dbff77844639118c66c9a8df01f397f43bf50a7e9610"
+    "0009-satrecomp-native-cache-control.patch": "59847ca5915e1256ed80dbff77844639118c66c9a8df01f397f43bf50a7e9610",
+    "0010-sakura-v01-launcher-presentation-safety.patch": "dcbf60ddeec642aeb2e82b7994ee9ae1ee59ab1c3c60bc3a849bc7d5455d5415"
   },
-  "guest_blocks": 575144,
+  "guest_blocks": 580328,
   "frames": 30000,
   "measurements": [
     {
@@ -327,7 +328,41 @@
         "cpp_files_written": 84,
         "skipped": 0
       }
-    }
+    },
+    "k003": [
+      {
+        "profile": "disc1",
+        "file": "/SAKURA2/K003.BIN",
+        "lba": 230961,
+        "bytes": 11644,
+        "base": "06078000",
+        "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515"
+      },
+      {
+        "profile": "disc2",
+        "file": "/SAKURA2/K003.BIN",
+        "lba": 218414,
+        "bytes": 11644,
+        "base": "06078000",
+        "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515"
+      },
+      {
+        "profile": "japanese-disc1",
+        "file": "/SAKURA2/K003.BIN",
+        "lba": 221424,
+        "bytes": 11644,
+        "base": "06078000",
+        "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515"
+      },
+      {
+        "profile": "japanese-disc2",
+        "file": "/SAKURA2/K003.BIN",
+        "lba": 202769,
+        "bytes": 11644,
+        "base": "06078000",
+        "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515"
+      }
+    ]
   },
   "battle_entry_parity": {
     "frames": 3001,
@@ -361,8 +396,100 @@
     "native": "local/work/sakura/public-sumire-native-9500.state"
   },
   "battle_field_progress": {
-    "frames_before_strict_stop": 6027,
-    "missing_block": "0607A5D0",
-    "status": "discovery pending; no interpreter fallback in native run"
+    "frames": 9001,
+    "all_frame_hashes_equal_reference": true,
+    "interpreted_sh2": 0,
+    "single_stepped": 0,
+    "compiled_blocks": 580328,
+    "host_calls": 0,
+    "first_playable_field": true,
+    "battle_completion": false,
+    "serialized_ignored_fields": [
+      {
+        "offset": 4201962,
+        "bytes": 1,
+        "name": "masterSH2.m_wbReg",
+        "reason": "unused reference-timing compatibility field; generated code writes it, own machine never reads it except serialization"
+      },
+      {
+        "offset": 4217311,
+        "bytes": 8,
+        "name": "SCSP DSP m_WRAM",
+        "reason": "host pointer restored on state load"
+      }
+    ],
+    "evidence": "local/logs/battle-field-v01.log"
+  },
+  "v01_presentation": [
+    {
+      "file": "frame-v01-default.png",
+      "output": [
+        960,
+        720
+      ],
+      "native": [
+        320,
+        224
+      ],
+      "scale": 3,
+      "viewport": [
+        0,
+        24,
+        960,
+        672
+      ],
+      "every_native_pixel_uniform": true
+    },
+    {
+      "file": "frame-v01-1366.png",
+      "output": [
+        1366,
+        768
+      ],
+      "native": [
+        320,
+        224
+      ],
+      "scale": 3,
+      "viewport": [
+        203,
+        48,
+        960,
+        672
+      ],
+      "every_native_pixel_uniform": true
+    },
+    {
+      "file": "frame-v01-ultrawide.png",
+      "output": [
+        2560,
+        1080
+      ],
+      "native": [
+        320,
+        224
+      ],
+      "scale": 4,
+      "viewport": [
+        640,
+        92,
+        1280,
+        896
+      ],
+      "every_native_pixel_uniform": true
+    }
+  ],
+  "v01_launcher": {
+    "theme": "cream, cherry blossom, burgundy and gold; one title screenshot only",
+    "native": "SDL3/ImGui",
+    "source_tests": 46,
+    "source_tests_log": "local/logs/tests-v01-all.log",
+    "lifetime_regression": "protected freed object page: access violation before fix, success after fix",
+    "invalid_backup_open": "all four malformed size/header cases rejected with original SHA256 unchanged",
+    "gui_import": "native click/type Import and Use this save, then 9501-frame episode8 load; final state matches reference except host DSP pointer",
+    "portable": "isolated PATH contains only Windows System32; launcher, native local title capture and all three pages exit0",
+    "title_generated_from_own_disc": true,
+    "title_resources_shipped": false,
+    "title_generated_sha256": "1bf5f6b59bbdd42835e4e83cc80e8f0ab32e14c55912537c7c6fea0f4071fe5c"
   }
 }

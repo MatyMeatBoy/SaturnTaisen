@@ -4,6 +4,7 @@
 #include "lift.h"
 #include "recomp.h"
 #include "access.h"
+#include "backup.h"
 #include <algorithm>
 #include <cstdio>
 #include <string>
@@ -19,6 +20,12 @@ static uint32_t position(Machine &m) {
 }
 int main(int argc, char **argv) {
     Machine m;
+    if (argc>2 && std::string(argv[1])=="backup-open") {
+        satrecomp::bup::BackupMemory backup;
+        try {backup.Open(argv[2]);}
+        catch (const std::exception& error) {std::fprintf(stderr,"%s\n",error.what());return 4;}
+        return 0;
+    }
     if (argc>1 && (std::string(argv[1])=="overlay" || std::string(argv[1])=="overlay-invalid" || std::string(argv[1])=="overlay-purge")) {
         const bool low=argc>2 && std::string(argv[2])=="low";
         const uint32_t address=low?0x00204000:0x06004000;

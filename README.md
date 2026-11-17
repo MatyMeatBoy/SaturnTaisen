@@ -1,15 +1,25 @@
-# SaturnTaisenFirst
+<h1 align="center">🌸 SaturnTaisenFirst</h1>
+<p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Recompilación estática para Windows x64</p>
+<p align="center">
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases"><img alt="Versión 0.1 alpha" src="https://img.shields.io/badge/versi%C3%B3n-0.1_alpha-9a4564?style=flat-square"></a>
+  <img alt="Plataforma Windows x64" src="https://img.shields.io/badge/plataforma-Windows_x64-77445b?style=flat-square">
+  <a href="docs/research/runtime-validation.json"><img alt="SH-2: AOT estática" src="https://img.shields.io/badge/SH--2-AOT_est%C3%A1tica-bf914d?style=flat-square"></a>
+  <a href="LICENSE"><img alt="Licencia GPL-3.0-only" src="https://img.shields.io/badge/licencia-GPL--3.0--only-5d755d?style=flat-square"></a>
+  <img alt="Estado: desarrollo" src="https://img.shields.io/badge/estado-en_desarrollo-d1a0ad?style=flat-square">
+</p>
 
-Proyecto de recompilación estática de **Sakura Taisen / Sakura Wars 1 para Sega Saturn**, con la traducción inglesa suministrada por el propietario del proyecto.
+Un regreso al Teatro Imperial con los píxeles de Saturn, una presentación cuidada y la traducción inglesa suministrada por el propietario. Repositorio privado de **MatyMeatBoy**.
 
-**Estado:** implementación inicial. Ambos discos ingleses están preparados localmente y sus hashes coinciden con RetroAchievements. Hay un ejecutable Windows de investigación: 119.781 fotogramas continuos de exploración en AOT estricto, y guardado del episodio 1 con carga desde un arranque nuevo verificada. Todavía no es un recomp completo ni se ha validado la campaña.
+**v0.1 es una versión de desarrollo.** Están verificados el arranque, 119.781 fotogramas continuos de exploración AOT, guardado/carga del episodio 1 y cargas de partidas públicas del episodio 8 y Finale en el disco 2. La entrada al primer combate coincide con la referencia durante 3.001 frames repetidos, y 9.001 más llegan a su primer campo jugable en AOT. La campaña completa, todas las batallas y la transición automática real de discos todavía no están validadas.
+
+El launcher usa una temática de cerezos inspirada en NewSnapRecomp, solo la captura local de la pantalla de título e importación de partidas en copias separadas. El juego se centra con **escala entera y nearest**, con un marco adaptable. [Notas de la v0.1](docs/releases/0.1.md) · [Diseño](docs/superpowers/specs/2026-11-17-v01-launcher.md) · [Validación](docs/research/runtime-validation.json) · [Formatos de partidas](docs/research/save-import.md).
 
 ## Objetivos confirmados
 
 - Recompilar el código SH-2 a código nativo; mantener las funciones necesarias del hardware en un runtime.
 - Incorporar localmente los dos discos y la traducción inglesa.
 - Integrar la transición entre discos y conservar las partidas.
-- Conservar la proporción original, maximizar una presentación nítida y rellenar el espacio restante con un marco.
+- Escalar únicamente en enteros, conservar los píxeles originales y rellenar el espacio restante con un marco adaptable.
 - Repositorio privado bajo MatyMeatBoy.
 - Ajustes compartidos entre launcher y menú ingame (Start + Select).
 - Mandos generales y perfiles automáticos Saturn para modelos reconocidos, incluidos M30.
@@ -43,7 +53,7 @@ python tools/build_runtime.py run
 
 `discover` utiliza interpretación exclusivamente para obtener cobertura. El ejecutable y `run` usan AOT estricto por defecto: se detienen si necesitan interpretar una instrucción SH-2 guest. Las funciones agrupadas y el enlace de llamadas host requieren habilitación experimental explícita; la ruta validada usa el despachador de bloques. Los servicios de hardware/BIOS reimplementados y el 68000 de audio son partes separadas del runtime.
 
-La base de bloques y los C++ generados no se incluyen en Git; cada desarrollador debe generarlos desde sus imágenes. Los comandos actuales son herramientas de desarrollo, no el launcher final ni la transición de discos. `tests/theater.movie` recorre la narración inicial con pulsaciones de A hasta el mapa del teatro; no cubre las ramas, las batallas ni la campaña completa. La preparación japonesa está disponible con `prepare_discs.py --original --cue ... --output ...`; su cobertura AOT y el selector de idioma aún se están integrando. Los avisos del runtime sobre hardware o composición no se consideran resueltos por el simple hecho de que arranque.
+La base de bloques y los C++ generados no se incluyen en Git; cada desarrollador debe generarlos desde sus imágenes. El launcher nativo se construye con `python tools/build_launcher.py`; la transición automática de discos sigue pendiente. `tests/theater.movie` recorre la narración inicial con pulsaciones de A hasta el mapa del teatro; no cubre las ramas, las batallas ni la campaña completa. La preparación japonesa está disponible con `prepare_discs.py --original --cue ... --output ...`; su cobertura AOT y el selector de idioma aún se están integrando. Los avisos del runtime sobre hardware o composición no se consideran resueltos por el simple hecho de que arranque.
 
 Las comprobaciones sintéticas de vídeo y máquina no necesitan dumps. Comprueban la composición de capas y sprites, búsquedas CD por pista/FAD, invalidación de sectores al cambiar de lector y rechazo de servicios BIOS desconocidos en modo estricto. La comparación larga entre intérprete y AOT se ejecuta así:
 

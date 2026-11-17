@@ -1,6 +1,6 @@
 # Importación de partidas de Saturn
 
-Requisito autorizado: importar partidas de los distintos emuladores desde el launcher, conservar originales y probar puntos avanzados obtenidos públicamente. La interfaz del launcher sigue pendiente.
+Requisito autorizado: importar partidas de los distintos emuladores desde el launcher, conservar originales y probar puntos avanzados obtenidos públicamente. La interfaz del launcher permite elegir o pegar el archivo, detectar el formato, crear una copia, activarla y volver a la partida habitual. Se probó con pulsaciones reales de su modo de pruebas y después con una carga del episodio 8 desde el launcher; los originales permanecen intactos.
 
 Primera herramienta local:
 
