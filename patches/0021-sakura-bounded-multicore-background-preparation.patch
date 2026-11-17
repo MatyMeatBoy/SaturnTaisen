@@ -1,0 +1,280 @@
+diff --git a/port/backdrop.h b/port/backdrop.h
+index fa72bf5..e6fb79f 100644
+--- a/port/backdrop.h
++++ b/port/backdrop.h
+@@ -54,7 +54,9 @@ inline SDL_Texture* BackdropTexture(SDL_Renderer* renderer,SDL_Surface* logical,
+     if(texture)SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_NEAREST);
+     return texture;
+ }
+-inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::path& file,std::span<const uint8_t> kabe,const std::filesystem::path& cacheDir,std::vector<uint32_t>* pixels=nullptr) {
++// CPU-only: caller owns the surface. No renderer or texture calls are allowed here.
++inline SDL_Surface* PrepareBackdrop(const std::filesystem::path& file,std::span<const uint8_t> kabe,const std::filesystem::path& cacheDir,bool requireCache=false) {
++    if(kabe.size()<512 || (requireCache && cacheDir.empty()))return nullptr;
+     std::vector<uint8_t> masterBytes;if(!ReadBackgroundPng(file,masterBytes))return nullptr;
+     uint64_t hash=14695981039346656037ull;
+     for(const auto byte:masterBytes)hash=(hash^byte)*1099511628211ull;
+@@ -78,9 +80,14 @@ inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::p
+     }
+     if(!cache.empty() && !fast) {
+         std::error_code error;std::filesystem::create_directories(cacheDir,error);
+-        if(!error && WriteBackgroundCache(cache,logical) && migrated)std::filesystem::remove(legacyFast,error);
++        const bool saved=!error && WriteBackgroundCache(cache,logical);
++        if(!saved && requireCache) {SDL_DestroySurface(logical);return nullptr;}
++        if(saved && migrated)std::filesystem::remove(legacyFast,error);
+     }
+-    return BackdropTexture(renderer,logical,pixels);
++    return logical;
++}
++inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::path& file,std::span<const uint8_t> kabe,const std::filesystem::path& cacheDir,std::vector<uint32_t>* pixels=nullptr) {
++    return BackdropTexture(renderer,PrepareBackdrop(file,kabe,cacheDir),pixels);
+ }
+ 
+ }
+diff --git a/port/background_cache.h b/port/background_cache.h
+index 97ccbca..c68eaa5 100644
+--- a/port/background_cache.h
++++ b/port/background_cache.h
+@@ -111,7 +111,19 @@ inline bool WriteBackgroundCache(const std::filesystem::path& file,SDL_Surface*
+     output.write(reinterpret_cast<const char*>(header.data()),header.size());output.write(reinterpret_cast<const char*>(stored.bytes.data()),stored.bytes.size());output.close();
+     std::error_code error;
+     if(output)std::filesystem::rename(temporary,file,error);
+-    if(!output || error) {std::error_code ignored;std::filesystem::remove(temporary,ignored);return false;}
++    if(!output || error) {
++        std::error_code ignored;std::filesystem::remove(temporary,ignored);
++        // Windows can deny replacement while another reader has the destination
++        // open. Another producer may already have published the exact surface.
++        // Accept that only after the ordinary integrity checks and pixel equality.
++        auto* existing=ReadBackgroundCache(file,surface->w,surface->h);
++        if(!existing)return false;
++        bool identical=true;
++        for(int y=0;y<existing->h && identical;y++)
++            identical=std::memcmp(static_cast<uint8_t*>(existing->pixels)+y*existing->pitch,
++                                  pixels.data()+size_t(y)*surface->w,size_t(surface->w)*4)==0;
++        SDL_DestroySurface(existing);return identical;
++    }
+     return true;
+ }
+ }
+diff --git a/port/background_workers.h b/port/background_workers.h
+new file mode 100644
+index 0000000..0cbdc79
+--- /dev/null
++++ b/port/background_workers.h
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <algorithm>
++#include <atomic>
++#include <charconv>
++#include <cstdlib>
++#include <functional>
++#include <system_error>
++#include <string_view>
++#include <thread>
++#include <vector>
++namespace port {
++inline unsigned BackgroundWorkerCount(bool offline,unsigned hardware=std::thread::hardware_concurrency()) {
++    const unsigned fallback=offline?std::clamp(hardware,1u,8u):std::clamp(hardware/4,1u,4u);
++    const char* value=std::getenv("SATRECOMP_BACKGROUND_WORKERS");if(!value)return fallback;
++    const std::string_view text(value);unsigned count=0;
++    const auto result=std::from_chars(text.data(),text.data()+text.size(),count);
++    return result.ec==std::errc{} && result.ptr==text.data()+text.size() && count<=8?count:fallback;
++}
++// Owns CPU-only preparation jobs. Never accepts a renderer, texture or guest state.
++// Start/Wait/Cancel/destruction are called by the owner thread. Jobs own their inputs.
++class BackgroundWorkers {
++public:
++    using Job=std::function<bool()>;
++    static unsigned Bound(unsigned requested,size_t jobs) {
++        return static_cast<unsigned>(std::min({size_t(requested),jobs,size_t(8)}));
++    }
++    ~BackgroundWorkers() {Cancel();Wait();}
++    void Start(std::vector<Job> jobs,unsigned count) {
++        Cancel();Wait();jobs_=std::move(jobs);next_=0;completed_=0;failed_=0;cancel_=false;
++        count=Bound(count,jobs_.size());threads_.reserve(count);
++        for(unsigned i=0;i<count;i++) {
++            try {threads_.emplace_back([this] {
++                while(!cancel_.load(std::memory_order_acquire)) {
++                    const size_t i=next_.fetch_add(1,std::memory_order_relaxed);
++                    if(i>=jobs_.size() || cancel_.load(std::memory_order_acquire))break;
++                    bool ok=false;try {ok=jobs_[i]();} catch(...) { /* optional enhancement falls back */ }
++                    if(!ok)failed_.fetch_add(1,std::memory_order_relaxed);
++                    completed_.fetch_add(1,std::memory_order_release);
++                }
++            });} catch(const std::system_error&) {break;} // fewer workers; synchronous loader remains usable
++        }
++    }
++    void Cancel() {cancel_.store(true,std::memory_order_release);}
++    void Wait() {
++        for(auto& thread:threads_)if(thread.joinable())thread.join();
++        threads_.clear();jobs_.clear();
++    }
++    unsigned Completed() const {return completed_.load(std::memory_order_acquire);}
++    unsigned Failed() const {return failed_.load(std::memory_order_relaxed);}
++private:
++    std::vector<Job> jobs_;std::vector<std::thread> threads_;
++    std::atomic<size_t> next_{0};std::atomic<unsigned> completed_{0},failed_{0};
++    std::atomic<bool> cancel_{false};
++};
++}
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index df91ddf..e46f180 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -10,6 +10,7 @@
+ #include "kabe.h"
+ #include "backdrop.h"
+ #include "pc_backdrop.h"
++#include "background_workers.h"
+ #include <map>
+ #include "../video/renderer.h"
+ #include <filesystem>
+@@ -172,6 +173,8 @@ int RunWindowed(Port &port) {
+         bool pc=false;std::string id;
+     };
+     std::vector<Backdrop> backdrops;
++    BackgroundWorkers backgroundWorkers;
++    bool backgroundWarmupStarted=false;
+     SDL_Texture *foreground=nullptr;
+     SakuraUi sakuraUi;
+     Shading shading;
+@@ -266,6 +269,8 @@ int RunWindowed(Port &port) {
+         return true;
+     };
+     auto closeWindow = [&]() {
++        backgroundWorkers.Cancel();backgroundWorkers.Wait();
++        backgroundWarmupStarted=false;
+         sakuraUi.Close();
+         for(auto& backdrop:backdrops) SDL_DestroyTexture(backdrop.texture);
+         backdrops.clear();
+@@ -455,6 +460,28 @@ int RunWindowed(Port &port) {
+                 }
+                 floral=backdrop.texture;break;
+             }
++            // Prepare future themes only after the current scene has loaded. Jobs
++            // own their inputs, retain no surfaces, and never touch guest/GPU state.
++            if(!choosing && !backgroundWarmupStarted) {
++                backgroundWarmupStarted=true;
++                const unsigned count=BackgroundWorkerCount(false);
++                if(count) {
++                    std::vector<BackgroundWorkers::Job> jobs;
++                    for(const auto& item:backdrops) {
++                        if(item.cacheDir.empty() || (item.pc && !preferPc))continue;
++                        jobs.push_back([files=item.files,cache=item.cacheDir,palette=item.nativePalette,
++                                        id=item.id,pc=item.pc,root=std::filesystem::path(port.opt.pcAssetsPath)] {
++                            for(const auto& file:files) {
++                                auto* surface=pc?PreparePcBackdrop(file,root,id,cache,true):PrepareBackdrop(file,palette,cache,true);
++                                if(surface) {SDL_DestroySurface(surface);return true;}
++                            }
++                            return false;
++                        });
++                    }
++                    if(std::getenv("SATRECOMP_BACKGROUND_STATS"))fprintf(stderr,"background warmup: jobs=%zu workers=%u\n",jobs.size(),BackgroundWorkers::Bound(count,jobs.size()));
++                    backgroundWorkers.Start(std::move(jobs),count);
++                }
++            }
+         }
+         if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+diff --git a/port/main.cpp b/port/main.cpp
+index 1677c26..381688d 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -8,6 +8,7 @@
+ #include "kabe.h"
+ #include "pc_spr.h"
+ #include "pc_backdrop.h"
++#include "background_workers.h"
+ 
+ #include "png_write.h"
+ #include "hle_bios.h"
+@@ -1382,6 +1383,8 @@ static void Usage(const char *argv0) {
+             "  --record PATH          record an input movie\n"
+             "  --auto SEED[:FROM]     random input from frame FROM on (exploration)\n"
+             "  --dump-ram PREFIX      write work RAM (PREFIXhigh.bin, PREFIXlow.bin), sound RAM (PREFIXsound.bin) and CPU registers at exit\n"
++            "  --prepare-saturn-backgrounds CUE CACHE  prepare Saturn art without running guest code\n"
++            "  --prepare-pc-backgrounds ROOT CACHE    prepare owner-verified Saturn HD art\n"
+             "  --video-stats          print what the game asked of the video hardware, at exit\n"
+             "  --stats                print recompiled/interpreted statistics at exit\n",
+             argv0);
+@@ -1399,26 +1402,38 @@ int main(int argc, char **argv) {
+             }
+             return argv[++i];
+         };
+-        if(a=="--prepare-pc-backgrounds") {
+-            const auto pcRoot=next(),cache=next();
+-            auto* surface=SDL_CreateSurface(1,1,SDL_PIXELFORMAT_ABGR8888);
+-            auto* renderer=surface?SDL_CreateSoftwareRenderer(surface):nullptr;
+-            if(!renderer) {if(surface)SDL_DestroySurface(surface);return 1;}
+-            std::vector<std::string> prepared,checked;int failures=0;
++        if(a=="--prepare-saturn-backgrounds" || a=="--prepare-pc-backgrounds") {
++            const bool pc=a=="--prepare-pc-backgrounds";
++            const std::filesystem::path source=next(),cache=next();
++            if(!pc && !p.discFiles.Open(source.string())) {fprintf(stderr,"Cannot read Saturn disc for background preparation\n");return 1;}
++            std::vector<port::BackgroundWorkers::Job> jobs;
+             for(int family=0;family<10;family++)for(int variant=0;variant<2;variant++) {
++                if(family==9 && variant==1)continue; // same native palette and PC mapping
+                 const auto native="KABE"+std::to_string(family)+std::to_string(variant);
+-                const auto* info=port::PcBackdropFor(native);if(!info)continue;
+-                const std::string id(info->id);
+-                if(std::find(checked.begin(),checked.end(),id)!=checked.end())continue;
+-                checked.push_back(id);
+-                const auto master=std::filesystem::path(SDL_GetBasePath())/"art"/"pc-backgrounds"/(id+"-v1.png");
+-                auto* texture=port::LoadPcBackdrop(renderer,master,pcRoot,native,cache,nullptr,true);
+-                if(texture) {prepared.push_back(id);SDL_DestroyTexture(texture);}
+-                else {failures++;fprintf(stderr,"PC background unavailable or unsupported: %s\n",id.c_str());}
++                if(pc) {
++                    const auto* info=port::PcBackdropFor(native);if(!info)return 1;
++                    const auto master=std::filesystem::path(SDL_GetBasePath())/"art"/"pc-backgrounds"/(std::string(info->id)+"-v1.png");
++                    jobs.push_back([=] {
++                        auto* image=port::PreparePcBackdrop(master,source,native,cache,true);
++                        const bool ok=image!=nullptr;SDL_DestroySurface(image);return ok;
++                    });
++                } else {
++                    std::vector<uint8_t> data;std::vector<uint32_t> pixels;
++                    if(!p.discFiles.Read(native+".BIN",data) || !port::DecodeKabe(data,pixels))return 1;
++                    data.resize(512);
++                    const auto master=std::filesystem::path(SDL_GetBasePath())/"art"/"backgrounds"/(native+".png");
++                    jobs.push_back([=] {
++                        auto* image=port::PrepareBackdrop(master,data,cache,true);
++                        const bool ok=image!=nullptr;SDL_DestroySurface(image);return ok;
++                    });
++                }
+             }
+-            SDL_DestroyRenderer(renderer);SDL_DestroySurface(surface);
+-            printf("Prepared %zu/19 verified PC decorative backgrounds; failures=%d\n",prepared.size(),failures);
+-            return prepared.size()==19?0:1;
++            port::BackgroundWorkers workers;
++            const unsigned count=port::BackgroundWorkerCount(true);
++            workers.Start(std::move(jobs),count);workers.Wait();
++            const unsigned ready=workers.Completed()-workers.Failed();
++            printf("Prepared %u/19 verified %s decorative backgrounds; workers=%u failures=%u\n",ready,pc?"Saturn HD":"Saturn",count,workers.Failed());
++            return ready==19?0:1;
+         } else if (a == "--export-pc-spr") {
+             const auto input=next(),output=next();
+             std::ifstream stream(input,std::ios::binary|std::ios::ate);
+diff --git a/port/pc_backdrop.h b/port/pc_backdrop.h
+index 7b59d92..8eef92d 100644
+--- a/port/pc_backdrop.h
++++ b/port/pc_backdrop.h
+@@ -37,7 +37,8 @@ inline uint64_t PcBackdropHash(std::span<const uint8_t> bytes,uint64_t hash=1469
+     for(auto byte:bytes)hash=(hash^byte)*1099511628211ull;
+     return hash;
+ }
+-inline SDL_Texture* LoadPcBackdrop(SDL_Renderer* renderer,const std::filesystem::path& masterFile,const std::filesystem::path& pcRoot,std::string_view saturn,const std::filesystem::path& cacheDir,std::vector<uint32_t>* pixels,bool requireCache=false) {
++// CPU-only; validated owner resources are never passed to a renderer here.
++inline SDL_Surface* PreparePcBackdrop(const std::filesystem::path& masterFile,const std::filesystem::path& pcRoot,std::string_view saturn,const std::filesystem::path& cacheDir,bool requireCache=false) {
+     if(requireCache && cacheDir.empty())return nullptr;
+     const auto* info=PcBackdropFor(saturn);if(!info)return nullptr;
+     std::vector<uint8_t> source,master;
+@@ -67,6 +68,9 @@ inline SDL_Texture* LoadPcBackdrop(SDL_Renderer* renderer,const std::filesystem:
+         if(!saved && requireCache) {SDL_DestroySurface(logical);return nullptr;}
+         if(saved && migrated)std::filesystem::remove(legacyFast,ignored);
+     }
+-    return BackdropTexture(renderer,logical,pixels);
++    return logical;
++}
++inline SDL_Texture* LoadPcBackdrop(SDL_Renderer* renderer,const std::filesystem::path& masterFile,const std::filesystem::path& pcRoot,std::string_view saturn,const std::filesystem::path& cacheDir,std::vector<uint32_t>* pixels,bool requireCache=false) {
++    return BackdropTexture(renderer,PreparePcBackdrop(masterFile,pcRoot,saturn,cacheDir,requireCache),pixels);
+ }
+ }

@@ -61,6 +61,9 @@ class FrontendTests(unittest.TestCase):
     def test_compact_background_storage_is_lossless_and_bounds_checked(self):
         self.fixture('background_codec')
 
+    def test_background_workers_bound_cancel_join_and_isolate_failures(self):
+        self.fixture('background_workers')
+
     def test_palette_acceleration_preserves_exact_colors_and_tie_order(self):
         self.fixture('palette_match')
 

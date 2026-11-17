@@ -1,6 +1,8 @@
 #include "backdrop.h"
 #include <cassert>
 #include <vector>
+#include <thread>
+#include <atomic>
 int main(int argc,char** argv) {
     const std::array<int16_t,3> fade{-255,30,-10};
     assert(port::OffsetBackdropPixel(0xFF1020F0,fade)==0xFF063E00);
@@ -17,6 +19,26 @@ int main(int argc,char** argv) {
     assert(argc==2);
     const auto file=std::filesystem::path(argv[1])/"master.png";
     assert(SDL_SavePNG(source,file.string().c_str()));
+    SDL_Surface* prepared=nullptr;
+    std::thread worker([&]{prepared=port::PrepareBackdrop(file,palette,std::filesystem::path(argv[1])/"prepared",true);});
+    worker.join();assert(prepared && prepared->w==416 && prepared->h==234);
+    assert(static_cast<uint32_t*>(prepared->pixels)[0]==0xFF0000F8);
+    SDL_DestroySurface(prepared);
+    // Foreground demand and speculative preparation may target the same cache.
+    std::atomic<unsigned> ready=0;std::vector<std::thread> concurrent;
+    for(unsigned i=0;i<8;i++)concurrent.emplace_back([&] {
+        auto* image=port::PrepareBackdrop(file,palette,std::filesystem::path(argv[1])/"shared",true);
+        if(image && static_cast<uint32_t*>(image->pixels)[0]==0xFF0000F8)++ready;
+        SDL_DestroySurface(image);
+    });
+    for(auto& thread:concurrent)thread.join();assert(ready==8);
+    unsigned cacheCount=0;
+    for(const auto& item:std::filesystem::directory_iterator(std::filesystem::path(argv[1])/"shared")) {
+        assert(item.path().extension()==".stfb");++cacheCount;
+    }
+    assert(cacheCount==1);
+    assert(!port::PrepareBackdrop(file,palette,{},true));
+    assert(!port::PrepareBackdrop(file,std::span<const uint8_t>(palette.data(),12),{},false));
     auto* output=SDL_CreateSurface(416,234,SDL_PIXELFORMAT_ABGR8888);assert(output);
     auto* renderer=SDL_CreateSoftwareRenderer(output);assert(renderer);
     std::vector<uint32_t> base;

@@ -17,13 +17,45 @@ STATE=ROOT/'local/work/sakura/iris-correct-room-3000.state'
 @unittest.skipUnless(Image is not None and STATE.is_file() and (BUILD/'art/backgrounds/KABE01.png').is_file(),
                      'requires owner-supplied local scene and generated background')
 class PresentationRuntimeTests(unittest.TestCase):
+    def test_multicore_preparation_keeps_scene_identical_and_prepares_future_themes(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:
+            folder=Path(directory);images=[]
+            for workers in (0,4):
+                profile=folder/str(workers);profile.mkdir();shot=profile/'scene.png'
+                backup=profile/'backup.bin';backup.write_bytes((ROOT/'local/work/sakura/prebattle-immutable-seed.bin').read_bytes())
+                env={k:v for k,v in os.environ.items() if not k.startswith('SATRECOMP_')}
+                env.update(PATH='C:/msys64/clang64/bin;'+env.get('PATH',''),SATRECOMP_WINDOW_HIDDEN='1',
+                           SATRECOMP_BACKGROUND_WORKERS=str(workers),SATRECOMP_BACKGROUND_STATS='1',
+                           SATRECOMP_WINDOW_KEYS=f'2:SIZE=1280x720,3:CHOICE=1,120:WINDOWSHOT={shot.as_posix()},132:QUIT')
+                run=subprocess.run([str(BUILD/'sakura.exe'),'--disc',str(ROOT/'local/prepared/disc1/game.cue'),
+                                    '--state-load','0:'+str(STATE),'--settings',str(profile/'settings.ini'),
+                                    '--backup',str(backup),'--mute'],env=env,capture_output=True,timeout=30)
+                self.assertEqual(run.returncode,0,run.stderr.decode(errors='replace'))
+                with Image.open(shot) as image:images.append(image.convert('RGBA').tobytes())
+                self.assertEqual(len(list(profile.rglob('*.stfb'))),19 if workers else 1)
+                self.assertFalse(list(profile.rglob('*.tmp')),'preparation left partial cache files')
+                if workers:self.assertIn(b'background warmup: jobs=19 workers=4',run.stderr)
+            self.assertEqual(images[0],images[1],'multicore preparation changed the presented scene')
+
+    def test_offline_saturn_preparation_is_complete_without_guest_execution(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:
+            env={k:v for k,v in os.environ.items() if not k.startswith('SATRECOMP_')}
+            env['PATH']='C:/msys64/clang64/bin;'+env.get('PATH','')
+            run=subprocess.run([str(BUILD/'sakura.exe'),'--prepare-saturn-backgrounds',
+                                str(ROOT/'local/prepared/disc1/game.cue'),directory],
+                               env=env,capture_output=True,timeout=30)
+            self.assertEqual(run.returncode,0,run.stderr.decode(errors='replace'))
+            self.assertIn(b'Prepared 19/19 verified Saturn',run.stdout)
+            self.assertEqual(len(list(Path(directory).glob('*.stfb'))),19)
+            self.assertFalse(list(Path(directory).glob('*.tmp')))
+
     def test_corrupt_derived_cache_regenerates_without_changing_the_background(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:
             folder=Path(directory);backup=folder/'backup.bin';seed=(ROOT/'local/work/sakura/prebattle-immutable-seed.bin').read_bytes()
             def capture(name):
                 backup.write_bytes(seed);shot=folder/(name+'.png')
                 env={k:v for k,v in os.environ.items() if not k.startswith('SATRECOMP_')}
-                env.update(PATH='C:/msys64/clang64/bin;'+env.get('PATH',''),SATRECOMP_WINDOW_HIDDEN='1',
+                env.update(PATH='C:/msys64/clang64/bin;'+env.get('PATH',''),SATRECOMP_WINDOW_HIDDEN='1',SATRECOMP_BACKGROUND_WORKERS='0',
                            SATRECOMP_WINDOW_KEYS=f'2:SIZE=1280x720,3:CHOICE=1,8:WINDOWSHOT={shot.as_posix()},12:QUIT')
                 run=subprocess.run([str(BUILD/'sakura.exe'),'--disc',str(ROOT/'local/prepared/disc1/game.cue'),
                                     '--state-load','0:'+str(STATE),'--settings',str(folder/'settings.ini'),
