@@ -1,0 +1,158 @@
+diff --git a/launcher/src/sakura_hd.cpp b/launcher/src/sakura_hd.cpp
+index fd3e93b..3f6a5ba 100644
+--- a/launcher/src/sakura_hd.cpp
++++ b/launcher/src/sakura_hd.cpp
+@@ -109,6 +109,17 @@ void DrawSakuraHd(launcher::PageContext& page) {
+                 ImGui::EndDisabled();
+             });
+         }
++        layout::inset_separator(page.width);
++        layout::row(page.width,"Precargar mod HD al iniciar","Carga los fondos y retratos HD habilitados antes de jugar. Usa más memoria y reduce las cargas entre escenas.",150,36,[&] {
++            int selected=page.settings.get("features","hd_preload")=="1"?1:0;
++            ImGui::BeginDisabled(page.playing || running);
++            if(ui::dropdown("##sakura-hd-preload",{"Desactivado","Activado"},selected,150)) {
++                const auto previous=page.settings.get("features","hd_preload");
++                page.settings.set("features","hd_preload",std::to_string(selected));
++                if(!page.settings.save()) {page.settings.set("features","hd_preload",previous);s.error=true;s.message="No se pudo guardar la precarga HD.";}
++            }
++            ImGui::EndDisabled();
++        });
+         card.end();
+     }
+     if(running) {ui::gap(10);ui::text("Verificando recursos y preparando fondos en paralelo…",ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);}
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index d9479ea..bdf6542 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -270,6 +270,35 @@ int RunWindowed(Port &port) {
+         }
+         if(!port.opt.settingsPath.empty() && !port.opt.pcAssetsPath.empty())
+             portraitPack.Open(std::filesystem::u8path(port.opt.settingsPath).parent_path()/"mods/hd-portraits",std::filesystem::u8path(port.opt.pcAssetsPath));
++        if(renderer && satrecomp::FeatureValue("hd_preload")==1) {
++            const bool usePc=!port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0;
++            const bool usePortraits=satrecomp::FeatureValue("pc_hd_portraits")==0;
++            const size_t portraitCount=usePortraits?portraitPack.VariantCount():0;
++            size_t backgroundCount=0;for(const auto& item:backdrops)if(!item.pc || usePc)backgroundCount++;
++            const size_t total=backgroundCount+portraitCount;
++            auto progress=[&](size_t done) {
++                int w=0,h=0;SDL_GetRenderOutputSize(renderer,&w,&h);
++                SDL_SetWindowTitle(window,("SaturnTaisenFirst - Precargando HD " + std::to_string(done)+"/"+std::to_string(total)).c_str());
++                SDL_SetRenderDrawColor(renderer,244,225,221,255);SDL_RenderClear(renderer);
++                const SDL_FRect rail{w*.15f,h*.48f,w*.7f,16},fill{rail.x,rail.y,total?rail.w*float(done)/float(total):rail.w,rail.h};
++                SDL_SetRenderDrawColor(renderer,220,185,191,255);SDL_RenderFillRect(renderer,&rail);
++                SDL_SetRenderDrawColor(renderer,167,67,98,255);SDL_RenderFillRect(renderer,&fill);SDL_RenderPresent(renderer);SDL_PumpEvents();
++            };
++            progress(0);size_t done=0,loaded=0;
++            for(auto& item:backdrops)if(!item.pc || usePc) {
++                item.attempted=true;
++                for(const auto& file:item.files) {
++                    item.texture=item.pc?LoadPcBackdrop(renderer,file,port.opt.pcAssetsPath,item.id,item.cacheDir,&item.pixels):
++                        LoadBackdrop(renderer,file,item.nativePalette,item.cacheDir,&item.pixels);
++                    if(item.texture) {loaded++;break;}
++                }
++                progress(++done);
++            }
++            if(usePortraits)portraitPack.Preload([&](size_t ready,size_t){progress(backgroundCount+ready);});
++            backgroundWarmupStarted=true;
++            if(std::getenv("SATRECOMP_HD_STATS"))fprintf(stderr,"HD preload: backgrounds=%zu/%zu portrait_variants=%zu\n",loaded,backgroundCount,portraitCount);
++            SDL_SetWindowTitle(window,"SaturnTaisenFirst 0.2-dev");
++        }
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
+     };
+diff --git a/port/main.cpp b/port/main.cpp
+index 0206adb..bf75469 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -130,6 +130,9 @@ static void RegisterPortFeatures() {
+     game.features.push_back({"text_style", "Pantalla", "Texto de diálogos",
+                              "Nítido redibuja los glifos ingleses reconocidos a resolución de ventana. Las fuentes desconocidas y otros textos conservan el original.",
+                              0, {"Nítido", "Original"}});
++    game.features.push_back({"hd_preload", "Pantalla", "Precargar mod HD al iniciar",
++                             "Prepara fondos y retratos HD habilitados antes de jugar. Reduce cargas durante las escenas a cambio de más memoria e inicio más largo.",
++                             0, {"Desactivado", "Activado"}});
+     game.features.push_back({"pc_hd_backgrounds", "Pantalla", "Fondos PC HD",
+                              "Usa el pack local de fondos PC en modo mejorado. Requiere recursos PC compatibles; si faltan, conserva Saturn. No cambia la fuente de texto.",
+                              0, {"Activados", "Desactivados"}});
+diff --git a/port/portrait_pack.h b/port/portrait_pack.h
+index 07949a8..0b7fb98 100644
+--- a/port/portrait_pack.h
++++ b/port/portrait_pack.h
+@@ -7,6 +7,7 @@
+ #include <charconv>
+ #include <cstdio>
+ #include <limits>
++#include <functional>
+ namespace port {
+ inline constexpr uint64_t kPortraitSourceBytes=5505346;
+ inline constexpr uint64_t kPortraitSourceHash=17275614850567186526ull;
+@@ -14,6 +15,7 @@ struct PortraitRecord {
+     unsigned identity=0;std::array<uint8_t,3200> native{};
+     std::array<std::string,2> files;std::array<uint64_t,2> hashes{};
+     std::array<bool,2> unavailable{};bool announced=false;
++    std::array<std::vector<uint32_t>,2> prepared;
+ };
+ struct PortraitPackData {uint64_t paletteHash=0;std::vector<PortraitRecord> records;};
+ inline bool PortraitFileName(const std::string& name,const char* extension) {
+@@ -65,7 +67,7 @@ inline bool ReadPortraitPack(const std::filesystem::path& folder,PortraitPackDat
+     result=std::move(parsed);return true;
+ }
+ // Only the SDL owner thread uses this presenter. CPU memory is bounded to one
+-// active atlas and one 40x48 replacement (density <=2); all other records are metadata.
++// active atlas and one replacement normally; optional preload retains <=394 atlas pairs (~25 MiB).
+ class PortraitPack {
+ public:
+     PortraitPack()=default;
+@@ -81,6 +83,16 @@ public:
+         SDL_DestroyTexture(texture_);texture_=nullptr;data_={};atlas_.clear();
+         atlasRecord_=std::numeric_limits<size_t>::max();hasProbe_=false;probeUsable_=false;disabled_=false;
+     }
++    size_t VariantCount() const {return data_.records.size()*2;}
++    size_t Preload(const std::function<void(size_t,size_t)>& progress={}) {
++        size_t done=0,failed=0;
++        for(auto& record:data_.records)for(int density=1;density<=2;density++) {
++            if(!LoadAtlas(record,density,record.prepared[density-1])) {record.unavailable[density-1]=true;failed++;}
++            done++;if(progress)progress(done,VariantCount());
++        }
++        if(std::getenv("SATRECOMP_HD_STATS"))std::fprintf(stderr,"portrait preload: variants=%zu failed=%zu\n",done,failed);
++        return done-failed;
++    }
+     bool PaletteMatches(std::span<const uint8_t> palette) const {
+         return !data_.records.empty() && palette.size()==512 && AtlasFingerprint(palette)==data_.paletteHash;
+     }
+@@ -99,16 +111,9 @@ public:
+         auto& record=data_.records[selected];const int variant=density-1;
+         if(record.unavailable[variant])return nullptr;
+         if(atlasRecord_!=selected || atlasDensity_!=density) {
+-            std::vector<uint8_t> bytes;
+-            if(!ReadBackgroundPng(folder_/record.files[variant],bytes,40*density,80*density) || AtlasFingerprint(bytes)!=record.hashes[variant]) {
+-                record.unavailable[variant]=true;return nullptr;
+-            }
+-            auto* source=DecodeBackgroundPng(bytes);auto* rgba=source?SDL_ConvertSurface(source,SDL_PIXELFORMAT_ABGR8888):nullptr;
+-            SDL_DestroySurface(source);
+-            if(!rgba) {record.unavailable[variant]=true;return nullptr;}
+-            atlas_.resize(size_t(40*80*density*density));
+-            for(int y=0;y<rgba->h;y++)std::memcpy(atlas_.data()+size_t(y)*rgba->w,static_cast<uint8_t*>(rgba->pixels)+y*rgba->pitch,size_t(rgba->w)*4);
+-            SDL_DestroySurface(rgba);atlasRecord_=selected;atlasDensity_=density;
++            if(!record.prepared[variant].empty())atlas_=record.prepared[variant];
++            else if(!LoadAtlas(record,density,atlas_)) {record.unavailable[variant]=true;return nullptr;}
++            atlasRecord_=selected;atlasDensity_=density;
+         }
+         std::vector<uint32_t> composed(size_t(40*48*density*density));const int width=40*density;
+         for(int y=0;y<48*density;y++) {
+@@ -134,6 +139,15 @@ public:
+         return texture_;
+     }
+ private:
++    bool LoadAtlas(const PortraitRecord& record,int density,std::vector<uint32_t>& output) {
++        output.clear();std::vector<uint8_t> bytes;const int variant=density-1;
++        if(!ReadBackgroundPng(folder_/record.files[variant],bytes,40*density,80*density) || AtlasFingerprint(bytes)!=record.hashes[variant])return false;
++        auto* source=DecodeBackgroundPng(bytes);auto* rgba=source?SDL_ConvertSurface(source,SDL_PIXELFORMAT_ABGR8888):nullptr;
++        SDL_DestroySurface(source);if(!rgba)return false;
++        output.resize(size_t(40*80*density*density));
++        for(int y=0;y<rgba->h;y++)std::memcpy(output.data()+size_t(y)*rgba->w,static_cast<uint8_t*>(rgba->pixels)+y*rgba->pitch,size_t(rgba->w)*4);
++        SDL_DestroySurface(rgba);return true;
++    }
+     std::filesystem::path folder_;PortraitPackData data_;SDL_Texture* texture_=nullptr;
+     std::vector<uint32_t> atlas_;size_t atlasRecord_=std::numeric_limits<size_t>::max();int atlasDensity_=0;
+     std::array<uint8_t,1920> probe_{};int probeDensity_=0;bool hasProbe_=false,probeUsable_=false,disabled_=false;
