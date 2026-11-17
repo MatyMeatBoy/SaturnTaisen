@@ -26,3 +26,7 @@ El comentario de carga de `cd.js` ilustra cómo una lectura todavía en progreso
 El anuncio presenta saturn-fullset, una SGL abierta sobre libyaul y recompilación Saturn hacia ejecutables nativos. El propio autor indica que ese repositorio no era público en el anuncio; no hay implementación pública revisada en esta investigación. Se conserva como referencia futura, sin cambiar el SDK actual ni depender de promesas.
 
 Los repositorios arcade/console/lan consultados declaran BSD3-Clause. htmlsaturn declara GPLv2 o posterior y componentes de varios orígenes; cualquier incorporación futura deberá conservar las atribuciones y revisar el archivo concreto. Por ahora solo se toman ideas y casos a contrastar. cranker-llm es una herramienta de lectura para agentes, no una aceleración del ejecutable de Sakura, y no se instala como parte del juego.
+
+## Resultado concreto de esta revisión
+
+La pista MAC.L permitió reproducir un defecto en las dos rutas propias. Se corrigieron intérprete y generador, se regeneró la AOT y pasaron68 pruebas. [Reproducción, matriz de casos y límites](macl-48bit-regression.md). No se ha incorporado código externo ni cambiado el SDK por saturn-fullset.

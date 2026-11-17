@@ -25,7 +25,8 @@
       "patches/0019-sakura-fast-validated-background-cache.patch",
       "patches/0020-sakura-lossless-packed-background-cache.patch",
       "patches/0021-sakura-bounded-multicore-background-preparation.patch",
-      "patches/0022-sakura-launcher-hd-resource-selection.patch"
+      "patches/0022-sakura-launcher-hd-resource-selection.patch",
+      "patches/0023-satrecomp-correct-macl-48bit-accumulator.patch"
     ]
   }
 }

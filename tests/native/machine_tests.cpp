@@ -10,6 +10,7 @@
 #include <string>
 
 using satrecomp::machine::Machine;
+int MacLongOracle(Machine&,bool);
 
 static void command(Machine &m, uint16_t a, uint16_t b, uint16_t c=0, uint16_t d=0) {
     m.BusWrite16(0x05890018,a);m.BusWrite16(0x0589001c,b);
@@ -20,6 +21,7 @@ static uint32_t position(Machine &m) {
 }
 int main(int argc, char **argv) {
     Machine m;
+    if(argc>1 && std::string(argv[1])=="macl-oracle")return MacLongOracle(m,argc>2 && std::string(argv[2])=="reference");
     if (argc>2 && std::string(argv[1])=="backup-open") {
         satrecomp::bup::BackupMemory backup;
         try {backup.Open(argv[2]);}

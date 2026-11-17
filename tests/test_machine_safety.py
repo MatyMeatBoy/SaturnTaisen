@@ -12,6 +12,13 @@ EXE = ROOT / 'local/build/machine-tests/machine-tests.exe'
 
 @unittest.skipUnless(EXE.is_file(), 'requires the local synthetic machine test build')
 class MachineTests(unittest.TestCase):
+    def test_mac_long_ignores_inactive_accumulator_bits_and_saturates_at_48_bits(self):
+        for mode in ('native','reference'):
+            with self.subTest(mode=mode):
+                result=self.run_machine('macl-oracle',mode,strict=False,reference=mode=='reference')
+                self.assertEqual(result.returncode,0,result.stderr)
+                self.assertIn('11616 arithmetic/address/flag cases passed',result.stdout)
+
     def test_invalid_existing_backup_is_rejected_without_reformatting(self):
         cases = [b'not a Saturn backup', b'x' * 32768,
                  b'BackUpRam Format' + b'\0' * 100,
