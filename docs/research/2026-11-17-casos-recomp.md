@@ -34,6 +34,17 @@ Deep Fear sigue indicando bandeja/segundo disco como trabajo pendiente en la rev
 
 Se inspeccionÃ³ tambiÃ©n el cÃ³digo de [ReKHCoM](https://github.com/MatyMeatBoy/ReKHCoM), no solo notas histÃ³ricas: su documentaciÃ³n antigua describe etapas ya superadas. Es referencia para token cifrado, callbacks en hilo dueÃ±o, softcore y UI. Sakura necesita su propio mapa Saturn y evaluaciÃ³n oficial 1:1.
 
-Fuentes oficiales: [rcheevos](https://github.com/RetroAchievements/rcheevos), `src/hash/rc_hash_disc.c` (primeros 512 bytes de datos del sector 0), `src/runtime/rc_consoleinfo.c` (dos ventanas WRAM), `include/rc_client.h` (login, softcore, cambio de medio, frame e idle). Ambos hashes originales locales coinciden con [los admitidos](https://retroachievements.org/game/16546/hashes). La traducciÃ³n aÃºn no estÃ¡ aplicada ni validada.
+Fuentes oficiales: [rcheevos](https://github.com/RetroAchievements/rcheevos), `src/hash/rc_hash_disc.c` (primeros 512 bytes de datos del sector 0), `src/runtime/rc_consoleinfo.c` (dos ventanas WRAM), `include/rc_client.h` (login, softcore, cambio de medio, frame e idle). Ambos hashes originales locales coinciden con [los admitidos](https://retroachievements.org/game/16546/hashes). La preparaciÃ³n local ya aplica la traducciÃ³n v2.1 a ambos discos y conserva esos mismos hashes RA; las rutas inglesas de arranque, exploraciÃ³n y guardado/carga se detallan en `runtime-validation.json`.
 
 [Manual M30](https://manual.8bitdo.com/m30/m30_windows.html) y [FAQ oficial](https://support.8bitdo.com/faq/m30-bluetooth-controller.html): las etiquetas fÃ­sicas de sus seis botones no equivalen a una disposiciÃ³n Xbox; cruceta configurable como stick. Los perfiles deben distinguir modos y conservar remapeo manual. No se dispone de validaciÃ³n fÃ­sica de mandos aquÃ­.
+
+
+## Regresión de overlays y caché SH-2
+
+Una prueba sintética con dos traducciones del mismo PC detectó un tercer contenido sin recompilar que ejecutaba la traducción anterior. Se reprodujo en WRAM alta y baja: la retención de bucles ignoraba CCR.CE. El parche 0009 limita esa retención a P0 con caché activada y la invalida al desactivar CE, reiniciar el CPU, escribir CCR.CP o purgar una línea coincidente. Las pruebas comprueban también que una escritura del otro SH-2 conserva el bucle antes de purgar y que purgar otra línea no lo elimina. Se cubren escrituras de 8/16/32 bits y CP que se borra tras escribirlo.
+
+Referencia primaria: [SH7604 Hardware Manual, sección 8](https://antime.kapsi.fi/sega/files/sh7604.pdf), CCR 0xFFFFFE92, áreas P0/P1 y purga asociativa. Esto corrige la heurística de retención existente; todavía no implementa una caché completa con tags, reemplazo y temporización. Las pruebas sintéticas no prueban por sí solas la fidelidad de toda la campaña.
+
+## Packs gráficos
+
+La búsqueda del 17 de noviembre no identificó un pack HD verificable para Sakura Wars 1 de Saturn. No se integra un supuesto pack por asociación con otra plataforma o entrega. La [publicación del autor del parche inglés](https://segaxtreme.net/resources/sakura-wars-english-patch.96/) indica que la edición SSP 2.1.1 conserva el contenido de la traducción y cambia el formato de aplicación; no constituye una mejora HD.

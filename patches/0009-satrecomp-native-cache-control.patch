@@ -1,0 +1,124 @@
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -24,6 +24,7 @@
+ 
+ #ifdef SATRECOMP_OWN_MACHINE
+ #include "../machine/machine.h"
++#include "cache_control.h"
+ #else
+ #include <ymir/hw/sh2/sh2_decode.hpp>
+ #endif
+@@ -1082,7 +1083,7 @@
+                 e = resumed;
+             }
+ #ifdef SATRECOMP_OWN_MACHINE
+-            else if (cached.entry && cached.pc != pc) {
++            else if (cached.entry && (cached.pc != pc || (pc >> 29) != 0 || !(cpu.Read8(0xFFFFFE92u) & 1))) {
+                 cached.entry = nullptr;
+             } else if (!e && cached.entry) {
+                 e = cached.entry; // (the code was overwritten under the CPU going round it: its cache still has it)
+@@ -1113,7 +1114,10 @@
+             }
+ #ifdef SATRECOMP_OWN_MACHINE
+             // (a CPU that comes back to where it came in last time is going round a loop: see CachedLoop)
+-            if (pc == cached.lastPc && cached.entry != e) {
++            // A retained instruction is possible only in P0 with CCR.CE enabled.
++            // P1 is cache-through even when CE is set. Never bypass exact-byte
++            // matching for disabled caches or cache-through accesses.
++            if (pc == cached.lastPc && cached.entry != e && (pc >> 29) == 0 && (cpu.Read8(0xFFFFFE92u) & 1)) {
+                 const uint32_t start = EntryStart(*e, block, pc);
+                 uint32_t span = e->size;
+                 if (e->function) {
+@@ -1840,6 +1844,18 @@
+         }
+     }
+ }
++
++#ifdef SATRECOMP_OWN_MACHINE
++void PurgeNativeCodeCache(machine::SH2 &cpu, uint32_t address) {
++    if (!g_rt) return;
++    auto &cached = g_rt->cachedLoop[cpu.IsMaster() ? 0 : 1];
++    const uint32_t line = address & 0x07FFFFF0u;
++    const uint32_t start = cached.start & 0x07FFFFFFu;
++    if (address == ~0u || (cached.entry && line < start + cached.bytes.size() && line + 16 > start)) {
++        cached = {};
++    }
++}
++#endif
+ 
+ void Finish() {
+     if (g_rt && g_rt->callHi) {
+--- a/machine/sh2.cpp
++++ b/machine/sh2.cpp
+@@ -3,6 +3,7 @@
+ #include "sh2.h"
+ 
+ #include "machine.h"
++#include "../runtime/cache_control.h"
+ 
+ #include <cstdio>
+ #include <cstdlib>
+@@ -103,6 +104,7 @@
+     m_dma[0] = m_dma[1] = {};
+     m_dmaOperation = 0;
+     m_cacheControl = 0;
++    PurgeNativeCodeCache(*this);
+     // (the reset vector: PC and the stack pointer from the first two entries of the table in ROM)
+     PC = Read32(0x00000000);
+     R[15] = Read32(0x00000004);
+@@ -230,7 +232,9 @@
+     }
+     switch (a >> 29) {
+     case 0: case 1: m_machine.BusWrite8(a & 0x07FFFFFFu, v); break;
+-    case 2: break; // (the cache's associative purge area: a write there drops a line from the cache; there is no cache here)
++    case 2:
++        if (a < 0x48000000u) PurgeNativeCodeCache(*this, a);
++        break;
+     case 6: m_cacheData[a & 0xFFF] = v; break;
+     case 7:
+         if (a >= 0xFFFFFE00u) {
+@@ -258,7 +262,9 @@
+     }
+     switch (a >> 29) {
+     case 0: case 1: m_machine.BusWrite16(a & 0x07FFFFFFu, v); break;
+-    case 2: break; // (the cache's associative purge area: a write there drops a line from the cache; there is no cache here)
++    case 2:
++        if (a < 0x48000000u) PurgeNativeCodeCache(*this, a);
++        break;
+     case 6: Put16(&m_cacheData[a & 0xFFE], v); break;
+     case 7:
+         if (a >= 0xFFFFFE00u) {
+@@ -291,7 +297,9 @@
+     }
+     switch (a >> 29) {
+     case 0: case 1: m_machine.BusWrite32(a & 0x07FFFFFFu, v); break;
+-    case 2: break; // (the cache's associative purge area: a write there drops a line from the cache; there is no cache here)
++    case 2:
++        if (a < 0x48000000u) PurgeNativeCodeCache(*this, a);
++        break;
+     case 6: Put32(&m_cacheData[a & 0xFFC], v); break;
+     case 7:
+         if (a >= 0xFFFFFE00u) {
+@@ -458,7 +466,10 @@
+         case 0x69: break;
+         case 0x71: m_dma[0].request = byte & 3; break;
+         case 0x72: m_dma[1].request = byte & 3; break;
+-        case 0x92: m_cacheControl = byte & 0xCF; break;
++        case 0x92:
++            if ((byte & 0x10) || !(byte & 1)) PurgeNativeCodeCache(*this);
++            m_cacheControl = byte & 0xCF;
++            break;
+         case 0xE0: high(INTC.ICR); break;
+         case 0xE1: low(INTC.ICR); break;
+         case 0xE2: high(INTC.IPRA); RecalcInterrupts(); break;
+--- /dev/null
++++ b/runtime/cache_control.h
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <cstdint>
++namespace satrecomp::machine { class SH2; }
++namespace satrecomp {
++// Drop retained native instructions for this CPU, all or one physical 16-byte line.
++void PurgeNativeCodeCache(machine::SH2 &cpu, uint32_t address = ~0u);
++}

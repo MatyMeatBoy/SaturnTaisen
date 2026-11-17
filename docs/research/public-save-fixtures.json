@@ -1,0 +1,54 @@
+[
+  {
+    "source": "https://github.com/bucanero/saturn-save-tools/tree/main/docs/sakura-wars",
+    "repository_commit": "99d0a715f09a88fb44f1960fdf3c9fa495e4b1f6",
+    "author": "privateye",
+    "file": "SAKURA-01.BUP",
+    "sha256": "bdf4b001c28101217dede8d746642b3c2131fbd92f39c307cfa83cb35bc7c84c",
+    "payload_bytes": 5708,
+    "paired_bup_saroo_equal": true,
+    "runtime_load": {
+      "profile": "English disc2 v2.1",
+      "frames": 9501,
+      "movie": "tests/cold-load.movie",
+      "loaded_slot": 1,
+      "episode": 8,
+      "interpreted_sh2": 0,
+      "single_stepped": 0,
+      "host_calls": 0,
+      "compiled_blocks": 542322,
+      "state_anchor_frame": 9500,
+      "state_equal_except_host_pointer": true,
+      "host_pointer_offset": 4217311,
+      "host_pointer_bytes": 8,
+      "reference": "local/work/sakura/public-sakura-ref-9500.state",
+      "native": "local/work/sakura/public-sakura-native-9500.state"
+    }
+  },
+  {
+    "source": "https://github.com/bucanero/saturn-save-tools/tree/main/docs/sakura-wars",
+    "repository_commit": "99d0a715f09a88fb44f1960fdf3c9fa495e4b1f6",
+    "author": "Pimpeaux",
+    "file": "SAKURA-01-002.BUP",
+    "sha256": "a6b9e4a93194adeb18acbda23609d8deb721a332e8596207afbc1ea2fe16ba37",
+    "payload_bytes": 5708,
+    "paired_bup_saroo_equal": true,
+    "runtime_load": {
+      "profile": "English disc2 v2.1",
+      "frames": 9501,
+      "movie": "local/work/sakura/public-finale.movie",
+      "loaded_slot": 3,
+      "episode": "Finale",
+      "interpreted_sh2": 0,
+      "single_stepped": 0,
+      "host_calls": 0,
+      "compiled_blocks": 575144,
+      "state_anchor_frame": 9500,
+      "state_equal_except_host_pointer": true,
+      "host_pointer_offset": 4217311,
+      "host_pointer_bytes": 8,
+      "reference": "local/work/sakura/public-sumire-ref-9500.state",
+      "native": "local/work/sakura/public-sumire-native-9500.state"
+    }
+  }
+]

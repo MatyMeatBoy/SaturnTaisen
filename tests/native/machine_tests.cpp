@@ -3,6 +3,7 @@
 #include "hle_bios.h"
 #include "lift.h"
 #include "recomp.h"
+#include "access.h"
 #include <algorithm>
 #include <cstdio>
 #include <string>
@@ -18,6 +19,61 @@ static uint32_t position(Machine &m) {
 }
 int main(int argc, char **argv) {
     Machine m;
+    if (argc>1 && (std::string(argv[1])=="overlay" || std::string(argv[1])=="overlay-invalid" || std::string(argv[1])=="overlay-purge")) {
+        const bool low=argc>2 && std::string(argv[2])=="low";
+        const uint32_t address=low?0x00204000:0x06004000;
+        satrecomp::hle::Install(m,{});
+        m.Reset(true);
+        auto &cpu=m.masterSH2;
+        const bool purge=std::string(argv[1])=="overlay-purge";
+        if (purge) cpu.Write8(0xFFFFFE92u,1);
+        cpu.Write16(address,0xE001);
+        cpu.Write16(address+2,0x000B);
+        cpu.Write16(address+4,0x0009);
+        satrecomp::Options options;
+        options.mode=satrecomp::Mode::Native;
+        satrecomp::Attach(m,options);
+        auto run=[&](unsigned expected) {
+            cpu.PC=address;
+            cpu.PR=0x1014; // native BIOS idle after the synthetic RTS
+            cpu.R[0]=0;
+            satrecomp::Access::SetWaiting(cpu,false);
+            m.RunFrame();
+            return cpu.R[0]==expected;
+        };
+        if (!run(1)) return 1;
+        cpu.Write8(address+1,2);
+        if (!run(2)) return 2;
+        cpu.Write16(address,0xE001);
+        if (!run(1)) return 3;
+        cpu.Write32(address,0xE002000B);
+        if (!run(2)) return 5;
+        if (purge) {
+            m.slaveSH2.Write16(address,0xE003); // other CPU does not snoop this cache
+            if (!run(2)) return 7;
+            const std::string method=argc>3?argv[3]:"cp";
+            // Purging an unrelated line must leave the retained loop intact.
+            cpu.Write32(0x40000000u | ((address+0x100)&0x07FFFFFFu),0);
+            if (!run(2)) return 10;
+            const uint32_t purgeAddress=0x40000000u | (address&0x07FFFFFFu);
+            if (method=="byte") cpu.Write8(purgeAddress,0);
+            else if (method=="word") cpu.Write16(purgeAddress,0);
+            else if (method=="long") cpu.Write32(purgeAddress,0);
+            else cpu.Write8(0xFFFFFE92u,0x11); // CP purges and self-clears; CE stays on
+            if (cpu.Read8(0xFFFFFE92u)!=1) return 8;
+            run(3);
+            return 9; // strict rejection must terminate before here
+        }
+        if (std::string(argv[1])=="overlay-invalid") {
+            cpu.Write16(address,0xE003); // no native translation exists for this variant
+            run(3);
+            std::fprintf(stderr,"Unexpected overlay completion: R0=%u PC=%08X\n",cpu.R[0],cpu.PC);
+            return 6;
+        }
+        satrecomp::Finish();
+        std::puts("Exact overlay variants survived all write widths");
+        return 0;
+    }
     if (argc>1 && std::string(argv[1])=="untranslated-default") {
         satrecomp::hle::Install(m,{});
         m.Reset(true);

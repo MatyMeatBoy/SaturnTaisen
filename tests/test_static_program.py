@@ -134,6 +134,21 @@ class StaticProgramTests(unittest.TestCase):
         self.assertIn(BASE,blocks,'valid block truncated before a delay slot was discarded')
         self.assertEqual(blocks[BASE],image[:94])
 
+    def test_copied_loader_is_analyzed_at_its_execution_address(self):
+        module=self.analyzer()
+        destination=0x06002000
+        source=0x060535D8
+        image=bytearray(96)
+        image[:6]=bytes.fromhex('d00f402b0009')
+        image[32:38]=bytes.fromhex('e007000b0009')
+        struct.pack_into('>I',image,64,destination+32)
+        original=dict(module.discover(bytes(image),source))
+        relocated=dict(module.discover(bytes(image),destination))
+        self.assertEqual(original[source],relocated[destination])
+        self.assertNotIn(source+32,original)
+        self.assertIn(destination+32,relocated,
+                      'copied code lost its absolute function pointer at the execution address')
+
 
 if __name__ == '__main__':
     unittest.main()

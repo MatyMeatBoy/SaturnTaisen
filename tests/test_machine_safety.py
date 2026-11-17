@@ -46,6 +46,28 @@ class MachineTests(unittest.TestCase):
         result = self.run_machine('untranslated-default', strict=False, reference=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_overlays_in_both_ram_banks_follow_byte_word_and_long_writes(self):
+        for bank in ('high','low'):
+            with self.subTest(bank=bank):
+                result=self.run_machine('overlay',bank)
+                self.assertEqual(result.returncode,0,result.stderr)
+                self.assertIn('Exact overlay variants survived all write widths',result.stdout)
+
+    def test_cache_purge_rejects_stale_translation_after_other_cpu_write(self):
+        for bank in ('high', 'low'):
+            for method in ('cp', 'byte', 'word', 'long'):
+                with self.subTest(bank=bank, method=method):
+                    result = self.run_machine('overlay-purge', bank, method)
+                    self.assertEqual(result.returncode, 4, result.stderr)
+                    self.assertIn('strict AOT: untranslated', result.stderr)
+
+    def test_overlay_with_uncompiled_bytes_never_reuses_previous_translation(self):
+        for bank in ('high','low'):
+            with self.subTest(bank=bank):
+                result=self.run_machine('overlay-invalid',bank)
+                self.assertEqual(result.returncode,4,result.stderr)
+                self.assertIn('strict AOT: untranslated',result.stderr)
+
 
 if __name__ == '__main__':
     unittest.main()

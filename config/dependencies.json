@@ -11,7 +11,8 @@
       "patches/0005-satrecomp-cd-track-seek.patch",
       "patches/0006-satrecomp-strict-bios.patch",
       "patches/0007-satrecomp-disc-reader-epoch.patch",
-      "patches/0008-satrecomp-incremental-generation.patch"
+      "patches/0008-satrecomp-incremental-generation.patch",
+      "patches/0009-satrecomp-native-cache-control.patch"
     ]
   }
 }

@@ -70,3 +70,10 @@ Una partida cercana al final del disco 1 serÃ¡ muy Ãºtil para probar la transici
 ## LÃ­mites y decisiones pendientes
 
 No hay todavÃ­a cÃ³digo de producto ni una compilaciÃ³n de Sakura. No se prometen mejoras de FPS, widescreen del Ã¡rea del juego ni compatibilidad completa. Quedan pendientes la selecciÃ³n del runtime, la comprobaciÃ³n del parche, los modos grÃ¡ficos observados y el mecanismo del cambio de disco. El repositorio remoto serÃ¡ privado; solo contendrÃ¡ documentaciÃ³n, cÃ³digo propio y dependencias que puedan redistribuirse segÃºn sus licencias. Se excluyen BIOS, dumps, xdelta, partidas, ejecutables extraÃ­dos, recursos y C++ generados desde el juego.
+
+
+## Ampliación autorizada: importar partidas de emuladores
+
+El usuario pidió importar partidas de los emuladores de Saturn y usar partidas públicas avanzadas para ampliar la validación. El launcher ofrecerá importar memoria de respaldo completa o archivos individuales, detectar el formato por contenido y mostrar las partidas de Sakura encontradas antes de activarlas. Conservar el archivo original y crear una copia; no reemplazar ni formatear silenciosamente una partida existente. Cubrir Mednafen/Beetle, SSF (memoria y archivos individuales), Yabause/Yaba Sanshiro/Kronos, BUP, SAROO y otros formatos documentados. Informar formatos aún no compatibles sin simular que se importaron.
+
+Los estados de máquina de un emulador requieren adaptación específica y no equivalen a una partida guardada por el juego. No cargarlos como memoria BUP. Las partidas públicas se conservan localmente con procedencia, autor, versión, hash y resultados. Deben comprobarse en el juego, no solo convertirse sin errores. Incluir pruebas de puntos avanzados, finales, minijuegos y la transición de discos. La importación no debe fabricar desbloqueos de RetroAchievements.

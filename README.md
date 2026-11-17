@@ -59,7 +59,7 @@ python tools/static_program.py --disc-iso "local/prepared/disc1/Track 01.iso" --
 
 `--all-entries` conserva además los prefijos válidos de todas las direcciones alineadas; produce muchos más candidatos y aumenta el tiempo y tamaño de compilación. Sigue punteros, llamadas y ramas, y reconoce tablas de salto relativas con una comprobación de rango. Su salida contiene código derivado del juego y debe permanecer local. Son candidatos adicionales: todavía hacen falta descubrimiento de otros saltos indirectos y overlays, comprobación de bytes en el runtime y pruebas de las rutas reales.
 
-La existencia de un repositorio o las afirmaciones de su autor no prueban que un juego completo funcione. Las referencias todavía no se han compilado ni probado con estos discos.
+Las pruebas con estos discos corresponden al runtime adaptado de satrecomp y están detalladas en `docs/research/runtime-validation.json`. Los demás proyectos se consultan como referencias de código; su existencia o las afirmaciones de sus autores no prueban que Sakura Taisen completo funcione.
 
 El generador conserva las posiciones de los bloques en `local/work/sakura/block-order.json` para añadir cobertura sin reescribir archivos C++ anteriores. El manifiesto rechaza variantes retiradas o cambios de partición; otra base requiere un directorio y manifiesto nuevos. Sigue siendo necesario comprobar los bytes guest durante la ejecución.
 

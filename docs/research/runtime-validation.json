@@ -10,9 +10,10 @@
     "0005-satrecomp-cd-track-seek.patch": "a15d555d536c2ca18d23b36520633ea6b15a7ac5d092fc041c1397469fb8ba09",
     "0006-satrecomp-strict-bios.patch": "0f91ed1c33d4dbf9f2b0f6d6d82c2c693fa546c5da2b1a7634ff6c4ada6f0c6f",
     "0007-satrecomp-disc-reader-epoch.patch": "a6dd3f6a5196e9407acbbad976343d914f74549fbb95ef8c4210135bd9bfdca4",
-    "0008-satrecomp-incremental-generation.patch": "fa12a97bbecd921180c598b50d181dcf8751d11639127c4ca7a1e4b2299d3a62"
+    "0008-satrecomp-incremental-generation.patch": "fa12a97bbecd921180c598b50d181dcf8751d11639127c4ca7a1e4b2299d3a62",
+    "0009-satrecomp-native-cache-control.patch": "59847ca5915e1256ed80dbff77844639118c66c9a8df01f397f43bf50a7e9610"
   },
-  "guest_blocks": 406725,
+  "guest_blocks": 575144,
   "frames": 30000,
   "measurements": [
     {
@@ -263,5 +264,105 @@
     "cpp_files_written": 138,
     "native_generated": 307553,
     "skipped": 0
+  },
+  "overlay_cache_regression": {
+    "test_build": "tests/native/CMakeLists.txt",
+    "tests": "tests/test_machine_safety.py",
+    "banks": [
+      "high WRAM",
+      "low WRAM"
+    ],
+    "write_widths_bits": [
+      8,
+      16,
+      32
+    ],
+    "cache_disabled_unknown_variant": "strict untranslated rejection",
+    "cache_enabled_other_cpu_write": "retained instruction before purge",
+    "purge": [
+      "CCR.CP self-clearing",
+      "matching line byte/word/long writes"
+    ],
+    "unrelated_line": "retained instruction preserved",
+    "full_cache_model": false,
+    "suite": "42 tests passed against the 575144-block executable; seven import tests included"
+  },
+  "public_save_import": {
+    "profile": "English disc2 v2.1",
+    "frames": 9501,
+    "movie": "tests/cold-load.movie",
+    "loaded_slot": 1,
+    "episode": 8,
+    "interpreted_sh2": 0,
+    "single_stepped": 0,
+    "host_calls": 0,
+    "compiled_blocks": 542322,
+    "state_anchor_frame": 9500,
+    "state_equal_except_host_pointer": true,
+    "host_pointer_offset": 4217311,
+    "host_pointer_bytes": 8,
+    "reference": "local/work/sakura/public-sakura-ref-9500.state",
+    "native": "local/work/sakura/public-sakura-native-9500.state"
+  },
+  "battle_modules": {
+    "slg": {
+      "base": "06004000",
+      "bytes": 309844,
+      "english_disc1_sha256": "7ca7dda97d17f704e7e687b4fc04170fb39c731ed1a4372fafc3e50b3aed41b8",
+      "identical_aliases": [
+        "/SAKURA2/0SLG.BIN",
+        "/SAKURA2/SLG.BIN"
+      ],
+      "native_entry_validation": "1157 frame hashes equal reference, then untranslated 0020A588"
+    },
+    "evt01": {
+      "file": "/SAKURA2/EVT01.BIN",
+      "base": "00204000",
+      "bytes": 76636,
+      "sha256": "99405f5252d4f5d9e31771489864532b3c5e7ba4eb97067e1a86a0fcc814e1d9",
+      "identity": "128-byte executed body at 0020A588 matches file offset 6588; all four profiles identical",
+      "native_build": {
+        "blocks": 575144,
+        "cpp_files": 1438,
+        "cpp_files_written": 84,
+        "skipped": 0
+      }
+    }
+  },
+  "battle_entry_parity": {
+    "frames": 3001,
+    "reference_equal": true,
+    "repeat_equal": true,
+    "interpreted_sh2": 0,
+    "single_stepped": 0,
+    "host_calls": 0,
+    "compiled_blocks": 575144,
+    "input_state": "local/work/sakura/exit-battle-save.state",
+    "backup_seed_sha256": "4aa58364c1eaa4d0cee384894861caa4cde1e426aa2e43da7aa6b4e94379bc5b",
+    "movie": "local/work/sakura/resume-chapter.movie",
+    "evidence": "local/work/sakura/battle-evt01-parity/report.json",
+    "scope": "pre-battle intermission Resume, loader, SLG and EVT01 cutscene; playable tactical field not yet verified"
+  },
+  "public_save_finale_import": {
+    "profile": "English disc2 v2.1",
+    "frames": 9501,
+    "movie": "local/work/sakura/public-finale.movie",
+    "loaded_slot": 3,
+    "episode": "Finale",
+    "interpreted_sh2": 0,
+    "single_stepped": 0,
+    "host_calls": 0,
+    "compiled_blocks": 575144,
+    "state_anchor_frame": 9500,
+    "state_equal_except_host_pointer": true,
+    "host_pointer_offset": 4217311,
+    "host_pointer_bytes": 8,
+    "reference": "local/work/sakura/public-sumire-ref-9500.state",
+    "native": "local/work/sakura/public-sumire-native-9500.state"
+  },
+  "battle_field_progress": {
+    "frames_before_strict_stop": 6027,
+    "missing_block": "0607A5D0",
+    "status": "discovery pending; no interpreter fallback in native run"
   }
 }
