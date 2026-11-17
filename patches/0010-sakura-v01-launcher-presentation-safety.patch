@@ -506,6 +506,10 @@
 +    auto* draw=ImGui::GetWindowDrawList();
 +    draw->AddRectFilled(at+ImVec2(0,px(4)),at+ImVec2(width,h+px(4)),IM_COL32(86,38,52,18),px(24));
 +    draw->AddRectFilled(at,at+ImVec2(width,h),p.surface,px(24));
++    if (!pair) {
++        sakura_flower(draw,at+ImVec2(width*.12f,h*.45f),px(27),ui::fade(p.primary,.18f));
++        sakura_flower(draw,at+ImVec2(width*.88f,h*.55f),px(27),ui::fade(p.accent,.35f));
++    }
 +    for (int i=0;i<(pair?2:1);i++) {
 +        const ImVec2 begin=at+ImVec2(pad+i*(imageW+gap),pad), end=begin+ImVec2(imageW,imageH);
 +        draw->AddRectFilled(begin,end,p.control,px(16));
@@ -521,10 +525,6 @@
 +            draw->AddCircleFilled(begin+ImVec2(imageW*.8f,imageH*.2f),px(52),p.accent_soft);
 +            draw->AddText(begin+ImVec2(px(16),imageH*.48f),p.primary,title_pending_?"Preparando el título…":"SAKURA WARS");
 +        }
-+    }
-+    if (!pair) {
-+        sakura_flower(draw,at+ImVec2(width*.12f,h*.45f),px(27),ui::fade(p.primary,.18f));
-+        sakura_flower(draw,at+ImVec2(width*.88f,h*.55f),px(27),ui::fade(p.accent,.35f));
 +    }
 +    ImGui::Dummy(ImVec2(width,h));
 +    ui::gap(20);

@@ -12,7 +12,7 @@
     "0007-satrecomp-disc-reader-epoch.patch": "a6dd3f6a5196e9407acbbad976343d914f74549fbb95ef8c4210135bd9bfdca4",
     "0008-satrecomp-incremental-generation.patch": "fa12a97bbecd921180c598b50d181dcf8751d11639127c4ca7a1e4b2299d3a62",
     "0009-satrecomp-native-cache-control.patch": "59847ca5915e1256ed80dbff77844639118c66c9a8df01f397f43bf50a7e9610",
-    "0010-sakura-v01-launcher-presentation-safety.patch": "dcbf60ddeec642aeb2e82b7994ee9ae1ee59ab1c3c60bc3a849bc7d5455d5415"
+    "0010-sakura-v01-launcher-presentation-safety.patch": "137cbff2b171227d3e6481e2531f11120494c871af3eb6b8608234dae0eb2446"
   },
   "guest_blocks": 580328,
   "frames": 30000,
@@ -475,6 +475,25 @@
         92,
         1280,
         896
+      ],
+      "every_native_pixel_uniform": true
+    },
+    {
+      "file": "frame-v01-4k.png",
+      "output": [
+        3840,
+        2160
+      ],
+      "native": [
+        320,
+        224
+      ],
+      "scale": 9,
+      "viewport": [
+        480,
+        72,
+        2880,
+        2016
       ],
       "every_native_pixel_uniform": true
     }
