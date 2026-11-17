@@ -6,7 +6,7 @@ El usuario confirmó que se deben adaptar también los sprites de chicas, otros 
 
 `tools/audit_hd_characters.py` compara los recursos propios extraídos con ambas ISO Saturn preparadas. Encontró 147 archivos de personajes NC de PC, con 3.596 imágenes no vacías. Los 147 nombres tienen candidatos nativos. El inventario registra hashes de archivo, dimensiones, formatos y ubicaciones por disco; no incluye píxeles ni datos originales. La coincidencia de nombre no demuestra coincidencia de índices, expresiones o geometría.
 
-La inspección nativa mediante `tests/inspect_pc_sprites.cpp` usa el mismo DecodePcSprites del runtime: los 147 archivos y las 3.596 imágenes se decodificaron sin errores, con 42.423.793 píxeles. Todos los registros de imagen NC observados usan 0x15 (RGB555 comprimido). También se inventariaron KAO.SPR (394 imágenes) y KAO_P.SPR (25); su decodificación y su correspondencia narrativa se verifican por separado.
+La inspección nativa mediante `tests/inspect_pc_sprites.cpp` usa el mismo DecodePcSprites del runtime: los 147 archivos y las 3.596 imágenes se decodificaron sin errores, con 42.423.793 píxeles. Todos los registros de imagen NC observados usan 0x15 (RGB555 comprimido). También se inventariaron KAO.SPR (394 imágenes) y KAO_P.SPR (25); su decodificación también pasó con el decoder nativo del runtime. Son4.015 imágenes verificadas en total; su correspondencia narrativa sigue pendiente.
 
 Hay 11.158.719 píxeles verdes puros en la salida NC, y el decodificador actual no asigna transparencia a estas imágenes directas. Esto expone trabajo pendiente de máscaras/composición: no basta con dibujarlas encima. No se declara todo verde como transparente, porque una regla general podría eliminar colores válidos.
 
@@ -20,3 +20,7 @@ Hay 11.158.719 píxeles verdes puros en la salida NC, y el decodificador actual 
 6. Ampliar al resto de personajes y elementos compatibles, comprobando ambas rutas de disco y sin sustituir textos ingleses por rótulos japoneses de PC. Original debe seguir ofreciendo sus sprites originales.
 
 Estado: fondos HD integrados experimentalmente; selector/preparación en launcher implementados; inventario y decodificación de personajes verificados. Los sprites HD de personajes todavía no se están dibujando durante el juego.
+
+## Control de la hipótesis de correspondencia
+
+Se comparó un campo numérico exploratorio de la tabla12 PC con el byte0x10 de los NC Saturn. Solo coincide en59 de147 pares y difiere en88 (por ejemplo NC14:52 frente a54; NC15:51 frente a52). Su significado completo aún no está validado. Esto descarta usar esa semejanza como correspondencia universal de entradas o animaciones: el mapeo deberá verificarse recurso a recurso y con escenas reales.

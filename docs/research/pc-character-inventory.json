@@ -3179,7 +3179,8 @@
           "palette_bank": 0,
           "stored_bytes": 14222
         }
-      ]
+      ],
+      "decoded_images_verified": 394
     },
     {
       "path": "SAKURA1/ICATCH/KAO_P.SPR",
@@ -3386,7 +3387,8 @@
           "palette_bank": 0,
           "stored_bytes": 7115
         }
-      ]
+      ],
+      "decoded_images_verified": 25
     }
   ],
   "characters": [
@@ -35549,5 +35551,6 @@
     "decoder_sha256": "80445117a0fbeac77d5595723ac10fe6929450002cbd46bed5b2dae94764b5f7",
     "audit_binary_sha256": "e5b012ffbce983c2ecaa1e7646f208ed46fa6ae7785d033f598ed30ad8286fdd",
     "transparency_note": "Direct RGB555 entries currently decode opaque; green pixels are candidates, not a verified universal transparency rule."
-  }
+  },
+  "total_character_and_portrait_images_verified": 4015
 }
