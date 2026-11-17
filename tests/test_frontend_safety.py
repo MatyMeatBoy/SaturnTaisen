@@ -49,6 +49,15 @@ class FrontendTests(unittest.TestCase):
     def test_glyph_decoder_rejects_unknown_atlas_and_ambiguous_tiles(self):
         self.fixture('glyph_text')
 
+    def test_narrative_text_respects_ink_bounds_and_integer_viewports(self):
+        self.fixture('text_layout')
+
+    def test_portrait_frames_match_exact_bytes_and_infer_patch_placement(self):
+        self.fixture('portrait_match')
+
+    def test_portrait_pack_rejects_bad_counts_paths_hashes_and_truncation(self):
+        self.fixture('portrait_pack',[DEP/'recomp-common/settings.cpp'])
+
     def test_kabe_decoder_validates_tiles_and_palette(self):
         self.fixture('kabe')
 

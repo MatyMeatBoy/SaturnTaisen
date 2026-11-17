@@ -1,0 +1,322 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 695c57a..a7eb155 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -11,6 +11,7 @@
+ #include "kabe.h"
+ #include "backdrop.h"
+ #include "pc_backdrop.h"
++#include "portrait_pack.h"
+ #include "background_workers.h"
+ #include <map>
+ #include "../video/renderer.h"
+@@ -174,6 +175,7 @@ int RunWindowed(Port &port) {
+         bool pc=false;std::string id;
+     };
+     std::vector<Backdrop> backdrops;
++    PortraitPack portraitPack;
+     BackgroundWorkers backgroundWorkers;
+     bool backgroundWarmupStarted=false;
+     SDL_Texture *foreground=nullptr;
+@@ -266,10 +268,13 @@ int RunWindowed(Port &port) {
+             }
+             if(!backdrop.files.empty())backdrops.push_back(std::move(backdrop));
+         }
++        if(!port.opt.settingsPath.empty() && !port.opt.pcAssetsPath.empty())
++            portraitPack.Open(std::filesystem::u8path(port.opt.settingsPath).parent_path()/"mods/hd-portraits",std::filesystem::u8path(port.opt.pcAssetsPath));
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
+     };
+     auto closeWindow = [&]() {
++        portraitPack.Close();
+         backgroundWorkers.Cancel();backgroundWorkers.Wait();
+         backgroundWarmupStarted=false;
+         sakuraUi.Close();
+@@ -432,7 +437,7 @@ int RunWindowed(Port &port) {
+                 if(!hdLines.empty()) SDL_UpdateTexture(texture,nullptr,hdNative.data(),320*sizeof(uint32_t));
+             }
+         }
+-        bool enhanced=false;
++        bool enhanced=false,portraitViewport=false;
+         SDL_Texture* floral=nullptr;
+         if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto palette=port.videoRenderer->BackgroundPaletteFingerprint();
+@@ -531,6 +536,7 @@ int RunWindowed(Port &port) {
+                 }
+                 SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
++                portraitViewport=!scene.movieOnly;
+             }
+         }
+         if (!enhanced) {
+@@ -545,6 +551,41 @@ int RunWindowed(Port &port) {
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
+         }
+         }
++        if(portraitViewport && !choosing && !port.menu.IsOpen() && satrecomp::FeatureValue("pc_hd_portraits")==0) {
++            const auto palette=port.videoRenderer->ColorBytes(0x800,512);
++            if(portraitPack.PaletteMatches(palette)) {
++                std::array<uint8_t,1920> portrait{};int localX=0,localY=0,count=0;
++                auto coordinate=[](uint16_t value){return static_cast<int>((value&0x1FFF)^0x1000)-0x1000;};
++                for(const auto& cmd:port.videoRenderer->LastCommands()) {
++                    const int type=cmd.words[0]&15;
++                    if(type==10) {localX=coordinate(cmd.words[6]);localY=coordinate(cmd.words[7]);continue;}
++                    if(type!=0 || (cmd.words[0]&0x8030) || cmd.words[2]!=0xA0 || cmd.words[3]!=0x4400)continue;
++                    const int x=coordinate(cmd.words[6])+localX,y=coordinate(cmd.words[7])+localY;
++                    if(cmd.words[5]==0x530 && x==16 && y==160) {
++                        count++;const auto bytes=port.videoRenderer->SpriteBytes(uint32_t(cmd.words[4])*8,1920);
++                        if(bytes.size()==portrait.size())std::copy(bytes.begin(),bytes.end(),portrait.begin());
++                        else count=2;
++                    } else if(count==1 && cmd.words[5]==0x510 && x==16 && y>=160 && y<=192) {
++                        const auto bytes=port.videoRenderer->SpriteBytes(uint32_t(cmd.words[4])*8,640);
++                        if(bytes.size()!=640) {count=2;continue;}
++                        // The verified VDP1 mode treats index zero as transparent.
++                        for(size_t i=0;i<640;i++)if(bytes[i])portrait[size_t(y-160)*40+i]=bytes[i];
++                    }
++                }
++                // Reject occlusion, colour calculation/fades or an unsupported layout.
++                if(count==1 && PortraitPixelsVisible(portrait,palette,softwareShown,320,224,16,160))
++                    if(auto* replacement=portraitPack.Texture(renderer,portrait,textFit.scale)) {
++                        const SDL_FRect where{float(textFit.x+(16-textCropX)*textFit.scale),float(textFit.y+(160-textCropY)*textFit.scale),
++                                              float(40*textFit.scale),float(48*textFit.scale)};
++                        if(std::getenv("SATRECOMP_HD_STATS")) {
++                            static std::array<int,4> logged{};
++                            const std::array<int,4> current{int(where.x),int(where.y),int(where.w),int(where.h)};
++                            if(current!=logged) {logged=current;std::fprintf(stderr,"portrait viewport: x=%d y=%d w=%d h=%d density=%d\n",current[0],current[1],current[2],current[3],PortraitDensity(textFit.scale));}
++                        }
++                        SDL_RenderTexture(renderer,replacement,nullptr,&where);
++                    }
++            }
++        }
+         if(!choosing && !port.menu.IsOpen() && !hdLines.empty())
+             sakuraUi.GameText(hdLines,textFit.x,textFit.y,textFit.scale,textCropX,textCropY);
+         if (choosing && sakuraUi.Active()) { if(sakuraUi.Choice(presentationChoice)) acceptChoice(); }
+diff --git a/port/main.cpp b/port/main.cpp
+index 381688d..8819b3f 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -130,6 +130,9 @@ static void RegisterPortFeatures() {
+     game.features.push_back({"pc_hd_backgrounds", "Pantalla", "Fondos PC HD",
+                              "Usa el pack local de fondos PC en modo mejorado. Requiere recursos PC compatibles; si faltan, conserva Saturn. No cambia la fuente de texto.",
+                              0, {"Activados", "Desactivados"}});
++    game.features.push_back({"pc_hd_portraits", "Pantalla", "Retratos PC HD",
++                             "Usa los retratos del pack emparejado en modo mejorado. Requiere tus recursos PC y un pack local válido; si falta una coincidencia segura, conserva Saturn.",
++                             0, {"Activados", "Desactivados"}});
+     // (custom_soundtrack: soundtrack.h; for a game whose sources name its music)
+     if (!game.songs.empty()) {
+         game.features.push_back({"custom_soundtrack", "Sound", "Custom soundtrack",
+diff --git a/port/portrait_match.h b/port/portrait_match.h
+new file mode 100644
+index 0000000..c5b6a6c
+--- /dev/null
++++ b/port/portrait_match.h
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <array>
++#include <cstdint>
++#include <cstring>
++#include <span>
++#include <optional>
++namespace port {
++struct PortraitPatch {int part=0,y=0;bool masked=false,ambiguous=false;};
++// A visible 40x48 portrait may be the base image or the base with one 40x16
++// expression copied into it. Infer placement from exact bytes, never a timer.
++inline std::optional<PortraitPatch> MatchPortraitFrame(std::span<const uint8_t> atlas,std::span<const uint8_t> frame) {
++    if(atlas.size()!=3200 || frame.size()!=1920)return {};
++    if(!std::memcmp(atlas.data(),frame.data(),1920))return PortraitPatch{};
++    std::optional<PortraitPatch> found;
++    for(int part=1;part<=2;part++)for(int y=0;y<=32;y++) {
++        const size_t start=size_t(y)*40,tail=start+640;
++        if(std::memcmp(atlas.data(),frame.data(),start) || std::memcmp(atlas.data()+tail,frame.data()+tail,1920-tail))continue;
++        const auto* patch=atlas.data()+(48+(part-1)*16)*40;
++        const bool literal=!std::memcmp(patch,frame.data()+start,640);
++        bool matches=literal;
++        if(!literal) {
++            matches=true;
++            for(size_t i=0;i<640;i++)if(frame[start+i]!=(patch[i]?patch[i]:atlas[start+i])) {matches=false;break;}
++        }
++        if(matches) {
++            if(found) {found->ambiguous=true;return found;}
++            found=PortraitPatch{part,y,!literal,false};
++        }
++    }
++    return found;
++}
++inline int PortraitDensity(int viewportScale) {return viewportScale>=2 && viewportScale%2==0?2:1;}
++inline bool PortraitPixelsVisible(std::span<const uint8_t> frame,std::span<const uint8_t> palette,
++                                 std::span<const uint32_t> pixels,int width,int height,int x,int y) {
++    if(frame.size()!=1920 || palette.size()!=512 || width<40 || height<48 || x<0 || y<0 || x>width-40 || y>height-48 ||
++       pixels.size()!=size_t(width)*height)return false;
++    bool opaque=false;
++    for(int row=0;row<48;row++)for(int column=0;column<40;column++) {
++        const auto index=frame[row*40+column];if(!index)continue;
++        opaque=true;const uint16_t word=uint16_t(palette[index*2])<<8|palette[index*2+1];
++        const uint32_t color=((word&31)<<3)|(((word>>5)&31)<<11)|(((word>>10)&31)<<19);
++        if((pixels[size_t(y+row)*width+x+column]&0xFFFFFF)!=color)return false;
++    }
++    return opaque;
++}
++}
+diff --git a/port/portrait_pack.h b/port/portrait_pack.h
+new file mode 100644
+index 0000000..07949a8
+--- /dev/null
++++ b/port/portrait_pack.h
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "portrait_match.h"
++#include "glyph_text.h"
++#include "background_cache.h"
++#include "../recomp-common/settings.h"
++#include <charconv>
++#include <cstdio>
++#include <limits>
++namespace port {
++inline constexpr uint64_t kPortraitSourceBytes=5505346;
++inline constexpr uint64_t kPortraitSourceHash=17275614850567186526ull;
++struct PortraitRecord {
++    unsigned identity=0;std::array<uint8_t,3200> native{};
++    std::array<std::string,2> files;std::array<uint64_t,2> hashes{};
++    std::array<bool,2> unavailable{};bool announced=false;
++};
++struct PortraitPackData {uint64_t paletteHash=0;std::vector<PortraitRecord> records;};
++inline bool PortraitFileName(const std::string& name,const char* extension) {
++    const std::filesystem::path path(name);
++    return !name.empty() && name.size()<100 && path==path.filename() && path.extension()==extension &&
++           name.find('\\')==std::string::npos && name.find('/')==std::string::npos;
++}
++inline bool PortraitNumber(const std::string& value,uint64_t& number) {
++    if(value.empty() || value.size()>20)return false;
++    const auto result=std::from_chars(value.data(),value.data()+value.size(),number);
++    return result.ec==std::errc{} && result.ptr==value.data()+value.size();
++}
++inline bool ReadPortraitBytes(const std::filesystem::path& file,std::vector<uint8_t>& data,size_t exact) {
++    std::ifstream input(file,std::ios::binary|std::ios::ate);
++    if(!input || input.tellg()!=static_cast<std::streamoff>(exact))return false;
++    data.resize(exact);input.seekg(0);
++    return bool(input.read(reinterpret_cast<char*>(data.data()),data.size()));
++}
++inline bool KnownPortraitSource(const std::filesystem::path& root) {
++    std::vector<uint8_t> data;
++    return ReadPortraitBytes(root/"SAKURA1/SYSTEM/KAO.SPR",data,kPortraitSourceBytes) && AtlasFingerprint(data)==kPortraitSourceHash;
++}
++inline bool ReadPortraitPack(const std::filesystem::path& folder,PortraitPackData& result) {
++    result={};std::error_code error;
++    const auto size=std::filesystem::file_size(folder/"manifest.ini",error);
++    if(error || !size || size>1024*1024)return false;
++    recomp::Ini ini(folder/"manifest.ini");ini.load();
++    auto number=[&](const std::string& section,const char* key,uint64_t& value){return PortraitNumber(ini.get(section,key),value);};
++    uint64_t schema=0,bytes=0,source=0,count=0,hash=0,palette=0;
++    if(!number("pack","schema",schema) || schema!=1 || !number("pack","source_bytes",bytes) || bytes!=kPortraitSourceBytes ||
++       !number("pack","source_hash",source) || source!=kPortraitSourceHash || !number("pack","count",count) || !count || count>394 ||
++       !number("pack","native_hash",hash) || !number("pack","palette_hash",palette))return false;
++    const auto nativeName=ini.get("pack","native_file");if(!PortraitFileName(nativeName,".bin"))return false;
++    std::vector<uint8_t> raw;
++    if(!ReadPortraitBytes(folder/nativeName,raw,static_cast<size_t>(count)*3200) || AtlasFingerprint(raw)!=hash)return false;
++    PortraitPackData parsed;parsed.paletteHash=palette;parsed.records.reserve(static_cast<size_t>(count));
++    for(size_t i=0;i<count;i++) {
++        const auto section="portrait-"+std::to_string(i);uint64_t identity=0,offset=0,rawHash=0;
++        if(!number(section,"native_id",identity) || identity<1 || identity>394 || !number(section,"offset",offset) || offset!=i*3200 ||
++           !number(section,"raw_hash",rawHash) || AtlasFingerprint(std::span<const uint8_t>(raw.data()+offset,3200))!=rawHash)return false;
++        PortraitRecord record;record.identity=static_cast<unsigned>(identity);
++        std::memcpy(record.native.data(),raw.data()+offset,3200);
++        for(int density=0;density<2;density++) {
++            record.files[density]=ini.get(section,"file"+std::to_string(density+1));
++            if(!PortraitFileName(record.files[density],".png") || !number(section,("hash"+std::to_string(density+1)).c_str(),record.hashes[density]))return false;
++        }
++        parsed.records.push_back(std::move(record));
++    }
++    result=std::move(parsed);return true;
++}
++// Only the SDL owner thread uses this presenter. CPU memory is bounded to one
++// active atlas and one 40x48 replacement (density <=2); all other records are metadata.
++class PortraitPack {
++public:
++    PortraitPack()=default;
++    PortraitPack(const PortraitPack&)=delete;
++    PortraitPack& operator=(const PortraitPack&)=delete;
++    ~PortraitPack() {Close();}
++    void Open(const std::filesystem::path& folder,const std::filesystem::path& pcRoot) {
++        Close();folder_=folder;
++        if(!ReadPortraitPack(folder_,data_) || !KnownPortraitSource(pcRoot)) {data_={};return;}
++        if(std::getenv("SATRECOMP_HD_STATS"))std::fprintf(stderr,"portrait pack: records=%zu source=verified\n",data_.records.size());
++    }
++    void Close() {
++        SDL_DestroyTexture(texture_);texture_=nullptr;data_={};atlas_.clear();
++        atlasRecord_=std::numeric_limits<size_t>::max();hasProbe_=false;probeUsable_=false;disabled_=false;
++    }
++    bool PaletteMatches(std::span<const uint8_t> palette) const {
++        return !data_.records.empty() && palette.size()==512 && AtlasFingerprint(palette)==data_.paletteHash;
++    }
++    SDL_Texture* Texture(SDL_Renderer* renderer,std::span<const uint8_t> frame,int viewportScale) {
++        if(disabled_ || frame.size()!=1920 || data_.records.empty())return nullptr;
++        const int density=PortraitDensity(viewportScale);
++        if(hasProbe_ && probeDensity_==density && !std::memcmp(probe_.data(),frame.data(),1920))return probeUsable_?texture_:nullptr;
++        std::memcpy(probe_.data(),frame.data(),1920);probeDensity_=density;hasProbe_=true;probeUsable_=false;
++        size_t selected=std::numeric_limits<size_t>::max();PortraitPatch patch;
++        for(size_t i=0;i<data_.records.size();i++)if(auto match=MatchPortraitFrame(data_.records[i].native,frame)) {
++            if(match->ambiguous)return nullptr;
++            if(selected!=std::numeric_limits<size_t>::max())return nullptr; // ambiguous original identity
++            selected=i;patch=*match;
++        }
++        if(selected==std::numeric_limits<size_t>::max())return nullptr;
++        auto& record=data_.records[selected];const int variant=density-1;
++        if(record.unavailable[variant])return nullptr;
++        if(atlasRecord_!=selected || atlasDensity_!=density) {
++            std::vector<uint8_t> bytes;
++            if(!ReadBackgroundPng(folder_/record.files[variant],bytes,40*density,80*density) || AtlasFingerprint(bytes)!=record.hashes[variant]) {
++                record.unavailable[variant]=true;return nullptr;
++            }
++            auto* source=DecodeBackgroundPng(bytes);auto* rgba=source?SDL_ConvertSurface(source,SDL_PIXELFORMAT_ABGR8888):nullptr;
++            SDL_DestroySurface(source);
++            if(!rgba) {record.unavailable[variant]=true;return nullptr;}
++            atlas_.resize(size_t(40*80*density*density));
++            for(int y=0;y<rgba->h;y++)std::memcpy(atlas_.data()+size_t(y)*rgba->w,static_cast<uint8_t*>(rgba->pixels)+y*rgba->pitch,size_t(rgba->w)*4);
++            SDL_DestroySurface(rgba);atlasRecord_=selected;atlasDensity_=density;
++        }
++        std::vector<uint32_t> composed(size_t(40*48*density*density));const int width=40*density;
++        for(int y=0;y<48*density;y++) {
++            int sourceY=y;
++            if(patch.part && y/density>=patch.y && y/density<patch.y+16)
++                sourceY=(48+(patch.part-1)*16)*density+y-patch.y*density;
++            for(int x=0;x<width;x++) {
++                const size_t at=size_t(y)*width+x;
++                auto color=atlas_[size_t(sourceY)*width+x];
++                if(patch.masked && !(color>>24))color=atlas_[at];
++                composed[at]=frame[(y/density)*40+x/density]?color:0;
++            }
++        }
++        auto* next=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,width,48*density);
++        if(!next || !SDL_UpdateTexture(next,nullptr,composed.data(),width*4) ||
++           !SDL_SetTextureBlendMode(next,SDL_BLENDMODE_BLEND) || !SDL_SetTextureScaleMode(next,SDL_SCALEMODE_NEAREST)) {
++            SDL_DestroyTexture(next);disabled_=true;return nullptr;
++        }
++        SDL_DestroyTexture(texture_);texture_=next;probeUsable_=true;
++        if(!record.announced && std::getenv("SATRECOMP_HD_STATS")) {
++            record.announced=true;std::fprintf(stderr,"portrait replace: id=%04X density=%d patch=%d y=%d\n",record.identity,density,patch.part,patch.y);
++        }
++        return texture_;
++    }
++private:
++    std::filesystem::path folder_;PortraitPackData data_;SDL_Texture* texture_=nullptr;
++    std::vector<uint32_t> atlas_;size_t atlasRecord_=std::numeric_limits<size_t>::max();int atlasDensity_=0;
++    std::array<uint8_t,1920> probe_{};int probeDensity_=0;bool hasProbe_=false,probeUsable_=false,disabled_=false;
++};
++}
+diff --git a/video/renderer.h b/video/renderer.h
+index 781caaa..90e8963 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -63,6 +63,10 @@ public:
+         if(address>=0x80000 || size>0x80000-address) return {};
+         return {m_mem.vram1+address,size};
+     }
++    std::span<const uint8> ColorBytes(uint32 address,size_t size) const {
++        if(!m_mem.cram || address>=0x1000 || size>0x1000-address)return {};
++        return {m_mem.cram+address,size};
++    }
+     uint64_t BackgroundPaletteFingerprint() const {
+         const auto& bg=m_regs2.bgParams[4];
+         const uint32 name=bg.twoWordChar?Vram2Long(bg.pageBaseAddresses[0]):Vram2Word(bg.pageBaseAddresses[0]);
