@@ -1,0 +1,12 @@
+{
+  "satrecomp": {
+    "repository": "https://github.com/tmcleroy/satrecomp.git",
+    "commit": "67a5fd456609f702817c08164e77e1420dc91138",
+    "license": "GPL-3.0-only",
+    "patches": [
+      "patches/0001-satrecomp-cue-wave-gaps.patch",
+      "patches/0002-satrecomp-strict-native.patch",
+      "patches/0003-satrecomp-native-interrupt-shadow.patch"
+    ]
+  }
+}

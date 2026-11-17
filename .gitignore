@@ -1,6 +1,7 @@
 # Keep proprietary/local inputs out of version control, including unknown files.
 /*
 !/.gitignore
+!/.gitattributes
 !/README.md
 !/docs/
 /docs/**
@@ -19,6 +20,7 @@
 /tests/**
 !/tests/*.py
 !/tests/*.cpp
+!/tests/*.movie
 !/patches/
 /patches/**
 !/patches/*.patch
@@ -26,3 +28,6 @@
 /games/**
 !/games/sakura/
 !/games/sakura/game.cfg
+!/config/
+/config/**
+!/config/*.json

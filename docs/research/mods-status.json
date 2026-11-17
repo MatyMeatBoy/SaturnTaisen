@@ -1,0 +1,23 @@
+{
+  "checked_date": "2026-11-17",
+  "target": "Sakura Taisen 1 Saturn GS-9037 V1.005, supplied English v2_1",
+  "verified_hd_packs": [],
+  "status": "No compatible Sakura 1 Saturn HD texture pack with author provenance and tested coverage found in searches so far. Do not substitute PS2 So Long My Love or PS4 assets.",
+  "translation": {
+    "source": "supplied local xdelta",
+    "default_enabled": true,
+    "discs_prepared": 2
+  },
+  "sources": [
+    "https://github.com/NoahSteam/RomHackingTools",
+    "https://segaxtreme.net/resources/sakura-wars-english-patch.96/"
+  ],
+  "searches": [
+    "Sakura Wars HD texture Saturn",
+    "Sakura Taisen texture pack",
+    "Sakura Wars HD pack Saturn",
+    "Sakura Taisen upscale pack",
+    "Japanese Sakura Saturn HD mod"
+  ],
+  "integration_rule": "Validated installed packs default on with individual off switches; unavailable packs are not advertised as installed."
+}

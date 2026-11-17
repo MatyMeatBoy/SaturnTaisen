@@ -1,0 +1,41 @@
+diff --git a/machine/sh2.cpp b/machine/sh2.cpp
+index 859cd00..54f0054 100644
+--- a/machine/sh2.cpp
++++ b/machine/sh2.cpp
+@@ -720,6 +720,11 @@ uint64 SH2::RecompInterpretNext() {
+         TakeInterrupt();
+         return 9;
+     }
++    static const bool strictNative = getenv("SATRECOMP_STRICT_NATIVE") != nullptr;
++    if (strictNative) {
++        fprintf(stderr, "strict AOT: untranslated %s SH-2 instruction at %08X\n", IsMaster() ? "master" : "slave", PC);
++        exit(4);
++    }
+     uint16 opcode;
+     if (recompFetchCode && PC - recompFetchBase < recompFetchSize) [[unlikely]] {
+         opcode = Get16(&recompFetchCode[PC - recompFetchBase]);
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index c968ae8..58978cc 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -712,6 +712,11 @@ namespace {
+         if (e.native && rt.opt.mode == Mode::Native) {
+             e.native(cpu, target, block);
+         } else {
++            static const bool strictNative = getenv("SATRECOMP_STRICT_NATIVE") != nullptr;
++            if (strictNative) {
++                fprintf(stderr, "strict AOT: untranslated %s SH-2 block at %08X\n", cpu.IsMaster() ? "master" : "slave", Access::PC(cpu));
++                exit(4);
++            }
+             InterpretFunctionFree(cpu, e.function, e.code, e.size, !e.sync, block, target);
+         }
+         lk.current = outer;
+@@ -963,7 +968,7 @@ namespace {
+             // An interrupt is serviced by the interpreter. One that is pending but held off for an instruction
+             // (after ldc/lds/stc/sts) is serviced right after the next instruction; blocks only check for that
+             // where it can happen inside them, so here the interpreter steps over it.
+-            if (Access::InterruptRaised(cpu) || (pc & 1) || !(r = RegionFor(rt, pc, offset))) {
++            if (Access::InterruptReady(cpu) || (pc & 1) || !(r = RegionFor(rt, pc, offset))) {
+                 break;
+             }
+             // An address in the ROM area that stands for a native BIOS routine (hle_bios.h)

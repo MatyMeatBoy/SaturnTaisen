@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-17",
+  "scope": "English disc1, boot/title/New Game opening route; no full campaign claim",
+  "dependency_commit": "67a5fd456609f702817c08164e77e1420dc91138",
+  "patch_sha256": {
+    "0001-satrecomp-cue-wave-gaps.patch": "b235ccea57f2f16e92413c9662a696b3900b87ee7a45db958aafe512da72e075",
+    "0002-satrecomp-strict-native.patch": "52767bc642b08f2378805a1795efb3879cfb68c3bfe3bd89eb7408e09e58f762",
+    "0003-satrecomp-native-interrupt-shadow.patch": "282ce96c38421ffc9ebcd2ee9bea32700c05d5917e8eedd2b37dcc913ea081cf"
+  },
+  "guest_blocks": 4658,
+  "frames": 4200,
+  "measurements": [
+    {
+      "mode": "interpreter",
+      "exit": 0,
+      "frames": 4200,
+      "seconds": 31.911149000021396,
+      "headless_fps": 131.61544261528107,
+      "equal_reference": true,
+      "first_difference": null
+    },
+    {
+      "mode": "aot-blocks",
+      "exit": 0,
+      "frames": 4200,
+      "seconds": 18.579396499990253,
+      "headless_fps": 226.05685819785393,
+      "equal_reference": true,
+      "first_difference": null
+    },
+    {
+      "mode": "aot-functions",
+      "exit": 0,
+      "frames": 4200,
+      "seconds": 14.787819599994691,
+      "headless_fps": 284.01753021124955,
+      "equal_reference": false,
+      "first_difference": 116
+    }
+  ],
+  "production_configuration": {
+    "strict_native": true,
+    "disable_function_grouping": true,
+    "disable_host_call_linking": true
+  },
+  "limitations": [
+    "Reference here is the toolkit interpreter on the same hardware runtime, not proof of Saturn hardware fidelity",
+    "Separate Beetle Saturn reference boot/screenshots available locally",
+    "VDP2 colour calculation still incomplete",
+    "Experimental joined-function route differs at frame116 and stays disabled",
+    "Battle/minigames/saves/disc transition/full campaign remain unvalidated",
+    "No physical gamepad or RA-account unlock validation yet"
+  ]
+}

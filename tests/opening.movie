@@ -1,0 +1,12 @@
+# Boot, skip opening, choose New Game, advance initial narration.
+# Frame numbers are tied to the fixed runtime and supplied English disc1.
+650 0800 0
+655 0000 0
+2200 0800 0
+2210 0000 0
+2320 0400 0
+2330 0000 0
+2600 0400 0
+2610 0000 0
+3200 0400 0
+3210 0000 0

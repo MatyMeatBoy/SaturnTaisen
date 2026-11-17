@@ -1,0 +1,66 @@
+[
+  {
+    "disc": 1,
+    "original_files": 1785,
+    "patched_files": 1785,
+    "changed_or_added": 201,
+    "code_related_changes": [
+      {
+        "path": "/SAKURA",
+        "original_bytes": 391712,
+        "patched_bytes": 391712,
+        "patched_sha256": "f9fc1dd16e3684558b22e857c876b682ad65a7c6b9416d453cd4304453021197"
+      },
+      {
+        "path": "/SAKURA1/LOGO.SH2",
+        "original_bytes": 243200,
+        "patched_bytes": 243200,
+        "patched_sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca"
+      },
+      {
+        "path": "/SAKURA4",
+        "original_bytes": 255995904,
+        "patched_bytes": 255995904,
+        "patched_sha256": "7569607b917979182ef81ec7d26fe66cb91bbc90e950118676777112a0639594"
+      },
+      {
+        "path": "/SAKURA5",
+        "original_bytes": 4358144,
+        "patched_bytes": 4358144,
+        "patched_sha256": "52146095c520a2d94419a8f9e76e59b1fa6d0bb15003afcb9bac5a822e6beb95"
+      }
+    ]
+  },
+  {
+    "disc": 2,
+    "original_files": 1785,
+    "patched_files": 1785,
+    "changed_or_added": 199,
+    "code_related_changes": [
+      {
+        "path": "/SAKURA",
+        "original_bytes": 392024,
+        "patched_bytes": 392024,
+        "patched_sha256": "333494474a6eeb2885d50d0d12a6c3f64cc83db867184d4459cc282f70c2b584"
+      },
+      {
+        "path": "/SAKURA1/LOGO.SH2",
+        "original_bytes": 243200,
+        "patched_bytes": 243200,
+        "patched_sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064"
+      },
+      {
+        "path": "/SAKURA4",
+        "original_bytes": 208545792,
+        "patched_bytes": 208545792,
+        "patched_sha256": "4521fc288f146a9920732077337ccf58af0bcbf3cb9108e79ce99d3abd377fb5"
+      },
+      {
+        "path": "/SAKURA5",
+        "original_bytes": 4358144,
+        "patched_bytes": 4358144,
+        "patched_sha256": "5f7831533c06bc2317ae7711cc05deef2bae375bb71d3b26d73dae0f4a3ed758"
+      }
+    ]
+  }
+]

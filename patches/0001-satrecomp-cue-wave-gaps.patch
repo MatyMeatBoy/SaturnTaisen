@@ -1,0 +1,139 @@
+diff --git a/port/disc_image.cpp b/port/disc_image.cpp
+index 269d671..31cb31f 100644
+--- a/port/disc_image.cpp
++++ b/port/disc_image.cpp
+@@ -18,20 +18,59 @@ DiscImage::~DiscImage() {
+ }
+ 
+ bool DiscImage::Open(const std::string &path) {
++    for (FILE *f : m_files) if (f) fclose(f);
++    m_files.clear();
++    m_tracks.clear();
++    m_leadOut = 150;
+     namespace fs = std::filesystem;
+     const fs::path image(path);
+     std::string extension = image.extension().string();
+     for (char &ch : extension) {
+         ch = static_cast<char>(tolower(static_cast<unsigned char>(ch)));
+     }
+-    auto openFile = [&](const fs::path &file, uint64_t &size) -> int {
++    std::vector<uint64_t> fileOffsets;
++    auto openFile = [&](const fs::path &file, uint64_t &size, bool wave = false) -> int {
+         FILE *f = fopen(file.string().c_str(), "rb");
+         if (!f) {
+             return -1;
+         }
+         std::error_code ec;
+         size = fs::file_size(file, ec);
++        if (ec) { fclose(f); return -1; }
++        uint64_t offset = 0;
++        if (wave) {
++            uint8_t header[12];
++            if (fread(header, 1, 12, f) != 12 || memcmp(header, "RIFF", 4) || memcmp(header + 8, "WAVE", 4)) {
++                fclose(f); return -1;
++            }
++            auto le16 = [](const uint8_t *p) { return uint32_t(p[0]) | uint32_t(p[1]) << 8; };
++            auto le32 = [](const uint8_t *p) { return uint32_t(p[0]) | uint32_t(p[1]) << 8 | uint32_t(p[2]) << 16 | uint32_t(p[3]) << 24; };
++            bool format = false, data = false;
++            const uint64_t limit = uint64_t(le32(header + 4)) + 8;
++            if (limit > size || limit < 12) { fclose(f); return -1; }
++            uint64_t at = 12;
++            while (at + 8 <= limit) {
++                uint8_t chunk[8];
++                if (fseeko(f, static_cast<off_t>(at), SEEK_SET) || fread(chunk, 1, 8, f) != 8) break;
++                const uint32_t length = le32(chunk + 4);
++                if (length > limit - at - 8) { fclose(f); return -1; }
++                if (!memcmp(chunk, "fmt ", 4)) {
++                    uint8_t fmt[16];
++                    if (length < 16 || fread(fmt, 1, 16, f) != 16 || le16(fmt) != 1 || le16(fmt + 2) != 2 ||
++                        le32(fmt + 4) != 44100 || le16(fmt + 12) != 4 || le16(fmt + 14) != 16) { fclose(f); return -1; }
++                    format = true;
++                } else if (!memcmp(chunk, "data", 4)) {
++                    if (data || !length || length % 2352) { fclose(f); return -1; }
++                    offset = at + 8;
++                    size = length;
++                    data = true;
++                }
++                at += 8 + uint64_t(length) + (length & 1);
++            }
++            if (!format || !data) { fclose(f); return -1; }
++        }
+         m_files.push_back(f);
++        fileOffsets.push_back(offset);
+         return static_cast<int>(m_files.size()) - 1;
+     };
+ 
+@@ -67,6 +106,8 @@ bool DiscImage::Open(const std::string &path) {
+         Track track;
+         uint32_t fileFrame = 0;
+         int file = -1;
++        uint32_t pregap = 0, postgap = 0, index0 = 0;
++        bool hasIndex0 = false;
+     };
+     std::vector<Pending> pending;
+     std::vector<std::pair<uint32_t, uint32_t>> fileSpans; // (first FAD, frames) of each file
+@@ -93,7 +134,11 @@ bool DiscImage::Open(const std::string &path) {
+             } else {
+                 in >> name;
+             }
+-            file = openFile(image.parent_path() / name, fileSize);
++            std::string type;
++            if (close != std::string::npos) {
++                std::istringstream tail(line.substr(close + 1)); tail >> type;
++            }
++            file = openFile(image.parent_path() / name, fileSize, type == "WAVE");
+             if (file < 0) {
+                 return false;
+             }
+@@ -112,30 +157,45 @@ bool DiscImage::Open(const std::string &path) {
+             unsigned minutes = 0, seconds = 0, frames = 0;
+             char colon;
+             in >> index >> minutes >> colon >> seconds >> colon >> frames;
+-            if (index == 1) {
++            if (seconds >= 60 || frames >= 75) return false;
++            if (index == 0) {
++                pending.back().index0 = (minutes * 60 + seconds) * 75 + frames;
++                pending.back().hasIndex0 = true;
++            } else if (index == 1) {
+                 pending.back().fileFrame = (minutes * 60 + seconds) * 75 + frames;
+             }
++        } else if ((word == "PREGAP" || word == "POSTGAP") && !pending.empty()) {
++            unsigned minutes = 0, seconds = 0, frames = 0; char first, second;
++            if (!(in >> minutes >> first >> seconds >> second >> frames) || first != ':' || second != ':' || seconds >= 60 || frames >= 75) return false;
++            const uint32_t gap = (minutes * 60 + seconds) * 75 + frames;
++            if (word == "PREGAP") pending.back().pregap = gap;
++            else pending.back().postgap = gap;
+         }
+     }
+     closeFile();
+     if (pending.empty()) {
+         return false;
+     }
+-    m_leadOut = fileStartFAD;
++    uint32_t gapShift = 0;
+     for (size_t i = 0; i < pending.size(); i++) {
+         Track track = pending[i].track;
+         const auto [firstFAD, frames] = fileSpans[static_cast<size_t>(pending[i].file)];
+         track.file = pending[i].file;
+-        track.startFAD = firstFAD + pending[i].fileFrame;
+-        track.fileOffset = static_cast<uint64_t>(pending[i].fileFrame) * track.sectorSize;
++        if (pending[i].fileFrame >= frames) return false;
++        gapShift += pending[i].pregap;
++        track.startFAD = firstFAD + pending[i].fileFrame + gapShift;
++        track.fileOffset = fileOffsets[static_cast<size_t>(track.file)] + static_cast<uint64_t>(pending[i].fileFrame) * track.sectorSize;
+         // (it ends where the next track's file or pause begins)
+-        uint32_t end = firstFAD + frames;
++        uint32_t end = firstFAD + frames + gapShift;
+         if (i + 1 < pending.size() && pending[i + 1].file == pending[i].file) {
+-            end = firstFAD + pending[i + 1].fileFrame;
++            end = firstFAD + (pending[i + 1].hasIndex0 ? pending[i + 1].index0 : pending[i + 1].fileFrame) + gapShift;
+         }
++        if (end <= track.startFAD) return false;
+         track.endFAD = end - 1;
+         m_tracks.push_back(track);
++        gapShift += pending[i].postgap;
+     }
++    m_leadOut = fileStartFAD + gapShift;
+     return true;
+ }
+ 

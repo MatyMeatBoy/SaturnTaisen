@@ -1,0 +1,64 @@
+diff --git a/runtime/access.h b/runtime/access.h
+index 954c478..72a6b8f 100644
+--- a/runtime/access.h
++++ b/runtime/access.h
+@@ -96,6 +96,9 @@ struct Access {
+     static bool InterruptRaised(SH2 &c) {
+         return c.m_intrFlags.pending;
+     }
++    static bool InterruptReady(SH2 &c) {
++        return c.m_intrFlags.pending && c.m_intrFlags.allow;
++    }
+     static void AddCycles(SH2 &c, uint64_t cycles) {
+         c.m_cyclesExecuted += cycles;
+     }
+diff --git a/runtime/block_native.h b/runtime/block_native.h
+index f3fb380..84fdec6 100644
+--- a/runtime/block_native.h
++++ b/runtime/block_native.h
+@@ -84,6 +84,8 @@ using Native = BlockSet<-1>;
+     uint32 pc = entry;                              \
+     uint64 base = c.m_cyclesExecuted;               \
+     bool hw = false;                                \
++    bool initial_shadow = c.m_intrFlags.pending && !c.m_intrFlags.allow; \
++    (void)initial_shadow;                            \
+     (void)hw;                                       \
+     (void)target;
+ 
+diff --git a/tools/recomp.py b/tools/recomp.py
+index 2d6ad8c..53e4c3a 100755
+--- a/tools/recomp.py
++++ b/tools/recomp.py
+@@ -234,6 +234,7 @@ class Generator:
+             if name in ENDS_BLOCK:
+                 return None
+             text = "// %08X  %s" % (pc + i * 2, disasm(ops[i], pc + i * 2))
++            check_after_inhibited = allow_off
+             if allow_off:
+                 lines.append("c.m_intrFlags.allow = true;")
+                 allow_off = False
+@@ -245,6 +246,11 @@ class Generator:
+                 idle = dest == pc and first_branch and sh2emit.only_waits(names[:i], ops[:i])
+                 # (the first instruction's bus-wait exit keeps m_wbReg as it is, so it is set here)
+                 lines.append("if (%s) { c.m_wbReg = 0xFF; %s } %s" % (cond, go(dest, expr, cycles[i + 1], idle), text))
++                if check_after_inhibited:
++                    lines.append("if (c.m_intrFlags.pending) [[unlikely]] %s" % leave(i + 1, cycles[i + 1], sh2emit.WB_NONE))
++                if i == 0:
++                    lines.append("if (initial_shadow && c.m_intrFlags.pending) [[unlikely]] %s" % leave(i + 1, cycles[i + 1], sh2emit.WB_NONE))
++                    lines.append("initial_shadow = false;")
+                 wb = sh2emit.WB_NONE
+                 first_branch = False
+                 i += 1
+@@ -289,8 +295,11 @@ class Generator:
+             if ins.clears_allow:
+                 lines.append("c.m_intrFlags.allow = false;")
+                 allow_off = True
+-            if ins.mem or ins.sr:
++            if (ins.mem or ins.sr or check_after_inhibited) and not ins.clears_allow:
+                 lines.append("if (c.m_intrFlags.pending) [[unlikely]] %s" % leave(i + 1, cycles[i + 1], wb))
++            if i == 0 and not ins.clears_allow:
++                lines.append("if (initial_shadow && c.m_intrFlags.pending) [[unlikely]] %s" % leave(i + 1, cycles[i + 1], wb))
++                lines.append("initial_shadow = false;")
+             i += 1
+         # running off the end of the block
+         end = pc + n * 2
