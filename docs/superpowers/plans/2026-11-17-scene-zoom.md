@@ -28,3 +28,6 @@ Se baja solo el diálogo media unidad de su escala (3 píxeles en1440p), sin mov
 
 
 Composición Zoom final confirmada: imagen y sombra suben1 píxel de salida; diálogo y sombra bajan1, dentro del límite de sombra recortable. En1440p: imageny29, diálogo1048, separación11; escalas×7/×6. Geometría y captura real de imagen/texto aprobadas.
+
+
+Límite posterior confirmado:16:9 máximo. FitInteger y Zoom calculan sobre ancho limitado; el renderer centra un área16:9 con bandas laterales en superficies más anchas. Fondos usan esa misma área. Prueba real verifica bandas negras y centro equivalente a2560×1440 (tolerancia2 niveles de cobertura de fuente HD). Ultrawide no se ofrece como modo de juego.

@@ -1,0 +1,183 @@
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+index 0e641a9..f46c260 100644
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -269,8 +269,8 @@ const launcher::Description& launcher::describe() {
+             d.folders = {{"soundtrack", "Custom soundtrack", soundtrack_detail.c_str(), "--soundtrack"}};
+         d.display = {{"fullscreen", "Pantalla completa", "F11 cambia entre ventana y pantalla completa. La escala del juego siempre es entera.", console_session(), nullptr}};
+         d.bindings = port::BindingTable();
+-        d.controls_heading = "WHILE PLAYING";
+-        d.controls = {{"Keys", "Esc or F1: menu (save states, cheats, training aids, quit)   F11: full screen. On a gamepad: Back (Select), alone or with Start, or a stick's click opens and closes the menu. (A button given to the game above does only that.)"}};
++        d.controls_heading = "DURANTE LA PARTIDA";
++        d.controls = {{"Controles", "Esc/F1: ajustes. F11: pantalla completa. En mando: Select/Back, solo o con Start, abre el menú. En M30 también se admite el botón Heart/Guide cuando el dispositivo lo expone. Las asignaciones personalizadas tienen prioridad."}};
+         return d;
+     }();
+     return about;
+diff --git a/port/controller_profiles.h b/port/controller_profiles.h
+new file mode 100644
+index 0000000..2561dac
+--- /dev/null
++++ b/port/controller_profiles.h
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "../recomp-common/launcher/src/bindings.h"
++#include <cstdint>
++#include <string>
++#include <string_view>
++#include <cctype>
++namespace port {
++enum class SaturnPadProfile {Standard,M30};
++inline SaturnPadProfile IdentifySaturnPad(uint16_t vendor,uint16_t product,const char* name) {
++    std::string text=name?name:"";for(char& c:text)c=char(std::tolower(static_cast<unsigned char>(c)));
++    if((vendor==0x2dc8 && (product==0x5006 || product==0x0651)) ||
++       (vendor==0x0ca3 && product==0x0024) || text.find("m30")!=std::string::npos)return SaturnPadProfile::M30;
++    return SaturnPadProfile::Standard;
++}
++inline recomp::PadInput ResolveSaturnInput(std::string_view action,recomp::PadInput configured,bool customized,SaturnPadProfile profile) {
++    if(customized || profile!=SaturnPadProfile::M30)return configured;
++    if(action=="a")return {SDL_GAMEPAD_BUTTON_SOUTH,-1};
++    if(action=="b")return {SDL_GAMEPAD_BUTTON_EAST,-1};
++    if(action=="c")return {-1,SDL_GAMEPAD_AXIS_RIGHT_TRIGGER};
++    if(action=="x")return {SDL_GAMEPAD_BUTTON_WEST,-1};
++    if(action=="y")return {SDL_GAMEPAD_BUTTON_NORTH,-1};
++    if(action=="z")return {SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER,-1};
++    if(action=="l")return {SDL_GAMEPAD_BUTTON_LEFT_SHOULDER,-1};
++    if(action=="r")return {-1,SDL_GAMEPAD_AXIS_LEFT_TRIGGER};
++    return configured;
++}
++}
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 35af362..889c9b5 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2,6 +2,7 @@
+ // Copyright (C) 2026 Tommy McLeroy. Part of satrecomp: https://github.com/tmcleroy/satrecomp
+ // Windowed frontend: SDL3 window, audio and input around Port::RunFrame().
+ #include "bindings.h"
++#include "controller_profiles.h"
+ #include "game.h"
+ #include "hud.h"
+ #include "sakura_ui.h"
+@@ -70,6 +71,16 @@ namespace {
+     // Controllers page), or the usual layout. Read once when the window opens; while playing only this table
+     // is looked at.
+     Bindings g_bindings = DefaultBindings();
++    bool g_customPad[kBoundPlayers][recomp::kBindMaxActions]{};
++    SaturnPadProfile GamepadProfile(SDL_Gamepad* gp) {
++        const int choice=satrecomp::FeatureValue("pad_profile");
++        if(choice==1)return SaturnPadProfile::Standard;
++        if(choice==2)return SaturnPadProfile::M30;
++        return IdentifySaturnPad(SDL_GetGamepadVendor(gp),SDL_GetGamepadProduct(gp),SDL_GetGamepadName(gp));
++    }
++    bool MenuSelectButton(SDL_Gamepad* gp,int button) {
++        return button==SDL_GAMEPAD_BUTTON_BACK || (gp && GamepadProfile(gp)==SaturnPadProfile::M30 && button==SDL_GAMEPAD_BUTTON_GUIDE);
++    }
+ 
+     static_assert(kBoundActions[0].bit == kPadUp && kBoundActions[1].bit == kPadDown && kBoundActions[2].bit == kPadLeft &&
+                   kBoundActions[3].bit == kPadRight && kBoundActions[4].bit == kPadStart && kBoundActions[5].bit == kPadA &&
+@@ -106,16 +117,20 @@ namespace {
+ 
+     uint16_t ReadGamepad(SDL_Gamepad *gp, int player) {
+         const int kDead = 16000; // how far a stick or a trigger must go to count
+-        uint16_t pad = 0;
++        uint16_t pad = 0;const auto profile=GamepadProfile(gp);
+         for (int action = 0; action < ActionCount(); action++) {
+-            const PadInput input = g_bindings.pad[player][action];
++            const auto& spec=BindingTable().actions[action];
++            const PadInput input=ResolveSaturnInput(spec.name,g_bindings.pad[player][action],g_customPad[player][action],profile);
+             if ((input.button >= 0 && SDL_GetGamepadButton(gp, static_cast<SDL_GamepadButton>(input.button))) ||
+                 (input.axis >= 0 && SDL_GetGamepadAxis(gp, static_cast<SDL_GamepadAxis>(input.axis)) > kDead)) {
+                 pad |= ActionBits(action);
+             }
+         }
+-        const int x = SDL_GetGamepadAxis(gp, SDL_GAMEPAD_AXIS_LEFTX);
+-        const int y = SDL_GetGamepadAxis(gp, SDL_GAMEPAD_AXIS_LEFTY);
++        int x = SDL_GetGamepadAxis(gp, SDL_GAMEPAD_AXIS_LEFTX);
++        int y = SDL_GetGamepadAxis(gp, SDL_GAMEPAD_AXIS_LEFTY);
++        if(profile==SaturnPadProfile::M30 && std::abs(x)<kDead && std::abs(y)<kDead) {
++            x=SDL_GetGamepadAxis(gp,SDL_GAMEPAD_AXIS_RIGHTX);y=SDL_GetGamepadAxis(gp,SDL_GAMEPAD_AXIS_RIGHTY);
++        }
+         if (x < -kDead) pad |= kPadLeft;
+         if (x > kDead) pad |= kPadRight;
+         if (y < -kDead) pad |= kPadUp;
+@@ -157,6 +172,11 @@ int RunWindowed(Port &port) {
+         return 1;
+     }
+     g_bindings = LoadBindings(port.opt.settingsPath);
++    {recomp::Ini choices(port.opt.settingsPath);choices.load();
++     for(int player=0;player<kBoundPlayers;player++)for(int action=0;action<ActionCount();action++)
++        g_customPad[player][action]=!choices.get("gamepad"+std::to_string(player+1),BindingTable().actions[action].name).empty();}
++    const auto mappings=std::filesystem::path(port.opt.settingsPath).parent_path()/"gamecontrollerdb.txt";
++    std::error_code mappingError;if(std::filesystem::is_regular_file(mappings,mappingError))SDL_AddGamepadMappingsFromFile(mappings.string().c_str());
+     // (the Display page's Window size, in times 240 lines, unless --scale says)
+     static const int kWindowTimes[] = {3, 2, 4, 5, 6};
+     const int scale = port.opt.scale > 0 ? port.opt.scale : kWindowTimes[std::clamp(satrecomp::FeatureValue("window_size"), 0, 4)];
+@@ -194,7 +214,7 @@ int RunWindowed(Port &port) {
+         }
+         flags |= SDL_WINDOW_RESIZABLE | (port.gpu || shade ? SDL_WINDOW_HIGH_PIXEL_DENSITY : 0) | (shade ? SDL_WINDOW_OPENGL : 0) |
+                  (testHidden ? SDL_WINDOW_HIDDEN : 0);
+-        window = SDL_CreateWindow("SaturnTaisenFirst 0.1", width, height, flags);
++        window = SDL_CreateWindow("SaturnTaisenFirst 0.2-dev", width, height, flags);
+         if (!window) {
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
+@@ -874,9 +894,9 @@ int RunWindowed(Port &port) {
+             case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+                 if (ButtonBound(ev.gbutton.button)) {
+                     // (a button given to the game does only that)
+-                } else if (ev.gbutton.button == SDL_GAMEPAD_BUTTON_BACK || ev.gbutton.button == SDL_GAMEPAD_BUTTON_LEFT_STICK) {
++                } else if (MenuSelectButton(SDL_GetGamepadFromID(ev.gbutton.which),ev.gbutton.button) || ev.gbutton.button == SDL_GAMEPAD_BUTTON_LEFT_STICK) {
+                     toggleMenu();
+-                    backToggled = backToggled || ev.gbutton.button == SDL_GAMEPAD_BUTTON_BACK;
++                    backToggled = backToggled || MenuSelectButton(SDL_GetGamepadFromID(ev.gbutton.which),ev.gbutton.button);
+                 } else if (ev.gbutton.button == SDL_GAMEPAD_BUTTON_RIGHT_STICK && !port.menu.IsOpen()) {
+                     resetPoint(port.resetPoint.empty()); // (the first click sets it)
+                 }
+@@ -884,6 +904,7 @@ int RunWindowed(Port &port) {
+             case SDL_EVENT_GAMEPAD_ADDED:
+                 if (SDL_Gamepad *gp = SDL_OpenGamepad(ev.gdevice.which)) {
+                     gamepads.push_back(gp);
++                    fprintf(stderr,"controller: name=%s vendor=%04X product=%04X profile=%s\n",SDL_GetGamepadName(gp),SDL_GetGamepadVendor(gp),SDL_GetGamepadProduct(gp),GamepadProfile(gp)==SaturnPadProfile::M30?"M30 / Saturn six-button":"SDL standard");
+                 }
+                 break;
+             case SDL_EVENT_GAMEPAD_REMOVED:
+@@ -914,7 +935,7 @@ int RunWindowed(Port &port) {
+             // (the buttons themselves, on any gamepad, whatever they do in the game)
+             bool both = false, back = false;
+             for (SDL_Gamepad *gamepad : gamepads) {
+-                const bool held = SDL_GetGamepadButton(gamepad, SDL_GAMEPAD_BUTTON_BACK);
++                const bool held = SDL_GetGamepadButton(gamepad, SDL_GAMEPAD_BUTTON_BACK) || (GamepadProfile(gamepad)==SaturnPadProfile::M30 && SDL_GetGamepadButton(gamepad,SDL_GAMEPAD_BUTTON_GUIDE));
+                 back = back || held;
+                 both = both || (held && SDL_GetGamepadButton(gamepad, SDL_GAMEPAD_BUTTON_START));
+             }
+diff --git a/port/main.cpp b/port/main.cpp
+index bf75469..7115dbd 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -106,10 +106,12 @@ bool Movie::Save(const std::string &path) const {
+ // launcher's own) and the menu, as the game's are
+ static void RegisterPortFeatures() {
+     satrecomp::Game &game = satrecomp::TheGame();
++    game.features.push_back({"pad_profile", "Mandos", "Perfil de mando",
++                             "Automático reconoce M30 Bluetooth y 2.4G por nombre o identidad USB. Si XInput oculta el modelo, elige M30 manualmente. Tus asignaciones personalizadas tienen prioridad.",
++                             0, {"Automático", "Estándar SDL", "M30 / Saturn 6 botones"}});
+     game.features.push_back({"run_ahead", "Juego", "Run-ahead",
+-                             "Shows the game a frame or two further on than it is, so that what you press is seen sooner (input lag "
+-                             "taken away). The game runs exactly as without it; it takes two or three times the processor.",
+-                             0, {"Off", "1 frame", "2 frames"}});
++                             "Anticipa uno o dos fotogramas para reducir la latencia de entrada. Aumenta el trabajo de CPU; desactívalo si aparecen tirones.",
++                             0, {"Desactivado", "1 fotograma", "2 fotogramas"}});
+     game.features.push_back({"widescreen", "Display", "Widescreen",
+                              "16:9: fights show more at the sides. The launcher's switch changes with it. Needs high resolution.",
+                              satrecomp::kFeatureFirstPage});
+@@ -148,8 +150,7 @@ static void RegisterPortFeatures() {
+                                  satrecomp::kFeatureEnhanced});
+     }
+     game.features.push_back({"window_size", "Pantalla", "Tamaño de ventana",
+-                             "How large the window opens, in times 240 lines (it can be made any size by dragging its "
+-                             "edges; full screen is on the launcher's first page and F11).",
++                             "Tamaño inicial de la ventana. Puedes redimensionarla o usar F11 para pantalla completa; el juego conserva la escala entera.",
+                              0, {"3x", "2x", "4x", "5x", "6x"}});
+ }
+ 

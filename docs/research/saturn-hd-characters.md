@@ -24,3 +24,12 @@ Estado: fondos HD integrados experimentalmente; selector/preparación en launche
 ## Control de la hipótesis de correspondencia
 
 Se comparó un campo numérico exploratorio de la tabla12 PC con el byte0x10 de los NC Saturn. Solo coincide en59 de147 pares y difiere en88 (por ejemplo NC14:52 frente a54; NC15:51 frente a52). Su significado completo aún no está validado. Esto descarta usar esa semejanza como correspondencia universal de entradas o animaciones: el mapeo deberá verificarse recurso a recurso y con escenas reales.
+
+
+## Enlace nativo comprobado y proporciones
+
+`tools/audit_native_characters.py` registra los147 NC de ambos discos: cabecera común00020000, tabla de entradas9 bytes con coordenadas firmadas (incluye valores negativos e inversión horizontal), paleta512 bytes en0x410 y píxeles desde0x610. No se interpretan los bytes reservados como una entrada adicional ni se deducen tamaños de todas las hojas.
+
+La escena de Iris carga la textura192×144 del comandoVDP1 0x80 desdeNC55.BIN offset0x610: coinciden los27.648 bytes completos y su paleta512 bytes coincide con CRAM banco0. Ambas ISO reproducen la identidad. Esto corrige la hipótesis de compresión aplicada al NC nativo; no prueba todavía su animación completa.
+
+Dirección visual confirmada: el reemplazo PC conserva su proporción con una sola escala determinada por altura, y se alinea por el eje central de cabeza/columna/torso. No se fuerza el ancho del PC a la caja de textura Saturn. Las partes de ojos y boca se componen mediante sus metadatos; el cuerpo base PC observado tiene la cara sin esas capas, por lo que no es válido mostrarlo solo como reemplazo completo.

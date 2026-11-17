@@ -1,0 +1,9 @@
+# Mandos M30 y SDL
+
+Auto identifica VID/PID2dc8:5006,2dc8:0651 (familia Bluetooth/USB) y0ca3:0024 (receptor2.4G/identidad compartida6B), además del nombre M30. La opción Perfil de mando permite Automático, Estándar SDL o M30 / Saturn6 botones. Identidades XInput genéricas no permiten reconocer con certeza el modelo: selección manual disponible. No confundir reconocimiento con validación de cada firmware.
+
+El perfil M30 conserva la disposición física A/B/C y X/Y/Z y L/R usando la normalización de SDL. Las asignaciones explícitas del usuario, incluso none, tienen prioridad. M30 acepta dirección desde dpad, stick izquierdo o derecho según el modo del propio mando. Select/Back o Heart/Guide (si SDL lo expone) abre ajustes, solo o con Start. Nombre, VID/PID y perfil se registran al conectar. gamecontrollerdb.txt en el perfil permite añadir mapeos SDL locales para dispositivos no reconocidos; no se sustituye globalmente el mapeo de otros mandos.
+
+Fuentes primarias: [base de SDL](https://github.com/libsdl-org/SDL/blob/main/src/joystick/SDL_gamepad_db.h), [perfil Bluetooth de RetroArch](https://github.com/libretro/retroarch-joypad-autoconfig/blob/master/dinput/8Bitdo_M30_BT.cfg), [perfil2.4G de RetroArch](https://github.com/libretro/retroarch-joypad-autoconfig/blob/master/sdl2/8Bitdo_M30_24G.cfg). Se consultaron para interpretar identidades y botones; no se incorpora una copia del repositorio externo.
+
+Verificación automatizada: identidades de ambas familias, rechazo de identificación de Xbox/Pro2 como M30, prioridad de bindings,8 botones Saturn y mando virtual SDL con ejes/gatillos. Hardware físico Bluetooth/2.4G/Switch/XInput y adaptadores pendiente. Otros mandos usan SDL estándar y reasignación disponible; no se promete compatibilidad universal con dispositivos que el sistema no expone.

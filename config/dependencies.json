@@ -34,7 +34,9 @@
       "patches/0028-sakura-lower-zoom-group.patch",
       "patches/0029-sakura-nudge-zoom-dialogue-down.patch",
       "patches/0030-sakura-final-zoom-pixel-alignment.patch",
-      "patches/0031-sakura-optional-full-hd-preload.patch"
+      "patches/0031-sakura-optional-full-hd-preload.patch",
+      "patches/0032-sakura-limit-presentation-to-16x9.patch",
+      "patches/0033-sakura-m30-controller-profiles-and-ui-copy.patch"
     ]
   }
 }

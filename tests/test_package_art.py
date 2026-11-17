@@ -21,6 +21,18 @@ class PackageArtTests(unittest.TestCase):
             (folder/'KABE00.png').write_bytes(data+b'tampered')
             with self.assertRaises(RuntimeError):generated_backgrounds(folder)
 
+    def test_pc_generated_art_uses_its_own_allowlist_and_hashes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder=Path(directory);data=b'\x89PNG\r\n\x1a\nfixture'
+            (folder/'KABE0100-v1.png').write_bytes(data)
+            manifest={'backgrounds':[{'file':'KABE0100-v1.png','sha256':hashlib.sha256(data).hexdigest()}]}
+            (folder/'provenance.json').write_text(json.dumps(manifest),encoding='utf-8')
+            self.assertEqual(list(generated_backgrounds(folder,pc=True)),['KABE0100-v1.png'])
+            with self.assertRaises(RuntimeError):generated_backgrounds(folder)
+            manifest['backgrounds'][0]['file']='../KABE0100-v1.png'
+            (folder/'provenance.json').write_text(json.dumps(manifest),encoding='utf-8')
+            with self.assertRaises(RuntimeError):generated_backgrounds(folder,pc=True)
+
     def test_manifest_cannot_escape_or_repeat_identity(self):
         with tempfile.TemporaryDirectory() as directory:
             folder=Path(directory)

@@ -37,14 +37,15 @@ def digest(path):
     return result.hexdigest()
 
 
-def generated_backgrounds(folder):
+def generated_backgrounds(folder,pc=False):
     """Only manifest-pinned generated art may pass the package's resource gate."""
     folder=Path(folder)
     data=json.loads((folder/'provenance.json').read_text(encoding='utf-8'))
     result={}
     for row in data['backgrounds']:
         name=row['file']
-        if not re.fullmatch(r'KABE[0-9][01]\.png',name) or name in result:
+        pattern=r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
+        if not re.fullmatch(pattern,name) or name in result:
             raise RuntimeError('Invalid/duplicate generated background identity')
         file=folder/name
         if file.is_symlink() or not file.is_file() or digest(file)!=row['sha256']:
@@ -132,6 +133,12 @@ def package(destination,toolchain,archive=True):
     for name in ('provenance.json','PROMPTS.md'):
         source=art_source/name
         if source.is_file():shutil.copy2(source,art/name)
+    pc_art_source=ROOT/'assets/generated/pc-backgrounds'
+    if pc_art_source.is_dir():
+        pc_art=destination/'art/pc-backgrounds';pc_art.mkdir(parents=True)
+        for name,source in generated_backgrounds(pc_art_source,pc=True).items():
+            shutil.copy2(source,pc_art/name);allowed_art['art/pc-backgrounds/'+name]=digest(source)
+        shutil.copy2(pc_art_source/'provenance.json',pc_art/'provenance.json')
     (destination/'portable.txt').write_text('',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
     (destination/'LEEME.md').write_text(f'''# SaturnTaisenFirst {version} · Desarrollo
@@ -145,11 +152,13 @@ def package(destination,toolchain,archive=True):
 
 El juego usa exclusivamente escala entera, sin suavizado, y un marco adaptable. Los dos discos se pueden seleccionar manualmente; el cambio automático de disco aún está pendiente.
 
-El modo mejorado amplía en enteros las escenas reconocidas sobre fondos decorativos generados. Conserva la composición original cuando no reconoce la escena. Los fondos generados son preliminares. La ejecución PC, su traducción y el pack HD de recursos PC están en desarrollo y no forman parte de las funciones jugables verificadas.
+El modo mejorado amplía en enteros las escenas reconocidas sobre fondos decorativos generados. Conserva la composición original cuando no reconoce la escena. Los fondos generados son preliminares. La ejecución PC y su traducción siguen pendientes. El mod HD Saturn puede usar tus fondos y un pack local de retratos PC emparejados; requiere tus recursos extraídos. Los cuerpos HD completos y las extensiones tácticas de mapa siguen en desarrollo.
+
+**Opciones de desarrollo:** Pantalla → Visualización de escena conserva Original o permite Zoom. MOD HD → Precargar mod HD al iniciar prepara los recursos habilitados antes de jugar. Mandos → Perfil de mando ofrece Automático, Estándar SDL y M30 / Saturn 6 botones. El modo mejorado se limita a16:9 máximo.
 
 **Partidas:** importa desde la sección Tus partidas. Se crea una copia separada y puedes activarla o volver a tu partida habitual. Los originales no se modifican. Guarda el nombre original al importar un archivo individual de SSF.
 
-Esta versión no certifica toda la campaña ni todos los mandos. Consulta las notas de versión y la validación. RA, packs HD y otras funciones pendientes no se presentan como disponibles.
+Esta versión no certifica toda la campaña ni todos los mandos. Consulta las notas de versión y la validación. RetroAchievements y el mod HD completo siguen pendientes.
 
 `user/` contiene tus partidas y ajustes en este modo portátil. No la borres al actualizar; conserva una copia antes de sustituir el programa.
 ''',encoding='utf-8',newline='\n')

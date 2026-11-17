@@ -45,6 +45,13 @@ class PortraitRuntimeTests(unittest.TestCase):
                 x=(width-306*scale)//2+7*scale;y=(height-212*scale)//2+152*scale
                 self.assertGreaterEqual(bbox[0],x);self.assertGreaterEqual(bbox[1],y)
                 self.assertLessEqual(bbox[2],x+40*scale);self.assertLessEqual(bbox[3],y+48*scale)
+                if width==2560:reference=on
+                if width==3440:
+                    self.assertIsNone(on.crop((0,0,440,1440)).getbbox())
+                    self.assertIsNone(on.crop((3000,0,3440,1440)).getbbox())
+                    # The HD font's float coordinates may round one coverage level differently.
+                    delta=ImageChops.difference(reference,on.crop((440,0,3000,1440)))
+                    self.assertLessEqual(max(high for low,high in delta.getextrema()),2)
             lazy,_=self.capture(profile,pc_root,2560,1440,True)
             eager,log=self.capture(profile,pc_root,2560,1440,True,True)
             self.assertEqual(lazy.tobytes(),eager.tobytes())

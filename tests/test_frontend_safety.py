@@ -31,6 +31,9 @@ class FrontendTests(unittest.TestCase):
             result=subprocess.run([str(exe),str(folder)],env=env,capture_output=True,text=True,timeout=15)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
+    def test_m30_profiles_detect_both_families_and_preserve_user_bindings(self):
+        self.fixture('controller_profiles')
+
     def test_integer_scaling_native_modes_and_all_window_shapes(self):
         self.fixture('integer_viewport')
 
