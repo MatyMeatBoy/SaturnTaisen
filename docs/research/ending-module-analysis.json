@@ -1,5 +1,5 @@
 {
-  "load_address_basis": "English disc1 module bytes at ISO LBA156966 match observed work RAM at 00204000; other profiles contain the same absolute-address stub layout, not yet executed on this route",
+  "load_address_basis": "Inferred from absolute-address stub layout. The first 64 bytes are shared with LOGO.SH2 and do not establish that ENDING.BIN was loaded during Continue.",
   "generator_policy": "all aligned valid prefixes, exact runtime byte checks still required",
   "profiles": [
     {
@@ -38,5 +38,6 @@
       "sha256": "f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553",
       "aligned_candidates": 54078
     }
-  ]
+  ],
+  "runtime_ownership_correction": "Continue function bodies at 0020528E and 00208A02 match LOGO.SH2, not ENDING.BIN. ENDING candidates remain static coverage for later testing."
 }

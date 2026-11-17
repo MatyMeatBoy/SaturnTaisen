@@ -1,0 +1,61 @@
+{
+  "load_address_basis": "English disc1 Continue bodies at0020528E/00208A02 and English disc2 wrong-disc body at00205E9C match offsets relative to00204000. Shared stub prefix alone was insufficient. Japanese profile bases are inferred from linked absolute addresses, pending this execution route.",
+  "profiles": [
+    {
+      "profile": "disc1",
+      "file": "/SAKURA1/LOGO.SH2",
+      "lba": 160804,
+      "bytes": 243200,
+      "load_address": "00204000",
+      "sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca",
+      "aligned_candidates": 71713
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA1/LOGO.SH2",
+      "lba": 137635,
+      "bytes": 243200,
+      "load_address": "00204000",
+      "sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064",
+      "aligned_candidates": 71702
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA1/LOGO.SH2",
+      "lba": 125256,
+      "bytes": 243200,
+      "load_address": "00204000",
+      "sha256": "dbe0c2e777ddbc47a46856e79ee7ccf06b546d3e4a7d7be7dc10d9bb3c32cf1d",
+      "aligned_candidates": 80606
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA1/LOGO.SH2",
+      "lba": 102087,
+      "bytes": 243200,
+      "load_address": "00204000",
+      "sha256": "a13718339b764e8b658bac44b6afaf7d597d1876e5c38460374fbf9fb013c12e",
+      "aligned_candidates": 80606
+    }
+  ],
+  "matched_body_samples": [
+    {
+      "profile": "disc1",
+      "ram_pc": "0020528E",
+      "file_offset": "0000128E",
+      "bytes": 64
+    },
+    {
+      "profile": "disc1",
+      "ram_pc": "00208A02",
+      "file_offset": "00004A02",
+      "bytes": 64
+    },
+    {
+      "profile": "disc2",
+      "ram_pc": "00205E9C",
+      "file_offset": "00001E9C",
+      "bytes": 64
+    }
+  ]
+}
