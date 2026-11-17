@@ -116,6 +116,42 @@
       "first_difference": null,
       "aot_before_disc_cache_patch": true,
       "interpreter_after_disc_cache_patch": true
+    },
+    "continuous_free_movement": {
+      "frames": 119781,
+      "guest_blocks": 253159,
+      "strict_native": true,
+      "interpreted": 0,
+      "single_stepped": 0,
+      "movie": "tests/chapter1-free-movement.movie",
+      "first_30000_equal_prior_interpreter": true,
+      "state_anchors": [
+        {
+          "fresh": "chapter1-continuous-30000.state",
+          "checkpoint": "theater.state",
+          "equal_except_sound_ram_host_pointer": true,
+          "ignored_field": "sound::Dsp::m_WRAM restored from current machine on load",
+          "host_pointer_offset": 4217311,
+          "host_pointer_bytes": 8
+        },
+        {
+          "fresh": "chapter1-continuous-47999.state",
+          "checkpoint": "post-18000.state",
+          "equal_except_sound_ram_host_pointer": true,
+          "ignored_field": "sound::Dsp::m_WRAM restored from current machine on load",
+          "host_pointer_offset": 4217311,
+          "host_pointer_bytes": 8
+        },
+        {
+          "fresh": "chapter1-continuous-119780.state",
+          "checkpoint": "stairs-scan.state",
+          "equal_except_sound_ram_host_pointer": true,
+          "ignored_field": "sound::Dsp::m_WRAM restored from current machine on load",
+          "host_pointer_offset": 4217311,
+          "host_pointer_bytes": 8
+        }
+      ],
+      "scope": "theater exploration through corridor event; battle not yet covered"
     }
   },
   "current_build_checks": {
