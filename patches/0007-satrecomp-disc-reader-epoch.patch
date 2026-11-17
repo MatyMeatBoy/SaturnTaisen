@@ -1,0 +1,49 @@
+--- a/runtime/lift.h
++++ b/runtime/lift.h
+@@ -96,6 +96,9 @@
+ // Reads one sector (2048 bytes) of the disc's data track by its frame address; false past its end.
+ using DiscSectorReader = std::function<bool(uint32_t frameAddress, uint8_t *out)>;
+ void SetDiscSectorReader(DiscSectorReader reader);
++// Changes whenever a reader is installed. Reinstall after every media change,
++// even if the callable is the same, so cached sectors cannot cross disc images.
++uint64_t DiscSectorReaderGeneration();
+ bool ReadDiscSector(uint32_t frameAddress, uint8_t *out);
+ // The buttons a player holds right now (Saturn control pad layout, 1 = pressed; player 0 or 1).
+ using PadReader = std::function<uint16_t(int player)>;
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -226,6 +226,7 @@
+     DiscFileReader g_extraDiscFileReader;
+     DiscFileLister g_discFileLister;
+     DiscSectorReader g_discSectorReader;
++    uint64_t g_discSectorGeneration = 0;
+     PadReader g_padReader;
+ 
+     // How long a free-running CPU waits at a sync point
+@@ -1710,6 +1711,10 @@
+ 
+ void SetDiscSectorReader(DiscSectorReader reader) {
+     g_discSectorReader = std::move(reader);
++    ++g_discSectorGeneration;
++}
++uint64_t DiscSectorReaderGeneration() {
++    return g_discSectorGeneration;
+ }
+ bool ReadDiscSector(uint32_t frameAddress, uint8_t *out) {
+     return g_discSectorReader && g_discSectorReader(frameAddress, out);
+--- a/machine/cd.cpp
++++ b/machine/cd.cpp
+@@ -51,9 +51,12 @@
+         // (a sector's data, read from the disc when the transfer comes to it)
+         static uint8 sector[2048];
+         static uint32 sectorFAD = 0xFFFFFFFF;
++        static uint64 sectorGeneration = 0;
+         const uint32 fad = cd.transferFAD[offset / 1024];
+-        if (fad != sectorFAD) {
++        const uint64 generation = satrecomp::DiscSectorReaderGeneration();
++        if (fad != sectorFAD || generation != sectorGeneration) {
+             sectorFAD = fad;
++            sectorGeneration = generation;
+             if (!satrecomp::ReadDiscSector(fad, sector)) {
+                 std::fill(std::begin(sector), std::end(sector), 0);
+             }

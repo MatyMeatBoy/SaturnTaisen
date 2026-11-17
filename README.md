@@ -45,10 +45,18 @@ python tools/build_runtime.py run
 
 La base de bloques y los C++ generados no se incluyen en Git; cada desarrollador debe generarlos desde sus imágenes. Los comandos actuales son herramientas de desarrollo, no el launcher final ni la transición de discos. `tests/theater.movie` recorre la narración inicial con pulsaciones de A hasta el mapa del teatro; no cubre las ramas, las batallas ni la campaña completa. La preparación japonesa está disponible con `prepare_discs.py --original --cue ... --output ...`; su cobertura AOT y el selector de idioma aún se están integrando. Los avisos del runtime sobre hardware o composición no se consideran resueltos por el simple hecho de que arranque.
 
-Las comprobaciones sintéticas de vídeo y máquina no necesitan dumps. Comprueban la composición de capas y sprites, búsquedas CD por pista/FAD y rechazo de servicios BIOS desconocidos en modo estricto. La comparación larga entre intérprete y AOT se ejecuta así:
+Las comprobaciones sintéticas de vídeo y máquina no necesitan dumps. Comprueban la composición de capas y sprites, búsquedas CD por pista/FAD, invalidación de sectores al cambiar de lector y rechazo de servicios BIOS desconocidos en modo estricto. La comparación larga entre intérprete y AOT se ejecuta así:
 
 ```powershell
 python tools/verify_runtime.py --frames 30000 --movie tests/theater.movie --timeout 600
 ```
+
+El analizador complementario puede leer directamente el programa inicial de una ISO preparada:
+
+```powershell
+python tools/static_program.py --disc-iso "local/prepared/disc1/Track 01.iso" --output local/work/sakura/static-disc1.txt
+```
+
+`--all-entries` conserva además los prefijos válidos de todas las direcciones alineadas; produce muchos más candidatos y aumenta el tiempo y tamaño de compilación. Sigue punteros, llamadas y ramas, y reconoce tablas de salto relativas con una comprobación de rango. Su salida contiene código derivado del juego y debe permanecer local. Son candidatos adicionales: todavía hacen falta descubrimiento de otros saltos indirectos y overlays, comprobación de bytes en el runtime y pruebas de las rutas reales.
 
 La existencia de un repositorio o las afirmaciones de su autor no prueban que un juego completo funcione. Las referencias todavía no se han compilado ni probado con estos discos.

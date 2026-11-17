@@ -25,6 +25,10 @@ class MachineTests(unittest.TestCase):
         self.assertEqual(result.returncode, 4, result.stderr)
         self.assertIn('strict AOT: unsupported BIOS service 0600026C', result.stderr)
 
+    def test_replacing_disc_reader_invalidates_same_fad_cache(self):
+        result = self.run_machine('disc-cache')
+        self.assertEqual(result.returncode, 0, result.stderr)
+
 
 if __name__ == '__main__':
     unittest.main()

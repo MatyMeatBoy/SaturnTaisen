@@ -8,9 +8,10 @@
     "0003-satrecomp-native-interrupt-shadow.patch": "282ce96c38421ffc9ebcd2ee9bea32700c05d5917e8eedd2b37dcc913ea081cf",
     "0004-satrecomp-vdp2-basic-color.patch": "ac8320bc386c10020c3b92a307382ddcbcc38dda1bc3e7defaa6f05f7f607b36",
     "0005-satrecomp-cd-track-seek.patch": "a15d555d536c2ca18d23b36520633ea6b15a7ac5d092fc041c1397469fb8ba09",
-    "0006-satrecomp-strict-bios.patch": "62503351ee21c3acb6e344950b917c5c1c70d0209b2e065cc58b3b2ce9d26b62"
+    "0006-satrecomp-strict-bios.patch": "62503351ee21c3acb6e344950b917c5c1c70d0209b2e065cc58b3b2ce9d26b62",
+    "0007-satrecomp-disc-reader-epoch.patch": "a6dd3f6a5196e9407acbbad976343d914f74549fbb95ef8c4210135bd9bfdca4"
   },
-  "guest_blocks": 8488,
+  "guest_blocks": 253159,
   "frames": 30000,
   "measurements": [
     {
@@ -58,7 +59,7 @@
   ],
   "video_tests": "Synthetic actual renderer: background/sprite blend, additive, endpoint, ratio selector, all four sprite gates, colour-calculation windows, post-blend offset",
   "measurement_guest_blocks": 8487,
-  "current_executable_sha256": "ebded09ee2a5c567f7c86c959544b4ba7a244053d50cd81c2d3c77dda5b89613",
+  "current_executable_sha256": "b28285adf8d0cd5cb3645e791ceffabae78521bd75e5f4127d18343871cbdde1",
   "profile_checks": {
     "english-disc1": {
       "frames": 4200,
@@ -76,5 +77,52 @@
       "frames": 1800,
       "strict_native": true
     }
-  }
+  },
+  "additional_checks": {
+    "post_theater": {
+      "frames_interpreter": 18001,
+      "frames_aot": 18001,
+      "equal": true,
+      "first_difference": null,
+      "guest_blocks": 12943,
+      "origin": "theater.state generated at frame30000"
+    },
+    "expanded_opening": {
+      "frames": 4200,
+      "guest_blocks": 16767,
+      "equal_prior_interpreter": true
+    },
+    "maria_click": {
+      "frames": 4201,
+      "guest_blocks": 16767,
+      "strict_native": true,
+      "reaches": "Yoneda conversation"
+    },
+    "eager_opening": {
+      "frames": 4200,
+      "guest_blocks": 253159,
+      "equal_prior_interpreter": true,
+      "before_disc_cache_patch": true
+    },
+    "ticket_counter": {
+      "frames": 12001,
+      "guest_blocks": 253159,
+      "strict_native": true,
+      "reaches": "original options menu",
+      "before_disc_cache_patch": true,
+      "frames_interpreter": 12001,
+      "frames_aot": 12001,
+      "equal": true,
+      "first_difference": null,
+      "aot_before_disc_cache_patch": true,
+      "interpreter_after_disc_cache_patch": true
+    }
+  },
+  "current_build_checks": {
+    "unit_tests": 22,
+    "passed": true,
+    "disc_reader_epoch_regression": true,
+    "build_succeeded": true
+  },
+  "profile_checks_guest_blocks": 16767
 }

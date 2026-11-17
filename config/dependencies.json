@@ -9,7 +9,8 @@
       "patches/0003-satrecomp-native-interrupt-shadow.patch",
       "patches/0004-satrecomp-vdp2-basic-color.patch",
       "patches/0005-satrecomp-cd-track-seek.patch",
-      "patches/0006-satrecomp-strict-bios.patch"
+      "patches/0006-satrecomp-strict-bios.patch",
+      "patches/0007-satrecomp-disc-reader-epoch.patch"
     ]
   }
 }

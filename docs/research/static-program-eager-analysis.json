@@ -1,0 +1,43 @@
+{
+  "entry_policy": "all-aligned-valid-prefixes",
+  "tool_sha256": "c8c16f637ad72f90aef9573544b89ba09bdf1f24174fadc2e82b16869f56af8d",
+  "profiles": [
+    {
+      "profile": "disc1",
+      "file": "SAKURA",
+      "lba": 63,
+      "bytes": 391712,
+      "load_address": "06004000",
+      "image_sha256": "f9fc1dd16e3684558b22e857c876b682ad65a7c6b9416d453cd4304453021197",
+      "aligned_candidates": 143269
+    },
+    {
+      "profile": "disc2",
+      "file": "SAKURA",
+      "lba": 63,
+      "bytes": 392024,
+      "load_address": "06004000",
+      "image_sha256": "333494474a6eeb2885d50d0d12a6c3f64cc83db867184d4459cc282f70c2b584",
+      "aligned_candidates": 143309
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "SAKURA",
+      "lba": 63,
+      "bytes": 391712,
+      "load_address": "06004000",
+      "image_sha256": "1729cd8701fa8da30b203d0bf97e47e2dc9cf06b50ca91589ea760fe0cb8ff87",
+      "aligned_candidates": 144534
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "SAKURA",
+      "lba": 63,
+      "bytes": 392024,
+      "load_address": "06004000",
+      "image_sha256": "ecbcbda739362745daac4a334e3d3d26ae8ac327ca6a66d52763416d22cdba93",
+      "aligned_candidates": 144574
+    }
+  ],
+  "combined_with_recorded": 253159
+}
