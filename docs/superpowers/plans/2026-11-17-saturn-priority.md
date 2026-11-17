@@ -54,3 +54,8 @@ Hallazgo derivado de la investigación solicitada: MAC.L saturado incluía bits 
 MAC.L: build completo aprobado (580.328 bloques, 708 archivos regenerados), suite completa 68 pruebas en103,707s, incluidas rutas reales de600 y4.200 frames con cero instrucciones guest interpretadas. Revisión propia de cambios y pruebas: acumulación y saturación sin desbordamiento firmado, S=0 modular sin cambios, orden de lecturas/alias y flags conservados. Sin delegación ni afirmación de campaña completa.
 
 Personajes: además de3.596 NC, el decoder del runtime procesó394 retratos KAO y25 KAO_P:4.015 imágenes verificadas en total. Sigue pendiente la correspondencia y el dibujo HD ingame. Los campos exploratorios solo coinciden en59 de147 pares, de modo que no se usa una correspondencia universal por índice.
+
+
+Avance posterior: patches24–30 incorporan fuente HD de proporciones uniformes y límites de tinta/clip, herramienta local de matching, primer consumidor de retratos HD validado por bytes/paleta/origen y modo Zoom opcional. El catálogo tiene304 identidades nativas,394 candidatos PC,191 propuestas conservadoras y113 pendientes. La primera escena real cambia únicamente el retrato; no equivale a cuerpos NC completos. Suite de integración de ese bloque:76 pruebas aprobadas. Zoom se probó geométricamente a varias resoluciones y en escena real1440p con igualdad de imagen/tinta; Original continúa como opción por defecto. La composición final añade un ajuste de1px arriba/abajo.
+
+Pendiente próximo: activar y validar el pack de retratos en el perfil de desarrollo, probar densidades/expresiones/fallbacks y avanzar identificación de los cuerpos NC. Después continúan campaña, cambio de disco, mandos y RA; ninguno se declara completo por estas pruebas visuales.

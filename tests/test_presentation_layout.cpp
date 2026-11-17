@@ -12,9 +12,9 @@ int main() {
         assert(zoom.picture.x+zoom.picture.w+zoom.shadow<=w);
     }
     auto zoom=port::FitSceneZoom(2560,1440,306,67,212,2);
-    assert(zoom.picture.scale==7 && zoom.dialogue.scale==6 && zoom.shadow==28 && zoom.gap==9 && zoom.picture.y==30 && zoom.dialogue.y==1047);
+    assert(zoom.picture.scale==7 && zoom.dialogue.scale==6 && zoom.shadow==28 && zoom.gap==11 && zoom.picture.y==29 && zoom.dialogue.y==1048);
     auto noClip=port::FitSceneZoom(2560,1440,306,67,212);
-    assert(noClip.dialogue.y+noClip.dialogue.h<=1440 && noClip.picture.y==24);
+    assert(noClip.dialogue.y+noClip.dialogue.h<=1440 && noClip.picture.y==23);
     assert(!port::FitSceneZoom(100,100,306,67,212).valid);
     assert(port::IsOldPictureShadow(20,153,3));
     assert(port::IsOldPictureShadow(307,155,3));

@@ -25,3 +25,6 @@ El conjunto Zoom baja hasta tres unidades de escala del diálogo, limitado por e
 ## Separación final de diálogo
 
 Se baja solo el diálogo media unidad de su escala (3 píxeles en1440p), sin mover la imagen. La separación pasa de6 a9; la caja empieza eny1047. El runtime identifica hasta dos filas finales que sean exclusivamente sombra/fondo y limita el desplazamiento para proteger marco y contenido. Imageny30, escalas×7/×6 y modo Original conservados. Fixture geométrico y comparación real de imagen/tinta correctos; captura dialogue-lowered.png.
+
+
+Composición Zoom final confirmada: imagen y sombra suben1 píxel de salida; diálogo y sombra bajan1, dentro del límite de sombra recortable. En1440p: imageny29, diálogo1048, separación11; escalas×7/×6. Geometría y captura real de imagen/texto aprobadas.
