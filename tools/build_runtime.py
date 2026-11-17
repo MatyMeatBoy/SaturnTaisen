@@ -91,6 +91,7 @@ def main():
         run(sys.executable, DEP / 'tools/recomp.py', '--blocks', WORK / 'blocks.txt',
             '--ops', DEP / 'machine/sh2_ops.h', '--out', WORK / 'gen',
             '--max-function-blocks', '1',
+            '--append-order', WORK / 'block-order.json',
             '--region', '00200000-00300000', '--region', '06002000-08000000')
     build(args.toolchain, env)
     if args.action in ('build', 'recompile'):

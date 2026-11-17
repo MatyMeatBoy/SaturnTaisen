@@ -14,7 +14,7 @@ index 4d103f8..08141ef 100644
      uint64_t cycles = 8;
  
      if (offset >= kUnimplemented && offset < kUnimplementedEnd) {
-+        static const bool strict = getenv("SATRECOMP_STRICT_NATIVE") != nullptr;
++        static const bool strict = getenv("SATRECOMP_STRICT_NATIVE") != nullptr || !getenv("SATRECOMP_NO_BLOCKS");
 +        if (strict) {
 +            fprintf(stderr, "strict AOT: unsupported BIOS service %08X (called from %08X)\n",
 +                    kRam + (offset - kUnimplemented), Access::PR(c));

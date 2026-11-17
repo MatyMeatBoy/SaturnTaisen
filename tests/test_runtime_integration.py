@@ -12,6 +12,18 @@ DISC = ROOT / 'local/prepared/disc1/game.cue'
 
 @unittest.skipUnless(EXE.is_file() and DISC.is_file(), 'requires local runtime and own prepared disc')
 class RuntimeTests(unittest.TestCase):
+    def test_direct_execution_uses_validated_aot_dispatch_without_environment_flags(self):
+        env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
+        env['PATH'] = 'C:/msys64/clang64/bin' + os.pathsep + env.get('PATH', '')
+        with tempfile.TemporaryDirectory(dir=ROOT / 'local') as directory:
+            result = subprocess.run([str(EXE), '--disc', str(DISC), '--headless', '--frames', '600',
+                                     '--stats', '--backup', str(Path(directory)/'backup.bin')],
+                                    env=env,capture_output=True,text=True,timeout=30)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertIn('interpreted 0 (0.00%)',result.stderr)
+        self.assertIn('calls made as calls 0 (',result.stderr,
+                      'direct execution enabled unvalidated host-call linking')
+
     def test_strict_aot_new_game_route_runs_without_guest_interpreter(self):
         env = os.environ.copy()
         env['PATH'] = 'C:/msys64/clang64/bin' + os.pathsep + env.get('PATH', '')

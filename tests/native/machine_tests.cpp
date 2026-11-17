@@ -18,6 +18,19 @@ static uint32_t position(Machine &m) {
 }
 int main(int argc, char **argv) {
     Machine m;
+    if (argc>1 && std::string(argv[1])=="untranslated-default") {
+        satrecomp::hle::Install(m,{});
+        m.Reset(true);
+        m.masterSH2.PC=0x06004000;
+        m.BusWrite16(0x06004000,0xAFFE); // BRA to itself, NOP delay slot
+        m.BusWrite16(0x06004002,0x0009);
+        satrecomp::Options options;
+        options.mode=satrecomp::Mode::Native;
+        satrecomp::Attach(m,options); // fixture deliberately has no generated guest blocks
+        m.RunFrame();
+        satrecomp::Finish();
+        return 0;
+    }
     if (argc>1 && std::string(argv[1])=="unsupported-bios") {
         satrecomp::hle::Install(m,{});
         m.masterSH2.PR=0x06004000;

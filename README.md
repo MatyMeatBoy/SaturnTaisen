@@ -2,7 +2,7 @@
 
 Proyecto de recompilación estática de **Sakura Taisen / Sakura Wars 1 para Sega Saturn**, con la traducción inglesa suministrada por el propietario del proyecto.
 
-**Estado:** implementación inicial. Ambos discos ingleses están preparados localmente y sus hashes coinciden con RetroAchievements. Hay un ejecutable Windows de investigación; la ruta inicial hasta comenzar partida se ha ejecutado con AOT estricto. Todavía no es un recomp completo ni se ha validado la campaña.
+**Estado:** implementación inicial. Ambos discos ingleses están preparados localmente y sus hashes coinciden con RetroAchievements. Hay un ejecutable Windows de investigación: 119.781 fotogramas continuos de exploración en AOT estricto, y guardado del episodio 1 con carga desde un arranque nuevo verificada. Todavía no es un recomp completo ni se ha validado la campaña.
 
 ## Objetivos confirmados
 
@@ -41,7 +41,7 @@ python tools/build_runtime.py recompile
 python tools/build_runtime.py run
 ```
 
-`discover` utiliza interpretación exclusivamente para obtener cobertura. `run` activa el control estricto AOT: se detiene si necesita interpretar una instrucción SH-2 guest. Los servicios de hardware/BIOS reimplementados y el 68000 de audio son partes separadas del runtime.
+`discover` utiliza interpretación exclusivamente para obtener cobertura. El ejecutable y `run` usan AOT estricto por defecto: se detienen si necesitan interpretar una instrucción SH-2 guest. Las funciones agrupadas y el enlace de llamadas host requieren habilitación experimental explícita; la ruta validada usa el despachador de bloques. Los servicios de hardware/BIOS reimplementados y el 68000 de audio son partes separadas del runtime.
 
 La base de bloques y los C++ generados no se incluyen en Git; cada desarrollador debe generarlos desde sus imágenes. Los comandos actuales son herramientas de desarrollo, no el launcher final ni la transición de discos. `tests/theater.movie` recorre la narración inicial con pulsaciones de A hasta el mapa del teatro; no cubre las ramas, las batallas ni la campaña completa. La preparación japonesa está disponible con `prepare_discs.py --original --cue ... --output ...`; su cobertura AOT y el selector de idioma aún se están integrando. Los avisos del runtime sobre hardware o composición no se consideran resueltos por el simple hecho de que arranque.
 
@@ -60,3 +60,13 @@ python tools/static_program.py --disc-iso "local/prepared/disc1/Track 01.iso" --
 `--all-entries` conserva además los prefijos válidos de todas las direcciones alineadas; produce muchos más candidatos y aumenta el tiempo y tamaño de compilación. Sigue punteros, llamadas y ramas, y reconoce tablas de salto relativas con una comprobación de rango. Su salida contiene código derivado del juego y debe permanecer local. Son candidatos adicionales: todavía hacen falta descubrimiento de otros saltos indirectos y overlays, comprobación de bytes en el runtime y pruebas de las rutas reales.
 
 La existencia de un repositorio o las afirmaciones de su autor no prueban que un juego completo funcione. Las referencias todavía no se han compilado ni probado con estos discos.
+
+El generador conserva las posiciones de los bloques en `local/work/sakura/block-order.json` para añadir cobertura sin reescribir archivos C++ anteriores. El manifiesto rechaza variantes retiradas o cambios de partición; otra base requiere un directorio y manifiesto nuevos. Sigue siendo necesario comprobar los bytes guest durante la ejecución.
+
+Para contrastar la carga de una partida propia del episodio 1 (archivo 1 en la pausa), el verificador puede iniciar cada modo con una copia independiente de la misma memoria nativa de 32 KiB:
+
+```powershell
+python tools/verify_runtime.py --frames 9098 --movie tests/cold-load.movie --backup-seed "ruta/al/backup.bin" --timeout 240
+```
+
+La imagen de origen se lee y se registra mediante SHA-256; cada ejecución modifica su propia copia privada. Los estados de investigación también necesitan conservar la memoria de guardado de su sesión.

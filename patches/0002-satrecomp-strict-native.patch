@@ -6,7 +6,7 @@ index 859cd00..54f0054 100644
          TakeInterrupt();
          return 9;
      }
-+    static const bool strictNative = getenv("SATRECOMP_STRICT_NATIVE") != nullptr;
++    static const bool strictNative = getenv("SATRECOMP_STRICT_NATIVE") != nullptr || !getenv("SATRECOMP_NO_BLOCKS");
 +    if (strictNative) {
 +        fprintf(stderr, "strict AOT: untranslated %s SH-2 instruction at %08X\n", IsMaster() ? "master" : "slave", PC);
 +        exit(4);
@@ -22,7 +22,7 @@ index c968ae8..58978cc 100644
          if (e.native && rt.opt.mode == Mode::Native) {
              e.native(cpu, target, block);
          } else {
-+            static const bool strictNative = getenv("SATRECOMP_STRICT_NATIVE") != nullptr;
++            static const bool strictNative = getenv("SATRECOMP_STRICT_NATIVE") != nullptr || !getenv("SATRECOMP_NO_BLOCKS");
 +            if (strictNative) {
 +                fprintf(stderr, "strict AOT: untranslated %s SH-2 block at %08X\n", cpu.IsMaster() ? "master" : "slave", Access::PC(cpu));
 +                exit(4);
@@ -39,3 +39,23 @@ index c968ae8..58978cc 100644
                  break;
              }
              // An address in the ROM area that stands for a native BIOS routine (hle_bios.h)
+@@ -1423,11 +1423,17 @@
+ 
+     // Calls as calls: when free running and nothing wants to see every block as it is entered
+     // (SATRECOMP_NO_CALLS=1: every call through the dispatcher, as before)
+-    rt.link = (rt.opt.mode == Mode::Native || rt.opt.mode == Mode::Free) && rt.opt.recordPath.empty() && !rt.trace && rt.watchPC == ~0u &&
++#ifdef SATRECOMP_OWN_MACHINE
++    // Direct launches use the validated block dispatcher. Linking is a research opt-in.
++    const bool allowFunctions = getenv("SATRECOMP_EXPERIMENTAL_FUNCTIONS") != nullptr;
++#else
++    const bool allowFunctions = true;
++#endif
++    rt.link = allowFunctions && (rt.opt.mode == Mode::Native || rt.opt.mode == Mode::Free) && rt.opt.recordPath.empty() && !rt.trace && rt.watchPC == ~0u &&
+               !rt.logPC && !rt.callHi && !getenv("SATRECOMP_NO_CALLS");
+ 
+     // Native functions of several blocks: an entry of their own at their first block, found before the block's
+-    if (!getenv("SATRECOMP_NO_FUNCTIONS") && !noBlocks) {
++    if (allowFunctions && !getenv("SATRECOMP_NO_FUNCTIONS") && !noBlocks) {
+         for (size_t t = 0; t < g_blockTableCount; t++) {
+             for (size_t i = 0; i < g_blockTables[t].functionCount; i++) {
+                 const FunctionDesc &f = g_blockTables[t].functions[i];

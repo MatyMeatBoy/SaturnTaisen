@@ -1,0 +1,42 @@
+{
+  "load_address_basis": "English disc1 module bytes at ISO LBA156966 match observed work RAM at 00204000; other profiles contain the same absolute-address stub layout, not yet executed on this route",
+  "generator_policy": "all aligned valid prefixes, exact runtime byte checks still required",
+  "profiles": [
+    {
+      "profile": "disc1",
+      "file": "/SAKURA1/ENDING.BIN",
+      "lba": 156966,
+      "bytes": 178968,
+      "load_address": "00204000",
+      "sha256": "754d7c791ff7d1ee6911e6796823b9f345e6e0751e3c921413e2ffc23b2e58e3",
+      "aligned_candidates": 54088
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA1/ENDING.BIN",
+      "lba": 133797,
+      "bytes": 178968,
+      "load_address": "00204000",
+      "sha256": "f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553",
+      "aligned_candidates": 54078
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA1/ENDING.BIN",
+      "lba": 125382,
+      "bytes": 178968,
+      "load_address": "00204000",
+      "sha256": "754d7c791ff7d1ee6911e6796823b9f345e6e0751e3c921413e2ffc23b2e58e3",
+      "aligned_candidates": 54088
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA1/ENDING.BIN",
+      "lba": 102213,
+      "bytes": 178968,
+      "load_address": "00204000",
+      "sha256": "f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553",
+      "aligned_candidates": 54078
+    }
+  ]
+}

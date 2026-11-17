@@ -1,17 +1,18 @@
 {
   "date": "2026-11-17",
-  "scope": "English disc1 through narration/dialogue/theater map (30000 frames); English/Japanese disc2 boot; Japanese disc1 opening",
+  "scope": "English disc1 continuous theater exploration and episode1 save/cold-load; short English/Japanese boots of both discs; full campaign unvalidated",
   "dependency_commit": "67a5fd456609f702817c08164e77e1420dc91138",
   "patch_sha256": {
     "0001-satrecomp-cue-wave-gaps.patch": "b235ccea57f2f16e92413c9662a696b3900b87ee7a45db958aafe512da72e075",
-    "0002-satrecomp-strict-native.patch": "52767bc642b08f2378805a1795efb3879cfb68c3bfe3bd89eb7408e09e58f762",
+    "0002-satrecomp-strict-native.patch": "8cd475a9c2ca2308ff81a7bccf12f46e9d4c02c684d2bf3b8fdbd942696bc523",
     "0003-satrecomp-native-interrupt-shadow.patch": "282ce96c38421ffc9ebcd2ee9bea32700c05d5917e8eedd2b37dcc913ea081cf",
     "0004-satrecomp-vdp2-basic-color.patch": "ac8320bc386c10020c3b92a307382ddcbcc38dda1bc3e7defaa6f05f7f607b36",
     "0005-satrecomp-cd-track-seek.patch": "a15d555d536c2ca18d23b36520633ea6b15a7ac5d092fc041c1397469fb8ba09",
-    "0006-satrecomp-strict-bios.patch": "62503351ee21c3acb6e344950b917c5c1c70d0209b2e065cc58b3b2ce9d26b62",
-    "0007-satrecomp-disc-reader-epoch.patch": "a6dd3f6a5196e9407acbbad976343d914f74549fbb95ef8c4210135bd9bfdca4"
+    "0006-satrecomp-strict-bios.patch": "0f91ed1c33d4dbf9f2b0f6d6d82c2c693fa546c5da2b1a7634ff6c4ada6f0c6f",
+    "0007-satrecomp-disc-reader-epoch.patch": "a6dd3f6a5196e9407acbbad976343d914f74549fbb95ef8c4210135bd9bfdca4",
+    "0008-satrecomp-incremental-generation.patch": "fa12a97bbecd921180c598b50d181dcf8751d11639127c4ca7a1e4b2299d3a62"
   },
-  "guest_blocks": 253159,
+  "guest_blocks": 307553,
   "frames": 30000,
   "measurements": [
     {
@@ -45,21 +46,24 @@
   "production_configuration": {
     "strict_native": true,
     "disable_function_grouping": true,
-    "disable_host_call_linking": true
+    "disable_host_call_linking": true,
+    "strict_native_default": true,
+    "experimental_opt_in": "SATRECOMP_EXPERIMENTAL_FUNCTIONS",
+    "reference_opt_in": "SATRECOMP_NO_BLOCKS (explicit strict flag still overrides)"
   },
   "limitations": [
     "Reference here is the toolkit interpreter on the same hardware runtime, not proof of Saturn hardware fidelity",
     "Separate Beetle Saturn reference boot/screenshots available locally",
     "Special, extended and line-screen colour calculation remain incomplete; no pending-composition warning on the 30000-frame route",
     "Experimental joined-function route differs at frame116 and stays disabled",
-    "Battle/minigames/saves/disc transition/full campaign remain unvalidated",
+    "Battle/minigames/other save points/disc transition/full campaign remain unvalidated",
     "No physical gamepad or RA-account unlock validation yet",
     "Long parity used 8487 block variants before the additional Japanese block and strict BIOS guard; current build passes short strict tests on all four profiles",
     "Timing collected during development, sometimes with concurrent work; not a final windowed product benchmark"
   ],
   "video_tests": "Synthetic actual renderer: background/sprite blend, additive, endpoint, ratio selector, all four sprite gates, colour-calculation windows, post-blend offset",
   "measurement_guest_blocks": 8487,
-  "current_executable_sha256": "b28285adf8d0cd5cb3645e791ceffabae78521bd75e5f4127d18343871cbdde1",
+  "current_executable_sha256": "c4cf457904fb40af469d3270bc36bfac1bd77d63ae1f8f47372c43297568fc23",
   "profile_checks": {
     "english-disc1": {
       "frames": 4200,
@@ -152,13 +156,92 @@
         }
       ],
       "scope": "theater exploration through corridor event; battle not yet covered"
+    },
+    "episode1_cold_load": {
+      "frames": 9098,
+      "equal_interpreter_hashes": true,
+      "backup_seed_unchanged": true,
+      "backup_seed_sha256": "13ee0dec3d0aa6483bc6d1aefa385e9a66840d6d6b658af7e9bde47a8ecdcbf0",
+      "warm_checkpoint_equal_except_restored_sound_host_pointer": true,
+      "differing_bytes_before_pointer_normalization": 3,
+      "guest_blocks": 307553,
+      "native_environment_flags": false,
+      "host_call_linking": false,
+      "movie": "tests/cold-load.movie",
+      "parity_modes": [
+        {
+          "mode": "interpreter",
+          "exit": 0,
+          "frames": 9098,
+          "seconds": 70.65893470001174,
+          "headless_fps": 128.7593711768554,
+          "equal_reference": true,
+          "first_difference": null
+        },
+        {
+          "mode": "aot-blocks",
+          "exit": 0,
+          "frames": 9098,
+          "seconds": 49.18762169999536,
+          "headless_fps": 184.96523486112886,
+          "equal_reference": true,
+          "first_difference": null
+        },
+        {
+          "mode": "aot-repeat",
+          "exit": 0,
+          "frames": 9098,
+          "seconds": 48.4950934999797,
+          "headless_fps": 187.60660807889374,
+          "equal_reference": true,
+          "first_difference": null
+        }
+      ]
     }
   },
   "current_build_checks": {
-    "unit_tests": 22,
+    "unit_tests": 31,
     "passed": true,
     "disc_reader_epoch_regression": true,
-    "build_succeeded": true
+    "build_succeeded": true,
+    "default_native_and_bios_guards": true,
+    "default_dispatch_no_host_call_linking": true,
+    "fresh_patch_stack_matches_dependency": true,
+    "incremental_initial_cpp_files_written": 0
   },
-  "profile_checks_guest_blocks": 16767
+  "profile_checks_guest_blocks": 16767,
+  "current_profile_checks": {
+    "english-disc2": {
+      "frames": 1800,
+      "guest_blocks": 307553,
+      "strict_native_default": true,
+      "interpreted": 0,
+      "single_stepped": 0,
+      "host_calls": 0
+    },
+    "japanese-disc1": {
+      "frames": 1800,
+      "guest_blocks": 307553,
+      "strict_native_default": true,
+      "interpreted": 0,
+      "single_stepped": 0,
+      "host_calls": 0
+    },
+    "japanese-disc2": {
+      "frames": 1800,
+      "guest_blocks": 307553,
+      "strict_native_default": true,
+      "interpreted": 0,
+      "single_stepped": 0,
+      "host_calls": 0
+    }
+  },
+  "incremental_generation": {
+    "before_blocks": 253163,
+    "after_blocks": 307553,
+    "cpp_files_total": 769,
+    "cpp_files_written": 138,
+    "native_generated": 307553,
+    "skipped": 0
+  }
 }
