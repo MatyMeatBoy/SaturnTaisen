@@ -15,7 +15,7 @@ int main(int argc,char** argv) {
     SDL_FillSurfaceRect(surface,nullptr,0xFFAABBCC);
     assert(port::WriteBackgroundCache(file,surface)); // atomic replacement of an existing cache
     loaded=port::ReadBackgroundCache(file,4,3);assert(loaded);assert(static_cast<uint32_t*>(loaded->pixels)[0]==0xFFAABBCC);SDL_DestroySurface(loaded);
-    {std::fstream edit(file,std::ios::in|std::ios::out|std::ios::binary);edit.seekp(33);edit.put(0);}
+    {std::fstream edit(file,std::ios::in|std::ios::out|std::ios::binary);edit.seekg(33);const auto value=edit.get();edit.seekp(33);edit.put(char(value^1));}
     assert(!port::ReadBackgroundCache(file,4,3)); // payload corruption
     assert(port::WriteBackgroundCache(file,surface));
     {std::fstream edit(file,std::ios::in|std::ios::out|std::ios::binary);edit.seekp(8);edit.put(char(255));}
@@ -31,6 +31,15 @@ int main(int argc,char** argv) {
     bytes[16]=255;bytes[17]=255;bytes[18]=255;bytes[19]=255;
     assert(!port::ValidBackgroundPng(bytes));
     assert(!port::DecodeBackgroundPng(bytes));
+    std::vector<uint8_t> legacy(32+4*12);
+    std::memcpy(legacy.data(),"STFBG001",8);
+    auto put=[&](int at,uint64_t n,int count){for(int i=0;i<count;i++)legacy[at+i]=uint8_t(n>>(8*i));};
+    put(8,4,4);put(12,3,4);put(16,48,4);
+    for(int pixel=0;pixel<12;pixel++)put(32+pixel*4,0xFFAABBCC,4);
+    put(24,port::BackgroundPayloadHash(std::span<const uint8_t>(legacy.data()+32,48)),8);
+    {std::ofstream old(file,std::ios::binary|std::ios::trunc);old.write(reinterpret_cast<const char*>(legacy.data()),legacy.size());}
+    loaded=port::ReadBackgroundCache(file,4,3);assert(loaded);
+    assert(static_cast<uint32_t*>(loaded->pixels)[0]==0xFFAABBCC);SDL_DestroySurface(loaded);
     {std::ofstream truncate(file,std::ios::binary|std::ios::trunc);truncate<<"STFBG001";}
     assert(!port::ReadBackgroundCache(file,4,3));
     SDL_DestroySurface(surface);

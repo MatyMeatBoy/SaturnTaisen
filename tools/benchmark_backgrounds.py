@@ -15,6 +15,7 @@ import statistics
 import struct
 import subprocess
 import time
+import zlib
 from PIL import Image
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -24,6 +25,7 @@ PREFIX=Path('C:/msys64/clang64')
 
 def environment():
     env=os.environ.copy();env['PATH']=str(PREFIX/'bin')+os.pathsep+env.get('PATH','')
+    env.pop('SATRECOMP_BACKGROUND_COMPRESSION',None)
     return env
 
 
@@ -51,10 +53,29 @@ def pixels(folder):
             with Image.open(file) as image:
                 size=image.size;raw=image.convert('RGBA').tobytes()
         elif file.suffix=='.stfb':
-            data=file.read_bytes();assert data[:8]==b'STFBG001'
-            width,height,length,reserved=struct.unpack_from('<4I',data,8)
-            assert reserved==0 and length==width*height*4 and len(data)==32+length
-            size=(width,height);raw=data[32:]
+            data=file.read_bytes();assert data[:8] in (b'STFBG001',b'STFBG002')
+            width,height,length,flags=struct.unpack_from('<4I',data,8);size=(width,height)
+            assert flags&~0x103==0
+            packed=data[32:]
+            if flags&0x100:
+                decoder=zlib.decompressobj();packed=decoder.decompress(packed)
+                assert decoder.eof and not decoder.unused_data and not decoder.unconsumed_tail
+            assert len(packed)==length
+            format=flags&3
+            if format==0:
+                assert length==width*height*4;raw=packed
+            elif format==1:
+                count=struct.unpack_from('<H',packed)[0];offset=2+4*count
+                assert 1<=count<=256 and len(packed)==offset+width*height
+                image=Image.frombytes('P',size,packed[offset:]);image.putpalette(packed[2:offset],'RGBA')
+                raw=image.convert('RGBA').tobytes()
+            else:
+                assert length==width*height*2
+                image=Image.frombytes('RGB',size,packed,'raw','BGR;15')
+                if format==2:
+                    levels={n*255//31:n<<3 for n in range(32)}
+                    image=image.point([levels.get(n,n) for n in range(256)]*3)
+                raw=image.convert('RGBA').tobytes()
         else:continue
         result[file.stem.split('-')[0]]={'size':list(size),'sha256_rgba':hashlib.sha256(raw).hexdigest()}
     assert len(result)==38,len(result)
@@ -67,6 +88,7 @@ def main():
     command.add_argument('--build',metavar='LABEL')
     command.add_argument('--compare',nargs=2,metavar=('BASELINE','CHANGE'))
     parser.add_argument('--runs',type=int,default=3)
+    parser.add_argument('--compression',type=int,choices=(0,1),help='override the production writer policy for a candidate')
     parser.add_argument('--pc-root',type=Path,default=ROOT/'local/work/v02-pc-game/_t_@_C__')
     parser.add_argument('--saturn-iso',type=Path,default=ROOT/'local/prepared/disc1/Track 01.iso')
     args=parser.parse_args();WORK.mkdir(parents=True,exist_ok=True)
@@ -74,16 +96,17 @@ def main():
         output=executable(args.build)
         if output.exists():raise FileExistsError('Preserve existing benchmark binary: '+str(output))
         prepare_palettes(args.saturn_iso)
-        subprocess.run([str(PREFIX/'bin/clang++.exe'),'-O3','-DNDEBUG','-std=c++20',
+        compression=[] if args.compression is None else [f'-DSATRECOMP_BACKGROUND_COMPRESSION_DEFAULT={args.compression}']
+        subprocess.run([str(PREFIX/'bin/clang++.exe'),'-O3','-DNDEBUG','-std=c++20',*compression,
                         str(ROOT/'tests/benchmark_backgrounds.cpp'),'-I',str(ROOT/'local/deps/satrecomp/port'),
-                        '-I',str(PREFIX/'include'),'-L',str(PREFIX/'lib'),'-lSDL3','-o',str(output)],
+                        '-I',str(PREFIX/'include'),'-L',str(PREFIX/'lib'),'-lSDL3','-lz','-o',str(output)],
                        env=environment(),check=True)
         headers=ROOT/'local/deps/satrecomp/port'
         identity=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                       compiler=subprocess.check_output([str(PREFIX/'bin/clang++.exe'),'--version'],text=True).splitlines()[0],
-                      flags=['-O3','-DNDEBUG','-std=c++20'],
+                      flags=['-O3','-DNDEBUG','-std=c++20',*compression],
                       headers={name:hashlib.sha256((headers/name).read_bytes()).hexdigest() for name in
-                               ['backdrop.h','pc_backdrop.h','pc_spr.h','pc_backdrop_ids.h','background_cache.h','palette_match.h'] if (headers/name).is_file()})
+                               ['backdrop.h','pc_backdrop.h','pc_spr.h','pc_backdrop_ids.h','background_cache.h','background_codec.h','palette_match.h'] if (headers/name).is_file()})
         output.with_suffix('.json').write_text(json.dumps(identity,indent=2)+'\n',encoding='utf-8')
         print(output);return
     if not 1<=args.runs<=20:raise ValueError('Use 1..20 repetitions')
@@ -104,7 +127,8 @@ def main():
         if expected is None:expected=actual
         assert actual==expected,'Normalized pixels changed: '+label
         rows.append(dict(label=label,round=round_number,cache=state,seconds=elapsed,
-                         loader_ms={kind:value/1000 for kind,value in work.items()},assets=assets))
+                         loader_ms={kind:value/1000 for kind,value in work.items()},assets=assets,
+                         cache_bytes=sum(file.stat().st_size for file in cache.iterdir() if file.is_file())))
     for label in args.compare:run(label,folder/('warmup-'+label),-1,'warmup')
     for number in range(args.runs):
         for label in args.compare if number%2==0 else reversed(args.compare):

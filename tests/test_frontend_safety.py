@@ -23,7 +23,7 @@ class FrontendTests(unittest.TestCase):
             command=[str(PREFIX/'bin/clang++.exe'),'-std=c++20',str(ROOT/'tests'/('test_'+name+'.cpp')),
                      *map(str,extra),'-I',str(DEP/'port'),'-I',str(DEP/'recomp-common'),
                      '-I',str(DEP/'recomp-common/launcher/src'),'-I',str(PREFIX/'include'),
-                     '-L',str(PREFIX/'lib'),'-lSDL3','-o',str(exe)]
+                     '-L',str(PREFIX/'lib'),'-lSDL3','-lz','-o',str(exe)]
             result=subprocess.run(command,capture_output=True,text=True,timeout=60)
             self.assertEqual(result.returncode,0,result.stderr)
             env=os.environ.copy()
@@ -57,6 +57,9 @@ class FrontendTests(unittest.TestCase):
 
     def test_background_cache_validates_payload_and_atomic_replacement(self):
         self.fixture('background_cache')
+
+    def test_compact_background_storage_is_lossless_and_bounds_checked(self):
+        self.fixture('background_codec')
 
     def test_palette_acceleration_preserves_exact_colors_and_tie_order(self):
         self.fixture('palette_match')

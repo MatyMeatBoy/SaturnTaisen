@@ -23,3 +23,9 @@ El usuario confirmó que Saturn tiene prioridad. La ejecución y traducción de 
 Registrar información de PC en la documentación de investigación existente, distinguiendo recursos útiles para Saturn de trabajo necesario para ejecutar/traducir PC. Las 19 identidades de fondos y su importación experimental siguen siendo útiles para el mod HD Saturn; la ruta de juego PC y sus guiones permanecen pendientes.
 
 No usar una suite aprobada ni un checkpoint como prueba de campaña completa. Registrar trabajo implementado, verificado e integrado por separado.
+
+## Bloque de caché compacta verificado
+
+Patch20: caché lossless paleta8/RGB555/RGBA, migración de formato anterior, DEFLATE evaluado y desactivado por latencia. 64 pruebas aprobadas y 38 imágenes idénticas; comparación final 5,128 → 1,960 s de preparación, sin mejora general caliente. No equivale a acelerar toda carga del juego. Diagnóstico optativo del renderer y carga por fondo; búfer de tintado reutilizado.
+
+Pendiente inmediato: separar preparación CPU de subida de texturas, medir trabajadores 1/2/4/8 según memoria y coste, y evitar preparación pesada en primer uso. GPU actual: composición Direct3D11 verificada; rasterizador Saturn GPU todavía no validado. Mantener los dos SH-2 coordinados.
