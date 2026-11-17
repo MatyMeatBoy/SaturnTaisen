@@ -1,0 +1,12 @@
+# Keep proprietary/local inputs out of version control, including unknown files.
+/*
+!/.gitignore
+!/README.md
+!/docs/
+/docs/**
+!/docs/research/
+!/docs/research/*.md
+!/docs/research/*.json
+!/docs/superpowers/
+!/docs/superpowers/specs/
+!/docs/superpowers/specs/*.md
