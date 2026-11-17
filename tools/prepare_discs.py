@@ -1,4 +1,4 @@
-"""Prepare local, checksum-validated English disc copies. Never modifies inputs."""
+"""Prepare local original or checksum-validated English discs. Never modifies inputs."""
 from __future__ import annotations
 
 import argparse
@@ -152,14 +152,62 @@ def prepare_disc(cue: Path, patch: Path, output: Path, xdelta: Path) -> dict:
         return manifest
 
 
+def prepare_original(cue: Path, output: Path) -> dict:
+    """An unpatched profile with the original data and embedded audio-gap timing."""
+    if output.exists():
+        raise FileExistsError(f'Refusing to overwrite {output}')
+    cue, output = cue.resolve(), output.resolve()
+    data, audio, pregap = parse_two_track_cue(cue)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.prepare-', dir=output.parent) as scratch:
+        prepared = Path(scratch) / 'prepared'
+        prepared.mkdir()
+        image = prepared / 'Track 01.iso'
+        count = extract_mode1(data, image)
+        with image.open('rb') as f:
+            header = f.read(512)
+        if header[:16] != b'SEGA SEGASATURN ':
+            raise ValueError('Original output has no Saturn header')
+        write_audio_wav(audio, prepared / 'Track 02.wav', pregap)
+        gap = f'{pregap // 4500:02}:{pregap // 75 % 60:02}:{pregap % 75:02}'
+        (prepared / 'game.cue').write_text(
+            'FILE "Track 01.iso" BINARY\n  TRACK 01 MODE1/2048\n    INDEX 01 00:00:00\n'
+            f'FILE "Track 02.wav" WAVE\n  TRACK 02 AUDIO\n    PREGAP {gap}\n    INDEX 01 00:00:00\n',
+            encoding='utf-8')
+        manifest = {
+            'schema': 1, 'translation': 'none',
+            'inputs': {p.name: sha256(p) for p in (cue, data, audio)},
+            'input_data_sectors': count, 'output_data_sectors': count,
+            'removed_embedded_audio_pregap_sectors': pregap,
+            'product': header[32:42].decode('ascii').strip(),
+            'version': header[42:48].decode('ascii').strip(),
+            'disc': header[56:64].decode('ascii').strip(),
+            'ra_hash': hashlib.md5(header).hexdigest(),
+            'outputs': {p.name: sha256(p) for p in prepared.iterdir()},
+        }
+        (prepared / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+        if output.exists():
+            raise FileExistsError(output)
+        os.rename(prepared, output)
+        return manifest
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cue', type=Path, required=True)
-    parser.add_argument('--patch', type=Path, required=True)
+    variant = parser.add_mutually_exclusive_group(required=True)
+    variant.add_argument('--patch', type=Path)
+    variant.add_argument('--original', action='store_true', help='prepare unpatched Japanese data')
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--xdelta', type=Path, required=True)
+    parser.add_argument('--xdelta', type=Path)
     args = parser.parse_args()
-    print(json.dumps(prepare_disc(args.cue, args.patch, args.output, args.xdelta), indent=2))
+    if args.original:
+        manifest = prepare_original(args.cue, args.output)
+    else:
+        if not args.xdelta:
+            parser.error('--xdelta is required with --patch')
+        manifest = prepare_disc(args.cue, args.patch, args.output, args.xdelta)
+    print(json.dumps(manifest, indent=2))
 
 
 if __name__ == '__main__':

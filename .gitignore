@@ -21,6 +21,9 @@
 !/tests/*.py
 !/tests/*.cpp
 !/tests/*.movie
+!/tests/native/
+!/tests/native/CMakeLists.txt
+!/tests/native/*.cpp
 !/patches/
 /patches/**
 !/patches/*.patch

@@ -53,7 +53,7 @@ def build(toolchain: Path, env):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['build', 'discover', 'recompile', 'run', 'check-disc', 'check-video'])
+    parser.add_argument('action', choices=['build', 'discover', 'recompile', 'run', 'check-disc', 'check-video', 'check-machine'])
     parser.add_argument('--toolchain', type=Path, default=Path('C:/msys64/clang64'))
     parser.add_argument('--disc', type=Path, default=ROOT / 'local/prepared/disc1/game.cue')
     parser.add_argument('--frames', type=int, default=600)
@@ -63,6 +63,13 @@ def main():
     dependency()
     env = os.environ.copy()
     env['PATH'] = str(args.toolchain / 'bin') + os.pathsep + env.get('PATH', '')
+    if args.action == 'check-machine':
+        destination = ROOT / 'local/build/machine-tests'
+        run(args.toolchain / 'bin/cmake.exe', '-S', ROOT / 'tests/native', '-B', destination, '-G', 'Ninja',
+            '-DCMAKE_BUILD_TYPE=Release', f'-DCMAKE_CXX_COMPILER={args.toolchain.as_posix()}/bin/clang++.exe', env=env)
+        run(args.toolchain / 'bin/cmake.exe', '--build', destination, '--parallel', '6', env=env)
+        run(sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_machine_safety.py', '-v', env=env)
+        return
     if args.action == 'check-video':
         executable = ROOT / 'local/vdp2-color-test.exe'
         sources = [DEP / 'video' / name for name in
@@ -91,7 +98,8 @@ def main():
     # Conservative AOT block dispatch matches the interpreter in the first parity route.
     env['SATRECOMP_NO_FUNCTIONS'] = '1'
     env['SATRECOMP_NO_CALLS'] = '1'
-    argv = [executable, '--disc', args.disc.resolve(), '--stats']
+    # The software compositor is the validated original-resolution presentation.
+    argv = [executable, '--disc', args.disc.resolve(), '--video', 'software', '--stats']
     if args.action == 'discover':
         env['SATRECOMP_NO_BLOCKS'] = '1'
         argv += ['--record-blocks', WORK / 'blocks.txt']

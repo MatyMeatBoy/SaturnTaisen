@@ -33,14 +33,22 @@ Python 3.11+, Git, CMake/Ninja/Clang y SDL3. En esta máquina se usa MSYS2 CLANG
 ```powershell
 python -m unittest discover -s tests -v
 python tools/build_runtime.py check-disc
+python tools/build_runtime.py check-video
+python tools/build_runtime.py check-machine
 python tools/build_runtime.py build
-python tools/build_runtime.py discover --frames 4200 --movie local/work/sakura/intro.movie
+python tools/build_runtime.py discover --frames 30000 --movie tests/theater.movie
 python tools/build_runtime.py recompile
 python tools/build_runtime.py run
 ```
 
 `discover` utiliza interpretación exclusivamente para obtener cobertura. `run` activa el control estricto AOT: se detiene si necesita interpretar una instrucción SH-2 guest. Los servicios de hardware/BIOS reimplementados y el 68000 de audio son partes separadas del runtime.
 
-La base de bloques y los C++ generados no se incluyen en Git; cada desarrollador debe generarlos desde sus imágenes. Los comandos actuales son herramientas de desarrollo del perfil inglés del disco 1, no el launcher final ni la transición de discos. El perfil japonés y la ampliación del mapa a todos los contenidos siguen pendientes. Los avisos del runtime sobre hardware o composición no se consideran resueltos por el simple hecho de que arranque.
+La base de bloques y los C++ generados no se incluyen en Git; cada desarrollador debe generarlos desde sus imágenes. Los comandos actuales son herramientas de desarrollo, no el launcher final ni la transición de discos. `tests/theater.movie` recorre la narración inicial con pulsaciones de A hasta el mapa del teatro; no cubre las ramas, las batallas ni la campaña completa. La preparación japonesa está disponible con `prepare_discs.py --original --cue ... --output ...`; su cobertura AOT y el selector de idioma aún se están integrando. Los avisos del runtime sobre hardware o composición no se consideran resueltos por el simple hecho de que arranque.
+
+Las comprobaciones sintéticas de vídeo y máquina no necesitan dumps. Comprueban la composición de capas y sprites, búsquedas CD por pista/FAD y rechazo de servicios BIOS desconocidos en modo estricto. La comparación larga entre intérprete y AOT se ejecuta así:
+
+```powershell
+python tools/verify_runtime.py --frames 30000 --movie tests/theater.movie --timeout 600
+```
 
 La existencia de un repositorio o las afirmaciones de su autor no prueban que un juego completo funcione. Las referencias todavía no se han compilado ni probado con estos discos.

@@ -17,7 +17,10 @@ def main():
     p.add_argument('--movie', type=Path, default=ROOT / 'tests/opening.movie')
     p.add_argument('--toolchain', type=Path, default=Path('C:/msys64/clang64'))
     p.add_argument('--experimental-functions', action='store_true', help='diagnose currently unvalidated function linking')
+    p.add_argument('--timeout', type=int, default=120, help='maximum seconds per mode (long story routes need more)')
     args = p.parse_args()
+    if args.frames <= 0 or args.timeout <= 0:
+        p.error('--frames and --timeout must be positive')
     out = Path(tempfile.mkdtemp(prefix='parity-', dir=ROOT / 'local/work/sakura'))
     base = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
     base['PATH'] = str(args.toolchain / 'bin') + os.pathsep + base.get('PATH', '')
@@ -34,7 +37,7 @@ def main():
                '--backup', str(out / (name + '-backup.bin')), '--hash-log', str(out / (name + '.hash')), '--stats']
         start = time.perf_counter()
         with (out / (name + '.log')).open('w') as log:
-            result = subprocess.run(cmd, env=base | flags, stdout=log, stderr=subprocess.STDOUT, timeout=120)
+            result = subprocess.run(cmd, env=base | flags, stdout=log, stderr=subprocess.STDOUT, timeout=args.timeout)
         duration = time.perf_counter() - start
         hashes = (out / (name + '.hash')).read_text().splitlines()
         if reference is None:

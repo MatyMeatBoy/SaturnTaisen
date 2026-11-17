@@ -1,0 +1,44 @@
+{
+  "disc1": {
+    "schema": 1,
+    "translation": "none",
+    "inputs": {
+      "Sakura Taisen (Japan) (Disc 1) (6M).cue": "3cab1ff2dd4f0ed74d14079f06a567c03b762b4384308ccfd54e3ec62f8bc571",
+      "Sakura Taisen (Japan) (Disc 1) (6M) (Track 1).bin": "98892052bc069767171e2db2fc2bce45760163b11412f35037a22ed398d9ea58",
+      "Sakura Taisen (Japan) (Disc 1) (6M) (Track 2).bin": "e349cec54ec2b2891ee77aa7726c35e93873c9e46b2a689331ac463b20c8004e"
+    },
+    "input_data_sectors": 270373,
+    "output_data_sectors": 270373,
+    "removed_embedded_audio_pregap_sectors": 150,
+    "product": "GS-9037",
+    "version": "V1.005",
+    "disc": "CD-1/2",
+    "ra_hash": "c4db9d08d56d1fbf78322852775d4818",
+    "outputs": {
+      "game.cue": "47b749392b761f2a12d8c6bca238e1f6dd7eb27d3ea86d615a3b678e6f128889",
+      "Track 01.iso": "70ea8fc64cb4bcc9652cf05cf53116136b0fe5e9f98a17d710d9a5b56ca19843",
+      "Track 02.wav": "a57bb91f37a50293a57675bcffb141834b5ec0273560b40fdf877fbc5b0273e3"
+    }
+  },
+  "disc2": {
+    "schema": 1,
+    "translation": "none",
+    "inputs": {
+      "Sakura Taisen (Japan) (Disc 2) (6M).cue": "1b683a786a62d6be27e1a3ea140373e5b9fe65a128eed9d11ee958a26c27f685",
+      "Sakura Taisen (Japan) (Disc 2) (6M) (Track 1).bin": "fd6e744cff48dbb1858da0b82fd923324efdd2f83b764904cbbf3e84f840b794",
+      "Sakura Taisen (Japan) (Disc 2) (6M) (Track 2).bin": "ea9f57afebf8749900314ee82eedbc0e641f44baa1a08bbe6da820d1109047f0"
+    },
+    "input_data_sectors": 262711,
+    "output_data_sectors": 262711,
+    "removed_embedded_audio_pregap_sectors": 150,
+    "product": "GS-9037",
+    "version": "V1.005",
+    "disc": "CD-2/2",
+    "ra_hash": "c306c094d0177459b31f411cd4cd44a9",
+    "outputs": {
+      "game.cue": "47b749392b761f2a12d8c6bca238e1f6dd7eb27d3ea86d615a3b678e6f128889",
+      "Track 01.iso": "5235007a8fb83994b38ebfd60201de8f481a5b7dc324c0bb0b94a44ba1a31636",
+      "Track 02.wav": "20dd422829f14d41bb37d16b64ecf8c8a922d1acf2a850d0755c9fb5ff889cb8"
+    }
+  }
+}

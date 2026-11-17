@@ -29,6 +29,18 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('interpreted 0 (0.00%)', result.stderr)
 
+    def test_boot_cd_track_seek_does_not_take_game_bios_exit_path(self):
+        env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
+        env['PATH'] = 'C:/msys64/clang64/bin' + os.pathsep + env.get('PATH', '')
+        env.update(SATRECOMP_NO_BLOCKS='1', SATRECOMP_NO_CALLS='1')
+        with tempfile.TemporaryDirectory(dir=ROOT / 'local') as directory:
+            result = subprocess.run([str(EXE), '--disc', str(DISC), '--headless', '--frames', '600',
+                                     '--backup', str(Path(directory) / 'backup.bin')],
+                                    env=env, capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn('BIOS service at 0x0600026C', result.stderr,
+                         'CD initialization failed and the game tried to exit to the BIOS')
+
     def test_strict_aot_boot_runs_without_guest_interpreter(self):
         env = os.environ.copy()
         env['PATH'] = 'C:/msys64/clang64/bin' + os.pathsep + env.get('PATH', '')

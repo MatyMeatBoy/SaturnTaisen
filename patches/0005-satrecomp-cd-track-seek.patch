@@ -1,0 +1,24 @@
+diff --git a/machine/cd.cpp b/machine/cd.cpp
+index dc34041..2135068 100644
+--- a/machine/cd.cpp
++++ b/machine/cd.cpp
+@@ -198,7 +198,18 @@ void Machine::CdCommand() {
+         } else if (target == 0) {
+             cd.status = 0x02;
+         } else {
+-            cd.status = 0x01;
++            // Bit 23 clear designates a track/index, not a frame address.
++            // Index zero means the track's first index, as used by Sakura's
++            // boot-time seek to audio track 2 (CR1=1100, CR2=0200).
++            const uint8 number = static_cast<uint8>(target >> 8);
++            const auto track = std::find_if(m_disc.tracks.begin(), m_disc.tracks.end(),
++                                            [&](const Disc::Track &t) { return t.number == number; });
++            if (track != m_disc.tracks.end()) {
++                cd.fad = track->startFAD;
++                cd.status = 0x01;
++            } else {
++                cd.status = 0x02;
++            }
+         }
+         CdReport(cd.status);
+         break;

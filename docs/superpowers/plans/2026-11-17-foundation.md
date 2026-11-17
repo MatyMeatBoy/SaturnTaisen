@@ -30,9 +30,9 @@
 
 Files: `docs/research/2026-11-17-casos-recomp.md`, `upstream-evidence.json`, `discs-inventory.json`, diseño y este plan.
 
-- [ ] Registrar SHAs de quince candidatos y referencias de doce casos con fallos, soluciones y límites.
-- [ ] Registrar inventario real de ambos discos y hashes RA, sin bytes de juego.
-- [ ] Verificar JSON y enlaces locales; revisar diff y exclusiones Git; commit.
+- [x] Registrar SHAs de quince candidatos y referencias de doce casos con fallos, soluciones y límites.
+- [x] Registrar inventario real de ambos discos y hashes RA, sin bytes de juego.
+- [x] Verificar JSON y enlaces locales; revisar diff y exclusiones Git; commit.
 
 ## Task 2: Preparación de discos
 
@@ -40,10 +40,10 @@ Files: `tools/prepare_discs.py`, `tests/test_prepare_discs.py`; salida privada `
 
 Interfaces: `extract_mode1(source: Path, destination: Path) -> int` valida sectores raw y devuelve cantidad; `prepare_disc(cue: Path, patch: Path, output: Path, xdelta: Path) -> dict` prepara una salida nueva con manifiesto SHA-256, traducción e identidad RA. Nunca modifica source.
 
-- [ ] Escribir pruebas con sectores sintéticos: conversión de contenido, rechazo de truncado/mode erróneo, ruta con espacios y rechazo de destino existente. Ejecutarlas y comprobar que fallan por funcionalidad ausente.
-- [ ] Implementar extracción validada y conversión CD-DA a WAV conservando índices CUE; xdelta sin flags que desactiven checksums; usar temporales y publicar manifiesto solo al terminar.
-- [ ] Ejecutar suite; aplicar ambos parches reales en carpetas privadas; verificar hashes, cabeceras, CUE y audio. Si el delta falla, investigar la representación exacta esperada antes de cambiar nada.
-- [ ] Guardar metadatos no propietarios de evidencia y commit.
+- [x] Escribir pruebas con sectores sintéticos: conversión de contenido, rechazo de truncado/mode erróneo, ruta con espacios y rechazo de destino existente. Ejecutarlas y comprobar que fallan por funcionalidad ausente.
+- [x] Implementar extracción validada y conversión CD-DA a WAV conservando índices CUE; xdelta sin flags que desactiven checksums; usar temporales y publicar manifiesto solo al terminar.
+- [x] Ejecutar suite; aplicar ambos parches reales en carpetas privadas; verificar hashes, cabeceras, CUE y audio. Si el delta falla, investigar la representación exacta esperada antes de cambiar nada.
+- [x] Guardar metadatos no propietarios de evidencia y commit.
 
 ## Task 3: Mapa AOT y viabilidad del runtime
 
@@ -52,7 +52,7 @@ Files: configuración del juego y herramientas en `games/sakura/` y `tools/`, de
 - [ ] Inspeccionar SAKURA, módulos SH2 y overlays en ambas traducciones; registrar direcciones desde crt0/cargas reales, no por nombres de archivo.
 - [ ] Ejecutar herramientas de análisis de satrecomp, contrastar decodificación y supuestos de hardware con saturnkit.
 - [ ] Compilar runtime mínimo y selftests sin juegos; resolver fallos Windows con regresiones dirigidas.
-- [ ] Descubrimiento instrumentado; emitir/compilar código guest y probar arranque/primera escena. Registrar todo destino o dispositivo que falte. No ocultar errores con stubs de éxito.
+- [x] Descubrimiento instrumentado; emitir/compilar código guest y probar arranque/primera escena. Registrar todo destino o dispositivo que falte. No ocultar errores con stubs de éxito.
 
 ## Continuación del proyecto
 

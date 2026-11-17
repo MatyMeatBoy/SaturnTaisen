@@ -1,0 +1,25 @@
+diff --git a/runtime/hle_bios.cpp b/runtime/hle_bios.cpp
+index 4d103f8..08141ef 100644
+--- a/runtime/hle_bios.cpp
++++ b/runtime/hle_bios.cpp
+@@ -18,6 +18,7 @@
+ 
+ #include <algorithm>
+ #include <cstdio>
++#include <cstdlib>
+ #include <cstring>
+ #include <set>
+ #include <string>
+@@ -772,6 +773,12 @@ bool Run(SH2 &c, uint32_t offset) {
+     uint64_t cycles = 8;
+ 
+     if (offset >= kUnimplemented && offset < kUnimplementedEnd) {
++        static const bool strict = getenv("SATRECOMP_STRICT_NATIVE") != nullptr;
++        if (strict) {
++            fprintf(stderr, "strict AOT: unsupported BIOS service %08X (called from %08X)\n",
++                    kRam + (offset - kUnimplemented), Access::PR(c));
++            std::exit(4);
++        }
+         if (g.reported.insert(offset).second) {
+             fprintf(stderr, "satrecomp: BIOS service at 0x%08X is not implemented (called from %08X)\n",
+                     kRam + (offset - kUnimplemented), Access::PR(c));

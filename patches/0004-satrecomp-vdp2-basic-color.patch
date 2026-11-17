@@ -1,5 +1,5 @@
 diff --git a/video/regs.cpp b/video/regs.cpp
-index b4ae00e..96282f2 100644
+index b4ae00e..873cee2 100644
 --- a/video/regs.cpp
 +++ b/video/regs.cpp
 @@ -93,9 +93,15 @@ void Vdp2Regs::Decode(const uint16 *raw) {
@@ -18,42 +18,154 @@ index b4ae00e..96282f2 100644
      mosaicV = Bits(raw[MZCTL], 12, 15) + 1;
      for (uint32 i = 0; i < 8; i++) {
          specialFunctionCodes[0].colorMatches[i] = Bit(raw[SFCODE], i);
+@@ -235,17 +241,23 @@ void Vdp2Regs::Decode(const uint16 *raw) {
+     spriteParams.spriteWindowInverted = Bit(raw[WCTLC], 12);
+     spriteParams.spriteWindowEnabled = Bit(raw[WCTLC], 13);
+     Windows(commonRotParams.windowSet, raw[WCTLD] & 0xFF);
++    Windows(colorCalcWindow, raw[WCTLD] >> 8);
+ 
+     // Sprites, colours, priorities
+     spriteParams.type = static_cast<uint8>(Bits(raw[SPCTL], 0, 3));
+     spriteParams.useSpriteWindow = Bit(raw[SPCTL], 4);
+     spriteParams.mixedFormat = Bit(raw[SPCTL], 5);
+     spriteParams.colorCalcEnable = Bit(raw[CCCTL], 6);
++    spriteParams.colorCalcCondition = Bits(raw[SPCTL], 12, 13);
++    spriteParams.colorCalcPriority = Bits(raw[SPCTL], 8, 10);
++    spriteParams.lineColorScreenEnable = Bit(raw[LNCLEN], 5);
+     spriteParams.colorDataOffset = Bits(raw[CRAOFB], 4, 6) << 8;
+     for (uint32 n = 0; n < 4; n++) {
+         bgParams[n + 1].cramOffset = Bits(raw[CRAOFA], n * 4, n * 4 + 2) << 8;
+         spriteParams.priorities[n * 2] = static_cast<uint8>(Bits(raw[PRISA + n], 0, 2));
+         spriteParams.priorities[n * 2 + 1] = static_cast<uint8>(Bits(raw[PRISA + n], 8, 10));
++        spriteParams.colorCalcRatios[n * 2] = Bits(raw[0x100 / 2 + n], 0, 4);
++        spriteParams.colorCalcRatios[n * 2 + 1] = Bits(raw[0x100 / 2 + n], 8, 12);
+     }
+     bgParams[0].cramOffset = Bits(raw[CRAOFB], 0, 2) << 8;
+     bgParams[1].priorityNumber = static_cast<uint8>(Bits(raw[PRINA], 0, 2));
 diff --git a/video/regs.h b/video/regs.h
-index d571b30..82345f5 100644
+index d571b30..1a7e1de 100644
 --- a/video/regs.h
 +++ b/video/regs.h
-@@ -131,6 +131,9 @@ struct Vdp2Regs {
+@@ -88,6 +88,9 @@ struct WindowParams {
+ struct SpriteParams {
+     uint8 type = 0;
+     bool useSpriteWindow = false, mixedFormat = false, colorCalcEnable = false;
++    bool lineColorScreenEnable = false;
++    uint8 colorCalcCondition = 0, colorCalcPriority = 0;
++    std::array<uint8, 8> colorCalcRatios{};
+     uint32 colorDataOffset = 0;
+     std::array<uint8, 8> priorities{};
+     bool spriteWindowEnabled = false, spriteWindowInverted = false;
+@@ -131,6 +134,10 @@ struct Vdp2Regs {
      SpriteParams spriteParams;
      LineBackScreenParams lineScreenParams, backScreenParams;
      std::array<bool, 7> colorOffsetEnable{}, colorOffsetSelect{}; // sprites, RBG0, NBG0..3, back
 +    std::array<uint8, 7> colorCalcRatio{};
 +    std::array<uint8, 5> specialColorCalcMode{};
 +    bool colorCalcAdd = false, colorCalcUseSecondRatio = false, colorCalcExtended = false;
++    WindowSet<3> colorCalcWindow;
      std::array<ColorOffset, 2> colorOffset;
      struct {
          std::array<bool, 8> colorMatches{};
 diff --git a/video/renderer.cpp b/video/renderer.cpp
-index 2702309..19031c5 100644
+index 2702309..51003a9 100644
 --- a/video/renderer.cpp
 +++ b/video/renderer.cpp
-@@ -369,8 +369,8 @@ bool Renderer::SpriteLine(uint32 y) {
+@@ -9,6 +9,7 @@
+ #include <cstdlib>
+ #include <cstring>
+ #include <string>
++#include <set>
+ 
+ namespace satrecomp::video {
+ 
+@@ -262,6 +263,9 @@ namespace {
+         {10, 12, 3, true},  {9, 12, 3, true},   {7, 7, 1, false},  {6, 7, 1, false},  {6, 6, 2, false},  {6, 0, 0, false},
+         {8, 7, 1, false},   {8, 7, 1, false},   {8, 6, 2, false},  {8, 0, 0, false},
+     };
++    // Colour-calculation ratio selector: shift and width in each sprite type.
++    constexpr uint8 kSpriteCalcShift[16] = {11,11,11,11,10,11,10,9,0,6,0,6,0,6,0,6};
++    constexpr uint8 kSpriteCalcBits[16] = {3,2,3,2,3,1,2,3,0,1,0,2,0,1,0,2};
+ } // namespace
+ 
+ bool Renderer::SpriteLine(uint32 y) {
+@@ -279,6 +283,8 @@ bool Renderer::SpriteLine(uint32 y) {
+     m_sprite.priority.resize(width);
+     m_sprite.special.resize(width);
+     m_sprite.shadowOrWindow.resize(width);
++    m_sprite.colorCalcEnable.resize(width);
++    m_sprite.colorCalcRatio.resize(width);
+ 
+     // The framebuffer is narrower than a high resolution picture (each pixel shows twice), or twice as wide
+     // as a normal one when it holds 8-bit pixels
+@@ -300,6 +306,8 @@ bool Renderer::SpriteLine(uint32 y) {
+         const uint32 offset = (x << readShift) + y * regs1.fbSizeH;
+         uint32 color = 0;
+         uint8 priority = 0, special = transparent, sow = 0;
++        uint8 calcIndex = 0;
++        bool colorMSB = false;
+         const uint16 word = static_cast<uint16>((fb[(offset * 2) & 0x3FFFE] << 8) | fb[((offset * 2) & 0x3FFFE) + 1]);
+         if (window[xx]) {
+             // (outside the sprite window: nothing)
+@@ -309,6 +317,7 @@ bool Renderer::SpriteLine(uint32 y) {
+             color = ConvertRGB555to888(Color555{word}).u32;
+             priority = params.priorities[0];
+             special = normal;
++            colorMSB = true;
+         } else if (params.mixedFormat && (word & 0x8000)) {
+             // (an RGB value that stands for no pixel)
+         } else {
+@@ -321,6 +330,7 @@ bool Renderer::SpriteLine(uint32 y) {
+             }
+             const uint32 colorData = raw & ((1u << format.colorBits) - 1);
+             const uint32 priorityIndex = (raw >> format.priorityShift) & ((1u << format.priorityBits) - 1);
++            calcIndex = (raw >> kSpriteCalcShift[params.type & 15]) & ((1u << kSpriteCalcBits[params.type & 15]) - 1);
+             sow = format.shadowBit && (raw & 0x8000);
+             // No pixel if everything but bit 15 is zero; a shadow if the colour is all ones but the lowest bit
+             special = (raw & 0x7FFF) == 0                                ? transparent
+@@ -333,8 +343,11 @@ bool Renderer::SpriteLine(uint32 y) {
+                 const uint32 index = params.colorDataOffset + colorData;
+                 if (colorMode == 2) {
+                     color = CramLong((index * 4) & 0xFFC);
++                    colorMSB = (color & 0x80000000) != 0;
+                 } else {
+-                    color = ConvertRGB555to888(Color555{CramWord((index * 2) & (colorMode == 0 ? 0x7FE : 0xFFE))}).u32;
++                    const uint16 entry = CramWord((index * 2) & (colorMode == 0 ? 0x7FE : 0xFFE));
++                    colorMSB = (entry & 0x8000) != 0;
++                    color = ConvertRGB555to888(Color555{entry}).u32;
+                 }
+                 priority = special == transparent && !sow ? 0 : params.priorities[priorityIndex];
+             }
+@@ -344,6 +357,11 @@ bool Renderer::SpriteLine(uint32 y) {
+             m_sprite.priority[xx + i] = priority;
+             m_sprite.special[xx + i] = special;
+             m_sprite.shadowOrWindow[xx + i] = sow;
++            const bool condition = params.colorCalcCondition == 0 ? priority <= params.colorCalcPriority
++                                 : params.colorCalcCondition == 1 ? priority == params.colorCalcPriority
++                                 : params.colorCalcCondition == 2 ? priority >= params.colorCalcPriority : colorMSB;
++            m_sprite.colorCalcEnable[xx + i] = params.colorCalcEnable && condition;
++            m_sprite.colorCalcRatio[xx + i] = params.colorCalcRatios[calcIndex];
+         }
+     }
+ 
+@@ -369,8 +387,8 @@ bool Renderer::SpriteLine(uint32 y) {
  
  // One line of the picture from the layers' lines: for every pixel, the layer with the highest priority that
  // has a pixel there (priority 0: none); between equals, sprites before RBG0 before NBG0..NBG3; the back screen
 -// where there is none. Then sprite shadows. Lines that need colour calculation or colour offset are left to
 -// the reference for now.
 +// where there is none. Basic two-screen colour calculation, then colour offset and sprite shadows.
-+// Special/extended calculations and sprite ratio selection still require the reference.
++// Special/extended and line-screen calculations still require the reference.
  void Renderer::ComposeLine(uint32 y) {
      const Vdp2Regs &regs2 = m_regs2;
      const Vdp2Regs &state2 = m_regs2;
-@@ -382,9 +382,11 @@ void Renderer::ComposeLine(uint32 y) {
+@@ -382,9 +400,11 @@ void Renderer::ComposeLine(uint32 y) {
      uint32 *out = &m_framebuffer[y * width];
      m_lines++;
  
 -    bool supported = !regs2.spriteParams.colorCalcEnable && !regs2.backScreenParams.colorCalcEnable;
-+    bool supported = !regs2.spriteParams.colorCalcEnable && !regs2.backScreenParams.colorCalcEnable && !regs2.colorCalcExtended &&
-+                     !(regs2.colorCalcUseSecondRatio && state2.layerEnabled[kSprites]);
++    bool supported = !regs2.backScreenParams.colorCalcEnable && !regs2.colorCalcExtended &&
++                     !(regs2.spriteParams.colorCalcEnable && regs2.spriteParams.lineColorScreenEnable);
      for (uint32 i = 0; i < 5; i++) {
 -        supported = supported && !regs2.bgParams[i].colorCalcEnable;
 +        supported = supported && (!regs2.bgParams[i].colorCalcEnable ||
@@ -61,7 +173,40 @@ index 2702309..19031c5 100644
      }
      if (!supported) {
          if (m_check) {
-@@ -447,6 +449,7 @@ void Renderer::ComposeLine(uint32 y) {
+@@ -393,6 +413,16 @@ void Renderer::ComposeLine(uint32 y) {
+             return;
+         }
+         m_approximateLines[6]++; // (drawn without the effect)
++        static const bool traceCalc = getenv("SATRECOMP_VIDEO_CC_TRACE") != nullptr;
++        if (traceCalc) {
++            static std::set<uint64_t> reported;
++            const uint64_t key = uint64_t(m_raw2[0xEC / 2]) | (uint64_t(m_raw2[0xEE / 2]) << 16) |
++                                 (uint64_t(m_raw2[0xE8 / 2]) << 32) | (uint64_t(m_raw2[0xE0 / 2]) << 48);
++            if (reported.insert(key).second) {
++                fprintf(stderr, "video: unsupported colour calculation CCCTL=%04X SFCCMD=%04X LNCLEN=%04X SPCTL=%04X\n",
++                        m_raw2[0xEC / 2], m_raw2[0xEE / 2], m_raw2[0xE8 / 2], m_raw2[0xE0 / 2]);
++            }
++        }
+     }
+ 
+     const Color888 back{.u32 = m_backColor};
+@@ -407,12 +437,15 @@ void Renderer::ComposeLine(uint32 y) {
+         m_sprite.priority.resize(width);
+         m_sprite.special.resize(width);
+         m_sprite.shadowOrWindow.resize(width);
++        m_sprite.colorCalcEnable.assign(width, 0);
++        m_sprite.colorCalcRatio.assign(width, 0);
+         m_ref->LayerLine(kSprites, width, m_sprite.color.data(), m_sprite.priority.data());
+         m_ref->SpriteLine(width, m_sprite.special.data(), m_sprite.shadowOrWindow.data());
+         m_spriteLinesLeftToReference++;
+     }
+     // The scroll screens' lines
+     WindowLines(y);
++    WindowLine(y, regs2.colorCalcWindow, m_colorCalcWindow);
+     for (uint32 layer = kRBG0; layer <= 5u; layer++) {
+         const bool rbg1 = regs2.bgEnabled[5]; // (RBG1 takes NBG0's place; not drawn here)
+         if (!state2.layerEnabled[layer] || (layer == 2u && rbg1)) {
+@@ -447,6 +480,7 @@ void Renderer::ComposeLine(uint32 y) {
      for (uint32 x = 0; x < width; x++) {
          uint32 top = kBack;
          uint32 topPriority = 0;
@@ -69,7 +214,7 @@ index 2702309..19031c5 100644
          if (state2.layerEnabled[kSprites] && m_sprite.special[x] == normal) {
              // (a shadow pixel is not shown itself: it darkens what is below)
              top = m_sprite.priority[x] ? static_cast<uint32>(kSprites) : top;
-@@ -458,12 +461,40 @@ void Renderer::ComposeLine(uint32 y) {
+@@ -458,12 +492,41 @@ void Renderer::ComposeLine(uint32 y) {
              }
              const uint8 priority = layers[layer].priority[x];
              if (priority > topPriority) { // (earlier layers win ties)
@@ -86,21 +231,22 @@ index 2702309..19031c5 100644
  
 +        // Colour offset follows colour calculation and uses the top screen selection.
 +        auto applyOffset = [&](Color888 value, uint32 layer) {
-+          if (regs2.colorOffsetEnable[layer]) {
-+            const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[layer]];
-+            if (offset.nonZero) {
-+                auto shift = [](uint32 channel, uint32 by) { return static_cast<uint32>(std::clamp<sint32>(static_cast<sint32>(channel) + bit::sign_extend<9>(by), 0, 255)); };
-+                value.u32 = shift(value.r, offset.r) | (shift(value.g, offset.g) << 8) | (shift(value.b, offset.b) << 16);
++            if (regs2.colorOffsetEnable[layer]) {
++                const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[layer]];
++                if (offset.nonZero) {
++                    auto shift = [](uint32 channel, uint32 by) { return static_cast<uint32>(std::clamp<sint32>(static_cast<sint32>(channel) + bit::sign_extend<9>(by), 0, 255)); };
++                    value.u32 = shift(value.r, offset.r) | (shift(value.g, offset.g) << 8) | (shift(value.b, offset.b) << 16);
++                }
 +            }
-+          }
-+          return value;
++            return value;
 +        };
-+        if (top >= kRBG0 && top <= 5u && regs2.bgParams[top - kRBG0].colorCalcEnable &&
-+            regs2.specialColorCalcMode[top - kRBG0] == 0 && !regs2.colorCalcExtended &&
-+            !regs2.bgParams[top - kRBG0].lineColorScreenEnable &&
-+            !(regs2.colorCalcUseSecondRatio && second == kSprites)) {
++        const bool calcTop = top == kSprites ? m_sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
++                           : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
++                             regs2.specialColorCalcMode[top - kRBG0] == 0 && !regs2.bgParams[top - kRBG0].lineColorScreenEnable;
++        if (calcTop && !regs2.colorCalcExtended && !m_colorCalcWindow[x]) {
 +            Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
-+            const uint32 ratio = regs2.colorCalcRatio[regs2.colorCalcUseSecondRatio ? second : top];
++            const uint32 ratioLayer = regs2.colorCalcUseSecondRatio ? second : top;
++            const uint32 ratio = ratioLayer == kSprites ? m_sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
 +            auto mix = [&](uint32 a, uint32 b) {
 +                return regs2.colorCalcAdd ? std::min(a + b, 255u) : (a * (31u - ratio) + b * (ratio + 1u)) >> 5;
 +            };
@@ -110,7 +256,7 @@ index 2702309..19031c5 100644
          // Sprite shadow: a shadow pixel of the sprite layer halves the brightness of the layer shown, if
          // that layer takes shadows
          const bool normalShadow = m_sprite.special[x] == static_cast<uint8>(SpriteSpecial::Shadow);
-@@ -476,14 +507,6 @@ void Renderer::ComposeLine(uint32 y) {
+@@ -476,14 +539,6 @@ void Renderer::ComposeLine(uint32 y) {
                  color.u32 = (color.u32 >> 1) & 0x7F7F7F7F;
              }
          }
@@ -125,3 +271,23 @@ index 2702309..19031c5 100644
          out[x] = color.u32;
      }
  }
+diff --git a/video/renderer.h b/video/renderer.h
+index 42269f0..626c90a 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -270,6 +270,7 @@ private:
+     std::vector<uint8> m_window[5] = {std::vector<uint8>(kMaxLine), std::vector<uint8>(kMaxLine), std::vector<uint8>(kMaxLine),
+                                       std::vector<uint8>(kMaxLine), std::vector<uint8>(kMaxLine)}; // RBG0, NBG0..3: 1 = cut out
+     std::vector<uint8> m_rotWindow = std::vector<uint8>(kMaxLine), m_spriteWindow = std::vector<uint8>(kMaxLine);
++    std::vector<uint8> m_colorCalcWindow = std::vector<uint8>(kMaxLine);
+     // Widescreen: extra VDP1 pixels per side; in VDP2 dots (twice as many in the high resolution modes); the
+     // width of a layer's line with them
+     uint32 m_wideExtra = 0;
+@@ -323,6 +324,7 @@ private:
+         std::vector<uint8> priority;       // 0: no pixel
+         std::vector<uint8> special;        // SpriteSpecial
+         std::vector<uint8> shadowOrWindow; // the sprite data's shadow / window bit
++        std::vector<uint8> colorCalcEnable, colorCalcRatio;
+     } m_sprite;
+     uint64_t m_spritePixelsDifferent = 0, m_spriteLinesLeftToReference = 0;
+     unsigned m_debugLeft = 12;

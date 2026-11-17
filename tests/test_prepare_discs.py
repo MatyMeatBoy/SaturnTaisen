@@ -11,6 +11,36 @@ def sector(value, mode=1):
 
 
 class PrepareTests(unittest.TestCase):
+    def test_original_profile_preserves_japanese_data_and_audio_timing(self):
+        import tools.prepare_discs as prepare
+        import wave
+        with tempfile.TemporaryDirectory() as directory:
+            p = Path(directory)
+            data = bytearray(2048)
+            data[:16] = b'SEGA SEGASATURN '
+            data[32:48] = b'GS-9037   V1.005'
+            data[56:64] = b'CD-1/2  '
+            raw = bytearray(sector(0)); raw[16:2064] = data
+            (p / 'data.bin').write_bytes(raw)
+            samples = b'\x01\x02\x03\x04' * 588
+            (p / 'audio.bin').write_bytes(bytes(150 * 2352) + samples)
+            cue = p / 'disc.cue'
+            cue.write_text('FILE "data.bin" BINARY\n TRACK 01 MODE1/2352\n INDEX 01 00:00:00\nFILE "audio.bin" BINARY\n TRACK 02 AUDIO\n INDEX 00 00:00:00\n INDEX 01 00:02:00\n')
+            original_hash = hashlib.sha256(raw).hexdigest()
+            output = p / 'japanese'
+            manifest = prepare.prepare_original(cue, output)
+            self.assertEqual((output / 'Track 01.iso').read_bytes(), data)
+            self.assertEqual(manifest['translation'], 'none')
+            self.assertEqual(manifest['ra_hash'], hashlib.md5(data[:512]).hexdigest())
+            self.assertEqual(manifest['inputs']['data.bin'], original_hash)
+            self.assertEqual(hashlib.sha256((p / 'data.bin').read_bytes()).hexdigest(), original_hash)
+            self.assertIn('PREGAP 00:02:00', (output / 'game.cue').read_text())
+            self.assertNotIn('POSTGAP', (output / 'game.cue').read_text())
+            with wave.open(str(output / 'Track 02.wav'), 'rb') as wav:
+                self.assertEqual(wav.readframes(588), samples)
+            with self.assertRaises(FileExistsError):
+                prepare.prepare_original(cue, output)
+
     def test_preserves_user_bytes_and_source_with_spaces(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
