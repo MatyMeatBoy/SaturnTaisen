@@ -56,6 +56,27 @@ Las fuentes PC de cuerpos conservarán una sola escala basada en altura, con el 
 
 [Progresión y combate](docs/research/chapter1-battle-progress.md) · [Mandos M30](docs/research/m30-controller-profiles.md) · [PixelGen v1](docs/research/pixelgen-v1.md) · [Guardados](docs/research/save-import.md)
 
+<!-- BEGIN HD PROGRESS -->
+
+## Progreso HD
+
+[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-191%2F304%20%2862.8%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Indeterminado-646464?style=flat-square)](docs/HD_PROGRESS.md)
+
+**Objetivo global: 100% verificado. Estado: Indeterminado.**
+
+| Área | Preparado | Verificado en juego |
+| --- | --- | --- |
+| Retratos y animación | 191/304 (62,8%) | Sin dato |
+| Vídeos | 0 | 0 |
+| HUD y menús PC/Saturn | Sin dato | Sin dato |
+| Fondos decorativos KABE | 19/19 (100%) | Sin dato |
+| Personajes grandes NC | Sin dato | Sin dato |
+| Escenas y transiciones | Sin dato | Sin dato |
+
+[Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
+
+<!-- END HD PROGRESS -->
+
 ## OptiPort y rendimiento
 
 Aplicamos [OptiPort](https://github.com/MatyMeatBoy/OptiPort): reproducciones, comparaciones, cambios acotados y evidencia ligada al artefacto. Las badges describen tecnología, entrega y documentación; no son porcentajes de juego completado ni garantías de estabilidad universal.

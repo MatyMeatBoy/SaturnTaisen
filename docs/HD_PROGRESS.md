@@ -1,0 +1,105 @@
+# Progreso HD
+
+**Objetivo global: 100% verificado. Estado: Indeterminado.**
+
+Los porcentajes corresponden al inventario definido para cada fila. Una celda «Sin dato» indica una medición pendiente y un cero indica una ausencia confirmada. Los recuentos de candidatos se detallan por separado.
+
+| Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
+| --- | --- | --- | --- | --- | --- | --- |
+| Retratos y animación | identidades Saturn | 304/304 (100%) | 191/304 (62,8%) | 191/304 (62,8%) | 191/304 (62,8%) | Sin dato |
+| Vídeos | clips únicos | Sin dato | 0 | 0 | 0 | 0 |
+| HUD y menús PC/Saturn | pantallas y piezas compartidas | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
+| Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
+| Personajes grandes NC | poses y composiciones nativas | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
+| Escenas y transiciones | escenas distintas en ejecución | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
+
+## Qué cuenta en cada etapa
+
+- **Inventariado**. Elementos nativos identificados dentro del alcance declarado.
+- **Emparejado**. Correspondencia aprobada del recurso y sus variantes necesarias.
+- **Preparado**. Sustitución empacada y validada con el formato del runtime.
+- **Integrado**. Sustitución conectada a la ruta de ejecución correspondiente.
+- **Verificado en juego**. Elementos distintos validados en capturas o reproducciones trazables.
+
+El objetivo global se alcanza cuando cada categoría tiene un total confirmado y todas sus etapas cubren ese total. Las unidades se evalúan por categoría, sin promediarlas.
+
+## Alcance y pendientes
+
+### Retratos y animación
+
+Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y boca se cuentan una vez por identidad.
+
+- 191 identidades con base, ojos y boca disponibles. Se comprobaron 382 PNG a dos densidades.
+- Capítulo 1. 81/123 identidades con las tres regiones preparadas y 42 pendientes. Los seis FCE de alcance figuran en la auditoría.
+- 394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.
+- **Siguiente paso**. Revisar las identidades pendientes y validar parpadeo, boca, ambas tiras simultáneas, efectos y fallback en juego.
+
+Rangos de ID Saturn pendientes en hexadecimal
+
+`0013-0014` `001d` `0026` `0038` `0040-0041` `0044-0046` `0049-004a` `004d-004f` `0052-0053` `005b-005c` `005f-0061` `0064` `006b` `006d-006e` `0071` `0074` `0076-0077` `007a` `007f` `0088` `0091-0098` `009a-009f` `00a1-00a8` `00ac-00b3` `00be-00c3` `00c5` `00ee-00f8` `00fa-00fb` `0103-0106` `010d` `010f` `0114-0116` `011e-011f` `0121` `013a-013f` `0152-0153` `0169` `0171-0172` `017e` `0185-018a`
+
+- [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 del recibo local `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.
+- [v0.1.2.md](releases/v0.1.2.md). SHA-256 del recibo local `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
+
+### Vídeos
+
+Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.
+
+- 52 MPEG de PC y 54 flujos FILM de Saturn indexados por origen. La apertura comparte planos en muestras puntuales.
+- **Siguiente paso**. Deduplicar los candidatos por clip y comparar montaje, audio, subtítulos, saltos y retorno al juego antes de integrar.
+
+- [scene-tagging.md](research/scene-tagging.md).
+- [intro-petals-transition.md](research/intro-petals-transition.md).
+
+### HUD y menús PC/Saturn
+
+Inventario conjunto por pantalla o pieza equivalente, incluidos elementos de mapa, batalla, estados y guardado.
+
+- Se observaron menús tácticos en Saturn y se ajustó su presentación. Falta vincular las piezas HD compartidas y contar las pantallas cubiertas.
+- **Siguiente paso**. Inventariar las pantallas y piezas compartidas por edición. Separar sustitución HD y ajustes del layout Saturn.
+
+- [tactical-menu-independent-reference.md](research/tactical-menu-independent-reference.md).
+- [v0.2.0-test.1.md](releases/v0.2.0-test.1.md).
+
+### Fondos decorativos KABE
+
+Los 19 temas decorativos únicos del catálogo KABE con alternativas HD, incluidos los pares día/noche catalogados.
+
+- 19 variantes de fondo listas para el runtime. La precarga y la paridad del loader miden los recursos preparados. La cobertura de escenas se registra aparte.
+- **Siguiente paso**. Reunir validaciones por tema y escena, incluidas variantes de iluminación, fundidos, diálogos y transiciones.
+
+- [provenance.json](../assets/generated/pc-backgrounds/provenance.json).
+- [saturn-background-workers.md](research/saturn-background-workers.md).
+- [v0.1.2.md](releases/v0.1.2.md). SHA-256 del recibo local `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
+
+### Personajes grandes NC
+
+Cuerpos y poses fuera del retrato de diálogo. El total de poses y composiciones nativas permanece abierto.
+
+- 147 paquetes PC y 3.596 imágenes decodificadas. Hay 147 pares de nombre candidatos. Faltan las equivalencias por pose.
+- **Siguiente paso**. Vincular índices por pose y validar ancla, proporción y animación en capturas Saturn para cada sustitución.
+
+- [saturn-hd-characters.md](research/saturn-hd-characters.md).
+- [pc-character-inventory.json](research/pc-character-inventory.json).
+
+### Escenas y transiciones
+
+Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.
+
+- El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.
+- Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.
+- **Siguiente paso**. Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.
+
+- [scene-tagging.md](research/scene-tagging.md).
+- [wide-map-crossfades.md](research/wide-map-crossfades.md).
+- [chapter-sweep.md](research/chapter-sweep.md).
+
+## Actualizar el registro
+
+Añade el resultado revisado a `config/hd-progress.json`. Registra la unidad y el alcance del total, la etapa comprobada y la evidencia pública correspondiente. Usa `null` si falta el inventario o el recuento, y cuenta cada identidad una vez aunque aparezca en varios discos o escenas. Una coincidencia por nombre, la extracción y la decodificación por sí solas cuentan como candidatos. Al aprobar un retrato, actualiza el número de emparejamientos y sus rangos pendientes. Conserva imágenes, vídeos, partidas, guiones y rutas locales de propietario fuera del registro.
+
+```powershell
+python tools/build_hd_progress.py
+python tools/build_hd_progress.py --check
+python -m unittest discover -s tests -p test_hd_progress.py
+```
