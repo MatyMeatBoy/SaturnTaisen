@@ -22,8 +22,8 @@ Reglas fijas: autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | ID | P | Tipo | Estado | Pendiente |
 |---|---|---|---|---|
 | T01 | P0 | decisión | libre | Integrar en una rama el trabajo sin commitear de `implementation/enhanced-v011` (patches 0035/0036, fondos de pantalla, franja táctica, catálogo de diálogo, auditorías y movies). Requiere visto bueno del propietario. |
-| T02 | P0 | local | libre | Victoria del primer combate y salida, continuando `tests/battle-multiple-turns.movie` sin cargas intermedias; cero bloques interpretados. |
-| T03 | P0 | local | libre | Ruta continua New Game → fin del episodio 1, guardado nativo, reinicio y Continue, dos repeticiones. |
+| T02 | P0 | local | tras T01 | Victoria del primer combate y salida, continuando `tests/battle-multiple-turns.movie` sin cargas intermedias; cero bloques interpretados. |
+| T03 | P0 | local | tras T01 | Ruta continua New Game → fin del episodio 1, guardado nativo, reinicio y Continue, dos repeticiones. |
 | T04 | P1 | local | tras T01 | Placa de glifos LIPS: reconocer `C510`/`C570`, filas Y=54/78/102 y 62/94, transformación y recorte por grupo (ver `chapter1-wide-transitions.md`). |
 | T05 | P1 | local | libre | Solapamiento del submenú táctico con la barra horizontal en Mejorado (referencia Beetle Saturn ya documentada). |
 | T06 | P1 | agente | tras T01 | Pulir la junta de fase entre mosaicos LOADING y el centro protegido. |
