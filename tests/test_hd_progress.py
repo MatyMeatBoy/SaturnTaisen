@@ -33,6 +33,14 @@ class HdProgressTests(unittest.TestCase):
         self.assertEqual(report.format_count(None, 12), 'Sin dato')
         self.assertEqual(report.format_count(1999, 2000), '1999/2000 (99,9%)')
 
+    def test_badges_distinguish_prepared_catalog_from_global_verification(self):
+        data=specimen()
+        data['categories'][0].update(prepared=1,integrated=1,verified=1)
+        text=report.badges(data)
+        self.assertIn('Retratos_HD_preparados',text)
+        self.assertIn('1%2F2%20%2850%25%29',text)
+        self.assertIn('Verificaci%C3%B3n%20pendiente',text)
+
     def test_requires_evidence_and_consistent_counts(self):
         data = specimen()
         report.validate(data)

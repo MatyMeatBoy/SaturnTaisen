@@ -3,6 +3,7 @@ import argparse
 import json
 from pathlib import Path, PurePosixPath
 import re
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORY_IDS = ('portraits', 'movies', 'hud-menus', 'backgrounds', 'large-characters', 'scenes')
@@ -164,11 +165,27 @@ def render_report(data):
     return '\n'.join(lines)
 
 
+def badges(data):
+    rows={row['id']:row for row in data['categories']}
+    items=[]
+    for identity,label,color in [('portraits','Retratos_HD_preparados','9a4564'),
+                                  ('backgrounds','Fondos_KABE_preparados','5d755d')]:
+        row=rows[identity]
+        message=format_count(row['prepared'],row['total']).replace(',','.')
+        url=f"https://img.shields.io/badge/{label}-{quote(message,safe='')}-{color}?style=flat-square"
+        items.append(f'[![{label.replace("_"," ")}]({url})](docs/HD_PROGRESS.md)')
+    status=global_status(data)
+    color='5d755d' if status=='100% verificado' else '646464'
+    url=f"https://img.shields.io/badge/HD_global-{quote(status,safe='')}-{color}?style=flat-square"
+    items.append(f'[![HD global verificado]({url})](docs/HD_PROGRESS.md)')
+    return ' '.join(items)
+
+
 def replace_readme(readme, data):
     if readme.count(BEGIN) != 1 or readme.count(END) != 1 or readme.index(BEGIN) >= readme.index(END):
         raise ValueError('README debe contener exactamente un bloque HD PROGRESS')
     summary = '\n'.join((
-        BEGIN, '', '## Progreso HD', '',
+        BEGIN, '', '## Progreso HD', '', badges(data), '',
         f'**Objetivo global: 100% verificado. Estado: {global_status(data)}.**', '',
         table(data), '',
         '[Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).', '', END,
