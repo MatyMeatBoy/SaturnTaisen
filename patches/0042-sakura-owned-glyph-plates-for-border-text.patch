@@ -1,0 +1,607 @@
+diff --git a/machine/machine.cpp b/machine/machine.cpp
+index b719a9f..1673689 100644
+--- a/machine/machine.cpp
++++ b/machine/machine.cpp
+@@ -262,6 +262,7 @@ void Machine::BusWrite8(uint32 a, uint8 v) {
+             m_vram1[a & 0x7FFFF] = v;
+         } else {
+             m_fb[m_video->DisplayFramebuffer() ^ 1][a & 0x3FFFF] = v;
++            m_video->Vdp1FramebufferWritten();
+         }
+         return;
+     case 0x5E: m_vram2[a & 0x7FFFF] = v; return;
+@@ -309,6 +310,7 @@ void Machine::BusWrite16(uint32 a, uint16 v) {
+             Put16(&m_vram1[a & 0x7FFFE], v);
+         } else {
+             Put16(&m_fb[m_video->DisplayFramebuffer() ^ 1][a & 0x3FFFE], v);
++            m_video->Vdp1FramebufferWritten();
+         }
+         return;
+     case 0x5D: Vdp1WriteRegister(a & 0x1E, v); return;
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 0ec866c..e63e1f2 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -459,6 +459,7 @@ int RunWindowed(Port &port) {
+         break; // fail closed for another translation/Japanese font, never guess its encoding
+     }
+     sakuraUi.SetGameAtlas(englishAtlas);
++    if(port.videoRenderer)port.videoRenderer->CaptureGlyphPlate(!englishAtlas.empty());
+     // Exact stage01 map-name identity; do not extrapolate unrelated menus/maps.
+     if(port.videoRenderer)port.videoRenderer->CaptureScrollExtension(39,0x1CAF3218B4B0F9F0ull);
+     if(port.videoRenderer)port.videoRenderer->SetScrollSpriteFilter([](const auto& command,std::span<const uint8_t> pixels,int x,int y) {
+@@ -511,8 +512,9 @@ int RunWindowed(Port &port) {
+         if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
+-                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;bool valid=true;};
++                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;std::map<size_t,uint16_t> owners;bool valid=true,needsPlate=false,plateReady=false;};
+                 std::map<int,TextRow> rows;
++                std::map<uint16_t,int> ownerRows;
+                 int localX=0,localY=0;
+                 auto coordinate=[](uint16_t value){return static_cast<int>((value&0x1FFF)^0x1000)-0x1000;};
+                 for(const auto& shown:planes.sprites) {
+@@ -525,7 +527,9 @@ int RunWindowed(Port &port) {
+                     auto& row=rows[y];
+                     const auto tile=std::span<const uint8_t>(shown.pixels);
+                     const char32_t letter=DecodeCodepoint(englishAtlas,tile);
+-                    if(!letter || row.chars.count(x) || !NarrativeInkFits(x,y,tile)) {row.valid=false;continue;}
++                    if(!letter || row.chars.count(x) || !NarrativeRecognizedInkFits(x,y,tile,letter)) {row.valid=false;continue;}
++                    row.needsPlate|=!NarrativeInkFits(x,y,tile);
++                    ownerRows[uint16_t(&shown-planes.sprites.data()+1)]=y;
+                     row.chars[x]=letter;
+                     for(int py=0;py<16;py++)for(int px=0;px<16;px++) {
+                         const uint8_t packed=tile[py*8+px/2];
+@@ -534,10 +538,53 @@ int RunWindowed(Port &port) {
+                         const size_t at=(y+py)*320+x+px;
+                         if(planes.source[at]!=0) row.valid=false;
+                         row.ink.push_back(at);
++                        row.owners[at]=uint16_t(&shown-planes.sprites.data()+1);
+                     }
+                 }
+                 hdNative=softwareShown;hdForeground=planes.foreground;
++                std::map<size_t,int> inkRows;
++                for(auto& [y,row]:rows)for(auto at:row.ink) {
++                    const auto [peer,inserted]=inkRows.emplace(at,y);
++                    if(!inserted && peer->second!=y) {row.needsPlate=true;rows.at(peer->second).needsPlate=true;}
++                    if(planes.glyphPlate.size()==320*224 && planes.glyphPlate[at].underOwner)row.needsPlate=true;
++                }
+                 for(auto& [y,row]:rows) if(row.valid && !row.chars.empty()) {
++                    int previous=row.chars.begin()->first-8;
++                    for(auto [x,letter]:row.chars) {
++                        if((x-previous)%8) {row.valid=false;break;}
++                        previous=x;
++                    }
++                    if(!row.valid)continue;
++                    row.plateReady=planes.glyphPlate.size()==320*224 && std::all_of(row.ink.begin(),row.ink.end(),[&](size_t at) {
++                        const auto& plate=planes.glyphPlate[at];
++                        return plate.owner && (plate.owner==row.owners.at(at) || plate.underOwner==row.owners.at(at));
++                    });
++                }
++                // Shared descender/ascender pixels must be restored for every participating
++                // row together. Rejection propagates through this bounded set of native rows.
++                for(size_t pass=0;pass<rows.size();pass++) {
++                    bool changed=false;
++                    for(auto& [y,row]:rows) if(row.plateReady) {
++                        for(auto at:row.ink) {
++                            const auto& plate=planes.glyphPlate[at];
++                            for(const uint16_t owner:{plate.owner,plate.underOwner}) if(owner) {
++                                const auto peer=ownerRows.find(owner);
++                                if(peer==ownerRows.end() || !rows.at(peer->second).plateReady) {row.plateReady=false;changed=true;break;}
++                            }
++                            if(!row.plateReady)break;
++                        }
++                    }
++                    if(!changed)break;
++                }
++                for(auto& [y,row]:rows) if(row.valid && !row.chars.empty()) {
++                    const bool usePlate=row.plateReady;
++                    if(row.needsPlate && !usePlate) {
++                        if(std::getenv("SATRECOMP_HD_TEXT_TRACE")) {
++                            static std::array<bool,224> rejected{};
++                            if(!rejected[y]) {rejected[y]=true;fprintf(stderr,"hd edge reject: row=%d shared_plate_unproven\n",y);}
++                        }
++                        continue;
++                    }
+                     UiTextLine line;line.x=row.chars.begin()->first;line.y=y;
+                     int previous=line.x-8;
+                     for(auto [x,letter]:row.chars) {
+@@ -553,7 +600,14 @@ int RunWindowed(Port &port) {
+                         const unsigned sum=(color&255)+((color>>8)&255)+((color>>16)&255);
+                         if(sum<darkest) {darkest=sum;line.color=color|0xFF000000;}
+                     }
+-                    for(auto at:row.ink) {hdNative[at]=hdForeground[at]=planes.underSprites[at];hdErased[at]=1;}
++                    for(auto at:row.ink) {
++                        if(usePlate) {hdNative[at]=planes.glyphPlate[at].nativeRgb;hdForeground[at]=planes.glyphPlate[at].foregroundRgba;hdErased[at]=2;}
++                        else {hdNative[at]=hdForeground[at]=planes.underSprites[at];hdErased[at]=1;}
++                    }
++                    if(row.needsPlate && std::getenv("SATRECOMP_HD_TEXT_TRACE")) {
++                        static std::array<bool,224> traced{};
++                        if(!traced[y]) {traced[y]=true;fprintf(stderr,"hd edge row: y=%d glyphs=%zu saved_under=%d\n",y,row.chars.size(),int(usePlate));}
++                    }
+                     hdLines.push_back(std::move(line));
+                 }
+                 if(!hdLines.empty()) SDL_UpdateTexture(texture,nullptr,hdNative.data(),320*sizeof(uint32_t));
+@@ -783,7 +837,7 @@ int RunWindowed(Port &port) {
+                             const int sx=int(crop.x)+px/fit.scale,sy=int(crop.y)+py/fit.scale;
+                             if(sx<0 || sx>=320 || sy<0 || sy>=224) {panelPixels[size_t(py)*fit.w+px]=0;continue;}
+                             const size_t at=size_t(sy)*320+sx;
+-                            const auto& recipe=hdErased[at]?planes.underPanelMix[at]:planes.panelMix[at];
++                            const auto& recipe=hdErased[at]==2?planes.glyphPlate[at].panelMix:(hdErased[at]?planes.underPanelMix[at]:planes.panelMix[at]);
+                             uint32_t pixel=sourcePixels[at];
+                             if((pixel>>24) && recipe.lowerWeight)if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
+                                     int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
+diff --git a/port/narrative_text.h b/port/narrative_text.h
+index f7890ef..fa74982 100644
+--- a/port/narrative_text.h
++++ b/port/narrative_text.h
+@@ -30,6 +30,18 @@ inline bool NarrativeInkFits(int x,int y,std::span<const uint8_t> tile) {
+     }
+     return true;
+ }
++// Only the two witnessed nine-pixel glyphs may cross the right ink boundary.
++// Callers must additionally prove the saved-under plate for the complete row.
++inline bool NarrativeRecognizedInkFits(int x,int y,std::span<const uint8_t> tile,char32_t code) {
++    if(NarrativeInkFits(x,y,tile))return true;
++    if(tile.size()!=128 || x!=296 || (code!=U'w' && code!=U'\u2026'))return false;
++    for(int py=0;py<16;py++)for(int px=0;px<16;px++) {
++        const uint8_t packed=tile[py*8+px/2];
++        if(!(px&1?packed&15:packed>>4))continue;
++        if(x+px<kTextLeft || x+px>kTextRight || y+py<kTextTop || y+py>=kTextBottom)return false;
++    }
++    return true;
++}
+ inline std::array<int,4> NarrativeClip(int x,int y,int scale,int cropX,int cropY) {
+     return {x+(kTextLeft-cropX)*scale,y+(kTextTop-cropY)*scale,
+             x+(kTextRight-cropX)*scale,y+(208-cropY)*scale};
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index 9267cde..d032c75 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -115,7 +115,7 @@ inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int wi
+         floral+=layer==5;
+         if(layer<5) {left=std::min(left,x);right=std::max(right,x);top=std::min(top,y);bottom=std::max(bottom,y);}
+         const bool inside=x>=16 && x<304 && y>=8 && y<152;
+-        if(layer<5 && (!inside && y<153 && layer<3 || x<9 || x>=315 || y<8 || y>=220))overhang=true;
++        if(layer<5 && ((!inside && y<153 && layer<3) || x<9 || x>=315 || y<8 || y>=220))overhang=true;
+         // source can name the revealed layer when NBG3 is the actual winner.
+         if(haveUnder && underSource[y*320+x]==5) {
+             fadedPicture+=inside && (layer==2 || layer==4);
+diff --git a/video/glyph_plate.h b/video/glyph_plate.h
+new file mode 100644
+index 0000000..5f0a810
+--- /dev/null
++++ b/video/glyph_plate.h
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include <cstdint>
++#include <limits>
++
++namespace satrecomp::video {
++struct GlyphPlateStamp {
++    uint16_t before=0,after=0,owner=0,underOwner=0;
++
++    void RecordWrite(uint16_t glyph,uint16_t previous,uint16_t current) {
++        if(!owner) {
++            if(glyph) *this={previous,current,glyph};
++        } else if(glyph && owner==glyph) {
++            after=current;
++        } else if(glyph && owner!=kUncertain && !underOwner) {
++            // The host may erase this pair only if both glyphs are accepted.
++            underOwner=owner;
++            owner=glyph;
++            after=current;
++        } else {
++            // A later draw can own the pixel even if it wrote the same word.
++            owner=kUncertain;
++        }
++    }
++
++    uint16_t Owner(uint16_t current) const {
++        return owner!=kUncertain && after==current?owner:0;
++    }
++private:
++    static constexpr uint16_t kUncertain=std::numeric_limits<uint16_t>::max();
++};
++}
+diff --git a/video/raster.cpp b/video/raster.cpp
+index a6fa1ae..1814a17 100644
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -72,8 +72,12 @@ SV_INLINE bool Renderer::RasterPixel(sint32 x, sint32 y, uint16 mode, uint16 col
+     }
+     offset &= 0x3FFFF;
+     uint8 *fb = m_rasterFB;
++    GlyphPlateStamp* stamp=nullptr;
++    if(m_glyphCaptureActive && !m_presentRasterTarget && x<320 && y<212 && y>=48)
++        stamp=&m_glyphStamps[m_captureDrawFB][size_t(y)*320+size_t(x)];
+     if (mode & kMsbOn) {
+         fb[offset & ~1u] |= 0x80;
++        if(stamp)stamp->RecordWrite(0,0,0);
+         return true;
+     }
+     if (regs1.pixel8Bits) {
+@@ -82,6 +86,7 @@ SV_INLINE bool Renderer::RasterPixel(sint32 x, sint32 y, uint16 mode, uint16 col
+     }
+     Color555 source{.u16 = color};
+     Color555 target{.u16 = static_cast<uint16>((fb[offset] << 8) | fb[offset + 1])};
++    const uint16 before=target.u16;
+     if (gouraud) {
+         source = Shade(source, *gouraud);
+     }
+@@ -112,6 +117,10 @@ SV_INLINE bool Renderer::RasterPixel(sint32 x, sint32 y, uint16 mode, uint16 col
+     }
+     fb[offset] = static_cast<uint8>(target.u16 >> 8);
+     fb[offset + 1] = static_cast<uint8>(target.u16);
++    if(stamp && (m_glyphCommand || stamp->owner)) {
++        stamp->RecordWrite(m_glyphCommand,before,target.u16);
++        m_glyphHasInk|=m_glyphCommand!=0;
++    }
+     return true;
+ }
+ 
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index efc306b..aa4c901 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -34,6 +34,8 @@ void Renderer::Reset(bool hard) {
+     m_lastCommands.clear();
+     for(auto& sprites:m_presentSprites)sprites.clear();
+     m_presentation.sprites.clear();m_captureValid=false;
++    m_presentation.glyphPlate.clear();
++    m_glyphPlateReady={};m_glyphCaptureActive=false;
+     m_presentation.panelMix.clear();
+     m_presentation.underPanelMix.clear();
+     m_presentation.underSource.clear();
+@@ -83,6 +85,8 @@ void Renderer::Serialize(Archive &ar) {
+         m_commands.clear();
+         for(auto& sprites:m_presentSprites)sprites.clear();
+         m_captureValid=false;
++        m_presentation.glyphPlate.clear();
++        m_glyphPlateReady={};m_glyphCaptureActive=false;
+         m_presentation.panelMix.clear();
+         m_presentation.underPanelMix.clear();
+         m_presentation.underSource.clear();
+@@ -105,7 +109,7 @@ void Renderer::Serialize(Archive &ar) {
+ // --- registers ---
+ 
+ void Renderer::WriteVdp1Reg(uint32 address, uint16 value) {
+-    if(m_drawing)m_menuReplayStable=false;
++    if(m_drawing) {m_menuReplayStable=false;m_glyphCaptureActive=false;}
+     m_regs1.Write(address, value);
+ }
+ 
+@@ -144,7 +148,13 @@ void Renderer::LatchDisplayMode() {
+ 
+ // --- VDP1 ---
+ 
++void Renderer::InvalidateGlyphPlate(uint32 framebuffer) {
++    m_glyphPlateReady[framebuffer]=false;
++    if(framebuffer==m_captureDrawFB)m_glyphCaptureActive=false;
++}
++
+ void Renderer::EraseFramebuffer(uint64 cycles) {
++    InvalidateGlyphPlate(m_displayFB);
+     if (m_gpu) {
+         Vdp1Erase();
+     } else if (m_compose) {
+@@ -163,6 +173,13 @@ void Renderer::SwapFramebuffer() {
+ void Renderer::BeginDrawing() {
+     m_commands.clear();
+     m_captureDrawFB=m_displayFB^1u;m_captureCount=0;m_captureBytes=0;m_captureValid=m_capturePresentation;
++    m_glyphPlateReady[m_captureDrawFB]=false;
++    m_glyphCaptureActive=m_captureGlyphPlate && m_capturePresentation && !m_gpu && !m_check &&
++        m_width==320 && m_height==224 && m_regs1.fbSizeH>=320 && m_regs1.fbSizeV>=224 &&
++        !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable &&
++        !m_regs2.TVMD.IsInterlaced();
++    m_glyphHasInk=false;m_glyphCommand=0;
++    if(m_glyphCaptureActive)m_glyphStamps[m_captureDrawFB].assign(320*224,{});
+     m_presentWideReady[m_captureDrawFB]=m_capturePresentation && m_presentation.scrollWidth>0 && !m_gpu &&
+         m_regs1.fbSizeH>=m_presentation.scrollWidth && !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable;
+     if(m_presentWideReady[m_captureDrawFB])std::fill(m_presentWideFB[m_captureDrawFB].begin(),m_presentWideFB[m_captureDrawFB].end(),0);
+@@ -207,7 +224,14 @@ void Renderer::DrawCommand(uint32 address) {
+     if (m_gpu) {
+         Vdp1Command(cmd);
+     } else if (m_compose) {
++        if(m_glyphCaptureActive && m_captureValid && m_captureCount && (cmd.words[0]&0x3F)==0 &&
++           cmd.words[2]==0x80 && (cmd.words[3]==0xC510 || cmd.words[3]==0xC570) && cmd.words[5]==0x210) {
++            const auto& sprite=m_presentSprites[m_captureDrawFB][m_captureCount-1];
++            if(sprite.x>=40 && sprite.x<=304 && sprite.y>=48 && sprite.y<=196)
++                m_glyphCommand=static_cast<uint16>(m_captureCount);
++        }
+         RasterCommand(cmd);
++        m_glyphCommand=0;
+         if(m_presentWideReady[m_captureDrawFB] && (cmd.words[0]&15)<8) {
+             std::span<const uint8> pixels;
+             if(m_captureValid && m_captureCount)pixels=m_presentSprites[m_captureDrawFB][m_captureCount-1].pixels;
+@@ -350,6 +374,9 @@ void Renderer::EndDrawing() {
+         }
+     }
+     m_drawing = false;
++    m_glyphPlateReady[m_captureDrawFB]=m_glyphCaptureActive && m_glyphHasInk && m_captureValid &&
++        m_captureDrawFB==(m_displayFB^1u);
++    m_glyphCaptureActive=false;
+     if(m_captureValid)m_presentSprites[m_captureDrawFB].resize(m_captureCount);
+     RelayoutScrollMenu();
+     m_drawings++;
+@@ -394,6 +421,7 @@ void Renderer::BeginFrame() {
+         m_presentation.underSprites.assign(static_cast<size_t>(m_width)*m_height,0);
+         m_presentation.spriteWhiteWeight.assign(m_width==320 && m_height==224?320*224:0,255);
+         m_presentation.panelMix.assign(m_presentation.spriteWhiteWeight.size(), {});
++        m_presentation.glyphPlate.assign(m_captureGlyphPlate?m_presentation.spriteWhiteWeight.size():0,{});
+         m_presentation.underPanelMix.assign(m_presentation.panelMix.size(), {});
+         m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
+         m_presentation.underSource.assign(static_cast<size_t>(m_width)*m_height,6);
+@@ -448,7 +476,7 @@ namespace {
+     constexpr uint8 kSpriteCalcBits[16] = {3,2,3,2,3,1,2,3,0,1,0,2,0,1,0,2};
+ } // namespace
+ 
+-bool Renderer::SpriteLine(uint32 y) {
++bool Renderer::SpriteLine(uint32 y,const uint8* alternateFb) {
+     const Vdp1Regs &regs1 = m_regs1;
+     const Vdp2Regs &regs2 = m_regs2;
+     const SpriteParams &params = regs2.spriteParams;
+@@ -473,7 +501,7 @@ bool Renderer::SpriteLine(uint32 y) {
+     const bool halfWidth = !regs1.hdtvEnable && regs1.pixel8Bits && (regs2.TVMD.HRESOn & 0b110) == 0b000;
+     const uint32 outputShift = doubleWidth || exclusive ? 1 : 0;
+     const uint32 readShift = halfWidth ? 1 : 0;
+-    const uint8 *fb = m_mem.fb[m_displayFB];
++    const uint8 *fb = alternateFb?alternateFb:m_mem.fb[m_displayFB];
+     const std::vector<uint8> &window = m_spriteWindow;
+     const SpriteFormat format = kSpriteFormats[params.type & 15];
+     const uint32 colorMode = regs2.vramControl.colorRAMMode;
+@@ -569,6 +597,35 @@ bool Renderer::SpriteLine(uint32 y) {
+ // has a pixel there (priority 0: none); between equals, sprites before RBG0 before NBG0..NBG3; the back screen
+ // where there is none. Basic two-screen colour calculation, then colour offset and sprite shadows.
+ // Special/extended and line-screen calculations still require the reference.
++bool Renderer::PrepareGlyphLine(uint32 y) {
++    if(m_presentation.glyphPlate.empty() || !m_glyphPlateReady[m_displayFB] || m_width!=320 || m_height!=224 ||
++       y<48 || y>=212 || m_regs1.fbSizeH<320 || m_regs1.fbSizeV<224 || m_regs1.fbRotEnable ||
++       m_regs1.pixel8Bits || m_regs1.hdtvEnable || m_regs1.dblInterlaceEnable || m_regs2.TVMD.IsInterlaced() ||
++       (m_regs2.TVMD.HRESOn&0b110)!=0 || m_regs2.spriteParams.useSpriteWindow)return false;
++
++    const size_t rowOffset=size_t(y)*m_regs1.fbSizeH*2;
++    if(rowOffset+640>0x40000)return false;
++    const auto* line=m_mem.fb[m_displayFB]+rowOffset;
++    const auto* stamps=m_glyphStamps[m_displayFB].data()+size_t(y)*320;
++    bool any=false;
++    for(unsigned x=0;x<320;++x) {
++        m_glyphLineOwners[x]=stamps[x].Owner(Be16(line+2*x));
++        any|=m_glyphLineOwners[x]!=0;
++    }
++    if(!any)return false;
++    m_glyphScratch.resize(0x40000);
++    auto* copy=m_glyphScratch.data()+rowOffset;
++    std::memcpy(copy,line,640);
++    for(unsigned x=0;x<320;++x)if(m_glyphLineOwners[x]) {
++        copy[2*x]=uint8(stamps[x].before>>8);
++        copy[2*x+1]=uint8(stamps[x].before);
++    }
++    std::swap(m_sprite,m_glyphSprite);
++    SpriteLine(y,m_glyphScratch.data());
++    std::swap(m_sprite,m_glyphSprite);
++    return true;
++}
++
+ void Renderer::ComposeLine(uint32 y) {
+     const Vdp2Regs &regs2 = m_regs2;
+     const Vdp2Regs &state2 = m_regs2;
+@@ -677,14 +734,46 @@ void Renderer::ComposeLine(uint32 y) {
+     const LayerLine *layers = m_layer;
+     const bool spriteWindow = regs2.spriteParams.useSpriteWindow;
+     const auto normal = static_cast<uint8>(SpriteSpecial::Normal);
+-    for (uint32 x = 0; x < width; x++) {
++    // Colour offset follows colour calculation and uses the top screen selection.
++    const auto applyOffset = [&](Color888 value, uint32 layer) {
++        if (regs2.colorOffsetEnable[layer]) {
++            const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[layer]];
++            if (offset.nonZero) {
++                auto shift = [](uint32 channel, uint32 by) { return static_cast<uint32>(std::clamp<sint32>(static_cast<sint32>(channel) + bit::sign_extend<9>(by), 0, 255)); };
++                value.u32 = shift(value.r, offset.r) | (shift(value.g, offset.g) << 8) | (shift(value.b, offset.b) << 16);
++            }
++        }
++        return value;
++    };
++    const bool captureWhiteWeight=m_capturePresentation && !m_presentation.spriteWhiteWeight.empty() && y<m_presentation.height;
++    const bool capturePanel = captureWhiteWeight && !m_presentation.panelMix.empty() && !regs2.colorCalcAdd;
++    const auto panelRecipe = [&](Color888 rawTop, uint32 ratio) {
++        ::port::PanelMix recipe;
++        recipe.topRgb = rawTop.u32 & 0xFFFFFF;
++        recipe.lowerWeight = static_cast<uint8>(ratio + 1);
++        if (regs2.colorOffsetEnable[3]) {
++            const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[3]];
++            recipe.postMixOffset = {static_cast<int16_t>(bit::sign_extend<9>(offset.r)),
++                                    static_cast<int16_t>(bit::sign_extend<9>(offset.g)),
++                                    static_cast<int16_t>(bit::sign_extend<9>(offset.b))};
++        }
++        return recipe;
++    };
++    struct ComposedPixel {
++        Color888 color;
++        uint32 top,source;
++        uint8 whiteWeight;
++        ::port::PanelMix panel;
++        bool unshadowedPanel;
++    };
++    const auto composite = [&](uint32 x,const Line& sprite) -> ComposedPixel {
+         uint32 top = kBack;
+         uint32 topPriority = 0;
+         uint32 second = kBack, secondPriority = 0;
+-        if (state2.layerEnabled[kSprites] && m_sprite.special[x] == normal) {
++        if (state2.layerEnabled[kSprites] && sprite.special[x] == normal) {
+             // (a shadow pixel is not shown itself: it darkens what is below)
+-            top = m_sprite.priority[x] ? static_cast<uint32>(kSprites) : top;
+-            topPriority = m_sprite.priority[x];
++            top = sprite.priority[x] ? static_cast<uint32>(kSprites) : top;
++            topPriority = sprite.priority[x];
+         }
+         for (uint32 layer = kRBG0; layer <= 5u; layer++) {
+             if (!state2.layerEnabled[layer]) {
+@@ -701,37 +790,12 @@ void Renderer::ComposeLine(uint32 y) {
+                 secondPriority = priority;
+             }
+         }
+-        Color888 color = top == kBack ? back : top == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[top].color[x]};
++        Color888 color = top == kBack ? back : top == kSprites ? Color888{.u32 = sprite.color[x]} : Color888{.u32 = layers[top].color[x]};
+ 
+-        // Colour offset follows colour calculation and uses the top screen selection.
+-        auto applyOffset = [&](Color888 value, uint32 layer) {
+-            if (regs2.colorOffsetEnable[layer]) {
+-                const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[layer]];
+-                if (offset.nonZero) {
+-                    auto shift = [](uint32 channel, uint32 by) { return static_cast<uint32>(std::clamp<sint32>(static_cast<sint32>(channel) + bit::sign_extend<9>(by), 0, 255)); };
+-                    value.u32 = shift(value.r, offset.r) | (shift(value.g, offset.g) << 8) | (shift(value.b, offset.b) << 16);
+-                }
+-            }
+-            return value;
+-        };
+         uint32 presentationSource=top;
+-        const bool captureWhiteWeight=m_capturePresentation && !m_presentation.spriteWhiteWeight.empty() && y<m_presentation.height;
+-        const bool capturePanel = captureWhiteWeight && !m_presentation.panelMix.empty() && !regs2.colorCalcAdd;
+         ::port::PanelMix panel;
+-        const auto panelRecipe = [&](Color888 rawTop, uint32 ratio) {
+-            ::port::PanelMix recipe;
+-            recipe.topRgb = rawTop.u32 & 0xFFFFFF;
+-            recipe.lowerWeight = static_cast<uint8>(ratio + 1);
+-            if (regs2.colorOffsetEnable[3]) {
+-                const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[3]];
+-                recipe.postMixOffset = {static_cast<int16_t>(bit::sign_extend<9>(offset.r)),
+-                                        static_cast<int16_t>(bit::sign_extend<9>(offset.g)),
+-                                        static_cast<int16_t>(bit::sign_extend<9>(offset.b))};
+-            }
+-            return recipe;
+-        };
+         uint8 whiteWeight=top==kSprites?0:255;
+-        const bool calcTop = top == kSprites ? m_sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
++        const bool calcTop = top == kSprites ? sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
+                            : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
+                              regs2.specialColorCalcMode[top - kRBG0] == 0 && !regs2.bgParams[top - kRBG0].lineColorScreenEnable;
+         if (calcTop && regs2.colorCalcExtended)whiteWeight=255;
+@@ -739,9 +803,9 @@ void Renderer::ComposeLine(uint32 y) {
+             // NBG3 can be the nominal top while colour calculation reveals the video below.
+             // Preserve the final mixed pixel but classify its visible content, not merely priority.
+             if(top==5 && second<5) presentationSource=second;
+-            Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
++            Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
+             const uint32 ratioLayer = regs2.colorCalcUseSecondRatio ? second : top;
+-            const uint32 ratio = ratioLayer == kSprites ? m_sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
++            const uint32 ratio = ratioLayer == kSprites ? sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
+             if (capturePanel && top == 3 && second == 5)
+                 panel = panelRecipe(color, ratio);
+             whiteWeight=255;
+@@ -761,11 +825,11 @@ void Renderer::ComposeLine(uint32 y) {
+         color = applyOffset(color, top);
+         // Sprite shadow: a shadow pixel of the sprite layer halves the brightness of the layer shown, if
+         // that layer takes shadows
+-        const bool normalShadow = m_sprite.special[x] == static_cast<uint8>(SpriteSpecial::Shadow);
+-        const bool msbShadow = !spriteWindow && m_sprite.shadowOrWindow[x];
++        const bool normalShadow = sprite.special[x] == static_cast<uint8>(SpriteSpecial::Shadow);
++        const bool msbShadow = !spriteWindow && sprite.shadowOrWindow[x];
+         const bool capturesUnshadowedPanel = capturePanel && !normalShadow && !msbShadow;
+         if (normalShadow || msbShadow) {
+-            const bool takesShadow = top == kSprites  ? static_cast<bool>(m_sprite.shadowOrWindow[x])
++            const bool takesShadow = top == kSprites  ? static_cast<bool>(sprite.shadowOrWindow[x])
+                                      : top == kBack ? regs2.backScreenParams.shadowEnable
+                                                             : regs2.bgParams[top - kRBG0].shadowEnable;
+             if (takesShadow) {
+@@ -773,6 +837,19 @@ void Renderer::ComposeLine(uint32 y) {
+                 whiteWeight=255;
+             }
+         }
++        return {color,top,presentationSource,whiteWeight,panel,capturesUnshadowedPanel};
++    };
++    const bool glyphLine=supported && PrepareGlyphLine(line);
++    for (uint32 x = 0; x < width; x++) {
++        const auto [color,top,presentationSource,whiteWeight,panel,capturesUnshadowedPanel]=composite(x,m_sprite);
++        if(glyphLine && top==kSprites && m_glyphLineOwners[x]) {
++            const auto restored=composite(x,m_glyphSprite);
++            const auto rgba=restored.color.u32|0xFF000000;
++            const size_t at=size_t(y)*width+x;
++            m_presentation.glyphPlate[at]=
++                {rgba,restored.source<5?rgba:0,m_glyphLineOwners[x],m_glyphStamps[m_displayFB][at].underOwner,
++                 restored.unshadowedPanel?restored.panel : ::port::PanelMix{}};
++        }
+         out[x] = color.u32;
+         if (m_capturePresentation && y<m_presentation.height) {
+             const size_t at=static_cast<size_t>(y)*width+x;
+diff --git a/video/renderer.h b/video/renderer.h
+index 43722cd..7e1a9bb 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -10,6 +10,7 @@
+ 
+ #include "base.h"
+ #include "frame.h"
++#include "glyph_plate.h"
+ #include "regs.h"
+ #include "../port/panel_compositing.h"
+ 
+@@ -59,6 +60,11 @@ public:
+     struct ScrollMenuLayout {size_t frame,end;unsigned frameHeight;int deltaY;};
+     using ScrollMenuRecognizer=std::function<std::optional<ScrollMenuLayout>(std::span<const PresentationSprite>)>;
+     // Host metadata excluded from guest serialization and hashes.
++    struct GlyphPlatePixel {
++        uint32 nativeRgb=0,foregroundRgba=0;
++        uint16 owner=0,underOwner=0;
++        ::port::PanelMix panelMix;
++    };
+     struct Presentation {
+         uint32 width=0,height=0;
+         std::vector<uint32> foreground,underSprites;
+@@ -67,6 +73,10 @@ public:
+         std::vector<uint8> underSource;
+         // 0: unmodified sprite; 1–31: exact white weight; 255: unsupported.
+         std::vector<uint8> spriteWhiteWeight;
++        // Visible glyph pixels, indexed by the same viewport as source.
++        // owner is the last writer's one-based index in sprites; zero means no plate.
++        // A nonzero underOwner must also be removed before erasing this pixel.
++        std::vector<GlyphPlatePixel> glyphPlate;
+         std::vector<PresentationSprite> sprites;
+         std::array<uint8,0x1000> palette{};
+         uint32 scrollWidth=0;
+@@ -106,6 +116,8 @@ public:
+     }
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
++    void CaptureGlyphPlate(bool enabled) {m_captureGlyphPlate=enabled;}
++    void Vdp1FramebufferWritten() {InvalidateGlyphPlate(m_displayFB^1u);}
+     void CaptureScrollExtension(uint32 extra,uint64 signature=0) {
+         m_captureScrollExtra=extra>64?64:extra;m_captureScrollSignature=signature;
+     }
+@@ -207,7 +219,13 @@ public:
+ 
+ private:
+     Presentation m_presentation;
+-    bool m_capturePresentation=false;
++    bool m_capturePresentation=false,m_captureGlyphPlate=false;
++    std::array<std::vector<GlyphPlateStamp>,2> m_glyphStamps;
++    std::array<bool,2> m_glyphPlateReady{};
++    bool m_glyphCaptureActive=false,m_glyphHasInk=false;
++    uint16 m_glyphCommand=0;
++    std::vector<uint8> m_glyphScratch;
++    std::array<uint16,320> m_glyphLineOwners{};
+     uint32 m_captureScrollExtra=0;
+     uint64 m_captureScrollSignature=0;
+     std::vector<uint8> m_presentWideFB[2]={std::vector<uint8>(0x40000),std::vector<uint8>(0x40000)};
+@@ -311,7 +329,9 @@ private:
+     void ComposeLine(uint32 y);
+     // The sprite layer's line: what the VDP2 makes of the VDP1 framebuffer's pixels (colour, priority, shadow).
+     // False if the settings are ones not handled here yet (the reference's line is used then).
+-    bool SpriteLine(uint32 y);
++    bool SpriteLine(uint32 y,const uint8* alternateFb=nullptr);
++    bool PrepareGlyphLine(uint32 y);
++    void InvalidateGlyphPlate(uint32 framebuffer);
+ 
+     // --- scroll screens (layers.cpp) ---
+     static constexpr uint32 kMaxLine = 704 + 2 * 256;
+@@ -408,7 +428,7 @@ private:
+         std::vector<uint8> special;        // SpriteSpecial
+         std::vector<uint8> shadowOrWindow; // the sprite data's shadow / window bit
+         std::vector<uint8> colorCalcEnable, colorCalcRatio;
+-    } m_sprite;
++    } m_sprite,m_glyphSprite;
+     uint64_t m_spritePixelsDifferent = 0, m_spriteLinesLeftToReference = 0;
+     unsigned m_debugLeft = 12;
+ 

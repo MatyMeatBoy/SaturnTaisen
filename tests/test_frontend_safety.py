@@ -17,6 +17,9 @@ DEP=ROOT/'local/deps/satrecomp'
 class FrontendTests(unittest.TestCase):
     def test_tactical_menu_recognition_rejects_unknown_or_ambiguous_groups(self):
         self.fixture('tactical_menu')
+    def test_glyph_saved_under_preserves_bevel_and_invalidates_overwrites(self):
+        self.fixture('glyph_plate',[DEP/'video'/name for name in ('renderer.cpp','layers.cpp','raster.cpp','regs.cpp','vdp1.cpp')])
+
     def test_vdp2_color_snapshots_and_extended_map_preserve_native_frame(self):
         self.fixture('vdp2_color',[DEP/'video'/name for name in ('renderer.cpp','layers.cpp','raster.cpp','regs.cpp','vdp1.cpp')])
     def test_tactical_extension_follows_camera_and_preserves_foreground(self):
@@ -53,6 +56,12 @@ class FrontendTests(unittest.TestCase):
 
     def test_modern_menu_view_preserves_existing_actions_and_selection(self):
         self.fixture('menu_view',[DEP/'recomp-common/menu.cpp'])
+
+    def test_map_crossfade_keeps_integer_phase_and_rejects_unproven_edges(self):
+        self.fixture('map_crossfade')
+
+    def test_panel_blending_keeps_hardware_truncation_and_screen_space_flowers(self):
+        self.fixture('panel_compositing')
 
     def test_presentation_keeps_subtitles_overhang_and_integer_cover(self):
         self.fixture('presentation_layout')

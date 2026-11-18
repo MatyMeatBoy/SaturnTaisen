@@ -40,7 +40,13 @@
       "patches/0034-sakura-portable-hd-discovery-v012.patch",
       "patches/0035-sakura-coherent-hd-scenes-and-guid-overrides.patch",
       "patches/0036-sakura-chapter1-wide-maps-and-menus.patch",
-      "patches/0037-sakura-proven-portrait-white-blends.patch"
+      "patches/0037-sakura-proven-portrait-white-blends.patch",
+      "patches/0038-sakura-movie-only-viewport.patch",
+      "patches/0039-sakura-no-original-border-in-enhanced-fallback.patch",
+      "patches/0040-sakura-panel-continuity-and-cursor-safe-backdrop.patch",
+      "patches/0041-sakura-use-compositor-witness-for-zoom-fades.patch",
+      "patches/0042-sakura-owned-glyph-plates-for-border-text.patch",
+      "patches/0043-sakura-map-crossfade-primitives.patch"
     ]
   }
 }

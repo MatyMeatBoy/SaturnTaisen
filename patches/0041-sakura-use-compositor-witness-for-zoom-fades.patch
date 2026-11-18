@@ -1,0 +1,75 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index e3312a1..0ec866c 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -686,7 +686,7 @@ int RunWindowed(Port &port) {
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
+                 enhanced=true;presentationKind="anchored-menu";
+             }
+-            const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height);
++            const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height,planes.underSource);
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
+                 if(!traced && planes.source.size()==320*224) {
+@@ -777,15 +777,15 @@ int RunWindowed(Port &port) {
+                    planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+                    size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
+                     const auto& sourcePixels=splitZoom?zoomForeground:(hdLines.empty()?planes.foreground:hdForeground);
+-                    if(sourcePixels.size()==320*224) {
+-                        panelPixels.resize(size_t(fit.w)*fit.h);bool hasMix=false;
++                    if(sourcePixels.size()==320*224 && ResizePanelBuffer(panelPixels,size_t(fit.w)*fit.h)) {
++                        bool hasMix=false;
+                         for(int py=0;py<fit.h;py++)for(int px=0;px<fit.w;px++) {
+                             const int sx=int(crop.x)+px/fit.scale,sy=int(crop.y)+py/fit.scale;
+                             if(sx<0 || sx>=320 || sy<0 || sy>=224) {panelPixels[size_t(py)*fit.w+px]=0;continue;}
+                             const size_t at=size_t(sy)*320+sx;
+                             const auto& recipe=hdErased[at]?planes.underPanelMix[at]:planes.panelMix[at];
+                             uint32_t pixel=sourcePixels[at];
+-                            if(recipe.lowerWeight)if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
++                            if((pixel>>24) && recipe.lowerWeight)if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
+                                     int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
+                                 pixel=CompositePanelPixel(recipe,*below,pixel);hasMix=true;
+                             }
+@@ -796,7 +796,10 @@ int RunWindowed(Port &port) {
+                                 if(panelTexture)SDL_DestroyTexture(panelTexture);
+                                 panelTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,fit.w,fit.h);
+                                 panelWidth=panelTexture?fit.w:0;panelHeight=panelTexture?fit.h:0;
+-                                if(panelTexture) {SDL_SetTextureBlendMode(panelTexture,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(panelTexture,SDL_SCALEMODE_NEAREST);}
++                                if(panelTexture && (!SDL_SetTextureBlendMode(panelTexture,SDL_BLENDMODE_BLEND) ||
++                                    !SDL_SetTextureScaleMode(panelTexture,SDL_SCALEMODE_NEAREST))) {
++                                    SDL_DestroyTexture(panelTexture);panelTexture=nullptr;panelWidth=panelHeight=0;
++                                }
+                             }
+                             if(panelTexture && SDL_UpdateTexture(panelTexture,nullptr,panelPixels.data(),fit.w*sizeof(uint32_t)))
+                                 panelDrawn=SDL_RenderTexture(renderer,panelTexture,nullptr,&target);
+diff --git a/port/panel_compositing.h b/port/panel_compositing.h
+index 29ab85a..eb9509c 100644
+--- a/port/panel_compositing.h
++++ b/port/panel_compositing.h
+@@ -6,6 +6,8 @@
+ #include <cstdint>
+ #include <span>
+ #include <optional>
++#include <vector>
++#include <new>
+ 
+ namespace port {
+ 
+@@ -24,7 +26,7 @@ struct PanelMix {
+ constexpr uint32_t CompositePanelPixel(const PanelMix& recipe, uint32_t unshiftedBackdrop,
+                                        uint32_t nativePixel) noexcept {
+     const unsigned lower = recipe.lowerWeight;
+-    if (!lower || lower > 32 ||
++    if (!(nativePixel >> 24) || !lower || lower > 32 ||
+         std::any_of(recipe.postMixOffset.begin(), recipe.postMixOffset.end(),
+                     [](int component) { return component < -256 || component > 255; })) {
+         return nativePixel;
+@@ -49,4 +51,8 @@ inline std::optional<uint32_t> SamplePanelBackdrop(std::span<const uint32_t> pix
+     if(dx<0 || dy<0 || dx>=int64_t(width)*scale || dy>=int64_t(height)*scale)return {};
+     return pixels[size_t(dy/scale)*size_t(width)+size_t(dx/scale)];
+ }
++inline bool ResizePanelBuffer(std::vector<uint32_t>& pixels,size_t count) noexcept {
++    if(count>16*1024*1024)return false;
++    try {pixels.resize(count);return true;}catch(const std::bad_alloc&) {return false;}
++}
+ } // namespace port

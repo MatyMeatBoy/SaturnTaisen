@@ -121,5 +121,38 @@ int main() {
     renderer.SwapFramebuffer();draw(0,0);
     assert((renderer.PresentationFrame().scrollPixels[38]&0xFFFFFF)!=0xF80000);
     assert((renderer.PresentationFrame().scrollPixels[39]&0xFFFFFF)==0xF80000); // original framebuffer is unchanged
+    // A blue NBG1 bitmap mixes over a red NBG3 tile, including under opaque sprite ink.
+    renderer.Reset(true);renderer.CaptureScrollExtension(0);
+    std::fill(fb1.begin(),fb1.end(),0);
+    vram2[0]=0;vram2[1]=1;vram2[32]=0x11;cram[2]=0;cram[3]=0x1f;
+    vram2[0x20000]=0x22;cram[4]=0x7c;cram[5]=0;
+    reg(0,0x8000);reg(0x0e,0x0100);reg(0x10,0x3377);reg(0x12,0x3377);
+    reg(0x14,0x5555);reg(0x16,0x5555);
+    reg(0x20,0x000a);reg(0x28,0x0200);reg(0x36,0x8000);reg(0x3c,0x0010);
+    reg(0xf8,0x0400);reg(0xfa,0x0300);renderer.LatchDisplayMode();
+    if(draw(2,0x0a00)!=0xa20055){fprintf(stderr,"panel blend setup failed: %06x\n",pixel);return 1;}
+    const auto &panels=renderer.PresentationFrame();
+    assert(panels.panelMix.size()==320*224 && panels.underPanelMix.size()==320*224);
+    assert(panels.panelMix[0].topRgb==0xf80000 && panels.panelMix[0].lowerWeight==11);
+    assert(panels.underPanelMix[0].lowerWeight==0);
+    assert(port::CompositePanelPixel(panels.panelMix[0],0x0000f8,pixel|0xff000000)==(pixel|0xff000000));
+    reg(0x110,2);reg(0x114,0x1f0);
+    assert(draw(2,0x0a00)==0xa20045);
+    assert((panels.panelMix[0].postMixOffset==std::array<int16_t,3>{-16,0,0}));
+    assert(port::CompositePanelPixel(panels.panelMix[0],0x0000f8,pixel|0xff000000)==(pixel|0xff000000));
+    fb1[0]=0x83;fb1[1]=0xe0;reg(0xe0,0x20);reg(0xf0,5);
+    assert(draw(2,0x0a00)==0x00f800);
+    assert(panels.panelMix[0].lowerWeight==0 && panels.underPanelMix[0].lowerWeight==11);
+    assert(panels.underSprites[0]==0xffa20045);
+    assert(panels.source[0]==0 && panels.underSource[0]==3);
+    assert(port::CompositePanelPixel(panels.underPanelMix[0],0x0000f8,panels.underSprites[0])==panels.underSprites[0]);
+    for(unsigned cc:{0x102u,0x402u,0u}) {
+        draw(cc,0x0a00);
+        assert(panels.panelMix[0].lowerWeight==0 && panels.underPanelMix[0].lowerWeight==0);
+    }
+    fb1[0]=0;fb1[1]=0;reg(0xd6,0x0200);draw(2,0x0a00);
+    assert(panels.panelMix[0].lowerWeight==0);
+    reg(0xd6,0);reg(0xfa,0x0500);draw(8,0x0a00);
+    assert(panels.source[0]==3 && panels.panelMix[0].lowerWeight==0);
     puts("VDP2 blending and coherent displayed sprite snapshots passed");
 }

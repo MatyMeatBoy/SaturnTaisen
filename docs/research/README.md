@@ -55,3 +55,13 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [dialogue-catalog.md](dialogue-catalog.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
 - [portrait-animation-coverage.md](portrait-animation-coverage.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
 - [tactical-menu-independent-reference.md](tactical-menu-independent-reference.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
+
+- [dialogue-panel-compositing.md](dialogue-panel-compositing.md): Mezcla Saturn exacta y continuidad del fondo dentro del panel.
+
+- [hd-text-row-rejections.md](hd-text-row-rejections.md): Reproducciones de Sumire y María: glifos válidos fuera del límite.
+
+- [intro-petals-transition.md](intro-petals-transition.md): Pétalos horneados, fallback durante destellos y primer vídeo.
+
+- [battle-story-inset-shadow.md](battle-story-inset-shadow.md): Prueba por capas de ausencia de sombra en la viñeta táctica.
+
+- [dialogue-voice-advance.md](dialogue-voice-advance.md): Pulsaciones A/B/C, voz real y comparación AOT/intérprete.

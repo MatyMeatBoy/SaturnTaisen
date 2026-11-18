@@ -1,0 +1,404 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index cd4c3b1..e3312a1 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -7,6 +7,7 @@
+ #include "hud.h"
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
++#include "panel_compositing.h"
+ #include "screen_backdrop.h"
+ #include "tactical_extension.h"
+ #include "tactical_menu.h"
+@@ -205,6 +206,8 @@ int RunWindowed(Port &port) {
+     BackgroundWorkers backgroundWorkers;
+     bool backgroundWarmupStarted=false;
+     SDL_Texture *foreground=nullptr;
++    SDL_Texture *panelTexture=nullptr;int panelWidth=0,panelHeight=0;
++    std::vector<uint32_t> panelPixels;std::vector<uint8_t> hdErased;
+     SDL_Texture *tacticalCanvas=nullptr;
+     SDL_Texture *mapBackdropTexture=nullptr;
+     std::vector<uint32_t> tacticalPatch,tacticalPixels;
+@@ -373,6 +376,8 @@ int RunWindowed(Port &port) {
+         backdrops.clear();
+         if (foreground) SDL_DestroyTexture(foreground);
+         foreground=nullptr;
++        if(panelTexture)SDL_DestroyTexture(panelTexture);
++        panelTexture=nullptr;panelWidth=panelHeight=0;
+         if(tacticalCanvas)SDL_DestroyTexture(tacticalCanvas);
+         tacticalCanvas=nullptr;
+         if(mapBackdropTexture)SDL_DestroyTexture(mapBackdropTexture);
+@@ -502,7 +507,7 @@ int RunWindowed(Port &port) {
+         DrawSakuraFrame(renderer, wide, high);
+         const auto baseFit=FitInteger(wide,high,texW,texH);
+         auto textFit=baseFit;int textCropX=0,textCropY=0;
+-        hdLines.clear();hdNative.clear();hdForeground.clear();
++        hdLines.clear();hdNative.clear();hdForeground.clear();hdErased.assign(320*224,0);
+         if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
+@@ -548,7 +553,7 @@ int RunWindowed(Port &port) {
+                         const unsigned sum=(color&255)+((color>>8)&255)+((color>>16)&255);
+                         if(sum<darkest) {darkest=sum;line.color=color|0xFF000000;}
+                     }
+-                    for(auto at:row.ink) hdNative[at]=hdForeground[at]=planes.underSprites[at];
++                    for(auto at:row.ink) {hdNative[at]=hdForeground[at]=planes.underSprites[at];hdErased[at]=1;}
+                     hdLines.push_back(std::move(line));
+                 }
+                 if(!hdLines.empty()) SDL_UpdateTexture(texture,nullptr,hdNative.data(),320*sizeof(uint32_t));
+@@ -558,7 +563,7 @@ int RunWindowed(Port &port) {
+         const char* presentationKind="native";
+         if(texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& shown=port.videoRenderer->PresentationFrame();std::vector<uint32_t> rows;
+-            if(AnalyzeRowBackdrop(softwareShown,shown.source,rows)) {
++            if(AnalyzeRowBackdrop(softwareShown,shown.source,rows,shown.underSprites,shown.underSource)) {
+                 const auto fit=FitInteger(wide,high,320,224);
+                 const int canvasWidth=PresentationWidth(wide,high),canvasLeft=(wide-canvasWidth)/2;
+                 if(!mapBackdropTexture) {
+@@ -614,7 +619,7 @@ int RunWindowed(Port &port) {
+                 }
+             }
+         }
+-        SDL_Texture* floral=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false;
++        SDL_Texture* floral=nullptr;const Backdrop* selectedBackdrop=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false;
+         if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto palette=port.videoRenderer->BackgroundPaletteFingerprint();
+             if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+@@ -647,7 +652,7 @@ int RunWindowed(Port &port) {
+                     float gridWidth=0,gridHeight=0;SDL_GetTextureSize(backdrop.texture,&gridWidth,&gridHeight);
+                     if(SDL_UpdateTexture(backdrop.texture,nullptr,shiftedBackdrop.data(),static_cast<int>(gridWidth)*sizeof(uint32_t)))backdrop.offset=offset;
+                 }
+-                floral=backdrop.texture;anchoredBackdrop=backdrop.anchored;if(backdrop.screen)screenBackdrop=backdrop.id;break;
++                floral=backdrop.texture;selectedBackdrop=&backdrop;anchoredBackdrop=backdrop.anchored;if(backdrop.screen)screenBackdrop=backdrop.id;break;
+             }
+             // Prepare future themes only after the current scene has loaded. Jobs
+             // own their inputs, retain no surfaces, and never touch guest/GPU state.
+@@ -717,6 +722,7 @@ int RunWindowed(Port &port) {
+                 }
+                 auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
+                 // Only split the known narrative layout; overhanging artwork retains the original group.
++                bool splitZoom=false;
+                 bool zoomSafe=!scene.movieOnly && satrecomp::FeatureValue("scene_view")==1 && scene.y==8 && scene.y+scene.h>153;
+                 if(zoomSafe)for(int y=0;y<153 && zoomSafe;y++)for(int x=0;x<320;x++) {
+                     if(planes.source[y*320+x]<3 && (x<16 || x>=304 || y<8 || y>=152)) {zoomSafe=false;break;}
+@@ -734,6 +740,7 @@ int RunWindowed(Port &port) {
+                     }
+                     const auto zoom=FitSceneZoom(wide,high,scene.w,scene.y+scene.h-153,scene.h,shadowRows);
+                     if(zoom.valid) {
++                        splitZoom=true;
+                         zoomForeground=hdLines.empty()?planes.foreground:hdForeground;
+                         for(int y=153;y<156;y++)for(int x=20;x<308;x++)
+                             if(IsOldPictureShadow(x,y,planes.source[y*320+x]))zoomForeground[y*320+x]=0;
+@@ -765,7 +772,38 @@ int RunWindowed(Port &port) {
+                     SDL_RenderFillRect(renderer,&shadow);
+                     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+                 }
+-                SDL_RenderTexture(renderer,content,&crop,&target);
++                bool panelDrawn=false;
++                if(!scene.movieOnly && selectedBackdrop && planes.panelMix.size()==320*224 &&
++                   planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
++                   size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
++                    const auto& sourcePixels=splitZoom?zoomForeground:(hdLines.empty()?planes.foreground:hdForeground);
++                    if(sourcePixels.size()==320*224) {
++                        panelPixels.resize(size_t(fit.w)*fit.h);bool hasMix=false;
++                        for(int py=0;py<fit.h;py++)for(int px=0;px<fit.w;px++) {
++                            const int sx=int(crop.x)+px/fit.scale,sy=int(crop.y)+py/fit.scale;
++                            if(sx<0 || sx>=320 || sy<0 || sy>=224) {panelPixels[size_t(py)*fit.w+px]=0;continue;}
++                            const size_t at=size_t(sy)*320+sx;
++                            const auto& recipe=hdErased[at]?planes.underPanelMix[at]:planes.panelMix[at];
++                            uint32_t pixel=sourcePixels[at];
++                            if(recipe.lowerWeight)if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
++                                    int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
++                                pixel=CompositePanelPixel(recipe,*below,pixel);hasMix=true;
++                            }
++                            panelPixels[size_t(py)*fit.w+px]=pixel;
++                        }
++                        if(hasMix) {
++                            if(panelWidth!=fit.w || panelHeight!=fit.h) {
++                                if(panelTexture)SDL_DestroyTexture(panelTexture);
++                                panelTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,fit.w,fit.h);
++                                panelWidth=panelTexture?fit.w:0;panelHeight=panelTexture?fit.h:0;
++                                if(panelTexture) {SDL_SetTextureBlendMode(panelTexture,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(panelTexture,SDL_SCALEMODE_NEAREST);}
++                            }
++                            if(panelTexture && SDL_UpdateTexture(panelTexture,nullptr,panelPixels.data(),fit.w*sizeof(uint32_t)))
++                                panelDrawn=SDL_RenderTexture(renderer,panelTexture,nullptr,&target);
++                        }
++                    }
++                }
++                if(!panelDrawn)SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 portraitViewport=!scene.movieOnly;
+diff --git a/port/panel_compositing.h b/port/panel_compositing.h
+new file mode 100644
+index 0000000..29ab85a
+--- /dev/null
++++ b/port/panel_compositing.h
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include <algorithm>
++#include <array>
++#include <cstdint>
++#include <span>
++#include <optional>
++
++namespace port {
++
++// The renderer should supply a recipe only for verified two-screen ratio mixing
++// with the replaceable background below the panel. A weight of zero means keep
++// the native composited pixel.
++struct PanelMix {
++    uint32_t topRgb = 0;
++    uint8_t lowerWeight = 0;
++    std::array<int16_t, 3> postMixOffset{};
++};
++
++// Colors are packed with red in the low byte. The background source is sampled
++// at the destination and supplied before color offsets. The hardware truncates
++// the blend in units of 1/32, then applies the top screen's signed offset.
++constexpr uint32_t CompositePanelPixel(const PanelMix& recipe, uint32_t unshiftedBackdrop,
++                                       uint32_t nativePixel) noexcept {
++    const unsigned lower = recipe.lowerWeight;
++    if (!lower || lower > 32 ||
++        std::any_of(recipe.postMixOffset.begin(), recipe.postMixOffset.end(),
++                    [](int component) { return component < -256 || component > 255; })) {
++        return nativePixel;
++    }
++
++    uint32_t result = 0xFF000000u;
++    for (unsigned channel = 0; channel < 3; ++channel) {
++        const unsigned shift = channel * 8;
++        const unsigned top = (recipe.topRgb >> shift) & 255;
++        const unsigned below = (unshiftedBackdrop >> shift) & 255;
++        const int blended = int((top * (32 - lower) + below * lower) >> 5);
++        const int shifted = std::clamp(blended + recipe.postMixOffset[channel], 0, 255);
++        result |= uint32_t(shifted) << shift;
++    }
++    return result;
++}
++
++inline std::optional<uint32_t> SamplePanelBackdrop(std::span<const uint32_t> pixels,
++        int width,int height,int originX,int originY,int scale,int screenX,int screenY) {
++    if(width<=0 || height<=0 || scale<=0 || size_t(width)*size_t(height)!=pixels.size())return {};
++    const int64_t dx=int64_t(screenX)-originX,dy=int64_t(screenY)-originY;
++    if(dx<0 || dy<0 || dx>=int64_t(width)*scale || dy>=int64_t(height)*scale)return {};
++    return pixels[size_t(dy/scale)*size_t(width)+size_t(dx/scale)];
++}
++} // namespace port
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index f5d52d5..9267cde 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -12,9 +12,14 @@ inline IntegerViewport FitAnchoredBackdrop(int width,int height) {
+ }
+ // Each sixteen-pixel border defines its own eight-pixel horizontal period.
+ // The night gradient's left and right edges differ on a few dithered rows.
+-inline bool AnalyzeRowBackdrop(std::span<const uint32_t> pixels,std::span<const uint8_t> source,std::vector<uint32_t>& rows) {
++inline bool AnalyzeRowBackdrop(std::span<const uint32_t> pixels,std::span<const uint8_t> source,std::vector<uint32_t>& rows,
++                              std::span<const uint32_t> underPixels={},std::span<const uint8_t> underSource={}) {
+     rows.clear();
+     if(pixels.size()!=320*224 || source.size()!=320*224)return false;
++    const bool haveUnder=underPixels.size()==pixels.size() && underSource.size()==source.size();
++    auto mapUnderSprite=[&](size_t at){return haveUnder && source[at]==0 && underSource[at]==2;};
++    auto layerAt=[&](size_t at){return mapUnderSprite(at)?uint8_t(2):source[at];};
++    auto pixelAt=[&](size_t at){return mapUnderSprite(at)?underPixels[at]:pixels[at];};
+     std::vector<uint32_t> prepared;prepared.reserve(224*16);
+     for(unsigned y=0;y<224;y++) {
+         unsigned period=0;
+@@ -22,9 +27,9 @@ inline bool AnalyzeRowBackdrop(std::span<const uint32_t> pixels,std::span<const
+             bool valid=true;
+             for(unsigned x=0;x<candidate*2;x++) {
+                 const unsigned right=320-candidate*2;
+-                if(source[y*320+x]==0 || source[y*320+right+x]==0 ||
+-                   (pixels[y*320+x]&0xFFFFFF)!=(pixels[y*320+x%candidate]&0xFFFFFF) ||
+-                   (pixels[y*320+right+x]&0xFFFFFF)!=(pixels[y*320+right+x%candidate]&0xFFFFFF)) {valid=false;break;}
++                if(layerAt(y*320+x)==0 || layerAt(y*320+right+x)==0 ||
++                   (pixelAt(y*320+x)&0xFFFFFF)!=(pixelAt(y*320+x%candidate)&0xFFFFFF) ||
++                   (pixelAt(y*320+right+x)&0xFFFFFF)!=(pixelAt(y*320+right+x%candidate)&0xFFFFFF)) {valid=false;break;}
+             }
+             if(valid) {period=candidate;break;}
+         }
+@@ -34,16 +39,16 @@ inline bool AnalyzeRowBackdrop(std::span<const uint32_t> pixels,std::span<const
+             for(unsigned side:{0u,312u})for(unsigned channel:{0u,8u,16u}) {
+                 unsigned low=255,high=0;
+                 for(unsigned x=0;x<8;x++) {
+-                    if(source[y*320+side+x]!=2)return false;
+-                    const unsigned value=(pixels[y*320+side+x]>>channel)&255;
++                    if(layerAt(y*320+side+x)!=2)return false;
++                    const unsigned value=(pixelAt(y*320+side+x)>>channel)&255;
+                     low=std::min(low,value);high=std::max(high,value);
+                 }
+                 if(high-low>24)return false;
+             }
+             period=8;
+         }
+-        for(unsigned x=0;x<8;x++)prepared.push_back(pixels[y*320+x%period]|0xFF000000);
+-        for(unsigned x=0;x<8;x++)prepared.push_back(pixels[y*320+320-period+x%period]|0xFF000000);
++        for(unsigned x=0;x<8;x++)prepared.push_back(pixelAt(y*320+x%period)|0xFF000000);
++        for(unsigned x=0;x<8;x++)prepared.push_back(pixelAt(y*320+320-period+x%period)|0xFF000000);
+     }
+     rows=std::move(prepared);
+     return true;
+@@ -97,15 +102,25 @@ inline SceneLayout AnalyzeOpeningPresentation(const std::vector<uint8_t>& source
+     }
+     return movie>=20000 && background>=1000?SceneLayout{true,true,16,24,288,144}:SceneLayout{};
+ }
+-inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int width,int height) {
++inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int width,int height,
++                                       std::span<const uint8_t> underSource={}) {
+     if(width!=320 || height!=224 || source.size()!=320*224) return {};
+     int floral=0,picture=0,movie=0,actor=0,text=0,frame=0;
++    const bool haveUnder=underSource.size()==source.size();
++    int fadedPicture=0,fadedPanel=0;
++    bool overhang=false;
+     int left=320,right=-1,top=224,bottom=-1;
+     for(int y=0;y<224;y++) for(int x=0;x<320;x++) {
+         const int layer=source[y*320+x];
+         floral+=layer==5;
+         if(layer<5) {left=std::min(left,x);right=std::max(right,x);top=std::min(top,y);bottom=std::max(bottom,y);}
+         const bool inside=x>=16 && x<304 && y>=8 && y<152;
++        if(layer<5 && (!inside && y<153 && layer<3 || x<9 || x>=315 || y<8 || y>=220))overhang=true;
++        // source can name the revealed layer when NBG3 is the actual winner.
++        if(haveUnder && underSource[y*320+x]==5) {
++            fadedPicture+=inside && (layer==2 || layer==4);
++            fadedPanel+=layer==3 && x>=13 && x<315 && y>=155 && y<220;
++        }
+         if(layer==1 || layer==2 || layer==4) {
+             if(!inside) return {}; // different screen layout
+             picture++; movie+=layer==1;
+@@ -114,7 +129,12 @@ inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int wi
+         text+=layer==0 && x>=56 && x<285 && y>=165 && y<204;
+         frame+=layer==0 && y>=153;
+     }
+-    if(floral<1000 || picture+actor<20000 || frame<100 || right<left || bottom<top) return {};
++    if(floral<1000 || picture+actor<20000 || right<left || bottom<top) return {};
++    // Use the witnessed dialogue geometry only while the floral plane mixes
++    // over both the picture and the panel. This proof is local to each frame.
++    if(!overhang && movie==0 && fadedPicture>=20000 && fadedPanel>=8000)
++        return {true,false,9,8,306,212};
++    if(frame<100)return {};
+     // Empty dialogue ornaments are not part of the witnessed movie viewport.
+     if(movie>30000 && actor==0 && text==0) return {true,true,16,8,288,144};
+     return {true,false,left,top,right-left+1,bottom-top+1};
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 0f21faa..efc306b 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -34,6 +34,9 @@ void Renderer::Reset(bool hard) {
+     m_lastCommands.clear();
+     for(auto& sprites:m_presentSprites)sprites.clear();
+     m_presentation.sprites.clear();m_captureValid=false;
++    m_presentation.panelMix.clear();
++    m_presentation.underPanelMix.clear();
++    m_presentation.underSource.clear();
+     m_presentWideReady[0]=m_presentWideReady[1]=false;m_presentRasterTarget=nullptr;
+     for(auto& dirty:m_menuDirty)dirty.clear();
+     m_menuReplayStable=false;
+@@ -80,6 +83,9 @@ void Renderer::Serialize(Archive &ar) {
+         m_commands.clear();
+         for(auto& sprites:m_presentSprites)sprites.clear();
+         m_captureValid=false;
++        m_presentation.panelMix.clear();
++        m_presentation.underPanelMix.clear();
++        m_presentation.underSource.clear();
+         m_presentWideReady[0]=m_presentWideReady[1]=false;m_presentRasterTarget=nullptr;
+         for(auto& dirty:m_menuDirty)dirty.clear();
+         m_menuReplayStable=false;
+@@ -387,7 +393,10 @@ void Renderer::BeginFrame() {
+         m_presentation.foreground.assign(static_cast<size_t>(m_width)*m_height,0);
+         m_presentation.underSprites.assign(static_cast<size_t>(m_width)*m_height,0);
+         m_presentation.spriteWhiteWeight.assign(m_width==320 && m_height==224?320*224:0,255);
++        m_presentation.panelMix.assign(m_presentation.spriteWhiteWeight.size(), {});
++        m_presentation.underPanelMix.assign(m_presentation.panelMix.size(), {});
+         m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
++        m_presentation.underSource.assign(static_cast<size_t>(m_width)*m_height,6);
+         m_presentation.scrollWidth=m_captureScrollExtra && m_width==320 && m_height==224?m_width+2*m_captureScrollExtra:0;
+         m_presentation.mapSignature=0;
+         if(m_presentation.scrollWidth) {
+@@ -707,6 +716,20 @@ void Renderer::ComposeLine(uint32 y) {
+         };
+         uint32 presentationSource=top;
+         const bool captureWhiteWeight=m_capturePresentation && !m_presentation.spriteWhiteWeight.empty() && y<m_presentation.height;
++        const bool capturePanel = captureWhiteWeight && !m_presentation.panelMix.empty() && !regs2.colorCalcAdd;
++        ::port::PanelMix panel;
++        const auto panelRecipe = [&](Color888 rawTop, uint32 ratio) {
++            ::port::PanelMix recipe;
++            recipe.topRgb = rawTop.u32 & 0xFFFFFF;
++            recipe.lowerWeight = static_cast<uint8>(ratio + 1);
++            if (regs2.colorOffsetEnable[3]) {
++                const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[3]];
++                recipe.postMixOffset = {static_cast<int16_t>(bit::sign_extend<9>(offset.r)),
++                                        static_cast<int16_t>(bit::sign_extend<9>(offset.g)),
++                                        static_cast<int16_t>(bit::sign_extend<9>(offset.b))};
++            }
++            return recipe;
++        };
+         uint8 whiteWeight=top==kSprites?0:255;
+         const bool calcTop = top == kSprites ? m_sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
+                            : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
+@@ -719,6 +742,8 @@ void Renderer::ComposeLine(uint32 y) {
+             Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
+             const uint32 ratioLayer = regs2.colorCalcUseSecondRatio ? second : top;
+             const uint32 ratio = ratioLayer == kSprites ? m_sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
++            if (capturePanel && top == 3 && second == 5)
++                panel = panelRecipe(color, ratio);
+             whiteWeight=255;
+             if(captureWhiteWeight && !regs2.colorCalcAdd) {
+                 if(top==kSprites && (below.u32&0xFFFFFF)==0xF8F8F8)
+@@ -738,6 +763,7 @@ void Renderer::ComposeLine(uint32 y) {
+         // that layer takes shadows
+         const bool normalShadow = m_sprite.special[x] == static_cast<uint8>(SpriteSpecial::Shadow);
+         const bool msbShadow = !spriteWindow && m_sprite.shadowOrWindow[x];
++        const bool capturesUnshadowedPanel = capturePanel && !normalShadow && !msbShadow;
+         if (normalShadow || msbShadow) {
+             const bool takesShadow = top == kSprites  ? static_cast<bool>(m_sprite.shadowOrWindow[x])
+                                      : top == kBack ? regs2.backScreenParams.shadowEnable
+@@ -751,7 +777,10 @@ void Renderer::ComposeLine(uint32 y) {
+         if (m_capturePresentation && y<m_presentation.height) {
+             const size_t at=static_cast<size_t>(y)*width+x;
+             m_presentation.source[at]=static_cast<uint8>(presentationSource);
++            m_presentation.underSource[at]=static_cast<uint8>(top);
+             if(captureWhiteWeight)m_presentation.spriteWhiteWeight[at]=whiteWeight;
++            if (capturesUnshadowedPanel)
++                m_presentation.panelMix[at] = panel;
+             m_presentation.foreground[at]=presentationSource<5 ? color.u32|0xFF000000 : 0;
+             Color888 under=color;
+             if(top==kSprites) {
+@@ -762,10 +791,13 @@ void Renderer::ComposeLine(uint32 y) {
+                     else if(priority>pb) {b=layer;pb=priority;}
+                 }
+                 under=a==kBack?back:Color888{.u32=layers[a].color[x]};
++                m_presentation.underSource[at]=static_cast<uint8>(a);
+                 if(a!=kBack && regs2.bgParams[a-kRBG0].colorCalcEnable && !regs2.colorCalcExtended &&
+                    regs2.specialColorCalcMode[a-kRBG0]==0 && !regs2.bgParams[a-kRBG0].lineColorScreenEnable && !m_colorCalcWindow[x]) {
+                     const Color888 below=b==kBack?back:Color888{.u32=layers[b].color[x]};
+                     const uint32 ratio=regs2.colorCalcRatio[regs2.colorCalcUseSecondRatio?b:a];
++                    if (capturesUnshadowedPanel && a == 3 && b == 5)
++                        m_presentation.underPanelMix[at] = panelRecipe(under, ratio);
+                     auto mix=[&](uint32 c,uint32 d){return regs2.colorCalcAdd?std::min(c+d,255u):(c*(31u-ratio)+d*(ratio+1u))>>5;};
+                     under.u32=mix(under.r,below.r)|(mix(under.g,below.g)<<8)|(mix(under.b,below.b)<<16);
+                 }
+diff --git a/video/renderer.h b/video/renderer.h
+index ec33964..43722cd 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -11,6 +11,7 @@
+ #include "base.h"
+ #include "frame.h"
+ #include "regs.h"
++#include "../port/panel_compositing.h"
+ 
+ #include <functional>
+ #include <memory>
+@@ -61,7 +62,9 @@ public:
+     struct Presentation {
+         uint32 width=0,height=0;
+         std::vector<uint32> foreground,underSprites;
++        std::vector<::port::PanelMix> panelMix,underPanelMix;
+         std::vector<uint8> source;
++        std::vector<uint8> underSource;
+         // 0: unmodified sprite; 1–31: exact white weight; 255: unsupported.
+         std::vector<uint8> spriteWhiteWeight;
+         std::vector<PresentationSprite> sprites;

@@ -13,6 +13,14 @@ int main() {
     assert(!port::NarrativeInkFits(55,160,tile));
     assert(!port::NarrativeInkFits(56,159,tile));
     assert(!port::NarrativeInkFits(56,160,std::span<const uint8_t>(tile.data(),4)));
+    auto edge=tile;edge[4*8+4]=0x10;
+    assert(!port::NarrativeInkFits(296,172,edge));
+    assert(port::NarrativeRecognizedInkFits(296,172,edge,U'w'));
+    assert(port::NarrativeRecognizedInkFits(296,184,edge,U'\u2026'));
+    assert(!port::NarrativeRecognizedInkFits(296,172,edge,U'm'));
+    assert(!port::NarrativeRecognizedInkFits(297,172,edge,U'w'));
+    edge[4*8+4]=0x11; // a second outboard column has no witnessed exception
+    assert(!port::NarrativeRecognizedInkFits(296,172,edge,U'w'));
     // Descenders on the fourth row belong inside the box, not to a native fallback.
     std::array<uint8_t,128> descender{};
     for(int y=2;y<15;y++)for(int x=0;x<4;x++)descender[y*8+x]=0x11;

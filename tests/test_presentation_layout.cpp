@@ -32,6 +32,18 @@ int main() {
     for(unsigned x=0;x<8;x++)mapPixels[218*320+x]=0xFF8070D0+x*0x010101;
     for(unsigned x=312;x<320;x++)mapPixels[218*320+x]=0xFF8070D0+(x-312)*0x010101;
     assert(port::AnalyzeRowBackdrop(mapPixels,mapSources,rows)); // irregular low-contrast ordered dither row
+    const auto cleanRows=rows;
+    const auto underMap=mapPixels;
+    std::vector<uint8_t> underSource(320*224,2);
+    for(unsigned y=12;y<21;y++)for(unsigned x=0;x<8;x++) {
+        mapSources[y*320+x]=0;
+        mapPixels[y*320+x]=0xFFABCDEF;
+    }
+    assert(!port::AnalyzeRowBackdrop(mapPixels,mapSources,rows));
+    assert(port::AnalyzeRowBackdrop(mapPixels,mapSources,rows,underMap,underSource));
+    assert(rows==cleanRows);
+    underSource[12*320]=5;
+    assert(!port::AnalyzeRowBackdrop(mapPixels,mapSources,rows,underMap,underSource) && rows.empty());
     std::vector<uint8_t> resource(1024);
     for(size_t i=512;i<resource.size();i++)resource[i]=uint8_t(i*17+i/13);
     port::ScreenBackdropSpec screen{"TEST","/TEST",{512,0},port::AtlasFingerprint(std::span<const uint8_t>(resource).subspan(512,512))};
@@ -66,6 +78,9 @@ int main() {
     fill(55,165,230,39,3);
     auto layout=port::AnalyzePresentation(source,320,224);
     assert(layout.recognized && layout.movieOnly);
+    assert(layout.x==16 && layout.y==8 && layout.w==288 && layout.h==144);
+    auto movieFit=port::FitInteger(2560,1440,layout.w,layout.h);
+    assert(movieFit.scale==8 && movieFit.w==2304 && movieFit.h==1152);
     fill(80,170,6,8,0); // actual dialogue means retain the entire group
     layout=port::AnalyzePresentation(source,320,224);
     assert(layout.recognized && !layout.movieOnly);
@@ -82,6 +97,26 @@ int main() {
     fill(16,8,288,144,0); // a letter/photo can occupy the whole VDP1 picture
     assert(port::AnalyzePresentation(source,320,224).recognized);
     assert(!port::AnalyzePresentation(source,352,224).recognized);
+    // During the hall fade the floral plane wins and blends over the exact
+    // picture and dialogue panel. Sprite ornaments may disappear mid-fade.
+    source.assign(320*224,5);
+    fill(16,8,288,144,4);
+    fill(13,155,302,65,3);
+    std::vector<uint8_t> fadeTop(320*224,5);
+    assert(!port::AnalyzePresentation(source,320,224).recognized);
+    auto fade=port::AnalyzePresentation(source,320,224,fadeTop);
+    assert(fade.recognized && !fade.movieOnly && fade.x==9 && fade.y==8 && fade.w==306 && fade.h==212);
+    fill(9,153,302,1,0);
+    fade=port::AnalyzePresentation(source,320,224,fadeTop);
+    assert(fade.w==306 && fade.h==212);
+    fill(0,0,1,1,0);
+    assert(port::AnalyzePresentation(source,320,224,fadeTop).y==0);
+    source.assign(320*224,5);
+    fill(16,8,288,144,4);
+    assert(!port::AnalyzePresentation(source,320,224,fadeTop).recognized);
+    fill(13,155,302,65,3);
+    fadeTop.assign(320*224,3); // ordinary NBG1, no evidence of the floral transition
+    assert(!port::AnalyzePresentation(source,320,224,fadeTop).recognized);
     source.assign(320*224,5);
     fill(16,24,288,144,1);fill(40,151,240,12,0); // opening lyrics stay inside the video
     auto opening=port::AnalyzeOpeningPresentation(source,320,224);
