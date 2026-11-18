@@ -60,11 +60,11 @@
       "next": "Emparejar cada archivo con su escena Saturn, empaquetarlo e integrarlo; verificar variantes de iluminación y fundidos.",
       "details": [
         "1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte.",
-        "11 pares aprobados por captura (pasada 1, 704 capturas revisadas): BG1119, BG1209, BG2251, BG1001, BG1002, BG1006, BG1007, BG1021, BG1116, BG2039, BG1075. Datos en config/hd-scene-bg-pairs.json; registro en docs/research/bg-matching-progress.md."
+        "12 pares aprobados por captura (pasada 1, 875 capturas revisadas): BG1119, BG1209, BG2251, BG1001, BG1002, BG1006, BG1007, BG1021, BG1116, BG2039, BG1075, BG1120. Datos en config/hd-scene-bg-pairs.json; registro en docs/research/bg-matching-progress.md."
       ],
       "total": 1267,
       "inventory": 1267,
-      "matched": 11,
+      "matched": 12,
       "prepared": 0,
       "integrated": 0,
       "verified": 0
