@@ -60,6 +60,12 @@ Proposed integrated launcher option (dependency, requires coordinating SDK owner
 - Saves: the format doesn't change; sharing or separating folders is the owner's decision (the separate profile from `perfil_es.py` keeps them apart).
 - The public release never includes the Spanish disc: it is a local owner output, just like the prepared English disc.
 
+## All chapters, both discs
+
+- `tools/es/volcar_todo.py --disc 1|2` replaces every `NNNNTBL.BIN` (and every `M##MES.BIN` that has batches) of a prepared English disc. Translations are looked up per chapter (first two digits of the table id) by English text. `capituloN/overrides.jsonl` (`{"id": "TTTT-iiii", "es": "..."}`) translates one record regardless of its English text: needed where identical English hides different Japanese speakers or registers (`yes, sir` said with はっ/はい, polite vs plain, Kansai). Batches without a `.out.jsonl` are skipped with a warning.
+- `tools/es/construir_todo.py --disc N` = `volcar_todo` + (disc 1) `menus_es` + `iso.py`, output `local/prepared/discN-es`. The disc-2 `SAKURA` program (392,024 bytes vs 391,712) and `LOGO.SH2` differ from disc 1, so the menu patches are not applied to disc 2 yet; `ICATALL.DAT`, `OMALL.DAT`, `TITLE1.BIN`, `LOAD.BIN` and `WKL01.BIN` are byte-identical on both discs; `WKL12-26` exist only on disc 2.
+- Fixed slots keep every LBA stable across rebuilds, so savestates from a Spanish build stay valid. Battle batches use `capituloN/lotes/lote90` (N = the M## scenario number).
+
 ## Pending
 
 Episode label (`TITLE1.BIN`) and LOADING screen, extra menu (`OMALL.DAT`), HD text review with Spanish, and the language option in the launcher. Chapters 2–10 follow the same method for the script.
