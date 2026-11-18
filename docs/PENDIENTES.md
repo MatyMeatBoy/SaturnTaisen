@@ -78,6 +78,8 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 
 | T48 | P1 | local | implementado y probado · patch0047 | Catálogo antiguo del perfil ya no oculta el preparado válido. Ocho ejecuciones:191→201 y huella distinta recuperan402variantes;90hashes y3RGB por caso iguales, GUI cambia solo retrato; perfiles válidos conservados. No incluido en test.2. |
 
+| T49 | P0 | local | preparando entrega | Checkpoint0.2.0-test.3 con674.182bloques, patches0001..0049 y HD201. Falta cerrar y probar los ZIP extraídos antes de publicarlos/entregarlos. Los paquetes test.2 permanecen intactos. |
+
 ## División para colaboradores
 
 - **Coordinador:** integración T01, revisión/merge y seguimiento de T02/T03/T22. Los otros bots no modifican los mismos archivos ni la base AOT compartida durante su compilación.
