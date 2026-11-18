@@ -103,6 +103,25 @@ static void restoreBevel() {
     assert(plate.owner==4 && plate.underOwner==3 && plate.nativeRgb==0xFF24644C);
     assert(frame(true,false).owner==0);
     assert(frame(false,true).owner==0);
+
+    // The visible glyph can be the lower input to a floral crossfade.
+    for(size_t at=0;at<0x2000;at+=2)vram2[at]=1;
+    std::fill_n(vram2.begin()+0x2000,32,0x11);
+    cram[3]=0x1f;
+    auto reg=[&](unsigned address,unsigned value){render.WriteVdp2Reg(address,value);};
+    reg(0x10,0x3377);reg(0x12,0x3377);reg(0x20,8);reg(0x36,0x8000);
+    reg(0xec,8);reg(0xfa,0x0700);reg(0xf0,0x0303);reg(0xf2,0x0303);reg(0x10a,0x0f00);
+    reg(0x110,8);
+    plate=frame(false,false);
+    const auto& planes=render.PresentationFrame();
+    assert(planes.topSource[y*320+x]==5 && planes.source[y*320+x]==0);
+    assert((shown[y*320+x]&0xffffff)==0x401cec);
+    assert(plate.owner==3 && plate.nativeRgb==0xff1030a0);
+    assert(plate.panelMix.topRgb==(bevelABGR&0xffffff) && plate.panelMix.lowerWeight==16);
+    assert(port::CompositePanelPixel(plate.panelMix,0x0000f8,0xff000000)==plate.nativeRgb);
+    reg(0xec,0x108);
+    plate=frame(false,false);
+    assert(plate.panelMix.lowerWeight==0);
 }
 
 int main() {

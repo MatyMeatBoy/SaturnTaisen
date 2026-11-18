@@ -31,7 +31,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T02b | P0 | local | tras T02a | Pantalla de victoria y salida del combate hasta el control normal, con hash guest y RGB iguales a la referencia. |
 | T02c | P0 | local | tras T02b | Componer `battle-multiple-turns.movie` + T02a + T02b con `tools/stitch_battle_replay.py` y repetir de una sola carga; registrar en `chapter1-continuous-battle.json`. |
 | T03 | P0 | local | tras T01 | Ruta continua New Game → fin del episodio 1, guardado nativo, reinicio y Continue, dos repeticiones. |
-| T04 | P1 | local | tras T01 | Placa de glifos LIPS: reconocer `C510`/`C570`, filas Y=54/78/102 y 62/94, transformación y recorte por grupo (ver `chapter1-wide-transitions.md`). |
+| T04 | P1 | local | coordinador · implementación | Placa de glifos LIPS: reconocer `C510`/`C570`, filas Y=54/78/102 y 62/94, transformación y recorte por grupo (ver `chapter1-wide-transitions.md`). |
 | T05 | P1 | local | integrado · PR #4 | Solapamiento corregido en Mejorado; cinco pestañas y rutas verificadas. Conservar pruebas y fallback seguro para menús desconocidos. |
 | T06 | P1 | agente | tras T01 | Pulir la junta de fase entre mosaicos LOADING y el centro protegido. |
 | T07 | P1 | local | hecho desarrollo · T01 | Intro previa al título: área 288×144 en 16,24 a la mayor escala entera con subtítulos ingleses. |
@@ -59,9 +59,17 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T28 | P2 | agente/local | tras T27 por escena | Consumir etiquetas verificadas para la presentación/Zoom sin heurísticas ambiguas. El índice local de metadatos todavía no gobierna el runtime. |
 | T29 | P0 | local | integrado · PR #8 | Capítulo2: EVT02 atribuido exactamente a 00204000. Candidato de 643.320 bloques pasa frontera1200 y arranque9501 con todos los hashes/RGB iguales al intérprete y cero interpretados. Base de la ampliación posterior de674.023; test.1 sigue inmutable. |
 | T30 | P0 | local | libre | Continuar desde la introducción del combate del capítulo2, validar órdenes/ataques/victoria y presentación. Partida y estado9500 privados disponibles; no confundir carga corregida con capítulo completo. |
-| T31 | P0 | local | coordinador · PR en preparación | Capítulo4: EVT06 registrado por coincidencia completa en RAM; candidato674.023 pasa frontera1200 y carga12000, con todos los hashes/RGB iguales al intérprete y cero interpretados. Integrar PR y continuar combate. |
+| T31 | P0 | local | integrado · PR #10 | Capítulo4: EVT06 registrado por coincidencia completa en RAM; candidato674.023 pasa frontera1200 y carga12000, con todos los hashes/RGB iguales al intérprete y cero interpretados. Integrar PR y continuar combate. |
 | T32 | P0 | local | libre | Completar rutas intermedias, combates, guardados y finales de capítulos2–Finale. El barrido inicial valida entradas de ocho rutas (96.000 frames) y el arreglo de entrada de capítulo4, no capítulos completos. |
 | T33 | P1 | local | coordinador · reproducción | Inicio y New Game: pétalos16:9, flashes sin borde4:3, caja vacía/sombras antes/después del primer vídeo y zoom de vídeo. Mantener posición aprobada de diálogo entre escenas. |
+| T34 | P1 | local | integrado · PR #11 | Recorte exclusivo del vídeo de novela 288×144; cajas vacías antes/después siguen T33. |
+| T35 | P1 | local | integrado · PR #11 | Continuidad floral y mezcla exacta del relleno del diálogo; fallback para mezclas no probadas. |
+| T36 | P1 | local | integrado · PR #11 | El cursor en el borde izquierdo del mapa conserva el fondo ancho. |
+| T37 | P1 | local | integrado parcial · PR #11 | Filas Sumire/María corregidas con placa VDP1; expansión a los44 glifos de9píxeles probada en la rama T39. Elecciones y cobertura completa pendientes. |
+| T38 | P2 | local | auditoría · PR #11 | Avance con voz: B interrumpe antes que A/C en una línea real, entradas recibidas y paridad AOT/intérprete. Falta referencia Saturn independiente. |
+| T39 | P1 | local | coordinador · pendientes/T39-floral-transitions | Fundido mapa↔floral y entrada directa aZoom;900hashes y9capturas nativas coinciden, muestreo exacto exterior/imagen/sombra. |
+| T40 | P1 | agente/local | libre (coordinar SDK) | Opción «Idioma: English / Español» en el launcher según `docs/research/traduccion-espanol.md`: `language=es` en `launcher.ini`, `find_nearby` prioriza `disc1-es`, selector desactivado si falta. Mientras tanto funciona `tools/es/perfil_es.py`. |
+
 
 ## División para colaboradores
 
@@ -99,5 +107,10 @@ Al abrir PR indicar ID, archivos propios, prueba y limitaciones. No marcar «hec
 - T37: patch42 convierte las filas reportadas de Sumire/María. PlacaVDP1 con primer píxel anterior y hasta dos glifos escritores; invalidación por tercer escritor, sobreescritura no glifo o escritura guest. Las filas con tinta compartida requieren borrado atómico. Se conserva el clipHD original.
 - Pruebas:12hashes por caso iguales entreOriginal,MejoradoHD,MejoradoSD ytest.1Original; RGBOriginalidéntico; AOTestricto0interpretados. Ver hd-text-row-rejections.md. Cobertura de eleccionesLIPS y todoslosguiones sigue pendiente, no declarar todoeltextoHD completo.
 - T38: auditoría voz cerrada para primera línea deSumire: Binterrumpe/avanzaantesqueA/C; inputsSMPC recibidos,460hashes+PCM porbotón igualesAOT/intérprete. FaltaSaturnindependiente.
-- Patch43 contiene solamente primitivas probadas de mezcla exterior mapa/floral; todavía no consume ese helper elruntime. No presentar como arreglo de todaslastransiciones.
-| T39 | P1 | agente/local | libre (coordinar SDK) | Opción «Idioma: English / Español» en el launcher según `docs/research/traduccion-espanol.md`: `language=es` en `launcher.ini`, `find_nearby` prioriza `disc1-es`, selector desactivado si falta. Mientras tanto funciona `tools/es/perfil_es.py`. |
+- Patch43 contiene primitivas de mezcla exterior mapa/floral; patch44 las consume en la entrada al comedor, con pruebas de continuidad. Otras transiciones siguen pendientes.
+
+### Integración futura de idiomas
+
+El idioma será una selección del launcher con una variante coherente de guiones, menús, fuentes y recursos. Compartir mapeos de fuente solo cuando el atlas y su codificación coincidan; las cachés de guion/recurso deben incluir idioma/revisión o hash de contenido. No regenerar hojas españolas ni copiar configuración de mandos encima de un perfil ya editado. PR12 integra herramientas privadas de preparación, no declara terminado el selector ni todo el juego traducido. Saturn y las correcciones visuales mantienen prioridad.
+
+

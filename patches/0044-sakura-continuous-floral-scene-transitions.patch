@@ -1,0 +1,424 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index e63e1f2..917b267 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -8,6 +8,7 @@
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
+ #include "panel_compositing.h"
++#include "map_crossfade.h"
+ #include "screen_backdrop.h"
+ #include "tactical_extension.h"
+ #include "tactical_menu.h"
+@@ -207,6 +208,9 @@ int RunWindowed(Port &port) {
+     bool backgroundWarmupStarted=false;
+     SDL_Texture *foreground=nullptr;
+     SDL_Texture *panelTexture=nullptr;int panelWidth=0,panelHeight=0;
++    SDL_Texture *pictureMixTexture=nullptr,*fadeBackdropTexture=nullptr,*shadowMixTexture=nullptr;
++    int pictureMixWidth=0,pictureMixHeight=0,fadeBackdropWidth=0,fadeBackdropHeight=0,shadowMixWidth=0,shadowMixHeight=0;
++    std::vector<uint32_t> pictureMixPixels,fadeBackdropPixels,shadowMixPixels;
+     std::vector<uint32_t> panelPixels;std::vector<uint8_t> hdErased;
+     SDL_Texture *tacticalCanvas=nullptr;
+     SDL_Texture *mapBackdropTexture=nullptr;
+@@ -378,6 +382,12 @@ int RunWindowed(Port &port) {
+         foreground=nullptr;
+         if(panelTexture)SDL_DestroyTexture(panelTexture);
+         panelTexture=nullptr;panelWidth=panelHeight=0;
++        if(pictureMixTexture)SDL_DestroyTexture(pictureMixTexture);
++        if(fadeBackdropTexture)SDL_DestroyTexture(fadeBackdropTexture);
++        if(shadowMixTexture)SDL_DestroyTexture(shadowMixTexture);
++        shadowMixTexture=nullptr;shadowMixWidth=shadowMixHeight=0;
++        pictureMixTexture=fadeBackdropTexture=nullptr;
++        pictureMixWidth=pictureMixHeight=fadeBackdropWidth=fadeBackdropHeight=0;
+         if(tacticalCanvas)SDL_DestroyTexture(tacticalCanvas);
+         tacticalCanvas=nullptr;
+         if(mapBackdropTexture)SDL_DestroyTexture(mapBackdropTexture);
+@@ -537,6 +547,7 @@ int RunWindowed(Port &port) {
+                         if(!index) continue;
+                         const size_t at=(y+py)*320+x+px;
+                         if(planes.source[at]!=0) row.valid=false;
++                        if(planes.topSource.size()==320*224 && planes.topSource[at]!=0)row.needsPlate=true;
+                         row.ink.push_back(at);
+                         row.owners[at]=uint16_t(&shown-planes.sprites.data()+1);
+                     }
+@@ -673,8 +684,13 @@ int RunWindowed(Port &port) {
+                 }
+             }
+         }
+-        SDL_Texture* floral=nullptr;const Backdrop* selectedBackdrop=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false;
++        SDL_Texture* floral=nullptr;const Backdrop* selectedBackdrop=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false,mixedFloralAvailable=false;
++        std::vector<uint32_t> mapFadeRows;std::optional<MapCrossfade> mapFade;
+         if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
++            const auto& floralFrame=port.videoRenderer->PresentationFrame();
++            mapFade=VerifyMapCrossfadeEdges(floralFrame.mapFadeEdges,mapFadeRows);
++            mixedFloralAvailable=floralFrame.floralCoverMix.size()==320*224 &&
++                std::count_if(floralFrame.floralCoverMix.begin(),floralFrame.floralCoverMix.end(),[](const auto& mix){return mix.lowerWeight!=0;})>=1000;
+             const auto palette=port.videoRenderer->BackgroundPaletteFingerprint();
+             if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static uint64_t previous=0;
+@@ -685,7 +701,7 @@ int RunWindowed(Port &port) {
+             for(auto& backdrop:backdrops) if((backdrop.palette==port.videoRenderer->BackgroundPaletteFingerprint(backdrop.layer) ||
+                 (backdrop.id=="PAUSE01" && port.videoRenderer->BackgroundPaletteFingerprint(4)==0xE9107F892185CCC8ull &&
+                  MatchesAnchoredBackdrop(port.videoRenderer->PresentationFrame().underSprites,backdrop.nativeScreen,port.videoRenderer->BackgroundColorOffset(4)))) && backdrop.pc==(preferPc && pass==0) &&
+-                std::count(port.videoRenderer->PresentationFrame().source.begin(),port.videoRenderer->PresentationFrame().source.end(),uint8_t(backdrop.layer))>=1000) {
++                (std::count(port.videoRenderer->PresentationFrame().source.begin(),port.videoRenderer->PresentationFrame().source.end(),uint8_t(backdrop.layer))>=1000 || (backdrop.layer==5 && (mixedFloralAvailable || mapFade.has_value())))) {
+                 if(!backdrop.attempted) {
+                     backdrop.attempted=true;
+                     for(const auto& file:backdrop.files) {
+@@ -755,13 +771,76 @@ int RunWindowed(Port &port) {
+                 }
+             }
+             const bool knownBackdrop=planes.width==320 && planes.height==224 && planes.source.size()==320*224 &&
+-                std::count(planes.source.begin(),planes.source.end(),uint8_t(5))>=1000;
++                (std::count(planes.source.begin(),planes.source.end(),uint8_t(5))>=1000 || mixedFloralAvailable || mapFade.has_value());
+             if (!anchoredBackdrop && knownBackdrop && planes.width==texW && planes.height==texH) {
+                 float bgw=0,bgh=0; SDL_GetTextureSize(floral,&bgw,&bgh);
+                 const int canvasWidth=PresentationWidth(wide,high),canvasLeft=(wide-canvasWidth)/2;
+                 const auto cover=CoverInteger(canvasWidth,high,static_cast<int>(bgw),static_cast<int>(bgh));
+                 const SDL_FRect bg{static_cast<float>(canvasLeft+cover.x),static_cast<float>(cover.y),static_cast<float>(cover.w),static_cast<float>(cover.h)};
+                 SDL_RenderTexture(renderer,floral,nullptr,&bg);
++                if(selectedBackdrop && mapFade) {
++                    const auto native=FitInteger(wide,high,320,224);
++                    if(ResizePanelBuffer(fadeBackdropPixels,size_t(canvasWidth)*high)) {
++                        std::fill(fadeBackdropPixels.begin(),fadeBackdropPixels.end(),0);
++                        for(int py=0;py<high;py++)for(int px=0;px<canvasWidth;px++) {
++                            const int screenX=canvasLeft+px;
++                            if(const auto floralPixel=SamplePanelBackdrop(selectedBackdrop->pixels,int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,screenX,py))
++                                if(const auto mixed=SampleMapCrossfade(*mapFade,mapFadeRows,native,screenX,py,*floralPixel))
++                                    fadeBackdropPixels[size_t(py)*canvasWidth+px]=*mixed;
++                        }
++                        if(fadeBackdropWidth!=canvasWidth || fadeBackdropHeight!=high) {
++                            if(fadeBackdropTexture)SDL_DestroyTexture(fadeBackdropTexture);
++                            fadeBackdropTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,canvasWidth,high);
++                            fadeBackdropWidth=fadeBackdropTexture?canvasWidth:0;fadeBackdropHeight=fadeBackdropTexture?high:0;
++                            if(fadeBackdropTexture && (!SDL_SetTextureBlendMode(fadeBackdropTexture,SDL_BLENDMODE_BLEND) ||
++                                    !SDL_SetTextureScaleMode(fadeBackdropTexture,SDL_SCALEMODE_NEAREST))) {
++                                SDL_DestroyTexture(fadeBackdropTexture);fadeBackdropTexture=nullptr;fadeBackdropWidth=fadeBackdropHeight=0;
++                            }
++                        }
++                        const SDL_FRect exterior{float(canvasLeft),0,float(canvasWidth),float(high)};
++                        if(fadeBackdropTexture && SDL_UpdateTexture(fadeBackdropTexture,nullptr,fadeBackdropPixels.data(),canvasWidth*sizeof(uint32_t)))
++                            SDL_RenderTexture(renderer,fadeBackdropTexture,nullptr,&exterior);
++                    }
++                }
++                const auto uploadLayer=[&](SDL_Texture*& cachedTexture,int& cachedWidth,int& cachedHeight,
++                        std::vector<uint32_t>& pixels,const IntegerViewport& fit,const SDL_FRect& crop,
++                        const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr) -> bool {
++                    const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
++                if(selectedBackdrop && planes.panelMix.size()==320*224 &&
++                   planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
++                   size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
++                    if(sourcePixels.size()==320*224 && ResizePanelBuffer(pixels,size_t(fit.w)*fit.h)) {
++                        bool hasMix=false;
++                        for(int py=0;py<fit.h;py++)for(int px=0;px<fit.w;px++) {
++                            const int sx=int(crop.x)+px/fit.scale,sy=int(crop.y)+py/fit.scale;
++                            if(sx<0 || sx>=320 || sy<0 || sy>=224) {pixels[size_t(py)*fit.w+px]=0;continue;}
++                            const size_t at=size_t(sy)*320+sx;
++                            const auto& baseRecipe=hdErased[at]==2?planes.glyphPlate[at].panelMix:(hdErased[at]?planes.underPanelMix[at]:planes.panelMix[at]);
++                            const auto& recipe=solidRecipe?*solidRecipe:(hdErased[at] || baseRecipe.lowerWeight || planes.floralCoverMix.size()!=320*224?baseRecipe:planes.floralCoverMix[at]);
++                            uint32_t pixel=solidRecipe?0xFF000000:sourcePixels[at];
++                            if((pixel>>24) && recipe.lowerWeight)if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
++                                    int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
++                                pixel=CompositePanelPixel(recipe,*below,pixel);hasMix=true;
++                            }
++                            pixels[size_t(py)*fit.w+px]=pixel;
++                        }
++                        if(hasMix) {
++                            if(cachedWidth!=fit.w || cachedHeight!=fit.h) {
++                                if(cachedTexture)SDL_DestroyTexture(cachedTexture);
++                                cachedTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,fit.w,fit.h);
++                                cachedWidth=cachedTexture?fit.w:0;cachedHeight=cachedTexture?fit.h:0;
++                                if(cachedTexture && (!SDL_SetTextureBlendMode(cachedTexture,SDL_BLENDMODE_BLEND) ||
++                                    !SDL_SetTextureScaleMode(cachedTexture,SDL_SCALEMODE_NEAREST))) {
++                                    SDL_DestroyTexture(cachedTexture);cachedTexture=nullptr;cachedWidth=cachedHeight=0;
++                                }
++                            }
++                            if(cachedTexture && SDL_UpdateTexture(cachedTexture,nullptr,pixels.data(),fit.w*sizeof(uint32_t)))
++                                return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
++                        }
++                    }
++                }
++                    return false;
++                };
+                 SDL_FRect crop=scene.recognized?SDL_FRect{static_cast<float>(scene.x),static_cast<float>(scene.y),static_cast<float>(scene.w),static_cast<float>(scene.h)}:SDL_FRect{0,0,320,224};
+                 SDL_Texture* content=foreground;
+                 if (scene.movieOnly) { crop={float(scene.x),float(scene.y),float(scene.w),float(scene.h)}; content=texture; }
+@@ -804,11 +883,17 @@ int RunWindowed(Port &port) {
+                         // Shadow belongs to the enlarged image. Draw it first so the dialogue
+                         // and its ornaments always cover it wherever the two layers meet.
+                         const SDL_FRect shadow{imageTarget.x+zoom.shadow,imageTarget.y+zoom.shadow,imageTarget.w,imageTarget.h};
+-                        SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+-                        SDL_SetRenderDrawColor(renderer,80,80,80,166);
+-                        SDL_RenderFillRect(renderer,&shadow);
+-                        SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+-                        SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
++                        const auto shadowRecipe=UniformPictureShadowRecipe(planes.panelMix,planes.floralCoverMix);
++                        auto shadowFit=zoom.picture;shadowFit.x+=zoom.shadow;shadowFit.y+=zoom.shadow;
++                        if(!shadowRecipe ||
++                           !uploadLayer(shadowMixTexture,shadowMixWidth,shadowMixHeight,shadowMixPixels,shadowFit,imageCrop,zoomForeground,&*shadowRecipe)) {
++                            SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
++                            SDL_SetRenderDrawColor(renderer,80,80,80,166);
++                            SDL_RenderFillRect(renderer,&shadow);
++                            SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
++                        }
++                        if(!uploadLayer(pictureMixTexture,pictureMixWidth,pictureMixHeight,pictureMixPixels,zoom.picture,imageCrop,zoomForeground))
++                            SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
+                         crop.y=153;crop.h=float(scene.y+scene.h-153);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                             static bool logged=false;if(!logged) {logged=true;fprintf(stderr,"scene zoom: image=%dx%d scale=%d dialogue=%dx%d scale=%d y=%d shadow=%d\n",zoom.picture.w,zoom.picture.h,zoom.picture.scale,fit.w,fit.h,fit.scale,fit.y,zoom.shadow);}
+@@ -826,41 +911,9 @@ int RunWindowed(Port &port) {
+                     SDL_RenderFillRect(renderer,&shadow);
+                     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+                 }
+-                bool panelDrawn=false;
+-                if(!scene.movieOnly && selectedBackdrop && planes.panelMix.size()==320*224 &&
+-                   planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+-                   size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
+-                    const auto& sourcePixels=splitZoom?zoomForeground:(hdLines.empty()?planes.foreground:hdForeground);
+-                    if(sourcePixels.size()==320*224 && ResizePanelBuffer(panelPixels,size_t(fit.w)*fit.h)) {
+-                        bool hasMix=false;
+-                        for(int py=0;py<fit.h;py++)for(int px=0;px<fit.w;px++) {
+-                            const int sx=int(crop.x)+px/fit.scale,sy=int(crop.y)+py/fit.scale;
+-                            if(sx<0 || sx>=320 || sy<0 || sy>=224) {panelPixels[size_t(py)*fit.w+px]=0;continue;}
+-                            const size_t at=size_t(sy)*320+sx;
+-                            const auto& recipe=hdErased[at]==2?planes.glyphPlate[at].panelMix:(hdErased[at]?planes.underPanelMix[at]:planes.panelMix[at]);
+-                            uint32_t pixel=sourcePixels[at];
+-                            if((pixel>>24) && recipe.lowerWeight)if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
+-                                    int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
+-                                pixel=CompositePanelPixel(recipe,*below,pixel);hasMix=true;
+-                            }
+-                            panelPixels[size_t(py)*fit.w+px]=pixel;
+-                        }
+-                        if(hasMix) {
+-                            if(panelWidth!=fit.w || panelHeight!=fit.h) {
+-                                if(panelTexture)SDL_DestroyTexture(panelTexture);
+-                                panelTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,fit.w,fit.h);
+-                                panelWidth=panelTexture?fit.w:0;panelHeight=panelTexture?fit.h:0;
+-                                if(panelTexture && (!SDL_SetTextureBlendMode(panelTexture,SDL_BLENDMODE_BLEND) ||
+-                                    !SDL_SetTextureScaleMode(panelTexture,SDL_SCALEMODE_NEAREST))) {
+-                                    SDL_DestroyTexture(panelTexture);panelTexture=nullptr;panelWidth=panelHeight=0;
+-                                }
+-                            }
+-                            if(panelTexture && SDL_UpdateTexture(panelTexture,nullptr,panelPixels.data(),fit.w*sizeof(uint32_t)))
+-                                panelDrawn=SDL_RenderTexture(renderer,panelTexture,nullptr,&target);
+-                        }
+-                    }
+-                }
+-                if(!panelDrawn)SDL_RenderTexture(renderer,content,&crop,&target);
++                const auto& mixedSource=splitZoom?zoomForeground:(hdLines.empty()?planes.foreground:hdForeground);
++                if(scene.movieOnly || !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,fit,crop,mixedSource))
++                    SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 portraitViewport=!scene.movieOnly;
+diff --git a/port/narrative_text.h b/port/narrative_text.h
+index fa74982..165d1a2 100644
+--- a/port/narrative_text.h
++++ b/port/narrative_text.h
+@@ -30,11 +30,13 @@ inline bool NarrativeInkFits(int x,int y,std::span<const uint8_t> tile) {
+     }
+     return true;
+ }
+-// Only the two witnessed nine-pixel glyphs may cross the right ink boundary.
+-// Callers must additionally prove the saved-under plate for the complete row.
++// Every nine-pixel glyph in the hash-locked English atlas was measured.
++// Callers must also prove exact decoding and the complete saved-under row plate.
++inline constexpr std::array<char32_t,44> kKnownNinePixelGlyphs={0x23,0x25,0x26,0x34,0x40,0x41,0x4D,0x4F,0x51,0x56,0x57,0x58,0x59,0x5F,0x77,0x7E,0x2026,0x2030,0x152,0x201C,0x2014,0x2122,0x153,0x178,0xA9,0xB5,0xBC,0xBD,0xBE,0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xD2,0xD3,0xD4,0xD5,0xD6,0xD8,0xDD,0xE6};
++
+ inline bool NarrativeRecognizedInkFits(int x,int y,std::span<const uint8_t> tile,char32_t code) {
+     if(NarrativeInkFits(x,y,tile))return true;
+-    if(tile.size()!=128 || x!=296 || (code!=U'w' && code!=U'\u2026'))return false;
++    if(tile.size()!=128 || x!=296 || std::find(kKnownNinePixelGlyphs.begin(),kKnownNinePixelGlyphs.end(),code)==kKnownNinePixelGlyphs.end())return false;
+     for(int py=0;py<16;py++)for(int px=0;px<16;px++) {
+         const uint8_t packed=tile[py*8+px/2];
+         if(!(px&1?packed&15:packed>>4))continue;
+diff --git a/port/panel_compositing.h b/port/panel_compositing.h
+index eb9509c..7c02ded 100644
+--- a/port/panel_compositing.h
++++ b/port/panel_compositing.h
+@@ -51,6 +51,19 @@ inline std::optional<uint32_t> SamplePanelBackdrop(std::span<const uint32_t> pix
+     if(dx<0 || dy<0 || dx>=int64_t(width)*scale || dy>=int64_t(height)*scale)return {};
+     return pixels[size_t(dy/scale)*size_t(width)+size_t(dx/scale)];
+ }
++inline std::optional<PanelMix> UniformPictureShadowRecipe(std::span<const PanelMix> panels,
++                                                         std::span<const PanelMix> covers) {
++    if(panels.size()!=320*224 || covers.size()!=320*224)return {};
++    std::optional<PanelMix> result;
++    for(int y=12;y<152;y++)for(int x=304;x<308;x++) {
++        const size_t at=size_t(y)*320+x;
++        const auto& recipe=panels[at].lowerWeight?panels[at]:covers[at];
++        if(!recipe.lowerWeight || recipe.lowerWeight>32 || (recipe.topRgb&0xFFFFFF)!=0x505050)return {};
++        if(result && (result->lowerWeight!=recipe.lowerWeight || result->postMixOffset!=recipe.postMixOffset))return {};
++        if(!result)result=recipe;
++    }
++    return result;
++}
+ inline bool ResizePanelBuffer(std::vector<uint32_t>& pixels,size_t count) noexcept {
+     if(count>16*1024*1024)return false;
+     try {pixels.resize(count);return true;}catch(const std::bad_alloc&) {return false;}
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index aa4c901..c1d428f 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -38,7 +38,10 @@ void Renderer::Reset(bool hard) {
+     m_glyphPlateReady={};m_glyphCaptureActive=false;
+     m_presentation.panelMix.clear();
+     m_presentation.underPanelMix.clear();
++    m_presentation.floralCoverMix.clear();
++    m_presentation.mapFadeEdges.clear();
+     m_presentation.underSource.clear();
++    m_presentation.topSource.clear();
+     m_presentWideReady[0]=m_presentWideReady[1]=false;m_presentRasterTarget=nullptr;
+     for(auto& dirty:m_menuDirty)dirty.clear();
+     m_menuReplayStable=false;
+@@ -89,7 +92,10 @@ void Renderer::Serialize(Archive &ar) {
+         m_glyphPlateReady={};m_glyphCaptureActive=false;
+         m_presentation.panelMix.clear();
+         m_presentation.underPanelMix.clear();
++        m_presentation.floralCoverMix.clear();
++        m_presentation.mapFadeEdges.clear();
+         m_presentation.underSource.clear();
++        m_presentation.topSource.clear();
+         m_presentWideReady[0]=m_presentWideReady[1]=false;m_presentRasterTarget=nullptr;
+         for(auto& dirty:m_menuDirty)dirty.clear();
+         m_menuReplayStable=false;
+@@ -423,8 +429,11 @@ void Renderer::BeginFrame() {
+         m_presentation.panelMix.assign(m_presentation.spriteWhiteWeight.size(), {});
+         m_presentation.glyphPlate.assign(m_captureGlyphPlate?m_presentation.spriteWhiteWeight.size():0,{});
+         m_presentation.underPanelMix.assign(m_presentation.panelMix.size(), {});
++        m_presentation.floralCoverMix.assign(m_presentation.panelMix.size(), {});
++        m_presentation.mapFadeEdges.assign(m_width==320 && m_height==224?32*224:0, {});
+         m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
+         m_presentation.underSource.assign(static_cast<size_t>(m_width)*m_height,6);
++        m_presentation.topSource.assign(m_presentation.source.size(),6);
+         m_presentation.scrollWidth=m_captureScrollExtra && m_width==320 && m_height==224?m_width+2*m_captureScrollExtra:0;
+         m_presentation.mapSignature=0;
+         if(m_presentation.scrollWidth) {
+@@ -747,12 +756,12 @@ void Renderer::ComposeLine(uint32 y) {
+     };
+     const bool captureWhiteWeight=m_capturePresentation && !m_presentation.spriteWhiteWeight.empty() && y<m_presentation.height;
+     const bool capturePanel = captureWhiteWeight && !m_presentation.panelMix.empty() && !regs2.colorCalcAdd;
+-    const auto panelRecipe = [&](Color888 rawTop, uint32 ratio) {
++    const auto mixRecipe = [&](Color888 fixedColor, uint32 floralWeight, uint32 topLayer) {
+         ::port::PanelMix recipe;
+-        recipe.topRgb = rawTop.u32 & 0xFFFFFF;
+-        recipe.lowerWeight = static_cast<uint8>(ratio + 1);
+-        if (regs2.colorOffsetEnable[3]) {
+-            const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[3]];
++        recipe.topRgb = fixedColor.u32 & 0xFFFFFF;
++        recipe.lowerWeight = static_cast<uint8>(floralWeight);
++        if (regs2.colorOffsetEnable[topLayer]) {
++            const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[topLayer]];
+             recipe.postMixOffset = {static_cast<int16_t>(bit::sign_extend<9>(offset.r)),
+                                     static_cast<int16_t>(bit::sign_extend<9>(offset.g)),
+                                     static_cast<int16_t>(bit::sign_extend<9>(offset.b))};
+@@ -764,6 +773,8 @@ void Renderer::ComposeLine(uint32 y) {
+         uint32 top,source;
+         uint8 whiteWeight;
+         ::port::PanelMix panel;
++        ::port::PanelMix floralCover;
++        uint8 mapWeight;
+         bool unshadowedPanel;
+     };
+     const auto composite = [&](uint32 x,const Line& sprite) -> ComposedPixel {
+@@ -794,6 +805,8 @@ void Renderer::ComposeLine(uint32 y) {
+ 
+         uint32 presentationSource=top;
+         ::port::PanelMix panel;
++        ::port::PanelMix floralCover;
++        uint8 mapWeight=0;
+         uint8 whiteWeight=top==kSprites?0:255;
+         const bool calcTop = top == kSprites ? sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
+                            : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
+@@ -807,7 +820,11 @@ void Renderer::ComposeLine(uint32 y) {
+             const uint32 ratioLayer = regs2.colorCalcUseSecondRatio ? second : top;
+             const uint32 ratio = ratioLayer == kSprites ? sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
+             if (capturePanel && top == 3 && second == 5)
+-                panel = panelRecipe(color, ratio);
++                panel = mixRecipe(color, ratio + 1, top);
++            if (capturePanel && top == 5 && second < 5) {
++                floralCover = mixRecipe(below, 31 - ratio, top);
++                if(second == 2)mapWeight=static_cast<uint8>(ratio + 1);
++            }
+             whiteWeight=255;
+             if(captureWhiteWeight && !regs2.colorCalcAdd) {
+                 if(top==kSprites && (below.u32&0xFFFFFF)==0xF8F8F8)
+@@ -837,27 +854,34 @@ void Renderer::ComposeLine(uint32 y) {
+                 whiteWeight=255;
+             }
+         }
+-        return {color,top,presentationSource,whiteWeight,panel,capturesUnshadowedPanel};
++        return {color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,capturesUnshadowedPanel};
+     };
+     const bool glyphLine=supported && PrepareGlyphLine(line);
+     for (uint32 x = 0; x < width; x++) {
+-        const auto [color,top,presentationSource,whiteWeight,panel,capturesUnshadowedPanel]=composite(x,m_sprite);
+-        if(glyphLine && top==kSprites && m_glyphLineOwners[x]) {
++        const auto [color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
++        if(glyphLine && presentationSource==kSprites && m_glyphLineOwners[x]) {
+             const auto restored=composite(x,m_glyphSprite);
+             const auto rgba=restored.color.u32|0xFF000000;
+             const size_t at=size_t(y)*width+x;
+             m_presentation.glyphPlate[at]=
+                 {rgba,restored.source<5?rgba:0,m_glyphLineOwners[x],m_glyphStamps[m_displayFB][at].underOwner,
+-                 restored.unshadowedPanel?restored.panel : ::port::PanelMix{}};
++                 restored.unshadowedPanel?(restored.top==5?restored.floralCover:restored.panel) : ::port::PanelMix{}};
+         }
+         out[x] = color.u32;
+         if (m_capturePresentation && y<m_presentation.height) {
+             const size_t at=static_cast<size_t>(y)*width+x;
+             m_presentation.source[at]=static_cast<uint8>(presentationSource);
++            m_presentation.topSource[at]=static_cast<uint8>(top);
+             m_presentation.underSource[at]=static_cast<uint8>(top);
+             if(captureWhiteWeight)m_presentation.spriteWhiteWeight[at]=whiteWeight;
+-            if (capturesUnshadowedPanel)
++            const bool mapEdge=capturesUnshadowedPanel && (x<16 || x>=304);
++            const size_t edgeAt=static_cast<size_t>(y)*32+(x<16?x:x-288);
++            if (capturesUnshadowedPanel) {
+                 m_presentation.panelMix[at] = panel;
++                m_presentation.floralCoverMix[at] = floralCover;
++                if(mapEdge && mapWeight)
++                    m_presentation.mapFadeEdges[edgeAt]={floralCover.topRgb,{mapWeight,floralCover.postMixOffset}};
++            }
+             m_presentation.foreground[at]=presentationSource<5 ? color.u32|0xFF000000 : 0;
+             Color888 under=color;
+             if(top==kSprites) {
+@@ -874,7 +898,13 @@ void Renderer::ComposeLine(uint32 y) {
+                     const Color888 below=b==kBack?back:Color888{.u32=layers[b].color[x]};
+                     const uint32 ratio=regs2.colorCalcRatio[regs2.colorCalcUseSecondRatio?b:a];
+                     if (capturesUnshadowedPanel && a == 3 && b == 5)
+-                        m_presentation.underPanelMix[at] = panelRecipe(under, ratio);
++                        m_presentation.underPanelMix[at] = mixRecipe(under, ratio + 1, a);
++                    if (capturesUnshadowedPanel && a == 5 && b < 5) {
++                        const auto recipe=mixRecipe(below, 31 - ratio, a);
++                        m_presentation.underPanelMix[at]=recipe;
++                        if(mapEdge && b==2)
++                            m_presentation.mapFadeEdges[edgeAt]={recipe.topRgb,{static_cast<uint8>(ratio+1),recipe.postMixOffset}};
++                    }
+                     auto mix=[&](uint32 c,uint32 d){return regs2.colorCalcAdd?std::min(c+d,255u):(c*(31u-ratio)+d*(ratio+1u))>>5;};
+                     under.u32=mix(under.r,below.r)|(mix(under.g,below.g)<<8)|(mix(under.b,below.b)<<16);
+                 }
+diff --git a/video/renderer.h b/video/renderer.h
+index 7e1a9bb..87a6e3c 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -13,6 +13,7 @@
+ #include "glyph_plate.h"
+ #include "regs.h"
+ #include "../port/panel_compositing.h"
++#include "../port/map_crossfade.h"
+ 
+ #include <functional>
+ #include <memory>
+@@ -69,7 +70,11 @@ public:
+         uint32 width=0,height=0;
+         std::vector<uint32> foreground,underSprites;
+         std::vector<::port::PanelMix> panelMix,underPanelMix;
++        std::vector<::port::PanelMix> floralCoverMix;
++        // Raw NBG0 edge pixels proven under the floral plane, in native row order.
++        std::vector<::port::MapFadeEdge> mapFadeEdges;
+         std::vector<uint8> source;
++        std::vector<uint8> topSource; // Actual winning layer before visibility remapping.
+         std::vector<uint8> underSource;
+         // 0: unmodified sprite; 1–31: exact white weight; 255: unsupported.
+         std::vector<uint8> spriteWhiteWeight;

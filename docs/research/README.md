@@ -66,6 +66,8 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 
 - [dialogue-voice-advance.md](dialogue-voice-advance.md): Pulsaciones A/B/C, voz real y comparación AOT/intérprete.
 
+- [wide-map-crossfades.md](wide-map-crossfades.md): Fundido mapa/floral con continuidad a16:9, entrada directa aZoom y paridad nativa.
+
 ## Traducción
 
 - [traduccion-espanol.md](traduccion-espanol.md) — parche al español: método japonés → inglés → español, formatos de diálogo, combate y menús, ISO con ranuras fijas.

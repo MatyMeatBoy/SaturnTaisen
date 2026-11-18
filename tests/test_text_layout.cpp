@@ -1,9 +1,30 @@
 #include "narrative_text.h"
 #include "integer_viewport.h"
+#include "glyph_text.h"
+#include <fstream>
+#include <iterator>
+#include <vector>
 #include <cassert>
 #include <array>
 #include <cmath>
-int main() {
+int main(int argc,char** argv) {
+    if(argc==2) {
+        std::ifstream file(argv[1],std::ios::binary);
+        std::vector<uint8_t> atlas((std::istreambuf_iterator<char>(file)),{});
+        assert(port::KnownEnglishAtlas(atlas));
+        unsigned wide=0;
+        for(unsigned code=32;code<=255;code++)if(const auto unicode=port::GlyphCodepoint(code)) {
+            int right=-1;
+            for(int y=0;y<16;y++)for(int x=0;x<16;x++) {
+                const auto packed=atlas[(code-1)*128+y*8+x/2];
+                if((x&1?packed&15:packed>>4)!=0)right=std::max(right,x);
+            }
+            assert(right<=8);
+            const bool registered=std::find(port::kKnownNinePixelGlyphs.begin(),port::kKnownNinePixelGlyphs.end(),unicode)!=port::kKnownNinePixelGlyphs.end();
+            assert(registered==(right==8));wide+=registered;
+        }
+        assert(wide==44);
+    }
     std::array<uint8_t,128> tile{};
     for(int y=0;y<12;y++)for(int x=0;x<4;x++)tile[y*8+x]=0x11;
     // A 16-pixel texture may have only 8 ink pixels. The last letter still fits.
@@ -18,6 +39,9 @@ int main() {
     assert(port::NarrativeRecognizedInkFits(296,172,edge,U'w'));
     assert(port::NarrativeRecognizedInkFits(296,184,edge,U'\u2026'));
     assert(!port::NarrativeRecognizedInkFits(296,172,edge,U'm'));
+    assert(port::NarrativeRecognizedInkFits(296,172,edge,U'M'));
+    assert(port::NarrativeRecognizedInkFits(296,172,edge,U'\u0152'));
+    assert(!port::NarrativeRecognizedInkFits(296,172,edge,U'\u6f22'));
     assert(!port::NarrativeRecognizedInkFits(297,172,edge,U'w'));
     edge[4*8+4]=0x11; // a second outboard column has no witnessed exception
     assert(!port::NarrativeRecognizedInkFits(296,172,edge,U'w'));
