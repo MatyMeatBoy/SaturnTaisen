@@ -75,6 +75,7 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [first-sakura-hd-portraits.md](first-sakura-hd-portraits.md): Matches revisados de Sakura0013/0014, reproducción y límites de la prueba en juego.
 - [Segundo lote de retratos HD del capítulo 1](chapter1-sumire-hd-portraits.md)
 - [Tercer lote de retratos HD del capítulo 1](chapter1-third-hd-portraits.md)
+- [Cuarto lote de retratos HD](chapter1-fourth-hd-portraits.md)
 - [Selección del paquete de retratos HD](portrait-pack-profile-fallback.md)
 
 - [chapter1-choice-hd.md](chapter1-choice-hd.md): Texto HD LIPS de dos/tres opciones, propiedad de glifos y diez perfiles reales.
