@@ -5,7 +5,8 @@ import csv
 import hashlib
 import json
 import mmap
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+import re
 import struct
 
 if __package__:
@@ -22,6 +23,8 @@ TAGS = {"video": "vídeo", "dialogo": "diálogo", "eleccion": "elección",
         "mapa": "mapa", "combate": "combate", "menu": "menú"}
 TRANSITION_NOTES = "docs/research/chapter1-wide-transitions.md"
 BATTLE_NOTES = "docs/research/tactical-menu-independent-reference.md"
+SHA256 = re.compile(r"[0-9a-f]{64}\Z")
+SWEEP_CASE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 
 
 def hash_span(data, start, end):
@@ -165,6 +168,87 @@ def runtime_observations(resources):
     return result
 
 
+def sweep_evidence(entry, expected_tag):
+    if not isinstance(entry, dict) or entry.get("tag") != expected_tag or expected_tag not in TAGS:
+        raise ValueError(f"invalid chapter-sweep tag for {expected_tag}")
+    evidence = entry.get("evidence")
+    if not isinstance(evidence, dict) or not isinstance(evidence.get("path"), str):
+        raise ValueError("invalid chapter-sweep screenshot metadata")
+    name, frame, sha = evidence["path"], evidence["frame"], evidence["sha256"]
+    path = PurePosixPath(name)
+    if (path.is_absolute() or name != path.as_posix() or ".." in path.parts
+            or "\\" in name or ":" in name or path.suffix.lower() != ".png"
+            or type(frame) is not int or frame < 0
+            or not isinstance(sha, str) or not SHA256.fullmatch(sha)):
+        raise ValueError("invalid chapter-sweep screenshot metadata")
+    return {"path": name, "frame": frame, "sha256": sha}
+
+
+def import_chapter_sweep(rows, resources, dialogue_records):
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("chapter sweep observations must be a nonempty array")
+    inventory = {(row["disc"], row["iso_path"]): row for row in resources}
+    discs = {disc for disc, _ in inventory}
+    result = []
+    seen = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("invalid chapter-sweep row")
+        disc, case, episode, slot = (row["disc_on_continue"], row["case"],
+                                     row["episode_on_continue"], row["slot"])
+        if (type(disc) is not int or disc not in discs
+                or not isinstance(case, str) or not SWEEP_CASE.fullmatch(case)
+                or (disc, case) in seen or type(slot) is not int or slot not in (1, 2, 3)
+                or not (episode == "Finale" or type(episode) is int and episode > 0)):
+            raise ValueError("invalid or duplicate chapter-sweep selection")
+        seen.add((disc, case))
+        identifier = f"{disc}:observation:chapter-sweep:{case}"
+        context = {"observed_episode": episode, "slot": slot}
+        result.append(scene(
+            f"{identifier}:selection", disc, "menu", "observed",
+            [sweep_evidence(row["selection"], "menu")], **context,
+        ))
+
+        observed = row.get("observed_scene")
+        if observed is None:
+            continue
+        if not isinstance(observed, dict) or observed.get("text_presence") != "present":
+            raise ValueError(f"chapter-sweep dialogue lacks visible text evidence: {case}")
+        evidence = sweep_evidence(observed, "dialogo")
+        tables = []
+        resident = {}
+        reported = row.get("exact_resident_resources", [])
+        if not isinstance(reported, list):
+            raise ValueError(f"invalid chapter-sweep resource list: {case}")
+        for item in reported:
+            if not isinstance(item, dict) or not isinstance(item.get("iso_path"), str):
+                raise ValueError(f"invalid chapter-sweep resource: {case}")
+            path = item["iso_path"]
+            resource = inventory.get((disc, path))
+            if (resource is None or path in resident or item.get("disc", disc) != disc
+                    or item["whole_file_equal"] is not True or item["sha256"] != resource["sha256"]
+                    or item["bytes"] != resource["byte_length"] or item["equal_bytes"] != item["bytes"]
+                    or item["lba"] != resource["lba"]):
+                raise ValueError(f"unverified chapter-sweep resource at disc {disc}, path {path}")
+            resident[path] = resource["resource_id"]
+            if resource["format"] == "english_dialogue_table":
+                tables.append((disc, path))
+        if len(tables) > 1:
+            raise ValueError(f"ambiguous chapter-sweep dialogue tables: {case}")
+        linkage = {}
+        if tables:
+            key, = tables
+            table_id = resident[key[1]]
+            linkage = {"dialogue_table": table_id, "resource_id": table_id, "iso_path": key[1],
+                       "record_association": "resident_table_inventory",
+                       "associated_record_keys": [line["record_key"] for line in dialogue_records[key]]}
+        result.append(scene(
+            f"{identifier}:dialogue", disc, "dialogo", "observed", [evidence], **context,
+            **linkage, text_presence="present", resident_resource_ids=list(resident.values()),
+        ))
+    return result
+
+
 def write_csv(path, rows):
     columns = list(dict.fromkeys(key for row in rows for key in row))
     with path.open("x", encoding="utf-8", newline="") as stream:
@@ -181,7 +265,7 @@ def write_json(path, value):
         stream.write("\n")
 
 
-def build(catalog, discs, output):
+def build(catalog, discs, output, observations_path=None):
     manifest_bytes = (catalog / "manifest.json").read_bytes()
     manifest = json.loads(manifest_bytes.decode("utf-8"))
     inventory = source_inventory(manifest)
@@ -199,6 +283,15 @@ def build(catalog, discs, output):
         resource["format"] = "english_dialogue_table"
     candidates = scene_candidates(resources, records)
     observations = runtime_observations(resources)
+    observation_manifest = None
+    if observations_path is not None:
+        data = observations_path.read_bytes()
+        imported = import_chapter_sweep(json.loads(data.decode("utf-8")), resources, records)
+        observations.extend(imported)
+        observation_manifest = {
+            "file": observations_path.name, "sha256": hashlib.sha256(data).hexdigest(),
+            "count": len(imported), "tags": dict(Counter(row["tag"] for row in imported)),
+        }
     scenes = candidates + observations
 
     output.mkdir(parents=True, exist_ok=False)
@@ -215,6 +308,8 @@ def build(catalog, discs, output):
         "runtime_observations": len(observations),
         "dialogue_records_linked": sum(len(row["associated_record_keys"]) for row in candidates),
     }
+    if observation_manifest is not None:
+        result["imported_observations"] = observation_manifest
     write_json(output / "manifest.json", result)
     return result
 
@@ -223,6 +318,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", type=Path, default=PRIVATE_ROOT / "dialogue-catalog-worker")
     parser.add_argument("--output", type=Path, default=PRIVATE_ROOT / "scene-index")
+    parser.add_argument("--observations", type=Path, help="optional chapter-sweep metadata JSON")
     for disc in (1, 2):
         parser.add_argument(f"--disc{disc}", type=Path,
                             default=WORKSPACE / "local/prepared" / f"disc{disc}" / "Track 01.iso")
@@ -231,8 +327,8 @@ def main():
     if PRIVATE_ROOT.resolve() not in output.parents or output.exists():
         parser.error("--output must be a new directory inside local/work")
     try:
-        report = build(args.catalog, {1: args.disc1, 2: args.disc2}, output)
-    except (OSError, KeyError, ValueError) as error:
+        report = build(args.catalog, {1: args.disc1, 2: args.disc2}, output, args.observations)
+    except (OSError, KeyError, TypeError, ValueError) as error:
         parser.exit(1, f"Scene index failed: {error}\n")
     print(f"{sum(report['resources'].values())} ISO files; "
           f"{report['resource_candidates']}; {report['runtime_observations']} runtime observations")

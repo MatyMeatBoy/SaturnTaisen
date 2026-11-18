@@ -24,3 +24,15 @@ The reader validates the FILM, FDSC, and STAB structures for Cinepak, including 
 `runtime_layout` keeps the observed layout when it appears in the evidence. `zoom_eligibility=validated_for_observation` is limited to that sample's framing. Unknown rows keep `fallback_layout=native`. A null `wait_for_text` leaves the decision on automatic advance pending.
 
 The translator can use `associated_record_keys` to locate the corresponding rows in `local/work/spanish-translation`, which also contains their aliases across discs. The index exports metadata and pointers to the local evidence. Image, video, and script files remain in their private locations.
+
+## Importing observations from the later sweep
+
+```powershell
+python tools/build_scene_index.py --observations local/work/later-chapter-audit/chapter-sweep/observed-scene-resources.json --output local/work/scene-index-later
+```
+
+The optional argument adds 17 observations from the sweep described in [AOT sweep of later-episode saves](chapter-sweep.md). The new destination contains 26 observations in total. Without the argument, the generator produces the nine base observations.
+
+Nine Continue selections are recorded with the `menu` label, and eight scenes with visible dialogue with the `dialogo` label. The episode for both phases comes from the observed slot. The case of a lock before any dialogue is shown keeps only the selection. Each ID includes disc, case, and phase. The manifest records the name and SHA-256 of the imported report. Screenshot paths are relative to the report's directory, and the importer validates the format of their hashes.
+
+The `resident_table_inventory` link requires a full match declared in RAM and verification of disc, ISO path, size, LBA, and SHA-256 against the inventory. The catalog keys correspond to the records of that resident table. The test leaves the use of each record in the observed frame pending. Zoom eligibility remains unknown for the imported rows, and the fallback stays native.
