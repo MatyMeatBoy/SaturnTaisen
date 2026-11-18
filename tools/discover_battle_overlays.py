@@ -41,19 +41,20 @@ def overlay_module(path,raw,profile):
 def analyze_modules(modules,discover):
     unique={};blocks=set();rows=[]
     for module in modules:
-        key=module['sha256'];raw=module['raw']
+        base=module['base'];key=(base,module['sha256']);raw=module['raw']
+        if base%2 or base<0 or base+len(raw)>0x100000000:raise ValueError('Invalid module address')
         if key not in unique:
-            candidates=discover(raw,BASE,range(BASE,BASE+len(raw),2),eager=True)
+            candidates=discover(raw,base,range(base,base+len(raw),2),eager=True)
             checked=set()
             for pc,code in candidates:
-                offset=pc-BASE
+                offset=pc-base
                 if (pc%2 or offset<0 or not 0<len(code)<=MAX_BLOCK or len(code)%2
                         or offset+len(code)>len(raw) or raw[offset:offset+len(code)]!=code):
                     raise ValueError('Analyzer emitted an invalid overlay candidate')
                 checked.add((pc,code))
             unique[key]=checked;blocks.update(checked)
         row={key:value for key,value in module.items() if key!='raw'}
-        row['base']=f'{BASE:08X}';row['candidate_blocks']=len(unique[key]);rows.append(row)
+        row['base']=f'{base:08X}';row['candidate_blocks']=len(unique[key]);rows.append(row)
     return blocks,rows
 
 

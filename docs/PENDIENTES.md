@@ -46,7 +46,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T19 | P3 | local | libre | Cuerpos HD (NC): escala única por altura y eje cabeza/torso, con ojos/boca. |
 | T20 | P3 | local | libre | Vídeos MPG del PC (MOVIE000..120): equivalencia, audio y subtítulos antes de sustituir. |
 
-| T21 | P0 | agente/local | coordinador · PR en preparación | Herramienta K001–K019 probada: reproduce exactamente 614.024 candidatos desde la semilla anterior. Falta integrar su PR; código derivado solo local. |
+| T21 | P0 | agente/local | integrado · PR #6 | Herramienta K001–K019 probada: reproduce exactamente 614.024 candidatos desde la semilla anterior. Código derivado solo local. |
 | T22 | P0 | local | empaquetado y traslado verificados | v0.2.0-test.1: release público limpio y ZIP privado de 708.495.279 bytes, disco1 inglés + HD procesado. Escena HD y combate arrancan desde extracción nueva con PATH Windows, cero interpretados. RX 6900 XT física pendiente T16. |
 | T23 | P1 | local | libre | Menús/HUD equivalentes PC: inventario y matches verificados para Saturn, sin deformar proporciones. |
 | T24 | P2 | agente/local | libre | Medir y desactivar trabajo auxiliar táctico en Original sin cambiar píxeles/guest; declarar caché y condiciones. |
@@ -54,7 +54,8 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T26 | P0 | local | tras T02/T03 y huecos HD | Entrega posterior con el capítulo1 completo y su mod HD verificados. El test.1 solicitado para otro PC no cierra esta tarea. |
 | T27 | P1 | local | libre | Ampliar observaciones del índice de escenas: actualmente inventario de ambos discos, 112 tablas, 54 vídeos y nueve observaciones. Confirmar por ruta los seis tags, texto/subtítulos y encuadre de cada clip; no convertir candidatos en cobertura probada. |
 | T28 | P2 | agente/local | tras T27 por escena | Consumir etiquetas verificadas para la presentación/Zoom sin heurísticas ambiguas. El índice local de metadatos todavía no gobierna el runtime. |
-| T29 | P0 | local | coordinador · reproducción fijada | Capítulo2: carga de una partida del banco táctico se detiene tras frame6688 en AOT estricto, master SH-2 00204000. Identificar módulo/bytes y ampliar cobertura con paridad. La misma partida carga bajo Beetle. No declarar corregido hasta probar recomp. |
+| T29 | P0 | local | corregido en candidato · PR en preparación | Capítulo2: EVT02 atribuido exactamente a 00204000. Candidato de 643.320 bloques pasa frontera1200 y arranque9501 con todos los hashes/RGB iguales al intérprete y cero interpretados. Falta integrar PR y promover build; test.1 sigue inmutable. |
+| T30 | P0 | local | libre | Continuar desde la introducción del combate del capítulo2, validar órdenes/ataques/victoria y presentación. Partida y estado9500 privados disponibles; no confundir carga corregida con capítulo completo. |
 
 ## División para colaboradores
 
