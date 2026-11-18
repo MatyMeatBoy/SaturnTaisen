@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
-PREFIX=Path('C:/msys64/clang64')
+PREFIX=next((p for p in (ROOT.parent/'toolkit/msys64/clang64',Path('C:/msys64/clang64')) if (p/'bin/clang++.exe').is_file()),Path('C:/msys64/clang64'))
 DEP=ROOT/'local/deps/satrecomp'
 
 
