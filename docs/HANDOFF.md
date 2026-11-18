@@ -183,3 +183,12 @@ The release no longer asks for prepared discs. `parches/` holds the language lay
 - Launcher and helper for a package: `python tools/build_launcher.py --build-dir local/build/launcher-vNNN --output-dir local/build/vNNN-package-binaries --with-importer --with-setup`. The runtime is still chosen with `package_release.py --runtime`; v0.2.2-alpha ships the test.4 executable (674,182 blocks, patch0050), unchanged.
 - The helper accepts any container and recognizes what is already prepared (`game/discN/taisen.json` receipts, `hd-resources/prepared-manifest.json` stamp), so extracting a newer release over the folder rebuilds only what changed.
 - Test the launcher without disturbing the owner: `SaturnTaisen.exe --screenshot PREFIX --size 980x600` with an absolute `SATURN_TAISEN_FIRST_HOME`; it writes one picture per page and exits.
+
+### Cleanup after v0.2.2-alpha — 2026-11-18
+
+26 items removed after checking each one, 22,372,961,867 apparent bytes; the private record with reasons and how to recover each is `local/work/cleanup-20261118-v0.2.2.json`. Removed: the staging trees of the delivered development ZIP (the ZIP was first verified against its recorded SHA-256 and stays), the extracted copy of the test.4 ZIP (every file compared by CRC), a third copy of the release runtime, launcher builds of closed test packages, two superseded Spanish disc builds, build caches, this block's scratch, an empty folder and five shortcuts whose target no longer existed. Not touched: discs, BIOS, the English patch, the PC image, every delivered ZIP, scripts, the AOT base, evidence of other trials, the development build tree, the auxiliary worktree and its local files.
+
+Measured afterwards: **31,127,631,026 bytes, 69,573 files** (hard links counted once). That is above the 20,000,000,000-byte limit: delivered packages that must be kept account for about 13.7 GB (7.6 GB in `local/releases`, 6.1 GB for the development ZIP, which sits inside the project folder although the earlier note placed it outside). Getting under the limit needs an owner decision about moving delivered ZIPs out of the project folder; nothing protected was removed to force the number.
+
+The current runtime is kept once, unpacked, in `local/releases/SaturnTaisen-v0.2.2-alpha-win64/sakura.exe` (SHA-256 `df68e9db…`); use it for `package_release.py --runtime`. The previous reference stays archived (`SaturnTaisenFirst-reference-SDK48-674182.7z`).
+

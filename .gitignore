@@ -71,6 +71,7 @@
 !/assets/generated/tactical-extensions/*.md
 
 !/docs/releases/v0.2.0-test.4-validation.json
+!/docs/releases/v0.2.2-alpha-validation.json
 # Taisen language patches (video layer is a release asset only)
 !/parches/
 /parches/**

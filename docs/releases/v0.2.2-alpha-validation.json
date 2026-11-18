@@ -1,0 +1,59 @@
+{
+  "version": "0.2.2-alpha",
+  "packaging_source_commit": "dcd29d03c56bbddc13b269b029b1ea17cda35f55",
+  "source_dirty": false,
+  "tag": "v0.2.2-alpha",
+  "runtime_compiled_blocks": 674182,
+  "runtime_sha256": "df68e9dbe2c7d9efe273e0e716c504774ba5c5f5f0826abc783a2e3d6bffcbd3",
+  "runtime_unchanged_since": "0.2.0-test.4",
+  "patches": 51,
+  "last_patch": "patches/0053-sakura-launcher-game-setup-and-language.patch",
+  "artifacts": {
+    "public": {
+      "file": "SaturnTaisen-v0.2.2-alpha-win64.zip",
+      "bytes": 567229256,
+      "sha256": "4b7f59979b4c555d6b316cff70304b6da0fc9816184917f4bb1b1e4bea6dae32",
+      "entries": 404,
+      "crc_verified": true,
+      "published": true,
+      "remote_digest_matches": true
+    },
+    "personal": {
+      "file": "SaturnTaisen-v0.2.2-alpha-personal-con-mis-archivos.zip",
+      "bytes": 2870958822,
+      "sha256": "dc4bc9de74628ab52f9c51d32c47828f1672cf06b587c8004f734476360f35ff",
+      "entries": 413,
+      "crc_verified": true,
+      "published": false,
+      "contents": "the published package, not prepared, plus the owner's two Saturn discs and PC image in discos/"
+    }
+  },
+  "checks": {
+    "windows_path_only": true,
+    "setup_from_extracted_zip_original_discs_and_pc_image": true,
+    "setup_from_english_v2_1_discs_and_extracted_pc_folder": true,
+    "second_run_rebuilds_nothing": true,
+    "prepared_data_tracks_identical_to_reference": 4,
+    "prepared_audio_tracks_identical_to_reference": 4,
+    "hd_backgrounds": 19,
+    "hd_portraits": 302,
+    "spanish_cold_boot_frames": 7001,
+    "helper_and_launcher_share_profile_folder": true,
+    "frontend_help_and_integration_info": true,
+    "launcher_pages_captured_980x600": 3,
+    "unit_tests_taisen_setup": 20,
+    "launcher_section_clicked_by_hand": false,
+    "single_file_and_iso_inputs_real_discs": false,
+    "physical_rx6900xt_m30": false,
+    "new_campaign_coverage": false
+  },
+  "cleanup": {
+    "record": "local/work/cleanup-20261118-v0.2.2.json (local)",
+    "items": 26,
+    "apparent_bytes_removed": 22372961867,
+    "project_bytes_after": 31127631026,
+    "project_files_after": 69573,
+    "below_20000000000": false,
+    "note": "Delivered packages that must be kept account for about 13.7 GB of the project folder."
+  }
+}
