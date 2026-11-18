@@ -1,0 +1,48 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 0000000..0000000 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1136,6 +1136,8 @@
+ 
+     const double kFrameNs = 1e9 / 59.8261; // NTSC Saturn field rate
+     uint64_t nextFrame = SDL_GetTicksNS();
++    uint64_t lastMouseMoveNs = SDL_GetTicksNS();
++    bool cursorHidden = false;
+     bool running = true;
+     uint64_t pass = 0, loggedFrame = ~0ull;
+     const uint64_t startedAt = SDL_GetTicksNS();
+@@ -1234,6 +1236,13 @@
+         }
+         while (SDL_PollEvent(&ev)) {
+             sakuraUi.Event(ev);
++            if (ev.type == SDL_EVENT_MOUSE_MOTION) {
++                lastMouseMoveNs = SDL_GetTicksNS();
++                if (cursorHidden) {
++                    SDL_ShowCursor();
++                    cursorHidden = false;
++                }
++            }
+             if(choosing && ev.type==SDL_EVENT_KEY_DOWN && ev.key.scancode!=SDL_SCANCODE_F11 &&
+                !(ev.key.scancode==SDL_SCANCODE_RETURN && (ev.key.mod&SDL_KMOD_ALT))) {
+                 if(ev.key.scancode==SDL_SCANCODE_LEFT || ev.key.scancode==SDL_SCANCODE_UP) presentationChoice=0;
+@@ -1306,6 +1315,20 @@
+             }
+         }
+ 
++        {
++            // Keyboard/gamepad is the only input this game supports: hide the mouse pointer after 1s of
++            // inactivity over a fullscreen or borderless window, show it again as soon as it moves.
++            const SDL_WindowFlags wf = SDL_GetWindowFlags(window);
++            const bool fsOrBorderless = (wf & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS)) != 0;
++            if (fsOrBorderless && !cursorHidden && SDL_GetTicksNS() - lastMouseMoveNs >= 1'000'000'000ull) {
++                SDL_HideCursor();
++                cursorHidden = true;
++            } else if (!fsOrBorderless && cursorHidden) {
++                SDL_ShowCursor();
++                cursorHidden = false;
++            }
++        }
++
+         if (port.opt.moviePlay.empty()) {
+             // Keyboard and the first gamepad are player 1; a second gamepad is player 2 (who has keys only if
+             // some were chosen)

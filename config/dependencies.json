@@ -53,7 +53,8 @@
       "patches/0047-sakura-validate-profile-before-portrait-selection.patch",
       "patches/0048-sakura-preload-dialogue-catalog-and-frame-witness.patch",
       "patches/0049-sakura-render-preloaded-dialogue-visible-cells.patch",
-      "patches/0050-sakura-preloaded-lips-groups.patch"
+      "patches/0050-sakura-preloaded-lips-groups.patch",
+      "patches/0052-sakura-cursor-autohide.patch"
     ]
   }
 }
