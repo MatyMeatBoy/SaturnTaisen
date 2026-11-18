@@ -1,0 +1,47 @@
+{
+  "version": "0.2.0-test.4",
+  "packaging_source_commit": "4406c13f9b292a979daf11e4a06e83a38987ad2d",
+  "runtime_compiled_blocks": 674182,
+  "patches": 50,
+  "artifacts": {
+    "public": {
+      "bytes": 317814458,
+      "sha256": "b98867a21868d1079d96ba7da11faeaa1612d8779e50102d4f477d41250733e5",
+      "entries": 368,
+      "crc_verified": true,
+      "manifest_verified": true,
+      "file": "SaturnTaisenFirst-v0.2.0-test.4-win64.zip",
+      "published": true
+    },
+    "personal": {
+      "bytes": 725937459,
+      "sha256": "f09ef35590f71671236e5806b4a3287233e65ca9a76c034a458f5e9718211c3e",
+      "entries": 807,
+      "crc_verified": true,
+      "manifest_verified": true,
+      "file": "SaturnTaisenFirst-v0.2.0-test.4-personal-disco1-HD.zip",
+      "published": false
+    }
+  },
+  "checks": {
+    "windows_path_only": true,
+    "empty_profile_launcher": true,
+    "hd_scene": true,
+    "tactical_scene": true,
+    "zero_interpreted": true,
+    "background_resources": 38,
+    "portrait_variants": 402,
+    "importer_help": true,
+    "controller_mapper_ui": true,
+    "handoff_included": true,
+    "physical_rx6900xt_m30": false
+  },
+  "work_stopped_by_user": true,
+  "excluded_experimental_patch": 51,
+  "binaries": {
+    "SaturnTaisenFirst.exe": "1d344db75dd9ab36988a44abb8f29c725264f9bac742530d51532fa6cd116f7e",
+    "sakura.exe": "df68e9dbe2c7d9efe273e0e716c504774ba5c5f5f0826abc783a2e3d6bffcbd3",
+    "import-saves.exe": "d75f50ccf94c372c498d42edb4e91ebacec5be7a923341229c3b381e2e9ce42c",
+    "Mapear M30.exe": "0ee4c5b3a7e11510568b28c119c81e3d7c5b6a7e6c268503a5401214bd5dc35a"
+  }
+}

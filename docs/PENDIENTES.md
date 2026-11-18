@@ -79,6 +79,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T48 | P1 | local | implementado y probado · patch0047 | Catálogo antiguo del perfil ya no oculta el preparado válido. Ocho ejecuciones:191→201 y huella distinta recuperan402variantes;90hashes y3RGB por caso iguales, GUI cambia solo retrato; perfiles válidos conservados. No incluido en test.2. |
 
 | T49 | P0 | local | entregado y traslado verificado | Test.3 público317.282.734bytes y personal725.392.142bytes, fuente72affb2, runtime674.182/patch0049 y HD201. ZIP extraídos con CRC/inventario/SHA correctos; escena/combate, película6201hashes y guardado/Continue10700hashes iguales a referencias,0interpretados. Archivo personal solo local. RX6900XT/M30 físicos pendientes. Test.2 intacto. |
+| T50 | P0 | local | entregado · test.4 · detenido | Público y ZIP personal extraídos y verificados; launcher, HD/combate, importador, mapper y handoff funcionan con PATH Windows. Runtime0050; experimento0051 fuera. No reanudar sin petición del usuario. Ver `releases/v0.2.0-test.4-validation.json`. |
 
 ## División para colaboradores
 
