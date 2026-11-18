@@ -48,6 +48,7 @@
 !/VERSION
 !/docs/releases/
 !/docs/releases/*.md
+!/docs/releases/v0.2.0-test.2-validation.json
 !/assets/
 /assets/**
 !/assets/generated/

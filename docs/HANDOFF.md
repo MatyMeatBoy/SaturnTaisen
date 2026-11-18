@@ -14,7 +14,7 @@ El launcher ofrece modos y ejemplos y se cierra cuando el juego confirma estar l
 
 1. Leer `AGENTS.md`, esta guía y `docs/PENDIENTES.md`; comprobar fecha y cambios posteriores.
 2. Ejecutar `git status --short`, `git branch --show-current` y consultar colaboradores activos. No limpiar un árbol sucio ajeno.
-3. Base de esta actualización: rama `implementation/enhanced-v011`, HEAD `d5f4424`. Este fue el punto de partida del bloque de integración; consultar el HEAD y el estado presentes antes de trabajar. No inferir el ejecutable local a partir de una versión anterior. `VERSION` actual: 0.2.0-test.1, prerelease publicada.
+3. Base de esta actualización: rama `implementation/enhanced-v011`, HEAD `d5f4424`. Este fue el punto de partida del bloque de integración; consultar el HEAD y el estado presentes antes de trabajar. No inferir el ejecutable local a partir de una versión anterior. `VERSION` actual: 0.2.0-test.2, prerelease publicada.
 4. Acordar archivos propios y una tarea concreta. No editar a la vez `frontend_sdl.cpp`, renderer o patches; no compilar sobre una edición incompleta de otro bot.
 5. Crear carpeta privada de resultados exclusiva por ensayo. Las imágenes se pueden sobrescribir sin querer: comprobar ruta absoluta, contenido visual y SHA antes de extraer conclusiones.
 
@@ -132,10 +132,16 @@ Candidatos distintos, todos privados: `local/build/visual-fixes-candidate/sakura
 
 El preparado más reciente contiene201 retratos y19 fondos, en `local/work/portrait-chapter1-third-review/prepared-hd`; el coordinador reprodujo sus404 archivos de retratos byte por byte desde el proyecto original191 y las diez aprobaciones hash-locked. Sigue pendiente probar las animaciones no observadas y las32 identidades restantes del capítulo1. T45 propone reordenado offline para00a1; todavía no aprobado ni implementado.
 
-Primer vídeo: usar el testigo capturado con el framebuffer; nunca inferir reproducción por una cabecera FILM residual o por ausencia de letras. Las fases y sus límites están en first-film-script-phase.md y first-film-transition-fix.md. El rótulo del episodio comparte cursor con la salida y se conserva por su capa de imagen. Las últimas correcciones no están en el ZIPtest.1 ni en otro ZIP aún.
+Primer vídeo: usar el testigo capturado con el framebuffer; nunca inferir reproducción por una cabecera FILM residual o por ausencia de letras. Las fases y sus límites están en first-film-script-phase.md y first-film-transition-fix.md. El rótulo del episodio comparte cursor con la salida y se conserva por su capa de imagen. Las correcciones de este checkpoint se incorporaron posteriormente a test.2; test.1 permanece intacto.
 
 ## Empaquetado desde un worktree actualizado
 
 package_release.py acepta --owner-root para leer dependencias/licencias privadas del propietario y --build-dir para seleccionar launcher/importador aislados; el código, VERSION, arte permitido y commit del manifest siguen siendo los del checkout ejecutado. --runtime selecciona el candidato AOT. package_personal_bundle.py acepta --owner-root para localizar exclusivamente disco, previews y fixtures privados. Ambos rechazan destinos de entrega existentes.
 
 Para test.2 se prepara el launcher en local/build/launcher-test2 con salida local/build/test2-package-binaries y GAME_VERSION0.2.0-test.2; no sobrescribe el launcher del propietario. El perfil personal mantiene HD activado (valores0 de fondos/retratos) y precarga1. El manifest personal enumera también hashes de BAT/defaults/texto generados, aparte de sus recursos fuente; se excluye a sí mismo del inventario recursivo.
+
+## Entrega test.2 verificada
+
+Publicada v0.2.0-test.2 con fuente limpia92edea7; ZIP público317.215.196bytes. Bundle personal725.331.460bytes solo local, disco1 inglés y HD201/19fondos. Extracción limpia con PATH Windows: launcher, escenaHD, combate y película6201frames funcionan;402variantes sin fallos y cero interpretados. El recibo público de metadatos está en docs/releases/v0.2.0-test.2-validation.json; el detalle privado en local/work/test2-relocation-report.json. No se cambian los bytes ni la etiqueta de los paquetes anteriores.
+
+Trabajo posterior: wide_transitions continúaT02a sin modificar RAM ni SDK. dialogue_tables reservó portrait_pack.h paraT48; el header está congelado para revisión, pero todavía no hay patch0047 registrado. No ejecutar build_runtime ni compilar el runtime compartido antes de la captura y validación del coordinador. El binario de test.2 y sus ZIP permanecen inmutables durante ese trabajo.

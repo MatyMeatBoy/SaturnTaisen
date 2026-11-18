@@ -31,7 +31,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T02b | P0 | local | tras T02a | Pantalla de victoria y salida del combate hasta el control normal, con hash guest y RGB iguales a la referencia. |
 | T02c | P0 | local | tras T02b | Componer `battle-multiple-turns.movie` + T02a + T02b con `tools/stitch_battle_replay.py` y repetir de una sola carga; registrar en `chapter1-continuous-battle.json`. |
 | T03 | P0 | local | tras T01 | Ruta continua New Game → fin del episodio 1, guardado nativo, reinicio y Continue, dos repeticiones. |
-| T04 | P1 | local | implementado y probado · patch0045 | Texto HD LIPS de dos/tres opciones en Zoom/conjunto: diez perfiles,240hashes iguales por escena, cero interpretados; reloj/marco conservados. Vencimiento natural y otras elecciones pendientes; aún sin paquete nuevo (ver `chapter1-choice-hd.md`). |
+| T04 | P1 | local | implementado y probado · patch0045 | Texto HD LIPS de dos/tres opciones en Zoom/conjunto: diez perfiles,240hashes iguales por escena, cero interpretados; reloj/marco conservados. Vencimiento natural y otras elecciones pendientes; incluido en test.2 (ver `chapter1-choice-hd.md`). |
 | T05 | P1 | local | integrado · PR #4 | Solapamiento corregido en Mejorado; cinco pestañas y rutas verificadas. Conservar pruebas y fallback seguro para menús desconocidos. |
 | T06 | P1 | agente | tras T01 | Pulir la junta de fase entre mosaicos LOADING y el centro protegido. |
 | T07 | P1 | local | hecho desarrollo · T01 | Intro previa al título: área 288×144 en 16,24 a la mayor escala entera con subtítulos ingleses. |
@@ -61,7 +61,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T31 | P0 | local | integrado · PR #10 | Capítulo4: EVT06 registrado por coincidencia completa en RAM; candidato674.023 pasa frontera1200 y carga12000, con todos los hashes/RGB iguales al intérprete y cero interpretados. Integrar PR y continuar combate. |
 | T32 | P0 | local | libre | Completar rutas intermedias, combates, guardados y finales de capítulos2–Finale. El barrido inicial valida entradas de ocho rutas (96.000 frames) y el arreglo de entrada de capítulo4, no capítulos completos. |
 | T33 | P1 | local | parcial · T33a probado | Primer vídeo: caja vacía y sombras corregidas en patch0046. Siguen pétalos16:9 y tarjeta de episodio/transiciones restantes. Mantener posición Zoom aprobada. |
-| T33a | P1 | local | implementado y probado · patch0046 | Primer video New Game: fondo solo707..879 y5938..6067, video ampliado880..5937;6201hashes y6RGB nativos iguales aOriginal, cero interpretados. Sin ZIP nuevo aún. RestoT33 abierto. |
+| T33a | P1 | local | implementado y probado · patch0046 | Primer video New Game: fondo solo707..879 y5938..6067, video ampliado880..5937;6201hashes y6RGB nativos iguales aOriginal, cero interpretados. Incluido en test.2. RestoT33 abierto. |
 | T34 | P1 | local | integrado · PR #11 | Recorte exclusivo del vídeo de novela288×144. Primeras cajas vacías resueltas enT33a; otras transiciones siguenT33. |
 | T35 | P1 | local | integrado · PR #11 | Continuidad floral y mezcla exacta del relleno del diálogo; fallback para mezclas no probadas. |
 | T36 | P1 | local | integrado · PR #11 | El cursor en el borde izquierdo del mapa conserva el fondo ancho. |
@@ -72,9 +72,11 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T41 | P1 | agente/local | integrado · PR #14 | Panel HD generado y porcentajes por categoría/etapa, con fuentes, pendientes y puerta de100% verificado. Actualizar al aprobar nuevos assets. |
 | T42 | P2 | local | integrado · PR #15/#17/#19 | Checkpoint reproducible de 201/304 y 91/123 del capítulo 1. Del tercer lote, María `0064` en base verificada en juego y cuatro identidades comprobadas en atlas. El ZIP entregado conserva su catálogo. |
 | T45 | P2 | local | libre | Revisar el retrato `00a1` con ambas tiras activas. El candidato PC 160 mejora al intercambiar las dos tiras de 32 filas durante la preparación offline. Conservar la base, la máscara Saturn y el formato del pack. Aprobar tras comparar ambas tiras en juego. |
-| T46 | P2 | agente | actualizado | Estado y handoff alineados con PR19/patch0046/retratos201; candidato674.023 probado en cargas2/4. Entrega nueva pendiente, test.1 intacto. |
+| T46 | P2 | agente | actualizado | Estado y handoff alineados con PR19/patch0046/retratos201; candidato674.023 probado en cargas2/4. Entrega nueva verificada enT47, test.1 intacto. |
 
-| T47 | P0 | local | coordinador · preparación | v0.2.0-test.2: runtime674.023/patch0046, launcher aislado y HD201. Crear release público limpio y ZIP personal; verificar extracción con PATH Windows. No entregado aún. |
+| T47 | P0 | local | entregado y traslado verificado | v0.2.0-test.2 público317.215.196bytes y personal725.331.460bytes. Fuente limpia92edea7, runtime674.023/patch0046 y HD201. Perfiles nuevos, PATH Windows,402variantes sin fallos y0interpretados; película6201hashes y6RGB iguales. RX6900XT/M30 físicos pendientes. |
+
+| T48 | P1 | local | dialogue_tables · implementación congelada | Si un catálogo antiguo del perfil falla autenticación, probar el preparado incluido; conservar la prioridad de mods personales válidos. Headerportrait_pack.h reservado; root debe revisar/capturarpatch0047 antes de compilar. Test.2 usa perfil nuevo y permanece inmutable. |
 
 ## División para colaboradores
 
@@ -86,13 +88,13 @@ Al abrir PR indicar ID, archivos propios, prueba y limitaciones. No marcar «hec
 
 ## Reproducciones visuales nuevas
 
-- T34: viewport de vídeo de novela: corregido en desarrollo para usar 288x144,16,8; fixture pasa a1440p en x8. Runtime del primer vídeo comprobado enT33a; empaquetado pendiente.
+- T34: viewport de vídeo de novela: corregido en desarrollo para usar 288x144,16,8; fixture pasa a1440p en x8. Runtime del primer vídeo comprobado enT33a e incluido en test.2.
 - Viñetas narrativas dentro del combate: auditoría cerrada para la viñeta de los villanos: no lleva sombra de novela; ver battle-story-inset-shadow.md.
 - Elecciones LIPS: dos/tres opciones inglesas implementadas y probadas en T04/PR16; vencimiento natural y resto de paneles siguen pendientes.
 
-- T35: continuidad floral del relleno de diálogo en Zoom (reportada por el propietario). Diagnóstico: `Presentation.foreground` guarda RGB final opaco para source<5; al separar/escalar caja se transporta el NBG3 nativo mezclado a otra posición. Investigar captura de top/second/ratio y recomposición sobre el fondo extendido en coordenadas de destino, con aritmética Saturn exacta. No sustituir por opacidad estimada, no regenerar fondos aprobados, preservar Original, marco, retrato y glifos. Pendiente evidencia del estado y prueba de runtime; no incluido en test.1.
+- T35: continuidad floral del relleno de diálogo en Zoom (reportada por el propietario). Diagnóstico: `Presentation.foreground` guarda RGB final opaco para source<5; al separar/escalar caja se transporta el NBG3 nativo mezclado a otra posición. Investigar captura de top/second/ratio y recomposición sobre el fondo extendido en coordenadas de destino, con aritmética Saturn exacta. No sustituir por opacidad estimada, no regenerar fondos aprobados, preservar Original, marco, retrato y glifos. Resuelto con patch0040 y evidencia runtime; incluido en test.2, no en test.1.
 
-- T36: transiciones widescreen: retirar marco rosa host durante fallback de Mejorado (patch39 en desarrollo, falta runtime). Extender también fondos y efectos de transición manteniendo fase/paleta; ocultar el borde no equivale a resolver el fallback nativo ni las flores/pétalos horneados. Revisar entrada muñeco, título/New Game, mapa↔novela y cambios de escena.
+- T36: transiciones widescreen: retirar marco rosa host durante fallback de Mejorado (patch39 integrado y verificado). Extender también fondos y efectos de transición manteniendo fase/paleta; ocultar el borde no equivale a resolver el fallback nativo ni las flores/pétalos horneados. Revisar entrada muñeco, título/New Game, mapa↔novela y cambios de escena.
 
 - T37: cobertura HD de texto y calidad de los guiones base de traducción. Reproducción inicial resuelta porpatch0042. Caso Sumire: registro50039, índice473 de /SAKURA1/0100TBL.BIN, tres filas de27/30/5 caracteres, sin controles desconocidos; la fila intermedia está íntegra en catálogo pero sigue SD en la captura. No corregir prosa ni reescribir la traducción de Claude para ocultar un rechazo de render. Auditoría estructural actual:112 tablas físicas/59450 registros, SHA del JSONL90c3c35f2661f1c8ac7d5bac512655b02d64ea9844a3ca2c17d93230b0ac3684; dos tabuladores no resueltos en el disco1. Falta cobertura visual/elecciones/menús y validación de guiones editados sin sobrescribir target_es.
 
