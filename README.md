@@ -61,13 +61,13 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 
 ## Progreso HD
 
-[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-300%2F304%20%2898.6%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Verificaci%C3%B3n%20pendiente-646464?style=flat-square)](docs/HD_PROGRESS.md)
+[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-302%2F304%20%2899.3%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Verificaci%C3%B3n%20pendiente-646464?style=flat-square)](docs/HD_PROGRESS.md)
 
 **Objetivo global: 100% verificado. Estado: Verificación pendiente.**
 
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
-| Retratos y animación | 300/304 (98,6%) | Sin dato |
+| Retratos y animación | 302/304 (99,3%) | Sin dato |
 | Vídeos | 0/50 (0%) | 0/50 (0%) |
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
@@ -76,15 +76,15 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
-| Retratos y animación | 300/304 (98,6%) | Sin dato |
+| Retratos y animación | 302/304 (99,3%) | Sin dato |
 | Vídeos | 0/50 (0%) | 0/50 (0%) |
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
 | Escenas y transiciones | Sin dato | 9/166 (5,4%) |
 
-- **Integración global indicativa (media de 5/6 categorías con total): 39,7%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 319/4541 (7%).** Mezcla unidades distintas; solo orienta.
+- **Integración global indicativa (media de 5/6 categorías con total): 39,8%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 321/4541 (7%).** Mezcla unidades distintas; solo orienta.
 - Categorías sin total confirmado: ninguna.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).

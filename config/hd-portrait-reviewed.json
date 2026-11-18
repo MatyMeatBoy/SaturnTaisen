@@ -3325,6 +3325,62 @@
         "alpha_holes": 0,
         "observed_runtime": null
       }
+    },
+    {
+      "id": "0152",
+      "pc_index": 337,
+      "native_raw_sha256": "297616ffc52474466936454794e4ea6763d0aff3e07b4c58db3391ce76161dd4",
+      "pc_rgba_sha256": "3b91a4eb398df36ecc5a4f9c6b814e2f2c329dc179f8f6c0a8f9fe828013a55c",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "83567c1a21423e6287d70fc48c974ce7f7ac3dd822793075b5a252de5eb6b9b4",
+        "2": "3b91a4eb398df36ecc5a4f9c6b814e2f2c329dc179f8f6c0a8f9fe828013a55c"
+      },
+      "evidence": {
+        "review": "batch7-visual-id-offset-invariant-palette-independent",
+        "id_offset_invariant": "ID-1 candidate (same rule as every accepted identity)",
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null,
+        "note": "Palette-based index scores were high (0.39-0.49), the palette-independent edge score at zero shift matches the best shift within noise; subject identical in the side-by-side review."
+      }
+    },
+    {
+      "id": "0153",
+      "pc_index": 338,
+      "native_raw_sha256": "f0ca09ddf9584b694db3c694c158ac11546708fa15ef8ce2d70128d3f2023ce7",
+      "pc_rgba_sha256": "0ca72127f8c5274b33d4eb0e96bc6eab67b4ef040018b5142a5ff5b1b4558652",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "772626f75c7aa07772b72acf42fd833fd2ad6f6710eddad3ab33d74c0d176102",
+        "2": "0ca72127f8c5274b33d4eb0e96bc6eab67b4ef040018b5142a5ff5b1b4558652"
+      },
+      "evidence": {
+        "review": "batch7-visual-id-offset-invariant-palette-independent",
+        "id_offset_invariant": "ID-1 candidate (same rule as every accepted identity)",
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null,
+        "note": "Palette-based index scores were high (0.39-0.49), the palette-independent edge score at zero shift matches the best shift within noise; subject identical in the side-by-side review."
+      }
     }
   ],
   "evidence": {
