@@ -1,23 +1,23 @@
-# Primer video: fondo limpio antes y despues
+# First video: clean background before and after
 
-El patch0046 elimina en Mejorado el pie vacio y la sombra de imagen de las fases verificadas de New Game. El video activo conserva el recorte288x144 y su escala entera maxima del patch0038. Original no cambia.
+Patch0046 removes, in Enhanced, the empty footer and image shadow from the verified phases of New Game. The active video keeps the 288x144 crop and its maximum integer scale from patch0038. Original is unchanged.
 
-## Identidad y fase
+## Identity and phase
 
-El programa0100.BIN tiene15404bytes y FNV64 `5DA24532C9356735`. Se lee una vez mediante el nombre simple usado por DiscFiles; se rechazan otros archivos. Cada testigo de fase compara el modulo completo contra Low WRAM en00204000 y lee el cursor BE32 de High WRAM060685B4. La lista exacta observada es00204006,00204462,00204ED8,00204EDE,00204EE4 y00204EE6. La secuencia y las muestras se describen en [la investigación del cursor](first-film-script-phase.md); estos valores no son una identificacion general del SDK ni de todos sus opcodes.
+Program 0100.BIN is 15404 bytes and FNV64 `5DA24532C9356735`. It is read once via the simple name used by DiscFiles; other files are rejected. Each phase witness compares the full module against Low WRAM at 00204000 and reads the BE32 cursor from High WRAM 060685B4. The exact observed list is 00204006, 00204462, 00204ED8, 00204EDE, 00204EE4 and 00204EE6. The sequence and samples are described in [the cursor research](first-film-script-phase.md); these values are not a general identification of the SDK nor of all its opcodes.
 
-El testigo se captura en el callback de framebuffer, bajo su mismo mutex y antes de restaurar RAM tras run-ahead. Se copia junto a los pixeles presentados. Es metadato del host y no entra en el estado guest ni modifica el guion.
+The witness is captured in the framebuffer callback, under its same mutex and before restoring RAM after run-ahead. It is copied alongside the presented pixels. It is host metadata and does not enter guest state nor modify the script.
 
-Ocultar requiere ademas un frame320x224 sin capas de imagen1/2/4, fondo floral visible, y solo capas0/3 dentro de las zonas conocidas. Las ordenes dibujables VDP1 deben estar ausentes o ser exclusivamente el pie/badge conocidos por modo, geometria y hash de textura. Se acepta el banco de badge C400 o4400 durante su fundido y dos copias identicas del pie al salir. Cualquier figura, glifo, textura u orden dibujable desconocida conserva el render normal. La tarjeta del episodio utiliza capa4 y se rechaza expresamente aunque persista el cursor00204EE6.
+Hiding also requires a 320x224 frame with no image layers 1/2/4, visible floral background, and only layers 0/3 within known zones. Drawable VDP1 commands must be absent or exclusively the known footer/badge by mode, geometry and texture hash. The badge bank C400 or 4400 is accepted during its fade, and two identical footer copies on exit. Any unknown figure, glyph, texture or drawable command keeps normal rendering. The episode card uses layer 4 and is explicitly rejected even if cursor 00204EE6 persists.
 
-## Verificacion continua
+## Continuous verification
 
-Reproduccion desde title-final.state, sin cargar estados intermedios divergentes, hasta6201fotogramas. El candidato final SHA256 es `453e1a6ae4679f654d27534c718edd7e5b817f97f8048a14178422dcbd1a1af1` (614024bloques).
+Playback from title-final.state, with no intermediate divergent state loads, up to 6201 frames. The final candidate SHA256 is `453e1a6ae4679f654d27534c718edd7e5b817f97f8048a14178422dcbd1a1af1` (614024 blocks).
 
-- Todos los6201hashes coinciden con Original y con la ruta archivada; seis capturas RGB nativas coinciden y hay cero bloques interpretados.
-- Fondo solo: pasos707..879 y5938..6067, sin retorno intermedio al grupo de novela. Se revisaron las capturas806/807/820/830/831 y5938/5939/5960/5988/5989.
-- Video ampliado:880..5937. La imagen usa el area288x144 y no incluye la caja de texto vacia.
-- Paso6068: la tarjeta del episodio conserva su contenido nativo. Esa transicion y el efecto completo de petalos del titulo siguen pendientes por separado.
-- Los fixtures verifican cursores admitidos/rechazados, modulo alterado, buffers truncados, presencia de imagen/actor fuera del pie y comandos desconocidos. Se observo el fallo antes de implementar la correccion.
+- All 6201 hashes match Original and the archived path; six native RGB captures match and there are zero interpreted blocks.
+- Background only: steps 707..879 and 5938..6067, with no intermediate return to the novel group. Captures 806/807/820/830/831 and 5938/5939/5960/5988/5989 were reviewed.
+- Enlarged video: 880..5937. The image uses the 288x144 area and does not include the empty text box.
+- Step 6068: the episode card keeps its native content. That transition and the full title petal effect remain pending separately.
+- The fixtures verify accepted/rejected cursors, altered module, truncated buffers, presence of image/actor outside the footer, and unknown commands. The failure was observed before implementing the fix.
 
-Las trazas opcionales SATRECOMP_MOVIE_PHASE_TRACE numeran los cambios de cursor y layout para acotar defectos de un solo fotograma. Estados, imagenes y recibos se conservan en local/work/first-film-phase-approved y las auditorias anteriores del propietario. El patch esta probado en esta ruta y aun no esta incluido en un nuevo ZIP. No acredita toda la introduccion ni la campana.
+The optional SATRECOMP_MOVIE_PHASE_TRACE traces number the cursor and layout changes to narrow single-frame defects. States, images and receipts are kept under local/work/first-film-phase-approved and the owner's earlier audits. The patch is tested on this path and is not yet included in a new ZIP. It does not demonstrate the full intro nor the campaign.

@@ -1,25 +1,25 @@
-# Segundo lote de retratos HD del capítulo 1
+# Second batch of chapter 1 HD portraits
 
-Se revisaron tres expresiones de Sumire. Las diferencias de boca y ojos distinguen las dos poses cercanas `0040` y `0041`. En `0045` se ve la boca abierta. Comparar el vestuario de la base permitió descartar las alternativas PC 90, 91 y 95, que comparten las tiras y visten otra variante.
+Three Sumire expressions were reviewed. Mouth and eye differences distinguish the two close poses `0040` and `0041`. `0045` shows the open mouth. Comparing the base's outfit allowed ruling out PC alternatives 90, 91 and 95, which share the strips and wear a different variant.
 
-| ID Saturn | Candidato PC | RMSE base | Primera tira | Segunda tira | Observado en juego |
+| Saturn ID | PC candidate | Base RMSE | First strip | Second strip | Observed in-game |
 | --- | ---: | ---: | ---: | ---: | --- |
-| `0040` | 63 | 0,058700 | 0,057460 | 0,056257 | Primera tira en Y=16 |
-| `0041` | 64 | 0,058665 | 0,057952 | 0,056752 | Primera tira en Y=16 |
-| `0045` | 68 | 0,059924 | 0,059211 | 0,056777 | Base |
+| `0040` | 63 | 0.058700 | 0.057460 | 0.056257 | First strip at Y=16 |
+| `0041` | 64 | 0.058665 | 0.057952 | 0.056752 | First strip at Y=16 |
+| `0045` | 68 | 0.059924 | 0.059211 | 0.056777 | Base |
 
-El análisis comparó la cuadrícula Saturn de 40×80 con una reducción de área del atlas PC de 80×160. En las tres regiones de cada retrato, el error fue menor con `dx=0` y `dy=0` que al desplazar un píxel nativo. La máscara Saturn se conservó exactamente con 3.200 píxeles opacos a 1× y 12.800 a 2×, sin huecos. La segunda tira y las dos tiras juntas siguen pendientes de observación en juego. `0095` conserva dos candidatos cercanos sin evidencia concluyente para elegir. `0169` conserva diferencias de composición y tiras que requieren revisión adicional.
+The analysis compared the 40×80 Saturn grid against an area reduction of the 80×160 PC atlas. In all three regions of each portrait, the error was lower with `dx=0` and `dy=0` than when shifting by one native pixel. The Saturn mask was preserved exactly with 3,200 opaque pixels at 1× and 12,800 at 2×, with no gaps. The second strip and both strips together are still pending in-game observation. `0095` still has two close candidates with no conclusive evidence to pick one. `0169` still has composition and strip differences that require further review.
 
-## Reproducción
+## Reproduction
 
-El [registro de revisiones](../../config/hd-portrait-reviewed.json) fija el archivo KAO, los tres atlas Saturn, los píxeles PC y cada variante preparada mediante hashes. El mismo comando aplica estas tres revisiones y las dos de Sakura al proyecto original del propietario y exporta a una carpeta nueva.
+The [review registry](../../config/hd-portrait-reviewed.json) pins the KAO file, the three Saturn atlases, the PC pixels, and each prepared variant via hashes. The same command applies these three reviews and the two for Sakura to the owner's original project and exports to a new folder.
 
 ```powershell
 python tools/apply_reviewed_hd_portraits.py --output-project local/work/chapter1-hd-196/project.json --export
 ```
 
-La auditoría del checkpoint contabilizó 196/304 identidades globales y 86/123 en el capítulo 1, con 392 variantes y cero errores. Quedan 108 pendientes en el catálogo y 37 en el capítulo 1. El paquete privado preparado conserva los 19 fondos byte por byte y tiene un recibo SHA-256 `7db33b3dbf185870f7077a695f27ba420927641e112573dbab963746184dfd02`. Los paquetes entregados se conservan.
+The checkpoint audit counted 196/304 global identities and 86/123 in chapter 1, with 392 variants and zero errors. 108 remain pending in the catalog and 37 in chapter 1. The prepared private package preserves the 19 backgrounds byte for byte and has an SHA-256 receipt `7db33b3dbf185870f7077a695f27ba420927641e112573dbab963746184dfd02`. Delivered packages are kept.
 
-## Prueba de ejecución
+## Execution test
 
-La build v0.2.0-test.1 reprodujo cada estado durante 180 fotogramas a 2560×1440 con los paquetes de 193 y 196. La comparación obtuvo 180 hashes guest iguales y tres capturas RGB nativas idénticas por identidad. La diferencia GUI del fotograma 8 se limitó al rectángulo de retrato `[404,644) × [996,1284)`. El runtime registró densidad 2 y cero bloques interpretados en las seis ejecuciones. Los estados, las capturas y los informes con hashes por ejecución quedan en el espacio privado del propietario.
+Build v0.2.0-test.1 reproduced each state for 180 frames at 2560×1440 with the 193 and 196 packages. The comparison obtained 180 matching guest hashes and three identical native RGB captures per identity. The GUI difference at frame 8 was limited to the portrait rectangle `[404,644) × [996,1284)`. The runtime logged density 2 and zero interpreted blocks across the six runs. The states, captures and per-run hash reports remain in the owner's private space.

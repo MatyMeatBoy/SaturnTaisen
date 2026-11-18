@@ -1,23 +1,23 @@
-# MAC.L: acumulación saturada de 48 bits
+# MAC.L: 48-bit saturated accumulation
 
-La investigación del hilo de cheviman señaló un caso de aritmética SH-2 que se contrastó con el [manual oficial Renesas SH-1/SH-2/SH-DSP, sección6.1.31](https://www.renesas.com/en/document/mas/sh-1sh-2sh-dsp-software-manual). Con S activado participan los 48 bits bajos del acumulador. La lectura del código ajeno se utilizó como pista; la prueba y la corrección son propias y no incorporan código de htmlsaturn.
+Research from the cheviman thread flagged an SH-2 arithmetic case that was cross-checked against the [official Renesas SH-1/SH-2/SH-DSP manual, section 6.1.31](https://www.renesas.com/en/document/mas/sh-1sh-2sh-dsp-software-manual). With S enabled, the 48 low bits of the accumulator participate. Reading the third-party code was used as a lead; the test and the fix are our own and do not incorporate htmlsaturn code.
 
-## Reproducción
+## Reproduction
 
-Con acumulador 0xFFFF000000000000 y ambos operandos cero, los bits activos representan cero. Antes del cambio, el generador nativo devolvía el máximo de saturación y el intérprete propio el mínimo. Ambos incluían bits inactivos y el generador además elegía la dirección de saturación por el signo del producto. No es prueba de que este caso se haya producido durante una escena observada de Sakura.
+With accumulator 0xFFFF000000000000 and both operands zero, the active bits represent zero. Before the change, the native generator returned the saturation maximum and our own interpreter the minimum. Both included inactive bits, and the generator additionally chose the saturation direction by the sign of the product. This is not proof that this case occurred during an observed Sakura scene.
 
-Los registros completos se conservan localmente en v02-macl-red.log. La prueba falló en ambas rutas antes de corregirlas. Se revisa tanto el intérprete como el generador: corregir una sola ruta podría dejar una referencia errónea o C++ generado obsoleto.
+The full logs are kept locally in v02-macl-red.log. The test failed on both paths before they were fixed. Both the interpreter and the generator are reviewed: fixing only one path could leave an incorrect reference or stale generated C++.
 
-## Corrección
+## Fix
 
-El acumulador se enmascara y se interpreta con signo de 48 bits; el producto y la suma se calculan sin desbordamiento firmado y se limitan por comparación del resultado con los extremos permitidos. Con S desactivado se mantiene la suma modular de 64 bits. Se mantienen orden de lecturas, incremento de punteros, flags y ciclos nominales.
+The accumulator is masked and interpreted as signed 48-bit; the product and the sum are computed without signed overflow and are clamped by comparing the result against the allowed extremes. With S disabled, the 64-bit modular sum is kept. Read order, pointer increment, flags, and nominal cycles are preserved.
 
-La prueba sintética compila las instrucciones emitidas por el sh2emit.py de producción, sin escribir un sustituto a mano. Cubre operandos extremos y cruces de signo, arrastre entre mitades, bits altos inactivos, registros de dirección coincidentes y distintos, S activado/desactivado y ambos SH-2. Son 11.616 casos por ruta (nativa e intérprete), incluyendo direcciones y conservación de flags. Los bits altos no activos de MACH no se tratan como un resultado definido de 48 bits. El modelo esperado usa aritmética de 128 bits, de forma independiente a la fórmula de producción.
+The synthetic test compiles the instructions emitted by production's sh2emit.py, without writing a hand-made substitute. It covers extreme operands and sign crossings, carry between halves, inactive high bits, matching and differing address registers, S enabled/disabled, and both SH-2s. There are 11,616 cases per path (native and interpreter), including addresses and flag preservation. MACH's inactive high bits are not treated as a defined 48-bit result. The expected model uses 128-bit arithmetic, independently of the production formula.
 
-Se regeneraron los 580.328 bloques AOT: el generador reescribió 708 archivos afectados y conservó el resto. No se eliminó cobertura para reducir la recompilación. Los archivos derivados del juego permanecen locales.
+All 580,328 AOT blocks were regenerated: the generator rewrote 708 affected files and kept the rest. No coverage was removed to reduce recompilation. Files derived from the game remain local.
 
-## Límites
+## Limits
 
-Es una corrección de semántica, no una mejora de FPS medida. La comprobación sintética completa no prueba la campaña entera, todas las instrucciones SH-2 ni el backend GPU. La referencia y el código nativo pueden compartir defectos: se mantiene la comparación con documentación y expectativas independientes.
+This is a semantic fix, not a measured FPS improvement. The full synthetic check does not prove the entire campaign, all SH-2 instructions, or the GPU backend. The reference and the native code may share defects: comparison against documentation and independent expectations is maintained.
 
-Validación final: build nativo completo aprobado y68 pruebas en103,707s. Incluye comprobaciones reales de arranque600 frames y recorrido inicial4.200 frames con cero instrucciones guest interpretadas. La v0.1.5 publicada no se modifica.
+Final validation: full native build passed, and 68 tests in 103.707s. Includes real checks of a 600-frame boot and an initial 4,200-frame run with zero guest instructions interpreted. The published v0.1.5 is not modified.

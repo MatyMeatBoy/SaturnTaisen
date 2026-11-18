@@ -1,29 +1,29 @@
-# Elecciones LIPS desde datos precargados
+# LIPS choices from preloaded data
 
-Continúa T11 dentro del alcance aprobado de texto HD precargado. Evidencia: [cursor LIPS](../../research/lips-script-cursor.md). No modifica el guion, los tiempos, las entradas, las posiciones ni los ZIP entregados.
+Continues T11 within the approved scope of preloaded HD text. Evidence: [LIPS cursor](../../research/lips-script-cursor.md). Does not modify the script, timing, inputs, positions, or delivered ZIPs.
 
-## Diseño y límites
+## Design and limits
 
-Preparar un índice inmutable de comandos completos `2E8000` y su registro de opciones. Cada grupo ocupa un registro con saltos CR. Capturar su testigo junto al framebuffer, con coincidencia completa de script y TBL residentes y cursor BE32 en060685B4. El puntero narrativo no identifica las opciones.
+Prepare an immutable index of complete `2E8000` commands and their options record. Each group occupies one record with CR breaks. Capture its witness alongside the framebuffer, with a full match of the resident script and TBL and a BE32 cursor at 060685B4. The narrative pointer does not identify the options.
 
-El helper admite límites explícitos y rechaza referencias ambiguas. La primera activación del host queda fijada a0102.BIN/26646bytes/FNV0CE1CF29E7390A98, la fuente observada. No generalizar178000, batalla u otros scripts sin evidencia. La ausencia de un testigo conserva la ruta previa.
+The helper accepts explicit limits and rejects ambiguous references. The host's first activation is pinned to 0102.BIN/26646 bytes/FNV0CE1CF29E7390A98, the observed source. Do not generalize to 178000, battle, or other scripts without evidence. Absence of a witness keeps the previous path.
 
-La sustitución es atómica por panel: reloj, filas, centrado, bancos, tinta y placas actuales siguen siendo obligatorios. Solo si todas las opciones coinciden con sus tiles/bytes y el registro completo se toman vistas prestadas del catálogo sellado. No reconstruir cadenas para el grupo preparado; mantener la reconstrucción existente en fallback.
+The substitution is atomic per panel: clock, rows, centering, banks, ink, and current plates remain mandatory. Only if all options match their tiles/bytes and the full record do we borrow views from the sealed catalog. Do not reconstruct strings for the prepared group; keep the existing reconstruction as fallback.
 
-## Trabajo
+## Work
 
-- [x] Helper ChoicePreload e índice acotado; tests RED/GREEN de cursor, revisiones, ambiguos y límites.
-- [x] Helper puro de filas/tiles de opciones y tests de dos/tres filas, centrado, CP1252 y bounds.
-- [x] Fixture de panel completo: préstamo de todas las filas, fallback atómico por registro equivocado y propiedad de tinta intacta.
-- [x] Conectar preparación, captura bajo fbMutex y copia junto a píxeles; mantener Original/headless/GPU fuera del trabajo nuevo.
-- [x] Capturar patch0050 y validar árbol SDK antes de compilar en una salida aislada.
-- [x] Comparar paneles de dos/tres opciones, selección, confirmación y vencimiento; hashes/RGB idénticos y traza efectiva de catálogo. Conservar las referencias y la falta de prueba de otras ramas.
-- [x] Revisión, pendientes y evidencia; integración por PR34. Test.3 queda inmutable.
+- [x] ChoicePreload helper and bounded index; RED/GREEN tests for cursor, revisions, ambiguous cases, and limits.
+- [x] Pure helper for option rows/tiles and tests for two/three rows, centering, CP1252, and bounds.
+- [x] Full-panel fixture: borrowing of all rows, atomic fallback on a wrong record, and ink ownership intact.
+- [x] Wire up preparation, capture under fbMutex, and copy alongside pixels; keep Original/headless/GPU outside the new work.
+- [x] Capture patch0050 and validate the SDK tree before building into an isolated output.
+- [x] Compare two/three-option panels, selection, confirmation, and expiry; identical hashes/RGB and effective catalog trace. Keep the caveats and the lack of testing on other branches.
+- [x] Review, pendings, and evidence; integration via PR34. Test.3 remains unchanged.
 
-## Verificación en curso
+## Ongoing verification
 
-Tres fixtures pasan contra el SDK compuesto0001..0050, validado de nuevo sin diferencias. El candidato674.182 tiene SHA256 `df68e9dbe2c7d9efe273e0e716c504774ba5c5f5f0826abc783a2e3d6bffcbd3`. Doce pares de ejecuciones coinciden en3.240 hashes y102 pares RGB, incluidos Original, texto nativo, Zoom, conjunto y run-ahead2. Las trazas verifican11 comandos precargados y consumo real de los grupos20008/20002. Evidencia privada: `local/work/choice-preload-runtime/result.json`.
+Three fixtures pass against the composite SDK0001..0050, re-validated with no differences. Candidate 674,182 has SHA256 `df68e9dbe2c7d9efe273e0e716c504774ba5c5f5f0826abc783a2e3d6bffcbd3`. Twelve run pairs match on 3,240 hashes and 102 RGB pairs, including Original, native text, Zoom, the set, and run-ahead 2. The traces verify 11 preloaded commands and real consumption of groups 20008/20002. Private evidence: `local/work/choice-preload-runtime/result.json`.
 
-El primer ensayo partía de paneles ya confirmados y cerrándose. Se obtuvieron semillas anteriores mediante entradas normales, sin cambiar huésped ni reloj. El verificador privado `choice-input-probe/verify.py` pasa para dos/tres filas: Abajo mueve el resaltado a la segunda fila en30; A elimina el panel antes de150 y abre la respuesta correspondiente en170; el control neutro conserva el panel en150 y vence con otra respuesta en450. La inspección del frontend confirmó que el guard `moviePlay.empty()` sí engloba la escritura del mando; no hubo que corregir entradas SDL.
+The first trial started from panels already confirmed and closing. Earlier seeds were obtained through normal inputs, without changing the guest or the clock. The private verifier `choice-input-probe/verify.py` passes for two/three rows: Down moves the highlight to the second row at 30; A dismisses the panel before 150 and opens the corresponding answer at 170; the neutral control keeps the panel at 150 and expires with a different answer at 450. Frontend inspection confirmed that the `moviePlay.empty()` guard does cover the controller write; no SDL input fixes were needed.
 
-La comparación adicional desde esas semillas ya pasa para tres opciones: seis perfiles,2.100 hashes y59 pares RGB idénticos,0 interpretados. La suite equivalente de dos opciones también pasa: otros 2.100 hashes y 59 pares RGB. Las tres suites suman 24 pares de ejecuciones, 7.440 hashes y 220 pares RGB iguales, con cero interpretados. Revisión independiente de helpers/panel y tres fixtures sin bloqueos.
+The additional comparison from those seeds now also passes for three options: six profiles, 2,100 hashes, and 59 identical RGB pairs, 0 interpreted. The equivalent two-option suite also passes: another 2,100 hashes and 59 RGB pairs. The three suites together total 24 run pairs, 7,440 hashes, and 220 matching RGB pairs, with zero interpreted. Independent review of the helpers/panel and three fixtures with no blockers.

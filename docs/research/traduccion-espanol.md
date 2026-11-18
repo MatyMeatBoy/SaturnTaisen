@@ -1,77 +1,77 @@
-# Traducción al español (T25)
+# Spanish translation (T25)
 
-Primer objetivo: todos los menús y el capítulo 1. Las herramientas viven en `tools/es/`; el guion, los lotes, el japonés reconstruido y los archivos generados permanecen en `local/work/guion-es` y nunca se suben. `SAKURA_OWNER_ROOT` apunta a la copia que contiene `local/` (misma convención que las pruebas runtime).
+First goal: all menus and chapter 1. The tools live in `tools/es/`; the script, the batches, the reconstructed Japanese, and the generated files remain in `local/work/guion-es` and are never pushed. `SAKURA_OWNER_ROOT` points to the copy that contains `local/` (same convention as the runtime tests).
 
-## Método de traducción
+## Translation method
 
-1. **Japonés reconstruido**: las tablas japonesas `NNNNTBL.BIN` guardan códigos de 16 bits (`0` fin, `0x0A0D` salto, `c` = glifo `c-1` de `NNNNKNJ.BIN`, 16×16 a 4 bpp). Los glifos se identifican por MD5 y se transcriben una vez a mano; `tools/es/japones.py` regenera el guion alineado con el inglés (mismos IDs y número de registros). Capítulo 1: 3.971 registros, 1,2 % de glifos dudosos. Los combates (`SAKURA2/M##MES.BIN` + `.FNT`) usan el mismo esquema.
-2. **Inglés v2.1** como adaptación de referencia, revisada por humanos.
-3. **Español**: neutro (ustedes, sin voseo); giro leve de España solo si mejora el modismo. Pasos: traducción por lotes (~330 textos únicos en orden de guion), revisión línea a línea japonés → inglés → español, unificación de términos y trato en la guía de estilo privada, validación (`tools/es/validar_lote.py`). En el capítulo 1 la revisión con japonés cambió entre un 25 % y un 70 % de las líneas por lote y corrigió errores del inglés (休演日 = día sin función, 大将 = general de ejército, 人を呼びますわよ = «llamaré a alguien», dialecto de Osaka de Kohran, juego 舞台/部隊 resuelto con «compañía»).
-4. **Extracción de lotes por capítulo**: `tools/es/lotes.py --tables 02XX... --out capitulo2/lotes` genera los lotes de un capítulo desde el catálogo de diálogo inglés ya existente (`local/work/dialogue-catalog-worker/dialogue.jsonl`, de todo el juego), filtrando los marcadores `NNNNTBL:idx` (no se traducen, los resuelve el motor en tiempo de ejecución). `tools/es/validar_lote.py loteNN --capitulo capitulo2` valida cualquier capítulo, no solo el primero.
+1. **Reconstructed Japanese**: the Japanese tables `NNNNTBL.BIN` store 16-bit codes (`0` end, `0x0A0D` line break, `c` = glyph `c-1` from `NNNNKNJ.BIN`, 16×16 at 4 bpp). Glyphs are identified by MD5 and transcribed once by hand; `tools/es/japones.py` regenerates the script aligned with the English version (same IDs and record count). Chapter 1: 3,971 records, 1.2% uncertain glyphs. Battles (`SAKURA2/M##MES.BIN` + `.FNT`) use the same scheme.
+2. **English v2.1** as the reference adaptation, human-reviewed.
+3. **Spanish**: neutral (ustedes, no voseo); slight Spain-leaning turn of phrase only if it improves the idiom. Steps: batch translation (~330 unique texts in script order), line-by-line review Japanese → English → Spanish, term and register unification in the private style guide, validation (`tools/es/validar_lote.py`). In chapter 1, the Japanese-based review changed between 25% and 70% of lines per batch and fixed English errors (休演日 = day with no performance, 大将 = army general, 人を呼びますわよ = "I'll call someone", Kohran's Osaka dialect, the 舞台/部隊 pun resolved with "company").
+4. **Per-chapter batch extraction**: `tools/es/lotes.py --tables 02XX... --out capitulo2/lotes` generates a chapter's batches from the already-existing English dialogue catalog (`local/work/dialogue-catalog-worker/dialogue.jsonl`, covering the whole game), filtering out the `NNNNTBL:idx` markers (not translated, resolved by the engine at runtime). `tools/es/validar_lote.py loteNN --capitulo capitulo2` validates any chapter, not just the first.
 
-## Diálogo y combate
+## Dialogue and battle
 
-- Fuentes del parche inglés: CP1252 completo con acentos (diálogo 16×16; combate 8×12, 255 glifos). No hace falta dibujar glifos.
-- Límite: 30 caracteres × 4 líneas. Ajuste automático; solo LIPS y menús de elección llevan saltos explícitos.
-- `tools/es/tablas.py`: cabecera `>II`, entradas `>II` (id, offset), registro `>HH` + texto CP1252 par terminado en `00 00`, pie de vocales de sincronía labial intacto. Reproduce byte a byte las 56 tablas inglesas.
-- `tools/es/combate.py`: texto en palabras de 16 bits CP1252, salto `0x0A0D`; reproduce byte a byte las 13 tablas.
-- `tools/es/iso.py`: copia la ISO inglesa preparada y mueve todas las `*TBL.BIN` y `*MES.BIN` a ranuras fijas de 128 KiB al final; los demás archivos se sustituyen en su sitio con el mismo tamaño. Los LBA no cambian entre builds, así que los savestates de una ISO española siguen valiendo. El juego localiza los archivos por el directorio ISO (el parche inglés ya reconstruyó la imagen).
-- Un savestate contiene la tabla ya cargada: para ver texto nuevo hay que partir de un estado anterior a esa carga.
+- English-patch fonts: full CP1252 with accents (dialogue 16×16; battle 8×12, 255 glyphs). No need to draw glyphs.
+- Limit: 30 characters × 4 lines. Automatic wrapping; only LIPS and choice menus carry explicit line breaks.
+- `tools/es/tablas.py`: header `>II`, entries `>II` (id, offset), record `>HH` + CP1252 text, even, ending in `00 00`, lip-sync vowel footer intact. Reproduces the 56 English tables byte for byte.
+- `tools/es/combate.py`: text in 16-bit CP1252 words, line break `0x0A0D`; reproduces the 13 tables byte for byte.
+- `tools/es/iso.py`: copies the prepared English ISO and moves all `*TBL.BIN` and `*MES.BIN` files to fixed 128 KiB slots at the end; the other files are replaced in place with the same size. LBAs don't change between builds, so savestates from a Spanish ISO remain valid. The game locates files via the ISO directory (the English patch already rebuilt the image).
+- A savestate contains the already-loaded table: to see new text you must start from a state prior to that load.
 
-## Menús
+## Menus
 
-Compresión LZ propia (rutina SH-2 `0x0600A164`), implementada en `tools/es/red_lz.py` y verificada con todos los flujos conocidos. Al reinsertar, un flujo solo puede ocupar su longitud original más el relleno de ceros que ya lo seguía: detrás suele haber paletas o tablas.
+Custom LZ compression (SH-2 routine `0x0600A164`), implemented in `tools/es/red_lz.py` and verified against all known streams. When reinserting, a stream can only occupy its original length plus the zero padding that already followed it: palettes or tables usually sit behind it.
 
-| Pantalla | Datos | Colocación |
+| Screen | Data | Placement |
 | --- | --- | --- |
-| Título (Program) | `LOGO.SH2`+0xFF20, tiles 16×16 4 bpp | Grupos de piezas `x,-8,16,16,char` en `LOGO.SH2`+0x6086 (punteros en +0x6234, contadores `08 05 08 07 07 08`); cada pieza apunta a cualquier tile. |
-| Rótulos del título | Marco 8 bpp `LOGO.SH2`+0x10808; «Press Start» 4 bpp en `+0x25410`+81760 | Pintados: se recomponen con las letras del propio parche inglés (d = b reflejada; s dibujada igual). |
-| Intermedio | `ICATALL.DAT`+0x2800 | Listas de tiles de longitud fija (5, 5, 6) en `SAKURA`+0x5F5C8. |
-| Opciones y mandos | `SAKURA`+0x5B320 y +0x59878; marco +0x5AE38 | Tablas de piezas en `SAKURA` (~0x59C70–0x5ACB0): cada palabra española se dibuja en los mismos tiles que la inglesa. |
-| Carga/guardado | Fuente de pares 8×16 (DTE) `SAKURA`+0x5C654, 144 tiles | Cadenas de tiles base 1 terminadas en 0 en `SAKURA`+0x5A09E..0x5A34A, casi todas con puntero (`0x0605xxxx`, carga en 0x06004000). Los botones usan ids fijos: Copy [90,4,95], Del [102,41], Yes [34,6], No [95,133,95]. |
-| Estado (stats) | `ICATALL.DAT`+0x13800, 48 tiles (16×16 4 bpp) | Tiles 0-16: nombres de personaje (no se traducen). 17-18 High, 20-21 Spirits!, 22-24 Normal, 25-26 Mood, 27-29 Terrible, 30-31 Atk, 32-33 Def, 34-35 Mov; el resto son `+ - 0-9`. |
-| Marco de carga (File/System RAM) | `SAKURA`+0x5E190..0x5EB4C (288×184, 4 bpp) rótulos pintados, no tiles | «File 1/2/3» en cajas (196,y,60,16) con y=40/80/120; «System RAM» en (2,162,108,16); mismo `rotulos.replace_text` que la pestaña «Options». |
-| Barra de combate (los 13 escenarios: WKL01, 02-11, 21, 22) | `SAKURA2/WKL##.BIN`, bloque 0 de la sección de «battle menu», sprites 4 bpp sin comprimir, 28 piezas de 16/24×16px | Dirección calculada por archivo con el algoritmo de `WklBattleMenuExtractor` (`local/research/noahsteam-repo/SakuraTaisen/SakuraTaisen.cpp`): u32 en `+0xE8` → tabla de bloques → cabeceras de imagen de 16 bytes del bloque 0 (offset/offset_prev/ancho/alto). 25 palabras (los últimos 3 son iconos, intactos); fuente CENTURY.TTF a 9pt (la de 15pt usada en otras pantallas no entra en estas celdas), binarizada a 2 tonos (tinta índice 3, borde 1). Verificado byte a byte: el mismo algoritmo reproduce el offset hallado a mano para WKL01 (`0x339A8`), y las 13 cabeceras dan el mismo ancho/alto por sprite con contenido inglés idéntico. |
+| Title (Program) | `LOGO.SH2`+0xFF20, 16×16 4 bpp tiles | Piece groups `x,-8,16,16,char` in `LOGO.SH2`+0x6086 (pointers at +0x6234, counters `08 05 08 07 07 08`); each piece points to any tile. |
+| Title labels | 8 bpp frame `LOGO.SH2`+0x10808; "Press Start" 4 bpp at `+0x25410`+81760 | Painted: recomposed with the letters from the English patch itself (d = flipped b; s drawn the same). |
+| Interlude | `ICATALL.DAT`+0x2800 | Fixed-length tile lists (5, 5, 6) in `SAKURA`+0x5F5C8. |
+| Options and controls | `SAKURA`+0x5B320 and +0x59878; frame +0x5AE38 | Piece tables in `SAKURA` (~0x59C70–0x5ACB0): each Spanish word is drawn on the same tiles as the English one. |
+| Load/save | 8×16 pair font (DTE) `SAKURA`+0x5C654, 144 tiles | Base-1 tile strings ending in 0 at `SAKURA`+0x5A09E..0x5A34A, almost all with a pointer (`0x0605xxxx`, loaded at 0x06004000). Buttons use fixed ids: Copy [90,4,95], Del [102,41], Yes [34,6], No [95,133,95]. |
+| Status (stats) | `ICATALL.DAT`+0x13800, 48 tiles (16×16 4 bpp) | Tiles 0-16: character names (not translated). 17-18 High, 20-21 Spirits!, 22-24 Normal, 25-26 Mood, 27-29 Terrible, 30-31 Atk, 32-33 Def, 34-35 Mov; the rest are `+ - 0-9`. |
+| Load frame (File/System RAM) | `SAKURA`+0x5E190..0x5EB4C (288×184, 4 bpp) painted labels, not tiles | "File 1/2/3" in boxes (196,y,60,16) with y=40/80/120; "System RAM" at (2,162,108,16); same `rotulos.replace_text` as the "Options" tab. |
+| Battle bar (the 13 scenarios: WKL01, 02-11, 21, 22) | `SAKURA2/WKL##.BIN`, block 0 of the "battle menu" section, uncompressed 4 bpp sprites, 28 pieces of 16/24×16px | Address computed per file with the `WklBattleMenuExtractor` algorithm (`local/research/noahsteam-repo/SakuraTaisen/SakuraTaisen.cpp`): u32 at `+0xE8` → block table → 16-byte image headers of block 0 (offset/offset_prev/width/height). 25 words (the last 3 are icons, untouched); CENTURY.TTF font at 9pt (the 15pt one used on other screens doesn't fit these cells), binarized to 2 tones (ink index 3, border 1). Verified byte for byte: the same algorithm reproduces the offset found by hand for WKL01 (`0x339A8`), and all 13 headers give the same width/height per sprite with identical English content. |
 
-Reglas de texto en menús: misma letra que el inglés (Century para la serif, Georgia Bold comprimida para el título); cuatro niveles de tinta [1, 5, 9, 13] para que cada flujo quepa; si una palabra exige comprimirla por debajo del 85 %, se usa su abreviatura («Cancel.», «Habl.», «Cop.», «Bor.»).
+Menu text rules: same typeface as English (Century for the serif, condensed Georgia Bold for the title); four ink levels [1, 5, 9, 13] so every string fits; if a word needs to be compressed below 85%, its abbreviation is used ("Cancel.", "Habl.", "Cop.", "Bor.").
 
-## Texto HD con español
+## HD text with Spanish
 
-Resuelto por construcción, sin cambios de código: `local/deps/satrecomp/port/glyph_text.h` (`DecodeCodepoint`) reconoce todo el rango CP1252 (32-126 y 128-255, con la tabla de puntuación 0x80-0x9F que incluye `…`=0x85), no solo ASCII — así que á/é/í/ó/ú/ñ/¿/¡ reciben el mismo tratamiento HD que cualquier letra inglesa. La condición es que el atlas de glifos coincida con la huella `KnownEnglishAtlas` (0xA6A05DFF441E0C60); el parche español nunca sustituye los `NNNNKNJ.BIN` (fuente), solo tablas `TBL`/`MES` y tiras de menú — confirmado en `tools/es/iso.py::build`, que solo reemplaza lo que recibe explícitamente. La fuente llega intacta, byte a byte igual que en el parche inglés.
+Resolved by construction, with no code changes: `local/deps/satrecomp/port/glyph_text.h` (`DecodeCodepoint`) recognizes the whole CP1252 range (32-126 and 128-255, with the 0x80-0x9F punctuation table that includes `…`=0x85), not just ASCII — so á/é/í/ó/ú/ñ/¿/¡ get the same HD treatment as any English letter. The condition is that the glyph atlas matches the `KnownEnglishAtlas` fingerprint (0xA6A05DFF441E0C60); the Spanish patch never replaces the `NNNNKNJ.BIN` files (font), only `TBL`/`MES` tables and menu strips — confirmed in `tools/es/iso.py::build`, which only replaces what it explicitly receives. The font arrives intact, byte for byte identical to the English patch.
 
-## Pruebas
+## Tests
 
-- `tests/test_es_herramientas.py`: LZ de ida y vuelta, tablas y combate sintéticos, y reconstrucción exacta de todas las tablas del disco del propietario si está disponible.
-- `tests/test_es_output_safety.py`: prueba límites de la ISO, escritura atómica y conservación de discos, estados y perfiles de entrada con datos sintéticos.
-- `tools/es/parchear_estado.py`: aplica los datos españoles a la RAM/VRAM de un savestate inglés para revisar un menú en segundos; no sustituye a un arranque real.
-- Verificado en el runtime (AOT estricto, 0 interpretados): prólogo y encuentro con Sakura en español desde la ISO española, combate del capítulo 1 en español, título y pantalla de carga desde arranque en frío; intermedio y opciones mediante estados parcheados.
+- `tests/test_es_herramientas.py`: round-trip LZ, synthetic tables and battle data, and exact reconstruction of every table on the owner's disc if available.
+- `tests/test_es_output_safety.py`: tests ISO bounds, atomic writes, and preservation of discs, states, and input profiles with synthetic data.
+- `tools/es/parchear_estado.py`: applies the Spanish data to an English savestate's RAM/VRAM to review a menu in seconds; it does not replace a real boot.
+- Verified in the runtime (strict AOT, 0 interpreted): prologue and the meeting with Sakura in Spanish from the Spanish ISO, chapter 1 battle in Spanish, title and loading screen from cold boot; interlude and options via patched states.
 
-## Modo español en el launcher
+## Spanish mode in the launcher
 
-Ya funciona sin tocar código: `tools/es/construir_disco_es.py` genera `local/prepared/disc1-es` y `tools/es/perfil_es.py` crea un perfil aparte (`local/profiles/espanol`, copia del perfil base con `[game] disc=` apuntando al disco español) y el acceso local «Jugar en español.bat». Verificado con la build `v0.2-ch1-preview`: el launcher arranca el disco español y el título muestra «Pulsa Start».
+Already works without touching code: `tools/es/construir_disco_es.py` generates `local/prepared/disc1-es` and `tools/es/perfil_es.py` creates a separate profile (`local/profiles/espanol`, a copy of the base profile with `[game] disc=` pointing to the Spanish disc) and the local shortcut "Jugar en español.bat". Verified with the `v0.2-ch1-preview` build: the launcher boots the Spanish disc and the title shows "Pulsa Start".
 
-Las herramientas de línea de comandos guardan los discos, estados de prueba y perfiles bajo `SAKURA_OWNER_ROOT/local`. El constructor verifica la ISO en un archivo temporal antes de publicar la imagen. Al repetir la creación del perfil se actualiza solo `[game] disc` en el INI del launcher y se conservan los ajustes y partidas del perfil. El acceso de Windows usa UTF-8 y admite rutas con espacios y caracteres Unicode; para reproducciones automatizadas con límite de tiempo, ejecuta el runtime directamente con `--disc`, `--settings` y `--backup`.
+The command-line tools store discs, test states, and profiles under `SAKURA_OWNER_ROOT/local`. The builder verifies the ISO in a temporary file before publishing the image. Repeating profile creation only updates `[game] disc` in the launcher's INI, keeping the profile's settings and saves. The Windows shortcut uses UTF-8 and supports paths with spaces and Unicode characters; for automated, time-bounded playbacks, run the runtime directly with `--disc`, `--settings`, and `--backup`.
 
-Opción integrada propuesta para el launcher (dependencia, requiere coordinar propiedad del SDK):
+Proposed integrated launcher option (dependency, requires coordinating SDK ownership):
 
-- Selector «Idioma: English / Español» en la tarjeta del disco; se guarda en `launcher.ini` (`[game] language=es`).
-- Con `es`, `find_nearby` prueba primero `local/prepared/disc1-es/game.cue`, `game/disc1-es/game.cue` y `disc1-es/game.cue`; si no existe, el selector aparece desactivado con el texto «Falta el disco en español (tools/es/construir_disco_es.py)».
-- `check_disc` acepta el disco español: el código del juego es idéntico al inglés; solo cambian tablas, menús y el programa principal en zonas de datos.
-- Partidas: el formato no cambia; compartir o separar carpetas es decisión del propietario (el perfil separado de `perfil_es.py` las separa).
-- El release público nunca incluye el disco español: es una salida local del propietario, igual que el disco inglés preparado.
+- "Language: English / Español" selector on the disc card; saved to `launcher.ini` (`[game] language=es`).
+- With `es`, `find_nearby` first tries `local/prepared/disc1-es/game.cue`, `game/disc1-es/game.cue`, and `disc1-es/game.cue`; if none exists, the selector appears disabled with the text "Falta el disco en español (tools/es/construir_disco_es.py)".
+- `check_disc` accepts the Spanish disc: the game code is identical to the English one; only tables, menus, and the main program change, in data zones.
+- Saves: the format doesn't change; sharing or separating folders is the owner's decision (the separate profile from `perfil_es.py` keeps them apart).
+- The public release never includes the Spanish disc: it is a local owner output, just like the prepared English disc.
 
-## Pendiente
+## Pending
 
-Rótulo de episodio (`TITLE1.BIN`) y pantalla LOADING, menú extra (`OMALL.DAT`), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método para el guion.
+Episode label (`TITLE1.BIN`) and LOADING screen, extra menu (`OMALL.DAT`), HD text review with Spanish, and the language option in the launcher. Chapters 2–10 follow the same method for the script.
 
-**Japonés disponible**: el dump crudo del disco japonés (.cue/.bin) sí está en el equipo del propietario; se preparó con `tools/prepare_discs.py --original` en `local/prepared/japanese-disc1` y `-disc2`. Ya no está bloqueada la revisión con japonés.
+**Japanese available**: the raw dump of the Japanese disc (.cue/.bin) is indeed on the owner's machine; it was prepared with `tools/prepare_discs.py --original` into `local/prepared/japanese-disc1` and `-disc2`. Japanese-based review is no longer blocked.
 
-**Capítulo 2**: 1.775 textos únicos (6 lotes, `0201TBL.BIN`-`0206TBL.BIN`) traducidos y validados. 125 glifos nuevos transcritos (`glifos_nuevos.py`), `japones.json` reconstruido (2.692 registros, 1,3 % dudoso, igual que el 1,2 % de capítulo 1 con `japones.py`). Revisión japonés → inglés → español: lote01 completo línea a línea (2 correcciones reales); lotes 02-06 solo con un barrido automático de divergencias numéricas, sin lectura humana todavía. El guion vive solo en `local/work/guion-es/capitulo2` (nunca se sube) con su propio `ESTADO.md`; no tratar como terminado hasta terminar esa revisión.
+**Chapter 2**: 1,775 unique texts (6 batches, `0201TBL.BIN`-`0206TBL.BIN`) translated and validated. 125 new glyphs transcribed (`glifos_nuevos.py`), `japones.json` rebuilt (2,692 records, 1.3% uncertain, matching chapter 1's 1.2% with `japones.py`). Japanese → English → Spanish review: batch01 fully reviewed line by line (2 real corrections); batches 02-06 only had an automatic sweep for numeric divergences, no human read yet. The script lives only in `local/work/guion-es/capitulo2` (never pushed) with its own `ESTADO.md`; do not treat it as finished until that review is complete.
 
-**Capítulo 3**: en curso, 3 de 7 lotes (990 de 2.060 textos) traducidos y validados desde el inglés, sin revisión japonesa todavía.
+**Chapter 3**: in progress, 3 of 7 batches (990 of 2,060 texts) translated and validated from English, no Japanese-based review yet.
 
-Investigado y descartado por ahora (no intentar de nuevo sin lo que falta):
+Investigated and shelved for now (don't retry without what's missing):
 
-- **Episodio / LOADING**: `draw_vdp2_screen` (ver `decodificar.py`) confirma que son pantallas VDP2 de celdas 8×8 a 8 bpp con mapa de 40×28 — no tiras de texto por tiles. El rótulo «LOADING»/«Episode N: ...» está pintado a pincel, con el mismo estilo que el fondo (pétalos, marca de agua 「サクラ大戦」); redibujarlo con una tipografía TTF desentonaría del arte, y las celdas del rótulo podrían compartirse con el fondo (no verificado), con riesgo de corromper otras zonas de la pantalla. Falta: confirmar qué celdas son exclusivas del rótulo antes de tocar nada, o conseguir arte pintado a mano en el mismo estilo.
-- **OMALL.DAT**: los 271 tiles de pares DTE (`omake_textos_1000`/`_79000`) no tienen tabla de punteros dentro del propio archivo — los flujos LZ en 0x0/0x3000/0x3800 decodificados son gráficos de marco (patrones de nibble típicos de bordes), no listas de índices. La tabla que referencia esos pares (equivalente a `SAKURA`+0x5A09E..0x5A34A de `carga()`) vive en otro archivo en una dirección de carga que no está documentada. Punto de partida para retomarlo: `local/deps/satrecomp/tools/sh2dis.py` (desensamblador SH-2 ya incluido en el repo) sobre `SAKURA` cargado en `0x06004000` — la cadena `"OMALL.DAT"` vive en `SAKURA`+0xFD60 (dirección `0x06013D60`), referenciada desde el pool de literales en 4 puntos (`0xFE88`, `0xFFA4`, `0x10074`, `0x10174`). El primero (`0x06013DFE`) carga esa dirección en `r5` justo antes de una llamada a `0x06008AF4`; unas instrucciones más abajo hay una llamada a `0x0600704C` con `r4=0x060E0000` (posible buffer destino en work RAM) y `r5=0x25F00C00` (posible VRAM VDP1). Falta trazar esas dos llamadas (son rutinas de biblioteca reutilizadas en varios sitios, no específicas de OMALL) para confirmar cuál hace la lectura del archivo y dónde queda su tabla de punteros antes de poder traducir el menú extra.
-  Dato adicional: `local/research/noahsteam-repo/SakuraTaisen/SakuraTaisen.cpp` (herramientas del equipo de traducción inglesa, fuente de `docs/research/sakura-engine-notes.md`) extrae `OMAKE01-03/11-13.BIN` como imágenes de pantalla completa (igual que `TITLE#.BIN`/`LOAD.BIN`, offset de tiles 0x1380), y **no menciona `OMALL.DAT` ni ningún texto de menú extra en absoluto** — el parche inglés de referencia tampoco tradujo este menú. No es solo prioridad baja por `AGENTS.md`: tampoco hay precedente de que se haya resuelto antes.
+- **Episode / LOADING**: `draw_vdp2_screen` (see `decodificar.py`) confirms these are VDP2 screens of 8×8 8-bpp cells with a 40×28 map — not tile text strips. The "LOADING"/"Episode N: ..." label is hand-painted, in the same style as the background (petals, the 「サクラ大戦」 watermark); redrawing it with a TTF font would clash with the art, and the label's cells might be shared with the background (unverified), risking corruption of other screen areas. Missing: confirm which cells belong exclusively to the label before touching anything, or obtain hand-painted art in the same style.
+- **OMALL.DAT**: the 271 DTE pair tiles (`omake_textos_1000`/`_79000`) have no pointer table within the file itself — the LZ streams at 0x0/0x3000/0x3800, once decoded, are frame graphics (nibble patterns typical of borders), not index lists. The table referencing those pairs (equivalent to `SAKURA`+0x5A09E..0x5A34A from `carga()`) lives in another file at a load address that isn't documented. Starting point to pick this back up: `local/deps/satrecomp/tools/sh2dis.py` (SH-2 disassembler already included in the repo) on `SAKURA` loaded at `0x06004000` — the string `"OMALL.DAT"` lives at `SAKURA`+0xFD60 (address `0x06013D60`), referenced from the literal pool at 4 points (`0xFE88`, `0xFFA4`, `0x10074`, `0x10174`). The first one (`0x06013DFE`) loads that address into `r5` right before a call to `0x06008AF4`; a few instructions below there's a call to `0x0600704C` with `r4=0x060E0000` (possible destination buffer in work RAM) and `r5=0x25F00C00` (possible VDP1 VRAM). Those two calls still need to be traced (they are library routines reused in several places, not specific to OMALL) to confirm which one reads the file and where its pointer table ends up, before the extra menu can be translated.
+  Additional data point: `local/research/noahsteam-repo/SakuraTaisen/SakuraTaisen.cpp` (tools from the English translation team, source for `docs/research/sakura-engine-notes.md`) extracts `OMAKE01-03/11-13.BIN` as full-screen images (same as `TITLE#.BIN`/`LOAD.BIN`, tile offset 0x1380), and **does not mention `OMALL.DAT` or any extra menu text at all** — the reference English patch didn't translate this menu either. It isn't just low priority per `AGENTS.md`: there is also no precedent that it has ever been solved.

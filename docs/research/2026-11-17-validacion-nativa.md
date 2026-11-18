@@ -1,28 +1,28 @@
-# Validación nativa del arranque y llegada al teatro
+# Native validation of boot and arrival at the theater
 
-El recorrido reproducible `tests/theater.movie` llega desde el arranque a narración, diálogos ingleses y el mapa del teatro. Sus pulsaciones de A eligen una ruta inicial; no prueban todas las elecciones ni la campaña. El descubrimiento combinado contiene 8.488 variantes de bloques entre los dos discos y ambos idiomas. Los datos y el C++ generado permanecen en `local/`.
+The reproducible run `tests/theater.movie` goes from boot to narration, English dialogue, and the theater map. Its A presses choose one initial route; they do not test every choice nor the full campaign. The combined discovery contains 8,488 block variants across the two discs and both languages. The data and generated C++ remain in `local/`.
 
-## Fallo de inicialización CD encontrado
+## CD initialization failure found
 
-El juego llamaba al servicio BIOS de salida, a través de `0x0600026C`, desde `0x06052C36`. El runtime imprimía un aviso y devolvía cero, permitiendo continuar después de una inicialización fallida. Que apareciera el título no probaba una inicialización correcta.
+The game called the exit BIOS service, through `0x0600026C`, from `0x06052C36`. The runtime printed a warning and returned zero, allowing it to continue after a failed initialization. The title appearing did not prove a correct initialization.
 
-El dump BIOS japonés del propietario y su RAM en Beetle Saturn permitieron identificar el servicio real. Una traza del código original mostró el fallo: el comando CD `1100 0200 0000 0000` pide buscar la pista 2, pero el runtime solo actualizaba la posición al recibir una dirección FAD. Dejar la posición anterior provocaba el error de la biblioteca CD del juego.
+The owner's Japanese BIOS dump and its RAM in Beetle Saturn allowed identifying the real service. A trace of the original code showed the failure: the CD command `1100 0200 0000 0000` asks to seek track 2, but the runtime only updated the position when it received a FAD address. Leaving the previous position caused the game's CD library error.
 
-El parche 0005 mueve el lector a la pista solicitada, conserva la posición con pausa y distingue una pista inválida. Después de corregirlo, el retorno original de esa inicialización es cero y desaparece la llamada BIOS de salida. Se prueba con comandos de bus sintéticos y con el arranque del disco real. La distinción pista/FAD está documentada en la [referencia de comandos de Yabause](https://wiki.yabause.org/index.php5?title=CDCommands) y en el [manual de comunicación CD de Sega](https://antime.kapsi.fi/sega/files/ST-162-062094.pdf).
+Patch 0005 moves the reader to the requested track, preserves position with pause, and distinguishes an invalid track. After fixing it, that initialization's original return is zero and the exit BIOS call disappears. It is tested with synthetic bus commands and with the real disc's boot. The track/FAD distinction is documented in [Yabause's command reference](https://wiki.yabause.org/index.php5?title=CDCommands) and in [Sega's CD communication manual](https://antime.kapsi.fi/sega/files/ST-162-062094.pdf).
 
-El parche 0006 hace que AOT estricto rechace también servicios BIOS no implementados. El intérprete de investigación conserva su diagnóstico; una compilación de producción no puede aprobar este caso devolviendo éxito provisional.
+Patch 0006 makes strict AOT also reject unimplemented BIOS services. The research interpreter keeps its diagnostic; a production build cannot approve this case by returning provisional success.
 
-## Composición VDP2
+## VDP2 composition
 
-El parche 0004 implementa mezcla normal de dos pantallas, suma saturada, selección de proporción del primer o segundo plano, desplazamiento de color posterior a la mezcla y sombra posterior. También decodifica las proporciones de los sprites, sus cuatro condiciones de habilitación y la ventana de cálculo de color. Las pruebas usan VRAM, CRAM y framebuffer sintéticos con el renderizador real.
+Patch 0004 implements normal blending of two screens, saturated sum, foreground/background ratio selection, post-blend color offset, and posterior shadow. It also decodes sprite ratios, their four enable conditions, and the color calculation window. The tests use synthetic VRAM, CRAM, and framebuffer with the real renderer.
 
-Las fórmulas y el orden de composición se contrastaron con el [compositor de Beetle Saturn](https://github.com/libretro/beetle-saturn-libretro/blob/master/mednafen/ss/vdp2_render.c). Las modalidades especiales por carácter/dot, extendidas y con pantalla de línea siguen pendientes; conservan su diagnóstico. La ruta larga probada no presenta avisos de composición pendiente.
+The formulas and composition order were cross-checked against [Beetle Saturn's compositor](https://github.com/libretro/beetle-saturn-libretro/blob/master/mednafen/ss/vdp2_render.c). The special per-character/dot modes, extended modes, and line-screen mode remain pending; they keep their diagnostic. The long tested route shows no pending-composition warnings.
 
-## Evidencia y límites
+## Evidence and limits
 
-- 30.000 hashes de estado por modo: intérprete, AOT conservador y repetición AOT iguales en todos los fotogramas. Evidencia local `local/work/sakura/parity-5ttcykm7/report.json`.
-- El AOT recorrió esa ruta sin interpretación SH-2 ni servicios BIOS desconocidos. Agrupar funciones/enlazar llamadas sigue desactivado por una divergencia anterior en el fotograma 116.
-- El perfil japonés conserva los bytes de datos y los tiempos del CUE original; solo cambia su representación a ISO/WAV. Sus hashes RA coinciden con los de los discos ingleses.
-- La referencia de los hashes es el intérprete sobre el mismo runtime. No demuestra por sí sola fidelidad completa del hardware; hay que continuar la comparación con Beetle y validar lógica, sonido y gráficos de las escenas restantes.
-- El rendimiento medido es headless en este recorrido. Las tareas concurrentes de desarrollo impiden tratarlo como una medición final del producto con ventana, audio y mandos.
-- Faltan campaña, batallas, minijuegos, guardar/cargar y cambio real 1→2, además de las funciones finales de launcher, mandos, logros y mods. No se declara terminado el recomp.
+- 30,000 state hashes per mode: interpreter, conservative AOT, and AOT replay are identical across every frame. Local evidence `local/work/sakura/parity-5ttcykm7/report.json`.
+- The AOT ran that route with no SH-2 interpretation nor unknown BIOS services. Grouping functions/binding calls remains disabled due to a previous divergence at frame 116.
+- The Japanese profile preserves the original CUE's data bytes and timings; only its representation changes to ISO/WAV. Its RA hashes match those of the English discs.
+- The reference for the hashes is the interpreter on the same runtime. It alone does not prove full hardware fidelity; comparison against Beetle must continue, and the logic, sound, and graphics of the remaining scenes must be validated.
+- The measured performance in this run is headless. Concurrent development tasks prevent treating it as a final product measurement with window, audio, and controllers.
+- Campaign, battles, minigames, save/load, and the real 1→2 swap are still missing, along with the final launcher, controller, achievement, and mod functions. The recomp is not declared finished.

@@ -1,35 +1,35 @@
-# Personajes PC para el mod HD de Saturn
+# PC characters for the Saturn HD mod
 
-El usuario confirmó que se deben adaptar también los sprites de chicas, otros personajes, retratos y expresiones. Continúa la prioridad Saturn; esto no integra ejecución ni traducción de la plataforma PC. La mejora de texto sigue siendo una opción separada.
+The user confirmed that girl sprites, other characters, portraits, and expressions should also be adapted. Saturn priority continues; this does not integrate PC-platform execution or translation. Text enhancement remains a separate option.
 
-## Inventario verificado
+## Verified inventory
 
-`tools/audit_hd_characters.py` compara los recursos propios extraídos con ambas ISO Saturn preparadas. Encontró 147 archivos de personajes NC de PC, con 3.596 imágenes no vacías. Los 147 nombres tienen candidatos nativos. El inventario registra hashes de archivo, dimensiones, formatos y ubicaciones por disco; no incluye píxeles ni datos originales. La coincidencia de nombre no demuestra coincidencia de índices, expresiones o geometría.
+`tools/audit_hd_characters.py` compares the proprietary extracted resources against both prepared Saturn ISOs. It found 147 PC NC character files, with 3,596 non-empty images. All 147 names have native candidates. The inventory records file hashes, dimensions, formats, and per-disc locations; it does not include pixels or original data. Name matching does not demonstrate matching indices, expressions, or geometry.
 
-La inspección nativa mediante `tests/inspect_pc_sprites.cpp` usa el mismo DecodePcSprites del runtime: los 147 archivos y las 3.596 imágenes se decodificaron sin errores, con 42.423.793 píxeles. Todos los registros de imagen NC observados usan 0x15 (RGB555 comprimido). También se inventariaron KAO.SPR (394 imágenes) y KAO_P.SPR (25); su decodificación también pasó con el decoder nativo del runtime. Son4.015 imágenes verificadas en total; su correspondencia narrativa sigue pendiente.
+Native inspection via `tests/inspect_pc_sprites.cpp` uses the runtime's own DecodePcSprites: all 147 files and 3,596 images decoded without errors, totaling 42,423,793 pixels. All observed NC image records use 0x15 (compressed RGB555). KAO.SPR (394 images) and KAO_P.SPR (25) were also inventoried; their decoding also passed with the runtime's native decoder. That is 4,015 verified images in total; their narrative correspondence is still pending.
 
-Hay 11.158.719 píxeles verdes puros en la salida NC, y el decodificador actual no asigna transparencia a estas imágenes directas. Esto expone trabajo pendiente de máscaras/composición: no basta con dibujarlas encima. No se declara todo verde como transparente, porque una regla general podría eliminar colores válidos.
+There are 11,158,719 pure-green pixels in the NC output, and the current decoder does not assign transparency to these direct images. This exposes pending mask/compositing work: simply drawing them on top is not enough. Not all green is declared transparent, because a blanket rule could remove valid colors.
 
-## Integración siguiente
+## Next integration
 
-1. Identificar las imágenes nativas y las tablas de composición de una escena reproducible. No inferir el formato NC nativo a partir de una cabecera parecida a un tamaño. Un intento exploratorio de LZSS SPRED aplicado directamente al NC Saturn no consume el recurso completo y no se considera un decoder válido.
-2. Verificar cuerpos, poses, ojos, bocas y retratos con sus anclajes, máscaras, flips y prioridades. Mantener las expresiones y el ritmo de animación elegidos por el juego.
-3. Asociar cada sustitución a una identidad de recurso/imagen, no solo a una dirección VRAM reutilizable. Rechazar fuentes desconocidas y conservar el original si no se obtiene una sustitución completa y usable.
-4. Reutilizar la transformación entera del compositor mejorado para que los sprites HD, el vídeo y la caja de texto permanezcan alineados; no introducir escalado fraccional ni cambios de colisión o lógica.
-5. Preparar y cargar solo los personajes necesarios, con caché acotada y subida de texturas en el hilo de ventana. Invalidar/recrear recursos al cargar estados o cambiar de dispositivo.
-6. Ampliar al resto de personajes y elementos compatibles, comprobando ambas rutas de disco y sin sustituir textos ingleses por rótulos japoneses de PC. Original debe seguir ofreciendo sus sprites originales.
+1. Identify the native images and compositing tables for a reproducible scene. Do not infer the native NC format from a header that merely resembles a size. An exploratory attempt applying LZSS SPRED directly to Saturn NC does not consume the full resource and is not considered a valid decoder.
+2. Verify bodies, poses, eyes, mouths, and portraits with their anchors, masks, flips, and priorities. Preserve the expressions and animation timing chosen by the game.
+3. Associate each substitution with a resource/image identity, not just a reusable VRAM address. Reject unknown sources and keep the original if a full, usable substitution is not obtained.
+4. Reuse the enhanced compositor's integer transform so HD sprites, video, and the text box remain aligned; do not introduce fractional scaling or changes to collision or logic.
+5. Prepare and load only the necessary characters, with a bounded cache and texture upload on the window thread. Invalidate/recreate resources on save-state load or device change.
+6. Extend to the rest of the compatible characters and elements, checking both disc paths and without replacing English text with Japanese PC labels. Original mode must continue to offer its original sprites.
 
-Estado: fondos HD integrados experimentalmente; selector/preparación en launcher implementados; inventario y decodificación de personajes verificados. Los sprites HD de personajes todavía no se están dibujando durante el juego.
+Status: HD backgrounds integrated experimentally; launcher selector/preparation implemented; character inventory and decoding verified. HD character sprites are not yet being drawn during gameplay.
 
-## Control de la hipótesis de correspondencia
+## Correspondence-hypothesis check
 
-Se comparó un campo numérico exploratorio de la tabla12 PC con el byte0x10 de los NC Saturn. Solo coincide en59 de147 pares y difiere en88 (por ejemplo NC14:52 frente a54; NC15:51 frente a52). Su significado completo aún no está validado. Esto descarta usar esa semejanza como correspondencia universal de entradas o animaciones: el mapeo deberá verificarse recurso a recurso y con escenas reales.
+An exploratory numeric field from PC table 12 was compared against byte 0x10 of the Saturn NCs. It only matches in 59 of 147 pairs and differs in 88 (for example NC14:52 versus 54; NC15:51 versus 52). Its full meaning is not yet validated. This rules out using that resemblance as a universal mapping of entries or animations: the mapping will need to be verified resource by resource and against real scenes.
 
 
-## Enlace nativo comprobado y proporciones
+## Verified native link and proportions
 
-`tools/audit_native_characters.py` registra los147 NC de ambos discos: cabecera común00020000, tabla de entradas9 bytes con coordenadas firmadas (incluye valores negativos e inversión horizontal), paleta512 bytes en0x410 y píxeles desde0x610. No se interpretan los bytes reservados como una entrada adicional ni se deducen tamaños de todas las hojas.
+`tools/audit_native_characters.py` records all 147 NCs from both discs: common header 00020000, 9-byte entry table with signed coordinates (including negative values and horizontal flip), 512-byte palette at 0x410, and pixels from 0x610. Reserved bytes are not interpreted as an additional entry, nor are the sizes of all sheets inferred.
 
-La escena de Iris carga la textura192×144 del comandoVDP1 0x80 desdeNC55.BIN offset0x610: coinciden los27.648 bytes completos y su paleta512 bytes coincide con CRAM banco0. Ambas ISO reproducen la identidad. Esto corrige la hipótesis de compresión aplicada al NC nativo; no prueba todavía su animación completa.
+The Iris scene loads the 192×144 texture from the VDP1 0x80 command from NC55.BIN offset 0x610: the full 27,648 bytes match, and its 512-byte palette matches CRAM bank 0. Both ISOs reproduce the identity. This corrects the hypothesis of compression applied to the native NC; it does not yet prove its full animation.
 
-Dirección visual confirmada: el reemplazo PC conserva su proporción con una sola escala determinada por altura, y se alinea por el eje central de cabeza/columna/torso. No se fuerza el ancho del PC a la caja de textura Saturn. Las partes de ojos y boca se componen mediante sus metadatos; el cuerpo base PC observado tiene la cara sin esas capas, por lo que no es válido mostrarlo solo como reemplazo completo.
+Confirmed visual direction: the PC replacement keeps its proportion with a single height-determined scale, and aligns on the head/spine/torso central axis. PC width is not forced onto the Saturn texture box. Eye and mouth parts are composed via their metadata; the observed PC base body has a face without those layers, so it is not valid to display it alone as a complete replacement.

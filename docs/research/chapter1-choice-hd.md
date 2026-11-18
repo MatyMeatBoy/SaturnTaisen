@@ -1,19 +1,19 @@
-# Texto HD de elecciones LIPS
+# HD text for LIPS choices
 
-El patch0045 sustituye las opciones inglesas usando el atlas verificado y los comandos del framebuffer mostrado. Reconoce los paneles de dos o tres opciones por su reloj, modo, bancos, filas y centrado. Cada pixel retirado requiere una placa de glifo y propietarios pertenecientes al mismo panel completo; si hay oclusion, datos incompletos o un glifo desconocido, conserva el texto nativo.
+Patch 0045 replaces the English options using the verified atlas and the commands from the displayed framebuffer. It recognizes two- or three-option panels by their clock, mode, banks, rows, and centering. Every retired pixel requires a glyph plate and owners belonging to the same complete panel; if there is occlusion, incomplete data, or an unknown glyph, it preserves the native text.
 
-La fuente reutiliza la tipografia HD existente, con transformacion uniforme y recorte propio del panel. Zoom usa la transformacion de la imagen superior; la vista conjunta conserva su propio encuadre. No cambia pulsaciones, temporizador ni logica del juego. La sustitucion se activa con texto HD en Mejorado y el atlas ingles conocido; otros idiomas requieren su atlas validado y siguen pendientes.
+The font reuses the existing HD typeface, with uniform transformation and its own panel clipping. Zoom uses the upper image's transformation; the combined view keeps its own framing. It does not change inputs, timer, nor game logic. The replacement is activated with HD text in Enhanced mode and the known English atlas; other languages require their own validated atlas and remain pending.
 
-## Evidencia real
+## Real evidence
 
-Se ejecutaron diez perfiles a1600x900: Original y Mejorado con Zoom/conjunto, cada uno con texto HD/nativo. Dos escenas privadas del capitulo1 aportaron paneles de dos y tres opciones. Cada perfil ejecuto240fotogramas, con las mismas pulsaciones de seleccion y confirmacion.
+Ten profiles were run at 1600x900: Original and Enhanced with Zoom/combined view, each with HD/native text. Two private chapter 1 scenes provided two- and three-option panels. Each profile ran 240 frames, with the same selection and confirmation inputs.
 
-- Los240hashes por escena fueron identicos entre sus cinco perfiles; todas las ejecuciones terminaron con cero bloques interpretados.
-- Los perfiles HD reconocieron dos o tres filas completas con saved_under=1.
-- Capturas8 y31: diferencias limitadas a las zonas de texto del panel; reloj, marco y resaltado no cambian respecto al mismo perfil sin texto HD.
-- Captura59: HD y nativo son identicos tras desaparecer las opciones; no quedan letras residuales.
-- Captura230: la respuesta inferior usa el texto HD habitual. Se revisaron visualmente los paneles Zoom de ambas escenas: texto dentro del marco y filas separadas.
+- The 240 hashes per scene were identical across their five profiles; all runs ended with zero interpreted blocks.
+- The HD profiles recognized two or three complete rows with saved_under=1.
+- Captures 8 and 31: differences limited to the panel's text zones; clock, frame, and highlight do not change relative to the same profile without HD text.
+- Capture 59: HD and native are identical after the options disappear; no residual letters remain.
+- Capture 230: the lower answer uses the usual HD text. The Zoom panels of both scenes were visually reviewed: text stays within the frame and rows are separated.
 
-Pruebas sinteticas: propiedad compartida de dos glifos, rechazo de propietario externo, filas incompletas, centrado/clip y datos ambiguos. Pasaron el fixture de elecciones y los fixtures de placa de glifos y VDP2. El arbol compuesto del SDK coincide con los patches0001..0045.
+Synthetic tests: shared ownership of two glyphs, rejection of an external owner, incomplete rows, centering/clipping, and ambiguous data. They passed the choice fixture and the glyph-plate and VDP2 fixtures. The SDK's composite tree matches patches 0001..0045.
 
-Los estados, capturas, ejecutable y recibo result.json quedan en local/work/choice-text-qa del propietario. Estas pruebas no acreditan todas las elecciones de la campana ni el vencimiento natural del reloj. El patch esta implementado y probado en estas rutas; no esta incluido en los paquetes previamente entregados.
+The states, captures, executable, and result.json receipt remain in the owner's local/work/choice-text-qa. These tests do not certify every choice in the campaign nor the clock's natural timeout. The patch is implemented and tested on these routes; it is not included in the previously delivered packages.

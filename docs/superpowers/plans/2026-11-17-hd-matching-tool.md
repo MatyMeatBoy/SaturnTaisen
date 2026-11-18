@@ -1,39 +1,39 @@
-# Herramienta de matching HD y aplicación Saturn
+# HD matching tool and Saturn application
 
-Alcance autorizado: programa para emparejar la mayoría de recursos y calzarlos en el recomp, adaptándose a las resoluciones; revisión del texto dentro de su caja. Se ejecuta en la rama de desarrollo existente, sin agentes y sin alterar v0.1.5.
+Authorized scope: a program to match most assets and fit them into the recomp, adapting to resolutions; text review within its box. Runs on the existing development branch, with no agents and without altering v0.1.5.
 
-## Contratos
+## Contracts
 
-- Inputs originales de solo lectura. Proyecto de matching, previsualizaciones y derivados bajo local/. Sin subir sprites propietarios.
-- Comparación de imágenes normalizadas para análisis; la salida de juego usa rejillas y escalas enteras. Coordenadas/anclajes guardados en unidades nativas.
-- Variantes de densidad1 y2: si la escala del viewport es impar se usa la variante1, si es divisible por2 se puede usar la variante2. Se conserva el tamaño máximo del conjunto y no se introduce un factor fraccional de presentación.
-- Propuestas por distancia visual y margen frente al segundo candidato. Empates/identidades conflictivas requieren revisión. El parecido no se presenta como probabilidad de acierto.
-- GUI local para comparar, elegir candidato, ajustar anclajes y exportar. La exportación produce un proyecto JSON y manifiesto INI con identidades nativas y archivos preparados; publicación atómica.
-- Runtime: solo sustituir texturas identificadas y con recursos completos/usables. Validar dimensiones, versiones, rutas, checksums y origen PC conocido. Fallback original en cualquier fallo. Recursos de renderer solo en su hilo.
+- Original inputs are read-only. Matching project, previews, and derivatives live under local/. No proprietary sprites uploaded.
+- Normalized image comparison for analysis; game output uses grids and integer scales. Coordinates/anchors stored in native units.
+- Density variants 1 and 2: if the viewport scale is odd, variant 1 is used; if divisible by 2, variant 2 may be used. The set's maximum size is preserved and no fractional presentation factor is introduced.
+- Proposals by visual distance and margin over the second candidate. Ties/conflicting identities require review. Similarity is not presented as a probability of correctness.
+- Local GUI to compare, pick a candidate, adjust anchors, and export. Export produces a JSON project and an INI manifest with native identities and prepared files; atomic publishing.
+- Runtime: only replace identified textures with complete/usable resources. Validate dimensions, versions, paths, checksums, and known PC origin. Fallback to the original on any failure. Renderer resources only on their thread.
 
-## Tareas
+## Tasks
 
-1. Texto: validar tinta real frente al interior56,160–304,208; evitar sustitución parcial de la última letra y recortar el texto mejorado al interior proyectado. Probar bordes y escalas720p/1080p/4K/ultrawide; probar escena real.
-2. Core matching en tools/hd_matching.py: preparar catálogo nativo FCE usando paleta de un estado local validado y catálogo PC de imágenes del decoder existente; ranking, márgenes, hashes y variantes enteras. Tests sintéticos de identidad, ambigüedad, anclajes, alfa y escalas.
-3. Interfaz en tools/hd_matcher_ui.py y tools/match_hd_assets.py: revisión por recurso, siguiente pendiente, teclado, persistencia y exportación de resultados aceptados. Servidor solo loopback; imágenes bajo catálogo local. BAT local para abrirlo.
-4. Primer consumidor: retratos narrativos40×48 y parches40×16 identificados por bytes nativos, paleta y modo. Aplicación conjunta de piezas conocidas; no reemplazar un retrato a medias. Validación en escena real y opciones del menú.
-5. Extender el mismo pipeline a cuerpos NC cuando se verifiquen sus partes/anclajes; no interpretar diferencias de tablas como índices equivalentes.
+1. Text: validate real ink against the interior 56,160–304,208; avoid partial substitution of the last letter and crop the enhanced text to the projected interior. Test edges and scales 720p/1080p/4K/ultrawide; test a real scene.
+2. Core matching in tools/hd_matching.py: prepare a native FCE catalog using the palette of a validated local state and a PC catalog of images from the existing decoder; ranking, margins, hashes, and integer variants. Synthetic tests for identity, ambiguity, anchors, alpha, and scales.
+3. Interface in tools/hd_matcher_ui.py and tools/match_hd_assets.py: per-resource review, next pending, keyboard, persistence, and export of accepted results. Loopback-only server; images under local catalog. Local BAT to open it.
+4. First consumer: narrative portraits 40×48 and patches 40×16 identified by native bytes, palette, and mode. Joint application of known pieces; don't half-replace a portrait. Validation in a real scene and menu options.
+5. Extend the same pipeline to NC bodies once their parts/anchors are verified; don't interpret table differences as equivalent indices.
 
-## Evidencia inicial
+## Initial evidence
 
-El retrato de la escena de Iris coincide por bytes con la identidad FCE0x0015. Su paleta de la captura reproduce los colores originales y su mejor candidato PC es20. En304 retratos, el ranking visual20×40 devuelve la hipótesis ID−1 como primera opción en293 casos y dentro de los primeros5 en304. Con umbral0,06 y margen0,008 se preseleccionan194 casos y todos concuerdan con esa hipótesis. Esto es evidencia para priorizar revisión, no verificación artística de todos los pares.
+The portrait from Iris's scene matches by bytes with native identity FCE 0x0015. Its capture palette reproduces the original colors and its best PC candidate is 20. Across 304 portraits, visual ranking 20×40 returns hypothesis ID−1 as the top option in 293 cases and within the top 5 in 304. With threshold 0.06 and margin 0.008, 194 cases are preselected and all of them agree with that hypothesis. This is evidence for prioritizing review, not artistic verification of every pair.
 
-Ruling: comenzar la aplicación por retratos, cuyo formato nativo y enlace con una textura real ya están demostrados, mientras el matcher admite catálogos PNG de otros recursos. Los cuerpos completos no se declaran integrados por disponer del catálogo.
+Ruling: start applying this to portraits, whose native format and link to a real texture are already demonstrated, while the matcher accepts PNG catalogs for other resources. Full bodies are not declared integrated just because the catalog exists.
 
 
-## Avance verificado
+## Verified progress
 
-La fuente HD conserva ahora una transformación uniforme para toda la tipografía, referenciada a la altura de mayúsculas del original. Se mantiene el avance nativo de 8 píxeles; las letras estrechas no se ensanchan individualmente. Se recorta al interior del diálogo y se comprueba la tinta real de los glifos. La opción de texto original sigue disponible.
+The HD font now keeps a uniform transform across the whole typeface, referenced to the original's uppercase height. The native 8-pixel advance is kept; narrow letters are not individually widened. It is cropped to the dialogue interior and the glyphs' real ink is checked. The original-text option remains available.
 
-El catálogo contiene 304 identidades nativas y 394 candidatos PC. Tras descartar conflictos entre propuestas, quedan 191 preseleccionadas y 113 pendientes. No equivalen a 191 comparaciones artísticas aprobadas.
+The catalog holds 304 native identities and 394 PC candidates. After discarding conflicting proposals, 191 remain preselected and 113 pending. These are not 191 approved artistic comparisons.
 
-Uso local: `python tools/match_hd_assets.py --serve --open`. Permite comparar, ajustar desplazamientos nativos, aceptar/omitir y exportar. El pack solo usa recursos locales del propietario y valida identidad, dimensiones y hashes. Las variantes de densidad 1/2 preservan escalado entero. Los cuerpos NC todavía requieren verificar su formato y anclajes.
+Local usage: `python tools/match_hd_assets.py --serve --open`. Lets you compare, adjust native offsets, accept/skip, and export. The pack only uses the owner's local resources and validates identity, dimensions, and hashes. Density variants 1/2 preserve integer scaling. NC bodies still need their format and anchors verified.
 
-Primera escena real: la sustitución del retrato 0x0015 a 1280×720 cambia exclusivamente el rectángulo (202,498)–(322,642) respecto a la captura sin HD. El resto de la escena permanece idéntico. Las expresiones se identifican por bytes, incluyendo parches con transparencia; coincidencias ambiguas conservan el original. Esta evidencia no valida toda la campaña ni todas las expresiones.
+First real scene: replacing portrait 0x0015 at 1280×720 changes exclusively the rectangle (202,498)–(322,642) relative to the capture without HD. The rest of the scene stays identical. Expressions are identified by bytes, including patches with transparency; ambiguous matches keep the original. This evidence does not validate the whole campaign or every expression.
 
-Compilación nativa correcta y 24 pruebas de frontend/matching correctas. Quedan la validación completa del conjunto, revisión artística y pruebas adicionales de resoluciones/expresiones.
+Correct native build and 24 correct frontend/matching tests. Still pending: full set validation, artistic review, and additional resolution/expression tests.

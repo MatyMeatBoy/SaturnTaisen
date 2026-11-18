@@ -1,29 +1,29 @@
-# Sakura: conocimiento específico del motor
+# Sakura: engine-specific knowledge
 
-Estado de investigación, 17/11/2026. Fuente prioritaria: [herramientas del equipo traductor](https://github.com/NoahSteam/RomHackingTools/blob/master/SakuraTaisen/SakuraTaisen.cpp), versión fijada en `upstream-evidence.json`. No se copiaron recursos del juego.
+Research status, 11/17/2026. Primary source: [translation team tools](https://github.com/NoahSteam/RomHackingTools/blob/master/SakuraTaisen/SakuraTaisen.cpp), version pinned in `upstream-evidence.json`. No game resources were copied.
 
-## Material comprobado aquí
+## Material verified here
 
-- Ambos discos son GS-9037 V1.005 (CD-1/2 y CD-2/2), región JT, con arranque en 0x06004000. Hay 1785 archivos en cada original y en cada traducción.
-- El parche cambia 201 archivos del disco 1 y 199 del disco 2; `translation-code-impact.json` guarda tamaños y hashes de candidatos relevantes. SAKURA y LOGO.SH2 sí cambian: no basta con recompilar el japonés y sustituir imágenes.
-- SAKURA4 y SAKURA5 son contenedores grandes sin extensión, no ejecutables monolíticos deducibles por su nombre. No se han clasificado todavía todas sus entradas.
-- Se alcanzó el título inglés, y la entrada a la narración inicial, mediante scripts de mando. El vídeo y la presentación no prueban aún batalla, elecciones, minijuegos, guardado ni campaña completa.
+- Both discs are GS-9037 V1.005 (CD-1/2 and CD-2/2), JT region, booting at 0x06004000. There are 1785 files in each original and in each translation.
+- The patch changes 201 files on disc 1 and 199 on disc 2; `translation-code-impact.json` stores sizes and hashes of the relevant candidates. SAKURA and LOGO.SH2 do change: it is not enough to recompile the Japanese version and swap images.
+- SAKURA4 and SAKURA5 are large containers without an extension, not monolithic executables that can be inferred from their name. Not all their entries have been classified yet.
+- The English title was reached, along with entry into the opening narration, via command scripts. The video and presentation do not yet prove battle, choices, minigames, saving, or the full campaign.
 
-## Aportaciones de las herramientas de traducción
+## Contributions from the translation tools
 
-`SakuraTaisen.cpp` contiene extracción/reinserción de texto, fuentes KNJ, paletas, gráficos comprimidos, caras FCE/FACE, menús WKL, eventos EVT y subtítulos. `FixupSakura` modifica instrucciones SH-2 de lectura y avance de caracteres, con direcciones anotadas para el arranque cargado en 0x06004000. Es información útil para nombrar funciones, comprobar el motor de texto traducido y localizar cambios, no una decompilación del motor completo.
+`SakuraTaisen.cpp` contains text extraction/reinsertion, KNJ fonts, palettes, compressed graphics, FCE/FACE faces, WKL menus, EVT events, and subtitles. `FixupSakura` modifies SH-2 instructions for character reading and advancement, with addresses annotated for boot loaded at 0x06004000. This is useful information for naming functions, checking the translated text engine, and locating changes — not a decompilation of the full engine.
 
-Los nombres y offsets de otros parches o versiones no se aplican sin comprobar los bytes y el disco exactos. Los contenedores deben conservar sus tablas y llamadas; un mod de gráficos no se fuerza cambiando el tamaño de una celda de Saturn.
+Names and offsets from other patches or versions are not applied without checking the exact bytes and disc. Containers must preserve their tables and calls; a graphics mod is not forced by changing a Saturn cell's size.
 
-## Referencia independiente
+## Independent reference
 
-Se descargó Beetle Saturn del buildbot oficial de Libretro para comparación, con hash SHA-256 `8e62cd7a513c0c0f95c8a18856a68cd37d09a43df3a68b898325ed8e79e1aaa0`. Usa las BIOS propias aportadas y los discos traducidos locales. Identifica la pista de audio del disco 1 en LBA 271118, consistente con el POSTGAP y PREGAP del CUE del parche.
+Beetle Saturn was downloaded from the official Libretro buildbot for comparison, with SHA-256 hash `8e62cd7a513c0c0f95c8a18856a68cd37d09a43df3a68b898325ed8e79e1aaa0`. It uses the owner-supplied BIOS files and the local translated discs. It identifies disc 1's audio track at LBA 271118, consistent with the patch CUE's POSTGAP and PREGAP.
 
-El arranque por BIOS tiene un desplazamiento respecto al arranque HLE del runtime; comparar escenas por estado y contenido, no restando un número supuesto de frames. Beetle informa 59.8265 Hz para este modo; la velocidad final debe respetar el reloj guest y no depender del monitor o del coste de dibujar.
+BIOS boot has an offset relative to the runtime's HLE boot; compare scenes by state and content, not by subtracting an assumed number of frames. Beetle reports 59.8265 Hz for this mode; final speed must respect the guest clock and not depend on the monitor or drawing cost.
 
-## Trabajo siguiente
+## Next work
 
-1. Resolver todas las diferencias de estado entre AOT e interpretación de referencia del toolkit; mantener activo el rechazo de fallback.
-2. Añadir color calculation de VDP2 y las funciones que el juego pida, contrastando con escenas/capturas de Beetle.
-3. Descubrir código de ambos discos y contenedores de minijuegos/batalla; localizar la máquina de estados y el cambio de disco.
-4. Establecer pruebas de elecciones con tiempo, diálogo/voz, batalla, minijuegos y guardado. Verificar esas mismas memorias al integrar RA.
+1. Resolve all state differences between AOT and the toolkit's reference interpretation; keep fallback rejection active.
+2. Add VDP2 color calculation and whatever functions the game requires, checking against Beetle scenes/captures.
+3. Discover code from both discs and the minigame/battle containers; locate the state machine and disc change.
+4. Establish timed-choice, dialogue/voice, battle, minigame, and save tests. Verify these same memory regions when integrating RA.

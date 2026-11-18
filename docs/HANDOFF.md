@@ -1,98 +1,98 @@
-# Handoff técnico y artístico
+# Technical and artistic handoff
 
-Actualizado: 2026-11-18. Para otro bot o colaborador que se incorpora a SaturnTaisenFirst. Estado operativo en [PENDIENTES](PENDIENTES.md); los documentos de investigación conservan las evidencias detalladas.
+Updated: 2026-11-18. For another bot or collaborator joining SaturnTaisenFirst. Operational status in [PENDIENTES](PENDIENTES.md); the research documents keep the detailed evidence.
 
-## Objetivo y acuerdos del usuario
+## Goal and user agreements
 
-Recompilación estática AOT de Sakura Taisen Saturn, Windows x64, ambos SH-2. Saturn primero; PC jugable/traducción PC después. Los recursos PC ya se aprovechan para el mod HD Saturn. Traducción inglesa del equipo Saturn reutilizada/adaptada; el corpus no se publica en Git.
+AOT static recompilation of Sakura Taisen Saturn, Windows x64, both SH-2. Saturn first; playable PC/PC translation afterward. PC assets are already used for the Saturn HD mod. English translation reused/adapted from the Saturn team; the corpus is not published in Git.
 
-Original conserva presentación nativa. Mejorado recompone escenas a **16:9 máximo**, sin ultrawide y con enteros/nearest. No agrandar horizontalmente el raster para simular widescreen. Original de escena mantiene escala conjunta; Zoom usa enteros independientes para imagen y diálogo. El usuario aprobó el encuadre Zoom actual y canceló el último desplazamiento de +2 px: **no volver a moverlo por iniciativa propia**. Sombras de imagen y caja son independientes, se dibujan en orden correcto, sin sombra duplicada.
+Original preserves the native presentation. Enhanced recomposes scenes to **16:9 maximum**, without ultrawide and with integers/nearest. Do not horizontally enlarge the raster to simulate widescreen. Scene Original keeps joint scaling; Zoom uses independent integers for image and dialogue. The user approved the current Zoom framing and canceled the last +2 px shift: **do not move it again on your own initiative**. Image and box shadows are independent, drawn in the correct order, with no duplicate shadow.
 
-El launcher ofrece modos y ejemplos y se cierra cuando el juego confirma estar listo. Los ajustes ingame se abren con Start+Select/Back. HD/texto son opcionales; las sustituciones requieren identidad y evidencia, con fallback cuando falta un recurso válido. El producto final unifica ambos discos; el paquete personal de un solo disco es una excepción de pruebas ya autorizada.
+The launcher offers modes and examples and closes once the game confirms it is ready. In-game settings open with Start+Select/Back. HD/text are optional; substitutions require identity and evidence, with a fallback when a valid asset is missing. The final product unifies both discs; the single-disc personal package is an already-authorized testing exception.
 
-## Al incorporarse
+## Upon joining
 
-1. Leer `AGENTS.md`, esta guía y `docs/PENDIENTES.md`; comprobar fecha y cambios posteriores.
-2. Ejecutar `git status --short`, `git branch --show-current` y consultar colaboradores activos. No limpiar un árbol sucio ajeno.
-3. Base integrada de este bloque: `main` en `d54919e`, tras PR32/33. Consultar siempre HEAD, rama y estado presentes antes de trabajar. `VERSION`: 0.2.0-test.3, prerelease publicada desde `72affb2`. Su runtime es674.182/patch0049 (`377cb29b…`); no inferir el ejecutable local a partir de la versión. T11/patch0050 se integra por PR34 con candidato independiente (`df68e9db…`), sin empaquetar; test.3 conserva patch0049.
-4. Acordar archivos propios y una tarea concreta. No editar a la vez `frontend_sdl.cpp`, renderer o patches; no compilar sobre una edición incompleta de otro bot.
-5. Crear carpeta privada de resultados exclusiva por ensayo. Las imágenes se pueden sobrescribir sin querer: comprobar ruta absoluta, contenido visual y SHA antes de extraer conclusiones.
+1. Read `AGENTS.md`, this guide, and `docs/PENDIENTES.md`; check the date and later changes.
+2. Run `git status --short`, `git branch --show-current`, and check active collaborators. Do not clean up someone else's dirty tree.
+3. Integrated base for this block: `main` at `d54919e`, after PR32/33. Always check the current HEAD, branch, and status before working. `VERSION`: 0.2.0-test.3, prerelease published from `72affb2`. Its runtime is 674,182/patch0049 (`377cb29b…`); do not infer the local executable from the version. T11/patch0050 is integrated via PR34 with an independent candidate (`df68e9db…`), not packaged; test.3 keeps patch0049.
+4. Agree on your own files and a specific task. Do not edit `frontend_sdl.cpp`, the renderer, or patches at the same time as someone else; do not build on top of another bot's incomplete edit.
+5. Create a private, exclusive results folder per trial. Images can be overwritten by accident: check absolute path, visual content, and SHA before drawing conclusions.
 
-Al cerrar esta actualización, `wide_transitions` terminó el ajuste y liberó `video/renderer.h`, `renderer.cpp`, `layers.cpp` y `port/tactical_menu.h`. El coordinador integró el bloque y el patch 36 mediante PR #4, con revisión y pruebas. **Consultar con él antes de tocar esos archivos o recapturar el patch.** Los nombres de agentes y esta asignación son estado de sesión, no una reserva perpetua.
+When closing this update, `wide_transitions` finished the fix and released `video/renderer.h`, `renderer.cpp`, `layers.cpp`, and `port/tactical_menu.h`. The coordinator integrated the block and patch 36 via PR #4, with review and tests. **Check with them before touching those files or recapturing the patch.** Agent names and this assignment are session state, not a permanent reservation.
 
-Trabajo útil para un segundo bot sin pisar esa integración: mejorar el inventario/matching de las 42 identidades pendientes del capítulo, preparar herramientas de catálogo/páginas de texto offline, o inventariar equivalencias de vídeos/HUD PC. Acordar una sola tarea y sus archivos; entregar manifest/propuesta y prueba, sin promover automáticamente candidatos dudosos ni reescribir el renderer. Si descubre un fallo en un archivo ajeno, enviar reproducción y propuesta al dueño.
+Useful work for a second bot without stepping on that integration: improve the inventory/matching of the chapter's 42 pending identities, prepare offline catalog/text-page tools, or inventory PC video/HUD equivalences. Agree on a single task and its files; deliver a manifest/proposal and evidence, without automatically promoting doubtful candidates or rewriting the renderer. If you discover a bug in someone else's file, send a reproduction and proposal to the owner.
 
-## Mapa del workspace
+## Workspace map
 
-### Limpieza y traslado — 2026-11-18
+### Cleanup and transfer — 2026-11-18
 
-Se retiraron seis worktrees antiguos mediante Git, conservando sus commits. Quedan el repositorio principal y una única copia auxiliar. Las nuevas tareas deben respetar el límite y las reglas de limpieza de `AGENTS.md`.
+Six old worktrees were removed via Git, preserving their commits. What remains is the main repository and a single auxiliary copy. New tasks must respect the limit and the cleanup rules in `AGENTS.md`.
 
-La medición posterior a la limpieza fue de **19.857.953.183 bytes (18,494 GiB), 67.822 archivos** en el proyecto principal. Se retiraron duplicados verificados e intermediarios regenerables; se conservaron dumps, BIOS, guiones, recursos preparados, checkpoints seleccionados y paquetes emitidos. La referencia SDK48 se conserva comprimida, con CRC y SHA del ejecutable restaurado comprobados. Los informes privados detallados están junto a la entrega, fuera del proyecto.
+The measurement after cleanup was **19,857,953,183 bytes (18.494 GiB), 67,822 files** in the main project. Verified duplicates and regenerable intermediates were removed; dumps, BIOS, scripts, prepared assets, selected checkpoints, and issued packages were kept. The SDK48 reference is kept compressed, with CRC and SHA of the restored executable verified. Detailed private reports are alongside the delivery, outside the project.
 
-El ZIP de desarrollo ya entregado permanece inmutable: `D:\01Claude\SaturnTaisenFirst-DEV-transfer-20261118\SaturnTaisenFirst-Development-Completo.zip`, 6.315.009.692 bytes, SHA256 `806b9e8803574e9fdea58ffce9b8ca1247a691f1e49295499f399ee5425e2059`. Tras restaurarlo en el otro PC, actualizar desde Git para obtener estas reglas posteriores a su creación. La limpieza no acredita nuevos avances de campaña ni cambia la versión de prueba.
+The already-delivered development ZIP remains immutable: `D:\01Claude\SaturnTaisenFirst-DEV-transfer-20261118\SaturnTaisenFirst-Development-Completo.zip`, 6,315,009,692 bytes, SHA256 `806b9e8803574e9fdea58ffce9b8ca1247a691f1e49295499f399ee5425e2059`. After restoring it on the other PC, update from Git to get these rules added after its creation. The cleanup does not certify new campaign progress nor change the test version.
 
-| Ruta relativa a `D:\01Claude\Sakurawars` | Uso |
+| Path relative to `D:\01Claude\Sakurawars` | Use |
 | --- | --- |
-| `local/deps/satrecomp` | SDK fijado en `config/dependencies.json`; edición local, cambios exportados como patches. |
-| `patches/0035-...patch`, `0036-...patch` | Coherencia HD/GUID y nuevas extensiones/presentación. El 36 ya contiene el ajuste de menús y la versión test.1; recapturar solo ante nuevos cambios de SDK. |
-| `local/build/sakura/sakura.exe` | Runtime de desarrollo; puede ser posterior al ZIP público. |
-| `local/work/sakura` | Estados y base de descubrimiento AOT privada (`blocks.txt`, `gen`, `block-order.json`). |
-| `local/prepared/disc1`, `disc2` | Discos propios traducidos preparados; no publicar. |
-| `local/art/tactics/stage01` | Referencias, generaciones, composición aprobada y `approved.json`; incluye contexto propietario. |
-| `assets/generated` | Recursos generativos seleccionados, manifiestos y hashes; no copiar aquí referencias completas del juego. |
-| `local/work/worker-wide-transitions` | Probes de capas, transiciones, comandos y arreglo de menús. |
-| `local/work/worker-menu-oracle` | Referencia independiente Beetle Saturn; harness/estados/capturas privados. |
-| `local/work/dialogue-catalog-worker` | Catálogo inglés JSONL/CSV extraído, solo local. |
-| `local/work/portrait-coverage-worker` | Auditoría de cobertura y mezclas de retratos. |
-| `local/releases` | Paquetes ya emitidos: inmutables. |
+| `local/deps/satrecomp` | SDK pinned in `config/dependencies.json`; local edit, changes exported as patches. |
+| `patches/0035-...patch`, `0036-...patch` | HD/GUID consistency and new extensions/presentation. 36 already contains the menu fix and the test.1 version; recapture only for new SDK changes. |
+| `local/build/sakura/sakura.exe` | Development runtime; may be later than the public ZIP. |
+| `local/work/sakura` | States and private AOT discovery base (`blocks.txt`, `gen`, `block-order.json`). |
+| `local/prepared/disc1`, `disc2` | Own prepared translated discs; do not publish. |
+| `local/art/tactics/stage01` | References, generations, approved composition, and `approved.json`; includes proprietary context. |
+| `assets/generated` | Selected generative assets, manifests, and hashes; do not copy full game references here. |
+| `local/work/worker-wide-transitions` | Layer probes, transitions, commands, and menu fix. |
+| `local/work/worker-menu-oracle` | Independent Beetle Saturn reference; private harness/states/captures. |
+| `local/work/dialogue-catalog-worker` | Extracted English catalog JSONL/CSV, local only. |
+| `local/work/portrait-coverage-worker` | Portrait coverage and blend audit. |
+| `local/releases` | Already issued packages: immutable. |
 
-Nunca publicar discos, BIOS, SPR/FILM/MPG originales, guiones, estados ni imágenes extraídas. Un manifiesto no convierte una composición con píxeles originales en arte generativo publicable. El ZIP personal puede incluir los archivos propios expresamente autorizados; no se sube a GitHub.
+Never publish discs, BIOS, original SPR/FILM/MPG, scripts, states, or extracted images. A manifest does not turn a composition with original pixels into publishable generative art. The personal ZIP may include the own files expressly authorized; it is not uploaded to GitHub.
 
-## Método de depuración y validación
+## Debugging and validation method
 
-T02: el cierre del primer combate reveló dos rutinas copiadas a06002000. El estado anterior contiene238bytes de/SAKURA; al ejecutar,0SLG los reemplaza por206bytes. La prueba WATCH del instante de ejecución es la atribución correcta para el fallo06002042. El registro de ambas variantes produce674.182bloques; candidato aisladoe7dd1c0… pasó Save Complete/Resume con3.000hashes y15RGB iguales al intérprete y0interpretados. La cadena109.740frames sigue en prueba. Ver [seguimiento del combate](research/chapter1-victory-followup.md); no usar el candidato674.110 como corrección ni modificar test.2.
+T02: closing the first battle revealed two routines copied to 06002000. The previous state contains 238 bytes from /SAKURA; on execution, 0SLG replaces them with 206 bytes. The WATCH test of the execution instant is the correct attribution for the 06002042 failure. Logging both variants produces 674,182 blocks; isolated candidate e7dd1c0… passed Save Complete/Resume with 3,000 hashes and 15 RGB matches identical to the interpreter and 0 interpreted. The 109,740-frame chain is still being tested. See [battle follow-up](research/chapter1-victory-followup.md); do not use candidate 674,110 as a fix or modify test.2.
 
-Reproducir antes de cambiar. Guardar estado inicial, copia de SRAM, pulsaciones/movie, settings, ejecutable/hash y registros. Aislar perfiles y eliminar variables `SATRECOMP_*` heredadas salvo las elegidas explícitamente. Usar `SATRECOMP_STRICT_NATIVE=1` y comprobar cero bloques interpretados para rutas AOT.
+Reproduce before changing anything. Save initial state, SRAM copy, inputs/movie, settings, executable/hash, and logs. Isolate profiles and remove inherited `SATRECOMP_*` variables except those explicitly chosen. Use `SATRECOMP_STRICT_NATIVE=1` and check zero interpreted blocks for AOT paths.
 
-En pruebas de LIPS, un panel todavía visible puede estar ya confirmado y cerrándose. La igualdad entre dos ejecutables prueba paridad, pero no que el ensayo `select` haya cambiado la elección. Exigir postcondiciones: banco de resaltado en otra fila, panel cerrado antes que el control sin pulsaciones y destino de respuesta correspondiente; para timeout, dejar entrada neutra y observar el destino posterior. Si una semilla no permite seleccionar, buscar un estado anterior sin modificar el reloj ni el huésped. En T11 la semilla anterior de tres opciones ya permitió observar esas diferencias; la evidencia y los límites se mantienen en la PR34.
+In LIPS tests, a panel still visible may already be confirmed and closing. Equality between two executables proves parity, but not that the `select` trial changed the choice. Require postconditions: highlight bank on another row, panel closed before the control without inputs, and the corresponding response destination; for timeout, leave neutral input and observe the later destination. If a seed does not allow selecting, look for an earlier state without modifying the clock or the guest. In T11 the earlier three-option seed already allowed observing those differences; the evidence and limits are kept in PR34.
 
-Separar tres preguntas: ¿falla la lógica nativa?, ¿falla la presentación del host?, ¿es un defecto del disco traducido? Comparar Original/Mejorado y, cuando importe, AOT/intérprete del mismo SDK. Esa última comparación **no es independiente**: pueden compartir un defecto de hardware emulado. Beetle Saturn se ha usado únicamente como oráculo de diagnóstico; no sustituye al runtime AOT del proyecto.
+Separate three questions: does the native logic fail, does the host presentation fail, or is it a defect in the translated disc? Compare Original/Enhanced and, when relevant, AOT/interpreter of the same SDK. That last comparison **is not independent**: they can share an emulated hardware defect. Beetle Saturn has been used only as a diagnostic oracle; it does not replace the project's AOT runtime.
 
-Los hashes por fotograma cubren el contrato de `StateHash`, no todos los campos serializados. Añadir comparación de píxeles, audio/entrada o guardados según el fallo. Una captura correcta no prueba la transición; un ataque no prueba victoria; una prueba desde estado no prueba arranque completo. Revisar imágenes individualmente con su etiqueta/ruta para evitar asociar una captura a otra.
+Per-frame hashes cover the `StateHash` contract, not every serialized field. Add pixel, audio/input, or save comparisons depending on the failure. A correct capture does not prove the transition; an attack does not prove victory; a test from a saved state does not prove a full boot. Review images individually with their label/path to avoid associating one capture with another.
 
-Al analizar estados, leer el serializador real. En el formato actual: vector 0 HighRAM, 1 LowRAM, **2 sound RAM**, 3 VDP1 VRAM, 4/5 framebuffers, **6 VDP2 VRAM**, 7 CRAM. Se corrigió una interpretación anterior que confundía sound RAM con VDP2; no reutilizar aquel supuesto.
+When analyzing states, read the actual serializer. In the current format: vector 0 HighRAM, 1 LowRAM, **2 sound RAM**, 3 VDP1 VRAM, 4/5 framebuffers, **6 VDP2 VRAM**, 7 CRAM. A previous misreading that confused sound RAM with VDP2 was corrected; do not reuse that assumption.
 
-Cambios del host no deben modificar RAM/VRAM, framebuffer o entradas del huésped. Capturar comandos/paletas/texturas asociados al **framebuffer presentado**, no al último escrito. En sprites animados, distinguir retraso de fase, dato faltante, oclusión y mezcla VDP2. No ocultar un fallo de matching con una sustitución aproximada.
+Host changes must not modify the guest's RAM/VRAM, framebuffer, or inputs. Capture commands/palettes/textures associated with the **presented framebuffer**, not the last one written. In animated sprites, distinguish phase delay, missing data, occlusion, and VDP2 blending. Do not hide a matching failure with an approximate substitution.
 
-## PixelGen v1: cómo estamos haciendo los artes
+## PixelGen v1: how we are making the art
 
-1. Identificar la escena/recurso/capa/paleta reales. Separar fondo, personajes, imagen/vídeo, caja y HUD antes de generar. Las capturas anotadas del usuario orientan; no sirven como única geometría.
-2. Guardar referencia limpia y original intacto en `local/`; definir una zona protegida y la franja que falta. Solicitar generación con contexto, mismo lenguaje visual, siluetas/materiales/paleta/dithering y densidad de píxel. No pedir un rediseño del centro.
-3. Usar la herramienta ImageGen integrada para generación/edición. Leer las skills aplicables. No cambiar silenciosamente a una API de pago ni reemplazar la generación por edición programática. El exportador determinista sí recorta/normaliza **la franja ya aprobada** como procesamiento técnico de integración.
-4. Revisar a tamaño nativo y a enteros reales: contornos, escala de flores/ladrillos/césped, luz, repetición, costura y ausencia de ruido/mezcla de densidades. Una buena miniatura no basta. Si cambia el centro, no aceptarla como sustitución completa: conservar solo la zona generada autorizada.
-5. Normalizar a la rejilla y paleta nativas en el runtime. No afirmar pixel perfect solo porque el PNG es grande o se ve nítido. Guardar fuente generada, prompt/resumen, variante elegida, SHA, geometría y procedencia.
-6. Para mapas, anclar en **coordenadas del mundo y scroll**, nunca al borde de la pantalla. Mantener unidades/efectos/HUD delante, sin nuevas casillas ni colisiones. Validar moviendo cámara y cambiando resolución.
-7. Para fondos con centro original protegido, alinear el centro de la textura extendida con el mismo viewport entero; derivar el anclaje del centro nativo para evitar diferencias de redondeo en ventanas impares. Conservar fades y offsets de color.
-8. Integrar solo assets generados seleccionados con allowlist y manifiesto. Rechazar hashes, dimensiones o identidad incorrectos al empaquetar. Documentar lo provisional: LOADING aún requiere pulir la fase del patrón en la unión.
+1. Identify the actual scene/asset/layer/palette. Separate background, characters, image/video, box, and HUD before generating. The user's annotated captures guide this; they do not serve as the sole geometry source.
+2. Save a clean reference and keep the original intact in `local/`; define a protected zone and the missing strip. Request generation with context, the same visual language, silhouettes/materials/palette/dithering, and pixel density. Do not ask for a redesign of the center.
+3. Use the built-in ImageGen tool for generation/editing. Read the applicable skills. Do not silently switch to a paid API or replace generation with programmatic editing. The deterministic exporter does crop/normalize **the already-approved strip** as technical integration processing.
+4. Review at native size and at real integers: outlines, scale of flowers/bricks/grass, light, repetition, seams, and absence of noise/mixed densities. A good thumbnail is not enough. If the center changes, do not accept it as a full replacement: keep only the authorized generated zone.
+5. Normalize to the native grid and palette at runtime. Do not claim pixel-perfect just because the PNG is large or looks sharp. Save the generated source, prompt/summary, chosen variant, SHA, geometry, and provenance.
+6. For maps, anchor in **world and scroll coordinates**, never to the screen edge. Keep units/effects/HUD in front, with no new tiles or collisions. Validate by moving the camera and changing resolution.
+7. For backgrounds with a protected original center, align the center of the extended texture with the same integer viewport; derive the anchor from the native center to avoid rounding differences on odd windows. Preserve fades and color offsets.
+8. Integrate only selected generated assets with an allowlist and manifest. Reject incorrect hashes, dimensions, or identity when packaging. Document what is provisional: LOADING still needs the pattern phase at the seam polished.
 
-Caso Stage01 aprobado: la referencia de salida es **940×448**, equivalente a **438×224** nativos con origen de mundo (277,24), no una ampliación uniforme ×2. La zona generada aprobada x814–895 se exporta a **39×224** y se coloca en **(656,24)**. El mapa termina en x655. No volver al antiguo cálculo provisional 41×224/origen (655,48). La franja exportada está en `assets/generated/tactical-extensions/STAGE01-right-v1.png`; contexto original solo en `local/`. Ver [PixelGen v1](research/pixelgen-v1.md).
+Approved Stage01 case: the output reference is **940×448**, equivalent to native **438×224** with world origin (277,24), not a uniform ×2 enlargement. The approved generated zone x814–895 is exported to **39×224** and placed at **(656,24)**. The map ends at x655. Do not revert to the old provisional 41×224/origin (655,48) calculation. The exported strip is at `assets/generated/tactical-extensions/STAGE01-right-v1.png`; original context only in `local/`. See [PixelGen v1](research/pixelgen-v1.md).
 
-Los motivos florales cambian según escena/paleta. Extender cada identidad y acompañar su transición real, sin mantener el fondo rosa donde toca azul, mapa o intermedio. El fondo floral con más flores fue la variante preferida por el usuario. Los fondos generados de pantalla y la franja táctica tienen allowlists separadas.
+Floral motifs change depending on scene/palette. Extend each identity and follow its real transition, without keeping the pink background where it should be blue, map, or interlude. The floral background with more flowers was the user's preferred variant. Generated screen backgrounds and the tactical strip have separate allowlists.
 
-## Mod HD y texto
+## HD mod and text
 
-Las sustituciones PC conservan proporción uniforme, escala por altura y eje cabeza/torso del original. Nada de estirar ancho/alto independientemente. Distinguir cuerpo/pose, retrato y partes de ojos/boca; las animaciones requieren la familia completa o fallback coherente. Los matches ambiguos se rechazan. Revisar mezclas VDP2 antes de atribuir un parpadeo a una animación ausente.
+PC substitutions keep uniform proportion, height-based scale, and the head/torso axis of the original. No stretching width/height independently. Distinguish body/pose, portrait, and eye/mouth parts; animations require the full family or a coherent fallback. Ambiguous matches are rejected. Check VDP2 blends before attributing a blink to a missing animation.
 
-La fuente HD debe respetar tamaño, avance y espaciado nativos con proporción natural, sin apariencia ancha. Cuatro líneas deben entrar con margen al marco. Los glifos se preparan antes del primer frame y el catálogo inglés se precarga una vez al activar HD. La narrativa verificada usa vistas del catálogo con máscara de celdas nativas; las elecciones conservan reconocimiento de comandos hasta identificar su conjunto completo. El catálogo exportado conserva IDs, bytes CP1252, controles, offsets y contexto de disco para la integración y futuras traducciones. No hacer OCR como única fuente si existe tabla nativa.
+The HD font must respect native size, advance, and spacing with natural proportion, with no wide appearance. Four lines must fit with margin inside the frame. Glyphs are prepared before the first frame and the English catalog is preloaded once when HD is activated. Verified narrative uses catalog views with a native-cell mask; choices keep command recognition until their full set is identified. The exported catalog keeps IDs, CP1252 bytes, controls, offsets, and disc context for integration and future translations. Do not use OCR as the sole source if a native table exists.
 
-T11/patch0048 añade un catálogo sellado y un testigo de registro capturado junto al framebuffer por software. La tabla completa en Low WRAM0x00224000 debe coincidir; el punteroBE32 está en High WRAM0x0606851C. Conserva29.725 registros,29.723 preparables; los dos tabuladores quedan intactos. Patch0049 presta las líneas precargadas con una máscara probada por tiles/celdas: no muestra todo el registro solo porque el puntero coincide. Origen de comandosx64, recorte de tintax56; no confundirlos ni mover la UI.14casos comprobaron2.280hashes y104pares RGB idénticos, con0interpretados. LIPS necesita identificar el conjunto completo por separado y otras rutas requieren cobertura. Detalle en [precarga de diálogo](research/dialogue-preload-runtime.md); test.2 permanece inmutable.
+T11/patch0048 adds a sealed catalog and a logging witness captured alongside the framebuffer by software. The full table in Low WRAM 0x00224000 must match; the BE32 pointer is in High WRAM 0x0606851C. It keeps 29,725 records, 29,723 preparable; the two tabulators remain intact. Patch0049 lends the preloaded lines with a mask tested per tile/cell: it does not show the whole record just because the pointer matches. Command origin x64, ink clipping x56; do not confuse them or move the UI. 14 cases checked 2,280 hashes and 104 identical RGB pairs, with 0 interpreted. LIPS needs to identify the full set separately, and other paths require coverage. Detail in [dialogue preload](research/dialogue-preload-runtime.md); test.2 remains unchanged.
 
-LIPS requiere transformación del panel superior y una placa de píxeles que preserve el personaje bajo la transparencia. `underSprites` elimina toda la capa VDP1: no sirve para borrar solo los glifos de opciones. Ver [diagnóstico de transiciones](research/chapter1-wide-transitions.md).
+LIPS requires transformation of the top panel and a pixel plate that preserves the character under the transparency. `underSprites` removes the entire VDP1 layer: it does not work to erase only the choice glyphs. See [transition diagnosis](research/chapter1-wide-transitions.md).
 
-## Comandos y precauciones de entorno
+## Commands and environment precautions
 
-PowerShell; toolchain `C:\msys64\clang64`. Python del entorno normal tiene Pillow. Si se antepone MSYS al PATH antes de llamar `python`, puede elegirse otro Python sin Pillow. Usar un proceso separado o ruta absoluta al Python habitual.
+PowerShell; toolchain `C:\msys64\clang64`. The normal environment's Python has Pillow. If MSYS is prepended to PATH before calling `python`, a different Python without Pillow may be chosen. Use a separate process or the absolute path to the usual Python.
 
 ```powershell
 git status --short
@@ -103,73 +103,73 @@ python -m unittest discover -s tests -p test_chapter1_widescreen_runtime.py -v
 python -m unittest discover -s tests -p test_widescreen_transitions.py -v
 ```
 
-Pruebas runtime requieren fixtures privados y deben omitir rutas ausentes. Añadir pruebas dirigidas al fallo; no repetir suites caras sin cambios nuevos que lo justifiquen. Tests de cámara/menú deben conservar hashes y píxeles fuera de la zona que se cambió deliberadamente.
+Runtime tests require private fixtures and must skip missing paths. Add tests targeted at the failure; do not repeat expensive suites without new changes that justify it. Camera/menu tests must preserve hashes and pixels outside the zone deliberately changed.
 
-Para compilar una dependencia ya coherente y con propiedad acordada:
+To build an already-consistent dependency with agreed ownership:
 
 ```powershell
 $env:PATH='C:\msys64\clang64\bin;'+$env:PATH
 cmake --build local/build/sakura -j 8
 ```
 
-`python tools/build_runtime.py build` comprueba primero el árbol de patches. `recompile` necesita la base privada `blocks.txt`; no equivale a descubrir automáticamente todas las funciones del juego. No regenerar AOT por un ajuste de UI. El repro de menús independientes está documentado en [referencia táctica](research/tactical-menu-independent-reference.md).
+`python tools/build_runtime.py build` first checks the patch tree. `recompile` needs the private base `blocks.txt`; it is not equivalent to automatically discovering every function of the game. Do not regenerate AOT for a UI tweak. The independent-menu repro is documented in [tactical reference](research/tactical-menu-independent-reference.md).
 
-Para cerrar el patch del SDK: crear índice Git temporal en la dependencia, partir del commit fijado, aplicar al índice los patches previos, calcular ese árbol base, añadir el árbol local al índice **temporal** y exportar el diff binario del último bloque. No usar/resetear el índice real de otro colaborador. El script privado actual es `local/work/capture-current-patch36.py`; revisar su alcance antes de ejecutarlo. Validar luego `build_runtime.dependency()`. No hacerlo mientras haya archivos de SDK a medio editar.
+To close the SDK patch: create a temporary Git index in the dependency, start from the pinned commit, apply the previous patches to the index, compute that base tree, add the local tree to the **temporary** index, and export the binary diff of the last block. Do not use/reset another collaborator's real index. The current private script is `local/work/capture-current-patch36.py`; review its scope before running it. Then validate `build_runtime.dependency()`. Do not do this while there are half-edited SDK files.
 
-## Entregas y comunicación
+## Deliveries and communication
 
-Al cerrar una tarea: explicar qué cambió, qué se probó, qué sigue pendiente y si está solo en desarrollo o en un paquete. Actualizar `docs/PENDIENTES.md` y el informe del área. Conservar nombres y hashes de ZIP anteriores; nueva entrega, nueva identidad. Nunca afirmar que la campaña o el capítulo están completos por pasar tests parciales.
+When closing a task: explain what changed, what was tested, what is still pending, and whether it is only in development or in a package. Update `docs/PENDIENTES.md` and the area's report. Keep the names and hashes of previous ZIPs; new delivery, new identity. Never claim the campaign or chapter is complete from passing partial tests.
 
-Release normal: código, DLL y assets generativos permitidos; recursos del juego aportados por el usuario. ZIP personal: nueva build + disco 1 inglés propio + HD ya procesado, todo junto para traslado, sin juego PC completo. Debe arrancar tras extracción en otro directorio sin Python/MSYS/toolkits. El producto final exigirá los dos discos. RX 6900 XT y variantes físicas M30 requieren pruebas del usuario en el equipo correspondiente.
+Normal release: code, DLL, and allowed generative assets; game assets provided by the user. Personal ZIP: new build + own English disc 1 + already-processed HD, all together for transfer, without a full PC game. It must boot after extraction into another directory without Python/MSYS/toolkits. The final product will require both discs. RX 6900 XT and physical M30 variants require user testing on the corresponding hardware.
 
-## Integración por PR
+## PR integration
 
-El usuario autorizó expresamente al coordinador Codex a integrar las PR el 2026-11-18. Claude y los demás workers entregan PR; el coordinador revisa diff, head SHA, pruebas y conflictos, integra y actualiza la cola. Cada rama toma un ID de `docs/PENDIENTES.md`; revisar main y las PR abiertas antes de reclamarlo. Evitar commits directos a main y PR que mezclen tareas ajenas. Una integración no publica automáticamente un release.
+The user expressly authorized the Codex coordinator to integrate PRs on 2026-11-18. Claude and the other workers deliver PRs; the coordinator reviews the diff, head SHA, tests, and conflicts, integrates, and updates the queue. Each branch takes an ID from `docs/PENDIENTES.md`; check main and open PRs before claiming it. Avoid direct commits to main and PRs that mix unrelated tasks. An integration does not automatically publish a release.
 
-Las PR #1 (cola), #2 (finales de línea) y #3 (índice de investigación) fueron revisadas e integradas. El conflicto de #2 se resolvió conservando la cola más nueva; nunca restaurar una lista vieja para hacer entrar una PR. Al añadir informes, actualizar también `docs/research/README.md`, comprobado por `test_research_index.py`.
+PRs #1 (queue), #2 (line endings), and #3 (research index) were reviewed and integrated. The #2 conflict was resolved by keeping the newer queue; never restore an old list to make a PR fit. When adding reports, also update `docs/research/README.md`, checked by `test_research_index.py`.
 
-## Entrega y material actual para Claude
+## Delivery and current material for Claude
 
-v0.2.0-test.1 publicada; ZIP personal privado de 708.495.279 bytes, con disco1 inglés y HD procesado. Probado tras extracción en carpeta nueva y PATH de Windows: escena HD y combate, 38/38 fondos, 382 variantes, cero bloques interpretados. PC vídeos no integrados: los vídeos Saturn están en el disco1 incluido. No se afirma capítulo completo ni prueba física RX6900XT.
+v0.2.0-test.1 published; private personal ZIP of 708,495,279 bytes, with own English disc 1 and processed HD. Tested after extraction into a new folder and Windows PATH: HD scene and battle, 38/38 backgrounds, 382 variants, zero interpreted blocks. PC videos not integrated: the Saturn videos are on the included disc 1. No complete chapter is claimed, nor physical RX6900XT testing.
 
-Guiones editables: `local/work/spanish-translation`, 56 tablas, 29.725 entradas EN canónicas con campo ES vacío y alias al disco2. Índice: `local/work/scene-index`, seis tags sencillos (vídeo, diálogo, elección, mapa, combate, menú). Inventaría ambos discos y 54 vídeos, pero solo nueve observaciones runtime están anotadas; no asumir vídeo sin texto ni autorizar Zoom por un candidato de archivo. El índice todavía no controla la presentación del runtime.
+Editable scripts: `local/work/spanish-translation`, 56 tables, 29,725 canonical EN entries with an empty ES field and alias to disc2. Index: `local/work/scene-index`, six simple tags (video, dialogue, choice, map, battle, menu). It inventories both discs and 54 videos, but only nine runtime observations are annotated; do not assume a video has no text, nor authorize Zoom based on a file candidate. The index still does not control runtime presentation.
 
-## Pruebas automáticas sin interrumpir al propietario
+## Automated tests without interrupting the owner
 
-Para probar el runtime, ejecutar directamente el binario aislado `sakura.exe`, con `--disc`, `--settings`, `--backup` absolutos y `SATRECOMP_WINDOW_HIDDEN=1`. No usar el launcher `--play` para un replay que no esté probando el launcher. Si se prueba el launcher, preparar un perfil privado válido y `SATURN_TAISEN_FIRST_HOME` absoluto antes de iniciarlo: un perfil ausente puede abrir el mensaje de configuración encima del juego del propietario. No matar procesos por nombre ni sobrescribir un ejecutable en uso. El 18 de noviembre se observó este aviso mientras una prueba de la preview española usaba `timeout … SaturnTaisenFirst.exe --play`; el launcher.ini español conservaba su disco configurado. Registro local: `local/work/coordination-current.json`.
+To test the runtime, run the isolated binary `sakura.exe` directly, with absolute `--disc`, `--settings`, `--backup`, and `SATRECOMP_WINDOW_HIDDEN=1`. Do not use the launcher's `--play` for a replay that is not testing the launcher itself. If testing the launcher, prepare a valid private profile and an absolute `SATURN_TAISEN_FIRST_HOME` before starting it: a missing profile can open the setup dialog on top of the owner's game. Do not kill processes by name or overwrite an executable in use. On November 18 this warning was observed while a test of the Spanish preview used `timeout … SaturnTaisenFirst.exe --play`; the Spanish launcher.ini kept its configured disc. Local log: `local/work/coordination-current.json`.
 
-## Relevo del checkpoint de patches0046 y retratos201
+## Handoff of the patch0046 and portraits201 checkpoint
 
-Las PR hasta19 están integradas en main `d7e94cd`; consultar siempre el HEAD actual. El SDK compartido coincide con el árbol compuesto0001..0046 del checkout del coordinador. Los cambios ya están exportados: no restaurar el SDK para acomodarlo a un config/dependencies.json antiguo de otro worktree. Traer los commits nuevos o usar el checkout actualizado, preservando cualquier cambio ajeno.
+PRs up to 19 are integrated into main `d7e94cd`; always check the current HEAD. The shared SDK matches the composite tree 0001..0046 of the coordinator's checkout. The changes are already exported: do not restore the SDK to fit an old `config/dependencies.json` from another worktree. Bring in the new commits or use the updated checkout, preserving any changes made by others.
 
-Candidatos distintos, todos privados: `local/build/visual-fixes-candidate/sakura.exe` prueba presentación con614.024 bloques; `local/build/polish-test2-final/sakura.exe` combina el mismo host con674.023 y pasa las cargas9501/12000 de capítulos2/4. El CMake compartido recuperó su directorio de salida habitual, sin recompilar encima del exe del propietario. Antes de otro build, volver a comprobar procesos y elegir un destino aislado.
+Different candidates, all private: `local/build/visual-fixes-candidate/sakura.exe` tests presentation with 614,024 blocks; `local/build/polish-test2-final/sakura.exe` combines the same host with 674,023 and passes the 9501/12000 loads of chapters 2/4. The shared CMake recovered its usual output directory, without building on top of the owner's exe. Before another build, check processes again and choose an isolated destination.
 
-El preparado más reciente contiene201 retratos y19 fondos, en `local/work/portrait-chapter1-third-review/prepared-hd`; el coordinador reprodujo sus404 archivos de retratos byte por byte desde el proyecto original191 y las diez aprobaciones hash-locked. Sigue pendiente probar las animaciones no observadas y las32 identidades restantes del capítulo1. T45 propone reordenado offline para00a1; todavía no aprobado ni implementado.
+The most recent prepared set contains 201 portraits and 19 backgrounds, in `local/work/portrait-chapter1-third-review/prepared-hd`; the coordinator reproduced its 404 portrait files byte for byte from the original project's 191 and the ten hash-locked approvals. Testing the unobserved animations and the remaining 32 identities of chapter 1 is still pending. T45 proposes offline reordering for 00a1; not yet approved or implemented.
 
-Primer vídeo: usar el testigo capturado con el framebuffer; nunca inferir reproducción por una cabecera FILM residual o por ausencia de letras. Las fases y sus límites están en first-film-script-phase.md y first-film-transition-fix.md. El rótulo del episodio comparte cursor con la salida y se conserva por su capa de imagen. Las correcciones de este checkpoint se incorporaron posteriormente a test.2; test.1 permanece intacto.
+First video: use the witness captured with the framebuffer; never infer playback from a residual FILM header or the absence of subtitles. The phases and their limits are in first-film-script-phase.md and first-film-transition-fix.md. The episode label shares a cursor with the exit and is kept because of its image layer. The fixes from this checkpoint were later incorporated into test.2; test.1 remains intact.
 
-## Empaquetado desde un worktree actualizado
+## Packaging from an updated worktree
 
-package_release.py acepta --owner-root para leer dependencias/licencias privadas del propietario y --build-dir para seleccionar launcher/importador aislados; el código, VERSION, arte permitido y commit del manifest siguen siendo los del checkout ejecutado. --runtime selecciona el candidato AOT. package_personal_bundle.py acepta --owner-root para localizar exclusivamente disco, previews y fixtures privados. Ambos rechazan destinos de entrega existentes.
+package_release.py accepts --owner-root to read the owner's private dependencies/licenses and --build-dir to select an isolated launcher/importer; the code, VERSION, allowed art, and manifest commit remain those of the checkout that was run. --runtime selects the AOT candidate. package_personal_bundle.py accepts --owner-root to locate only the private disc, previews, and fixtures. Both reject existing delivery destinations.
 
-Para test.2 se prepara el launcher en local/build/launcher-test2 con salida local/build/test2-package-binaries y GAME_VERSION0.2.0-test.2; no sobrescribe el launcher del propietario. El perfil personal mantiene HD activado (valores0 de fondos/retratos) y precarga1. El manifest personal enumera también hashes de BAT/defaults/texto generados, aparte de sus recursos fuente; se excluye a sí mismo del inventario recursivo.
+For test.2, the launcher is prepared in local/build/launcher-test2 with output local/build/test2-package-binaries and GAME_VERSION 0.2.0-test.2; it does not overwrite the owner's launcher. The personal profile keeps HD enabled (background/portrait values 0) and preload 1. The personal manifest also lists hashes of generated BAT/defaults/text, aside from their source assets; it excludes itself from the recursive inventory.
 
-## Entrega test.2 verificada
+## Verified test.2 delivery
 
-Publicada v0.2.0-test.2 con fuente limpia92edea7; ZIP público317.215.196bytes. Bundle personal725.331.460bytes solo local, disco1 inglés y HD201/19fondos. Extracción limpia con PATH Windows: launcher, escenaHD, combate y película6201frames funcionan;402variantes sin fallos y cero interpretados. El recibo público de metadatos está en docs/releases/v0.2.0-test.2-validation.json; el detalle privado en local/work/test2-relocation-report.json. No se cambian los bytes ni la etiqueta de los paquetes anteriores.
+v0.2.0-test.2 published with clean source 92edea7; public ZIP 317,215,196 bytes. Personal bundle 725,331,460 bytes, local only, English disc 1 and HD 201/19 backgrounds. Clean extraction with Windows PATH: launcher, HD scene, battle, and 6201-frame film work; 402 variants with no failures and zero interpreted. The public metadata receipt is in docs/releases/v0.2.0-test.2-validation.json; the private detail in local/work/test2-relocation-report.json. The bytes and label of previous packages are not changed.
 
-Trabajo posterior: wide_transitions continúaT02a sin modificar RAM ni SDK. T48 quedó registrado en patch0047 y el árbol compuesto se validó. Su candidato aislado674.023 pasó cuatro perfiles/8ejecuciones de90frames con402variantes. El header ya no tiene ediciones sin registrar; consultar el commit integrado antes del próximo build. El binario de test.2 y sus ZIP permanecen inmutables durante ese trabajo.
+Later work: wide_transitions continues T02a without modifying RAM or the SDK. T48 was recorded in patch0047 and the composite tree was validated. Its isolated candidate 674,023 passed four profiles/8 runs of 90 frames with 402 variants. The header no longer has unrecorded edits; check the integrated commit before the next build. The test.2 binary and its ZIPs remain unchanged during this work.
 
-## Candidato posterior a test.2: fallback del catálogo de retratos
+## Candidate after test.2: portrait catalog fallback
 
-local/build/portrait-fallback-candidate/sakura-674.exe contiene el patch0047; no sustituye los binarios de test.2. El runtime prueba el paquete incluido cuando el catálogo del perfil falla autenticación, conservando la prioridad de un mod personal que sí pasa la validación. Los PNG siguen verificándose al cargar; su fallback diferido es un caso aparte. Prueba integrada en research/portrait-pack-profile-fallback.md. No cambiar el ZIP ni el release para incluir un arreglo posterior.
+local/build/portrait-fallback-candidate/sakura-674.exe contains patch0047; it does not replace the test.2 binaries. The runtime tests the included package when the profile's catalog fails authentication, preserving the priority of a personal mod that does pass validation. PNGs are still verified on load; their deferred fallback is a separate case. Test integrated in research/portrait-pack-profile-fallback.md. Do not change the ZIP or the release to include a later fix.
 
-## Cierre solicitado — test.4
+## Requested closure — test.4
 
-Se prepara v0.2.0-test.4 con el runtime674.182/patch0050 probado, sin el experimento0051. La guía para otro PC y el toolkit es `docs/releases/PORTABLE-HANDOFF.md`. El usuario pidió detenerse al entregar: no continuar automáticamente con tareas nuevas. Los workers cerraron sus pruebas y no mantienen procesos activos.
+v0.2.0-test.4 is being prepared with the tested 674,182/patch0050 runtime, without experiment 0051. The guide for another PC and the toolkit is `docs/releases/PORTABLE-HANDOFF.md`. The user asked to stop upon delivery: do not automatically continue with new tasks. Workers closed their tests and are not keeping active processes.
 
-T33 experimental quedó en `pendientes/T33-petal-transitions`, commit7888d08. El fixture pasa y el candidato reconoce algunos cuadros blancos, pero la aserción de pantalla uniforme en114 falla: solo118/119 son completamente anchos en el sondeo fino. Otras fases uniformes/partículas aún vuelven a4:3. No empaquetar ni promover ese patch0051 como arreglo completo. El SDK compartido fue restaurado exactamente a0001..0050 y CMake vuelve a la salida `local/build/sakura`.
+Experimental T33 was left in `pendientes/T33-petal-transitions`, commit 7888d08. The fixture passes and the candidate recognizes some white frames, but the uniform-screen assertion at 114 fails: only 118/119 are fully wide in the fine probe. Other uniform/particle phases still revert to 4:3. Do not package or promote that patch0051 as a complete fix. The shared SDK was restored exactly to 0001..0050 and CMake goes back to the `local/build/sakura` output.
 
-Relevos privados para reanudar solo cuando se solicite: capítulo1 `corridor-bridge/new-sumire-turn/finish.state` SHA f9780d38285655a7f54252b2856c56b886021a280e3bd7add757f630e51317de, backup5c71f717…; ataque nuevo de Sakura probado3.199hashes/RGB/SRAM iguales, sin victoria en esta ruta. Capítulo2 `t30-chapter2-followup/maria-elimination/finish.state` SHA f1084a893b337712195d700b110855138e6f20b00104bd108742c7100302ca01; SRAM emparejada original4c22bf1e…. PR35 documenta los tramos; la prueba continua posterior se canceló y no se presenta como aprobada.
+Private handoffs to resume only when requested: chapter1 `corridor-bridge/new-sumire-turn/finish.state` SHA f9780d38285655a7f54252b2856c56b886021a280e3bd7add757f630e51317de, backup 5c71f717…; new Sakura attack tested 3,199 hashes/RGB/SRAM matching, no victory on this route. Chapter2 `t30-chapter2-followup/maria-elimination/finish.state` SHA f1084a893b337712195d700b110855138e6f20b00104bd108742c7100302ca01; paired original SRAM 4c22bf1e…. PR35 documents the stretches; the later continuous test was canceled and is not presented as approved.
 
-Entrega test.4 publicada y comprobada. El recibo final es `docs/releases/v0.2.0-test.4-validation.json`. Los ZIP y el tag4406c13… permanecen inmutables. No quedan workers ni pruebas propias activas. Objetivo pausado por la petición de detenerse; no dar por completada la campaña.
+Test.4 delivery published and checked. The final receipt is `docs/releases/v0.2.0-test.4-validation.json`. The ZIPs and the tag 4406c13… remain unchanged. No workers or own tests remain active. Goal paused due to the stop request; the campaign is not considered complete.

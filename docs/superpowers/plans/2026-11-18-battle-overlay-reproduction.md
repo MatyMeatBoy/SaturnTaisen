@@ -1,8 +1,8 @@
-# T21 — cobertura AOT reproducible de overlays
+# T21 — reproducible AOT coverage for overlays
 
-Alcance aprobado en la cola: automatizar la ampliación K001–K019 que corrigió Sumire, sin modificar discos ni la base compartida usada por Claude.
+Scope approved in the queue: automate the K001–K019 expansion that fixed Sumire, without modifying disks or the shared base used by Claude.
 
-1. Añadir pruebas sintéticas para identificación exacta de familia, límites/alineación/base, variantes duplicadas, conservación de candidatos previos y rechazo de datos incompletos.
-2. Implementar `tools/discover_battle_overlays.py`: leer ISOs preparados, validar overlays, deduplicar por SHA, reutilizar `static_program.discover`, fusionar candidatos conservando variantes y emitir base/manifiesto en un directorio privado nuevo. El SDK se puede indicar explícitamente para trabajar en worktree aislado.
-3. Reproducir desde la base privada anterior al arreglo con los cuatro perfiles disponibles. Comparar el conjunto resultante con los 614.024 candidatos actuales, sin promocionarlo ni regenerar el ejecutable compartido. Registrar inputs, hashes y límites; candidatos no equivalen a cobertura ejecutada.
-4. Revisar, abrir PR T21 e integrar con la cola actualizada. Los workers documentan puntos verificables de capítulos posteriores y revisan por separado T10.
+1. Add synthetic tests for exact family identification, bounds/alignment/base, duplicate variants, preservation of previous candidates, and rejection of incomplete data.
+2. Implement `tools/discover_battle_overlays.py`: read prepared ISOs, validate overlays, deduplicate by SHA, reuse `static_program.discover`, merge candidates while preserving variants, and emit a base/manifest in a new private directory. The SDK can be explicitly specified to work in an isolated worktree.
+3. Reproduce from the private base prior to the fix with the four available profiles. Compare the resulting set with the current 614,024 candidates, without promoting it or regenerating the shared executable. Log inputs, hashes, and bounds; candidates do not equate to executed coverage.
+4. Review, open PR T21, and integrate with the updated queue. Workers document verifiable points for later chapters and separately review T10.

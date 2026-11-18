@@ -1,63 +1,63 @@
-# Catálogo de diálogo en runtime — Implementation Plan
+# Runtime dialogue catalog — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
-**Goal:** Preparar el texto del guion una vez y vincularlo al framebuffer nativo antes de sustituir la reconstrucción dinámica de líneas.
+**Goal:** Prepare the script text once and link it to the native framebuffer before replacing the dynamic line reconstruction.
 
-**Architecture:** Caché inmutable por contenido exacto y testigo capturado con el framebuffer. La lectura acotada precede al parseo; el render conserva su lógica hasta completar las pruebas del observador.
+**Architecture:** Immutable cache keyed by exact content, with a witness captured alongside the framebuffer. Bounded reading precedes parsing; rendering keeps its current logic until the observer tests are complete.
 
-**Tech Stack:** C++20, lectorDiscFiles, parserTBL existente, SDL y pruebas Clang/fixture privadas.
+**Tech Stack:** C++20, existing discFileReader, existing TBLparser, SDL, and private Clang/fixture tests.
 
 **Spec:** ../specs/2026-11-18-dialogue-catalog-runtime.md
 
 ## Global Constraints
 
-- Solo recursos privados del usuario; ningún guion o dump aGit.
-- Windowsx64; C++20; SDK/patches registrados antes de build_runtime.
-- Original y Zoom aprobados intactos,16:9 máximo, escala entera.
-- No alterar bytes guest, temporizadores, entradas ni reglas de texto.
-- Todo cambio SDK se captura en un patch y se valida como árbol compuesto.
+- Only the user's private resources; no script or dump goes to Git.
+- Windows x64; C++20; SDK/patches registered before build_runtime.
+- Approved Original and Zoom framings stay intact, 16:9 max, integer scaling.
+- Do not alter guest bytes, timers, inputs, or text rules.
+- Every SDK change is captured in a patch and validated as a composite tree.
 
 ## Review Focus
 
-- Tabla parcialmente sobrescrita durante una carga: no producir un testigo válido.
-- Puntero fuera del texto o revisión de tabla distinta: no inferir registro por ID.
-- Controles no interpretados o geometría fuera de4×31: conservar datos y marcar la preparación visual no admitida.
-- Cambio de modo en el selector o pausa: cargar una vez y no introducir trabajo de disco por fotograma.
-- Frame mostrado tras run-ahead o carga de estado: usar metadata del framebuffer, nunca RAM restaurada posteriormente.
+- Table partially overwritten during a load: must not produce a valid witness.
+- Pointer outside the text, or a different table revision: do not infer a record by ID.
+- Uninterpreted controls or geometry outside 4×31: keep the data and flag the visual preparation as unsupported.
+- Mode change in the selector, or pause: load once and do not introduce per-frame disk work.
+- Frame shown after run-ahead or a state load: use framebuffer metadata, never RAM restored afterward.
 
-### Task1: Caché pura y acotada
+### Task 1: Pure, bounded cache
 
 **Files:** SDKport/dialogue_preload.h; tests/test_dialogue_preload.cpp.
 
-**Interfaces:** namespaceport, DialogueWitness{bool valid;uint32_t table,record,offset;}, PreloadedDialogueLine{uint32_t rawOffset;std::u32string text;}, PreloadedDialogueRecord{id,index,offset,prefix0,prefix1,raw,array4lines,lineCount,simple}, PreloadedDialogueTable{name,fingerprint,bytes,records}. DialoguePreload::Add(string,span<constuint8_t>), Seal(), Sealed(), TableCount(), RecordCount(), ReadyCount(), SourceBytes(), Tables(), Get(witness), Locate(low,high), todos los observadores const. Add devuelvebool; Locate devuelveDialogueWitness; Get devuelveconstPreloadedDialogueRecord*.
+**Interfaces:** namespace port, DialogueWitness{bool valid; uint32_t table,record,offset;}, PreloadedDialogueLine{uint32_t rawOffset; std::u32string text;}, PreloadedDialogueRecord{id,index,offset,prefix0,prefix1,raw,array4lines,lineCount,simple}, PreloadedDialogueTable{name,fingerprint,bytes,records}. DialoguePreload::Add(string,span<const uint8_t>), Seal(), Sealed(), TableCount(), RecordCount(), ReadyCount(), SourceBytes(), Tables(), Get(witness), Locate(low,high), all observers const. Add returns bool; Locate returns DialogueWitness; Get returns const PreloadedDialogueRecord*.
 
-- [x] Test RED de tabla válida/CP1252/saltos/prefijos y registro señalado.
-- [x] Implementar con parser existente,128tablas,8MiB de bytes fuente,65.535registros globales; impedir Add trasSeal y nombres duplicados. No truncar datos silenciosamente.
-- [x] Precompilar hasta4filas/31columnas; conservar raw completo y marcar simple=false ante controles no admitidos. Tabulador permanece sin interpretar.
-- [x] Locate exige ambos bancos1MiB, tabla exacta en low+0x24000 y punteroBE32 en high+0x6851C. Validar texto después de4bytes de prefijo y antes/incluyendo NUL; rechazar resultados ambiguos.
-- [x] Tests GREEN de límites, revisión alterada, punteros inválidos, tabla truncada, final de cadena y Seal; guardar evidencia.
+- [x] RED test for a valid table/CP1252/line breaks/prefixes and flagged record.
+- [x] Implement with the existing parser, 128 tables, 8MiB of source bytes, 65,535 global records; prevent Add after Seal and duplicate names. Do not silently truncate data.
+- [x] Precompile up to 4 rows/31 columns; keep the full raw data and mark simple=false for unsupported controls. Tab remains uninterpreted.
+- [x] Locate requires both 1MiB banks, exact table at low+0x24000, and a BE32 pointer at high+0x6851C. Validate text after the 4-byte prefix and up to/including NUL; reject ambiguous results.
+- [x] GREEN tests for bounds, altered revision, invalid pointers, truncated table, end of string, and Seal; save evidence.
 
-### Task2: Lectura y captura integradas
+### Task 2: Integrated reading and capture
 
-**Files:** SDKport/disc_files.h/.cpp, port/port.h, port/main.cpp, port/frontend_sdl.cpp; fixture de lectura.
+**Files:** SDKport/disc_files.h/.cpp, port/port.h, port/main.cpp, port/frontend_sdl.cpp; reading fixture.
 
-**Interfaces:** DiscFiles::ReadBounded(name,data,maxBytes), Port::PrepareDialogueCatalog(knownAtlas), shared_ptr<constDialoguePreload> y fbDialogue; copia a shownDialogue bajo fbMutex. Preparación solo con atlas inglés verificado, presentaciónMejorada y textoHD.
+**Interfaces:** DiscFiles::ReadBounded(name,data,maxBytes), Port::PrepareDialogueCatalog(knownAtlas), shared_ptr<const DialoguePreload> and fbDialogue; copy to shownDialogue under fbMutex. Preparation only with the verified English atlas, enhancedPresentation, and HDtext.
 
-- [x] Test RED para ReadBounded: tamaño superior al límite se rechaza antes de leer y deja data vacío; lectura válida y fallo parcial comprobados.
-- [x] Leer TBL con presupuesto restante, compilar y sellar antes de publicar el catálogo. Registrar contadores/tiempo bajo SATRECOMP_DIALOGUE_TRACE; sin UI técnica nueva.
-- [x] Capturar Locate() en callback de framebuffer propio y copiar testigo junto a softwareShown. No serializarlo con guest.
-- [x] Prueba de catálogo real56/29.725,29.723preparables; controles2 conservados. Prueba de muestras conocidas Sumire/María/Iris y elecciones, y rechazo durante carga.
-- [x] Comparar hashes/RGB yGUI antes/después, con Original sin precarga nueva. Verificar una sola preparación por sesión/cambio de modo, no una por frame.
-- [x] Capturar patch0048, validar árbol compuesto y revisar antes de integrar. No declarar completoT11.
+- [x] RED test for ReadBounded: size above the limit is rejected before reading and leaves data empty; valid read and partial failure both checked.
+- [x] Read TBL with the remaining budget, compile and seal before publishing the catalog. Log counters/timing under SATRECOMP_DIALOGUE_TRACE; no new technical UI.
+- [x] Capture Locate() in the framebuffer's own callback and copy the witness alongside softwareShown. Do not serialize it with guest state.
+- [x] Real-catalog test 56/29,725, 29,723 preparable; 2 controls preserved. Test of known Sumire/María/Iris samples and choices, and rejection during loading.
+- [x] Compare hashes/RGB and GUI before/after, with Original having no new preload. Verify a single preparation per session/mode change, not one per frame.
+- [x] Capture patch0048, validate the composite tree, and review before integrating. Do not declare T11 complete.
 
-### Task3: Render desde las líneas precargadas
+### Task 3: Rendering from preloaded lines
 
-**Files:** frontend/UiTextLine y helper separado de máscara de revelado; coordinar propiedad antes de editar.
+**Files:** frontend/UiTextLine and a separate reveal-mask helper; coordinate ownership before editing.
 
-- [x] Probar máscara/celda esperada contra atlas y comandos del mismo framebuffer, sin adelantar letras ni borrar glifos desconocidos.
-- [x] Usar vistas a líneas inmutables y la fuente ya precocinada; conservar posiciones, placas, color y clip aprobados.
-- [x] Repetir revelado, avance,4filas, fundidos y entradas/salidas de retratos; medir cobertura y fallback. Las elecciones requieren identificar su conjunto completo por separado.
-- [x] Actualizar pendientes/evidencia y cerrar solo los casos probados, sin modificar test.2.
+- [x] Test the mask/expected cell against the atlas and commands from the same framebuffer, without advancing letters or erasing unknown glyphs.
+- [x] Use views into immutable lines and the already precooked font; keep approved positions, plates, color, and clip.
+- [x] Repeat reveal, advance, 4 rows, fades, and portrait entries/exits; measure coverage and fallback. Choices require separately identifying their full set.
+- [x] Update pendings/evidence and close only the tested cases, without modifying test.2.
 
-Evidencia Task3: patch0049, candidato377cb29…;14casos/2.280hashes/104pares RGB iguales. Narrativa con origen64, clip56 intacto y trazas de catálogo efectivas. T11 sigue parcial: elecciones por conjunto y cobertura global pendientes.
+Task 3 evidence: patch0049, candidate 377cb29…; 14 cases/2,280 hashes/104 matching RGB pairs. Narrative with origin 64, clip 56 intact, and effective catalog traces. T11 remains partial: per-set choices and overall coverage still pending.

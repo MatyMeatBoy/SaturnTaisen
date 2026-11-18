@@ -1,22 +1,22 @@
-# Selección del paquete de retratos HD
+# HD portrait pack selection
 
-El runtime evalúa primero el catálogo de `user/mods/hd-portraits`. Si ese candidato falla, evalúa `hd-resources/portraits` como catálogo incluido. Publica la ruta y los datos únicamente tras validar el candidato. Con un KAO original verificado, conserva la prioridad del mod personal. Con recursos preparados, el recibo debe coincidir con el origen, el número de identidades y la huella del manifiesto seleccionado. Si ambos candidatos fallan, se conserva el retrato nativo.
+The runtime first evaluates the catalog at `user/mods/hd-portraits`. If that candidate fails, it evaluates `hd-resources/portraits` as the bundled catalog. It publishes the path and data only after validating the candidate. With a verified original KAO, it keeps the personal mod's priority. With prepared resources, the receipt must match the source, the identity count, and the selected manifest's fingerprint. If both candidates fail, the native portrait is kept.
 
-Antes del cambio, el runtime probaba el catálogo incluido cuando el manifiesto personal no se podía leer. Un manifiesto personal que se podía leer y luego fallaba al compararse con el recibo dejaba el juego sin retratos HD. La prueba sintética reproduce dos causas, un número antiguo de identidades y el mismo número con otro manifiesto. También cubre el perfil vacío, el manifiesto mal formado, el perfil que coincide con el recibo y el caso donde ambos catálogos son inválidos.
+Before the change, the runtime tried the bundled catalog only when the personal manifest could not be read. A personal manifest that could be read and then failed when compared against the receipt left the game without HD portraits. The synthetic test reproduces two causes, a stale identity count and the same count with a different manifest. It also covers the empty profile, the malformed manifest, the profile that matches the receipt, and the case where both catalogs are invalid.
 
-Con `SATRECOMP_HD_STATS=1`, el log indica si se rechazó el perfil o el catálogo incluido y da el motivo. La validación de cada PNG al precargarlo o mostrarlo conserva su comportamiento.
+With `SATRECOMP_HD_STATS=1`, the log indicates whether the profile or the bundled catalog was rejected and gives the reason. Validation of each PNG when preloading or displaying it keeps its behavior.
 
-## Verificación
+## Verification
 
-- La prueba sintética falló con el encabezado anterior. Con el cambio, ambos rechazos tardíos seleccionan las cuatro variantes del catálogo incluido.
-- Se compiló un fixture directo con Clang, SDL y el lector del SDK. En una prueba con el KAO original del propietario, el mod personal de una identidad conservó prioridad sobre un catálogo de dos identidades.
-- Con el catálogo de 191 como entrada del perfil y el paquete preparado de 201 como entrada incluida, el fixture de solo lectura registró `prepared count mismatch`, `records=201 source=prepared` y `portrait preload: variants=402 failed=0`. Esta prueba ejercitó los PNG reales. La selección de ruta se verificó después en la build integrada descrita abajo.
-- El ZIP de v0.2.0-test.2 se publicó antes de este cambio y conserva su contenido.
+- The synthetic test failed with the previous header. With the change, both late rejections select the four variants of the bundled catalog.
+- A direct fixture was compiled with Clang, SDL, and the SDK reader. In a test with the owner's original KAO, the one-identity personal mod kept priority over a two-identity catalog.
+- With the catalog of 191 as the profile input and the prepared pack of 201 as the bundled input, the read-only fixture logged `prepared count mismatch`, `records=201 source=prepared`, and `portrait preload: variants=402 failed=0`. This test exercised the real PNGs. Path selection was verified afterward in the integrated build described below.
+- The v0.2.0-test.2 ZIP was published before this change and keeps its content.
 
-## Build integrada y paridad
+## Integrated build and parity
 
-Patch0047 sobre el árbol registrado0001..0046. Candidato674.023 bloques SHA256 `cdedbb966ea5222d55898c50c7b89303fd53eb23c2ed19f3a391308f54f07897`. Se comparó con el runtime de test.2 en cuatro perfiles: catálogo191, catálogo201 con huella distinta, perfil vacío y copia válida del catálogo201.
+Patch 0047 on top of the registered tree 0001..0046. Candidate 674,023 blocks, SHA256 `cdedbb966ea5222d55898c50c7b89303fd53eb23c2ed19f3a391308f54f07897`. It was compared against the test.2 runtime across four profiles: catalog 191, catalog 201 with a different fingerprint, empty profile, and a valid copy of catalog 201.
 
-Ocho ejecuciones de90fotogramas a2560×1440. Los dos perfiles obsoletos pasaron de0 a402variantes precargadas sin fallos. Los90hashes por caso y tres capturas RGB nativas por caso coincidieron; todos terminaron con cero bloques interpretados. En ambos casos corregidos, la única diferencia GUI frente a test.2 fue el retrato, dentro de `[404,644) × [1090,1378)`. Los perfiles vacío y válido conservaron el GUI idéntico. Los cuatro perfiles nuevos mostraron exactamente el mismo GUI que el perfil vacío con201.
+Eight runs of 90 frames at 2560×1440. The two stale profiles went from 0 to 402 preloaded variants with no failures. The 90 hashes per case and three native RGB captures per case matched; all finished with zero instructions interpreted. In both corrected cases, the only GUI difference versus test.2 was the portrait, within `[404,644) × [1090,1378)`. The empty and valid profiles kept the identical GUI. The four new profiles showed exactly the same GUI as the empty profile with 201.
 
-Evidencia privada: local/work/portrait-fallback-runtime/result.json y sus logs/capturas. La validación del árbol compuesto y dos fixtures de retratos pasaron. El CMake compartido recuperó su salida habitual tras compilar el candidato aislado. El fallo diferido de un PNG después de aceptar el catálogo sigue fuera de esta corrección; no se promete fallback por archivo de imagen. El cambio está probado en desarrollo, no incluido en test.2.
+Private evidence: local/work/portrait-fallback-runtime/result.json and its logs/captures. The composite-tree validation and two portrait fixtures passed. The shared CMake recovered its usual output after compiling the isolated candidate. The deferred failure of a PNG after accepting the catalog remains outside this fix; per-image-file fallback is not promised. The change is tested in development, not included in test.2.
