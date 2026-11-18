@@ -6,7 +6,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
-| Retratos y animación | identidades Saturn | 304/304 (100%) | 300/304 (98,6%) | 300/304 (98,6%) | 300/304 (98,6%) | Sin dato |
+| Retratos y animación | identidades Saturn | 304/304 (100%) | 302/304 (99,3%) | 302/304 (99,3%) | 302/304 (99,3%) | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
 | HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
@@ -17,15 +17,15 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
-| Retratos y animación | 300/304 (98,6%) | Sin dato |
+| Retratos y animación | 302/304 (99,3%) | Sin dato |
 | Vídeos | 0/50 (0%) | 0/50 (0%) |
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
 | Escenas y transiciones | Sin dato | 9/166 (5,4%) |
 
-- **Integración global indicativa (media de 5/6 categorías con total): 39,7%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 319/4541 (7%).** Mezcla unidades distintas; solo orienta.
+- **Integración global indicativa (media de 5/6 categorías con total): 39,8%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 321/4541 (7%).** Mezcla unidades distintas; solo orienta.
 - Categorías sin total confirmado: ninguna.
 
 ## Qué cuenta en cada etapa
@@ -48,11 +48,12 @@ Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y b
 - Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.
 - Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.
 - 394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.
+- Lote 7: 0152 (buzo) y 0153 (monstruo) aceptados con ajuste nulo; identidad inequívoca, candidato ID-1 y puntaje de bordes independiente de paleta dentro del ruido. Incluyen base, ojos y boca. Quedan 00a1 (tiras de ojos intercambiadas) y 0169 (carta con otro diseño en PC).
 - **Siguiente paso**. Revisar las identidades pendientes y validar parpadeo, boca, ambas tiras simultáneas, efectos y fallback en juego.
 
 Rangos de ID Saturn pendientes en hexadecimal
 
-`00a1` `0152-0153` `0169`
+`00a1` `0169`
 
 - [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 del recibo local `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.
 - [first-sakura-hd-portraits.md](research/first-sakura-hd-portraits.md). SHA-256 del recibo local `8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1`.

@@ -33,17 +33,17 @@
         "Checkpoint reproducible. 201 identidades con base, ojos y boca disponibles. Se comprobaron 402 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.",
         "Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.",
         "Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.",
-        "394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay."
+        "394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.",
+        "Lote 7: 0152 (buzo) y 0153 (monstruo) aceptados con ajuste nulo; identidad inequívoca, candidato ID-1 y puntaje de bordes independiente de paleta dentro del ruido. Incluyen base, ojos y boca. Quedan 00a1 (tiras de ojos intercambiadas) y 0169 (carta con otro diseño en PC)."
       ],
       "total": 304,
       "inventory": 304,
-      "matched": 300,
-      "prepared": 300,
-      "integrated": 300,
+      "matched": 302,
+      "prepared": 302,
+      "integrated": 302,
       "verified": null,
       "pending_ids": [
         "00a1",
-        "0152-0153",
         "0169"
       ]
     },
