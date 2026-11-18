@@ -12,4 +12,6 @@ T20 scope, inventory only: no playback is replaced. Measurements came from ffpro
 
 Method: relative duration, 24×12 grayscale thumbnails at five relative points, and stream order in `/SAKURA4` (stream k ↔ `MOVIE00k`). Thumbnails alone are weak (the Saturn palette differs), so the assignment is driven by duration and order; no equivalence is declared for edit, audio, or subtitles.
 
-Pending: review the six pairs, compare audio/subtitles/cuts, and design MPEG-1/MP2 decoding and runtime sync. Not integrated in test.4.
+Content check of the six pairs (5-frame luminance signature, 24x12, against all 52 PC clips): each assigned PC clip is the unique best match with a margin of 1.5x-3.0x over the runner-up (distances 14.4-25.1 versus 27.3-44.9; the closest are MOVIE011 at 1.5x and MOVIE102 at 1.6x). They are accepted as matched, recorded as alternate cuts (PC runs 0.6-3.7 s different). The pairing is by content, not by audio or subtitles.
+
+Pending: compare audio/subtitles/cuts of these six alternate cuts and design MPEG-1/MP2 decoding and runtime sync. Not integrated in test.4.
