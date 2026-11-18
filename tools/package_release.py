@@ -65,14 +65,16 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     return result
 
 
-def package(destination,toolchain,archive=True):
+def package(destination,toolchain,archive=True,runtime=None):
+    tracked=set(subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0'))
     destination=destination.resolve()
     destination.mkdir(parents=True,exist_ok=False)
     build=ROOT/'local/build/sakura'
     executables={'sakura-launcher.exe':'SaturnTaisenFirst.exe','sakura.exe':'sakura.exe',
                  'import-saves.exe':'import-saves.exe'}
     for source,name in executables.items():
-        shutil.copy2(build/source,destination/name)
+        selected=Path(runtime) if runtime is not None and source=='sakura.exe' else build/source
+        shutil.copy2(selected,destination/name)
     # Resolve the actual PE imports, including dependencies of toolchain DLLs.
     available={p.name.casefold():p for p in (toolchain/'bin').glob('*.dll')}
     pending=list(destination.glob('*.exe'))
@@ -128,6 +130,7 @@ def package(destination,toolchain,archive=True):
         target.mkdir(parents=True,exist_ok=True)
         for pattern in patterns:
             for source in (ROOT/folder).glob(pattern):
+                if source.relative_to(ROOT).as_posix() not in tracked:continue
                 shutil.copy2(source,target/source.name)
     art_source=ROOT/'assets/generated/backgrounds'
     if not art_source.is_dir():art_source=ROOT/'art/backgrounds'
@@ -215,8 +218,9 @@ def main():
     parser.add_argument('--output',type=Path,required=True,help='new directory; existing targets are refused')
     parser.add_argument('--toolchain',type=Path,default=Path('C:/msys64/clang64'))
     parser.add_argument('--no-archive',action='store_true')
+    parser.add_argument('--runtime',type=Path,help='isolated candidate executable; avoids replacing another tester runtime')
     args=parser.parse_args()
-    result=package(args.output,args.toolchain,not args.no_archive)
+    result=package(args.output,args.toolchain,not args.no_archive,args.runtime)
     print(json.dumps({'output':str(args.output.resolve()),'files':len(result['files']),'dlls':result['dlls']}))
 
 
