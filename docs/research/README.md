@@ -71,3 +71,5 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 ## Traducción
 
 - [traduccion-espanol.md](traduccion-espanol.md) — parche al español: método japonés → inglés → español, formatos de diálogo, combate y menús, ISO con ranuras fijas.
+
+- [first-sakura-hd-portraits.md](first-sakura-hd-portraits.md): Matches revisados de Sakura0013/0014, reproducción y límites de la prueba en juego.
