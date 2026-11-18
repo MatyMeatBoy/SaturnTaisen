@@ -14,6 +14,14 @@ else:
     from discover_battle_overlays import ROOT,read_seed,merge_candidates,analyze_with_sdk
 
 REGISTRY={
+    'SLG_RELOCATED':dict(file='/SAKURA2/0SLG.BIN',base=0x06002000,bytes=309844,
+                 sha256='7ca7dda97d17f704e7e687b4fc04170fb39c731ed1a4372fafc3e50b3aed41b8',
+                 slice_offset=0x47B14,slice_bytes=206,
+                 evidence='Chapter1 postbattle: function06032B00 copies103 words from0604BB14 to06002000; exact206 bytes match WATCH_PC dump at missing PC06002042'),
+    'MAIN_RELOCATED':dict(file='/SAKURA',base=0x06002000,bytes=391712,
+                 sha256='f9fc1dd16e3684558b22e857c876b682ad65a7c6b9416d453cd4304453021197',
+                 slice_offset=0x4F5D8,slice_bytes=238,
+                 evidence='Chapter1 postbattle: function06005C58 copies119 words from060535D8 to06002000; all238 bytes match state before missing PC06002042'),
     'EVT02':dict(file='/SAKURA2/EVT02.BIN',base=0x00204000,bytes=76180,
                  sha256='701d68ab48e67eabce1e1eb89bd4a8b790aa0f6a40ff68bbfa0600489b97c660',
                  evidence='Episode2 cold load: all 76180 bytes equal LowRAM at 00204000 in strict/interpreter state frame6688; strict first missing PC00204000'),
@@ -28,6 +36,14 @@ def registered_module(name,raw,profile,registry=REGISTRY):
     if spec is None:raise ValueError('Overlay has no verified registry entry: '+name)
     if len(raw)!=spec['bytes'] or hashlib.sha256(raw).hexdigest()!=spec['sha256']:
         raise ValueError('Overlay bytes differ from the witnessed version: '+name)
+    if 'slice_offset' in spec or 'slice_bytes' in spec:
+        offset,size=spec.get('slice_offset'),spec.get('slice_bytes')
+        if (not isinstance(offset,int) or not isinstance(size,int) or offset<0 or size<=0 or
+                offset%2 or size%2 or offset+size>len(raw)):
+            raise ValueError('Invalid registered copied region: '+name)
+        fragment=raw[offset:offset+size]
+        return dict(spec,profile=profile,source_bytes=len(raw),source_sha256=spec['sha256'],
+                    bytes=len(fragment),sha256=hashlib.sha256(fragment).hexdigest(),raw=fragment)
     return dict(spec,profile=profile,raw=raw)
 
 

@@ -85,3 +85,4 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 
 - [RetroAchievements 16546 en Saturn](retroachievements-16546.md)
 - [dialogue-preload-runtime.md](dialogue-preload-runtime.md): Catálogo inmutable, lectura acotada y testigo nativo capturado con el framebuffer; conexión visual pendiente.
+- [chapter1-victory-followup.md](chapter1-victory-followup.md): Derrota de Satan, rutinas relocalizadas, bloqueo postcombate y validación de guardado/Resume.
