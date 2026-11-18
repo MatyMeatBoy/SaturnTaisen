@@ -17,6 +17,9 @@ void ShutdownSakuraSaves() {}
 void DrawSakuraHd(launcher::PageContext&) {}
 void ShutdownSakuraHd() {}
 bool SakuraHdBusy() {return false;}
+void DrawSakuraSetup(launcher::PageContext&) {}
+void ShutdownSakuraSetup() {}
+bool SakuraSetupBusy() {return false;}
 
 int main(int argc,char** argv) {
     assert(argc==2);
