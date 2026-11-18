@@ -123,3 +123,13 @@ Guiones editables: `local/work/spanish-translation`, 56 tablas, 29.725 entradas 
 ## Pruebas automáticas sin interrumpir al propietario
 
 Para probar el runtime, ejecutar directamente el binario aislado `sakura.exe`, con `--disc`, `--settings`, `--backup` absolutos y `SATRECOMP_WINDOW_HIDDEN=1`. No usar el launcher `--play` para un replay que no esté probando el launcher. Si se prueba el launcher, preparar un perfil privado válido y `SATURN_TAISEN_FIRST_HOME` absoluto antes de iniciarlo: un perfil ausente puede abrir el mensaje de configuración encima del juego del propietario. No matar procesos por nombre ni sobrescribir un ejecutable en uso. El 18 de noviembre se observó este aviso mientras una prueba de la preview española usaba `timeout … SaturnTaisenFirst.exe --play`; el launcher.ini español conservaba su disco configurado. Registro local: `local/work/coordination-current.json`.
+
+## Relevo del checkpoint de patches0046 y retratos201
+
+Las PR hasta19 están integradas en main `d7e94cd`; consultar siempre el HEAD actual. El SDK compartido coincide con el árbol compuesto0001..0046 del checkout del coordinador. Los cambios ya están exportados: no restaurar el SDK para acomodarlo a un config/dependencies.json antiguo de otro worktree. Traer los commits nuevos o usar el checkout actualizado, preservando cualquier cambio ajeno.
+
+Candidatos distintos, todos privados: `local/build/visual-fixes-candidate/sakura.exe` prueba presentación con614.024 bloques; `local/build/polish-test2-final/sakura.exe` combina el mismo host con674.023 y pasa las cargas9501/12000 de capítulos2/4. El CMake compartido recuperó su directorio de salida habitual, sin recompilar encima del exe del propietario. Antes de otro build, volver a comprobar procesos y elegir un destino aislado.
+
+El preparado más reciente contiene201 retratos y19 fondos, en `local/work/portrait-chapter1-third-review/prepared-hd`; el coordinador reprodujo sus404 archivos de retratos byte por byte desde el proyecto original191 y las diez aprobaciones hash-locked. Sigue pendiente probar las animaciones no observadas y las32 identidades restantes del capítulo1. T45 propone reordenado offline para00a1; todavía no aprobado ni implementado.
+
+Primer vídeo: usar el testigo capturado con el framebuffer; nunca inferir reproducción por una cabecera FILM residual o por ausencia de letras. Las fases y sus límites están en first-film-script-phase.md y first-film-transition-fix.md. El rótulo del episodio comparte cursor con la salida y se conserva por su capa de imagen. Las últimas correcciones no están en el ZIPtest.1 ni en otro ZIP aún.

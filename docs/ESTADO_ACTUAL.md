@@ -6,11 +6,11 @@ La prioridad es Saturn. **v0.2.0-test.1 ya está publicada como prueba y su ZIP 
 
 ## P0 — antes del siguiente ZIP de prueba
 
-- [x] **Menús tácticos:** solapamiento corregido en Mejorado, cinco pestañas y rutas de confirmación/cámara verificadas; revisión independiente sin bloqueadores y patch actualizado. Sigue en desarrollo, no en un ZIP entregado.
+- [x] **Menús tácticos:** solapamiento corregido en Mejorado, cinco pestañas y rutas de confirmación/cámara verificadas; revisión independiente sin bloqueadores y patch actualizado. Incluido en test.1; las regresiones posteriores conservan el ajuste.
 
 - [ ] **Ruta continua del capítulo 1:** alcanzar victoria del primer combate, salida, guardado y recarga sin saltos entre estados. Hay ataques y varios turnos probados; no hay todavía victoria/capítulo completo verificados.
 
-- [ ] **Cobertura AOT reproducible:** conservar y automatizar el descubrimiento de la familia de overlays K001–K019. La build local ampliada resuelve el bloqueo observado de Sumire en PC 060783FC; el ZIP viejo no contiene esa corrección. Comparar nativo con intérprete del mismo SDK sin llamarlo referencia independiente de Saturn.
+- [x] **Descubrimiento AOT reproducible de K001–K019:** integrado en PR6. Las entradas EVT02 y EVT06 ampliaron el candidato a674.023 bloques. El candidato combinado con patches38–46 repite las cargas de capítulos2/4:21.501 hashes yRGB iguales a la referencia, cero interpretados. Esto no certifica sus combates ni toda la campaña; test.1 conserva su código anterior.
 
 - [ ] **Panorámico por escena/transición:** cerrar huecos restantes hasta el final del capítulo, incluidos carga, intermedio, mapas, combate, fundidos y vuelta a título. El barrido de estados es cobertura parcial, no un recorrido completo.
 
@@ -18,9 +18,9 @@ La prioridad es Saturn. **v0.2.0-test.1 ya está publicada como prueba y su ZIP 
 
 - [ ] **Texto HD de diálogo:** integrar catálogo precargado y sincronización con la página/revelado real. El catálogo inglés ya está exportado localmente; todavía no es la fuente de texto del runtime. Revisar todas las líneas, desbordes, cambio de página, vibración/mezcla con tinta nativa y centrado interior.
 
-- [ ] **Opciones LIPS HD:** implementar placa de fondo que conserve sprites bajo el panel translúcido, reconocimiento del color seleccionado y transformación de escena correcta en Zoom. Las opciones siguen usando texto nativo; cambiar solo el límite Y produciría errores de composición.
+- [x] **Opciones LIPS HD de dos/tres filas inglesas:** PR16/patch0045, placa de glifos y clip propio en Zoom/conjunto. Diez perfiles conservan240hashes por escena y el cierre sin residuos. Faltan vencimiento natural y cobertura del resto de elecciones; aún sin paquete nuevo.
 
-- [ ] **Retratos/animaciones HD:** cubrir los pendientes del capítulo y mantener HD en parpadeo, boca, idle y mezclas VDP2. 81/123 identidades del capítulo tienen sustitución preparada; 42 siguen pendientes. Yoneda dispone de partes, pero se ha identificado fallback durante mezclas blancas; no afirmar que falte únicamente un fotograma de ojos.
+- [ ] **Retratos/animaciones HD:** cubrir los pendientes del capítulo y mantener HD en parpadeo, boca, idle y mezclas VDP2. 91/123 identidades del capítulo tienen sustitución preparada;32 siguen pendientes. Total201/304. Las nuevas revisiones fijan base y ambas tiras por hash; solo las observaciones runtime declaradas acreditan animación. La mezcla blanca probada de25/32 está corregida en PR9; quedan otras identidades y combinaciones.
 
 - [ ] **Vídeos PC:** extraer, identificar e integrar los equivalentes en el mod HD. No están acreditados como integrados. Preservar subtítulos/letras y sincronía; usar el área de imagen máxima en enteros.
 
@@ -85,3 +85,14 @@ La prioridad es Saturn. **v0.2.0-test.1 ya está publicada como prueba y su ZIP 
 [Handoff](HANDOFF.md) · [Progresión](research/chapter1-battle-progress.md) · [Transiciones](research/chapter1-wide-transitions.md) · [Referencia independiente de menús](research/tactical-menu-independent-reference.md) · [PixelGen v1](research/pixelgen-v1.md) · [Catálogo](research/dialogue-catalog.md) · [Retratos](research/portrait-animation-coverage.md).
 
 Actualizar esta lista al cerrar cada bloque. Marcar una tarea solo con la prueba correspondiente y anotar si el cambio sigue local o ya está empaquetado.
+
+## Checkpoint integrado posterior a test.1
+
+Main `d7e94cd` incluye los patches hasta0046 y los201 retratos revisados. El informe [HD_PROGRESS](HD_PROGRESS.md) separa preparación, integración y verificación. No hay porcentaje global verificado mientras falten denominadores y pruebas de todas las categorías.
+
+- PR11/13: panel floral continuo, texto de borde Sumire/María, cursor izquierdo del mapa y entrada directa aZoom durante el fundido al comedor.
+- PR16: texto HD de elecciones inglesas de dos/tres filas.
+- PR18: primera película de New Game con fondo limpio antes/después y vídeo ampliado;6201hashes y seis RGB nativos conservados. Pétalos16:9 y tarjeta del episodio siguen T33.
+- PR15/17/19: diez matches adicionales revisados, preparados de191 a201; animaciones solo verificadas donde consta evidencia.
+
+El candidato combinado de674.023 bloques está en `local/build/polish-test2-final/sakura.exe` del propietario, SHA256 `a12b26d1990cabf9c54da562e4f05a9c842c7078d1b5c8ae3fe935a426c91418`. Sus cargas de capítulo2/4 pasan9501/12000fotogramas respectivamente. No es un ZIP entregado; faltan empaquetado y traslado de esta revisión. Los vídeos PC, cuerpos/HUD equivalentes y RetroAchievements continúan pendientes.
