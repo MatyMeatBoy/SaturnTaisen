@@ -32,3 +32,5 @@ Stem match between PC SPR names and Saturn disc files (`pc-saturn-name-links.jso
 ### Caveat on BG name links (probe, 2026-11-18)
 
 `/SAKURA1/BG1001.BIN` (45,120 bytes, disc 1) starts `00 01 00 01` followed by zeros and has high byte entropy (256 distinct values). It does not decode as a linear 8 bpp bitmap (widths 256/288/320), as 8x8 4 bpp cells (offsets 0, 0x20, 0x40, 0x100), or with the game's LZ (`tools/es/red_lz.py`, starts 0/4/8/16). The PC counterpart `BG1001.SPR` is a 231 KB SPRED image. Until the Saturn BG format is decoded, treat the 712 name links as unverified candidates; the name may be shared by unrelated data. Next step: find which routine loads `BG*.BIN` (trace the SH-2 program) and decode it, then compare with the PC image.
+
+The Saturn `NC10.BIN` (104,528 bytes, all NC files share that size) starts `00 02` followed by a small table, then dense data; it does not decode as a plain bitmap or with `red_lz` at offsets 0-0x3e. Same next step: trace the loader.
