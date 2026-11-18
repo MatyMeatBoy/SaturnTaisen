@@ -65,3 +65,7 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [battle-story-inset-shadow.md](battle-story-inset-shadow.md): Prueba por capas de ausencia de sombra en la viñeta táctica.
 
 - [dialogue-voice-advance.md](dialogue-voice-advance.md): Pulsaciones A/B/C, voz real y comparación AOT/intérprete.
+
+## Traducción
+
+- [traduccion-espanol.md](traduccion-espanol.md) — parche al español: método japonés → inglés → español, formatos de diálogo, combate y menús, ISO con ranuras fijas.
