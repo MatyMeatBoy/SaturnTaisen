@@ -82,3 +82,5 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [first-film-transition-fix.md](first-film-transition-fix.md): Fase verificada del primer video, fondo limpio y prueba continua de6201fotogramas.
 
 - [first-film-script-phase.md](first-film-script-phase.md): Investigación del cursor de0100.BIN y límites de las fases sin imagen.
+
+- [RetroAchievements 16546 en Saturn](retroachievements-16546.md)
