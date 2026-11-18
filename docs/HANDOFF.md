@@ -173,3 +173,13 @@ Experimental T33 was left in `pendientes/T33-petal-transitions`, commit 7888d08.
 Private handoffs to resume only when requested: chapter1 `corridor-bridge/new-sumire-turn/finish.state` SHA f9780d38285655a7f54252b2856c56b886021a280e3bd7add757f630e51317de, backup 5c71f717…; new Sakura attack tested 3,199 hashes/RGB/SRAM matching, no victory on this route. Chapter2 `t30-chapter2-followup/maria-elimination/finish.state` SHA f1084a893b337712195d700b110855138e6f20b00104bd108742c7100302ca01; paired original SRAM 4c22bf1e…. PR35 documents the stretches; the later continuous test was canceled and is not presented as approved.
 
 Test.4 delivery published and checked. The final receipt is `docs/releases/v0.2.0-test.4-validation.json`. The ZIPs and the tag 4406c13… remain unchanged. No workers or own tests remain active. Goal paused due to the stop request; the campaign is not considered complete.
+
+## v0.2.2-alpha: the player's files are the only inputs
+
+The release no longer asks for prepared discs. `parches/` holds the language layers (differences only), `tools/taisen_setup.py` is shipped as `preparar-juego.exe`, and the launcher (patch0053) has a "Preparar juego" card, home switches for language, presentation, HD text and HD mode, and the frontend flags (`--rom`, `--language`, `--no-launcher`, `--setup`, `--fullscreen`, `--widescreen`, `--integration-info`, `--help`). `recomp-launcher.json` describes that surface.
+
+- Regenerate the layers after any change to the Spanish reference discs: `python -X utf8 tools/build_taisen_patches.py --output local/work/taisen-parches/v0.1`, then copy the four language layers and `parches.json` to `parches/`. The two video layers are release assets only (over GitHub's 100 MB file limit); pass their folder to `package_release.py --video-patches`.
+- After approving HD portraits run `python tools/build_hd_recipe.py`; `tests/test_taisen_setup.py` fails while the recipe is behind `config/hd-portrait-reviewed.json` or `docs/HD_PROGRESS.md`.
+- Launcher and helper for a package: `python tools/build_launcher.py --build-dir local/build/launcher-vNNN --output-dir local/build/vNNN-package-binaries --with-importer --with-setup`. The runtime is still chosen with `package_release.py --runtime`; v0.2.2-alpha ships the test.4 executable (674,182 blocks, patch0050), unchanged.
+- The helper accepts any container and recognizes what is already prepared (`game/discN/taisen.json` receipts, `hd-resources/prepared-manifest.json` stamp), so extracting a newer release over the folder rebuilds only what changed.
+- Test the launcher without disturbing the owner: `SaturnTaisen.exe --screenshot PREFIX --size 980x600` with an absolute `SATURN_TAISEN_FIRST_HOME`; it writes one picture per page and exits.

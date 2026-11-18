@@ -1,0 +1,651 @@
+diff --git a/launcher/CMakeLists.txt b/launcher/CMakeLists.txt
+index aae67805bef416fa8654e3e679f3690411a61ca8..19593d1723d04ad291c365a502ac8b334237eb52 100644
+--- a/launcher/CMakeLists.txt
++++ b/launcher/CMakeLists.txt
+@@ -20,7 +20,7 @@ set(LAUNCHER_GAME_EXE "${GAME_EXE}")
+ set(LAUNCHER_APP_ID "${APP_ID}")
+ set(LAUNCHER_HOME_ENV "${HOME_ENV}")
+ set(LAUNCHER_DISCLAIMER "${DISCLAIMER}")
+-set(LAUNCHER_PORT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/description.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_saves.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_hd.cpp)
++set(LAUNCHER_PORT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/description.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_saves.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_hd.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/sakura_setup.cpp)
+ # The game's version (its repository's VERSION, shown under its name) and, when its game.cfg names one
+ # (update_repo = owner/name), the GitHub repository whose releases the launcher updates itself from
+ # (recomp-common/launcher/src/update.h: the release carries an update-<system>.txt for each download)
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+index d6fe1ef71e6f658afcf970a6fc0e3c039cbf419b..e5f0c4ad3d0ce52cab67cd093a3b62e0766016b3 100644
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -7,6 +7,7 @@
+ #include "launcher.h"
+ #include "sakura_saves.h"
+ #include "sakura_hd.h"
++#include "sakura_setup.h"
+ #include "sakura_resources.h"
+ #include <stdexcept>
+ 
+@@ -267,9 +268,9 @@ const launcher::Description& launcher::describe() {
+             return std::string();
+         };
+         d.arguments = arguments;
+-        d.extra_home = [](launcher::PageContext& page) {DrawSakuraHd(page);DrawSakuraSaves(page);};
+-        d.extra_home_busy = SakuraHdBusy;
+-        d.shutdown = [] {ShutdownSakuraHd();ShutdownSakuraSaves();};
++        d.extra_home = [](launcher::PageContext& page) {DrawSakuraSetup(page);DrawSakuraHd(page);DrawSakuraSaves(page);};
++        d.extra_home_busy = [] {return SakuraSetupBusy() || SakuraHdBusy();};
++        d.shutdown = [] {ShutdownSakuraSetup();ShutdownSakuraHd();ShutdownSakuraSaves();};
+         d.saves_folder = true;
+         // (a custom soundtrack's files and discs: port/soundtrack.h)
+         static const std::string soundtrack_detail =
+diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..a3c52780ee81a4fca2a24eb80cf0f2682ba7c939
+--- /dev/null
++++ b/launcher/src/sakura_setup.cpp
+@@ -0,0 +1,217 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#include "sakura_setup.h"
++#include "game_process.h"
++#include "layout.h"
++#include "ui.h"
++#include <array>
++#include <fstream>
++#include <memory>
++#include <mutex>
++namespace {
++struct SetupState {
++    std::mutex mutex;
++    bool dialog=false,closed=false,finished=true,error=false;
++    std::string pending;
++    std::array<char,2048> source{};
++    std::unique_ptr<GameProcess> worker;
++    std::filesystem::path log;
++    std::string message,progress;
++    Uint64 lastRead=0;
++    int language=0; // 0 Español, 1 English
++};
++std::shared_ptr<SetupState> state;
++
++void Picked(void* userdata,const char* const* files,int) {
++    std::unique_ptr<std::shared_ptr<SetupState>> owner(static_cast<std::shared_ptr<SetupState>*>(userdata));
++    const auto one=*owner;std::lock_guard<std::mutex> lock(one->mutex);
++    if(!one->closed && files && files[0])one->pending=files[0];
++    one->dialog=false;
++}
++std::filesystem::path LanguageDisc(const std::filesystem::path& program,int language) {
++    return program/"game"/(language==0?"disc1-es":"disc1")/"game.cue";
++}
++bool Exists(const std::filesystem::path& file) {std::error_code error;return std::filesystem::is_regular_file(file,error);}
++std::string Utf8(const std::filesystem::path& path) {const auto text=path.u8string();return std::string(text.begin(),text.end());}
++// The helper's last "PROGRESO n text" or "ERROR text" line.
++void ReadProgress(SetupState& s) {
++    std::ifstream input(s.log,std::ios::binary);std::string line,last,failure;
++    while(std::getline(input,line)) {
++        if(!line.empty() && line.back()=='\r')line.pop_back();
++        if(line.rfind("PROGRESO ",0)==0)last=line.substr(9);
++        else if(line.rfind("ERROR ",0)==0)failure=line.substr(6);
++    }
++    if(!failure.empty()) {s.progress=failure;return;}
++    const auto space=last.find(' ');
++    if(space!=std::string::npos)s.progress=last.substr(0,space)+" % · "+last.substr(space+1);
++}
++// A round "bubble" switch: small capitals over its value, tinted while on. Its words always fit: the value
++// takes a smaller size before it would be cut.
++bool Bubble(const char* id,const char* title,const char* value,bool on,float width,bool enabled) {
++    const auto& p=ui::palette();const float height=ui::px(62);
++    const ImVec2 at=ImGui::GetCursorScreenPos();
++    ImGui::PushID(id);
++    ImGui::BeginDisabled(!enabled);
++    const bool pressed=ImGui::InvisibleButton("bubble",ImVec2(width,height),ImGuiButtonFlags_EnableNav);
++    const bool hovered=ImGui::IsItemHovered(),focused=ImGui::IsItemFocused();
++    ImGui::EndDisabled();
++    ImGui::PopID();
++    auto* draw=ImGui::GetWindowDrawList();const float round=height*.5f,alpha=enabled?1.0f:.55f;
++    draw->AddRectFilled(at+ImVec2(0,ui::px(4)),at+ImVec2(width,height+ui::px(4)),IM_COL32(86,38,52,20),round);
++    draw->AddRectFilled(at,at+ImVec2(width,height),ui::fade(on?p.accent_soft:p.surface,alpha),round);
++    draw->AddRectFilled(at,at+ImVec2(width,height),ui::fade(p.surface,on?.35f:0.0f),round);
++    // (the shine of a bubble: a soft light along the top and a small glint)
++    draw->AddRectFilled(at+ImVec2(round*.7f,ui::px(5)),at+ImVec2(width-round*.7f,ui::px(12)),IM_COL32(255,255,255,on?120:150),ui::px(4));
++    draw->AddCircleFilled(at+ImVec2(width-round*.75f,round*.62f),ui::px(4),IM_COL32(255,255,255,on?150:110));
++    draw->AddRect(at,at+ImVec2(width,height),ui::fade(on?p.primary:p.separator,(hovered||focused)?1.0f:.75f),round,ui::px(on?2.0f:1.2f));
++    draw->AddCircleFilled(at+ImVec2(round*.78f,height*.5f),ui::px(6),ui::fade(on?p.primary:p.tertiary,alpha));
++    const float left=round*.78f+ui::px(14),room=width-left-ui::px(14);
++    ImGui::SetCursorScreenPos(at+ImVec2(left,ui::px(12)));
++    ui::text(title,ui::Font::Semibold,10.5f,ui::fade(p.secondary,alpha));
++    float size=14.5f;
++    for(;size>10.0f;size-=.5f) {
++        ImGui::PushFont(nullptr,ui::px(size));const float wide=ImGui::CalcTextSize(value).x;ImGui::PopFont();
++        if(wide<=room)break;
++    }
++    ImGui::SetCursorScreenPos(at+ImVec2(left,ui::px(29)));
++    ui::text(value,ui::Font::Semibold,size,ui::fade(on?p.primary:p.text,alpha));
++    ImGui::SetCursorScreenPos(at+ImVec2(0,height+ui::px(6)));
++    ImGui::Dummy(ImVec2(width,0));
++    return pressed && enabled;
++}
++void Save(launcher::PageContext& page,std::initializer_list<std::pair<const char*,const char*>> values) {
++    for(const auto& value:values)page.settings.set("features",value.first,value.second);
++    if(page.settings.get("features","preset")!="custom")page.settings.set("features","preset","custom");
++    page.settings.save();
++}
++}
++void ShutdownSakuraSetup() {
++    if(!state)return;
++    {std::lock_guard<std::mutex> lock(state->mutex);state->closed=true;}
++    state->worker.reset();state.reset();
++}
++bool SakuraSetupBusy() {return state && state->worker && state->worker->running();}
++void DrawSakuraSetup(launcher::PageContext& page) {
++    if(!state) {
++        state=std::make_shared<SetupState>();
++        state->language=page.prefs.get("sakura","language")=="en"?1:0;
++        SDL_strlcpy(state->source.data(),page.prefs.get("sakura","setup_source").c_str(),state->source.size());
++    }
++    auto& s=*state;bool dialog=false;
++    {
++        std::lock_guard<std::mutex> lock(s.mutex);dialog=s.dialog;
++        if(!s.pending.empty()) {
++            if(s.pending.size()<s.source.size())SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());
++            s.pending.clear();
++        }
++    }
++    const bool running=s.worker && s.worker->running();
++    if(running && SDL_GetTicks()-s.lastRead>400) {s.lastRead=SDL_GetTicks();ReadProgress(s);}
++    if(s.worker && !running && !s.finished) {
++        s.finished=true;s.error=s.worker->exit_code()!=0;ReadProgress(s);
++        if(s.error)s.message=s.progress.empty()?"No se pudo preparar el juego. Revisa logs/preparar-juego.log.":s.progress;
++        else {
++            s.message="Juego preparado. Ya puedes jugar.";
++            page.prefs.load();page.settings.load(); // the helper wrote the disc, the language and first-run defaults
++            s.language=page.prefs.get("sakura","language")=="en"?1:0;
++            const auto disc=LanguageDisc(page.program_folder,s.language);
++            if(Exists(disc) && page.use_file)page.use_file(Utf8(disc));
++        }
++        s.progress.clear();
++    }
++    const bool english=Exists(LanguageDisc(page.program_folder,1)),spanish=Exists(LanguageDisc(page.program_folder,0));
++    const bool pack=Exists(page.program_folder/"hd-resources"/"hd-pack.stfp") || !page.prefs.get("sakura","pc_assets").empty();
++    std::error_code ignored;
++    const bool folder=std::filesystem::is_directory(page.program_folder/"discos",ignored);
++    const bool locked=running || dialog || page.playing;
++    const auto& p=ui::palette();
++
++    // ---- the four switches of the home page ----
++    const bool enhanced=page.settings.get("features","presentation_mode")=="1";
++    const bool sharp=enhanced && page.settings.get("features","text_style")!="1";
++    const bool hd=enhanced && pack && page.settings.get("features","pc_hd_backgrounds")!="1" && page.settings.get("features","pc_hd_portraits")!="1";
++    const bool stacked=page.width<ui::px(520);
++    const float gap=ui::px(10),each=stacked?(page.width-gap)*.5f:(page.width-gap*3)*.25f;
++    const ImVec2 row=ImGui::GetCursorScreenPos();
++    auto place=[&](int index) {
++        ImGui::SetCursorScreenPos(row+(stacked?ImVec2((index%2)*(each+gap),(index/2)*ui::px(72)):ImVec2(index*(each+gap),0)));
++    };
++    place(0);
++    if(Bubble("language","IDIOMA",s.language==0?"Español":"English",true,each,!locked && (english || spanish))) {
++        const int wanted=1-s.language;
++        if(Exists(LanguageDisc(page.program_folder,wanted))) {
++            s.language=wanted;
++            page.prefs.set("sakura","language",wanted==0?"es":"en");page.prefs.save();
++            if(page.use_file)page.use_file(Utf8(LanguageDisc(page.program_folder,wanted)));
++            s.message.clear();
++        } else {s.error=true;s.message="Ese idioma aún no está preparado: pulsa Preparar.";}
++    }
++    place(1);
++    if(Bubble("presentation","PRESENTACIÓN",enhanced?"Mejorada":"Original",enhanced,each,!page.playing))
++        Save(page,{{"presentation_mode",enhanced?"0":"1"}});
++    place(2);
++    if(Bubble("text","TEXTO HD",sharp?"Activado":"Desactivado",sharp,each,!page.playing)) {
++        if(sharp)Save(page,{{"text_style","1"}});
++        else Save(page,{{"text_style","0"},{"presentation_mode","1"}}); // (HD text belongs to the enhanced presentation)
++    }
++    place(3);
++    if(Bubble("hd","MODO HD",!pack?"Sin preparar":hd?"Activado":"Desactivado",hd,each,!page.playing)) {
++        if(!pack) {s.error=true;s.message="El modo HD necesita tu edición de PC: añádela abajo y pulsa Preparar.";}
++        else if(hd)Save(page,{{"pc_hd_backgrounds","1"},{"pc_hd_portraits","1"}});
++        else Save(page,{{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},{"hd_preload","1"},{"presentation_mode","1"}});
++    }
++    ImGui::SetCursorScreenPos(row+ImVec2(0,ui::px(stacked?144:72)));
++    ImGui::Dummy(ImVec2(page.width,0));
++    ui::text("Modo HD reúne fondos y retratos de tu edición de PC; con Texto HD solo actúa en la presentación Mejorada.",
++             ui::Font::Regular,ui::size::kSmall,p.secondary,page.width);
++
++    // ---- preparing the game from the player's own files ----
++    ui::gap(18);ui::text("PREPARAR JUEGO",ui::Font::Semibold,ui::size::kDetail,p.secondary);ui::gap(8);
++    {
++        layout::Card card(page.width);
++        layout::row(page.width,"Tus archivos",
++                    "Tus dos discos de Saturn (originales o ya con la traducción inglesa v2.1) y, para el modo HD, tu edición de PC. "
++                    "Elige la carpeta donde están o cualquiera de ellos: el resto se busca al lado.",300,36,[&] {
++            ImGui::BeginDisabled(locked);
++            ui::text_field("##sakura-setup-source",s.source.data(),s.source.size(),folder?"Carpeta «discos»":"Sin elegir",300);
++            ImGui::EndDisabled();
++        });
++        layout::inset_separator(page.width);
++        const bool done=english && spanish;
++        layout::row(page.width,running?"Preparando…":done?"Todo preparado":"Preparar",
++                    done?"Lo ya preparado se reconoce y se conserva; solo se rehace lo que cambió.":
++                         "Se trabaja sobre una copia; tus archivos solo se leen. Tarda unos minutos la primera vez.",300,36,[&] {
++            if(ui::button("Carpeta…",ui::Kind::Secondary,92,!locked)) {
++                {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
++                SDL_ShowOpenFolderDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,nullptr,false);
++            }
++            ImGui::SameLine(0,ui::px(6));
++            if(ui::button("Archivo…",ui::Kind::Secondary,92,!locked)) {
++                static const SDL_DialogFileFilter filters[]={{"Discos e imágenes","cue;iso;bin;img;mdf;zip"}};
++                {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
++                SDL_ShowOpenFileDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,filters,1,nullptr,false);
++            }
++            ImGui::SameLine(0,ui::px(6));
++            if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,(s.source[0] || folder || done) && !locked)) {
++                page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
++                std::vector<std::string> args={"prepare","--language",s.language==0?"es":"en","--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
++                if(s.source[0]) {args.push_back("--rom");args.push_back(s.source.data());}
++                else if(folder) {args.push_back("--folder");args.push_back(Utf8(page.program_folder/"discos"));}
++                s.finished=false;s.error=false;s.message.clear();s.progress="0 % · Iniciando…";
++                std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
++                s.log=page.folder/"logs"/"preparar-juego.log";s.worker=std::make_unique<GameProcess>();
++                if(!s.worker->start(page.program_folder/"preparar-juego.exe",args,page.program_folder,s.message,s.log)) {
++                    s.worker.reset();s.finished=true;s.error=true;
++                    if(s.message.empty())s.message="No se pudo iniciar preparar-juego.exe.";
++                }
++            }
++        });
++        card.end();
++    }
++    ui::gap(8);
++    if(running)ui::text(s.progress.c_str(),ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);
++    else if(!s.message.empty())ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.error?p.danger:p.success,page.width);
++    else {
++        const std::string status=std::string("Inglés: ")+(english?"listo":"falta")+" · Español: "+(spanish?"listo":"falta")+" · Modo HD: "+(pack?"listo":"falta tu edición de PC");
++        ui::text(status.c_str(),ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);
++    }
++}
+diff --git a/launcher/src/sakura_setup.h b/launcher/src/sakura_setup.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..e2cbeae88342855983761efbb63b45754b9e4208
+--- /dev/null
++++ b/launcher/src/sakura_setup.h
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "launcher.h"
++// "Preparar juego": the player's two original discs and, optionally, their PC edition image go in; the
++// bundled preparar-juego helper applies the release's patches and builds the HD pack. Nothing is read
++// from the network and the player's files are only read.
++void DrawSakuraSetup(launcher::PageContext& page);
++void ShutdownSakuraSetup();
++bool SakuraSetupBusy();
+diff --git a/recomp-common/launcher/src/app.cpp b/recomp-common/launcher/src/app.cpp
+index 07458138d421affcaebcdc3bbd4e8b01c8c169fa..66a1c30e370b886ab5cca66ccbdc1ef3ea7ab38d 100644
+--- a/recomp-common/launcher/src/app.cpp
++++ b/recomp-common/launcher/src/app.cpp
+@@ -29,6 +29,7 @@
+ #include "steam.h"
+ #include "ui.h"
+ #include "presentation_cards.h"
++#include "run_program.h"
+ #include "../../launch_ready.h"
+ 
+ using launcher::FileCheck;
+@@ -57,6 +58,111 @@ float page_padding_top() {
+ constexpr float kContentMaxWidth = 720.0f;
+ constexpr size_t kAnyGame = static_cast<size_t>(-1);  // (a file or folder for whichever game takes it)
+ 
++// Words that were read as Windows-1252 when they were UTF-8 (once or several times over, as some of this game's
++// feature descriptions were when their source was saved) are put back. A field that is already right stays as it is.
++bool valid_utf8(const std::string& text) {
++    for (size_t i = 0; i < text.size();) {
++        const unsigned char c = static_cast<unsigned char>(text[i]);
++        const size_t more = c < 0x80 ? 0 : (c & 0xE0) == 0xC0 ? 1 : (c & 0xF0) == 0xE0 ? 2 : (c & 0xF8) == 0xF0 ? 3 : 9;
++        if (more == 9 || i + more >= text.size() + (more ? 0 : 1)) {
++            return false;
++        }
++        for (size_t k = 1; k <= more; k++) {
++            if ((static_cast<unsigned char>(text[i + k]) & 0xC0) != 0x80) {
++                return false;
++            }
++        }
++        i += more + 1;
++    }
++    return true;
++}
++std::string repair_field(std::string text) {
++    static const unsigned high[32] = {0x20AC, 0x81, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 0x02C6, 0x2030, 0x0160,
++                                      0x2039, 0x0152, 0x8D, 0x017D, 0x8F, 0x90, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022,
++                                      0x2013, 0x2014, 0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x9D, 0x017E, 0x0178};
++    for (int pass = 0; pass < 4 && valid_utf8(text); pass++) {
++        std::string bytes;
++        bool changed = false, known = true;
++        for (size_t i = 0; i < text.size() && known;) {
++            const unsigned char c = static_cast<unsigned char>(text[i]);
++            unsigned point = c;
++            size_t length = 1;
++            if ((c & 0xE0) == 0xC0) {
++                point = (c & 31u) << 6 | (static_cast<unsigned char>(text[i + 1]) & 63u);
++                length = 2;
++            } else if ((c & 0xF0) == 0xE0) {
++                point = (c & 15u) << 12 | (static_cast<unsigned char>(text[i + 1]) & 63u) << 6 | (static_cast<unsigned char>(text[i + 2]) & 63u);
++                length = 3;
++            } else if (c >= 0x80) {
++                known = false;
++            }
++            i += length;
++            if (point < 0x80) {
++                bytes += static_cast<char>(point);
++            } else if (point >= 0xA0 && point <= 0xFF) {
++                bytes += static_cast<char>(point);
++                changed = true;
++            } else {
++                int byte = -1;
++                for (int k = 0; k < 32; k++) {
++                    if (high[k] == point) {
++                        byte = 0x80 + k;
++                    }
++                }
++                known = byte >= 0;
++                bytes += static_cast<char>(byte);
++                changed = true;
++            }
++        }
++        if (!known || !changed || !valid_utf8(bytes)) {
++            break;
++        }
++        text = bytes;
++    }
++    return text;
++}
++std::string repair_feature_text(const std::string& list) {
++    std::string out, field;
++    for (const char c : list) {
++        if (c == '\t' || c == '\n' || c == '|') {
++            out += repair_field(field);
++            out += c;
++            field.clear();
++        } else {
++            field += c;
++        }
++    }
++    return out + repair_field(field);
++}
++
++// The page's texture: soap-bubble rings and a fine grain, the same every frame.
++void bubbly_backdrop(ImDrawList* draw, ImVec2 from, ImVec2 to, ImU32 tint, ImU32 light) {
++    unsigned seed = 0x5A4B1997u;
++    auto next = [&seed] {
++        seed = seed * 1664525u + 1013904223u;
++        return static_cast<float>(seed >> 8) / 16777216.0f;
++    };
++    const float w = to.x - from.x, h = to.y - from.y;
++    if (w <= 0 || h <= 0) {
++        return;
++    }
++    draw->PushClipRect(from, to, true);
++    for (int i = 0; i < 26; i++) {
++        const ImVec2 center(from.x + next() * w, from.y + next() * h);
++        const float radius = ui::px(10.0f + next() * 44.0f);
++        draw->AddCircleFilled(center, radius, ui::fade(tint, 0.030f + next() * 0.035f), 40);
++        draw->AddCircle(center, radius, ui::fade(light, 0.35f), 40, ui::px(1.0f));
++        draw->AddCircleFilled(center + ImVec2(-radius * 0.38f, -radius * 0.42f), radius * 0.13f, ui::fade(light, 0.55f), 12);
++    }
++    const float step = ui::px(7.0f);
++    for (float y = from.y + step * 0.5f; y < to.y; y += step) {
++        for (float x = from.x + (static_cast<int>((y - from.y) / step) % 2 ? step * 0.5f : 0.0f); x < to.x; x += step) {
++            draw->AddRectFilled(ImVec2(x, y), ImVec2(x + 1.0f, y + 1.0f), ui::fade(tint, 0.045f));
++        }
++    }
++    draw->PopClipRect();
++}
++
+ void sakura_flower(ImDrawList* draw, ImVec2 center, float radius, ImU32 color) {
+     for (int petal=0;petal<5;petal++) {
+         const float angle=petal*1.256637f;
+@@ -363,6 +469,22 @@ bool prepare_folders(bool ask) {
+     return true;
+ }
+ 
++int frontend_setup(const std::string& command, const std::vector<std::string>& args, std::string* output) {
++    const std::filesystem::path helper = base_path() / "preparar-juego.exe";
++    std::error_code error;
++    if (!std::filesystem::is_regular_file(helper, error)) {
++        return -1;
++    }
++    auto text = [](const std::filesystem::path& path) {
++        const auto utf8 = path.u8string();
++        return std::string(utf8.begin(), utf8.end());
++    };
++    std::vector<std::string> all = {command, "--home", text(player_folder(LAUNCHER_GAME_NAME, LAUNCHER_HOME_ENV)),
++                                    "--program", text(base_path())};
++    all.insert(all.end(), args.begin(), args.end());
++    return launcher::run_program(helper, all, output);
++}
++
+ int play_directly(const std::string& id, const std::vector<std::string>& extra) {
+     // Straight into the game with the file chosen earlier (e.g. a Steam shortcut in Game Mode).
+     std::vector<Target> all = targets();
+@@ -852,6 +974,7 @@ launcher::PageContext App::context(float width) {
+     Slot& one = slot();
+     launcher::PageContext context{width, window_, prefs_, one.settings, one.folder, program_folder_, one.game.running(), one.game.exit_code(), one.play_error, {}};
+     context.play = [this] { play(slot_); };
++    context.use_file = [this](const std::string& path) { use_game_file(slot_, path); };
+     return context;
+ }
+ 
+@@ -1143,7 +1266,7 @@ void App::load_features(Slot& one) {
+         one.features_error = "Falta el programa del juego junto al launcher.";
+         return;
+     }
+-    one.features = recomp::ParseFeatureList(GameProcess::output_of(one.program(), {"--list-features"}));
++    one.features = recomp::ParseFeatureList(repair_feature_text(GameProcess::output_of(one.program(), {"--list-features"})));
+ }
+ 
+ // A collection's features that more than one of its games (those here) has, by the same name and with the same
+@@ -1375,6 +1498,8 @@ void App::frame() {
+     ImGui::GetWindowDrawList()->AddRectFilled(viewport->Pos + ImVec2(px(sidebar_width()) - 1.0f, 0), viewport->Pos + ImVec2(px(sidebar_width()), height),
+                                               p.separator);
+     auto* theme=ImGui::GetWindowDrawList();
++    bubbly_backdrop(theme,viewport->Pos+ImVec2(px(sidebar_width()),0),viewport->Pos+viewport->Size,p.primary,IM_COL32(255,255,255,255));
++    bubbly_backdrop(theme,viewport->Pos,viewport->Pos+ImVec2(px(sidebar_width())-1.0f,height),p.accent,IM_COL32(255,255,255,255));
+     sakura_flower(theme,viewport->Pos+ImVec2(px(74),height-px(120)),px(48),ui::fade(p.primary,.12f));
+     sakura_flower(theme,viewport->Pos+ImVec2(px(175),height-px(220)),px(25),ui::fade(p.accent,.20f));
+     theme->AddLine(viewport->Pos+ImVec2(px(24),px(92)),viewport->Pos+ImVec2(px(sidebar_width()-24),px(92)),ui::fade(p.accent,.35f),px(1));
+@@ -2830,7 +2955,7 @@ void App::sakura_art(float width) {
+     const ImVec2 at = ImGui::GetCursorScreenPos();
+     const bool pair = false;
+     const float gap=px(16), pad=px(12), imageW=(width-pad*2-(pair?gap:0))/(pair?2:1);
+-    const float imageH=std::min(px(208),imageW*0.7f), h=imageH+pad*2;
++    const float imageH=std::min(px(104),imageW*0.7f), h=imageH+pad*2;
+     auto* draw=ImGui::GetWindowDrawList();
+     draw->AddRectFilled(at+ImVec2(0,px(4)),at+ImVec2(width,h+px(4)),IM_COL32(86,38,52,18),px(24));
+     draw->AddRectFilled(at,at+ImVec2(width,h),p.surface,px(24));
+@@ -2855,7 +2980,7 @@ void App::sakura_art(float width) {
+         }
+     }
+     ImGui::Dummy(ImVec2(width,h));
+-    ui::gap(20);
++    ui::gap(14);
+ }
+ 
+ void App::game_page(float width) {
+@@ -2868,6 +2993,10 @@ void App::game_page(float width) {
+             if(mode_previews_[i]) break;
+         }
+     }
++    bool ready = play_button(0, width);
++    ui::gap(16);
++    if (about_.extra_home) { auto page=context(width); about_.extra_home(page); }
++    ui::gap(26);
+     int presentation=slots_[0]->settings.get("features","presentation_mode")=="1"?1:0;
+     ui::text("ELIGE TU PRESENTACIÓN",Font::Semibold,13,ui::palette().primary);
+     ui::gap(10);
+@@ -2876,14 +3005,11 @@ void App::game_page(float width) {
+         slots_[0]->settings.save();
+     }
+     ui::text("Podrás confirmarlo al iniciar y cambiarlo desde el menú del juego.",Font::Regular,12,ui::palette().secondary,width);
+-    ui::gap(18);
+-    bool ready = play_button(0, width);
+     ui::gap(28);
+ #ifdef LAUNCHER_UPDATE_REPO
+     update_card(width, true);
+ #endif
+     file_card(0, width);
+-    if (about_.extra_home) { auto page=context(width); about_.extra_home(page); }
+     display_cards(0, width);
+     play_cards(0, width, ready);
+     files_card(width);
+diff --git a/recomp-common/launcher/src/app.h b/recomp-common/launcher/src/app.h
+index 5ef0eafaff97a5e0e6aa5e5189be753552e44804..58c6684f17183782b414f9845be903dea9a2d3bb 100644
+--- a/recomp-common/launcher/src/app.h
++++ b/recomp-common/launcher/src/app.h
+@@ -42,6 +42,11 @@ int play_directly(const std::string& id, const std::vector<std::string>& extra =
+ // player is asked (`ask`) whether what the system's folders have is copied there; nothing is moved or written over.
+ bool prepare_folders(bool ask);
+ 
++// A frontend's flags on the launcher (--rom, --language, --fullscreen, --widescreen, --integration-info,
++// --help) go to the port's setup helper beside the launcher, with the player's folder: its exit code
++// (-1: this port has no helper) and what it printed.
++int frontend_setup(const std::string& command, const std::vector<std::string>& args, std::string* output);
++
+ class App {
+ public:
+     App(SDL_Window* window);
+diff --git a/recomp-common/launcher/src/launcher.h b/recomp-common/launcher/src/launcher.h
+index b7a1770c2057cefbadbca9f317299709a94f85dc..b7b21bdce62acf157fac2752e02ad90346da98c5 100644
+--- a/recomp-common/launcher/src/launcher.h
++++ b/recomp-common/launcher/src/launcher.h
+@@ -107,6 +107,7 @@ struct PageContext {
+     int exit_code;                               // of its last run
+     const std::string &play_error;               // why it did not start, or ""
+     std::function<void()> play;                  // starts the game with the port's `arguments`
++    std::function<void(const std::string&)> use_file; // makes this the game file now (checked as a chosen one)
+ };
+ 
+ // A page of the port's own, in the sidebar before the launcher's pages
+diff --git a/recomp-common/launcher/src/layout.h b/recomp-common/launcher/src/layout.h
+index 4671765f2da80994647b6bc8c566cc60308c02f0..2eec6e3591648e3fe3483b8f0d16c242da7f3018 100644
+--- a/recomp-common/launcher/src/layout.h
++++ b/recomp-common/launcher/src/layout.h
+@@ -28,11 +28,14 @@ public:
+         const ui::Palette& p = ui::palette();
+         ImVec2 end(start_.x + width_, ImGui::GetCursorScreenPos().y);
+         list_->ChannelsSetCurrent(0);
+-        list_->AddRectFilled(start_ + ImVec2(0,ui::px(3)), end + ImVec2(0,ui::px(3)), IM_COL32(75,32,48,14), ui::px(24));
+-        list_->AddRectFilled(start_, end, p.surface, ui::px(24));
++        const float round = ui::px(26);
++        list_->AddRectFilled(start_ + ImVec2(0,ui::px(7)), end + ImVec2(0,ui::px(7)), IM_COL32(86,38,52,9), round);
++        list_->AddRectFilled(start_ + ImVec2(0,ui::px(3)), end + ImVec2(0,ui::px(3)), IM_COL32(86,38,52,16), round);
++        list_->AddRectFilled(start_, end, p.surface, round);
++        list_->AddRect(start_ + ImVec2(1,1), end - ImVec2(1,1), IM_COL32(255,255,255,150), round, std::max(1.0f, ui::px(1.5f)));
+         if (highlight_) {
+-            list_->AddRectFilled(start_, end, p.accent_soft, ui::px(24));
+-            list_->AddRect(start_, end, p.accent, ui::px(24), std::max(1.0f, ui::px(1.5f)));
++            list_->AddRectFilled(start_, end, p.accent_soft, round);
++            list_->AddRect(start_, end, p.accent, round, std::max(1.0f, ui::px(1.5f)));
+         }
+         list_->ChannelsMerge();
+     }
+@@ -96,7 +99,7 @@ inline void heading(const char* title, const char* intro, float width) {
+         ui::gap(8);
+         ui::text(intro, ui::Font::Regular, ui::size::kLead, p.secondary, std::min(width, ui::px(620)));
+     }
+-    ui::gap(26);
++    ui::gap(18);
+ }
+ 
+ // The small capitals over a card.
+diff --git a/recomp-common/launcher/src/main.cpp b/recomp-common/launcher/src/main.cpp
+index 5d8b81c4019971c65516954a7aa0b11aa7e911bb..ded4d1fbd870eaaa0edad07bb54bf0ad5e3771a2 100644
+--- a/recomp-common/launcher/src/main.cpp
++++ b/recomp-common/launcher/src/main.cpp
+@@ -256,6 +256,9 @@ int main(int argc, char** argv) {
+     bool play = false;
+     std::string play_id, page_id;
+     std::vector<std::string> extra;  // (after --: the game's)
++    // A frontend's flags (RecompLauncher / Easy Setup): the player's files and choices, set up before anything opens
++    std::vector<std::string> frontend;
++    bool integration_info = false, help = false;
+     int width = 980, height = 660;
+     for (int i = 1; i < argc; i++) {
+         if (std::strcmp(argv[i], "--") == 0) {
+@@ -277,6 +280,20 @@ int main(int argc, char** argv) {
+             }
+         } else if (std::strcmp(argv[i], "--page") == 0 && i + 1 < argc) {
+             page_id = argv[++i];
++        } else if (std::strcmp(argv[i], "--no-launcher") == 0) {
++            play = true;
++        } else if (std::strcmp(argv[i], "--setup") == 0) {
++            play = false;  // (the launcher itself is the setup screen)
++        } else if (std::strcmp(argv[i], "--integration-info") == 0) {
++            integration_info = true;
++        } else if (std::strcmp(argv[i], "--help") == 0 || std::strcmp(argv[i], "-h") == 0) {
++            help = true;
++        } else if (std::strcmp(argv[i], "--fullscreen") == 0) {
++            frontend.push_back(argv[i]);
++        } else if ((std::strcmp(argv[i], "--rom") == 0 || std::strcmp(argv[i], "--language") == 0 ||
++                    std::strcmp(argv[i], "--widescreen") == 0) && i + 1 < argc) {
++            frontend.push_back(argv[i]);
++            frontend.push_back(argv[++i]);
+         }
+     }
+ #ifdef LAUNCHER_VERSION
+@@ -288,6 +305,24 @@ int main(int argc, char** argv) {
+         SDL_Quit();
+         return 1;
+     }
++    if (integration_info || help || !frontend.empty()) {
++        std::string output;
++        const int code = frontend_setup(integration_info ? "info" : help ? "help" : "frontend", frontend, &output);
++        if (integration_info || help) {
++            std::fputs(output.c_str(), stdout);
++            std::fflush(stdout);
++            SDL_Quit();
++            return code < 0 ? 1 : code;
++        }
++        if (code > 0) {  // (-1: no helper in this port; the flags are then ignored)
++            const size_t at = output.rfind("ERROR ");
++            const std::string message = at == std::string::npos ? output : output.substr(at + 6);
++            std::fputs(output.c_str(), stderr);
++            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, LAUNCHER_GAME_NAME, message.c_str(), nullptr);
++            SDL_Quit();
++            return code;
++        }
++    }
+     if (play) {
+         // Straight into the game, e.g. from a Steam shortcut in Game Mode.
+         int code = play_directly(play_id, extra);
+diff --git a/recomp-common/launcher/src/ui.cpp b/recomp-common/launcher/src/ui.cpp
+index fa7ca9e6d617ab328f4fe328069549ed5b420c47..6f2e06b3e840e0897e00f3cb1dd3997074887fdc 100644
+--- a/recomp-common/launcher/src/ui.cpp
++++ b/recomp-common/launcher/src/ui.cpp
+@@ -311,7 +311,15 @@ bool button(const char* label, Kind kind, float width, bool enabled, float heigh
+     }
+     float alpha = enabled ? 1.0f : 0.4f;
+     ImRect shown = pressed_rect(rect, press);
+-    window->DrawList->AddRectFilled(shown.Min, shown.Max, fade(fill, alpha), (shown.Max.y - shown.Min.y) * 0.5f);
++    const float pill = (shown.Max.y - shown.Min.y) * 0.5f;
++    if (kind != Kind::Ghost) {
++        window->DrawList->AddRectFilled(shown.Min + ImVec2(0, px(2)), shown.Max + ImVec2(0, px(3)), IM_COL32(86, 38, 52, enabled ? 26 : 8), pill);
++    }
++    window->DrawList->AddRectFilled(shown.Min, shown.Max, fade(fill, alpha), pill);
++    if (kind != Kind::Ghost) {  // (the shine of a bubble)
++        window->DrawList->AddRectFilled(shown.Min + ImVec2(pill * 0.8f, px(3)), ImVec2(shown.Max.x - pill * 0.8f, shown.Min.y + px(8)),
++                                        IM_COL32(255, 255, 255, kind == Kind::Primary ? 46 : 120), px(3));
++    }
+     ImVec2 at(std::round(rect.Min.x + (box.x - label_size.x) * 0.5f), std::round(rect.Min.y + (box.y - label_size.y) * 0.5f));
+     window->DrawList->AddText(at, fade(ink, alpha), label, end);
+     pop_font();
+@@ -367,8 +375,15 @@ bool dropdown(const char* id_text, const std::vector<std::string>& labels, int&
+     bool open = ImGui::IsPopupOpen(popup, ImGuiPopupFlags_None);
+     float hover = animate(id + 1, hovered || open ? 1.0f : 0.0f, 22.0f);
+     window->DrawList->AddRectFilled(rect.Min, rect.Max, mix(p.control, p.control_hover, hover), px(18));
+-    push_font(Font::Regular, size::kBody);
+     const char* current = index >= 0 && index < static_cast<int>(labels.size()) ? labels[static_cast<size_t>(index)].c_str() : "";
++    float fitted = size::kBody;  // (long words take a smaller size before they would leave the control)
++    push_font(Font::Regular, fitted);
++    const float room = box.x - px(42);
++    if (const float wide = ImGui::CalcTextSize(current).x; wide > room && wide > 0.0f) {
++        pop_font();
++        fitted = std::max(9.5f, fitted * room / wide);
++        push_font(Font::Regular, fitted);
++    }
+     float line = ImGui::GetFontSize();
+     window->DrawList->AddText(ImVec2(rect.Min.x + px(14), std::round(rect.Min.y + (box.y - line) * 0.5f)), p.text, current);
+     pop_font();

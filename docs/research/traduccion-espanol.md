@@ -46,19 +46,22 @@ Resolved by construction, with no code changes: `local/deps/satrecomp/port/glyph
 - `tools/es/parchear_estado.py`: applies the Spanish data to an English savestate's RAM/VRAM to review a menu in seconds; it does not replace a real boot.
 - Verified in the runtime (strict AOT, 0 interpreted): prologue and the meeting with Sakura in Spanish from the Spanish ISO, chapter 1 battle in Spanish, title and loading screen from cold boot; interlude and options via patched states.
 
-## Spanish mode in the launcher
+## Spanish in the launcher (v0.2.2-alpha)
 
-Already works without touching code: `tools/es/construir_disco_es.py` generates `local/prepared/disc1-es` and `tools/es/perfil_es.py` creates a separate profile (`local/profiles/espanol`, a copy of the base profile with `[game] disc=` pointing to the Spanish disc) and the local shortcut "Jugar en español.bat". Verified with the `v0.2-ch1-preview` build: the launcher boots the Spanish disc and the title shows "Pulsa Start".
+The player never builds a disc by hand. The release ships the language as **layers of differences** in `parches/`, and `preparar-juego.exe` (`tools/taisen_setup.py`) applies them on the player's PC:
 
-The command-line tools store discs, test states, and profiles under `SAKURA_OWNER_ROOT/local`. The builder verifies the ISO in a temporary file before publishing the image. Repeating profile creation only updates `[game] disc` in the launcher's INI, keeping the profile's settings and saves. The Windows shortcut uses UTF-8 and supports paths with spaces and Unicode characters; for automated, time-bounded playbacks, run the runtime directly with `--disc`, `--settings`, and `--backup`.
+| Layer | From → to | Size (disc 1 + 2) |
+| --- | --- | --- |
+| Inglés v0.1 Taisen | original Japanese data track → English base | 4.0 + 4.1 MB |
+| Español v0.1 Taisen | English base → Spanish | 0.58 + 0.58 MB |
+| Subtitled videos (optional) | original `/SAKURA4` → the subtitled container, in place | 101 + 123 MB |
 
-Proposed integrated launcher option (dependency, requires coordinating SDK ownership):
-
-- "Language: English / Español" selector on the disc card; saved to `launcher.ini` (`[game] language=es`).
-- With `es`, `find_nearby` first tries `local/prepared/disc1-es/game.cue`, `game/disc1-es/game.cue`, and `disc1-es/game.cue`; if none exists, the selector appears disabled with the text "Falta el disco en español (tools/es/construir_disco_es.py)".
-- `check_disc` accepts the Spanish disc: the game code is identical to the English one; only tables, menus, and the main program change, in data zones.
-- Saves: the format doesn't change; sharing or separating folders is the owner's decision (the separate profile from `perfil_es.py` keeps them apart).
-- The public release never includes the Spanish disc: it is a local owner output, just like the prepared English disc.
+- The English base is the English translation v2.1 repackaged for this port: identical to it except that `/SAKURA4` (the FILM video container) keeps the original bytes. With the video layer the prepared disc is byte for byte the v2.1 one.
+- The Spanish layer is encoded between images whose `/SAKURA4` extent is zero-filled and the video bytes are copied back afterwards, so it applies to an English disc with either container. A player's own English v2.1 disc is therefore a valid starting point, and a later release can rebuild only the Spanish disc from the English one already prepared.
+- A disc is identified by the SHA-256 of its data track, whatever its container (`.cue` with one or two files, a single `.bin`/`.img`, a plain `.iso`, a folder or a `.zip`). `parches/parches.json` pins every input and output; a step whose hash differs stops with a message.
+- `tools/build_taisen_patches.py` regenerates the layers from the owner's prepared discs (`local/prepared/japanese-discN`, `discN`, `discN-es`) and verifies each by decoding it again. The owner pipeline below (`construir_todo.py`) still produces those reference discs.
+- Language is a switch on the launcher's home page (Español / English): it points `launcher.ini` at `game/disc1-es` or `game/disc1` and takes effect at once. `tools/es/perfil_es.py` and the "Jugar en español" shortcut remain only as owner conveniences.
+- The public release still never includes a disc: the layers contain differences only and are useless without the player's own discs.
 
 ## All chapters, both discs
 
@@ -79,7 +82,7 @@ These rules come from reviewing all ten chapters against the reconstructed Japan
 
 ## Pending
 
-Episode label (`TITLE1.BIN`) and LOADING screen, extra menu (`OMALL.DAT`), HD text review with Spanish, and the language option in the launcher. Chapters 2–10 follow the same method for the script.
+Episode label (`TITLE1.BIN`) and LOADING screen, the extra menu (`OMALL.DAT`), video subtitles in Spanish, HD text review with Spanish beyond chapter 1, and in-game play of chapters 3–6, 9 and 10 (verified on the built image only). The launcher language option is done (v0.2.2-alpha).
 
 **Japanese available**: the raw dump of the Japanese disc (.cue/.bin) is indeed on the owner's machine; it was prepared with `tools/prepare_discs.py --original` into `local/prepared/japanese-disc1` and `-disc2`. Japanese-based review is no longer blocked.
 

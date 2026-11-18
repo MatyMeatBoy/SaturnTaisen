@@ -92,3 +92,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [LIPS group identification via the cursor](lips-script-cursor.md) — two panels verified with the script, the table, and native tiles.
 - [Chapter 2 tactical progression](chapter2-tactical-progression.md) — Continue, orders, enemy phase, and ally attack with AOT/interpreter comparison.
 - [EVT overlay registry](evt-overlay-registry.md)
+- [bg-matching-progress.md](bg-matching-progress.md): Running log of the PC BG scene-image matching by screenshot; counts only.
+- [bg-matching-shards.md](bg-matching-shards.md): Split of the 766 PC BG images into shards so the matching can run in parallel.
+- [pc-asset-census.md](pc-asset-census.md): Header-level census of the PC edition cabinet that sizes the HD categories.
+- [pc-saturn-name-links.json](pc-saturn-name-links.json): Name links between PC and Saturn resource folders (identifiers only).

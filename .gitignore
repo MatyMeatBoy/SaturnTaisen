@@ -71,3 +71,11 @@
 !/assets/generated/tactical-extensions/*.md
 
 !/docs/releases/v0.2.0-test.4-validation.json
+# Taisen language patches (video layer is a release asset only)
+!/parches/
+/parches/**
+!/parches/parches.json
+!/parches/CREDITOS.md
+!/parches/ingles-v*-disc?.xdelta
+!/parches/espanol-v*-disc?.xdelta
+!/recomp-launcher.json
