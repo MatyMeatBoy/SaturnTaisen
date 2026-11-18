@@ -27,7 +27,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 |---|---|---|---|---|
 | T01 | P0 | agente | integrado · PR #4 | Patches 0035/0036, fondos, táctica, texto, catálogos, pruebas y handoff integrados. Nuevas tareas parten de origin/main; acordar archivos antes de tocar renderer compartido. |
 | T02 | P0 | local | dividido · ver T02a–T02c | Victoria del primer combate y salida. El movie continuo de 23.443 frames se reproduce en el build actual con 0 interpretados y termina con el menú de órdenes abierto; estado de relevo local `local/work/t02/fin-multiple-turns.state` (SHA-256 4d67dd1a…). |
-| T02a | P0 | local | libre | Desde el estado de relevo, grabar los turnos restantes hasta derrotar a todos los enemigos, con pulsaciones de varios frames (SMPC) y sin forzar HP ni variables. |
+| T02a | P0 | local | wide_transitions · gameplay | Desde el estado de relevo, grabar los turnos restantes hasta derrotar a todos los enemigos, con pulsaciones de varios frames (SMPC) y sin forzar HP ni variables. |
 | T02b | P0 | local | tras T02a | Pantalla de victoria y salida del combate hasta el control normal, con hash guest y RGB iguales a la referencia. |
 | T02c | P0 | local | tras T02b | Componer `battle-multiple-turns.movie` + T02a + T02b con `tools/stitch_battle_replay.py` y repetir de una sola carga; registrar en `chapter1-continuous-battle.json`. |
 | T03 | P0 | local | tras T01 | Ruta continua New Game → fin del episodio 1, guardado nativo, reinicio y Continue, dos repeticiones. |
@@ -76,7 +76,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 
 | T47 | P0 | local | entregado y traslado verificado | v0.2.0-test.2 público317.215.196bytes y personal725.331.460bytes. Fuente limpia92edea7, runtime674.023/patch0046 y HD201. Perfiles nuevos, PATH Windows,402variantes sin fallos y0interpretados; película6201hashes y6RGB iguales. RX6900XT/M30 físicos pendientes. |
 
-| T48 | P1 | local | dialogue_tables · implementación congelada | Si un catálogo antiguo del perfil falla autenticación, probar el preparado incluido; conservar la prioridad de mods personales válidos. Headerportrait_pack.h reservado; root debe revisar/capturarpatch0047 antes de compilar. Test.2 usa perfil nuevo y permanece inmutable. |
+| T48 | P1 | local | implementado y probado · patch0047 | Catálogo antiguo del perfil ya no oculta el preparado válido. Ocho ejecuciones:191→201 y huella distinta recuperan402variantes;90hashes y3RGB por caso iguales, GUI cambia solo retrato; perfiles válidos conservados. No incluido en test.2. |
 
 ## División para colaboradores
 
