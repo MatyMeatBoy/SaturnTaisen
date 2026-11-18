@@ -14,11 +14,11 @@ El launcher ofrece modos y ejemplos y se cierra cuando el juego confirma estar l
 
 1. Leer `AGENTS.md`, esta guía y `docs/PENDIENTES.md`; comprobar fecha y cambios posteriores.
 2. Ejecutar `git status --short`, `git branch --show-current` y consultar colaboradores activos. No limpiar un árbol sucio ajeno.
-3. Base de esta actualización: rama `implementation/enhanced-v011`, HEAD `d5f4424`. Este fue el punto de partida del bloque de integración; consultar el HEAD y el estado presentes antes de trabajar. No inferir el ejecutable local a partir de una versión anterior. `VERSION` sigue 0.1.2.
+3. Base de esta actualización: rama `implementation/enhanced-v011`, HEAD `d5f4424`. Este fue el punto de partida del bloque de integración; consultar el HEAD y el estado presentes antes de trabajar. No inferir el ejecutable local a partir de una versión anterior. `VERSION` actual: 0.2.0-test.1, prerelease publicada.
 4. Acordar archivos propios y una tarea concreta. No editar a la vez `frontend_sdl.cpp`, renderer o patches; no compilar sobre una edición incompleta de otro bot.
 5. Crear carpeta privada de resultados exclusiva por ensayo. Las imágenes se pueden sobrescribir sin querer: comprobar ruta absoluta, contenido visual y SHA antes de extraer conclusiones.
 
-Al cerrar esta actualización, `wide_transitions` terminó el ajuste y liberó `video/renderer.h`, `renderer.cpp`, `layers.cpp` y `port/tactical_menu.h`. El coordinador tiene la integración y el patch 36 en revisión final. **Consultar con él antes de tocar esos archivos o recapturar el patch.** Los nombres de agentes y esta asignación son estado de sesión, no una reserva perpetua.
+Al cerrar esta actualización, `wide_transitions` terminó el ajuste y liberó `video/renderer.h`, `renderer.cpp`, `layers.cpp` y `port/tactical_menu.h`. El coordinador integró el bloque y el patch 36 mediante PR #4, con revisión y pruebas. **Consultar con él antes de tocar esos archivos o recapturar el patch.** Los nombres de agentes y esta asignación son estado de sesión, no una reserva perpetua.
 
 Trabajo útil para un segundo bot sin pisar esa integración: mejorar el inventario/matching de las 42 identidades pendientes del capítulo, preparar herramientas de catálogo/páginas de texto offline, o inventariar equivalencias de vídeos/HUD PC. Acordar una sola tarea y sus archivos; entregar manifest/propuesta y prueba, sin promover automáticamente candidatos dudosos ni reescribir el renderer. Si descubre un fallo en un archivo ajeno, enviar reproducción y propuesta al dueño.
 
@@ -27,7 +27,7 @@ Trabajo útil para un segundo bot sin pisar esa integración: mejorar el inventa
 | Ruta relativa a `D:\01Claude\Sakurawars` | Uso |
 | --- | --- |
 | `local/deps/satrecomp` | SDK fijado en `config/dependencies.json`; edición local, cambios exportados como patches. |
-| `patches/0035-...patch`, `0036-...patch` | Coherencia HD/GUID y nuevas extensiones/presentación. El 36 se vuelve a capturar al cerrar el renderer actual. |
+| `patches/0035-...patch`, `0036-...patch` | Coherencia HD/GUID y nuevas extensiones/presentación. El 36 ya contiene el ajuste de menús y la versión test.1; recapturar solo ante nuevos cambios de SDK. |
 | `local/build/sakura/sakura.exe` | Runtime de desarrollo; puede ser posterior al ZIP público. |
 | `local/work/sakura` | Estados y base de descubrimiento AOT privada (`blocks.txt`, `gen`, `block-order.json`). |
 | `local/prepared/disc1`, `disc2` | Discos propios traducidos preparados; no publicar. |
@@ -113,3 +113,9 @@ Release normal: código, DLL y assets generativos permitidos; recursos del juego
 El usuario autorizó expresamente al coordinador Codex a integrar las PR el 2026-11-18. Claude y los demás workers entregan PR; el coordinador revisa diff, head SHA, pruebas y conflictos, integra y actualiza la cola. Cada rama toma un ID de `docs/PENDIENTES.md`; revisar main y las PR abiertas antes de reclamarlo. Evitar commits directos a main y PR que mezclen tareas ajenas. Una integración no publica automáticamente un release.
 
 Las PR #1 (cola), #2 (finales de línea) y #3 (índice de investigación) fueron revisadas e integradas. El conflicto de #2 se resolvió conservando la cola más nueva; nunca restaurar una lista vieja para hacer entrar una PR. Al añadir informes, actualizar también `docs/research/README.md`, comprobado por `test_research_index.py`.
+
+## Entrega y material actual para Claude
+
+v0.2.0-test.1 publicada; ZIP personal privado de 708.495.279 bytes, con disco1 inglés y HD procesado. Probado tras extracción en carpeta nueva y PATH de Windows: escena HD y combate, 38/38 fondos, 382 variantes, cero bloques interpretados. PC vídeos no integrados: los vídeos Saturn están en el disco1 incluido. No se afirma capítulo completo ni prueba física RX6900XT.
+
+Guiones editables: `local/work/spanish-translation`, 56 tablas, 29.725 entradas EN canónicas con campo ES vacío y alias al disco2. Índice: `local/work/scene-index`, seis tags sencillos (vídeo, diálogo, elección, mapa, combate, menú). Inventaría ambos discos y 54 vídeos, pero solo nueve observaciones runtime están anotadas; no asumir vídeo sin texto ni autorizar Zoom por un candidato de archivo. El índice todavía no controla la presentación del runtime.
