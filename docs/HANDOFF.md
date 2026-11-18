@@ -133,3 +133,9 @@ Candidatos distintos, todos privados: `local/build/visual-fixes-candidate/sakura
 El preparado más reciente contiene201 retratos y19 fondos, en `local/work/portrait-chapter1-third-review/prepared-hd`; el coordinador reprodujo sus404 archivos de retratos byte por byte desde el proyecto original191 y las diez aprobaciones hash-locked. Sigue pendiente probar las animaciones no observadas y las32 identidades restantes del capítulo1. T45 propone reordenado offline para00a1; todavía no aprobado ni implementado.
 
 Primer vídeo: usar el testigo capturado con el framebuffer; nunca inferir reproducción por una cabecera FILM residual o por ausencia de letras. Las fases y sus límites están en first-film-script-phase.md y first-film-transition-fix.md. El rótulo del episodio comparte cursor con la salida y se conserva por su capa de imagen. Las últimas correcciones no están en el ZIPtest.1 ni en otro ZIP aún.
+
+## Empaquetado desde un worktree actualizado
+
+package_release.py acepta --owner-root para leer dependencias/licencias privadas del propietario y --build-dir para seleccionar launcher/importador aislados; el código, VERSION, arte permitido y commit del manifest siguen siendo los del checkout ejecutado. --runtime selecciona el candidato AOT. package_personal_bundle.py acepta --owner-root para localizar exclusivamente disco, previews y fixtures privados. Ambos rechazan destinos de entrega existentes.
+
+Para test.2 se prepara el launcher en local/build/launcher-test2 con salida local/build/test2-package-binaries y GAME_VERSION0.2.0-test.2; no sobrescribe el launcher del propietario. El perfil personal mantiene HD activado (valores0 de fondos/retratos) y precarga1. El manifest personal enumera también hashes de BAT/defaults/texto generados, aparte de sus recursos fuente; se excluye a sí mismo del inventario recursivo.
