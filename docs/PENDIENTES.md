@@ -34,7 +34,7 @@ Reglas fijas: los agentes solo abren PR; fusionar o integrar lo hace únicamente
 | T11 | P2 | agente | tras T01 | Integrar el catálogo de diálogo precargado con el lector de tablas inglesas validado. |
 | T12 | P2 | local | tras T01 | Cámara de combate con la extensión táctica STAGE01 anclada en 656,24 durante todo el combate. |
 | T13 | P2 | agente | libre | Normalizar finales de línea (avisos CRLF/LF) con `.gitattributes`, sin cambiar contenido. |
-| T14 | P3 | agente | libre | Índice de `docs/research` con una línea por documento. |
+| T14 | P3 | agente | hecho (PR) | Índice de `docs/research` con una línea por documento. |
 | T15 | P3 | decisión | libre | Revisar y fusionar `codex/catalog-listing` (ficha pública e icono). |
 | T16 | P3 | físico | libre | Probar el ZIP portátil en RX 6900 XT y mandos M30 físicos. |
 | T17 | P3 | decisión | libre | Cambio real de disco 1→2 e importador final unificado. |
