@@ -66,6 +66,17 @@ Proposed integrated launcher option (dependency, requires coordinating SDK owner
 - `tools/es/construir_todo.py --disc N` = `volcar_todo` + (disc 1) `menus_es` + `iso.py`, output `local/prepared/discN-es`. The disc-2 `SAKURA` program (392,024 bytes vs 391,712) and `LOGO.SH2` differ from disc 1, so the menu patches are not applied to disc 2 yet; `ICATALL.DAT`, `OMALL.DAT`, `TITLE1.BIN`, `LOAD.BIN` and `WKL01.BIN` are byte-identical on both discs; `WKL12-26` exist only on disc 2.
 - Fixed slots keep every LBA stable across rebuilds, so savestates from a Spanish build stay valid. Battle batches use `capituloN/lotes/lote90` (N = the M## scenario number).
 
+## Review lessons (what the full pass taught)
+
+These rules come from reviewing all ten chapters against the reconstructed Japanese; the script itself stays private.
+
+- **Japanese is the authority.** English adds or drops honorifics (`ma'am`, `sir`, `Chief`) and flattens speaker and register. Speaker, tú/usted, gender and tone are decided from the Japanese (`tools/es/leer_japones.py TABLE FROM TO [disc]`, with romaji for reviewers who do not read it); a per-character style table is only a starting point. A bulk pass that applied the table without reading the Japanese had to be redone for Ayame (she addresses Ogami as 大神くん with commands like しなさい, i.e. familiar), Sakura and the staff.
+- **Terms are decided by context and Japanese, not by the English word.** 帝国歌劇団 (the theater company) and 帝国華撃団 (the military unit) are both "Assault Troupe" in English; Spanish keeps them apart ("de Ópera" / "de Asalto"). "Revista" reads as a magazine in Spanish and is not used.
+- **Identical English can hide different Japanese.** Batches deduplicate by English text, so `tools/es/dedup_riesgo.py` lists the groups whose Japanese differs in register or speaker; those are resolved with per-record overrides (see above).
+- **Jokes are recreated, not translated.** Puns, misunderstandings and dialect jokes are re-built in Spanish with the scene context (e.g. a mix-up between two similar words becomes an equivalent Spanish pair); a literal rendering that no longer makes a joke is treated as an error.
+- **Mechanical checks** (`tools/es/auditar_todo.py`): missing/duplicate ids, altered markers, `\n` literal, non-CP1252 characters, unopened `¿`/`¡`, vosotros/voseo, lost digits. `tools/es/verificar_iso_es.py N` re-reads a built disc and checks every table against the English one (same record ids, markers intact, share of changed texts).
+- **Neutral Spanish** (`ustedes`, no voseo, no regionalisms from Spain or Latin America) with character voices kept constant; Spanish text is longer than English, so the 30×4 limit forces condensing without losing sense or tone.
+
 ## Pending
 
 Episode label (`TITLE1.BIN`) and LOADING screen, extra menu (`OMALL.DAT`), HD text review with Spanish, and the language option in the launcher. Chapters 2–10 follow the same method for the script.
