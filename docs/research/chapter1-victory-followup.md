@@ -89,4 +89,12 @@ Desde `stairs-scan.state` se avanza por la elección LIPS del pasillo, el regres
 
 Una sola carga inicial reproduce los 29.597 hashes de los cuatro segmentos. Para los mismos 29.597 cuadros, la referencia interpretada coincide en hashes, RGB final y SRAM guardada. El candidato AOT registró cero bloques interpretados. El último hash guest es `f5282806f43e9908`. La película tiene SHA-256 `34df861ba09b6ba1899d4708ce44e3cb31abe4acd7ee5404f247683bc0288596` y la SRAM guardada tiene SHA-256 `2e96cc84378141ecc42d37c1ba1d71976974f6984ce85c791b68d9b95390801c`. La evidencia privada está en `local/work/chapter1-victory-followup/corridor-bridge/verification.json`.
 
-El ancla del pasillo corresponde al fotograma 119.780 de la repetición anterior desde New Game, según la comparación histórica de estados salvo el puntero de RAM de sonido que restaura el lector. Faltan probar el empalme desde New Game y unir este guardado con el inicio del combate.
+El ancla del pasillo corresponde al fotograma 119.780 de la repetición anterior desde New Game, según la comparación histórica de estados salvo el puntero de RAM de sonido que restaura el lector. Queda por probar el empalme desde New Game.
+
+## Del guardado nocturno al tutorial de combate
+
+Desde el guardado nocturno, el comando `Resume` devuelve el control al teatro. La ronda pasa por la biblioteca, la planta baja y el vestidor. Tras devolver a Jean-Paul a Iris, Ogami termina la ronda. La salida de la mañana lleva a un segundo intermedio y a un guardado en la ranura 1 antes del combate. Al reanudar, la ruta llega a la selección de objetivo tras las instrucciones de María.
+
+Con una sola carga inicial del estado del guardado nocturno, el candidato de 674.182 bloques reproduce los 147.730 hashes guest de los 21 segmentos. El RGB final y la SRAM guardada coinciden, con cero bloques interpretados. El último hash guest es `f26cfda21efe6e60`. La película tiene SHA-256 `0e8cd95c6802a3ad702794cf25299366fd468a82cb5b8088da73ea8640aa5fef` y la SRAM resultante, `5c71f7178690356219a0c800e1206412ad059de11dd9981873472c15e83868d0`. En el tramo de entrada al combate también coinciden 5.400 hashes, nueve capturas RGB y la SRAM entre AOT estricto y la referencia interpretada.
+
+La evidencia privada está en `local/work/chapter1-victory-followup/corridor-bridge/continuous-night-to-tutorial/verification.json`. El relevo del nuevo tutorial llega a una interfaz similar a la del estado histórico, con diferencias de RGB y RAM guest. Quedan por enlazar la nueva ruta con los turnos de combate ya comprobados y por probar dos recorridos completos desde New Game con guardado, reinicio y Continue.
