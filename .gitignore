@@ -16,6 +16,8 @@
 !/tools/
 /tools/**
 !/tools/*.py
+!/tools/controller_mapper.cpp
+!/tools/controller_capture.h
 !/tests/
 /tests/**
 !/tests/*.py
