@@ -18,7 +18,7 @@ La sustitución es atómica por panel: reloj, filas, centrado, bancos, tinta y p
 - [x] Conectar preparación, captura bajo fbMutex y copia junto a píxeles; mantener Original/headless/GPU fuera del trabajo nuevo.
 - [x] Capturar patch0050 y validar árbol SDK antes de compilar en una salida aislada.
 - [x] Comparar paneles de dos/tres opciones, selección, confirmación y vencimiento; hashes/RGB idénticos y traza efectiva de catálogo. Conservar las referencias y la falta de prueba de otras ramas.
-- [ ] Revisión, pendientes y evidencia; integrar por PR. Test.3 queda inmutable.
+- [x] Revisión, pendientes y evidencia; integración por PR34. Test.3 queda inmutable.
 
 ## Verificación en curso
 

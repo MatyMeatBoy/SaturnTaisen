@@ -14,7 +14,7 @@ El launcher ofrece modos y ejemplos y se cierra cuando el juego confirma estar l
 
 1. Leer `AGENTS.md`, esta guía y `docs/PENDIENTES.md`; comprobar fecha y cambios posteriores.
 2. Ejecutar `git status --short`, `git branch --show-current` y consultar colaboradores activos. No limpiar un árbol sucio ajeno.
-3. Base integrada de este bloque: `main` en `d54919e`, tras PR32/33. Consultar siempre HEAD, rama y estado presentes antes de trabajar. `VERSION`: 0.2.0-test.3, prerelease publicada desde `72affb2`. Su runtime es674.182/patch0049 (`377cb29b…`); no inferir el ejecutable local a partir de la versión. T11/patch0050 se trabaja por separado, todavía sin integrar ni empaquetar.
+3. Base integrada de este bloque: `main` en `d54919e`, tras PR32/33. Consultar siempre HEAD, rama y estado presentes antes de trabajar. `VERSION`: 0.2.0-test.3, prerelease publicada desde `72affb2`. Su runtime es674.182/patch0049 (`377cb29b…`); no inferir el ejecutable local a partir de la versión. T11/patch0050 se integra por PR34 con candidato independiente (`df68e9db…`), sin empaquetar; test.3 conserva patch0049.
 4. Acordar archivos propios y una tarea concreta. No editar a la vez `frontend_sdl.cpp`, renderer o patches; no compilar sobre una edición incompleta de otro bot.
 5. Crear carpeta privada de resultados exclusiva por ensayo. Las imágenes se pueden sobrescribir sin querer: comprobar ruta absoluta, contenido visual y SHA antes de extraer conclusiones.
 
