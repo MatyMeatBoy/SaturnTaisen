@@ -1,7 +1,7 @@
 <h1 align="center">🌸 SaturnTaisenFirst</h1>
 <p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Recompilación estática SH-2 · Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases/tag/v0.1.2"><img alt="v0.1.2 de prueba" src="https://img.shields.io/badge/release-v0.1.2_prueba-9a4564?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases/tag/v0.2.0-test.1"><img alt="v0.2.0-test.1 de prueba" src="https://img.shields.io/badge/release-v0.2.0--test.1-9a4564?style=flat-square"></a>
   <img alt="Windows x64 portátil" src="https://img.shields.io/badge/Windows-x64_portable-77445b?style=flat-square">
   <a href="docs/research/chapter1-battle-progress.md"><img alt="SH-2 AOT estática" src="https://img.shields.io/badge/SH--2-AOT_est%C3%A1tica-bf914d?style=flat-square"></a>
   <a href="docs/releases/v0.1.2.md"><img alt="Validación local documentada" src="https://img.shields.io/badge/pruebas-informe_local-5d755d?style=flat-square"></a>
@@ -11,7 +11,7 @@
 
 Un regreso al Teatro Imperial con el código SH-2 recompilado, píxeles enteros y mejoras opcionales de presentación. Proyecto público de **MatyMeatBoy**.
 
-**La v0.1.2 es una prerelease de prueba, no el juego completo certificado.** El nombre de este checkpoint fue solicitado para probar en otro PC; la [v0.1.5 anterior](docs/releases/v0.1.5.md) se conserva intacta. No está verificado todavía el capítulo 1 de principio a fin ni la campaña completa. [Alcance y validación de esta entrega](docs/releases/v0.1.2.md).
+**La v0.2.0-test.1 es una prerelease de prueba, no el juego completo certificado.** Incluye el ajuste de menús y presentación panorámica en las rutas verificadas. No está verificado todavía el capítulo 1 de principio a fin ni la campaña completa. [Alcance de esta entrega](docs/releases/v0.2.0-test.1.md). Los paquetes [v0.1.2](docs/releases/v0.1.2.md) y [v0.1.5](docs/releases/v0.1.5.md) se conservan intactos.
 
 ## Jugar
 
@@ -45,10 +45,10 @@ Los píxeles se escalan con nearest y multiplicadores enteros. La salida conserv
 | Arranque y AOT | Arranque desde cero y rutas probadas sin intérprete SH-2 guest. |
 | Exploración | 119.781 frames continuos de una ruta de exploración; no equivale a capítulo completo. |
 | Guardado/carga | Puntos concretos del episodio 1 y partidas de investigación; campaña y cambio real de disco pendientes. |
-| Combate | Tutorial, movimiento, defensa y primer ataque normal observados.1.200 hashes de ataque coinciden AOT/referencia del SDK. |
+| Combate | Tutorial, movimiento, defensa y ataques Sakura/Sumire probados. Submenús separados en Mejorado; las pruebas AOT/intérprete del SDK no certifican victoria ni campaña. |
 | HD | Fondos y retratos integrados con validación y fallback. Cuerpos/poses/expresiones completos pendientes. |
-| PixelGen v1 | Extensión derecha aprobada artísticamente; anclaje al mapa/cámara e integración táctica pendientes. |
-| Táctico16:9/HUD | En investigación; el prototipo no está habilitado en la entrega normal. |
+| PixelGen v1 | Franja derecha Stage01 integrada y anclada al scroll del mundo; cámara y sprites comprobados en rutas concretas. |
+| Táctico16:9/HUD | Stage01 habilitado en Mejorado y menús corregidos. Otros escenarios, HUD completo y batalla entera siguen pendientes. |
 | RetroAchievements | Pendiente: no se anuncian logros online/offline como disponibles. |
 | PC | Se usan recursos para el mod Saturn; ejecución y traducción de la versión PC aparcadas. |
 
@@ -63,6 +63,8 @@ Aplicamos [OptiPort](https://github.com/MatyMeatBoy/OptiPort): reproducciones, c
 La preparación CPU de 38 fondos pasó de2,102s con un trabajador a0,478s con ocho en la medición registrada; es preparación de recursos, **no una mejora demostrada del FPS ni de toda carga del juego**. Las texturas SDL se crean en el hilo del renderer. [Condiciones y límites](docs/research/saturn-background-workers.md).
 
 ## Desarrollo
+
+Entrada para colaboradores: [pendientes actuales](docs/PENDIENTES.md) y [handoff técnico/artístico](docs/HANDOFF.md). Distinguen el trabajo local de las versiones entregadas y explican el método PixelGen v1, las pruebas y la coordinación entre bots.
 
 Python 3.11+, Git, CMake/Ninja/Clang y SDL3. La dependencia satrecomp está fijada por commit y los cambios se distribuyen como patches reproducibles. Los dumps, estados, código generado y recursos propios permanecen en `local/`, fuera de Git.
 

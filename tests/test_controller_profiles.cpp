@@ -7,6 +7,9 @@ int main() {
     assert(IdentifySaturnPad(0x0ca3,0x0024,"6B controller")==SaturnPadProfile::M30);
     assert(IdentifySaturnPad(0,0,"8BitDo M30 2.4G Gamepad")==SaturnPadProfile::M30);
     assert(IdentifySaturnPad(0x045e,0x028e,"Xbox 360 Controller")==SaturnPadProfile::Standard);
+    assert(ChooseSaturnProfile(0x045e,0x028e,"Xbox 360 Controller","m30")==SaturnPadProfile::M30);
+    assert(ChooseSaturnProfile(0x045e,0x028e,"Xbox 360 Controller","")==SaturnPadProfile::Standard);
+    assert(ChooseSaturnProfile(0x2dc8,0x5006,"8BitDo M30","standard")==SaturnPadProfile::Standard);
     assert(IdentifySaturnPad(0,0,"8BitDo Pro 2")==SaturnPadProfile::Standard);
     const recomp::PadInput custom{SDL_GAMEPAD_BUTTON_RIGHT_STICK,-1};
     assert(ResolveSaturnInput("a",custom,true,SaturnPadProfile::M30)==custom);

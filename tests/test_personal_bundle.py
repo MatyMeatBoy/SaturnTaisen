@@ -3,6 +3,28 @@ import hashlib,json,sys,tempfile,unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 class PersonalBundleTests(unittest.TestCase):
+    def test_archive_entry_names_are_unique_safe_and_collision_checked(self):
+        from package_personal_bundle import unique_entries
+        with tempfile.TemporaryDirectory() as tmp:
+            a=Path(tmp)/'a';b=Path(tmp)/'b';a.write_bytes(b'same');b.write_bytes(b'same')
+            self.assertEqual(unique_entries([('art/tactics/x.png',a),('art/tactics/x.png',b)]),[('art/tactics/x.png',a)])
+            b.write_bytes(b'changed')
+            with self.assertRaises(ValueError):unique_entries([('x',a),('x',b)])
+            for unsafe in ('../x','/x','C:/x','a\\x','./x','a//x'):
+                with self.subTest(name=unsafe),self.assertRaises(ValueError):unique_entries([(unsafe,a)])
+            with self.assertRaises(ValueError):unique_entries([('A',a),('a',b)])
+
+    def test_generated_tactical_band_is_pinned_and_excludes_native_map_context(self):
+        from package_personal_bundle import tactical_entries
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);file=root/'STAGE01-right-v1.png';Image.new('RGB',(39,224),'pink').save(file)
+            report=dict(schema=1,generated_only=True,original_map_context_included=False,stage_map_signature='1CAF3218B4B0F9F0',world_origin=[656,24],logical_size=[39,224],
+                files=[dict(path=file.name,bytes=file.stat().st_size,sha256=hashlib.sha256(file.read_bytes()).hexdigest())])
+            (root/'provenance.json').write_text(json.dumps(report))
+            self.assertEqual(len(tactical_entries(root)),2)
+            report['files'][0]['path']='composite-v2.png';(root/'provenance.json').write_text(json.dumps(report))
+            with self.assertRaises(ValueError):tactical_entries(root)
     def fixture(self,root):
         outputs={}
         for name in ('game.cue','Track 01.iso','Track 02.wav'):

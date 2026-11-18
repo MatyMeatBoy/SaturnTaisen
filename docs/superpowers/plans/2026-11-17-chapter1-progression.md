@@ -9,3 +9,12 @@ Objetivo inmediato: demostrar una ruta reproducible desde New Game hasta el fina
 5. Documentar por separado pruebas pasadas, rutas alternativas pendientes y estado de campaña/discos. Añadir una regresión por bloqueo corregido, sin tests que solo repitan la implementación.
 
 Fuera de esta prueba: cuerpos HD, PixelGen en mapa y combate panorámico no deben cambiar lógica ni colisiones; investigar HUD relativo después de una base de progreso reproducible. Capítulo1 no se considera verificado hasta lograr4.
+
+
+## Continuación tras v0.1.2
+
+1. Reproducir el ataque normal de Sumire desde fixture local inmutable y fijar su movie público sin datos originales. La v0.1.2 se detiene en AOT estricto en 060783FC.
+2. Atribuir el bloque por sus bytes a K002.BIN (offset03FC, base06078000), ampliar estáticamente el módulo y comprobar hermanos de la familia K mediante punteros propios; no confundir candidatos con cobertura ejecutada.
+3. Recompilar incrementalmente y comparar 1.800 hashes y RGB final AOT/referencia para Sumire; repetir ataque previo de Sakura.
+4. tools/stitch_battle_replay.py compone los probes con desplazamiento frames-1, porque el estado se guarda antes de ejecutar ese frame. Rechazar fuente modificada, pulsación retenida y eventos en la frontera. Cuatro pruebas sintéticas preceden su uso real.
+5. Ejecutar el movie compuesto sin cargas intermedias y contrastar su estado/frame final con la ruta por tramos. La ruta actual empieza después del primer ataque; todavía no demuestra New Game→fin de episodio.

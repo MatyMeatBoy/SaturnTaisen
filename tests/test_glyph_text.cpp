@@ -13,4 +13,8 @@ int main() {
     assert(port::DecodeGlyph(atlas,std::span<const uint8_t>(changed.data(),127))==0);
     std::memcpy(atlas.data()+('V'-1)*128,tile.data(),128);
     assert(port::DecodeGlyph(atlas,tile)==0); // exact match alone must still be unique
+    std::array<uint8_t,128> ellipsis{};ellipsis[70]=0x11;ellipsis[72]=0x11;ellipsis[74]=0x11;
+    std::memcpy(atlas.data()+(133-1)*128,ellipsis.data(),128);
+    assert(port::DecodeCodepoint(atlas,ellipsis)==U'\u2026');
+    assert(port::GlyphUtf8(U'\u2026')=="\xE2\x80\xA6");
 }

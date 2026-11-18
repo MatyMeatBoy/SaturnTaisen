@@ -40,3 +40,13 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [translation-code-impact.json](translation-code-impact.json) — código afectado por la traducción.
 - [logo-module-analysis.json](logo-module-analysis.json), [ending-module-analysis.json](ending-module-analysis.json) — análisis de módulos LOGO y final.
 - [mods-status.json](mods-status.json) — estado de mods evaluados.
+
+## Integración del 2026-11-18
+
+- [spanish-translation-workflow.md](spanish-translation-workflow.md) — guiones ingleses con IDs, controles y alias entre discos para el parche español de Claude.
+- [battle-overlay-family.json](battle-overlay-family.json) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
+- [chapter1-continuous-battle.json](chapter1-continuous-battle.json) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
+- [chapter1-wide-transitions.md](chapter1-wide-transitions.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
+- [dialogue-catalog.md](dialogue-catalog.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
+- [portrait-animation-coverage.md](portrait-animation-coverage.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
+- [tactical-menu-independent-reference.md](tactical-menu-independent-reference.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.

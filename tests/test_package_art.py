@@ -10,6 +10,33 @@ from package_release import generated_backgrounds
 
 
 class PackageArtTests(unittest.TestCase):
+    def test_tactical_asset_requires_generated_only_world_anchor_and_fixed_name(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            folder=Path(directory);file=folder/'STAGE01-right-v1.png';Image.new('RGB',(39,224),'pink').save(file)
+            report=dict(generated_only=True,original_map_context_included=False,world_origin=[656,24],logical_size=[39,224],
+                backgrounds=[dict(file=file.name,sha256=hashlib.sha256(file.read_bytes()).hexdigest())])
+            (folder/'provenance.json').write_text(json.dumps(report))
+            self.assertEqual(list(generated_backgrounds(folder,tactical=True)),[file.name])
+            Image.new('RGB',(940,448),'pink').save(file)
+            report['backgrounds'][0]['sha256']=hashlib.sha256(file.read_bytes()).hexdigest()
+            (folder/'provenance.json').write_text(json.dumps(report))
+            with self.assertRaises(RuntimeError):generated_backgrounds(folder,tactical=True)
+            report['original_map_context_included']=True;(folder/'provenance.json').write_text(json.dumps(report))
+            with self.assertRaises(RuntimeError):generated_backgrounds(folder,tactical=True)
+    def test_intro_and_title_extensions_have_a_separate_bounded_allowlist(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder=Path(directory);data=b'\x89PNG\r\n\x1a\nfixture'
+            (folder/'TITLE-v1.png').write_bytes(data)
+            (folder/'provenance.json').write_text(json.dumps({'backgrounds':[{'file':'TITLE-v1.png','sha256':hashlib.sha256(data).hexdigest()}]}))
+            self.assertEqual(list(generated_backgrounds(folder,screen=True)),['TITLE-v1.png'])
+            for name in ('STATUS-v1.png','PAUSE01-v1.png','LOADING-v1.png'):
+                (folder/name).write_bytes(data)
+                manifest=json.loads((folder/'provenance.json').read_text())
+                manifest['backgrounds'].append({'file':name,'sha256':hashlib.sha256(data).hexdigest()})
+                (folder/'provenance.json').write_text(json.dumps(manifest))
+            self.assertEqual(len(generated_backgrounds(folder,screen=True)),4)
+            with self.assertRaises(RuntimeError):generated_backgrounds(folder)
     def test_only_manifest_pinned_files_are_selected(self):
         with tempfile.TemporaryDirectory() as directory:
             folder=Path(directory);data=b'\x89PNG\r\n\x1a\nfixture'

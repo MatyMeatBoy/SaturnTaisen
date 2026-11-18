@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "backgrounds": [
+    {
+      "file": "OPENING-v1.png",
+      "sha256": "07bac72eea69b68a394aa8c5e5a45f65137c3c386ef8dc670ad90f2a5a0c6f81",
+      "source_layer_sha256": "2b65bbd6419c6fb46fd7d493f9c4e551d59c681835662e53abf2488c03239748",
+      "method": "PixelGen v1 generative outpainting; native-density palette normalization in runtime",
+      "logical_grid": [
+        416,
+        234
+      ]
+    },
+    {
+      "file": "TITLE-v1.png",
+      "sha256": "3ca6842d2218d0870ef72ceda59915b7f43298253b8cb47a29c3bd34225be726",
+      "source_layer_sha256": "4ef91541323a71143e752e42498117440f3d67e0fe4115de691b97bbfd003a7d",
+      "method": "PixelGen v1 generative outpainting; native-density palette normalization in runtime",
+      "logical_grid": [
+        416,
+        234
+      ]
+    },
+    {
+      "file": "STATUS-v1.png",
+      "sha256": "b807a1ff434d0a4e3971f0599b3ba08ed5c90064eeff101a7d4d43bc707abd66",
+      "source_layer_sha256": "c1f3676788e70101113b5bb718c2b32890a59abda5e6006f20b434a4793fda32",
+      "method": "PixelGen v1 built-in ImageGen outpainting; native palette and integer presentation",
+      "logical_grid": [
+        416,
+        234
+      ],
+      "native_center_overlay": false
+    },
+    {
+      "file": "PAUSE01-v1.png",
+      "sha256": "8d655968a434004f7d9318790cffec89cfc5880fe0a597c5c186504d77b28bef",
+      "source_layer_sha256": "66750844e95173ed564710a7a003cc6a715bd61def108e51d20572cd4c45f7fc",
+      "method": "PixelGen v1 built-in ImageGen outpainting; native palette and integer presentation",
+      "logical_grid": [
+        800,
+        450
+      ],
+      "native_center_overlay": true
+    },
+    {
+      "file": "LOADING-v1.png",
+      "sha256": "a6de6e1e03782629e532f2c3629aab9615205993c52c3f77943446eeebde77f7",
+      "source_layer_sha256": "dad049fa377fe52b38ebfc37490f3c1ef78855d34fb364f503e8ae8f07e5bfaa",
+      "method": "PixelGen v1 built-in ImageGen background-only tiled extension; native palette and integer presentation",
+      "logical_grid": [
+        800,
+        450
+      ],
+      "native_center_overlay": true
+    }
+  ],
+  "source_pixels_included": false
+}

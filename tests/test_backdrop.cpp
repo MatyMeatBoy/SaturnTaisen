@@ -7,12 +7,32 @@ int main(int argc,char** argv) {
     const std::array<int16_t,3> fade{-255,30,-10};
     assert(port::OffsetBackdropPixel(0xFF1020F0,fade)==0xFF063E00);
     assert(port::OffsetBackdropPixel(0xFFFEFEFE,{20,20,20})==0xFFFFFFFF);
+    std::vector<uint32_t> reference(320*224),visible;
+    for(size_t i=0;i<reference.size();i++)reference[i]=0xFF000000u|uint32_t(i%251)*0x010101u;
+    visible=reference;
+    assert(port::MatchesAnchoredBackdrop(visible,reference,{}));
+    for(size_t i=0;i<visible.size()/10;i++)visible[i]^=0x0000FF00u;
+    assert(port::MatchesAnchoredBackdrop(visible,reference,{}));
+    visible.assign(reference.size(),0xFF000000u);
+    assert(!port::MatchesAnchoredBackdrop(visible,reference,{}));
+    assert(!port::MatchesAnchoredBackdrop({},reference,{}));
+    visible=reference;for(auto& pixel:visible)pixel=port::OffsetBackdropPixel(pixel,{-8,-16,-24});
+    assert(port::MatchesAnchoredBackdrop(visible,reference,{-8,-16,-24}));
     std::vector<uint8_t> palette(512);
     for(int i=0;i<256;i++){palette[i*2]=0x80;palette[i*2+1]=0x1F;}
     auto* source=SDL_CreateSurface(1920,1080,SDL_PIXELFORMAT_ABGR8888);assert(source);
     SDL_FillSurfaceRect(source,nullptr,0xFFFF0000); // blue master; only authorized palette entry is red
     auto* logical=port::NormalizeBackdrop(source,palette);assert(logical);
     assert(logical->w==416 && logical->h==234);
+    auto* anchored=port::NormalizeBackdrop(source,palette,800,450);assert(anchored);
+    assert(anchored->w==800 && anchored->h==450);
+    std::vector<uint32_t> native(320*224,0xFF0000F8);
+    SDL_FillSurfaceRect(anchored,nullptr,0xFFFF0000);
+    assert(port::AnchorBackdropSurface(anchored,native,palette));
+    const auto at=[&](int x,int y){return reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(anchored->pixels)+y*anchored->pitch)[x];};
+    assert(at(240,113)==native[0] && at(239,113)==native[0]);
+    assert(at(230,113)==0xFFFF0000); // preserve generated art away from the seam
+    SDL_DestroySurface(anchored);
     for(int y=0;y<234;y++)for(int x=0;x<416;x++)
         assert(reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(logical->pixels)+y*logical->pitch)[x]==0xFF0000F8);
     assert(!port::NormalizeBackdrop(source,std::span<const uint8_t>(palette.data(),12)));
