@@ -60,13 +60,15 @@
           "path": "docs/research/intro-petals-transition.md"
         }
       ],
-      "next": "Deduplicar los candidatos por clip y comparar montaje, audio, subtítulos, saltos y retorno al juego antes de integrar.",
+      "next": "Revisar el montaje de los seis pares con diferencia de duración, comprobar audio/subtítulos/saltos y diseñar la reproducción PC dentro del runtime.",
       "details": [
-        "52 MPEG de PC y 54 flujos FILM de Saturn indexados por origen. La apertura comparte planos en muestras puntuales."
+        "50 clips Saturn únicos (flujos FILM deduplicados entre ambos discos; el cortometraje de 0,15 s del logo queda fuera) frente a 52 MPEG de PC (51 MOVIE + REDLOGO).",
+        "44 pares con duración dentro de 0,5 s y orden consecutivo idéntico (flujo k de /SAKURA4 ↔ MOVIE00k). Seis pares requieren revisión de montaje por diferencia de duración: 743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102 y def7a6↔020 (3,7 s).",
+        "Sin sustitución integrada: falta decodificación MPEG-1/MP2 en el runtime, sincronía de audio, subtítulos y salto."
       ],
-      "total": null,
-      "inventory": null,
-      "matched": 0,
+      "total": 50,
+      "inventory": 50,
+      "matched": 44,
       "prepared": 0,
       "integrated": 0,
       "verified": 0

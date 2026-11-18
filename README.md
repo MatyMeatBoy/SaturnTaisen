@@ -67,7 +67,7 @@ Las fuentes PC de cuerpos conservarán una sola escala basada en altura, con el 
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 300/304 (98,6%) | Sin dato |
-| Vídeos | 0 | 0 |
+| Vídeos | 0/50 (0%) | 0/50 (0%) |
 | HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | Sin dato | Sin dato |
