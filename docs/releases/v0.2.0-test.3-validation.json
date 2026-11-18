@@ -1,0 +1,112 @@
+{
+  "version": "0.2.0-test.3",
+  "packaging_source_commit": "72affb2007ca917706717226a337d835e0ea5802",
+  "runtime_relevant_source_commit": "f6a71e22323b4c9027e13b65406d3d68cfc30616",
+  "runtime_compiled_blocks": 674182,
+  "patches": 49,
+  "artifacts": {
+    "public": {
+      "file": "SaturnTaisenFirst-v0.2.0-test.3-win64.zip",
+      "bytes": 317282734,
+      "sha256": "53b166c194f50d1429bbaaa54b2841d04917021f9be6615198bea6bd1d0f751d",
+      "entries": 359,
+      "crc_verified": true,
+      "manifest_verified": true,
+      "published": true
+    },
+    "personal": {
+      "file": "SaturnTaisenFirst-v0.2.0-test.3-personal-disco1-HD.zip",
+      "bytes": 725392142,
+      "sha256": "785335d0b8a4e53edf2721317748f29e0e3aa4093903d5e4f64bf4345716cd64",
+      "entries": 798,
+      "crc_verified": true,
+      "manifest_verified": true,
+      "published": false
+    }
+  },
+  "binaries": {
+    "import-saves.exe": {
+      "bytes": 8319249,
+      "sha256": "d75f50ccf94c372c498d42edb4e91ebacec5be7a923341229c3b381e2e9ce42c"
+    },
+    "sakura.exe": {
+      "bytes": 855883776,
+      "sha256": "377cb29b9e05d2f70d8a97c838e0cd9ccc511046ff690da54953b60dac5a0ba7"
+    },
+    "SaturnTaisenFirst.exe": {
+      "bytes": 2380800,
+      "sha256": "3ecd4614be88cf7bc707b9f5376e8ed9a07a98b1c696ae24612ce0f8ebac0ec3"
+    }
+  },
+  "published_release": {
+    "url": "https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases/tag/v0.2.0-test.3",
+    "source_commit": "72affb2007ca917706717226a337d835e0ea5802",
+    "prerelease": true,
+    "draft": false,
+    "assets": [
+      {
+        "name": "SaturnTaisenFirst-v0.2.0-test.3-win64.zip",
+        "bytes": 317282734,
+        "sha256": "53b166c194f50d1429bbaaa54b2841d04917021f9be6615198bea6bd1d0f751d"
+      },
+      {
+        "name": "SaturnTaisenFirst-v0.2.0-test.3-win64.zip.sha256",
+        "bytes": 109,
+        "sha256": "b537b72146a2d26a2827da45ae5b254e9b3ab38b1311720fb902201ba05994bc"
+      }
+    ]
+  },
+  "packaged_checks": {
+    "path_windows_only": true,
+    "empty_profile_launcher": true,
+    "importer_help": true,
+    "prepared_background_resources": 38,
+    "portrait_identities": 201,
+    "portrait_variants": 402,
+    "hd_scene_and_battle": true,
+    "catalog_text_observed": true,
+    "first_film": {
+      "frames": 6201,
+      "all_hashes_equal": true,
+      "native_rgb_equal": true,
+      "interpreted": 0,
+      "path_windows_only": true,
+      "disc_from_extracted_bundle": true
+    },
+    "save_and_continue": [
+      {
+        "name": "exit",
+        "frames": 1200,
+        "hashes_equal": true,
+        "final_native_rgb_equal": true,
+        "backup_equal": true,
+        "backup_sha256": "6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df",
+        "state_load": true,
+        "interpreted": 0,
+        "path_windows_only": true,
+        "disc_from_bundle": true
+      },
+      {
+        "name": "cold",
+        "frames": 9500,
+        "hashes_equal": true,
+        "final_native_rgb_equal": true,
+        "backup_equal": true,
+        "backup_sha256": "6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df",
+        "state_load": false,
+        "interpreted": 0,
+        "path_windows_only": true,
+        "disc_from_bundle": true
+      }
+    ]
+  },
+  "unverified": [
+    "RX6900XT hardware",
+    "M30 physical variants",
+    "New Game to episode1 end and two complete repeats",
+    "remaining campaign/disc change",
+    "full HD and PC movies",
+    "RetroAchievements"
+  ],
+  "post_delivery_supplement": true
+}
