@@ -43,6 +43,7 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 
 ## Integración del 2026-11-18
 
+- [chapter-sweep.md](chapter-sweep.md) — nueve rutas posteriores, residencias verificadas y ampliación EVT06 del episodio4 ([resultado](episode4-aot-fix.json)).
 - [portrait-white-blends.md](portrait-white-blends.md) — metadatos exactos de mezcla blanca y preservación del fundido en retratos HD.
 - [later-chapter-validation.md](later-chapter-validation.md) — partidas verificadas, bloqueo de EVT02 y seguimiento de la carga de episodios posteriores ([arreglo AOT](episode2-aot-fix.json)).
 - [battle-overlay-reproduction.md](battle-overlay-reproduction.md) — reconstrucción verificable de la ampliación de combate ([manifiesto](battle-overlay-reproduction.json)).

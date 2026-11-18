@@ -9,31 +9,41 @@ from PIL import Image
 
 ROOT=Path(__file__).resolve().parents[1]
 OWNER=Path(os.environ.get('SAKURA_OWNER_ROOT',ROOT))
-EXE=Path(os.environ.get('SAKURA_LATER_TEST_EXE',OWNER/'local/build/sakura/sakura-episode2.exe'))
+EXE=Path(os.environ.get('SAKURA_LATER_TEST_EXE',OWNER/'local/build/sakura/sakura-episode4.exe'))
 STATE=OWNER/'local/work/later-chapter-audit/ep2-strict-anchor/state-6688.bin'
 SEED=OWNER/'local/work/later-chapter-audit/episode2-test-copy.bin'
+STATE4=OWNER/'local/work/later-chapter-audit/chapter-sweep/bank-4-battle-reference/state-6678.bin'
+SEED4=OWNER/'local/work/later-chapter-audit/chapter-sweep/seeds/bank-4-battle.bin'
 
 
-@unittest.skipUnless(EXE.is_file() and STATE.is_file() and SEED.is_file(),'requires private episode2 boundary and candidate runtime')
+@unittest.skipUnless(EXE.is_file(),'requires private candidate runtime')
 class LaterChapterRuntimeTests(unittest.TestCase):
     def test_episode2_overlay_boundary_keeps_native_hashes_and_pixels(self):
+        if not STATE.is_file() or not SEED.is_file():self.skipTest('requires episode2 fixtures')
         self.assertEqual(hashlib.sha256(STATE.read_bytes()).hexdigest(),
                          '61b8cbb898f59c116509640a496ce8fb25e8b4d9d85c46d9ccef2d3533c05333')
         self.compare(STATE,1200)
 
+    def test_episode4_overlay_boundary_keeps_native_hashes_and_pixels(self):
+        if not STATE4.is_file() or not SEED4.is_file():self.skipTest('requires episode4 fixtures')
+        self.assertEqual(hashlib.sha256(STATE4.read_bytes()).hexdigest(),
+                         '42ab8d52f4b844bd45ae80ca799b98a7732e84f8e0814164a4b89a1f718cba14')
+        self.compare(STATE4,1200,seed=SEED4)
+
     @unittest.skipUnless(os.environ.get('SAKURA_LATER_COLD')=='1','opt-in longer cold-load replay')
     def test_episode2_cold_continue_matches_interpreter(self):
+        if not SEED.is_file():self.skipTest('requires episode2 SRAM')
         self.assertEqual(hashlib.sha256(SEED.read_bytes()).hexdigest(),
                          '4c22bf1edd1437b082ccd05e12df5bbf46bdcc5c9058fa3cc869db281f043908')
         self.compare(None,9501,ROOT/'tests/cold-load.movie')
 
-    def compare(self,state,frames,movie=None):
+    def compare(self,state,frames,movie=None,seed=SEED):
         hashes=[];pictures=[]
         (ROOT/'local/work').mkdir(parents=True,exist_ok=True)
         with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as temporary:
             for mode in ('native','interpreter'):
                 folder=Path(temporary)/mode;folder.mkdir()
-                (folder/'backup.bin').write_bytes(SEED.read_bytes())
+                (folder/'backup.bin').write_bytes(seed.read_bytes())
                 env={key:value for key,value in os.environ.items() if not key.startswith('SATRECOMP_')}
                 env['PATH']='C:/msys64/clang64/bin;'+env.get('PATH','')
                 env.update(SATRECOMP_NO_CALLS='1',SATRECOMP_NO_FUNCTIONS='1')
