@@ -17,6 +17,9 @@ REGISTRY={
     'EVT02':dict(file='/SAKURA2/EVT02.BIN',base=0x00204000,bytes=76180,
                  sha256='701d68ab48e67eabce1e1eb89bd4a8b790aa0f6a40ff68bbfa0600489b97c660',
                  evidence='Episode2 cold load: all 76180 bytes equal LowRAM at 00204000 in strict/interpreter state frame6688; strict first missing PC00204000'),
+    'EVT06':dict(file='/SAKURA2/EVT06.BIN',base=0x00204000,bytes=77716,
+                 sha256='3214506d26f1b9fbec18190e993acf4ef5502532522790d7a327efe7125c89e5',
+                 evidence='Episode4 cold load: all 77716 bytes equal LowRAM at 00204000 in states6677-6680; strict first missing PC00204000 after6678 complete frames'),
 }
 
 

@@ -37,7 +37,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T07 | P1 | local | hecho desarrollo · T01 | Intro previa al título: área 288×144 en 16,24 a la mayor escala entera con subtítulos ingleses. |
 | T08 | P1 | local | tras T01 | Fondos extendidos durante fundidos: medir los fotogramas exactos de fallback `native` (añadir número de fotograma a la traza de layout). |
 | T09 | P2 | local | libre | Retratos pendientes del capítulo 1 (42), revisando `004f`, `00ef`, `013b`, `013c` por sus tres regiones. |
-| T10 | P2 | local | coordinador · PR en preparación | Mezcla blanca HD con metadatos exactos, alfa y caché por peso; compositor sintético5/15/25 y testigo real25/32 a1440p pasan. Otras identidades/animaciones siguen T09/T19. |
+| T10 | P2 | local | integrado · PR #9 | Mezcla blanca HD con metadatos exactos, alfa y caché por peso; compositor sintético5/15/25 y testigo real25/32 a1440p pasan. Otras identidades/animaciones siguen T09/T19. |
 | T11 | P2 | agente | tras T01 | Integrar el catálogo de diálogo precargado con el lector de tablas inglesas validado. |
 | T12 | P2 | local | tras T01 | Cámara de combate con la extensión táctica STAGE01 anclada en 656,24 durante todo el combate. |
 | T13 | P2 | agente | integrado · PR #2 | Normalizar finales de línea (avisos CRLF/LF) con `.gitattributes`, sin cambiar contenido. |
@@ -57,8 +57,11 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T26 | P0 | local | tras T02/T03 y huecos HD | Entrega posterior con el capítulo1 completo y su mod HD verificados. El test.1 solicitado para otro PC no cierra esta tarea. |
 | T27 | P1 | local | libre | Ampliar observaciones del índice de escenas: actualmente inventario de ambos discos, 112 tablas, 54 vídeos y nueve observaciones. Confirmar por ruta los seis tags, texto/subtítulos y encuadre de cada clip; no convertir candidatos en cobertura probada. |
 | T28 | P2 | agente/local | tras T27 por escena | Consumir etiquetas verificadas para la presentación/Zoom sin heurísticas ambiguas. El índice local de metadatos todavía no gobierna el runtime. |
-| T29 | P0 | local | corregido en candidato · PR en preparación | Capítulo2: EVT02 atribuido exactamente a 00204000. Candidato de 643.320 bloques pasa frontera1200 y arranque9501 con todos los hashes/RGB iguales al intérprete y cero interpretados. Falta integrar PR y promover build; test.1 sigue inmutable. |
+| T29 | P0 | local | integrado · PR #8 | Capítulo2: EVT02 atribuido exactamente a 00204000. Candidato de 643.320 bloques pasa frontera1200 y arranque9501 con todos los hashes/RGB iguales al intérprete y cero interpretados. Base de la ampliación posterior de674.023; test.1 sigue inmutable. |
 | T30 | P0 | local | libre | Continuar desde la introducción del combate del capítulo2, validar órdenes/ataques/victoria y presentación. Partida y estado9500 privados disponibles; no confundir carga corregida con capítulo completo. |
+| T31 | P0 | local | coordinador · PR en preparación | Capítulo4: EVT06 registrado por coincidencia completa en RAM; candidato674.023 pasa frontera1200 y carga12000, con todos los hashes/RGB iguales al intérprete y cero interpretados. Integrar PR y continuar combate. |
+| T32 | P0 | local | libre | Completar rutas intermedias, combates, guardados y finales de capítulos2–Finale. El barrido inicial valida entradas de ocho rutas (96.000 frames) y el arreglo de entrada de capítulo4, no capítulos completos. |
+| T33 | P1 | local | coordinador · reproducción | Inicio y New Game: pétalos16:9, flashes sin borde4:3, caja vacía/sombras antes/después del primer vídeo y zoom de vídeo. Mantener posición aprobada de diálogo entre escenas. |
 
 ## División para colaboradores
 
