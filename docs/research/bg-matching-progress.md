@@ -16,11 +16,14 @@ Signature: 32x20 luminance of the scene area (x 5-95 %, y 4-66 % of the frame), 
 | `SAKURA1/BG1006` | Lobby, staircase and desk | |
 | `SAKURA1/BG1007` | Theatre lobby with crowd (variant) | |
 | `SAKURA1/BG1021` | Lobby staircase, green carpet | |
+| `SAKURA1/BG1116` | Corridor with windows and door | |
+| `SAKURA1/BG2039` | Group photo (academy cadets) | |
+| `SAKURA1/BG1075` | Library, green curtains | |
 
 Rejected: `SAKURA1/BG2173` for the episode title card (false positive, no matching structure).
 
 ## Pass 1: cold New Game, continuous run
 
 - Source: the 297,107-frame cold run (inputs of `local/work/rb-full/input.movie`), one screenshot every 250 frames (about 1,190 frames), strict native mode.
-- Status when written: running; 537 screenshots captured and ranked (79 strong, 9 distinct candidates, 8 confirmed). After it ends: rank all screenshots, confirm candidates visually, and update this table and the scene-images counter in `config/hd-progress.json`.
-- Count so far: 8 of 1,267 scene images matched, 0 integrated.
+- Status when written: running; 704 screenshots ranked (90 strong, 12 distinct candidates, 11 confirmed). After it ends: rank all screenshots, confirm candidates visually, and update this table and the scene-images counter in `config/hd-progress.json`.
+- Count so far: 11 of 1,267 scene images matched, 0 integrated.
