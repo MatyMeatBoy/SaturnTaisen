@@ -53,7 +53,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T22 | P0 | local | empaquetado y traslado verificados | v0.2.0-test.1: release público limpio y ZIP privado de 708.495.279 bytes, disco1 inglés + HD procesado. Escena HD y combate arrancan desde extracción nueva con PATH Windows, cero interpretados. RX 6900 XT física pendiente T16. |
 | T23 | P1 | local | libre | Menús/HUD equivalentes PC: inventario y matches verificados para Saturn, sin deformar proporciones. |
 | T24 | P2 | agente/local | libre | Medir y desactivar trabajo auxiliar táctico en Original sin cambiar píxeles/guest; declarar caché y condiciones. |
-| T25 | P1 | agente/local | Claude · en curso | Parche al español. Reutilizar catálogo inglés validado, sin publicar guiones extraídos. Coordinador prepara workspace con IDs/contexto/controles para evitar transcribir dos veces ambos discos. |
+| T25 | P1 | agente/local | Claude · en curso | Parche al español (menús + capítulo 1). Herramientas en `tools/es/` y método en `docs/research/traduccion-espanol.md`; guion y datos solo en `local/work/guion-es`. Capítulo 1 traducido y revisado con japonés; título, intermedio, opciones y carga en español. Faltan estado, barra de combate, rótulos de carga/episodio/LOADING, extras, texto HD y opción de idioma en el launcher. |
 | T26 | P0 | local | tras T02/T03 y huecos HD | Entrega posterior con el capítulo1 completo y su mod HD verificados. El test.1 solicitado para otro PC no cierra esta tarea. |
 | T27 | P1 | local | libre | Ampliar observaciones del índice de escenas: actualmente inventario de ambos discos, 112 tablas, 54 vídeos y nueve observaciones. Confirmar por ruta los seis tags, texto/subtítulos y encuadre de cada clip; no convertir candidatos en cobertura probada. |
 | T28 | P2 | agente/local | tras T27 por escena | Consumir etiquetas verificadas para la presentación/Zoom sin heurísticas ambiguas. El índice local de metadatos todavía no gobierna el runtime. |
@@ -68,6 +68,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T37 | P1 | local | integrado parcial · PR #11 | Filas Sumire/María corregidas con placa VDP1; expansión a los44 glifos de9píxeles probada en la rama T39. Elecciones y cobertura completa pendientes. |
 | T38 | P2 | local | auditoría · PR #11 | Avance con voz: B interrumpe antes que A/C en una línea real, entradas recibidas y paridad AOT/intérprete. Falta referencia Saturn independiente. |
 | T39 | P1 | local | coordinador · pendientes/T39-floral-transitions | Fundido mapa↔floral y entrada directa aZoom;900hashes y9capturas nativas coinciden, muestreo exacto exterior/imagen/sombra. |
+| T40 | P1 | agente/local | libre (coordinar SDK) | Opción «Idioma: English / Español» en el launcher según `docs/research/traduccion-espanol.md`: `language=es` en `launcher.ini`, `find_nearby` prioriza `disc1-es`, selector desactivado si falta. Mientras tanto funciona `tools/es/perfil_es.py`. |
 
 
 ## División para colaboradores
@@ -106,8 +107,10 @@ Al abrir PR indicar ID, archivos propios, prueba y limitaciones. No marcar «hec
 - T37: patch42 convierte las filas reportadas de Sumire/María. PlacaVDP1 con primer píxel anterior y hasta dos glifos escritores; invalidación por tercer escritor, sobreescritura no glifo o escritura guest. Las filas con tinta compartida requieren borrado atómico. Se conserva el clipHD original.
 - Pruebas:12hashes por caso iguales entreOriginal,MejoradoHD,MejoradoSD ytest.1Original; RGBOriginalidéntico; AOTestricto0interpretados. Ver hd-text-row-rejections.md. Cobertura de eleccionesLIPS y todoslosguiones sigue pendiente, no declarar todoeltextoHD completo.
 - T38: auditoría voz cerrada para primera línea deSumire: Binterrumpe/avanzaantesqueA/C; inputsSMPC recibidos,460hashes+PCM porbotón igualesAOT/intérprete. FaltaSaturnindependiente.
-- Patch43 contiene solamente primitivas probadas de mezcla exterior mapa/floral; todavía no consume ese helper elruntime. No presentar como arreglo de todaslastransiciones.
+- Patch43 contiene primitivas de mezcla exterior mapa/floral; patch44 las consume en la entrada al comedor, con pruebas de continuidad. Otras transiciones siguen pendientes.
 
 ### Integración futura de idiomas
 
 El idioma será una selección del launcher con una variante coherente de guiones, menús, fuentes y recursos. Compartir mapeos de fuente solo cuando el atlas y su codificación coincidan; las cachés de guion/recurso deben incluir idioma/revisión o hash de contenido. No regenerar hojas españolas ni copiar configuración de mandos encima de un perfil ya editado. PR12 integra herramientas privadas de preparación, no declara terminado el selector ni todo el juego traducido. Saturn y las correcciones visuales mantienen prioridad.
+
+
