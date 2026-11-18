@@ -28,3 +28,7 @@ Scene images total 1,267 SPR files and tactical mode 542. These are candidates b
 ## Name links to Saturn files
 
 Stem match between PC SPR names and Saturn disc files (`pc-saturn-name-links.json`; candidates, not approved pairs): SAKURA1/BG 712 of 716, SAKURA2/BG 37 of 50, SAKURA1/TITLE 10 of 10, SAKURA1/NC 147 of 147, SAKURA3/NC 19 of 19, SAKURA1/MAP 16 of 17, SAKURA1/ITEM 42 of 57, SAKURA1/ICATCH 10 of 21. No name link: SAKURA1/ENDING, SAKURA2/EVENT, SAKURA3/CG, SAKURA2/MAP, SAKURA2/UNIT and almost all SYSTEM files; those need pixel or index matching. A name link still requires decoding both images and checking the layout before it counts as matched.
+
+### Caveat on BG name links (probe, 2026-11-18)
+
+`/SAKURA1/BG1001.BIN` (45,120 bytes, disc 1) starts `00 01 00 01` followed by zeros and has high byte entropy (256 distinct values). It does not decode as a linear 8 bpp bitmap (widths 256/288/320), as 8x8 4 bpp cells (offsets 0, 0x20, 0x40, 0x100), or with the game's LZ (`tools/es/red_lz.py`, starts 0/4/8/16). The PC counterpart `BG1001.SPR` is a 231 KB SPRED image. Until the Saturn BG format is decoded, treat the 712 name links as unverified candidates; the name may be shared by unrelated data. Next step: find which routine loads `BG*.BIN` (trace the SH-2 program) and decode it, then compare with the PC image.
