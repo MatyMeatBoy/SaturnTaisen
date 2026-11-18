@@ -97,6 +97,19 @@ def run(command, **kwargs):
                           **kwargs)
 
 
+def default_home(program: Path) -> Path:
+    """The player's folder as the launcher resolves it in portable mode (the launcher passes --home itself).
+
+    SATURN_TAISEN_FIRST_HOME wins; a profile kept directly in user/ by an earlier release is still used;
+    otherwise it is user/SaturnTaisen, where the launcher keeps it beside portable.txt."""
+    env = os.environ.get('SATURN_TAISEN_FIRST_HOME')
+    if env:
+        return Path(env).resolve()
+    if (program / 'user' / 'launcher.ini').is_file():
+        return program / 'user'
+    return program / 'user' / 'SaturnTaisen'
+
+
 class Paths:
     """Where the release keeps its parts; every one can be overridden for tests and the source tree."""
 
@@ -124,8 +137,7 @@ class Paths:
                                program / 'assets/generated/pc-backgrounds/provenance.json')
         self.game = Path(args.output).resolve() if args.output else program / 'game'
         self.hd = Path(args.hd_output).resolve() if args.hd_output else program / 'hd-resources'
-        env = os.environ.get('SATURN_TAISEN_FIRST_HOME')
-        self.home = Path(args.home).resolve() if args.home else Path(env).resolve() if env else program / 'user'
+        self.home = Path(args.home).resolve() if args.home else default_home(program)
 
 
 # ---- reading the player's discs ---------------------------------------------------------------------

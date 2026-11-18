@@ -191,8 +191,10 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         for name,source in generated_backgrounds(tactical_source,tactical=True).items():
             shutil.copy2(source,tactical_art/name);allowed_art['art/tactics/'+name]=digest(source)
         shutil.copy2(tactical_source/'provenance.json',tactical_art/'provenance.json')
-    (destination/'Jugar.bat').write_text('@echo off\nsetlocal\nset "SATURN_TAISEN_FIRST_HOME=%~dp0user"\nset "SATRECOMP_HD_STATS=1"\nset "SATRECOMP_BACKGROUND_STATS=1"\nif not exist "%~dp0user" mkdir "%~dp0user"\nif not exist "%~dp0user\\settings.ini" if exist "%~dp0personal-defaults.ini" copy /y "%~dp0personal-defaults.ini" "%~dp0user\\settings.ini" >nul\nstart "" /d "%~dp0" "%~dp0SaturnTaisen.exe"\n',encoding='ascii')
-    (destination/'Ver logs.bat').write_text('@echo off\nif not exist "%~dp0user\\logs" mkdir "%~dp0user\\logs"\nstart "" "%~dp0user\\logs"\n',encoding='ascii')
+    # One profile however the game is started: the launcher's own portable folder (user/SaturnTaisen). A profile an
+    # earlier release kept directly in user/ is still used, so its saves and settings are not left behind.
+    (destination/'Jugar.bat').write_text('@echo off\nsetlocal\nif exist "%~dp0user\\launcher.ini" set "SATURN_TAISEN_FIRST_HOME=%~dp0user"\nstart "" /d "%~dp0" "%~dp0SaturnTaisen.exe"\n',encoding='ascii')
+    (destination/'Ver logs.bat').write_text('@echo off\nsetlocal\nset "LOGS=%~dp0user\\SaturnTaisen\\logs"\nif exist "%~dp0user\\launcher.ini" set "LOGS=%~dp0user\\logs"\nif not exist "%LOGS%" mkdir "%LOGS%"\nstart "" "%LOGS%"\n',encoding='ascii')
     (destination/'portable.txt').write_text('',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
     (destination/'LEEME.md').write_text(f'''# SaturnTaisen {version}
@@ -216,7 +218,7 @@ Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Tai
 
 Esta versión no certifica toda la campaña ni todos los mandos; el cambio automático de disco y RetroAchievements siguen pendientes. Consulta las notas de versión.
 
-`user/` contiene tus partidas y ajustes y `game/` los discos preparados. No las borres al actualizar.
+`user/` contiene tus partidas y ajustes, y `game/` y `hd-resources/` lo ya preparado. No las borres al actualizar: puedes descomprimir una versión nueva encima y no se rehace nada que siga vigente.
 ''',encoding='utf-8',newline='\n')
     forbidden={'.iso','.cue','.bin','.bup','.sro','.xdelta','.state','.png','.jpg','.wav'}
     files=[]

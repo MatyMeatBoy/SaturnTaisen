@@ -234,6 +234,23 @@ class Profile(unittest.TestCase):
                 self.assertEqual(ini['launcher']['preset_chosen'], '1')
                 self.assertEqual(setup.saved_language(paths), language)
 
+    def test_default_home_is_the_launchers_portable_folder(self):
+        import os
+        saved = os.environ.pop('SATURN_TAISEN_FIRST_HOME', None)
+        try:
+            with tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                self.assertEqual(setup.default_home(root), root / 'user' / 'SaturnTaisen')
+                (root / 'user').mkdir()
+                (root / 'user' / 'launcher.ini').write_text('[game]\n', encoding='ascii')
+                self.assertEqual(setup.default_home(root), root / 'user')  # a profile from an earlier release
+                os.environ['SATURN_TAISEN_FIRST_HOME'] = str(root / 'otro')
+                self.assertEqual(setup.default_home(root), (root / 'otro').resolve())
+        finally:
+            os.environ.pop('SATURN_TAISEN_FIRST_HOME', None)
+            if saved is not None:
+                os.environ['SATURN_TAISEN_FIRST_HOME'] = saved
+
     def test_unprepared_language_is_refused(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
