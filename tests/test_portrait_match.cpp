@@ -34,4 +34,45 @@ int main() {
     assert(!port::PortraitPixelsVisible(frame,palette,pixels,320,224,16,160));
     frame[0]=0;assert(port::PortraitPixelsVisible(frame,palette,pixels,320,224,16,160));
     frame.fill(0);assert(!port::PortraitPixelsVisible(frame,palette,pixels,320,224,16,160));
+
+    // Trusted VDP2 metadata describes exactly one white mix across opaque pixels.
+    using port::MatchPortraitVisibility;
+    std::array<uint8_t,320*224> whiteWeights{};
+    frame.fill(1);
+    frame[0]=0;
+    pixels.fill(0xFF0000F8);
+    assert(MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights)==0);
+    for(uint8_t weight:{5,15,25}) {
+        const auto channel=uint32_t((248*weight)>>5);
+        const uint32_t mixed=0xFF0000F8|(channel<<8)|(channel<<16);
+        for(int row=0;row<48;++row)for(int column=0;column<40;++column) {
+            const auto at=(160+row)*320+16+column;
+            pixels[at]=mixed;whiteWeights[at]=weight;
+        }
+        const auto at=160*320+16;
+        pixels[at]=0xFF00FF00;whiteWeights[at]=0; // original transparency is ignored
+        assert(!port::PortraitPixelsVisible(frame,palette,pixels,320,224,16,160));
+        assert(MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights)==weight);
+        pixels[at+1]^=1;
+        assert(!MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights));
+        pixels[at+1]^=1;
+        whiteWeights[at+1]=0;
+        assert(!MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights));
+        whiteWeights[at+1]=weight;
+        const uint32_t rgba=0x7FA06020;
+        assert(port::ApplyPortraitWhiteMix(rgba,weight)==(0x7F000000u |
+               ((32*(32-weight)+248*weight)>>5) |
+               (((96*(32-weight)+248*weight)>>5)<<8) |
+               (((160*(32-weight)+248*weight)>>5)<<16)));
+        assert(port::ApplyPortraitWhiteMix(0x00A06020,weight)==0x00A06020);
+    }
+    whiteWeights.fill(24);
+    assert(!MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights));
+    assert(!MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,std::span(whiteWeights).first(1)));
+    // Exact white is ambiguous from RGB alone. Only the renderer's weight is used.
+    palette[2]=0x7F;palette[3]=0xFF;
+    pixels.fill(0xFFF8F8F8);whiteWeights.fill(15);
+    assert(MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights)==15);
+    frame.fill(0);
+    assert(!MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights));
 }

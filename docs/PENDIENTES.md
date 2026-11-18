@@ -37,7 +37,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T07 | P1 | local | hecho desarrollo · T01 | Intro previa al título: área 288×144 en 16,24 a la mayor escala entera con subtítulos ingleses. |
 | T08 | P1 | local | tras T01 | Fondos extendidos durante fundidos: medir los fotogramas exactos de fallback `native` (añadir número de fotograma a la traza de layout). |
 | T09 | P2 | local | libre | Retratos pendientes del capítulo 1 (42), revisando `004f`, `00ef`, `013b`, `013c` por sus tres regiones. |
-| T10 | P2 | local | libre | Mezcla hacia blanco de retratos: aceptar en `PortraitPixelsVisible` las mezclas exactas 5/15/25 sobre 32. |
+| T10 | P2 | local | coordinador · PR en preparación | Mezcla blanca HD con metadatos exactos, alfa y caché por peso; compositor sintético5/15/25 y testigo real25/32 a1440p pasan. Otras identidades/animaciones siguen T09/T19. |
 | T11 | P2 | agente | tras T01 | Integrar el catálogo de diálogo precargado con el lector de tablas inglesas validado. |
 | T12 | P2 | local | tras T01 | Cámara de combate con la extensión táctica STAGE01 anclada en 656,24 durante todo el combate. |
 | T13 | P2 | agente | integrado · PR #2 | Normalizar finales de línea (avisos CRLF/LF) con `.gitattributes`, sin cambiar contenido. |

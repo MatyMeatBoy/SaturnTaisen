@@ -1,0 +1,194 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 7d50e6d..8e9cb04 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -806,15 +806,17 @@ int RunWindowed(Port &port) {
+                         for(size_t i=0;i<640;i++)if(bytes[i])portrait[size_t(y-160)*40+i]=bytes[i];
+                     }
+                 }
+-                // Reject occlusion, colour calculation/fades or an unsupported layout.
+-                if(count==1 && PortraitPixelsVisible(portrait,palette,softwareShown,320,224,16,160))
+-                    if(auto* replacement=portraitPack.Texture(renderer,portrait,textFit.scale)) {
++                // Match the displayed sprite and, when present, its exact white fade.
++                const auto weight=count==1?MatchPortraitVisibility(portrait,palette,softwareShown,320,224,16,160,
++                    shownFrame.spriteWhiteWeight):std::nullopt;
++                if(weight)
++                    if(auto* replacement=portraitPack.Texture(renderer,portrait,textFit.scale,*weight)) {
+                         const SDL_FRect where{float(textFit.x+(16-textCropX)*textFit.scale),float(textFit.y+(160-textCropY)*textFit.scale),
+                                               float(40*textFit.scale),float(48*textFit.scale)};
+                         if(std::getenv("SATRECOMP_HD_STATS")) {
+-                            static std::array<int,4> logged{};
+-                            const std::array<int,4> current{int(where.x),int(where.y),int(where.w),int(where.h)};
+-                            if(current!=logged) {logged=current;std::fprintf(stderr,"portrait viewport: x=%d y=%d w=%d h=%d density=%d\n",current[0],current[1],current[2],current[3],PortraitDensity(textFit.scale));}
++                            static std::array<int,5> logged{};
++                            const std::array<int,5> current{int(where.x),int(where.y),int(where.w),int(where.h),*weight};
++                            if(current!=logged) {logged=current;std::fprintf(stderr,"portrait viewport: x=%d y=%d w=%d h=%d density=%d white_mix=%d\n",current[0],current[1],current[2],current[3],PortraitDensity(textFit.scale),current[4]);}
+                         }
+                         SDL_RenderTexture(renderer,replacement,nullptr,&where);
+                     }
+diff --git a/port/portrait_match.h b/port/portrait_match.h
+index 76c4b7e..1a5b2a9 100644
+--- a/port/portrait_match.h
++++ b/port/portrait_match.h
+@@ -59,17 +59,42 @@ inline std::optional<PortraitPatch> MatchPortraitFrame(std::span<const uint8_t>
+     return found;
+ }
+ inline int PortraitDensity(int viewportScale) {return viewportScale>=2 && viewportScale%2==0?2:1;}
+-inline bool PortraitPixelsVisible(std::span<const uint8_t> frame,std::span<const uint8_t> palette,
+-                                 std::span<const uint32_t> pixels,int width,int height,int x,int y) {
++inline constexpr bool PortraitWhiteWeight(uint8_t weight) {
++    return weight==5 || weight==15 || weight==25;
++}
++inline constexpr uint32_t ApplyPortraitWhiteMix(uint32_t rgba,uint8_t weight) {
++    if(!PortraitWhiteWeight(weight) || !(rgba>>24))return rgba;
++    uint32_t mixed=rgba&0xFF000000;
++    for(unsigned shift:{0u,8u,16u}) {
++        const uint32_t channel=(rgba>>shift)&255;
++        mixed|=((channel*(32-weight)+248*weight)>>5)<<shift;
++    }
++    return mixed;
++}
++// A weight greater than zero requires the renderer to prove that the visible
++// sprite participated in that exact VDP2 blend. Never infer it from RGB alone.
++// Empty metadata retains the original exact-pixel comparison.
++inline std::optional<uint8_t> MatchPortraitVisibility(std::span<const uint8_t> frame,std::span<const uint8_t> palette,
++    std::span<const uint32_t> pixels,int width,int height,int x,int y,std::span<const uint8_t> whiteWeights={}) {
+     if(frame.size()!=1920 || palette.size()!=512 || width<40 || height<48 || x<0 || y<0 || x>width-40 || y>height-48 ||
+-       pixels.size()!=size_t(width)*height)return false;
+-    bool opaque=false;
++       pixels.size()!=size_t(width)*height || (!whiteWeights.empty() && whiteWeights.size()!=pixels.size()))return {};
++    std::optional<uint8_t> weight;
+     for(int row=0;row<48;row++)for(int column=0;column<40;column++) {
+         const auto index=frame[row*40+column];if(!index)continue;
+-        opaque=true;const uint16_t word=uint16_t(palette[index*2])<<8|palette[index*2+1];
+-        const uint32_t color=((word&31)<<3)|(((word>>5)&31)<<11)|(((word>>10)&31)<<19);
+-        if((pixels[size_t(y+row)*width+x+column]&0xFFFFFF)!=color)return false;
++        const size_t at=size_t(y+row)*width+x+column;
++        const uint8_t actual=whiteWeights.empty()?0:whiteWeights[at];
++        if(!weight) {
++            if(actual!=0 && !PortraitWhiteWeight(actual))return {};
++            weight=actual;
++        }else if(actual!=*weight)return {};
++        const uint16_t word=uint16_t(palette[index*2])<<8|palette[index*2+1];
++        const uint32_t color=0xFF000000|((word&31)<<3)|(((word>>5)&31)<<11)|(((word>>10)&31)<<19);
++        if((pixels[at]&0xFFFFFF)!=(ApplyPortraitWhiteMix(color,*weight)&0xFFFFFF))return {};
+     }
+-    return opaque;
++    return weight;
++}
++inline bool PortraitPixelsVisible(std::span<const uint8_t> frame,std::span<const uint8_t> palette,
++                                 std::span<const uint32_t> pixels,int width,int height,int x,int y) {
++    return MatchPortraitVisibility(frame,palette,pixels,width,height,x,y).has_value();
+ }
+ }
+diff --git a/port/portrait_pack.h b/port/portrait_pack.h
+index 7684916..517621c 100644
+--- a/port/portrait_pack.h
++++ b/port/portrait_pack.h
+@@ -105,11 +105,11 @@ public:
+     bool PaletteMatches(std::span<const uint8_t> palette) const {
+         return !data_.records.empty() && palette.size()==512 && AtlasFingerprint(palette)==data_.paletteHash;
+     }
+-    SDL_Texture* Texture(SDL_Renderer* renderer,std::span<const uint8_t> frame,int viewportScale) {
+-        if(disabled_ || frame.size()!=1920 || data_.records.empty())return nullptr;
++    SDL_Texture* Texture(SDL_Renderer* renderer,std::span<const uint8_t> frame,int viewportScale,uint8_t whiteWeight=0) {
++        if(disabled_ || frame.size()!=1920 || data_.records.empty() || (whiteWeight && !PortraitWhiteWeight(whiteWeight)))return nullptr;
+         const int density=PortraitDensity(viewportScale);
+-        if(hasProbe_ && probeDensity_==density && !std::memcmp(probe_.data(),frame.data(),1920))return probeUsable_?texture_:nullptr;
+-        std::memcpy(probe_.data(),frame.data(),1920);probeDensity_=density;hasProbe_=true;probeUsable_=false;
++        if(hasProbe_ && probeDensity_==density && probeWhiteWeight_==whiteWeight && !std::memcmp(probe_.data(),frame.data(),1920))return probeUsable_?texture_:nullptr;
++        std::memcpy(probe_.data(),frame.data(),1920);probeDensity_=density;probeWhiteWeight_=whiteWeight;hasProbe_=true;probeUsable_=false;
+         size_t selected=std::numeric_limits<size_t>::max();PortraitPatch patch;
+         for(size_t i=0;i<data_.records.size();i++)if(auto match=MatchPortraitFrame(data_.records[i].native,frame)) {
+             if(match->ambiguous)return nullptr;
+@@ -138,7 +138,7 @@ public:
+                 const size_t at=size_t(y)*width+x;
+                 auto color=atlas_[size_t(sourceY)*width+x];
+                 if(masked && !(color>>24))color=atlas_[at];
+-                composed[at]=frame[(y/density)*40+x/density]?color:0;
++                composed[at]=frame[(y/density)*40+x/density]?ApplyPortraitWhiteMix(color,whiteWeight):0;
+             }
+         }
+         auto* next=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,width,48*density);
+@@ -164,6 +164,6 @@ private:
+     }
+     std::filesystem::path folder_;PortraitPackData data_;SDL_Texture* texture_=nullptr;
+     std::vector<uint32_t> atlas_;size_t atlasRecord_=std::numeric_limits<size_t>::max();int atlasDensity_=0;
+-    std::array<uint8_t,1920> probe_{};int probeDensity_=0;bool hasProbe_=false,probeUsable_=false,disabled_=false;
++    std::array<uint8_t,1920> probe_{};int probeDensity_=0;uint8_t probeWhiteWeight_=0;bool hasProbe_=false,probeUsable_=false,disabled_=false;
+ };
+ }
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 60360ff..0f21faa 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -386,6 +386,7 @@ void Renderer::BeginFrame() {
+         m_presentation.width=m_width; m_presentation.height=m_height;
+         m_presentation.foreground.assign(static_cast<size_t>(m_width)*m_height,0);
+         m_presentation.underSprites.assign(static_cast<size_t>(m_width)*m_height,0);
++        m_presentation.spriteWhiteWeight.assign(m_width==320 && m_height==224?320*224:0,255);
+         m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
+         m_presentation.scrollWidth=m_captureScrollExtra && m_width==320 && m_height==224?m_width+2*m_captureScrollExtra:0;
+         m_presentation.mapSignature=0;
+@@ -705,9 +706,12 @@ void Renderer::ComposeLine(uint32 y) {
+             return value;
+         };
+         uint32 presentationSource=top;
++        const bool captureWhiteWeight=m_capturePresentation && !m_presentation.spriteWhiteWeight.empty() && y<m_presentation.height;
++        uint8 whiteWeight=top==kSprites?0:255;
+         const bool calcTop = top == kSprites ? m_sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
+                            : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
+                              regs2.specialColorCalcMode[top - kRBG0] == 0 && !regs2.bgParams[top - kRBG0].lineColorScreenEnable;
++        if (calcTop && regs2.colorCalcExtended)whiteWeight=255;
+         if (calcTop && !regs2.colorCalcExtended && !m_colorCalcWindow[x]) {
+             // NBG3 can be the nominal top while colour calculation reveals the video below.
+             // Preserve the final mixed pixel but classify its visible content, not merely priority.
+@@ -715,11 +719,20 @@ void Renderer::ComposeLine(uint32 y) {
+             Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = m_sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
+             const uint32 ratioLayer = regs2.colorCalcUseSecondRatio ? second : top;
+             const uint32 ratio = ratioLayer == kSprites ? m_sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
++            whiteWeight=255;
++            if(captureWhiteWeight && !regs2.colorCalcAdd) {
++                if(top==kSprites && (below.u32&0xFFFFFF)==0xF8F8F8)
++                    whiteWeight=static_cast<uint8>(ratio+1);
++                else if(second==kSprites && (color.u32&0xFFFFFF)==0xF8F8F8)
++                    whiteWeight=static_cast<uint8>(31-ratio);
++            }
+             auto mix = [&](uint32 a, uint32 b) {
+                 return regs2.colorCalcAdd ? std::min(a + b, 255u) : (a * (31u - ratio) + b * (ratio + 1u)) >> 5;
+             };
+             color.u32 = mix(color.r, below.r) | (mix(color.g, below.g) << 8) | (mix(color.b, below.b) << 16);
+         }
++        if(captureWhiteWeight && regs2.colorOffsetEnable[top] && regs2.colorOffset[regs2.colorOffsetSelect[top]].nonZero)
++            whiteWeight=255;
+         color = applyOffset(color, top);
+         // Sprite shadow: a shadow pixel of the sprite layer halves the brightness of the layer shown, if
+         // that layer takes shadows
+@@ -731,12 +744,14 @@ void Renderer::ComposeLine(uint32 y) {
+                                                             : regs2.bgParams[top - kRBG0].shadowEnable;
+             if (takesShadow) {
+                 color.u32 = (color.u32 >> 1) & 0x7F7F7F7F;
++                whiteWeight=255;
+             }
+         }
+         out[x] = color.u32;
+         if (m_capturePresentation && y<m_presentation.height) {
+             const size_t at=static_cast<size_t>(y)*width+x;
+             m_presentation.source[at]=static_cast<uint8>(presentationSource);
++            if(captureWhiteWeight)m_presentation.spriteWhiteWeight[at]=whiteWeight;
+             m_presentation.foreground[at]=presentationSource<5 ? color.u32|0xFF000000 : 0;
+             Color888 under=color;
+             if(top==kSprites) {
+diff --git a/video/renderer.h b/video/renderer.h
+index 1934c36..ec33964 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -62,6 +62,8 @@ public:
+         uint32 width=0,height=0;
+         std::vector<uint32> foreground,underSprites;
+         std::vector<uint8> source;
++        // 0: unmodified sprite; 1–31: exact white weight; 255: unsupported.
++        std::vector<uint8> spriteWhiteWeight;
+         std::vector<PresentationSprite> sprites;
+         std::array<uint8,0x1000> palette{};
+         uint32 scrollWidth=0;
