@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "scope": "Name-based link candidates between PC SPR files and Saturn disc files (stem match, both discs). Candidates only: no pixel equivalence is claimed.",
+  "folders": {
+    "SAKURA1/BG": {
+      "pc_files": 716,
+      "name_linked": 712,
+      "unlinked": [
+        "BG1000",
+        "BG1118",
+        "BG2089",
+        "BG2090"
+      ]
+    },
+    "SAKURA1/ENDING": {
+      "pc_files": 13,
+      "name_linked": 0,
+      "unlinked": [
+        "END_AI",
+        "END_GE",
+        "END_KA",
+        "END_KO",
+        "END_MA",
+        "END_SA",
+        "END_SU",
+        "STAFF_AI",
+        "STAFF_KA",
+        "STAFF_KO",
+        "STAFF_MA",
+        "STAFF_SA",
+        "STAFF_SU"
+      ]
+    },
+    "SAKURA1/ICATCH": {
+      "pc_files": 21,
+      "name_linked": 10,
+      "unlinked": [
+        "IC0100",
+        "IC0200",
+        "IC0300",
+        "IC0400",
+        "IC0600",
+        "IC0700",
+        "IC0800",
+        "IC0900",
+        "KAO_P",
+        "SHINRAI",
+        "SHINRIAD"
+      ]
+    },
+    "SAKURA1/ITEM": {
+      "pc_files": 57,
+      "name_linked": 42,
+      "unlinked": [
+        "BURO01",
+        "BURO02",
+        "BURO03",
+        "BURO04",
+        "BURO05",
+        "BURO06",
+        "BURO07",
+        "BURO08",
+        "BURO09",
+        "BURO10",
+        "BURO11",
+        "BURO12",
+        "BURO13",
+        "BUROICON",
+        "ITEMICON"
+      ]
+    },
+    "SAKURA1/MAP": {
+      "pc_files": 17,
+      "name_linked": 16,
+      "unlinked": [
+        "TMAP2"
+      ]
+    },
+    "SAKURA1/NC": {
+      "pc_files": 147,
+      "name_linked": 147,
+      "unlinked": []
+    },
+    "SAKURA1/SYSTEM": {
+      "pc_files": 40,
+      "name_linked": 1,
+      "unlinked": [
+        "BURO_W",
+        "CAUTION",
+        "EXIT_W",
+        "FONT_CSL",
+        "HARI",
+        "ICON2",
+        "JYOUKI",
+        "KAO",
+        "KARAOKE",
+        "LIPSBARY",
+        "LIPSCUR",
+        "LISPBARX",
+        "MINISAKU",
+        "MSTAFF",
+        "NOWLOAD",
+        "OMKMOV_W",
+        "OMKSND_W",
+        "OPTION",
+        "OP_WIN",
+        "POINT",
+        "REDLOGO",
+        "R_HARI",
+        "SEGALOGO",
+        "SHADE_WA",
+        "SHADE_WA",
+        "SHADE_WB",
+        "SHADE_WB",
+        "SISTEM",
+        "SIS_BG",
+        "SIS_BG2",
+        "SIS_BG3",
+        "SIS_ICON",
+        "TL_BG0",
+        "TL_ROGO0",
+        "TUIKA_W",
+        "WINDOW",
+        "WINDOW_A",
+        "WINDOW_B",
+        "WINDOW_C"
+      ]
+    },
+    "SAKURA1/TITLE": {
+      "pc_files": 10,
+      "name_linked": 10,
+      "unlinked": []
+    },
+    "SAKURA1/WALL": {
+      "pc_files": 25,
+      "name_linked": 3,
+      "unlinked": [
+        "KABE0100",
+        "KABE0101",
+        "KABE0200",
+        "KABE0201",
+        "KABE0300",
+        "KABE0301",
+        "KABE0400",
+        "KABE0401",
+        "KABE0500",
+        "KABE0501",
+        "KABE0600",
+        "KABE0601",
+        "KABE0700",
+        "KABE0701",
+        "KABE0800",
+        "KABE0801",
+        "KABE0900",
+        "KABE0901",
+        "KABE1000",
+        "OMAKE1",
+        "OMAKE2",
+        "OMAKE3"
+      ]
+    },
+    "SAKURA2/BG": {
+      "pc_files": 50,
+      "name_linked": 37,
+      "unlinked": [
+        "BBG001",
+        "BBG101",
+        "BBG102",
+        "BBG105",
+        "BBG201",
+        "BBG202",
+        "BBG206",
+        "BBG207",
+        "BBG212",
+        "BBG219",
+        "BBG220",
+        "GO_JINBU",
+        "GO_KOUBU"
+      ]
+    },
+    "SAKURA2/EVENT": {
+      "pc_files": 235,
+      "name_linked": 0,
+      "unlinked": "omitted (>40)"
+    },
+    "SAKURA2/MAP": {
+      "pc_files": 177,
+      "name_linked": 0,
+      "unlinked": "omitted (>40)"
+    },
+    "SAKURA2/SYSTEM": {
+      "pc_files": 19,
+      "name_linked": 0,
+      "unlinked": [
+        "ALLMAP",
+        "BSDAMAGE",
+        "BS_GAUGE",
+        "BS_KIAI",
+        "BS_LIFE",
+        "BS_MOJIB",
+        "CONTINUE",
+        "KAOSLG",
+        "NAMECHR",
+        "NAMESP",
+        "NAMEUNIT",
+        "POINT",
+        "SHADOW",
+        "SLGSYS00",
+        "SLGSYS01",
+        "SLGSYS02",
+        "SLGSYS03",
+        "START",
+        "YES_NO"
+      ]
+    },
+    "SAKURA2/UNIT": {
+      "pc_files": 291,
+      "name_linked": 0,
+      "unlinked": "omitted (>40)"
+    },
+    "SAKURA3/CG": {
+      "pc_files": 222,
+      "name_linked": 0,
+      "unlinked": "omitted (>40)"
+    },
+    "SAKURA3/NC": {
+      "pc_files": 19,
+      "name_linked": 19,
+      "unlinked": []
+    }
+  }
+}
