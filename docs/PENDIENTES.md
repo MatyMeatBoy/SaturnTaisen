@@ -74,6 +74,8 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T45 | P2 | local | libre | Revisar el retrato `00a1` con ambas tiras activas. El candidato PC 160 mejora al intercambiar las dos tiras de 32 filas durante la preparación offline. Conservar la base, la máscara Saturn y el formato del pack. Aprobar tras comparar ambas tiras en juego. |
 | T46 | P2 | agente | actualizado | Estado y handoff alineados con PR19/patch0046/retratos201; candidato674.023 probado en cargas2/4. Entrega nueva pendiente, test.1 intacto. |
 
+| T47 | P0 | local | coordinador · preparación | v0.2.0-test.2: runtime674.023/patch0046, launcher aislado y HD201. Crear release público limpio y ZIP personal; verificar extracción con PATH Windows. No entregado aún. |
+
 ## División para colaboradores
 
 - **Coordinador:** integración T01, revisión/merge y seguimiento de T02/T03/T22. Los otros bots no modifican los mismos archivos ni la base AOT compartida durante su compilación.

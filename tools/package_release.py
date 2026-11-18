@@ -15,8 +15,8 @@ import zipfile
 ROOT=Path(__file__).resolve().parents[1]
 
 
-def common_notice():
-    path=ROOT/'local/licenses/recomp-common-28503a2e-NOTICES.md'
+def common_notice(owner_root=None):
+    path=Path(owner_root or ROOT)/'local/licenses/recomp-common-28503a2e-NOTICES.md'
     expected='45df29fb27a3fbcdb4fec51aaa7cae96ead79b40b7623e9c6f4642400cbe93d9'
     if not path.is_file():
         url='https://raw.githubusercontent.com/tmcleroy/recomp-common/28503a2e6ae35d9a53c09001c2af07c6d892401c/THIRD_PARTY_NOTICES.md'
@@ -65,11 +65,12 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     return result
 
 
-def package(destination,toolchain,archive=True,runtime=None):
+def package(destination,toolchain,archive=True,runtime=None,owner_root=None,build_dir=None):
+    owner=Path(owner_root or ROOT).resolve()
     tracked=set(subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0'))
     destination=destination.resolve()
     destination.mkdir(parents=True,exist_ok=False)
-    build=ROOT/'local/build/sakura'
+    build=Path(build_dir).resolve() if build_dir else owner/'local/build/sakura'
     executables={'sakura-launcher.exe':'SaturnTaisenFirst.exe','sakura.exe':'sakura.exe',
                  'import-saves.exe':'import-saves.exe'}
     for source,name in executables.items():
@@ -109,12 +110,12 @@ def package(destination,toolchain,archive=True,runtime=None):
         if source.is_dir():
             shutil.copytree(source,licenses/name)
     for name,source in {
-        'satrecomp-NOTICES.md':ROOT/'local/deps/satrecomp/THIRD_PARTY_NOTICES.md',
-        'recomp-common-NOTICES.md':common_notice(),
-        'Inter-OFL.txt':ROOT/'local/build/launcher/_deps/inter-src/LICENSE.txt',
-        'Dear-ImGui-MIT.txt':ROOT/'local/build/launcher/_deps/imgui-src/LICENSE.txt',
+        'satrecomp-NOTICES.md':owner/'local/deps/satrecomp/THIRD_PARTY_NOTICES.md',
+        'recomp-common-NOTICES.md':common_notice(owner),
+        'Inter-OFL.txt':owner/'local/build/launcher/_deps/inter-src/LICENSE.txt',
+        'Dear-ImGui-MIT.txt':owner/'local/build/launcher/_deps/imgui-src/LICENSE.txt',
         'Python-PSF.txt':Path(sys.base_prefix)/'LICENSE.txt',
-        'PyInstaller-COPYING.txt':ROOT/'local/venv-release/Lib/site-packages/pyinstaller-6.22.3.dist-info/licenses/COPYING.txt',
+        'PyInstaller-COPYING.txt':owner/'local/venv-release/Lib/site-packages/pyinstaller-6.22.3.dist-info/licenses/COPYING.txt',
     }.items():
         if not source.is_file():
             raise RuntimeError(f'Missing required license: {source}')
@@ -219,8 +220,10 @@ def main():
     parser.add_argument('--toolchain',type=Path,default=Path('C:/msys64/clang64'))
     parser.add_argument('--no-archive',action='store_true')
     parser.add_argument('--runtime',type=Path,help='isolated candidate executable; avoids replacing another tester runtime')
+    parser.add_argument('--owner-root',type=Path,help='owner workspace with private build dependencies and licenses; sources remain in this checkout')
+    parser.add_argument('--build-dir',type=Path,help='isolated directory with launcher and importer binaries')
     args=parser.parse_args()
-    result=package(args.output,args.toolchain,not args.no_archive,args.runtime)
+    result=package(args.output,args.toolchain,not args.no_archive,args.runtime,args.owner_root,args.build_dir)
     print(json.dumps({'output':str(args.output.resolve()),'files':len(result['files']),'dlls':result['dlls']}))
 
 
