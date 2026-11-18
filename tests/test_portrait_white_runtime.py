@@ -10,12 +10,13 @@ from PIL import Image
 
 ROOT=Path(__file__).resolve().parents[1]
 OWNER=Path(os.environ.get('SAKURA_OWNER_ROOT',ROOT))
-EXE=Path(os.environ.get('SAKURA_WHITE_TEST_EXE',OWNER/'local/build/portrait-blend-candidate/sakura.exe'))
+EXE=Path(os.environ.get('SAKURA_WHITE_TEST_EXE',OWNER/'local/build/visual-fixes-candidate/sakura.exe'))
 STATE=OWNER/'local/work/sakura/morning-9000.state'
 PACK=OWNER/'local/work/v012-prepared-hd'
+ART=OWNER/'local/releases/SaturnTaisenFirst-v0.2.0-test.1-win64/art'
 
 
-@unittest.skipUnless(EXE.is_file() and STATE.is_file() and (PACK/'prepared-manifest.json').is_file(),
+@unittest.skipUnless(EXE.is_file() and STATE.is_file() and (PACK/'prepared-manifest.json').is_file() and ART.is_dir(),
                      'requires owner white-fade state, prepared HD and candidate')
 class PortraitWhiteRuntimeTests(unittest.TestCase):
     def test_proven_white_mix_keeps_guest_state_and_native_fade_pixels(self):
@@ -26,6 +27,7 @@ class PortraitWhiteRuntimeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as temporary:
             for disabled in (0,1):
                 folder=Path(temporary)/str(disabled);folder.mkdir();shot=folder/'shot.png'
+                shutil.copytree(ART,folder/'art')
                 (folder/'settings.ini').write_text('[features]\npresentation_mode=1\nscene_view=1\n'
                     f'pc_hd_portraits={disabled}\npc_hd_backgrounds=0\nhd_preload=0\nrun_ahead=0\n',encoding='ascii')
                 shutil.copy2(OWNER/'local/work/sakura/prebattle-immutable-seed.bin',folder/'backup.bin')

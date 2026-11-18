@@ -36,6 +36,16 @@ int main() {
     assert(!port::SamplePanelBackdrop(flowers,2,2,-2,-1,3,4,2));
     assert(!port::SamplePanelBackdrop(flowers,2,2,0,0,0,0,0));
     assert(!port::SamplePanelBackdrop(flowers,3,2,0,0,1,0,0));
+    std::vector<port::PanelMix> shadows(320*224),covers(320*224);
+    for(int y=12;y<152;y++)for(int x=304;x<308;x++)shadows[y*320+x]=dark;
+    assert(port::UniformPictureShadowRecipe(shadows,covers).has_value());
+    shadows[80*320+305].lowerWeight=12;
+    assert(!port::UniformPictureShadowRecipe(shadows,covers));
+    shadows[80*320+305]={};
+    covers[80*320+305]=dark;
+    assert(port::UniformPictureShadowRecipe(shadows,covers).has_value());
+    covers[80*320+305].topRgb=Rgb(248,248,248);
+    assert(!port::UniformPictureShadowRecipe(shadows,covers));
     std::vector<uint32_t> storage;
     assert(port::ResizePanelBuffer(storage,16) && storage.size()==16);
     assert(!port::ResizePanelBuffer(storage,16*1024*1024+1) && storage.size()==16);

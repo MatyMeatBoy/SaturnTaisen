@@ -154,5 +154,45 @@ int main() {
     assert(panels.panelMix[0].lowerWeight==0);
     reg(0xd6,0);reg(0xfa,0x0500);draw(8,0x0a00);
     assert(panels.source[0]==3 && panels.panelMix[0].lowerWeight==0);
+    assert(panels.floralCoverMix[0].topRgb==0xf80000 && panels.floralCoverMix[0].lowerWeight==31);
+    assert(port::CompositePanelPixel(panels.floralCoverMix[0],0x0000f8,pixel|0xff000000)==(pixel|0xff000000));
+
+    // Swap the lower bitmap to NBG0. NBG3 wins and uses the lower screen's ratio.
+    reg(0x20,0x0009);reg(0x28,0x0002);reg(0x3c,0x0001);reg(0xf8,0x0003);
+    reg(0x14,0x4444);reg(0x16,0x4444);reg(0x110,8);
+    assert(draw(0x208,10)==0x5500a2-16);
+    assert((panels.floralCoverMix[0].postMixOffset==std::array<int16_t,3>{-16,0,0}));
+    assert(panels.floralCoverMix[0].lowerWeight==21);
+    assert(port::CompositePanelPixel(panels.floralCoverMix[0],0x0000f8,0xff000000)==(pixel|0xff000000));
+    assert(panels.mapFadeEdges.size()==32*224 && panels.mapFadeEdges[0].mapRgb==0xf80000);
+    assert(panels.mapFadeEdges[0].mix.mapWeight==11);
+    fb1[0]=0x83;fb1[1]=0xe0;reg(0xf0,6);
+    assert(draw(0x208,10)==0x00f800);
+    assert(panels.floralCoverMix[0].lowerWeight==0 && panels.mapFadeEdges[0].mix.mapWeight==11);
+    assert(port::CompositePanelPixel(panels.underPanelMix[0],0x0000f8,0xff000000)==panels.underSprites[0]);
+    fb1[0]=0;fb1[1]=0;
+    draw(0x208,31);
+    assert(panels.floralCoverMix[0].lowerWeight==0 && panels.mapFadeEdges[0].mix.mapWeight==32);
+    for(const unsigned mode:{0x308u,0x608u,0u}) {
+        draw(mode,10);
+        assert(panels.floralCoverMix[0].lowerWeight==0 && panels.mapFadeEdges[0].mix.mapWeight==0);
+    }
+    reg(0xd6,0x0200);draw(0x208,10);
+    assert(panels.floralCoverMix[0].lowerWeight==0 && panels.mapFadeEdges[0].mix.mapWeight==0);
+    reg(0xd6,0);
+    // Prove both raw edges across the frame, including the pixel hidden by a cursor.
+    for(size_t at=0;at<0x2000;at+=2) {vram2[at]=1;vram2[at+1]=0;}
+    std::fill_n(vram2.begin()+0x2000,32,0x11);
+    std::fill_n(vram2.begin()+0x20000,256*224,0x22);
+    fb1[0]=0x83;fb1[1]=0xe0;
+    reg(0xec,0x208);reg(0x108,10);
+    renderer.BeginFrame();
+    for(unsigned y=0;y<224;y++)renderer.RenderLine(y);
+    renderer.EndFrame();
+    std::vector<uint32_t> mapRows;
+    const auto mapFade=port::VerifyMapCrossfadeEdges(panels.mapFadeEdges,mapRows);
+    assert(mapFade && mapFade->mapWeight==11);
+    assert((mapFade->postMixOffset==std::array<int16_t,3>{-16,0,0}));
+    assert(mapRows.size()==16*224 && mapRows.front()==0xfff80000 && mapRows.back()==0xfff80000);
     puts("VDP2 blending and coherent displayed sprite snapshots passed");
 }

@@ -65,3 +65,5 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [battle-story-inset-shadow.md](battle-story-inset-shadow.md): Prueba por capas de ausencia de sombra en la viñeta táctica.
 
 - [dialogue-voice-advance.md](dialogue-voice-advance.md): Pulsaciones A/B/C, voz real y comparación AOT/intérprete.
+
+- [wide-map-crossfades.md](wide-map-crossfades.md): Fundido mapa/floral con continuidad a16:9, entrada directa aZoom y paridad nativa.
