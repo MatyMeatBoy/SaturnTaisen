@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "scope": "Visually confirmed PC BG image <-> Saturn scene pairs from the cold New Game run (screenshot every 250 frames). Data only: file name, SHA-256 of the PC SPR, evidence frame of the run. No pixels. Saturn-side identification (hash of the native plane or the decoded BG*.BIN) is not recorded yet.",
+  "run": "local cold run, inputs local/work/rb-full/input.movie, strict native",
+  "pairs": [
+    {
+      "pc_file": "SAKURA1/BG/BG1119.SPR",
+      "pc_sha256": "529877b7f50110a11c295d27ea23c73aa89ef9b449de8af7090c3d6d82948f51",
+      "pc_image_index": 0,
+      "evidence_frame": 118250,
+      "score": 0.98,
+      "margin": 0.08
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1209.SPR",
+      "pc_sha256": "fe8461698a7725f1f99cc1244559532e088039f2c0e132a8ac56aabf7e4070c4",
+      "pc_image_index": 0,
+      "evidence_frame": 8750,
+      "score": 0.97,
+      "margin": 0.22
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG2251.SPR",
+      "pc_sha256": "12430c490a6511d5b3838c88d0ee9d5aaa2e8789adc1b60a1c9282c3338a3fce",
+      "pc_image_index": 0,
+      "evidence_frame": 12500,
+      "score": 0.82,
+      "margin": 0.27
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1001.SPR",
+      "pc_sha256": "0ad86a70bea381c30f412811623fff18792dd158c50a1476527b857cd5943895",
+      "pc_image_index": 0,
+      "evidence_frame": 22000,
+      "score": 0.81,
+      "margin": 0.09
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1002.SPR",
+      "pc_sha256": "e28e41ef5c527ecba2eb78a266de4cf770869c2e43395faf9e1b251e53a58db7",
+      "pc_image_index": 0,
+      "evidence_frame": 74500,
+      "score": 0.81,
+      "margin": 0.11
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1006.SPR",
+      "pc_sha256": "bd78da2523a5b5194b6d0eb57389ac6007f271cfed46c7d69478217be00cf2db",
+      "pc_image_index": 0,
+      "evidence_frame": 29500,
+      "score": 0.92,
+      "margin": 0.27
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1007.SPR",
+      "pc_sha256": "539547f4866e211f91af38b9ddb230751484c22c66d7a83cc665531079175af1",
+      "pc_image_index": 0,
+      "evidence_frame": 77500,
+      "score": 0.92,
+      "margin": 0.27
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1021.SPR",
+      "pc_sha256": "6b9a590ae32013fa2531ab401f634797117f270fba44d87740dcb1fd361460ad",
+      "pc_image_index": 0,
+      "evidence_frame": 59750,
+      "score": 0.85,
+      "margin": 0.12
+    }
+  ]
+}
