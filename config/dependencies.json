@@ -50,7 +50,8 @@
       "patches/0044-sakura-continuous-floral-scene-transitions.patch",
       "patches/0045-sakura-owned-hd-choice-text.patch",
       "patches/0046-sakura-first-movie-transition-phases.patch",
-      "patches/0047-sakura-validate-profile-before-portrait-selection.patch"
+      "patches/0047-sakura-validate-profile-before-portrait-selection.patch",
+      "patches/0048-sakura-preload-dialogue-catalog-and-frame-witness.patch"
     ]
   }
 }

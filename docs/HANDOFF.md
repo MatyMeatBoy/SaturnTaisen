@@ -74,6 +74,8 @@ Las sustituciones PC conservan proporción uniforme, escala por altura y eje cab
 
 La fuente HD debe respetar tamaño, avance y espaciado nativos con proporción natural, sin apariencia ancha. Cuatro líneas deben entrar con margen al marco. Los glifos se preparan antes del primer frame; esto no significa que el catálogo de páginas ya esté integrado. El texto actual sigue reconocido desde comandos nativos. El catálogo exportado conserva IDs, bytes CP1252, controles, offsets y contexto de disco para la integración y futuras traducciones. No hacer OCR como única fuente si existe tabla nativa.
 
+T11/patch0048 añade un catálogo sellado y un testigo de registro capturado junto al framebuffer por software. La tabla completa en Low WRAM0x00224000 debe coincidir; el punteroBE32 está en High WRAM0x0606851C. Conserva29.725 registros,29.723 preparables; los dos tabuladores quedan intactos. El render aún usa los glifos existentes: el siguiente paso requiere máscara de revelado y evidencia visible, no mostrar todo el registro solo porque el puntero coincide. LIPS necesita identificar el conjunto completo por separado. Detalle en [precarga de diálogo](research/dialogue-preload-runtime.md); test.2 permanece inmutable.
+
 LIPS requiere transformación del panel superior y una placa de píxeles que preserve el personaje bajo la transparencia. `underSprites` elimina toda la capa VDP1: no sirve para borrar solo los glifos de opciones. Ver [diagnóstico de transiciones](research/chapter1-wide-transitions.md).
 
 ## Comandos y precauciones de entorno
