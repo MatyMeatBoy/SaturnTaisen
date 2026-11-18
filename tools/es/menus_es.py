@@ -247,12 +247,27 @@ def opciones(files: Files, preview):
     print(f'  marco de opciones: {used} bytes comprimidos')
 
 
-WKL01_SPR = 0x339A8  # en WKLxx.BIN: copia del bloque de sprites de combate (VRAM1 0x4000)
-BATTLE_BAR = [(a - 0x4000, w, 16) for a, w in [
-    (0x5C80, 16), (0x5D00, 16), (0x5D80, 24), (0x5E40, 16), (0x5EC0, 16), (0x5F40, 24), (0x6000, 24),
-    (0x60C0, 24), (0x6180, 24), (0x6240, 24), (0x6300, 24), (0x63C0, 16), (0x6440, 16), (0x64C0, 24),
-    (0x6580, 24), (0x6640, 24), (0x6700, 24), (0x67C0, 24), (0x6880, 24), (0x6940, 16), (0x69C0, 24),
-    (0x6A80, 24), (0x6B40, 24), (0x6C00, 16), (0x6C80, 24), (0x6D40, 24), (0x6E00, 16), (0x6E80, 16)]]
+# Every WKL##.BIN stage file repeats the same battle command bar, but at a different absolute
+# offset, computed from a per-file header (block 0, images 5-32 of the "battle menu" section).
+# Algorithm from the English translation team's own tooling (WklBattleMenuExtractor in
+# local/research/noahsteam-repo/SakuraTaisen/SakuraTaisen.cpp) — not guessed from a single file.
+WKL_STAGES = ['WKL%02d' % n for n in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 21, 22)]
+
+
+def battle_bar_sprites(data: bytes):
+    """Returns the 28 (file_offset, width, height) battle-bar sprites of a WKL##.BIN file."""
+    image_data_addr = struct.unpack_from('>I', data, 0xE8)[0]
+    block_off, _ = struct.unpack_from('>II', data, image_data_addr)  # block 0 only: the command bar
+    num_images = struct.unpack_from('>H', data, image_data_addr + block_off)[0]
+    header_end = image_data_addr + block_off + 8
+    misc_end = header_end + 16 * num_images + 8
+    sprites = []
+    for k in range(5, 33):  # 0-4 are other HUD bars; 5-32 are the 28 command-bar words/icons
+        offset_from_header, offset_from_prev, w, h, _unknown = struct.unpack_from('>IIHHI', data, header_end + k * 16)
+        sprites.append((misc_end + offset_from_header + offset_from_prev, w, h))
+    return sprites
+
+
 # Text labels for sprites 0-24 (25-27 are icons, left untouched). Each English word verified by eye
 # against local/work/guion-es/menus/tmp/combate_bar_idx_{a,b}.png before choosing these.
 BATTLE_BAR_ES = [
@@ -263,37 +278,37 @@ BATTLE_BAR_ES = [
 
 
 def combate(files: Files, preview):
-    """Battle command bar (WKL01.BIN, chapter 1's only stage): raw uncompressed 4bpp sprites, no LZ
+    """Battle command bar, every stage (WKL01..WKL22.BIN): raw uncompressed 4bpp sprites, no LZ
     budget to respect. Words are redrawn with a small font size (native HUD text is far narrower
     than the 15pt used elsewhere) and binarised to the sprite's own 2-tone ink (index 3 ink, 1 edge)."""
     from fuente import render
-    wkl = files['/SAKURA2/WKL01.BIN']
     face, size, base = 'CENTURY.TTF', 9, 8
     ink, edge = 3, 1
-    for i, text in enumerate(BATTLE_BAR_ES):
-        off, w, h = BATTLE_BAR[i]
-        start = WKL01_SPR + off
-        rows, ww = render(text, face, size, base, height=h, gamma=1.3)
-        squeeze = 1.0
-        while ww > w and squeeze > 0.72:
-            squeeze -= 0.02
-            rows, ww = render(text, face, size, base, squeeze=squeeze, height=h, gamma=1.3)
-        if ww > w:
-            raise SystemExit(f'combate: {text!r} no cabe en {w}px')
-        left = max(0, (w - ww) // 2)
-        for y in range(h):
-            for x in range(w):
-                i_byte = start + (y * w + x) // 2
-                v = 0
-                if left <= x < left + ww:
-                    cell = rows[y][x - left]
-                    v = ink if cell and cell <= 6 else (edge if cell else 0)
-                b = wkl[i_byte]
-                if x % 2 == 0:
-                    wkl[i_byte] = (v << 4) | (b & 0x0F)
-                else:
-                    wkl[i_byte] = (b & 0xF0) | v
-        print(f'  combate {text!r}: {ww}px en {w}px, compresión {squeeze:.2f}')
+    for stage in WKL_STAGES:
+        wkl = files[f'/SAKURA2/{stage}.BIN']
+        sprites = battle_bar_sprites(bytes(wkl))
+        for text, (start, w, h) in zip(BATTLE_BAR_ES, sprites):
+            rows, ww = render(text, face, size, base, height=h, gamma=1.3)
+            squeeze = 1.0
+            while ww > w and squeeze > 0.72:
+                squeeze -= 0.02
+                rows, ww = render(text, face, size, base, squeeze=squeeze, height=h, gamma=1.3)
+            if ww > w:
+                raise SystemExit(f'combate {stage}: {text!r} no cabe en {w}px')
+            left = max(0, (w - ww) // 2)
+            for y in range(h):
+                for x in range(w):
+                    i_byte = start + (y * w + x) // 2
+                    v = 0
+                    if left <= x < left + ww:
+                        cell = rows[y][x - left]
+                        v = ink if cell and cell <= 6 else (edge if cell else 0)
+                    b = wkl[i_byte]
+                    if x % 2 == 0:
+                        wkl[i_byte] = (v << 4) | (b & 0x0F)
+                    else:
+                        wkl[i_byte] = (b & 0xF0) | v
+        print(f'  combate {stage}: {len(sprites)} sprites traducidos')
 
 
 def estado(files: Files, preview):
