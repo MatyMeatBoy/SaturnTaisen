@@ -65,7 +65,7 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     return result
 
 
-def package(destination,toolchain,archive=True,runtime=None,owner_root=None,build_dir=None):
+def package(destination,toolchain,archive=True,runtime=None,owner_root=None,build_dir=None,controller_mapper=None):
     owner=Path(owner_root or ROOT).resolve()
     tracked=set(subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0'))
     destination=destination.resolve()
@@ -76,6 +76,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     for source,name in executables.items():
         selected=Path(runtime) if runtime is not None and source=='sakura.exe' else build/source
         shutil.copy2(selected,destination/name)
+    if controller_mapper is not None:
+        shutil.copy2(Path(controller_mapper),destination/'Mapear M30.exe')
     # Resolve the actual PE imports, including dependencies of toolchain DLLs.
     available={p.name.casefold():p for p in (toolchain/'bin').glob('*.dll')}
     pending=list(destination.glob('*.exe'))
@@ -222,8 +224,9 @@ def main():
     parser.add_argument('--runtime',type=Path,help='isolated candidate executable; avoids replacing another tester runtime')
     parser.add_argument('--owner-root',type=Path,help='owner workspace with private build dependencies and licenses; sources remain in this checkout')
     parser.add_argument('--build-dir',type=Path,help='isolated directory with launcher and importer binaries')
+    parser.add_argument('--controller-mapper',type=Path,help='optional verified portable controller reporting utility')
     args=parser.parse_args()
-    result=package(args.output,args.toolchain,not args.no_archive,args.runtime,args.owner_root,args.build_dir)
+    result=package(args.output,args.toolchain,not args.no_archive,args.runtime,args.owner_root,args.build_dir,args.controller_mapper)
     print(json.dumps({'output':str(args.output.resolve()),'files':len(result['files']),'dlls':result['dlls']}))
 
 

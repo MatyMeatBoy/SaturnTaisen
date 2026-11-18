@@ -155,3 +155,11 @@ Trabajo posterior: wide_transitions continúaT02a sin modificar RAM ni SDK. T48 
 ## Candidato posterior a test.2: fallback del catálogo de retratos
 
 local/build/portrait-fallback-candidate/sakura-674.exe contiene el patch0047; no sustituye los binarios de test.2. El runtime prueba el paquete incluido cuando el catálogo del perfil falla autenticación, conservando la prioridad de un mod personal que sí pasa la validación. Los PNG siguen verificándose al cargar; su fallback diferido es un caso aparte. Prueba integrada en research/portrait-pack-profile-fallback.md. No cambiar el ZIP ni el release para incluir un arreglo posterior.
+
+## Cierre solicitado — test.4
+
+Se prepara v0.2.0-test.4 con el runtime674.182/patch0050 probado, sin el experimento0051. La guía para otro PC y el toolkit es `docs/releases/PORTABLE-HANDOFF.md`. El usuario pidió detenerse al entregar: no continuar automáticamente con tareas nuevas. Los workers cerraron sus pruebas y no mantienen procesos activos.
+
+T33 experimental quedó en `pendientes/T33-petal-transitions`, commit7888d08. El fixture pasa y el candidato reconoce algunos cuadros blancos, pero la aserción de pantalla uniforme en114 falla: solo118/119 son completamente anchos en el sondeo fino. Otras fases uniformes/partículas aún vuelven a4:3. No empaquetar ni promover ese patch0051 como arreglo completo. El SDK compartido fue restaurado exactamente a0001..0050 y CMake vuelve a la salida `local/build/sakura`.
+
+Relevos privados para reanudar solo cuando se solicite: capítulo1 `corridor-bridge/new-sumire-turn/finish.state` SHA f9780d38285655a7f54252b2856c56b886021a280e3bd7add757f630e51317de, backup5c71f717…; ataque nuevo de Sakura probado3.199hashes/RGB/SRAM iguales, sin victoria en esta ruta. Capítulo2 `t30-chapter2-followup/maria-elimination/finish.state` SHA f1084a893b337712195d700b110855138e6f20b00104bd108742c7100302ca01; SRAM emparejada original4c22bf1e…. PR35 documenta los tramos; la prueba continua posterior se canceló y no se presenta como aprobada.

@@ -57,7 +57,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T27 | P1 | local | libre | Ampliar observaciones del índice de escenas: actualmente inventario de ambos discos, 112 tablas, 54 vídeos y nueve observaciones. Confirmar por ruta los seis tags, texto/subtítulos y encuadre de cada clip; no convertir candidatos en cobertura probada. |
 | T28 | P2 | agente/local | tras T27 por escena | Consumir etiquetas verificadas para la presentación/Zoom sin heurísticas ambiguas. El índice local de metadatos todavía no gobierna el runtime. |
 | T29 | P0 | local | integrado · PR #8 | Capítulo2: EVT02 atribuido exactamente a 00204000. Candidato de 643.320 bloques pasa frontera1200 y arranque9501 con todos los hashes/RGB iguales al intérprete y cero interpretados. Base de la ampliación posterior de674.023; test.1 sigue inmutable. |
-| T30 | P0 | local | Codex · pendientes/T30-chapter2-battle | Continue, órdenes, dos fases enemigas y eliminación de Musket #7 verificados en Original. Comparación por tramos de 33.141 fotogramas y 341 pares RGB. Pendientes victoria, salida y presentación Mejorada. Ver `chapter2-tactical-progression.md`. |
+| T30 | P0 | local | parcial integrado · PR #35 · detenido | Continue, órdenes, dos fases enemigas y eliminación de Musket #7 verificados en Original. Comparación por tramos de 33.141 fotogramas y 341 pares RGB. Pendientes victoria, salida y presentación Mejorada. Ver `chapter2-tactical-progression.md`. |
 | T31 | P0 | local | integrado · PR #10 | Capítulo4: EVT06 registrado por coincidencia completa en RAM; candidato674.023 pasa frontera1200 y carga12000, con todos los hashes/RGB iguales al intérprete y cero interpretados. Integrar PR y continuar combate. |
 | T32 | P0 | local | libre | Completar rutas intermedias, combates, guardados y finales de capítulos2–Finale. El barrido inicial valida entradas de ocho rutas (96.000 frames) y el arreglo de entrada de capítulo4, no capítulos completos. |
 | T33 | P1 | local | parcial · T33a probado | Primer vídeo: caja vacía y sombras corregidas en patch0046. Siguen pétalos16:9 y tarjeta de episodio/transiciones restantes. Mantener posición Zoom aprobada. |
@@ -120,3 +120,7 @@ Limpieza: se retiraron los dos candidatos antiguos sustituidos (1.604.792.320byt
 ### Integración futura de idiomas
 
 El idioma será una selección del launcher con una variante coherente de guiones, menús, fuentes y recursos. Compartir mapeos de fuente solo cuando el atlas y su codificación coincidan; las cachés de guion/recurso deben incluir idioma/revisión o hash de contenido. No regenerar hojas españolas ni copiar configuración de mandos encima de un perfil ya editado. PR12 integra herramientas privadas de preparación, no declara terminado el selector ni todo el juego traducido. Saturn y las correcciones visuales mantienen prioridad.
+
+### Cierre test.4 solicitado
+
+El usuario pidió publicar el siguiente checkpoint y detener el trabajo. Guía de traslado y toolkit: `docs/releases/PORTABLE-HANDOFF.md`. El experimento0051 queda fuera del paquete, en la ramaT33 indicada en el handoff. No reanudar la cola automáticamente tras esta entrega.
