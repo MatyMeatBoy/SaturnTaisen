@@ -76,6 +76,7 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [Segundo lote de retratos HD del capítulo 1](chapter1-sumire-hd-portraits.md)
 - [Tercer lote de retratos HD del capítulo 1](chapter1-third-hd-portraits.md)
 - [Cuarto lote de retratos HD](chapter1-fourth-hd-portraits.md)
+- [Equivalencia de vídeos Saturn y PC](video-equivalence.md)
 - [Selección del paquete de retratos HD](portrait-pack-profile-fallback.md)
 
 - [chapter1-choice-hd.md](chapter1-choice-hd.md): Texto HD LIPS de dos/tres opciones, propiedad de glifos y diez perfiles reales.
