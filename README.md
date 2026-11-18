@@ -11,7 +11,7 @@
 
 Un regreso al Teatro Imperial con el código SH-2 recompilado, píxeles enteros y mejoras opcionales de presentación. Proyecto público de **MatyMeatBoy**.
 
-**La v0.2.0-test.3 es una prerelease de prueba, no el juego completo certificado.** Incluye la corrección AOT del cierre del primer combate, narrativa HD desde el catálogo precargado y el checkpoint de201 retratos preparados, con los límites documentados. No está verificado todavía el capítulo 1 de principio a fin ni la campaña completa. [Alcance de esta entrega](docs/releases/v0.2.0-test.3.md). Los paquetes [v0.1.2](docs/releases/v0.1.2.md) y [v0.1.5](docs/releases/v0.1.5.md) se conservan intactos.
+**La v0.2.0-test.3 es una prerelease de prueba, no el juego completo certificado.** Incluye la corrección AOT del cierre del primer combate, narrativa HD desde el catálogo precargado y el checkpoint de 201 retratos preparados, con los límites documentados. No está verificado todavía el capítulo 1 de principio a fin ni la campaña completa. [Alcance de esta entrega](docs/releases/v0.2.0-test.3.md). Los paquetes [v0.1.2](docs/releases/v0.1.2.md) y [v0.1.5](docs/releases/v0.1.5.md) se conservan intactos.
 
 ## Jugar
 
