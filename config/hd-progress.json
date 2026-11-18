@@ -59,11 +59,12 @@
       ],
       "next": "Emparejar cada archivo con su escena Saturn, empaquetarlo e integrarlo; verificar variantes de iluminación y fundidos.",
       "details": [
-        "1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte."
+        "1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte.",
+        "Primer par aprobado por captura: corredor del capítulo 1 = SAKURA1/BG1119 (la variante de noche es BG1120). Método y límites en docs/research/pc-asset-census.md."
       ],
       "total": 1267,
       "inventory": 1267,
-      "matched": 0,
+      "matched": 1,
       "prepared": 0,
       "integrated": 0,
       "verified": 0
