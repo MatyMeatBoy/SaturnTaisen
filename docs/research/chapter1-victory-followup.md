@@ -69,4 +69,10 @@ El candidato aislado `local/build/postbattle-slg-candidate/sakura.exe`, SHA256 `
 
 El candidato674.182 pasó los1.200fotogramas desde la frontera hasta `Save Complete!`, y después1.800desde su propio estado guardado hasta hanami. Los3.000hashes coincidieron con las referencias interpretadas. Coincidieron diez pares RGB en guardado y cinco en Resume, y la SRAM resultante fue idéntica a la referencia en ambas fases. Todas las ejecuciones del candidato registraron cero interpretados. Evidencia privada: `local/work/postbattle-fixed-validation/result.json` y sus subcarpetas `save`/`resume`.
 
-La película compuesta de109.740fotogramas desde `west-dialogue` hasta hanami está preparada y su ejecución única sigue en prueba. Faltan la concatenación desde los relevos anteriores, el arranque frío con Continue del nuevo guardado y la ruta completa New Game→fin del capítulo. Esta corrección no completa el capítulo ni modifica el ZIP test.2 ya entregado.
+## Reproducción continua tras LIPS
+
+Con el candidato de 674.182 bloques se cargó `west-dialogue/finish.state` una vez y se reprodujo la película compuesta sin cargar estados intermedios. La ruta completa el combate, guarda en el intermedio y selecciona `Resume` hasta el epílogo de hanami. Los 109.740 hashes guest coincidieron con la referencia segmentada y se registraron cero bloques interpretados. El último hash guest fue `3cbd8ffb97c0500b`. El RGB final y la SRAM resultante coincidieron con la referencia.
+
+La película tiene SHA-256 `3e7db4e78a2c498d892864fa850bc363bc5faa769bbfe8c525ab842249732693` y la SRAM resultante tiene SHA-256 `6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df`. El registro de verificación se conserva en `local/work/chapter1-victory-followup/t10-save-resume-native-full/verification.json`.
+
+Quedan por unir los relevos anteriores y probar Continue en frío con la SRAM resultante y New Game hasta el final del capítulo. El ZIP test.2 ya entregado precede a este candidato.
