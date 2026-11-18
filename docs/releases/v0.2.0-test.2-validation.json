@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "version": "0.2.0-test.2",
+  "source_commit": "92edea78ab1ac176fb6fa836fc08cceaa074ba7c",
+  "source_dirty": false,
+  "public_archive": {
+    "file": "SaturnTaisenFirst-v0.2.0-test.2-win64.zip",
+    "bytes": 317215196,
+    "sha256": "f225d0386b3b55806879738e77120a2688aecc8578646994cc67cf8ea1cf0fe3",
+    "entries": 344,
+    "crc_verified": true,
+    "all_manifest_hashes_verified": true,
+    "github_digest_matches": true,
+    "game_assets_included": false
+  },
+  "personal_archive": {
+    "file": "SaturnTaisenFirst-v0.2.0-test.2-personal-disco1-HD.zip",
+    "bytes": 725331460,
+    "sha256": "5dc701e28fbf6d4d9764000a58efa6d318206e8b0abc5ca69dfabde67681a54d",
+    "entries": 783,
+    "crc_verified": true,
+    "all_manifest_hashes_verified": true,
+    "personal_only": true,
+    "published": false,
+    "disc_numbers": [
+      1
+    ],
+    "original_pc_files_included": false,
+    "backgrounds": 19,
+    "portraits": 201,
+    "portrait_variants": 402
+  },
+  "runtime": {
+    "blocks": 674023,
+    "sha256": "a12b26d1990cabf9c54da562e4f05a9c842c7078d1b5c8ae3fe935a426c91418"
+  },
+  "launcher": {
+    "version": "0.2.0-test.2",
+    "sha256": "75371cf4654409e0d04bcc61fd2d1bfbc3ef3a7e1a0eb7192705529f4f8ad763"
+  },
+  "relocation": {
+    "fresh_directories": true,
+    "path_windows_system32_only": true,
+    "external_bios": false,
+    "development_tools_required": false,
+    "public_launcher_empty_profile": true,
+    "hd_preload_backgrounds": "38/38",
+    "hd_preload_variants": 402,
+    "hd_preload_failed": 0,
+    "smoke": [
+      {
+        "scene": "hd",
+        "exit": 0,
+        "zero_interpreted": true,
+        "portrait_variants": 402,
+        "path_windows_only": true
+      },
+      {
+        "scene": "battle",
+        "exit": 0,
+        "zero_interpreted": true,
+        "portrait_variants": 402,
+        "path_windows_only": true
+      },
+      {
+        "scene": "hd1440",
+        "exit": 0,
+        "zero_interpreted": true,
+        "portrait_variants": 402,
+        "path_windows_only": true,
+        "image_scale": 7,
+        "image_grid_verified": true,
+        "picture_bounds": [
+          272,
+          29,
+          2288,
+          1037
+        ],
+        "dialogue_scale": 6,
+        "portrait_density": 2
+      }
+    ],
+    "first_film": {
+      "frames": 6201,
+      "all_hashes_equal": true,
+      "native_rgb_equal": true,
+      "interpreted": 0,
+      "path_windows_only": true,
+      "disc_from_extracted_bundle": true
+    }
+  },
+  "hardware_tested": {
+    "rx6900xt": false,
+    "m30_physical": false
+  },
+  "chapter1_complete_verified": false,
+  "campaign_complete_verified": false
+}

@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-18. Lista de desarrollo; no describe como disponibles cambios que aún no están en un ZIP. Método y entrada para otro bot: [HANDOFF](HANDOFF.md) · [Cola compartida](PENDIENTES.md).
 
-La prioridad es Saturn. **v0.2.0-test.1 ya está publicada como prueba y su ZIP privado está preparado y verificado tras extracción.** Incluye las rutas panorámicas y el HD disponibles, con los huecos declarados. El capítulo 1 completo y la campaña siguen sin certificar; los paquetes anteriores se conservan intactos.
+La prioridad es Saturn. **v0.2.0-test.2 está publicada como prueba y su ZIP privado está preparado y verificado tras extracción.** Incluye las rutas panorámicas y el HD disponibles, con los huecos declarados. El capítulo 1 completo y la campaña siguen sin certificar; los paquetes anteriores se conservan intactos.
 
 ## P0 — antes del siguiente ZIP de prueba
 
@@ -18,7 +18,7 @@ La prioridad es Saturn. **v0.2.0-test.1 ya está publicada como prueba y su ZIP 
 
 - [ ] **Texto HD de diálogo:** integrar catálogo precargado y sincronización con la página/revelado real. El catálogo inglés ya está exportado localmente; todavía no es la fuente de texto del runtime. Revisar todas las líneas, desbordes, cambio de página, vibración/mezcla con tinta nativa y centrado interior.
 
-- [x] **Opciones LIPS HD de dos/tres filas inglesas:** PR16/patch0045, placa de glifos y clip propio en Zoom/conjunto. Diez perfiles conservan240hashes por escena y el cierre sin residuos. Faltan vencimiento natural y cobertura del resto de elecciones; aún sin paquete nuevo.
+- [x] **Opciones LIPS HD de dos/tres filas inglesas:** PR16/patch0045, placa de glifos y clip propio en Zoom/conjunto. Diez perfiles conservan240hashes por escena y el cierre sin residuos. Faltan vencimiento natural y cobertura del resto de elecciones; los casos probados están incluidos en test.2.
 
 - [ ] **Retratos/animaciones HD:** cubrir los pendientes del capítulo y mantener HD en parpadeo, boca, idle y mezclas VDP2. 91/123 identidades del capítulo tienen sustitución preparada;32 siguen pendientes. Total201/304. Las nuevas revisiones fijan base y ambas tiras por hash; solo las observaciones runtime declaradas acreditan animación. La mezcla blanca probada de25/32 está corregida en PR9; quedan otras identidades y combinaciones.
 
@@ -95,4 +95,8 @@ Main `d7e94cd` incluye los patches hasta0046 y los201 retratos revisados. El inf
 - PR18: primera película de New Game con fondo limpio antes/después y vídeo ampliado;6201hashes y seis RGB nativos conservados. Pétalos16:9 y tarjeta del episodio siguen T33.
 - PR15/17/19: diez matches adicionales revisados, preparados de191 a201; animaciones solo verificadas donde consta evidencia.
 
-El candidato combinado de674.023 bloques está en `local/build/polish-test2-final/sakura.exe` del propietario, SHA256 `a12b26d1990cabf9c54da562e4f05a9c842c7078d1b5c8ae3fe935a426c91418`. Sus cargas de capítulo2/4 pasan9501/12000fotogramas respectivamente. No es un ZIP entregado; faltan empaquetado y traslado de esta revisión. Los vídeos PC, cuerpos/HUD equivalentes y RetroAchievements continúan pendientes.
+El candidato combinado de674.023 bloques está en `local/build/polish-test2-final/sakura.exe` del propietario, SHA256 `a12b26d1990cabf9c54da562e4f05a9c842c7078d1b5c8ae3fe935a426c91418`. Sus cargas de capítulo2/4 pasan9501/12000fotogramas respectivamente. Está incluido en test.2 y su traslado está verificado; ver el recibo de la entrega. Los vídeos PC, cuerpos/HUD equivalentes y RetroAchievements continúan pendientes.
+
+## Entrega test.2
+
+Release público317.215.196bytes y ZIP personal725.331.460bytes, con fuente limpia92edea7. Las últimas correcciones hasta0046 y el preparado201 están incluidos. Extracción nueva: launcher, escenaHD, combate y primera película6201frames con PATH Windows;402variantes sin fallos y cero interpretados. [Validación](releases/v0.2.0-test.2-validation.json). Test.1 y paquetes anteriores permanecen intactos. Esto no cierraT02/T03 niT26.

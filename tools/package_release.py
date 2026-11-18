@@ -126,7 +126,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
                             'games/sakura':['game.cfg'],'docs/superpowers/specs':['*.md'],
                             'docs/superpowers/plans':['*.md'],
                             'docs':['PENDIENTES.md','HANDOFF.md','ESTADO_ACTUAL.md'],
-                            'docs/research':['*.md','*.json'],'docs/releases':['*.md']}.items():
+                            'docs/research':['*.md','*.json'],'docs/releases':['*.md','*-validation.json']}.items():
         target=destination/folder
         target.mkdir(parents=True,exist_ok=True)
         for pattern in patterns:
