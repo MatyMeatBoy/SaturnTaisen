@@ -1,0 +1,1013 @@
+diff --git a/port/backdrop.h b/port/backdrop.h
+index c072c58..ba37958 100644
+--- a/port/backdrop.h
++++ b/port/backdrop.h
+@@ -19,10 +19,26 @@ inline uint32_t OffsetBackdropPixel(uint32_t pixel,const std::array<int16_t,3>&
+     }
+     return result;
+ }
++// A logo can change the first cell's palette without changing the painted screen.
++// Verify the displayed native image before accepting that secondary identity.
++inline bool MatchesAnchoredBackdrop(std::span<const uint32_t> shown,std::span<const uint32_t> native,const std::array<int16_t,3>& offset) {
++    if(shown.size()!=320*224 || native.size()!=shown.size())return false;
++    std::array<unsigned,4> matches{},counts{};unsigned transitions=0,total=0;
++    uint32_t previous=0;
++    for(int y=0;y<224;y+=4)for(int x=0;x<320;x+=4) {
++        const size_t at=y*320+x;const unsigned quadrant=(y>=112?2:0)+(x>=160?1:0);
++        const auto expected=OffsetBackdropPixel(native[at],offset);
++        if(shown[at]!=previous)++transitions;previous=shown[at];
++        ++counts[quadrant];if(shown[at]==expected){++matches[quadrant];++total;}
++    }
++    if(transitions<64 || total*100<4480*80)return false;
++    for(unsigned i=0;i<4;i++)if(matches[i]*100<counts[i]*60)return false;
++    return true;
++}
+ // Import master art into one native-density 16:9 grid; presentation only uses integer multiples.
+-inline SDL_Surface* NormalizeBackdrop(SDL_Surface* master,std::span<const uint8_t> kabe) {
+-    if(!master || kabe.size()<512) return nullptr;
+-    auto* logical=SDL_CreateSurface(416,234,SDL_PIXELFORMAT_ABGR8888);
++inline SDL_Surface* NormalizeBackdrop(SDL_Surface* master,std::span<const uint8_t> kabe,int width=416,int height=234) {
++    if(!master || kabe.size()<512 || width<1 || height<1 || width>800 || height>450) return nullptr;
++    auto* logical=SDL_CreateSurface(width,height,SDL_PIXELFORMAT_ABGR8888);
+     if(!logical) return nullptr;
+     SDL_SetSurfaceBlendMode(master,SDL_BLENDMODE_NONE);
+     if(!SDL_BlitSurfaceScaled(master,nullptr,logical,nullptr,SDL_SCALEMODE_NEAREST)) {SDL_DestroySurface(logical);return nullptr;}
+@@ -92,5 +108,33 @@ inline SDL_Surface* PrepareBackdrop(const std::filesystem::path& file,std::span<
+ inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::path& file,std::span<const uint8_t> kabe,const std::filesystem::path& cacheDir,std::vector<uint32_t>* pixels=nullptr) {
+     return BackdropTexture(renderer,PrepareBackdrop(file,kabe,cacheDir),pixels);
+ }
++inline bool AnchorBackdropSurface(SDL_Surface* surface,std::span<const uint32_t> native,std::span<const uint8_t> paletteBytes) {
++    if(!surface || surface->w!=800 || surface->h!=450 || surface->format!=SDL_PIXELFORMAT_ABGR8888 || native.size()!=320*224 || paletteBytes.size()<512)return false;
++    std::array<uint32_t,256> palette;
++    for(size_t i=0;i<256;i++) {
++        const uint16_t word=uint16_t(paletteBytes[i*2])<<8|paletteBytes[i*2+1];
++        palette[i]=0xFF000000|((word&31)<<3)|(((word>>5)&31)<<11)|(((word>>10)&31)<<19);
++    }
++    const PaletteMatcher matcher(palette);
++    for(int y=105;y<345;y++)for(int x=232;x<568;x++) {
++        const int nx=std::clamp(x-240,0,319),ny=std::clamp(y-113,0,223);
++        const int distance=std::max(std::abs(x-(240+nx)),std::abs(y-(113+ny)));
++        if(distance>8)continue;
++        auto& target=reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(surface->pixels)+y*surface->pitch)[x];
++        const auto original=native[ny*320+nx];
++        if(distance==0) {target=original;continue;}
++        const unsigned weight=9-distance;uint32_t mixed=0xFF000000;
++        for(unsigned shift:{0u,8u,16u})mixed|=((((target>>shift)&255)*(8-weight)+((original>>shift)&255)*weight)/8)<<shift;
++        target=matcher.Color(mixed);
++    }
++    return true;
++}
++inline SDL_Texture* LoadAnchoredBackdrop(SDL_Renderer* renderer,const std::filesystem::path& file,std::span<const uint8_t> palette,std::span<const uint32_t> native,std::vector<uint32_t>* pixels) {
++    std::vector<uint8_t> bytes;if(!ReadBackgroundPng(file,bytes))return nullptr;
++    auto* master=DecodeBackgroundPng(bytes);if(!master)return nullptr;
++    auto* logical=NormalizeBackdrop(master,palette,800,450);SDL_DestroySurface(master);
++    if(logical && !AnchorBackdropSurface(logical,native,palette)) {SDL_DestroySurface(logical);return nullptr;}
++    return BackdropTexture(renderer,logical,pixels);
++}
+ 
+ }
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index d4a903b..3876a1c 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -8,6 +8,8 @@
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
+ #include "screen_backdrop.h"
++#include "tactical_extension.h"
++#include "tactical_menu.h"
+ #include "glyph_text.h"
+ #include "narrative_text.h"
+ #include "kabe.h"
+@@ -193,16 +195,19 @@ int RunWindowed(Port &port) {
+     SDL_Renderer *renderer = nullptr;
+     struct Backdrop {
+         uint64_t palette=0;SDL_Texture* texture=nullptr;
+-        std::vector<uint32_t> pixels;std::array<int16_t,3> offset{};
++        std::vector<uint32_t> pixels,nativeScreen;std::array<int16_t,3> offset{};
+         std::vector<std::filesystem::path> files;std::filesystem::path cacheDir;std::vector<uint8_t> nativePalette;
+         bool attempted=false;
+-        bool pc=false,screen=false;std::string id;
++        bool pc=false,screen=false,anchored=false;unsigned layer=5;std::string id;
+     };
+     std::vector<Backdrop> backdrops;
+     PortraitPack portraitPack;
+     BackgroundWorkers backgroundWorkers;
+     bool backgroundWarmupStarted=false;
+     SDL_Texture *foreground=nullptr;
++    SDL_Texture *tacticalCanvas=nullptr;
++    SDL_Texture *mapBackdropTexture=nullptr;
++    std::vector<uint32_t> tacticalPatch,tacticalPixels;
+     SakuraUi sakuraUi;
+     Shading shading;
+     bool shaded = false;
+@@ -267,6 +272,19 @@ int RunWindowed(Port &port) {
+             fprintf(stderr,"background renderer: %s\n",name?name:"unknown");
+         }
+         if (!sakuraUi.Open(window,renderer,port.opt.settingsPath)) return false;
++        tacticalPatch.clear();
++        for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++            const auto file=folder/"art/tactics/STAGE01-right-v1.png";
++            if(auto* image=SDL_LoadPNG(file.string().c_str())) {
++                if(image->w==39 && image->h==224)if(auto* rgba=SDL_ConvertSurface(image,SDL_PIXELFORMAT_ABGR8888)) {
++                    tacticalPatch.resize(39*224);
++                    for(int y=0;y<224;y++)std::copy_n(reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(rgba->pixels)+y*rgba->pitch),39,tacticalPatch.data()+y*39);
++                    SDL_DestroySurface(rgba);
++                }
++                SDL_DestroySurface(image);
++            }
++            if(!tacticalPatch.empty())break;
++        }
+         for(const auto& name:port.discFiles.Names()) if(name.find("KABE")!=std::string::npos && name.ends_with(".BIN")) {
+             std::vector<uint8_t> data;std::vector<uint32_t> pixels;
+             if(!port.discFiles.Read(name,data) || !DecodeKabe(data,pixels)) continue;
+@@ -297,6 +315,10 @@ int RunWindowed(Port &port) {
+             if(!port.discFiles.Read(spec.resource,source))continue;
+             const auto palette=ScreenPalette(source,spec);if(palette.empty())continue;
+             Backdrop item;item.screen=true;item.id=spec.id;item.palette=spec.paletteHash;
++            item.layer=spec.layer;item.anchored=spec.anchored;
++            std::vector<uint32_t> original;
++            if(item.anchored && !DecodeKabe(source,original))continue;
++            item.nativeScreen=original;
+             item.nativePalette.assign(palette.begin(),palette.end());
+             item.cacheDir=port.opt.settingsPath.empty()?std::filesystem::path():std::filesystem::path(port.opt.settingsPath).parent_path()/"cache/backgrounds";
+             for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
+@@ -305,7 +327,7 @@ int RunWindowed(Port &port) {
+             }
+             // These two startup backgrounds are prepared before the first guest frame.
+             item.attempted=true;
+-            for(const auto& file:item.files)if((item.texture=LoadBackdrop(renderer,file,item.nativePalette,item.cacheDir,&item.pixels)))break;
++            for(const auto& file:item.files)if((item.texture=item.anchored?LoadAnchoredBackdrop(renderer,file,item.nativePalette,original,&item.pixels):LoadBackdrop(renderer,file,item.nativePalette,item.cacheDir,&item.pixels)))break;
+             if(item.texture)backdrops.push_back(std::move(item));
+         }
+         if(!port.opt.settingsPath.empty() && !port.opt.pcAssetsPath.empty())
+@@ -351,6 +373,10 @@ int RunWindowed(Port &port) {
+         backdrops.clear();
+         if (foreground) SDL_DestroyTexture(foreground);
+         foreground=nullptr;
++        if(tacticalCanvas)SDL_DestroyTexture(tacticalCanvas);
++        tacticalCanvas=nullptr;
++        if(mapBackdropTexture)SDL_DestroyTexture(mapBackdropTexture);
++        mapBackdropTexture=nullptr;
+         if (shaded) {
+             shading.Close();
+         } else if (port.gpu) {
+@@ -428,6 +454,26 @@ int RunWindowed(Port &port) {
+         break; // fail closed for another translation/Japanese font, never guess its encoding
+     }
+     sakuraUi.SetGameAtlas(englishAtlas);
++    // Exact stage01 map-name identity; do not extrapolate unrelated menus/maps.
++    if(port.videoRenderer)port.videoRenderer->CaptureScrollExtension(39,0x1CAF3218B4B0F9F0ull);
++    if(port.videoRenderer)port.videoRenderer->SetScrollSpriteFilter([](const auto& command,std::span<const uint8_t> pixels,int x,int y) {
++        return KeepStage01Sprite(command.words[0]&15,command.words[2],command.words[3],x,y,AtlasFingerprint(pixels));
++    });
++    if(port.videoRenderer)port.videoRenderer->SetScrollMenuRecognizer([](auto sprites)
++        -> std::optional<satrecomp::video::Renderer::ScrollMenuLayout> {
++        if(satrecomp::FeatureValue("presentation_mode")!=1)return std::nullopt;
++        std::vector<TacticalMenuSprite> commands;
++        commands.reserve(sprites.size());
++        for(const auto& sprite:sprites) {
++            const auto& words=sprite.command.words;
++            const auto hash=(words[0]&0x3F)==0 && words[2]==0x88?AtlasFingerprint(sprite.pixels):0;
++            commands.push_back({hash,sprite.x,sprite.y,unsigned((words[5]>>8)&63)*8,unsigned(words[5]&255),
++                                unsigned(words[0]&0x3F),words[2],words[3]});
++        }
++        const auto plan=FindTacticalMenuLayout(commands);
++        if(!plan)return std::nullopt;
++        return satrecomp::video::Renderer::ScrollMenuLayout{plan->frame,plan->end,plan->frameHeight,plan->deltaY};
++    });
+     std::vector<uint32_t> hdNative,hdForeground;
+     std::vector<UiTextLine> hdLines;
+     std::string windowShot;
+@@ -509,7 +555,66 @@ int RunWindowed(Port &port) {
+             }
+         }
+         bool enhanced=false,portraitViewport=false;
+-        SDL_Texture* floral=nullptr;std::string screenBackdrop;
++        const char* presentationKind="native";
++        if(texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
++            const auto& shown=port.videoRenderer->PresentationFrame();std::vector<uint32_t> rows;
++            if(AnalyzeRowBackdrop(softwareShown,shown.source,rows)) {
++                const auto fit=FitInteger(wide,high,320,224);
++                const int canvasWidth=PresentationWidth(wide,high),canvasLeft=(wide-canvasWidth)/2;
++                if(!mapBackdropTexture) {
++                    mapBackdropTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,16,224);
++                    if(mapBackdropTexture)SDL_SetTextureScaleMode(mapBackdropTexture,SDL_SCALEMODE_NEAREST);
++                }
++                if(mapBackdropTexture && SDL_UpdateTexture(mapBackdropTexture,nullptr,rows.data(),16*sizeof(uint32_t))) {
++                    const int tileWidth=8*fit.scale;
++                    const int first=fit.x-((fit.x-canvasLeft+tileWidth-1)/tileWidth)*tileWidth;
++                    for(int x=first;x<canvasLeft+canvasWidth;x+=tileWidth) {
++                        const SDL_FRect tile{float(x),float(fit.y),float(tileWidth),float(fit.h)};
++                        const float sourceX=x>=fit.x+fit.w?8.0f:0.0f;
++                        const SDL_FRect source{sourceX,0,8,224};
++                        SDL_RenderTexture(renderer,mapBackdropTexture,&source,&tile);
++                        const SDL_FRect topSource{sourceX,0,8,1},topTarget{float(x),0,float(tileWidth),float(fit.y)};
++                        const SDL_FRect bottomSource{sourceX,223,8,1},bottomTarget{float(x),float(fit.y+fit.h),float(tileWidth),float(high-fit.y-fit.h)};
++                        if(fit.y>0)SDL_RenderTexture(renderer,mapBackdropTexture,&topSource,&topTarget);
++                        if(high>fit.y+fit.h)SDL_RenderTexture(renderer,mapBackdropTexture,&bottomSource,&bottomTarget);
++                    }
++                    const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
++                    SDL_RenderTexture(renderer,texture,nullptr,&target);enhanced=true;presentationKind="row-gradient";
++                }
++            }
++        }
++        if(texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1 && tacticalPatch.size()==39*224) {
++            const auto& shown=port.videoRenderer->PresentationFrame();
++            if(shown.scrollWidth==398 && shown.scrollPixels.size()==398*224) {
++                if(std::getenv("SATRECOMP_TACTICAL_SPRITE_TRACE")) {
++                    static std::map<std::pair<uint64_t,int>,bool> logged;
++                    int localX=0,localY=0;
++                    auto coordinate=[](uint16_t v){return int((v&8191)^4096)-4096;};
++                    for(const auto& sprite:shown.sprites) {
++                        const auto& cmd=sprite.command;
++                        if((cmd.words[0]&15)==10) {localX=coordinate(cmd.words[6]);localY=coordinate(cmd.words[7]);}
++                        if((cmd.words[0]&15)>7)continue;
++                        const int x=coordinate(cmd.words[6])+localX,y=coordinate(cmd.words[7])+localY;
++                        const uint64_t hash=AtlasFingerprint(sprite.pixels);
++                        if((x<0 || x>=280) && logged.size()<128 && !logged[{hash,x}]) {
++                            logged[{hash,x}]=true;std::fprintf(stderr,"tactical sprite: type=%u x=%d y=%d size=%ux%u mode=%04X color=%04X hash=%016llX\n",cmd.words[0]&15,x,y,((cmd.words[5]>>8)&63)*8,cmd.words[5]&255,cmd.words[2],cmd.words[3],static_cast<unsigned long long>(hash));
++                        }
++                    }
++                }
++                if(!tacticalCanvas) {
++                    tacticalCanvas=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,398,224);
++                    if(tacticalCanvas)SDL_SetTextureScaleMode(tacticalCanvas,SDL_SCALEMODE_NEAREST);
++                }
++                tacticalPixels=shown.scrollPixels;
++                if(!tacticalPatch.empty())ApplyTacticalExtension(tacticalPixels,398,shown.source,39,shown.scrollWorld,tacticalPatch,39,224,656,24,shown.scrollColorOffset,shown.scrollSpriteMask);
++                if(tacticalCanvas && SDL_UpdateTexture(tacticalCanvas,nullptr,tacticalPixels.data(),398*sizeof(uint32_t))) {
++                    const auto fit=FitInteger(wide,high,398,224);
++                    const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
++                    SDL_RenderTexture(renderer,tacticalCanvas,nullptr,&target);enhanced=true;presentationKind="tactical";
++                }
++            }
++        }
++        SDL_Texture* floral=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false;
+         if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto palette=port.videoRenderer->BackgroundPaletteFingerprint();
+             if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+@@ -518,7 +623,10 @@ int RunWindowed(Port &port) {
+             }
+             const bool preferPc=!port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0;
+             for(int pass=0;pass<(preferPc?2:1) && !floral;pass++)
+-            for(auto& backdrop:backdrops) if(backdrop.palette==palette && backdrop.pc==(preferPc && pass==0)) {
++            for(auto& backdrop:backdrops) if((backdrop.palette==port.videoRenderer->BackgroundPaletteFingerprint(backdrop.layer) ||
++                (backdrop.id=="PAUSE01" && port.videoRenderer->BackgroundPaletteFingerprint(4)==0xE9107F892185CCC8ull &&
++                 MatchesAnchoredBackdrop(port.videoRenderer->PresentationFrame().underSprites,backdrop.nativeScreen,port.videoRenderer->BackgroundColorOffset(4)))) && backdrop.pc==(preferPc && pass==0) &&
++                std::count(port.videoRenderer->PresentationFrame().source.begin(),port.videoRenderer->PresentationFrame().source.end(),uint8_t(backdrop.layer))>=1000) {
+                 if(!backdrop.attempted) {
+                     backdrop.attempted=true;
+                     for(const auto& file:backdrop.files) {
+@@ -532,14 +640,14 @@ int RunWindowed(Port &port) {
+                     }
+                 }
+                 if(!backdrop.texture)continue; // try Saturn if a PC resource is unavailable
+-                const auto offset=port.videoRenderer->BackgroundColorOffset();
++                const auto offset=port.videoRenderer->BackgroundColorOffset(backdrop.layer);
+                 if(offset!=backdrop.offset) {
+                     shiftedBackdrop.resize(backdrop.pixels.size());
+                     std::transform(backdrop.pixels.begin(),backdrop.pixels.end(),shiftedBackdrop.begin(),[&](auto pixel){return OffsetBackdropPixel(pixel,offset);});
+                     float gridWidth=0,gridHeight=0;SDL_GetTextureSize(backdrop.texture,&gridWidth,&gridHeight);
+                     if(SDL_UpdateTexture(backdrop.texture,nullptr,shiftedBackdrop.data(),static_cast<int>(gridWidth)*sizeof(uint32_t)))backdrop.offset=offset;
+                 }
+-                floral=backdrop.texture;if(backdrop.screen)screenBackdrop=backdrop.id;break;
++                floral=backdrop.texture;anchoredBackdrop=backdrop.anchored;if(backdrop.screen)screenBackdrop=backdrop.id;break;
+             }
+             // Prepare future themes only after the current scene has loaded. Jobs
+             // own their inputs, retain no surfaces, and never touch guest/GPU state.
+@@ -566,6 +674,13 @@ int RunWindowed(Port &port) {
+         }
+         if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
++            if(anchoredBackdrop && planes.width==320 && planes.height==224) {
++                const auto bg=FitAnchoredBackdrop(wide,high),native=FitInteger(wide,high,320,224);
++                const SDL_FRect bgTarget{float(bg.x),float(bg.y),float(bg.w),float(bg.h)},nativeTarget{float(native.x),float(native.y),float(native.w),float(native.h)};
++                SDL_RenderTexture(renderer,floral,nullptr,&bgTarget);
++                SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
++                enhanced=true;presentationKind="anchored-menu";
++            }
+             const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height);
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
+@@ -582,7 +697,7 @@ int RunWindowed(Port &port) {
+             }
+             const bool knownBackdrop=planes.width==320 && planes.height==224 && planes.source.size()==320*224 &&
+                 std::count(planes.source.begin(),planes.source.end(),uint8_t(5))>=1000;
+-            if (knownBackdrop && planes.width==texW && planes.height==texH) {
++            if (!anchoredBackdrop && knownBackdrop && planes.width==texW && planes.height==texH) {
+                 float bgw=0,bgh=0; SDL_GetTextureSize(floral,&bgw,&bgh);
+                 const int canvasWidth=PresentationWidth(wide,high),canvasLeft=(wide-canvasWidth)/2;
+                 const auto cover=CoverInteger(canvasWidth,high,static_cast<int>(bgw),static_cast<int>(bgh));
+@@ -652,6 +767,7 @@ int RunWindowed(Port &port) {
+                 }
+                 SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
++                presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 portraitViewport=!scene.movieOnly;
+             }
+         }
+@@ -705,6 +821,10 @@ int RunWindowed(Port &port) {
+             }
+         }
+         const int canvasWidth=PresentationWidth(wide,high),canvasLeft=(wide-canvasWidth)/2;
++        if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
++            static std::string previousKind;
++            if(previousKind!=presentationKind) {previousKind=presentationKind;std::fprintf(stderr,"presentation layout: %s\n",presentationKind);}
++        }
+         if(canvasLeft>0) {
+             SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);SDL_SetRenderDrawColor(renderer,0,0,0,255);
+             const SDL_FRect left{0,0,float(canvasLeft),float(high)},right{float(canvasLeft+canvasWidth),0,float(wide-canvasLeft-canvasWidth),float(high)};
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index 091d188..44e00bf 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -3,7 +3,51 @@
+ #include "integer_viewport.h"
+ #include <cstdint>
+ #include <vector>
++#include <span>
+ namespace port {
++inline IntegerViewport FitAnchoredBackdrop(int width,int height) {
++    const auto native=FitInteger(width,height,320,224);
++    if(!native.scale)return {};
++    return {native.x-240*native.scale,native.y-113*native.scale,800*native.scale,450*native.scale,native.scale};
++}
++// Each sixteen-pixel border defines its own eight-pixel horizontal period.
++// The night gradient's left and right edges differ on a few dithered rows.
++inline bool AnalyzeRowBackdrop(std::span<const uint32_t> pixels,std::span<const uint8_t> source,std::vector<uint32_t>& rows) {
++    rows.clear();
++    if(pixels.size()!=320*224 || source.size()!=320*224)return false;
++    std::vector<uint32_t> prepared;prepared.reserve(224*16);
++    for(unsigned y=0;y<224;y++) {
++        unsigned period=0;
++        for(unsigned candidate:{2u,4u,8u}) {
++            bool valid=true;
++            for(unsigned x=0;x<candidate*2;x++) {
++                const unsigned right=320-candidate*2;
++                if(source[y*320+x]==0 || source[y*320+right+x]==0 ||
++                   (pixels[y*320+x]&0xFFFFFF)!=(pixels[y*320+x%candidate]&0xFFFFFF) ||
++                   (pixels[y*320+right+x]&0xFFFFFF)!=(pixels[y*320+right+x%candidate]&0xFFFFFF)) {valid=false;break;}
++            }
++            if(valid) {period=candidate;break;}
++        }
++        if(!period) {
++            // A few native dither rows use a longer phase. Retain their actual
++            // eight edge pixels only when both borders are a low-contrast ramp.
++            for(unsigned side:{0u,312u})for(unsigned channel:{0u,8u,16u}) {
++                unsigned low=255,high=0;
++                for(unsigned x=0;x<8;x++) {
++                    if(source[y*320+side+x]!=2)return false;
++                    const unsigned value=(pixels[y*320+side+x]>>channel)&255;
++                    low=std::min(low,value);high=std::max(high,value);
++                }
++                if(high-low>24)return false;
++            }
++            period=8;
++        }
++        for(unsigned x=0;x<8;x++)prepared.push_back(pixels[y*320+x%period]|0xFF000000);
++        for(unsigned x=0;x<8;x++)prepared.push_back(pixels[y*320+320-period+x%period]|0xFF000000);
++    }
++    rows=std::move(prepared);
++    return true;
++}
+ inline IntegerViewport CoverInteger(int width,int height,int columns,int lines) {
+     if(width<=0 || height<=0 || columns<=0 || lines<=0) return {};
+     const int k=std::max({1,1+(width-1)/columns,1+(height-1)/lines});
+diff --git a/port/screen_backdrop.h b/port/screen_backdrop.h
+index 39848b9..74e0e05 100644
+--- a/port/screen_backdrop.h
++++ b/port/screen_backdrop.h
+@@ -9,10 +9,15 @@ struct ScreenBackdropSpec {
+     const char* resource;
+     std::array<size_t,2> paletteOffsets;
+     uint64_t paletteHash;
++    unsigned layer=5;
++    bool anchored=false;
+ };
+ inline constexpr ScreenBackdropSpec kScreenBackdrops[]={
+-    {"OPENING","/SAKURA",{377396,377708},0x0A42F1691B513AFEull},
+-    {"TITLE","/SAKURA1/LOGO.SH2",{168228,168228},0x91E480C617AD7F6Cull},
++    {"OPENING","SAKURA",{377396,377708},0x0A42F1691B513AFEull},
++    {"TITLE","LOGO.SH2",{168228,168228},0x91E480C617AD7F6Cull},
++    {"STATUS","ICATALL.DAT",{77824,77824},0x554CC13BFE8B8594ull},
++    {"LOADING","LOAD.BIN",{0,0},0x74EA8ADC9B0340CCull,4,true},
++    {"PAUSE01","IC01.BIN",{0,0},0x530FF280499422C3ull,4,true},
+ };
+ inline std::span<const uint8_t> ScreenPalette(std::span<const uint8_t> resource,const ScreenBackdropSpec& spec) {
+     for(const auto offset:spec.paletteOffsets)if(offset<=resource.size() && resource.size()-offset>=512) {
+diff --git a/port/tactical_extension.h b/port/tactical_extension.h
+new file mode 100644
+index 0000000..06efe6c
+--- /dev/null
++++ b/port/tactical_extension.h
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <array>
++#include <algorithm>
++#include <cstdint>
++#include <span>
++namespace port {
++inline bool KeepStage01Sprite(unsigned kind,unsigned mode,unsigned color,int worldX,int worldY,uint64_t hash) {
++    // Eight witnessed frames of the decorative water puffs on the right map
++    // fringe. Keep unknown effects, units and the same effect elsewhere.
++    constexpr std::array<uint64_t,8> water={0x2B12B3C4BC5A3266ull,0x31596952E57E90AFull,
++        0x8FF506B0E9C8FF57ull,0x6C5340F6F05A5A8Bull,0x038BFCCD7E3523FCull,
++        0x1AEF849C0DBDEFD9ull,0x00A6A1047D3ECE74ull,0x9FCEC67765CA50E2ull};
++    return kind!=2 || mode!=0x80 || color!=0x2500 || worldX<608 || worldX>=672 || worldY<32 || worldY>=128 ||
++        std::find(water.begin(),water.end(),hash)==water.end();
++}
++inline bool ApplyTacticalExtension(std::span<uint32_t> canvas,unsigned width,
++    std::span<const uint8_t> nativeSource,unsigned extra,
++    std::span<const std::array<uint32_t,2>> world,std::span<const uint32_t> patch,
++    unsigned patchWidth,unsigned patchHeight,unsigned patchX,unsigned patchY,std::array<int16_t,3> offset={},std::span<const uint8_t> wideSprites={}) {
++    if(width!=320+2*extra || extra>64 || world.size()!=224 || nativeSource.size()!=320*224 ||
++       canvas.size()!=size_t(width)*224 || !patchWidth || !patchHeight ||
++       patchWidth>1024 || patchHeight>1024 || patch.size()!=size_t(patchWidth)*patchHeight)return false;
++    if(!wideSprites.empty() && wideSprites.size()!=canvas.size())return false;
++    for(unsigned y=0;y<224;y++) {
++        if(world[y][1]<patchY || world[y][1]-patchY>=patchHeight)continue;
++        for(unsigned x=0;x<width;x++) {
++            const uint64_t wx=uint64_t(world[y][0])+x;
++            if(wx<patchX || wx-patchX>=patchWidth)continue;
++            if(!wideSprites.empty() && wideSprites[y*width+x])continue;
++            if(x>=extra && x<extra+320 && nativeSource[y*320+x-extra]==0)continue;
++            const auto pixel=patch[(world[y][1]-patchY)*patchWidth+size_t(wx-patchX)];
++            uint32_t shifted=0xFF000000;
++            for(unsigned channel=0;channel<3;channel++)shifted|=uint32_t(std::clamp(int((pixel>>(channel*8))&255)+offset[channel],0,255))<<(channel*8);
++            canvas[y*width+x]=shifted;
++        }
++    }
++    return true;
++}
++}
+diff --git a/port/tactical_menu.h b/port/tactical_menu.h
+new file mode 100644
+index 0000000..acc0a10
+--- /dev/null
++++ b/port/tactical_menu.h
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <array>
++#include <cstddef>
++#include <cstdint>
++#include <optional>
++#include <span>
++
++namespace port {
++
++struct TacticalMenuSprite {
++    uint64_t hash;
++    int x,y;
++    unsigned width,height,control,mode,color;
++
++    bool operator==(const TacticalMenuSprite&) const = default;
++};
++
++struct TacticalMenuLayout {
++    // Shift [frame,end) vertically and shorten only the frame.
++    size_t frame,end;
++    unsigned frameHeight;
++    int deltaY;
++};
++
++inline std::optional<TacticalMenuLayout> FindTacticalMenuLayout(std::span<const TacticalMenuSprite> sprites) {
++    // Disc 1, translated action labels in native Move/Atk/Def/Info/End order.
++    constexpr std::array<uint64_t,5> tabs{
++        0x9D8E240F6AB586BCull,0x75F0B7757F6FCC84ull,0x242ACB24C7364114ull,
++        0xACFE13240DF0957Cull,0xF91F81A1290CA869ull
++    };
++    constexpr std::array<std::array<uint64_t,3>,5> labels{{
++        {0x7FF4F719DAF08740ull}, {0x23ABA1E5F681994Bull,0xDC7CD3F64BAD9A36ull},
++        {0xB430B4DEFA5702F6ull,0xEE580AB839732AFFull,0x00396DF5443F4349ull},
++        {0x745709153803CE04ull,0xBA095F71BC2889B2ull,0xBAA90DCC46388B80ull},
++        {0x8F6274AF2C1E7779ull}
++    }};
++    constexpr std::array<unsigned,5> rows{1,2,3,3,1};
++    constexpr std::array<uint64_t,3> frames{
++        0x549B32456EF87DB3ull,0xD17D592842A221CDull,0xD46C77EFDE420A6Full
++    };
++    constexpr uint64_t disabledMove=0x4ACD7121B85349BDull;
++    constexpr uint64_t barHash=0x18FDBFE27D4349D5ull;
++    constexpr uint64_t markerHash=0x02175A89080041A4ull;
++
++    std::optional<TacticalMenuLayout> layout;
++    for(size_t start=0;start<sprites.size();++start) {
++        const auto& bar=sprites[start];
++        if(bar!=TacticalMenuSprite{barHash,bar.x,bar.y,96,32,0,0x88,0xFFEC} ||
++           bar.x<0 || bar.x>224 || bar.y<8 || bar.y>192 || sprites.size()-start<10)continue;
++        const auto group=sprites.subspan(start);
++        bool valid=true;
++        for(unsigned i=0;i<tabs.size();++i) {
++            const auto& label=group[i+1];
++            const auto hash=i==0 && label.hash==disabledMove?disabledMove:tabs[i];
++            if(label!=TacticalMenuSprite{hash,bar.x+8+16*int(i),bar.y+8,16,16,0,0x88,0xFFEC})valid=false;
++        }
++        if(!valid)continue;
++
++        const auto& popup=group[6];
++        const int offset=popup.x-bar.x;
++        if(offset<0 || offset>64 || offset%16)continue;
++        const auto tab=unsigned(offset/16);
++        const unsigned count=rows[tab],height=32+16*count;
++        const int top=bar.y+32-int(height);
++        if(group.size()<9+count || top<8 ||
++           popup!=TacticalMenuSprite{frames[count-1],popup.x,top,40,height,0,0x88,0xFFEC})continue;
++
++        const auto& marker=group[7];
++        const int tabX=popup.x+8,firstY=top+8;
++        if(marker!=TacticalMenuSprite{markerHash,tabX,marker.y,24,16,0,0x88,0xFFF0} ||
++           marker.y<firstY || marker.y>=firstY+16*int(count) || (marker.y-firstY)%16)continue;
++
++        for(unsigned row=0;row<count;++row)
++            if(group[8+row]!=TacticalMenuSprite{labels[tab][row],tabX,firstY+16*int(row),24,16,0,0x88,0xFFEC})valid=false;
++        if(!valid || group[8+count]!=group[tab+1])continue;
++
++        // The final 24 rows draw the join over the bar. The upper frame's
++        // complete lower edge survives the crop and ends where the bar begins.
++        if(layout)return std::nullopt;
++        layout=TacticalMenuLayout{start+6,start+8+count,height-24,-8};
++    }
++    return layout;
++}
++
++} // namespace port
+diff --git a/video/layers.cpp b/video/layers.cpp
+index e42d978..706e731 100644
+--- a/video/layers.cpp
++++ b/video/layers.cpp
+@@ -10,6 +10,7 @@
+ 
+ #include <algorithm>
+ #include <cstdio>
++#include "../port/png_write.h"
+ 
+ namespace satrecomp::video {
+ 
+@@ -431,6 +432,118 @@ SV_INLINE void Renderer::CellPixel(const BGParams &bg, const Char &ch, uint32 do
+ // ---------------------------------------------------------------------------------------------------------
+ // Normal screens
+ 
++void Renderer::DumpWorldMap(const char* path) {
++    const auto saved=std::array<Scroll,4>{m_scroll[0],m_scroll[1],m_scroll[2],m_scroll[3]};
++    std::vector<uint32> pixels(1024*512);
++    const auto originX=sint32(m_regs2.bgParams[3].scrollAmountH>>8);
++    for(unsigned y=0;y<512;y++) {
++        for(unsigned layer=0;layer<4;layer++) {
++            m_scroll[layer].fracX=0;
++            m_scroll[layer].fracY=(y<<8)-m_regs2.bgParams[layer+1].scrollAmountV;
++        }
++        for(unsigned x=0;x<1024;x++)pixels[y*1024+x]=SampleNormalPresentation(sint32(x)-originX);
++    }
++    std::copy(saved.begin(),saved.end(),m_scroll);
++    WritePng(path,pixels.data(),1024,512);
++}
++
++// Additional host presentation pixels. The guest framebuffer, VDP1 clip and
++// hardware layer fetchers stay untouched; map coordinates use the same line's
++// scroll state as the native composition.
++uint32 Renderer::SampleNormalPresentation(sint32 x,bool sprites,uint8* spriteMask,bool nativeLayers) {
++    uint32 colors[7]={},priorities[7]={};
++    colors[6]=m_backColor;
++    const unsigned spriteX=unsigned(x+sint32(m_captureScrollExtra));
++    if(sprites && m_regs2.layerEnabled[0] && m_sprite.special[spriteX]==uint8(SpriteSpecial::Normal)) {
++        colors[0]=m_sprite.color[spriteX];priorities[0]=m_sprite.priority[spriteX];
++    }
++    if(nativeLayers && m_regs2.layerEnabled[1]) {
++        colors[1]=m_layer[1].color[x];priorities[1]=m_layer[1].priority[x];
++    }
++    for(uint32 i=0;i<4;i++) {
++        const auto& bg=m_regs2.bgParams[i+1];
++        if(nativeLayers) {
++            if(m_regs2.layerEnabled[i+2] && !(i==0 && m_regs2.bgEnabled[5])) {
++                colors[i+2]=m_layer[i+2].color[x];priorities[i+2]=m_layer[i+2].priority[x];
++            }
++            continue;
++        }
++        if(!m_regs2.layerEnabled[i+2] || bg.mosaicEnable || bg.vcellScrollEnable)continue;
++        const auto& scroll=m_scroll[i];
++        const uint32 sx=(scroll.fracX+bg.scrollAmountH+uint32(x)*scroll.incH)>>8;
++        const uint32 sy=(scroll.fracY+bg.scrollAmountV)>>8;
++        uint8 priority=0;uint32 color=0;Fetcher fetch{};
++        if(bg.bitmap)Dot(bg,true,bg.bitmapBaseAddress,bg.bitmapSizeH,sx&(bg.bitmapSizeH-1),sy&(bg.bitmapSizeV-1),bg.supplBitmapPalNum,bg.supplBitmapSpecialPriority,color,priority);
++        else MapPixel(bg,false,bg.pageBaseAddresses,bg.pageShiftH,bg.pageShiftV,sx,sy,fetch,color,priority);
++        colors[i+2]=color;priorities[i+2]=priority;
++    }
++    uint32 top=6,second=6;
++    for(uint32 layer:{0u,1u,2u,3u,4u,5u}) {
++        if(priorities[layer]>priorities[top]) {second=top;top=layer;}
++        else if(priorities[layer]>priorities[second])second=layer;
++    }
++    uint32 color=colors[top];
++    if(spriteMask)*spriteMask=uint8(top==0 || (sprites && m_sprite.priority[spriteX] && m_sprite.special[spriteX]==uint8(SpriteSpecial::Shadow)));
++    const bool calcTop=top==0?m_sprite.colorCalcEnable[spriteX] && !m_regs2.spriteParams.lineColorScreenEnable:
++        top<6 && m_regs2.bgParams[top-1].colorCalcEnable && m_regs2.specialColorCalcMode[top-1]==0 && !m_regs2.bgParams[top-1].lineColorScreenEnable;
++    if(calcTop && !m_regs2.colorCalcExtended && (!nativeLayers || !m_colorCalcWindow[x])) {
++        const auto ratioLayer=m_regs2.colorCalcUseSecondRatio?second:top;
++        const auto ratio=ratioLayer==0?m_sprite.colorCalcRatio[spriteX]:m_regs2.colorCalcRatio[ratioLayer];
++        uint32 mixed=0;
++        for(unsigned shift:{0u,8u,16u}) {
++            const uint32 a=(color>>shift)&255,b=(colors[second]>>shift)&255;
++            mixed|=(m_regs2.colorCalcAdd?std::min(a+b,255u):(a*(31-ratio)+b*(ratio+1))>>5)<<shift;
++        }
++        color=mixed;
++    }
++    if(m_regs2.colorOffsetEnable[top]) {
++        const auto& offset=m_regs2.colorOffset[m_regs2.colorOffsetSelect[top]];
++        const uint32 by[3]={offset.r,offset.g,offset.b};uint32 shifted=0;
++        for(unsigned channel=0;channel<3;channel++)shifted|=uint32(std::clamp(int((color>>(channel*8))&255)+bit::sign_extend<9>(by[channel]),0,255))<<(channel*8);
++        color=shifted;
++    }
++    if(sprites && (m_sprite.special[spriteX]==uint8(SpriteSpecial::Shadow) || (!m_regs2.spriteParams.useSpriteWindow && m_sprite.shadowOrWindow[spriteX]))) {
++        const bool takesShadow=top==0?bool(m_sprite.shadowOrWindow[spriteX]):top==6?m_regs2.backScreenParams.shadowEnable:m_regs2.bgParams[top-1].shadowEnable;
++        if(takesShadow)color=(color>>1)&0x7F7F7F7F;
++    }
++    return color|0xFF000000;
++}
++void Renderer::CaptureScrollLine(uint32 y,const uint32* native) {
++    if(y==0) {
++        m_presentation.scrollColorOffset={};
++        if(m_regs2.colorOffsetEnable[4]) {
++            const auto& by=m_regs2.colorOffset[m_regs2.colorOffsetSelect[4]];
++            m_presentation.scrollColorOffset={int16_t(bit::sign_extend<9>(by.r)),int16_t(bit::sign_extend<9>(by.g)),int16_t(bit::sign_extend<9>(by.b))};
++        }
++    }
++    auto* out=m_presentation.scrollPixels.data()+size_t(y)*m_presentation.scrollWidth;
++    const uint32 extra=m_captureScrollExtra;
++    auto* mask=m_presentation.scrollSpriteMask.data()+size_t(y)*m_presentation.scrollWidth;
++    for(uint32 x=0;x<m_width;x++)out[extra+x]=native[x]|0xFF000000;
++    for(uint32 x=0;x<m_width;x++)mask[extra+x]=m_presentation.source[size_t(y)*m_width+x]==0;
++    const bool sprites=m_presentWideReady[m_displayFB];
++    if(sprites) {
++        const auto savedWidth=m_width;auto* savedFramebuffer=m_mem.fb[m_displayFB];const auto savedCheck=m_check;
++        const auto savedWindow=m_spriteWindow;
++        std::fill(m_spriteWindow.begin(),m_spriteWindow.end(),0);
++        std::copy_n(savedWindow.begin(),savedWidth,m_spriteWindow.begin()+extra);
++        m_width=m_presentation.scrollWidth;m_mem.fb[m_displayFB]=m_presentWideFB[m_displayFB].data();m_check=false;
++        SpriteLine(y);
++        m_width=savedWidth;m_mem.fb[m_displayFB]=savedFramebuffer;m_check=savedCheck;m_spriteWindow=savedWindow;
++    }
++    const auto& dirty=m_menuDirty[m_displayFB];
++    if(sprites && dirty.size()==m_presentation.scrollPixels.size()) {
++        for(uint32 x=0;x<m_width;++x)if(dirty[size_t(y)*m_presentation.scrollWidth+extra+x])
++            out[extra+x]=SampleNormalPresentation(sint32(x),true,mask+extra+x,true);
++    }
++    for(uint32 i=0;i<extra;i++) {
++        out[i]=SampleNormalPresentation(sint32(i)-sint32(extra),sprites,mask+i);
++        out[extra+m_width+i]=SampleNormalPresentation(sint32(m_width+i),sprites,mask+extra+m_width+i);
++    }
++    const auto& bg=m_regs2.bgParams[3];const auto& scroll=m_scroll[2];
++    m_presentation.scrollWorld[y]={(scroll.fracX+bg.scrollAmountH-extra*scroll.incH)>>8,(scroll.fracY+bg.scrollAmountV)>>8};
++}
++
+ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+     const Vdp2Regs &regs2 = m_regs2;
+     const BGParams &bg = regs2.bgParams[index + 1];
+diff --git a/video/raster.cpp b/video/raster.cpp
+index 1926583..a6fa1ae 100644
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -32,6 +32,7 @@ namespace {
+ } // namespace
+ 
+ uint8 *Renderer::RasterTarget(uint32 index) {
++    if(m_presentRasterTarget)return m_presentRasterTarget;
+     return m_check ? m_shadowFB[index & 1].data() : m_mem.fb[index & 1];
+ }
+ 
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index a841d3e..60360ff 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -34,6 +34,9 @@ void Renderer::Reset(bool hard) {
+     m_lastCommands.clear();
+     for(auto& sprites:m_presentSprites)sprites.clear();
+     m_presentation.sprites.clear();m_captureValid=false;
++    m_presentWideReady[0]=m_presentWideReady[1]=false;m_presentRasterTarget=nullptr;
++    for(auto& dirty:m_menuDirty)dirty.clear();
++    m_menuReplayStable=false;
+     std::fill(std::begin(m_raw2), std::end(m_raw2), 0);
+     const bool odd = m_regs2.TVSTAT.ODD;
+     m_regs2 = {};
+@@ -77,6 +80,9 @@ void Renderer::Serialize(Archive &ar) {
+         m_commands.clear();
+         for(auto& sprites:m_presentSprites)sprites.clear();
+         m_captureValid=false;
++        m_presentWideReady[0]=m_presentWideReady[1]=false;m_presentRasterTarget=nullptr;
++        for(auto& dirty:m_menuDirty)dirty.clear();
++        m_menuReplayStable=false;
+         m_frame.events.clear();
+         m_frame.quads.clear();
+         m_frame.vram.clear();
+@@ -93,13 +99,20 @@ void Renderer::Serialize(Archive &ar) {
+ // --- registers ---
+ 
+ void Renderer::WriteVdp1Reg(uint32 address, uint16 value) {
++    if(m_drawing)m_menuReplayStable=false;
+     m_regs1.Write(address, value);
+ }
+ 
+ void Renderer::WriteVdp2Reg(uint32 address, uint16 value) {
+     const uint32 index = (address & 0x1FE) >> 1;
++    const auto scrollX=m_regs2.bgParams[3].scrollAmountH,scrollY=m_regs2.bgParams[3].scrollAmountV;
++    const bool sprites=m_regs2.layerEnabled[0];
+     m_raw2[index] = value;
+     m_regs2.Decode(m_raw2);
++    if(m_menuReplayStable && m_drawing) {
++        const auto& after=m_regs2.bgParams[3];
++        if(sprites!=m_regs2.layerEnabled[0] || scrollX!=after.scrollAmountH || scrollY!=after.scrollAmountV)m_menuReplayStable=false;
++    }
+     if (index == 0x000 / 2) {
+         // (a display turned off takes effect at once, one turned on with the next frame)
+         m_regs2.displayEnabledLatch = m_regs2.displayEnabledLatch && m_regs2.TVMD.DISP;
+@@ -144,6 +157,17 @@ void Renderer::SwapFramebuffer() {
+ void Renderer::BeginDrawing() {
+     m_commands.clear();
+     m_captureDrawFB=m_displayFB^1u;m_captureCount=0;m_captureBytes=0;m_captureValid=m_capturePresentation;
++    m_presentWideReady[m_captureDrawFB]=m_capturePresentation && m_presentation.scrollWidth>0 && !m_gpu &&
++        m_regs1.fbSizeH>=m_presentation.scrollWidth && !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable;
++    if(m_presentWideReady[m_captureDrawFB])std::fill(m_presentWideFB[m_captureDrawFB].begin(),m_presentWideFB[m_captureDrawFB].end(),0);
++    m_menuDirty[m_captureDrawFB].clear();
++    m_menuReplayStable=m_presentWideReady[m_captureDrawFB] && !m_check && bool(m_scrollMenuRecognizer);
++    if(m_menuReplayStable) {
++        const auto* start=m_mem.fb[m_captureDrawFB];
++        m_menuStartFB.assign(start,start+m_presentWideFB[m_captureDrawFB].size());
++    }
++    m_menuInitialContext=m_ctx;
++    m_menuVramWrites=m_vramWritesWhileDrawing;
+     m_drawing = true;
+     if (m_gpu) {
+         Vdp1BeginDraw();
+@@ -160,13 +184,15 @@ void Renderer::DrawCommand(uint32 address) {
+         auto& sprites=m_presentSprites[m_captureDrawFB];
+         const unsigned kind=cmd.words[0]&15,mode=(cmd.words[2]>>3)&7;
+         const size_t width=((cmd.words[5]>>8)&63)*8,height=cmd.words[5]&255;
+-        const size_t bytes=kind==0?width*height*(mode>=5?2:1)/(mode<=1?2:1):0;
++        const size_t bytes=kind<=3?width*height*(mode>=5?2:1)/(mode<=1?2:1):0;
+         // Bounded host-only metadata; unsupported/excessive draws retain native output.
+         if(m_captureCount>=4096 || bytes>0x80000 || bytes>4*1024*1024-m_captureBytes) {
+             sprites.clear();m_captureValid=false;
+         }else {
+             if(m_captureCount==sprites.size())sprites.emplace_back();
+             auto& shown=sprites[m_captureCount++];shown.command=cmd;shown.pixels.resize(bytes);
++            shown.x=bit::sign_extend<13>(cmd.words[6])+m_ctx.localCoordX;
++            shown.y=bit::sign_extend<13>(cmd.words[7])+m_ctx.localCoordY;
+             const size_t start=size_t(cmd.words[4])*8;
+             for(size_t i=0;i<bytes;i++)shown.pixels[i]=m_mem.vram1[(start+i)&0x7FFFF];
+             m_captureBytes+=bytes;
+@@ -176,9 +202,101 @@ void Renderer::DrawCommand(uint32 address) {
+         Vdp1Command(cmd);
+     } else if (m_compose) {
+         RasterCommand(cmd);
++        if(m_presentWideReady[m_captureDrawFB] && (cmd.words[0]&15)<8) {
++            std::span<const uint8> pixels;
++            if(m_captureValid && m_captureCount)pixels=m_presentSprites[m_captureDrawFB][m_captureCount-1].pixels;
++            RasterWideCommand(cmd,pixels,m_presentWideFB[m_captureDrawFB].data());
++        }
+     }
+ }
+ 
++void Renderer::RasterWideCommand(const Command& cmd,std::span<const uint8> pixels,uint8* target) {
++    const auto& bg=m_regs2.bgParams[3];
++    if(m_scrollSpriteFilter && m_captureValid && m_captureCount &&
++       !m_scrollSpriteFilter(cmd,pixels,bit::sign_extend<13>(cmd.words[6])+m_ctx.localCoordX+sint32(bg.scrollAmountH>>8),
++           bit::sign_extend<13>(cmd.words[7])+m_ctx.localCoordY+sint32(bg.scrollAmountV>>8)))return;
++
++    const auto savedContext=m_ctx;
++    auto* savedRaster=m_rasterFB;
++    const auto extra=sint32(m_captureScrollExtra);
++    m_ctx.localCoordX+=extra;
++    m_ctx.sysClipH=uint16(m_presentation.scrollWidth-1);
++    if(m_ctx.userClipX0==0 && m_ctx.userClipX1>=319) {
++        m_ctx.userClipX0=0;m_ctx.userClipX1=uint16(m_presentation.scrollWidth-1);
++    }else {
++        m_ctx.userClipX0+=uint16(extra);m_ctx.userClipX1+=uint16(extra);
++    }
++    m_presentRasterTarget=target;
++    RasterCommand(cmd);
++    m_presentRasterTarget=nullptr;
++    m_ctx=savedContext;
++    m_rasterFB=savedRaster;
++}
++
++void Renderer::RelayoutScrollMenu() {
++    if(!m_menuReplayStable || !m_captureValid || !m_presentation.scrollWidth ||
++       m_vramWritesWhileDrawing!=m_menuVramWrites || m_captureDrawFB!=(m_displayFB^1u))return;
++    const auto& sprites=m_presentSprites[m_captureDrawFB];
++    const auto plan=m_scrollMenuRecognizer(sprites);
++    if(!plan || plan->frame>=plan->end || plan->end>sprites.size() ||
++       !plan->frameHeight || plan->deltaY>=0 || plan->deltaY<-224)return;
++    const auto& frame=sprites[plan->frame];
++    const unsigned oldHeight=frame.command.words[5]&255;
++    const int x0=frame.x+int(m_captureScrollExtra),x1=x0+int((frame.command.words[5]>>8)&63)*8;
++    const int y0=frame.y+plan->deltaY,y1=frame.y+int(oldHeight);
++    if(plan->frameHeight>oldHeight ||
++       x0<0 || x1>int(m_presentation.scrollWidth) || y0<0 || y1>int(m_height))return;
++
++    auto& baseline=m_presentWideFB[m_captureDrawFB];
++    const size_t stride=size_t(m_regs1.fbSizeH)*2;
++    if(!stride || baseline.size()%stride || size_t(y1)>baseline.size()/stride ||
++       size_t(x1)*2>stride)return;
++    const int first=std::max(x0,int(m_captureScrollExtra));
++    const int last=std::min(x1,int(m_captureScrollExtra+m_width));
++    if(first>=last)return;
++    const auto* finished=m_mem.fb[m_captureDrawFB];
++    for(int y=y0;y<y1;++y) {
++        const size_t at=size_t(y)*stride+size_t(first-m_captureScrollExtra)*2;
++        const size_t length=size_t(last-first)*2;
++        // The erased menu area must have a trustworthy plate. Reject retained
++        // VDP1 pixels, and reject native clipping or writes not in the replay.
++        if(std::any_of(m_menuStartFB.begin()+at,m_menuStartFB.begin()+at+length,[](uint8 b){return b!=0;}) ||
++           std::memcmp(finished+at,baseline.data()+size_t(y)*stride+size_t(first)*2,length)!=0)return;
++    }
++    m_menuReplayFB.assign(baseline.size(),0);
++    const auto finalContext=m_ctx;
++    m_ctx=m_menuInitialContext;
++    for(size_t index=0;index<sprites.size();++index) {
++        auto cmd=sprites[index].command;
++        if(index>=plan->frame && index<plan->end) {
++            const int y=bit::sign_extend<13>(cmd.words[7])+plan->deltaY;
++            cmd.words[7]=uint16(y)&0x1FFF;
++            if(index==plan->frame)cmd.words[5]=uint16((cmd.words[5]&0xFF00)|plan->frameHeight);
++        }
++        if((cmd.words[0]&15)<8)RasterWideCommand(cmd,sprites[index].pixels,m_menuReplayFB.data());
++        else RasterCommand(cmd);
++    }
++    m_ctx=finalContext;
++    // Accept the replay only when all other VDP1 pixels match the ordinary wide draw.
++    for(size_t y=0;y<baseline.size()/stride;++y) {
++        const size_t start=y*stride;
++        const auto* old=baseline.data()+start;
++        const auto* next=m_menuReplayFB.data()+start;
++        if(y<size_t(y0) || y>=size_t(y1)) {
++            if(std::memcmp(old,next,stride)!=0)return;
++        }else if(std::memcmp(old,next,size_t(x0)*2)!=0 ||
++                 std::memcmp(old+size_t(x1)*2,next+size_t(x1)*2,stride-size_t(x1)*2)!=0)return;
++    }
++    auto& dirty=m_menuDirty[m_captureDrawFB];
++    dirty.assign(size_t(m_presentation.scrollWidth)*m_height,0);
++    for(int y=y0;y<y1;++y)for(int x=x0;x<x1;++x) {
++        const size_t at=size_t(y)*stride+size_t(x)*2;
++        dirty[size_t(y)*m_presentation.scrollWidth+size_t(x)]=
++            baseline[at]!=m_menuReplayFB[at] || baseline[at+1]!=m_menuReplayFB[at+1];
++    }
++    baseline.swap(m_menuReplayFB);
++}
++
+ void Renderer::EndDrawing() {
+     static const bool info = getenv("SATRECOMP_VDP1_INFO") != nullptr;
+     static unsigned frames = 0;
+@@ -227,6 +345,7 @@ void Renderer::EndDrawing() {
+     }
+     m_drawing = false;
+     if(m_captureValid)m_presentSprites[m_captureDrawFB].resize(m_captureCount);
++    RelayoutScrollMenu();
+     m_drawings++;
+     m_lastCommands.swap(m_commands);
+     if (m_gpu) {
+@@ -268,6 +387,18 @@ void Renderer::BeginFrame() {
+         m_presentation.foreground.assign(static_cast<size_t>(m_width)*m_height,0);
+         m_presentation.underSprites.assign(static_cast<size_t>(m_width)*m_height,0);
+         m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
++        m_presentation.scrollWidth=m_captureScrollExtra && m_width==320 && m_height==224?m_width+2*m_captureScrollExtra:0;
++        m_presentation.mapSignature=0;
++        if(m_presentation.scrollWidth) {
++            uint64 hash=14695981039346656037ull;
++            const uint32 base=m_regs2.bgParams[3].pageBaseAddresses[0];
++            for(uint32 i=0;i<8192;i++)hash=(hash^m_mem.vram2[(base+i)&0x7FFFF])*1099511628211ull;
++            m_presentation.mapSignature=hash;
++            if(m_captureScrollSignature && hash!=m_captureScrollSignature)m_presentation.scrollWidth=0;
++        }
++        m_presentation.scrollPixels.assign(size_t(m_presentation.scrollWidth)*m_height,0xFF000000);
++        m_presentation.scrollSpriteMask.assign(size_t(m_presentation.scrollWidth)*m_height,0);
++        m_presentation.scrollWorld.assign(m_presentation.scrollWidth?m_height:0,{});
+     }
+ 
+     LayersBeginFrame();
+@@ -628,6 +759,8 @@ void Renderer::ComposeLine(uint32 y) {
+             m_presentation.underSprites[at]=under.u32|0xFF000000;
+         }
+     }
++    if(m_capturePresentation && m_presentation.scrollWidth && y<m_height)
++        CaptureScrollLine(y,out);
+ }
+ 
+ void Renderer::EndFrame() {
+@@ -645,6 +778,12 @@ void Renderer::EndFrame() {
+         if(m_mem.cram)std::copy_n(m_mem.cram,0x1000,m_presentation.palette.begin());
+     }
+     if (const char* prefix=getenv("SATRECOMP_LAYER_PROBE"); prefix && !probe.done && probe.width==m_width && probe.height==m_height) {
++        if(m_presentation.scrollWidth)DumpWorldMap((std::string(prefix)+"-world.png").c_str());
++        for(unsigned layer=1;layer<=4;layer++) {
++            const auto& bg=m_regs2.bgParams[layer];
++            fprintf(stderr,"layer palette %u hash=%016llX\n",layer+1,static_cast<unsigned long long>(BackgroundPaletteFingerprint(layer+1)));
++            fprintf(stderr,"layer map %u enabled=%d page=%X,%X,%X,%X scroll=%u,%u increment=%u,%u palette=%u\n",layer+1,int(m_regs2.layerEnabled[layer+1]),bg.pageBaseAddresses[0],bg.pageBaseAddresses[1],bg.pageBaseAddresses[2],bg.pageBaseAddresses[3],bg.scrollAmountH,bg.scrollAmountV,bg.scrollIncH,bg.scrollIncV,bg.cramOffset);
++        }
+         for (unsigned layer=0;layer<6;layer++) {
+             const std::string stem=std::string(prefix)+"-layer"+std::to_string(layer);
+             WritePng((stem+".png").c_str(),probe.image[layer].data(),probe.width,probe.height);
+diff --git a/video/renderer.h b/video/renderer.h
+index 8218c68..1934c36 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -14,6 +14,7 @@
+ 
+ #include <functional>
+ #include <memory>
++#include <optional>
+ #include <span>
+ #include <vector>
+ 
+@@ -53,7 +54,9 @@ struct Command {
+ 
+ class Renderer final {
+ public:
+-    struct PresentationSprite {Command command{};std::vector<uint8> pixels;};
++    struct PresentationSprite {Command command{};std::vector<uint8> pixels;sint32 x=0,y=0;};
++    struct ScrollMenuLayout {size_t frame,end;unsigned frameHeight;int deltaY;};
++    using ScrollMenuRecognizer=std::function<std::optional<ScrollMenuLayout>(std::span<const PresentationSprite>)>;
+     // Host metadata excluded from guest serialization and hashes.
+     struct Presentation {
+         uint32 width=0,height=0;
+@@ -61,6 +64,12 @@ public:
+         std::vector<uint8> source;
+         std::vector<PresentationSprite> sprites;
+         std::array<uint8,0x1000> palette{};
++        uint32 scrollWidth=0;
++        std::vector<uint32> scrollPixels;
++        std::vector<uint8> scrollSpriteMask;
++        std::vector<std::array<uint32,2>> scrollWorld;
++        uint64 mapSignature=0;
++        std::array<int16_t,3> scrollColorOffset{};
+     };
+     std::span<const uint8> SpriteBytes(uint32 address,size_t size) const {
+         if(address>=0x80000 || size>0x80000-address) return {};
+@@ -70,8 +79,9 @@ public:
+         if(!m_mem.cram || address>=0x1000 || size>0x1000-address)return {};
+         return {m_mem.cram+address,size};
+     }
+-    uint64_t BackgroundPaletteFingerprint() const {
+-        const auto& bg=m_regs2.bgParams[4];
++    uint64_t BackgroundPaletteFingerprint(uint32 layer=5) const {
++        if(layer<1 || layer>5)return 0;
++        const auto& bg=m_regs2.bgParams[layer-1];
+         const uint32 name=bg.twoWordChar?Vram2Long(bg.pageBaseAddresses[0]):Vram2Word(bg.pageBaseAddresses[0]);
+         const uint32 palette=bg.twoWordChar?((name>>16)&0x7F)<<4:((name>>12)&7)<<8;
+         const uint32 base=bg.cramOffset+(palette&0x700);
+@@ -83,14 +93,20 @@ public:
+         }
+         return hash;
+     }
+-    std::array<int16_t,3> BackgroundColorOffset() const {
+-        if(!m_regs2.colorOffsetEnable[5])return {};
+-        const auto& offset=m_regs2.colorOffset[m_regs2.colorOffsetSelect[5]];
++    std::array<int16_t,3> BackgroundColorOffset(uint32 layer=5) const {
++        if(layer>6 || !m_regs2.colorOffsetEnable[layer])return {};
++        const auto& offset=m_regs2.colorOffset[m_regs2.colorOffsetSelect[layer]];
+         auto signed9=[](unsigned value){return static_cast<int16_t>((int(value&0x1FF)^0x100)-0x100);};
+         return {signed9(offset.r),signed9(offset.g),signed9(offset.b)};
+     }
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
++    void CaptureScrollExtension(uint32 extra,uint64 signature=0) {
++        m_captureScrollExtra=extra>64?64:extra;m_captureScrollSignature=signature;
++    }
++    void SetScrollSpriteFilter(std::function<bool(const Command&,std::span<const uint8>,sint32,sint32)> filter) {m_scrollSpriteFilter=std::move(filter);}
++
++    void SetScrollMenuRecognizer(ScrollMenuRecognizer recognize) {m_scrollMenuRecognizer=std::move(recognize);}
+ 
+     explicit Renderer(const Memory &memory);
+ 
+@@ -187,6 +203,18 @@ public:
+ private:
+     Presentation m_presentation;
+     bool m_capturePresentation=false;
++    uint32 m_captureScrollExtra=0;
++    uint64 m_captureScrollSignature=0;
++    std::vector<uint8> m_presentWideFB[2]={std::vector<uint8>(0x40000),std::vector<uint8>(0x40000)};
++    bool m_presentWideReady[2]={false,false};
++    uint8* m_presentRasterTarget=nullptr;
++    std::function<bool(const Command&,std::span<const uint8>,sint32,sint32)> m_scrollSpriteFilter;
++    ScrollMenuRecognizer m_scrollMenuRecognizer;
++    std::array<std::vector<uint8>,2> m_menuDirty;
++    std::vector<uint8> m_menuReplayFB,m_menuStartFB;
++    Vdp1Context m_menuInitialContext;
++    uint64 m_menuVramWrites=0;
++    bool m_menuReplayStable=false;
+     Memory m_mem;
+     uint16 m_raw2[0x100] = {}; // the VDP2's registers as written
+     Vdp1Regs m_regs1;
+@@ -358,6 +386,11 @@ private:
+                    uint8 &priority);
+     // (offsetY: added to the line's place in the map, 11.8 fixed point; for the other field's line)
+     bool NormalLine(uint32 index, sint32 offsetY = 0);
++    void CaptureScrollLine(uint32 y,const uint32* native);
++    void DumpWorldMap(const char* path);
++    uint32 SampleNormalPresentation(sint32 x,bool sprites=false,uint8* spriteMask=nullptr,bool nativeLayers=false);
++    void RasterWideCommand(const Command& command,std::span<const uint8> pixels,uint8* target);
++    void RelayoutScrollMenu();
+     bool Coefficient(const RotationParams &params, uint32 address, bool always, sint32 &value, bool &transparent) const;
+     void RotationParameters(uint32 y);
+     bool RotationLine();

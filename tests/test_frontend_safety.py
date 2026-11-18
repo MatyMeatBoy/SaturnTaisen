@@ -15,6 +15,14 @@ DEP=ROOT/'local/deps/satrecomp'
                      and (DEP/'port/integer_viewport.h').is_file(),
                      'requires the locally patched Windows SDL/Clang dependency')
 class FrontendTests(unittest.TestCase):
+    def test_tactical_menu_recognition_rejects_unknown_or_ambiguous_groups(self):
+        self.fixture('tactical_menu')
+    def test_vdp2_color_snapshots_and_extended_map_preserve_native_frame(self):
+        self.fixture('vdp2_color',[DEP/'video'/name for name in ('renderer.cpp','layers.cpp','raster.cpp','regs.cpp','vdp1.cpp')])
+    def test_tactical_extension_follows_camera_and_preserves_foreground(self):
+        self.fixture('tactical_extension')
+    def test_english_dialogue_tables_preserve_ids_offsets_and_reject_truncation(self):
+        self.fixture('dialogue_catalog')
     def fixture(self,name,extra=()):
         with tempfile.TemporaryDirectory(dir=ROOT/'local') as directory:
             folder=Path(directory).resolve()
@@ -22,7 +30,7 @@ class FrontendTests(unittest.TestCase):
             exe=folder/(name+'.exe')
             command=[str(PREFIX/'bin/clang++.exe'),'-std=c++20',str(ROOT/'tests'/('test_'+name+'.cpp')),
                      *map(str,extra),'-I',str(DEP/'port'),'-I',str(DEP/'recomp-common'),
-                     '-I',str(DEP/'recomp-common/launcher/src'),'-I',str(PREFIX/'include'),
+                     '-I',str(DEP/'recomp-common/launcher/src'),'-I',str(DEP/'video'),'-I',str(PREFIX/'include'),
                      '-L',str(PREFIX/'lib'),'-lSDL3','-lz','-o',str(exe)]
             result=subprocess.run(command,capture_output=True,text=True,timeout=60)
             self.assertEqual(result.returncode,0,result.stderr)

@@ -9,10 +9,14 @@ int main() {
     // A 16-pixel texture may have only 8 ink pixels. The last letter still fits.
     assert(port::NarrativeInkFits(296,196,tile));
     assert(!port::NarrativeInkFits(297,196,tile));
-    assert(!port::NarrativeInkFits(296,197,tile));
+    assert(!port::NarrativeInkFits(296,201,tile));
     assert(!port::NarrativeInkFits(55,160,tile));
     assert(!port::NarrativeInkFits(56,159,tile));
     assert(!port::NarrativeInkFits(56,160,std::span<const uint8_t>(tile.data(),4)));
+    // Descenders on the fourth row belong inside the box, not to a native fallback.
+    std::array<uint8_t,128> descender{};
+    for(int y=2;y<15;y++)for(int x=0;x<4;x++)descender[y*8+x]=0x11;
+    assert(port::NarrativeInkFits(56,196,descender));
     // Use a single affine scale for the entire font. A narrow i must not be
     // stretched to a native bitmap's different width or height.
     const auto natural=port::NaturalTextPlacement(7.5f,1,3,9,0,2,11,3);
@@ -23,6 +27,14 @@ int main() {
     assert(std::abs(1*natural.scale+natural.offsetX)<0.0001f);
     assert(std::abs(3*natural.scale+natural.offsetY-6)<0.0001f);
     assert(9*natural.scale<=11*3);
+    // Reserve three native pixels above the inner bottom frame, even for
+    // descenders on the fourth line. Offset is fixed before any text reveals.
+    for(int scale:{1,3,6,8}) {
+        const float bottom=14.5f*scale;
+        const float row=port::NarrativeRowTop(196,scale);
+        assert(row+bottom<=207*scale+0.001f);
+        assert(port::NarrativeRowTop(172,scale)-port::NarrativeRowTop(160,scale)==11*scale);
+    }
     for(const auto [w,h]:std::array<std::pair<int,int>,5>{{{640,480},{1280,720},{1920,1080},{3840,2160},{3440,1440}}}) {
         const auto fit=port::FitInteger(w,h,320,224);
         const auto clip=port::NarrativeClip(fit.x,fit.y,fit.scale,0,0);

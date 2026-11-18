@@ -3,8 +3,12 @@
 !/.gitignore
 !/.gitattributes
 !/README.md
+!/AGENTS.md
 !/docs/
 /docs/**
+!/docs/PENDIENTES.md
+!/docs/HANDOFF.md
+!/docs/ESTADO_ACTUAL.md
 !/docs/research/
 !/docs/research/*.md
 !/docs/research/*.json
@@ -53,3 +57,11 @@
 !/assets/generated/pc-backgrounds/*.png
 !/assets/generated/pc-backgrounds/*.json
 !/assets/generated/pc-backgrounds/*.md
+!/assets/generated/screen-backgrounds/
+!/assets/generated/screen-backgrounds/*.png
+!/assets/generated/screen-backgrounds/*.json
+!/assets/generated/screen-backgrounds/*.md
+!/assets/generated/tactical-extensions/
+!/assets/generated/tactical-extensions/*.png
+!/assets/generated/tactical-extensions/*.json
+!/assets/generated/tactical-extensions/*.md

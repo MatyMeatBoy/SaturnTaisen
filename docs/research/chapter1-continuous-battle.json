@@ -1,0 +1,13 @@
+{
+  "frames": 23443,
+  "initial_loads": 1,
+  "intermediate_state_loads": 0,
+  "final_guest_hash_equal": true,
+  "final_rgb_equal": true,
+  "compiled_blocks": 580328,
+  "interpreted": 0,
+  "scope": "battle turns after Sakura first attack through Maria second-cycle attack; no victory yet",
+  "initial_state_sha256": "87f69986f6428b66a0dfac2e32fb3197adf43762857f8fccb177951909882b39",
+  "movie": "tests/battle-multiple-turns.movie",
+  "source_commit": "cd4407e9e1f8e8ef597ca2c196c9b4a6a0e93df2"
+}

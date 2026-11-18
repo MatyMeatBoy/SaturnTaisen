@@ -64,6 +64,8 @@ La preparación CPU de 38 fondos pasó de2,102s con un trabajador a0,478s con oc
 
 ## Desarrollo
 
+Entrada para colaboradores: [pendientes actuales](docs/PENDIENTES.md) y [handoff técnico/artístico](docs/HANDOFF.md). Distinguen el trabajo local de las versiones entregadas y explican el método PixelGen v1, las pruebas y la coordinación entre bots.
+
 Python 3.11+, Git, CMake/Ninja/Clang y SDL3. La dependencia satrecomp está fijada por commit y los cambios se distribuyen como patches reproducibles. Los dumps, estados, código generado y recursos propios permanecen en `local/`, fuera de Git.
 
 ```powershell

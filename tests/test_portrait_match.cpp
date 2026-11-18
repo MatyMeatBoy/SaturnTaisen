@@ -13,6 +13,11 @@ int main() {
     }
     frame[0]^=127;frame[1000]^=73;frame[1919]^=34;
     assert(!port::MatchPortraitFrame(atlas,frame));
+    std::copy_n(atlas.begin(),frame.size(),frame.begin());
+    std::copy_n(atlas.begin()+48*40,640,frame.begin()+4*40);
+    std::copy_n(atlas.begin()+64*40,640,frame.begin()+25*40);
+    match=port::MatchPortraitFrame(atlas,frame);
+    assert(match && !match->ambiguous && match->part==1 && match->y==4 && match->part2==2 && match->y2==25);
     for(size_t i=48*40;i<64*40;i+=5)atlas[i]=0;
     std::copy_n(atlas.begin(),frame.size(),frame.begin());
     for(size_t i=0;i<640;i++)if(atlas[48*40+i])frame[7*40+i]=atlas[48*40+i];

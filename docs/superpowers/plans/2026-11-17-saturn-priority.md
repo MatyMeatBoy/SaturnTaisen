@@ -71,3 +71,20 @@ Checkpoint de prueba solicitado en20 minutos: build0.2-dev para probar capítulo
 - Launcher detecta disco y recursos preparados junto al ejecutable; traslado sin toolchain probado a 1440p.
 - Entrega personal autorizada: únicamente disco 1 inglés y recursos HD procesados; nunca publicar ese ZIP. Release Git sin entradas originales.
 - Pendientes: prueba RX 6900 XT/M30 físicos, capítulo 1 continuo completo, cuerpos HD, táctico 16:9 y transición natural de discos.
+
+
+## Feedback visual del checkpoint 0.1.2 (prioridad actual)
+
+- Intro anterior al título: ampliar área real288×144 situada en16,24 a la mayor escala entera; conservar subtítulos ingleses incrustados. El vídeo posterior a Comenzar ya funciona.
+- Fondo lila de intro y fondo rosado de título: PixelGen v1 a16:9 con sus capas originales separadas. Masters generados; integración y verificación pendientes.
+- Mantener fondos extendidos durante todas las escenas y transiciones en que aparece un fondo conocido, aunque la composición no reconozca el diálogo.
+- Zoom global en Mejorado: cuadros de imagen/diálogo, sprites sobre imagen y eleccionesLIPS; táctico mantiene su plano real/integro y HUD relativo.
+- TextoHD: corregir filas mezcladas con nativas, cuarta línea/descendentes, estabilidad al avanzar, bajar ligeramente baseline y centrar; glifos/fuente preparados antes de mostrar y reemplazo coherente por frame. Incluir eleccionesLIPS.
+- Recoger texto reconocido en tablas locales con IDs/contexto para futura localización; no afirmar corpus completo ni publicar la traducción íntegra del propietario.
+- ModHD PC incluye vídeosMPG (MOVIE000..120 encontrados), menús/HUD equivalentes además de fondos/retratos; validar equivalencia, subtítulos/audio/inglés y proporciones antes de sustituir. Sin ejecución PC prioritaria.
+
+### Ajuste del margen inferior del texto HD
+
+Reproducido con `post-3000.state`, diálogo de Sumire de cuatro líneas. El reconocimiento nativo conserva hasta y212 para reconocer descendentes; el dibujo HD ahora recorta en y208 y coloca filas con paso fijo de11 píxeles, frente a12, con origen un píxel más arriba. Se conservan fuente, tamaño, avance horizontal y geometría Zoom. La posición depende de la fila original, nunca de las letras visibles durante el tecleo.
+
+Captura real revisada a2560×1440: `local/work/text-safe-margin/shot.png`, detalle `dialogue.png`; primera y cuarta líneas completas y separadas del marco. Build local correcto,22 pruebas del frontend aprobadas en34,580s, prueba de geometría Zoom aprobada y árbol compuesto de35 parches verificado. Ajuste en build de desarrollo; ZIPs anteriores sin modificar. El lector validado de tablas inglesas está añadido como base, todavía sin integración del catálogo precargado.

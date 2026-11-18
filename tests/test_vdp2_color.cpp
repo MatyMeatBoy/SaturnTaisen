@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <cstdio>
 #include <vector>
+#include <cassert>
+#include <algorithm>
 
 using namespace satrecomp::video;
 int main() {
@@ -29,6 +31,15 @@ int main() {
     reg(0x110,1);reg(0x114,32);
     if(draw(1,15)!=0x7c009c){fprintf(stderr,"post-blend offset failed: %06x\n",pixel);return 1;}
     reg(0x110,0);
+    renderer.CapturePresentation(true);
+    renderer.CaptureScrollExtension(39);
+    draw(0,15);
+    assert(renderer.PresentationFrame().scrollWidth==398);
+    assert(renderer.PresentationFrame().scrollPixels.size()==398*224);
+    assert((renderer.PresentationFrame().scrollPixels[39]&0xFFFFFF)==pixel);
+    assert((renderer.PresentationFrame().scrollPixels[39]>>24)==255);
+    assert((renderer.PresentationFrame().scrollPixels[0]&0xFFFFFF)==0x0000f8);
+    renderer.CaptureScrollExtension(0);
     // Decorative extension observes NBG3's signed 9-bit offset, including bank B.
     reg(0x110,8);reg(0x112,8);reg(0x11a,0x100);reg(0x11c,0x1ff);reg(0x11e,255);
     if(renderer.BackgroundColorOffset()!=std::array<int16_t,3>{-256,-1,255}) {
@@ -60,5 +71,44 @@ int main() {
     if(draw(0x40,0)!=0x7c007c){fprintf(stderr,"inverted colour-calculation window failed: %06x\n",pixel);return 1;}
     reg(0xd6,0);fb1[0]=0;fb1[1]=0; // transparent sprite cannot blend or occlude
     if(draw(0x40,0)!=0x0000f8){fprintf(stderr,"transparent sprite failed: %06x\n",pixel);return 1;}
-    puts("VDP2 background/sprite blending, ratio selection, gates, windows and offset passed");
+    // Text/portrait replacements must use the displayed framebuffer's immutable
+    // commands and texels, not a newer draw or subsequently edited live VRAM.
+    renderer.CapturePresentation(true);renderer.Reset(true);
+    renderer.SetResolution(320,224,false);reg(0,0x8000);renderer.LatchDisplayMode();
+    auto word=[&](size_t offset,uint16_t value){vram1[offset]=value>>8;vram1[offset+1]=value&255;};
+    word(0,0);word(4,0x80);word(6,0xC510);word(8,0x200);word(10,0x210);
+    std::fill_n(vram1.begin()+0x1000,128,0x11);
+    renderer.BeginDrawing();renderer.DrawCommand(0);renderer.EndDrawing();
+    std::fill_n(vram1.begin()+0x1000,128,0x22);
+    draw(0,0);assert(renderer.PresentationFrame().sprites.empty());
+    renderer.SwapFramebuffer();draw(0,0);
+    assert(renderer.PresentationFrame().sprites.size()==1);
+    assert(renderer.PresentationFrame().sprites[0].pixels.size()==128);
+    assert(renderer.PresentationFrame().sprites[0].pixels[0]==0x11);
+    std::fill_n(vram1.begin()+0x1000,128,0x33);
+    renderer.BeginDrawing();renderer.DrawCommand(0);renderer.EndDrawing();
+    draw(0,0);assert(renderer.PresentationFrame().sprites[0].pixels[0]==0x11);
+    renderer.SwapFramebuffer();cram[0x800]=0x12;draw(0,0);cram[0x800]=0x34;
+    assert(renderer.PresentationFrame().sprites[0].pixels[0]==0x33);
+    assert(renderer.PresentationFrame().palette[0x800]==0x12);
+    // A sprite crossing the original left edge must continue into the extended
+    // viewport, while the native framebuffer and native clip retain their size.
+    renderer.Reset(true);renderer.CaptureScrollExtension(39);
+    std::fill(fb0.begin(),fb0.end(),0);std::fill(fb1.begin(),fb1.end(),0);
+    reg(0,0x8000);reg(0x20,0x0103);reg(0x28,0x3232);reg(0x3c,0x0010);reg(0xf8,0x0102);
+    reg(0xe0,0x20);reg(0xf0,3);renderer.LatchDisplayMode();draw(0,0);
+    std::fill(vram1.begin(),vram1.begin()+64,0);
+    word(0,9);word(20,319);word(22,223);
+    word(32,0);word(36,0xA8);word(40,0x200);word(42,0x210);word(44,0x1FFC);
+    for(unsigned i=0;i<256;i++)word(0x1000+i*2,0xFC00);
+    renderer.BeginDrawing();renderer.DrawCommand(0);renderer.DrawCommand(32);renderer.EndDrawing();
+    renderer.SwapFramebuffer();draw(0,0);
+    assert((renderer.PresentationFrame().scrollPixels[38]&0xFFFFFF)==0xF80000);
+    assert((renderer.PresentationFrame().scrollPixels[34]&0xFFFFFF)!=0xF80000);
+    renderer.SetScrollSpriteFilter([](const auto&,auto,int,int){return false;});
+    renderer.BeginDrawing();renderer.DrawCommand(0);renderer.DrawCommand(32);renderer.EndDrawing();
+    renderer.SwapFramebuffer();draw(0,0);
+    assert((renderer.PresentationFrame().scrollPixels[38]&0xFFFFFF)!=0xF80000);
+    assert((renderer.PresentationFrame().scrollPixels[39]&0xFFFFFF)==0xF80000); // original framebuffer is unchanged
+    puts("VDP2 blending and coherent displayed sprite snapshots passed");
 }

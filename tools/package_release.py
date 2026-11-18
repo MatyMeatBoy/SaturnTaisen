@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import struct
 import subprocess
 import sys
 import urllib.request
@@ -37,21 +38,27 @@ def digest(path):
     return result.hexdigest()
 
 
-def generated_backgrounds(folder,pc=False):
+def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     """Only manifest-pinned generated art may pass the package's resource gate."""
     folder=Path(folder)
     data=json.loads((folder/'provenance.json').read_text(encoding='utf-8'))
+    if sum((pc,screen,tactical))>1:raise RuntimeError('Conflicting generated-art classes')
+    if tactical and (data.get('generated_only') is not True or data.get('original_map_context_included') is not False or data.get('world_origin')!=[656,24] or data.get('logical_size')!=[39,224]):raise RuntimeError('Unverified generated tactical band')
     result={}
     for row in data['backgrounds']:
         name=row['file']
-        pattern=r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
+        if pc and screen:raise RuntimeError('Conflicting generated-art classes')
+        pattern=r'STAGE01-right-v1\.png' if tactical else r'(?:OPENING|TITLE|STATUS|PAUSE01|LOADING)-v1\.png' if screen else r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
         if not re.fullmatch(pattern,name) or name in result:
             raise RuntimeError('Invalid/duplicate generated background identity')
         file=folder/name
         if file.is_symlink() or not file.is_file() or digest(file)!=row['sha256']:
             raise RuntimeError('Generated background checksum mismatch: '+name)
-        if file.read_bytes()[:8]!=b'\x89PNG\r\n\x1a\n':
+        with file.open('rb') as stream:header=stream.read(24)
+        if header[:8]!=b'\x89PNG\r\n\x1a\n':
             raise RuntimeError('Generated background is not a PNG: '+name)
+        if tactical and (len(header)!=24 or header[12:16]!=b'IHDR' or struct.unpack('>II',header[16:24])!=(39,224)):
+            raise RuntimeError('Unexpected generated tactical image extent')
         result[name]=file
     if not result:
         raise RuntimeError('Empty generated background manifest')
@@ -111,7 +118,7 @@ def package(destination,toolchain,archive=True):
             raise RuntimeError(f'Missing required license: {source}')
         shutil.copy2(source,licenses/name)
     # Only original project sources and reproducible patches, no generated code.
-    for folder,patterns in {'tools':['*.py'],'patches':['*.patch'],'config':['*.json'],
+    for folder,patterns in {'tools':['*.py','controller_mapper.cpp','controller_capture.h'],'patches':['*.patch'],'config':['*.json'],
                             'tests':['*.py','*.cpp','*.movie'],'tests/native':['*.cpp','CMakeLists.txt'],
                             'games/sakura':['game.cfg'],'docs/superpowers/specs':['*.md'],
                             'docs/superpowers/plans':['*.md'],
@@ -139,6 +146,18 @@ def package(destination,toolchain,archive=True):
         for name,source in generated_backgrounds(pc_art_source,pc=True).items():
             shutil.copy2(source,pc_art/name);allowed_art['art/pc-backgrounds/'+name]=digest(source)
         shutil.copy2(pc_art_source/'provenance.json',pc_art/'provenance.json')
+    screen_source=ROOT/'assets/generated/screen-backgrounds'
+    if screen_source.is_dir():
+        screen_art=destination/'art/screen-backgrounds';screen_art.mkdir(parents=True)
+        for name,source in generated_backgrounds(screen_source,screen=True).items():
+            shutil.copy2(source,screen_art/name);allowed_art['art/screen-backgrounds/'+name]=digest(source)
+        shutil.copy2(screen_source/'provenance.json',screen_art/'provenance.json')
+    tactical_source=ROOT/'assets/generated/tactical-extensions'
+    if tactical_source.is_dir():
+        tactical_art=destination/'art/tactics';tactical_art.mkdir(parents=True)
+        for name,source in generated_backgrounds(tactical_source,tactical=True).items():
+            shutil.copy2(source,tactical_art/name);allowed_art['art/tactics/'+name]=digest(source)
+        shutil.copy2(tactical_source/'provenance.json',tactical_art/'provenance.json')
     (destination/'Jugar.bat').write_text('@echo off\nsetlocal\nset "SATURN_TAISEN_FIRST_HOME=%~dp0user"\nset "SATRECOMP_HD_STATS=1"\nset "SATRECOMP_BACKGROUND_STATS=1"\nif not exist "%~dp0user" mkdir "%~dp0user"\nif not exist "%~dp0user\\settings.ini" if exist "%~dp0personal-defaults.ini" copy /y "%~dp0personal-defaults.ini" "%~dp0user\\settings.ini" >nul\nstart "" /d "%~dp0" "%~dp0SaturnTaisenFirst.exe"\n',encoding='ascii')
     (destination/'Ver logs.bat').write_text('@echo off\nif not exist "%~dp0user\\logs" mkdir "%~dp0user\\logs"\nstart "" "%~dp0user\\logs"\n',encoding='ascii')
     (destination/'portable.txt').write_text('',encoding='ascii')
