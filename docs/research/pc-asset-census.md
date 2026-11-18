@@ -38,3 +38,9 @@ The Saturn `NC10.BIN` (104,528 bytes, all NC files share that size) starts `00 0
 ### PC SPRED decoder
 
 `tools/decode_spred.py` (ported from patch 0013) decodes any PC `.SPR` to PNG for local comparison; verified on `SAKURA1/BG/BG1001.SPR` (the theatre lobby, 576x320). The Saturn `BG1001.BIN` is not the same LZ ring format (decoded output is noise at start offsets 0-0x20). Decoded PNGs are the owner's assets: keep them under `local/`.
+
+### Scene-based BG matching (first verified pair)
+
+Because Saturn `BG*.BIN` is not decoded yet, pairs can be approved from screenshots of the running game: crop the scene area above the text box, compare a luminance signature (32x20, z-scored correlation) against all 766 decoded PC BG images, then confirm visually. First pair: the corridor in the chapter 1 state (`chapter1-continuous-119780`) is `SAKURA1/BG1119` (day, bright window; correlation 0.70, runner-up `SAKURA2/BBG240` 0.63). `BG1120` is the same corridor lit for night, so lighting variants share structure: always confirm the window/lights, and treat a margin under 0.1 as ambiguous. Of 36 sample states, 7 gave a clear top match; the rest need a cleaner frame (no actor covering the scene) or a longer run.
+
+A cold New Game run with a screenshot every 250 frames (`--shot-every`) is the intended source of frames; keep screenshots and decoded PNGs under `local/`.
