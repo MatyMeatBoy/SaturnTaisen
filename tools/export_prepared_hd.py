@@ -30,7 +30,7 @@ def export_prepared(pc_root,portrait_pack,output,runtime):
     for row in rows:
         file=pc_root/'SAKURA1/WALL'/(row['id']+'.SPR')
         if hashlib.sha256(file.read_bytes()).hexdigest()!=row['source_spred_sha256']:raise ValueError('Modified PC background')
-    env=os.environ.copy();env['PATH']='C:/msys64/clang64/bin;'+env.get('PATH','')
+    env=os.environ.copy();env['PATH']=os.environ.get('STF_CLANG','C:/msys64/clang64/bin')+';'+env.get('PATH','')
     with tempfile.TemporaryDirectory(prefix='prepared-hd-',dir=ROOT/'local/work') as tmp:
         cache=Path(tmp)
         result=subprocess.run([str(Path(runtime).resolve()),'--prepare-pc-backgrounds',str(pc_root),str(cache)],env=env,capture_output=True,timeout=90)
