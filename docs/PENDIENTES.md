@@ -81,6 +81,11 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T49 | P0 | local | entregado y traslado verificado | Test.3 público317.282.734bytes y personal725.392.142bytes, fuente72affb2, runtime674.182/patch0049 y HD201. ZIP extraídos con CRC/inventario/SHA correctos; escena/combate, película6201hashes y guardado/Continue10700hashes iguales a referencias,0interpretados. Archivo personal solo local. RX6900XT/M30 físicos pendientes. Test.2 intacto. |
 | T50 | P0 | local | entregado · test.4 · detenido | Público y ZIP personal extraídos y verificados; launcher, HD/combate, importador, mapper y handoff funcionan con PATH Windows. Runtime0050; experimento0051 fuera. No reanudar sin petición del usuario. Ver `releases/v0.2.0-test.4-validation.json`. |
 | T51 | P2 | agente | PR #41 · portabilidad | Pruebas y exportador HD usan el toolkit portátil (`toolkit/msys64/clang64` o `STF_CLANG`) en lugar de `C:/msys64`. Aviso: en copias traspasadas el SDK con `core.autocrlf=true` rompe `build_runtime.dependency()` (fin de línea); compilar con `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.autocrlf GIT_CONFIG_VALUE_0=false` y restaurar el SDK desde el árbol compuesto 0001..0050. Sin cambio de runtime. |
+| T52 | P0 | libre | HD retratos | Faltan 4 retratos HD (`00a1`, `0152`, `0153`, `0169`): 300/304 integrados. Verificar en juego los 99 nuevos; rechazar coincidencias ambiguas. |
+| T53 | P1 | libre | HD vídeos | 44/50 vídeos emparejados por duración y orden (`docs/research/video-equivalence.md`). Faltan 6 pares; comprobar audio/subtítulos/salto y diseñar la reproducción MPEG-1/MP2 en runtime. |
+| T54 | P1 | libre | HD cuerpos/HUD | Cuerpos NC (T19) no se dibujan en runtime; integrar HUD/menús HD sobre el inventario T23. |
+| T55 | P1 | libre | recomp EVT | 19 EVT registrados por inferencia (`docs/research/evt-overlay-registry.md`): observarlos jugando. Repetir el barrido de 40.000 cuadros (17 casos) con timeout alto y registrar bloques que falten. |
+| T56 | P1 | libre | campaña | Cadena New Game→tutorial verificada (297.107 cuadros). Faltan tutorial→victoria, guardar/reiniciar/Continue (x2) y rutas de capítulos T32. |
 
 ## División para colaboradores
 
