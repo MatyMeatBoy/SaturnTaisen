@@ -1670,6 +1670,986 @@
         "observed_runtime": null,
         "review": "batch4-automatic-conservative"
       }
+    },
+    {
+      "id": "0091",
+      "pc_index": 144,
+      "native_raw_sha256": "07498444ee028ffa354963546ef96387a4cc2ae1367996874eb778da1b499a98",
+      "pc_rgba_sha256": "e835052f5aeb97e7623d73645712afb94280ec81df14e246a5a3757a51cc9a64",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "79f3c7aa5292a33a4002f16c33a5d7a4a975a49135dba72009e06a6f52db7a51",
+        "2": "e835052f5aeb97e7623d73645712afb94280ec81df14e246a5a3757a51cc9a64"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "0092",
+      "pc_index": 145,
+      "native_raw_sha256": "0bc4687f5b6254240a899cbcf906684f4444a5ffdc5f106a8c403955b6204e87",
+      "pc_rgba_sha256": "20333f9930c506ab016125c23a11499c6ebc1b446187ddfc9737d47876c3c275",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "beb1233129514db5766a8794a6a3c30dd7551b20774649444765661e33c2e3c7",
+        "2": "20333f9930c506ab016125c23a11499c6ebc1b446187ddfc9737d47876c3c275"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "0093",
+      "pc_index": 146,
+      "native_raw_sha256": "2bff860c781d6ee679d89d55fedfcd4b3cddd0621178dc9cbc0de203c2da6300",
+      "pc_rgba_sha256": "caaf3cfeea7a7cfa52671f184eb5b1e7882f7b2c0c98b8be87cce2d1abf8195d",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "87be508495f0aa41f088e1223984c7d590c553df262789ecbe3524a9a8129cbb",
+        "2": "caaf3cfeea7a7cfa52671f184eb5b1e7882f7b2c0c98b8be87cce2d1abf8195d"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "0094",
+      "pc_index": 147,
+      "native_raw_sha256": "190a5378e7ca7cbfdd669b0fd750863f281c9bc7cc73316374045cb04a39937c",
+      "pc_rgba_sha256": "1caf64cd64eded30fc1f1a7348513beb16d8793ef29febf8626952c99f81eec6",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "b10b0543458d7bb74f5dc24e43fb8fc1f3a88c6295db09990c72f22b460269eb",
+        "2": "1caf64cd64eded30fc1f1a7348513beb16d8793ef29febf8626952c99f81eec6"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "0095",
+      "pc_index": 148,
+      "native_raw_sha256": "d0fe979c812543a000bbd43687e8e7aa7242d5ca51c2033bec0398669979aca7",
+      "pc_rgba_sha256": "eefaa3551eedf4de0a6543c02ff702c0c5c90c989b0e1f75e2cbe0f83cdaf0ea",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "adc7fa2127cbffea0482bd11cc3bdef8cc80c001a4275712a734a2ecd52cbe44",
+        "2": "eefaa3551eedf4de0a6543c02ff702c0c5c90c989b0e1f75e2cbe0f83cdaf0ea"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "0097",
+      "pc_index": 150,
+      "native_raw_sha256": "e413822124a451f34ba5c4c3f132b24782efdb083a30724a183385e6d6d18e54",
+      "pc_rgba_sha256": "a960852b29029c077e96e5123c9334664c3c0c3420ee6105b702b5b2ece18045",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "9dfc7f872d56a1ca0ee4e4a9acba3ff0b0437f732caa1938418558f43faf5799",
+        "2": "a960852b29029c077e96e5123c9334664c3c0c3420ee6105b702b5b2ece18045"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "0098",
+      "pc_index": 151,
+      "native_raw_sha256": "9357e0616969b5cc30847667fab652db94d7f68938bb2f3182a26c14e31cd4c0",
+      "pc_rgba_sha256": "79aef44dd66179612c29c5e58f34ada262bc6aa40a8980ec761de0452f975098",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "cfc6c2587722425b48a76dad246f84b04265d0edca5f87200f904f6c914bfd4a",
+        "2": "79aef44dd66179612c29c5e58f34ada262bc6aa40a8980ec761de0452f975098"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "009a",
+      "pc_index": 153,
+      "native_raw_sha256": "a0f224faa2964d015e1383829419220ddf33a5cf75e9c79ee006c151e7df32aa",
+      "pc_rgba_sha256": "75ca1075997c5809e294b0184ab8df16d022416b83a44a64f17bbe8e691a9bf1",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "79e6834f7efc30d1a8a6b50a371dceb681ecd4ee3ca600639dde0a2eac2090bd",
+        "2": "75ca1075997c5809e294b0184ab8df16d022416b83a44a64f17bbe8e691a9bf1"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "009b",
+      "pc_index": 154,
+      "native_raw_sha256": "28189df9bdd9016afe45413801a46b2c2d09932b1e9ae552e9109eb54f9dd9ab",
+      "pc_rgba_sha256": "a63db01b041eb1f74b04f0ac1eacd0da4e080b6008e922947862cea1d403f8ba",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "4c0a0521a3910adf51f24ed7bb70b20bc6892830562c407b6193e2085e3ce345",
+        "2": "a63db01b041eb1f74b04f0ac1eacd0da4e080b6008e922947862cea1d403f8ba"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "009c",
+      "pc_index": 155,
+      "native_raw_sha256": "f2f0541c89fadd05bfca8e5c1dd6c211e4a16dd0ffe53c26b65664072898238f",
+      "pc_rgba_sha256": "f24ac920a6cbd8d5508d286288edbd89107631d3a31dbf1c1148eefba149bc7c",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "55f28f9264043ecbd68df5c8cd71dbbc9d747848e3dfee78b5bd93664e98e5da",
+        "2": "f24ac920a6cbd8d5508d286288edbd89107631d3a31dbf1c1148eefba149bc7c"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "009d",
+      "pc_index": 156,
+      "native_raw_sha256": "f57e8681f19616fd7a90de27f6133fe207974a58ef255cce229c7905301dde38",
+      "pc_rgba_sha256": "a85a45ae614598cd9e84a00eb4adaf0939b31f2b8fe35497631cc17117ca6578",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "ae7c55ecb6d339a526ccc1c8365bbf4c944ac4484ec7a88ff1a67dbc90c05e99",
+        "2": "a85a45ae614598cd9e84a00eb4adaf0939b31f2b8fe35497631cc17117ca6578"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "009e",
+      "pc_index": 157,
+      "native_raw_sha256": "b8bcac70c70c26d87e8c7df31e9473d97cd46198715b81ad5c05460ff437b209",
+      "pc_rgba_sha256": "2eb7120eaed3a662f4b12b9b4a2a31451c6185905e18a3cd4f365950d34bb58a",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "f4d8ca9d35380dfb3f155d6b5d8b524f1150958e33e1636b6e5eba23d63cd8bb",
+        "2": "2eb7120eaed3a662f4b12b9b4a2a31451c6185905e18a3cd4f365950d34bb58a"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "009f",
+      "pc_index": 158,
+      "native_raw_sha256": "59ff56d7f23f286d31948021eb773adf57f9f9ad3ee578f3f6236d385d8fa989",
+      "pc_rgba_sha256": "2cdf30f4d9b53b32d9f184f004bf2803e4c6aff37d1957c4eb705d5b6f08541d",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "17fd79b6ab6ca233f26f7dad5e21dc584d790f2b0a8ffdf84266e47baa12ac0d",
+        "2": "2cdf30f4d9b53b32d9f184f004bf2803e4c6aff37d1957c4eb705d5b6f08541d"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00a2",
+      "pc_index": 161,
+      "native_raw_sha256": "5ba4c9f624d53338ba189ebd0ecfc5799584f977199cc63cd364ab8963388d06",
+      "pc_rgba_sha256": "921d644e40b0c940edd1032549f2d53200c4f28ffba77c0c1b82b5d14cc3b599",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "20fd510fdb6b0287641c695d104e28a51cf051e4d22594c0532002f93bcdb7fe",
+        "2": "921d644e40b0c940edd1032549f2d53200c4f28ffba77c0c1b82b5d14cc3b599"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00a3",
+      "pc_index": 162,
+      "native_raw_sha256": "ed82f463d2e4a3bf521124b2961ba263bd5b587691ffca75718891f65d10ee28",
+      "pc_rgba_sha256": "b5e9492777070a0bc13c6a5047d7328c678ea24d63aa8324601094a30b218698",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "9136da58c36528402cbd2f60a68dd75020df3c3ed549c69a0c1f979c0397b04b",
+        "2": "b5e9492777070a0bc13c6a5047d7328c678ea24d63aa8324601094a30b218698"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00a4",
+      "pc_index": 163,
+      "native_raw_sha256": "db9774478101999295975390d2c647e6197e6e330b422766187b677631dfd28a",
+      "pc_rgba_sha256": "2f4898fe7516da1fcf0f01263449edc8b3c60901ec86cbeb6fdf028670469223",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "ab8961566f94ec2e11076c66dd457535e99c53433e976a7174c0c56391865005",
+        "2": "2f4898fe7516da1fcf0f01263449edc8b3c60901ec86cbeb6fdf028670469223"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00a5",
+      "pc_index": 164,
+      "native_raw_sha256": "c457582246647d3d303c7e6cffd28ba36361b13507e26c81977a277bb6afce1f",
+      "pc_rgba_sha256": "67a07e870aae64638014f09fa2832457d3d943840530df8fd8dc39d7d6389da7",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "d4c30f48733bc57a89b67c2573303da5787a713ac5ff5d4a144f490679babfdb",
+        "2": "67a07e870aae64638014f09fa2832457d3d943840530df8fd8dc39d7d6389da7"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00a6",
+      "pc_index": 165,
+      "native_raw_sha256": "684a1d7230300044ead78a2dfc43e91129d3e0a0d55f250f6392036836d97d9e",
+      "pc_rgba_sha256": "44c6c9416ba93f874900888fd1bb9384cf5fbfe6f9253039d595f82fea0fa340",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "8d190767c3bdaeec45bc43ea77c379f76663d6e1acf4c2faab359958460155e5",
+        "2": "44c6c9416ba93f874900888fd1bb9384cf5fbfe6f9253039d595f82fea0fa340"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00a7",
+      "pc_index": 166,
+      "native_raw_sha256": "754cd1d9457d3bbb192df78a886031f5d741482cf0226bd0392398c9ce06fea7",
+      "pc_rgba_sha256": "beeb995911708ea30ba489d8f0dda1c208d0e6aba58691e280941056b63f1f45",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "8c59896cf3acc8c60ea1376fcc5c6a6ec2ebbb4c2f08a39de7759ed10cc84176",
+        "2": "beeb995911708ea30ba489d8f0dda1c208d0e6aba58691e280941056b63f1f45"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00a8",
+      "pc_index": 167,
+      "native_raw_sha256": "fdadb57cbf41074b6c5eac4367de84cb6886f91f1d1fe7a3a5d1644d4922f843",
+      "pc_rgba_sha256": "f5c8c3e5c77abff08c3590388ba5d6f6d19f2f8d1b3100a210055f5edd73e733",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "e24dc5b02b6bd47f6a6b2e39894de8aebf90021feccc929a659f38674bcd1e5c",
+        "2": "f5c8c3e5c77abff08c3590388ba5d6f6d19f2f8d1b3100a210055f5edd73e733"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00ac",
+      "pc_index": 171,
+      "native_raw_sha256": "bd12f1b12b80f252785d3afd6c159a603d9fc7ece076f027c4e7d3194945c66d",
+      "pc_rgba_sha256": "1f4dc86995edce4c2148ba1a4263c6ee8341573298d4124e753dc8735c6515a9",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "3b3c7e140a40c88f517abe5e53c639b2c9fb38b5772b9bc240751fc1fae8f2e7",
+        "2": "1f4dc86995edce4c2148ba1a4263c6ee8341573298d4124e753dc8735c6515a9"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00ad",
+      "pc_index": 172,
+      "native_raw_sha256": "4c11add4ded7d49f829b3043edbf4127d10997e7475f6de4ddbab1cada78d8cd",
+      "pc_rgba_sha256": "870357835364f79cd35758d5b22fad353230ec5cda78f6a2ad0f5bfc01818747",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "dce8315f630db830e8d5e9a117036a38a3b6938047ebe3895508c5a7ef976dcc",
+        "2": "870357835364f79cd35758d5b22fad353230ec5cda78f6a2ad0f5bfc01818747"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00ae",
+      "pc_index": 173,
+      "native_raw_sha256": "5864c228872587ff2a6a8cd1e527b43ded3e666c01e5e256b304d6258c78ad5b",
+      "pc_rgba_sha256": "8faaed886b0445e24a17025757d8fecbda89f33703807cf8f8fe2074ed513d1f",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "d66ecfeb10cef73e7624dc06e9e3a42027601b62846f36e5d93dbb4cd1e6517a",
+        "2": "8faaed886b0445e24a17025757d8fecbda89f33703807cf8f8fe2074ed513d1f"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00af",
+      "pc_index": 174,
+      "native_raw_sha256": "c71cc6fcd1da144f0bf637d2fec6de3563f3a5f965dbf57ba46515ce4aae765b",
+      "pc_rgba_sha256": "3ae07291b0b1e78f7357f5c293a951a130014f3892a36555066e510510ff9eee",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "87f4e42255404c2cba09063d60fae3f88ff5eebba6b33a3edb7d4e656251b13a",
+        "2": "3ae07291b0b1e78f7357f5c293a951a130014f3892a36555066e510510ff9eee"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00b0",
+      "pc_index": 175,
+      "native_raw_sha256": "d0e18efb6c10be7c471c15aa31af619c59df97b68885a740603bb52ad0b628c3",
+      "pc_rgba_sha256": "2ff13f00b23b2c58af963e209879b6406762046967f28c1866e92f500c36fefb",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "4e55dcece39bcecf682921de705e39e66a880de88b5f2dd387ce958ddf95ca6b",
+        "2": "2ff13f00b23b2c58af963e209879b6406762046967f28c1866e92f500c36fefb"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00b1",
+      "pc_index": 176,
+      "native_raw_sha256": "29dd2bb07cc591045ed605a76caaaf1444189ad1db46945128e3616499885eed",
+      "pc_rgba_sha256": "9c062d33bc0023442e4ffe1ac1683d3246cfc6cf4c709d65b750a39839fb1b2b",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "7c37ef2c3561b73ba48e99043bc2580d88bd2de3f608f2d2b496278db97685ff",
+        "2": "9c062d33bc0023442e4ffe1ac1683d3246cfc6cf4c709d65b750a39839fb1b2b"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00b2",
+      "pc_index": 177,
+      "native_raw_sha256": "4c4b3dac179dfdbd0cd22c624e23d2009b368ca43b9cfdfb7692d93486d64b34",
+      "pc_rgba_sha256": "6ddef6ae0c642a6569c59c52687b0304efc1b756881ae907bf9ca083bea45e7e",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "988f54415240e4dc6c26bf98fa4b4dc82b5d9cb38b45474829c4cf5cec5017d4",
+        "2": "6ddef6ae0c642a6569c59c52687b0304efc1b756881ae907bf9ca083bea45e7e"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00b3",
+      "pc_index": 178,
+      "native_raw_sha256": "58b7ba39c0e081670d174cdcd6a9d543bbc2dfdaeb74833c7d3a57572c14ee0c",
+      "pc_rgba_sha256": "f9ae2f9b6e004dcf1d5726641eb997702b1908aa48ecf302ae763a55e7f8e835",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "4fca282099d30bbbd53551fb47a796707262beb3ad31bf14357e4486896cf2fa",
+        "2": "f9ae2f9b6e004dcf1d5726641eb997702b1908aa48ecf302ae763a55e7f8e835"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00be",
+      "pc_index": 189,
+      "native_raw_sha256": "8e759861cd63d509422d805ea651aa9f069a9968fd48929e4cee05ba74baebd6",
+      "pc_rgba_sha256": "5a710eedfdfed1ed105aa8db4c0f570b837123ea2dbc5d62f663c51fefeebf26",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "90bd3037bc5a47ba6692229cc23feb5324a610038af1ade72cd3f5ca5de0f4ef",
+        "2": "5a710eedfdfed1ed105aa8db4c0f570b837123ea2dbc5d62f663c51fefeebf26"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00bf",
+      "pc_index": 190,
+      "native_raw_sha256": "61e3d554573354d4d05ea9783ce5d9aa4277d2d9c5ca6772afcde6a0917b9505",
+      "pc_rgba_sha256": "5cbc513be189595790c88ddbe65994f2165027a61f84c7488c9a7824139a88aa",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "31e6305cae696656d3d4a0434165eebf07890644cfa7254c3b33065ce8e8c4ad",
+        "2": "5cbc513be189595790c88ddbe65994f2165027a61f84c7488c9a7824139a88aa"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00c0",
+      "pc_index": 191,
+      "native_raw_sha256": "43d11e2d20dddb71de83f4e0ec58f5fbb0a54581f452b7b4a4fbde2ab8102b43",
+      "pc_rgba_sha256": "ba875ffd54dd7717ee9ebe3644d1ae80dbb71631adf06fa8b912359ce7f3e5d9",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "38764fc5639d97ec7650d65a9d69a591d4fa976b3c2f58982b6dd51e9eae054a",
+        "2": "ba875ffd54dd7717ee9ebe3644d1ae80dbb71631adf06fa8b912359ce7f3e5d9"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00c1",
+      "pc_index": 192,
+      "native_raw_sha256": "d7686e613bc888210d0ca9f61c3e6f588924a2a04a02ee765a0d6c9316dd8c81",
+      "pc_rgba_sha256": "997b8277cc1c6277a14dab122a4cbebe2db86c7528cd565442061991eb5d7710",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "10aa51f3c7272568249de89b6322a82afcd9b3fd56753f1b5faa2d240f8aee47",
+        "2": "997b8277cc1c6277a14dab122a4cbebe2db86c7528cd565442061991eb5d7710"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00c2",
+      "pc_index": 193,
+      "native_raw_sha256": "d47cecacd05e67b0543a37e2e93164aea9a984868e33a33aa314a8abe6a6f678",
+      "pc_rgba_sha256": "ff4371e13f680be593384e638e06cad85a8f6670d5d37c0b4e9f8ef8f015fa8c",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "be687fa268c99d55f28ae5de32b2ffadcb130cdb4651355f08fb32ff7429097c",
+        "2": "ff4371e13f680be593384e638e06cad85a8f6670d5d37c0b4e9f8ef8f015fa8c"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00c3",
+      "pc_index": 194,
+      "native_raw_sha256": "e4722d7e817b81ab9ad7edac8c60af55dec57a1c37dfaa6a1f54fd437b0cceb1",
+      "pc_rgba_sha256": "f68792ac215f9bfde06074b97065d728cb635881dfdc7eebf005b2e4ef6b6b50",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "49920995f5c8dc544ce7a824a4d71df4c0017741f44bf2329b917965852ac04b",
+        "2": "f68792ac215f9bfde06074b97065d728cb635881dfdc7eebf005b2e4ef6b6b50"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
+    },
+    {
+      "id": "00c5",
+      "pc_index": 196,
+      "native_raw_sha256": "8b27a1af3860f406c8b7850755104d3756c951c009613575ca1f37ee35098cde",
+      "pc_rgba_sha256": "57e9cc9c22bd780cc4db1f01ba1bab7e3b6ee7564c4030b82d134bf1f2898013",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "64f341a7fef7f47d7b305f53aa170413e91040ce8a96e590e5def3b845e06761",
+        "2": "57e9cc9c22bd780cc4db1f01ba1bab7e3b6ee7564c4030b82d134bf1f2898013"
+      },
+      "evidence": {
+        "review": "batch5-iris-visual-cram-bank4",
+        "palette_state": "iris-correct-room-3000.state",
+        "palette_bank": 4,
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": null
+      }
     }
   ],
   "evidence": {
