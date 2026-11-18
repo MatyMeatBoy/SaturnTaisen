@@ -30,6 +30,7 @@ Compresión LZ propia (rutina SH-2 `0x0600A164`), implementada en `tools/es/red_
 | Carga/guardado | Fuente de pares 8×16 (DTE) `SAKURA`+0x5C654, 144 tiles | Cadenas de tiles base 1 terminadas en 0 en `SAKURA`+0x5A09E..0x5A34A, casi todas con puntero (`0x0605xxxx`, carga en 0x06004000). Los botones usan ids fijos: Copy [90,4,95], Del [102,41], Yes [34,6], No [95,133,95]. |
 | Estado (stats) | `ICATALL.DAT`+0x13800, 48 tiles (16×16 4 bpp) | Tiles 0-16: nombres de personaje (no se traducen). 17-18 High, 20-21 Spirits!, 22-24 Normal, 25-26 Mood, 27-29 Terrible, 30-31 Atk, 32-33 Def, 34-35 Mov; el resto son `+ - 0-9`. |
 | Marco de carga (File/System RAM) | `SAKURA`+0x5E190..0x5EB4C (288×184, 4 bpp) rótulos pintados, no tiles | «File 1/2/3» en cajas (196,y,60,16) con y=40/80/120; «System RAM» en (2,162,108,16); mismo `rotulos.replace_text` que la pestaña «Options». |
+| Barra de combate (solo WKL01, único escenario del capítulo 1) | `SAKURA2/WKL01.BIN`+0x339A8 (VRAM1 0x4000), sprites 4 bpp sin comprimir, 28 piezas de 16/24×16px | 25 palabras (los últimos 3 son iconos, intactos); fuente CENTURY.TTF a 9pt (la de 15pt usada en otras pantallas no entra en estas celdas), binarizada a 2 tonos (tinta índice 3, borde 1) porque el sprite no usa el degradado de 15 pasos de las tiras LZ. |
 
 Reglas de texto en menús: misma letra que el inglés (Century para la serif, Georgia Bold comprimida para el título); cuatro niveles de tinta [1, 5, 9, 13] para que cada flujo quepa; si una palabra exige comprimirla por debajo del 85 %, se usa su abreviatura («Cancel.», «Habl.», «Cop.», «Bor.»).
 
@@ -56,4 +57,4 @@ Opción integrada propuesta para el launcher (dependencia, requiere coordinar pr
 
 ## Pendiente
 
-Barra de combate (`WKL##.BIN`, sprites sin comprimir: la fuente en esas celdas de 16-24px es más estrecha que CENTURY.TTF, falta calibrar una fuente propia antes de traducirla), rótulo de episodio (`TITLE1.BIN`), pantalla LOADING, menú extra (`OMALL.DAT`), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método.
+Barra de combate de los escenarios 2–22 (`WKL02..WKL22.BIN`: el offset del bloque de sprites no es el mismo que en WKL01 y falta ubicarlo por archivo), rótulo de episodio (`TITLE1.BIN`), pantalla LOADING (ambos son arte VDP2 pintado a mano, no tiles de texto), menú extra (`OMALL.DAT`: 271 tiles de pares DTE con tablas de punteros propias, es un lote de traducción nuevo), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método.
