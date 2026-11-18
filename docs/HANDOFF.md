@@ -144,4 +144,8 @@ Para test.2 se prepara el launcher en local/build/launcher-test2 con salida loca
 
 Publicada v0.2.0-test.2 con fuente limpia92edea7; ZIP público317.215.196bytes. Bundle personal725.331.460bytes solo local, disco1 inglés y HD201/19fondos. Extracción limpia con PATH Windows: launcher, escenaHD, combate y película6201frames funcionan;402variantes sin fallos y cero interpretados. El recibo público de metadatos está en docs/releases/v0.2.0-test.2-validation.json; el detalle privado en local/work/test2-relocation-report.json. No se cambian los bytes ni la etiqueta de los paquetes anteriores.
 
-Trabajo posterior: wide_transitions continúaT02a sin modificar RAM ni SDK. dialogue_tables reservó portrait_pack.h paraT48; el header está congelado para revisión, pero todavía no hay patch0047 registrado. No ejecutar build_runtime ni compilar el runtime compartido antes de la captura y validación del coordinador. El binario de test.2 y sus ZIP permanecen inmutables durante ese trabajo.
+Trabajo posterior: wide_transitions continúaT02a sin modificar RAM ni SDK. T48 quedó registrado en patch0047 y el árbol compuesto se validó. Su candidato aislado674.023 pasó cuatro perfiles/8ejecuciones de90frames con402variantes. El header ya no tiene ediciones sin registrar; consultar el commit integrado antes del próximo build. El binario de test.2 y sus ZIP permanecen inmutables durante ese trabajo.
+
+## Candidato posterior a test.2: fallback del catálogo de retratos
+
+local/build/portrait-fallback-candidate/sakura-674.exe contiene el patch0047; no sustituye los binarios de test.2. El runtime prueba el paquete incluido cuando el catálogo del perfil falla autenticación, conservando la prioridad de un mod personal que sí pasa la validación. Los PNG siguen verificándose al cargar; su fallback diferido es un caso aparte. Prueba integrada en research/portrait-pack-profile-fallback.md. No cambiar el ZIP ni el release para incluir un arreglo posterior.
