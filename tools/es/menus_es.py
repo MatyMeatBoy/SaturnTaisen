@@ -247,6 +247,86 @@ def opciones(files: Files, preview):
     print(f'  marco de opciones: {used} bytes comprimidos')
 
 
+# Every WKL##.BIN stage file repeats the same battle command bar, but at a different absolute
+# offset, computed from a per-file header (block 0, images 5-32 of the "battle menu" section).
+# Algorithm from the English translation team's own tooling (WklBattleMenuExtractor in
+# local/research/noahsteam-repo/SakuraTaisen/SakuraTaisen.cpp) — not guessed from a single file.
+WKL_STAGES = ['WKL%02d' % n for n in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 21, 22)]
+
+
+def battle_bar_sprites(data: bytes):
+    """Returns the 28 (file_offset, width, height) battle-bar sprites of a WKL##.BIN file."""
+    image_data_addr = struct.unpack_from('>I', data, 0xE8)[0]
+    block_off, _ = struct.unpack_from('>II', data, image_data_addr)  # block 0 only: the command bar
+    num_images = struct.unpack_from('>H', data, image_data_addr + block_off)[0]
+    header_end = image_data_addr + block_off + 8
+    misc_end = header_end + 16 * num_images + 8
+    sprites = []
+    for k in range(5, 33):  # 0-4 are other HUD bars; 5-32 are the 28 command-bar words/icons
+        offset_from_header, offset_from_prev, w, h, _unknown = struct.unpack_from('>IIHHI', data, header_end + k * 16)
+        sprites.append((misc_end + offset_from_header + offset_from_prev, w, h))
+    return sprites
+
+
+# Text labels for sprites 0-24 (25-27 are icons, left untouched). Each English word verified by eye
+# against local/work/guion-es/menus/tmp/combate_bar_idx_{a,b}.png before choosing these.
+BATTLE_BAR_ES = [
+    'Mov', 'Mov', 'Mover', 'Atq', 'Atq', 'Normal', 'Normal', 'Espec.', 'Espec.', 'Combo', 'Combo',
+    'Def', 'Def', 'Descan.', 'Descan.', 'Proteg.', 'Proteg.', 'Curar', 'Curar', 'Info', 'Info',
+    'Mapa', 'Consej.', 'Fin', 'Fin',
+]
+
+
+def combate(files: Files, preview):
+    """Battle command bar, every stage (WKL01..WKL22.BIN): raw uncompressed 4bpp sprites, no LZ
+    budget to respect. Words are redrawn with a small font size (native HUD text is far narrower
+    than the 15pt used elsewhere) and binarised to the sprite's own 2-tone ink (index 3 ink, 1 edge)."""
+    from fuente import render
+    face, size, base = 'CENTURY.TTF', 9, 8
+    ink, edge = 3, 1
+    for stage in WKL_STAGES:
+        wkl = files[f'/SAKURA2/{stage}.BIN']
+        sprites = battle_bar_sprites(bytes(wkl))
+        for text, (start, w, h) in zip(BATTLE_BAR_ES, sprites):
+            rows, ww = render(text, face, size, base, height=h, gamma=1.3)
+            squeeze = 1.0
+            while ww > w and squeeze > 0.72:
+                squeeze -= 0.02
+                rows, ww = render(text, face, size, base, squeeze=squeeze, height=h, gamma=1.3)
+            if ww > w:
+                raise SystemExit(f'combate {stage}: {text!r} no cabe en {w}px')
+            left = max(0, (w - ww) // 2)
+            for y in range(h):
+                for x in range(w):
+                    i_byte = start + (y * w + x) // 2
+                    v = 0
+                    if left <= x < left + ww:
+                        cell = rows[y][x - left]
+                        v = ink if cell and cell <= 6 else (edge if cell else 0)
+                    b = wkl[i_byte]
+                    if x % 2 == 0:
+                        wkl[i_byte] = (v << 4) | (b & 0x0F)
+                    else:
+                        wkl[i_byte] = (b & 0xF0) | v
+        print(f'  combate {stage}: {len(sprites)} sprites traducidos')
+
+
+def estado(files: Files, preview):
+    """Status screen (ICATALL.DAT stream 0x13800, 48 tiles). Character names (tiles 0-16) stay as-is."""
+    ic = files['/SAKURA1/ICATALL.DAT']
+    face, size, base = 'CENTURY.TTF', 15, 13
+    raw = bytearray(decompress(bytes(ic[0x13800:0x15000])))
+    rows = strip_from(raw, 0, len(raw) // 128)
+    in_place(rows, [
+        (17, 2, 'Alto'), (20, 2, ['Ánimo', 'Mor.']), (22, 3, 'Normal'), (25, 2, ['Humor', 'Hum.']),
+        (27, 3, ['Pésimo', 'Pés.']), (30, 2, ['Atq.', 'Atq']), (32, 2, 'Def'), (34, 2, 'Mov'),
+    ], face, size, base)
+    strip_into(raw, 0, rows)
+    used = put_stream(ic, 0x13800, 0x15000 - 0x13800, bytes(raw), 'textos de estado')
+    print(f'  estado: {used} bytes comprimidos de {0x15000 - 0x13800}')
+    preview.append(('estado', rows, len(raw) // 128))
+
+
 CARGA_ES = {
     'The Floral Assault Troop!': '¡Asalto floral imperial!',
     'Hive of Darkness': 'Colmena Oscura',
@@ -429,6 +509,19 @@ def carga(files: Files, preview):
     size = put_stream(prog, 0x5C654, 0x5E190 - 0x5C654, bytes(raw), 'fuente de la carga')
     print(f'  carga: tira {size} bytes comprimidos de {0x5E190 - 0x5C654}')
     preview.append(('carga', rows, tiles_n))
+    # Frame labels painted into the bitmap itself: «File 1/2/3» and «System RAM» (stream 0x5E190..0x5EB4C)
+    from rotulos import load_palette, read_indices, replace_text, write_indices
+    marco_start, marco_end = 0x5E190, 0x5EB4C
+    raw = bytearray(decompress(bytes(prog[marco_start:marco_end])))
+    fr = read_indices(raw, 0, 288, 184, 4)
+    pal = load_palette(('load', 'cram', 0x2C0), 4)
+    ink, bg, allowed = 5, 2, [2, 5]
+    for n, y in ((1, 40), (2, 80), (3, 120)):
+        replace_text(fr, pal, (196, y, 60, 16), f'Partida {n}', 'CENTURY.TTF', 15, ink=ink, bg=bg, allowed=allowed)
+    replace_text(fr, pal, (2, 162, 108, 16), 'RAM del sistema', 'CENTURY.TTF', 15, ink=ink, bg=bg, allowed=allowed)
+    write_indices(raw, 0, fr, 4)
+    used = put_stream(prog, marco_start, marco_end - marco_start, bytes(raw), 'marco de carga')
+    print(f'  marco de carga: {used} bytes comprimidos de {marco_end - marco_start}')
 
 
 def titulo_rotulos(files: Files, preview, compare):
@@ -544,6 +637,8 @@ def main():
     titulo(files, preview)
     opciones(files, preview)
     carga(files, preview)
+    estado(files, preview)
+    combate(files, preview)
     compare = []
     titulo_rotulos(files, preview, compare)
     files.save()
