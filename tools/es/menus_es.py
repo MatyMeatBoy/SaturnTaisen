@@ -247,6 +247,22 @@ def opciones(files: Files, preview):
     print(f'  marco de opciones: {used} bytes comprimidos')
 
 
+def estado(files: Files, preview):
+    """Status screen (ICATALL.DAT stream 0x13800, 48 tiles). Character names (tiles 0-16) stay as-is."""
+    ic = files['/SAKURA1/ICATALL.DAT']
+    face, size, base = 'CENTURY.TTF', 15, 13
+    raw = bytearray(decompress(bytes(ic[0x13800:0x15000])))
+    rows = strip_from(raw, 0, len(raw) // 128)
+    in_place(rows, [
+        (17, 2, 'Alto'), (20, 2, ['Ánimo', 'Mor.']), (22, 3, 'Normal'), (25, 2, ['Humor', 'Hum.']),
+        (27, 3, ['Pésimo', 'Pés.']), (30, 2, ['Atq.', 'Atq']), (32, 2, 'Def'), (34, 2, 'Mov'),
+    ], face, size, base)
+    strip_into(raw, 0, rows)
+    used = put_stream(ic, 0x13800, 0x15000 - 0x13800, bytes(raw), 'textos de estado')
+    print(f'  estado: {used} bytes comprimidos de {0x15000 - 0x13800}')
+    preview.append(('estado', rows, len(raw) // 128))
+
+
 CARGA_ES = {
     'The Floral Assault Troop!': '¡Asalto floral imperial!',
     'Hive of Darkness': 'Colmena Oscura',
@@ -544,6 +560,7 @@ def main():
     titulo(files, preview)
     opciones(files, preview)
     carga(files, preview)
+    estado(files, preview)
     compare = []
     titulo_rotulos(files, preview, compare)
     files.save()

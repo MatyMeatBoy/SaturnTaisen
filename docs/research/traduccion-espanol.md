@@ -28,6 +28,7 @@ Compresión LZ propia (rutina SH-2 `0x0600A164`), implementada en `tools/es/red_
 | Intermedio | `ICATALL.DAT`+0x2800 | Listas de tiles de longitud fija (5, 5, 6) en `SAKURA`+0x5F5C8. |
 | Opciones y mandos | `SAKURA`+0x5B320 y +0x59878; marco +0x5AE38 | Tablas de piezas en `SAKURA` (~0x59C70–0x5ACB0): cada palabra española se dibuja en los mismos tiles que la inglesa. |
 | Carga/guardado | Fuente de pares 8×16 (DTE) `SAKURA`+0x5C654, 144 tiles | Cadenas de tiles base 1 terminadas en 0 en `SAKURA`+0x5A09E..0x5A34A, casi todas con puntero (`0x0605xxxx`, carga en 0x06004000). Los botones usan ids fijos: Copy [90,4,95], Del [102,41], Yes [34,6], No [95,133,95]. |
+| Estado (stats) | `ICATALL.DAT`+0x13800, 48 tiles (16×16 4 bpp) | Tiles 0-16: nombres de personaje (no se traducen). 17-18 High, 20-21 Spirits!, 22-24 Normal, 25-26 Mood, 27-29 Terrible, 30-31 Atk, 32-33 Def, 34-35 Mov; el resto son `+ - 0-9`. |
 
 Reglas de texto en menús: misma letra que el inglés (Century para la serif, Georgia Bold comprimida para el título); cuatro niveles de tinta [1, 5, 9, 13] para que cada flujo quepa; si una palabra exige comprimirla por debajo del 85 %, se usa su abreviatura («Cancel.», «Habl.», «Cop.», «Bor.»).
 
@@ -54,4 +55,4 @@ Opción integrada propuesta para el launcher (dependencia, requiere coordinar pr
 
 ## Pendiente
 
-Estado y estadísticas, barra de combate (`WKL##.BIN`, sprites sin comprimir), rótulos «File/System RAM» del marco de carga, rótulo de episodio (`TITLE1.BIN`), pantalla LOADING, menú extra (`OMALL.DAT`), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método.
+Barra de combate (`WKL##.BIN`, sprites sin comprimir), rótulos «File/System RAM» del marco de carga, rótulo de episodio (`TITLE1.BIN`), pantalla LOADING, menú extra (`OMALL.DAT`), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método.
