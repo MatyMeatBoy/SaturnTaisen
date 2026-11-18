@@ -5,6 +5,7 @@
 !/README.md
 !/docs/
 /docs/**
+!/docs/PENDIENTES.md
 !/docs/research/
 !/docs/research/*.md
 !/docs/research/*.json
