@@ -99,3 +99,5 @@ python tools/build_launcher.py
 El descubrimiento con intérprete se usa exclusivamente para investigar cobertura; la producción rechaza fallback SH-2. Los servicios BIOS/hardware reimplementados y el 68000 de audio son componentes separados del runtime. El conjunto de bloques candidatos no representa porcentaje de decompilación ni cobertura de campaña.
 
 [Diseño](docs/superpowers/specs/2026-11-17-saturn-taisen-first-design.md) · [Board Saturn](docs/superpowers/plans/2026-11-17-saturn-priority.md) · [Referencias](docs/research/2026-11-17-investigacion.md) · [Licencias](THIRD_PARTY_NOTICES.md)
+
+Guía de traslado a otro PC y herramientas incluidas: [handoff portátil](docs/releases/PORTABLE-HANDOFF.md).
