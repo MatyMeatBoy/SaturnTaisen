@@ -48,7 +48,6 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T18 | P2 | agente/local | libre | RetroAchievements 16546 softcore: catálogo/condiciones/badges 1:1, desbloqueo local offline, pestaña/popup, login y sync. Alcance ya aprobado, implementación pendiente. |
 | T19 | P3 | local | libre | Cuerpos HD (NC): escala única por altura y eje cabeza/torso, con ojos/boca. |
 | T20 | P3 | local | libre | Vídeos MPG del PC (MOVIE000..120): equivalencia, audio y subtítulos antes de sustituir. |
-
 | T21 | P0 | agente/local | integrado · PR #6 | Herramienta K001–K019 probada: reproduce exactamente 614.024 candidatos desde la semilla anterior. Código derivado solo local. |
 | T22 | P0 | local | empaquetado y traslado verificados | v0.2.0-test.1: release público limpio y ZIP privado de 708.495.279 bytes, disco1 inglés + HD procesado. Escena HD y combate arrancan desde extracción nueva con PATH Windows, cero interpretados. RX 6900 XT física pendiente T16. |
 | T23 | P1 | local | libre | Menús/HUD equivalentes PC: inventario y matches verificados para Saturn, sin deformar proporciones. |
@@ -62,15 +61,18 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T31 | P0 | local | integrado · PR #10 | Capítulo4: EVT06 registrado por coincidencia completa en RAM; candidato674.023 pasa frontera1200 y carga12000, con todos los hashes/RGB iguales al intérprete y cero interpretados. Integrar PR y continuar combate. |
 | T32 | P0 | local | libre | Completar rutas intermedias, combates, guardados y finales de capítulos2–Finale. El barrido inicial valida entradas de ocho rutas (96.000 frames) y el arreglo de entrada de capítulo4, no capítulos completos. |
 | T33 | P1 | local | parcial · T33a probado | Primer vídeo: caja vacía y sombras corregidas en patch0046. Siguen pétalos16:9 y tarjeta de episodio/transiciones restantes. Mantener posición Zoom aprobada. |
-| T34 | P1 | local | integrado · PR #11 | Recorte exclusivo del vídeo de novela 288×144; cajas vacías antes/después siguen T33. |
+| T33a | P1 | local | implementado y probado · patch0046 | Primer video New Game: fondo solo707..879 y5938..6067, video ampliado880..5937;6201hashes y6RGB nativos iguales aOriginal, cero interpretados. Sin ZIP nuevo aún. RestoT33 abierto. |
+| T34 | P1 | local | integrado · PR #11 | Recorte exclusivo del vídeo de novela288×144. Primeras cajas vacías resueltas enT33a; otras transiciones siguenT33. |
 | T35 | P1 | local | integrado · PR #11 | Continuidad floral y mezcla exacta del relleno del diálogo; fallback para mezclas no probadas. |
 | T36 | P1 | local | integrado · PR #11 | El cursor en el borde izquierdo del mapa conserva el fondo ancho. |
-| T37 | P1 | local | integrado parcial · PR #11 | Filas Sumire/María corregidas con placa VDP1; expansión a los44 glifos de9píxeles probada en la rama T39. Elecciones y cobertura completa pendientes. |
+| T37 | P1 | local | integrado parcial · PR #11 | Filas Sumire/María corregidas con placa VDP1; expansión a los44 glifos de9píxeles probada en la rama T39. Elecciones inglesas de dos/tres filas resueltas enT04; cobertura completa pendiente. |
 | T38 | P2 | local | auditoría · PR #11 | Avance con voz: B interrumpe antes que A/C en una línea real, entradas recibidas y paridad AOT/intérprete. Falta referencia Saturn independiente. |
 | T39 | P1 | local | integrado · PR #13 | Fundido mapa↔floral y entrada directa aZoom;900hashes y9capturas nativas coinciden, muestreo exacto exterior/imagen/sombra. |
 | T40 | P1 | agente/local | libre (coordinar SDK) | Opción «Idioma: English / Español» en el launcher según `docs/research/traduccion-espanol.md`: `language=es` en `launcher.ini`, `find_nearby` prioriza `disc1-es`, selector desactivado si falta. Mientras tanto funciona `tools/es/perfil_es.py`. |
-| T41 | P1 | agente/local | coordinador · pendientes/T41-hd-progress | Panel HD generado y porcentajes por categoría/etapa, con fuentes, pendientes y puerta de100% verificado. Actualizar al aprobar nuevos assets. |
-
+| T41 | P1 | agente/local | integrado · PR #14 | Panel HD generado y porcentajes por categoría/etapa, con fuentes, pendientes y puerta de100% verificado. Actualizar al aprobar nuevos assets. |
+| T42 | P2 | local | integrado · PR #15/#17/#19 | Checkpoint reproducible de 201/304 y 91/123 del capítulo 1. Del tercer lote, María `0064` en base verificada en juego y cuatro identidades comprobadas en atlas. El ZIP entregado conserva su catálogo. |
+| T45 | P2 | local | libre | Revisar el retrato `00a1` con ambas tiras activas. El candidato PC 160 mejora al intercambiar las dos tiras de 32 filas durante la preparación offline. Conservar la base, la máscara Saturn y el formato del pack. Aprobar tras comparar ambas tiras en juego. |
+| T46 | P2 | agente | actualizado | Estado y handoff alineados con PR19/patch0046/retratos201; candidato674.023 probado en cargas2/4. Entrega nueva pendiente, test.1 intacto. |
 
 ## División para colaboradores
 
@@ -82,42 +84,33 @@ Al abrir PR indicar ID, archivos propios, prueba y limitaciones. No marcar «hec
 
 ## Reproducciones visuales nuevas
 
-- T34: viewport de vídeo de novela: corregido en desarrollo para usar 288x144,16,8; fixture pasa a1440p en x8. Falta comprobar runtime y empaquetar. No resuelve todavía cajas vacías antes/después del vídeo.
-- Viñetas narrativas dentro del combate: auditoría de sombra original en curso; conservar composición por escena, sin imponer sombra de novela.
+- T34: viewport de vídeo de novela: corregido en desarrollo para usar 288x144,16,8; fixture pasa a1440p en x8. Runtime del primer vídeo comprobado enT33a; empaquetado pendiente.
+- Viñetas narrativas dentro del combate: auditoría cerrada para la viñeta de los villanos: no lleva sombra de novela; ver battle-story-inset-shadow.md.
 - Elecciones LIPS: dos/tres opciones inglesas implementadas y probadas en T04/PR16; vencimiento natural y resto de paneles siguen pendientes.
 
 - T35: continuidad floral del relleno de diálogo en Zoom (reportada por el propietario). Diagnóstico: `Presentation.foreground` guarda RGB final opaco para source<5; al separar/escalar caja se transporta el NBG3 nativo mezclado a otra posición. Investigar captura de top/second/ratio y recomposición sobre el fondo extendido en coordenadas de destino, con aritmética Saturn exacta. No sustituir por opacidad estimada, no regenerar fondos aprobados, preservar Original, marco, retrato y glifos. Pendiente evidencia del estado y prueba de runtime; no incluido en test.1.
 
 - T36: transiciones widescreen: retirar marco rosa host durante fallback de Mejorado (patch39 en desarrollo, falta runtime). Extender también fondos y efectos de transición manteniendo fase/paleta; ocultar el borde no equivale a resolver el fallback nativo ni las flores/pétalos horneados. Revisar entrada muñeco, título/New Game, mapa↔novela y cambios de escena.
 
-- T37: cobertura HD de texto y calidad de los guiones base de traducción. Caso Sumire: registro50039, índice473 de /SAKURA1/0100TBL.BIN, tres filas de27/30/5 caracteres, sin controles desconocidos; la fila intermedia está íntegra en catálogo pero sigue SD en la captura. No corregir prosa ni reescribir la traducción de Claude para ocultar un rechazo de render. Auditoría estructural actual:112 tablas físicas/59450 registros, SHA del JSONL90c3c35f2661f1c8ac7d5bac512655b02d64ea9844a3ca2c17d93230b0ac3684; dos tabuladores no resueltos en el disco1. Falta cobertura visual/elecciones/menús y validación de guiones editados sin sobrescribir target_es.
+- T37: cobertura HD de texto y calidad de los guiones base de traducción. Reproducción inicial resuelta porpatch0042. Caso Sumire: registro50039, índice473 de /SAKURA1/0100TBL.BIN, tres filas de27/30/5 caracteres, sin controles desconocidos; la fila intermedia está íntegra en catálogo pero sigue SD en la captura. No corregir prosa ni reescribir la traducción de Claude para ocultar un rechazo de render. Auditoría estructural actual:112 tablas físicas/59450 registros, SHA del JSONL90c3c35f2661f1c8ac7d5bac512655b02d64ea9844a3ca2c17d93230b0ac3684; dos tabuladores no resueltos en el disco1. Falta cobertura visual/elecciones/menús y validación de guiones editados sin sobrescribir target_es.
 
   T37, segundo testigo: María, registro50064/índice498 de0100TBL, fila3 terminaCP1252 0x85 (puntos suspensivos), texto íntegro y sin controles desconocidos. Sumire reproducida: w enX296,Y172 tiene dos píxeles visibles enX304,Y176–177; `NarrativeInkFits` rechaza la fila completa porX<304. Allí también hay bisel VDP1: no ensanchar ni borrar con underSprites a ciegas. Preparar placa exacta y encaje HD, comprobar María antes de atribuir causa compartida.
 
-- T38: avance de diálogo con voz: comparar A/B/C con pulsos sostenidos y releases, texto revelándose/completo y voz activa/terminada; contrastar AOT/intérprete y referencia Saturn independiente antes de declarar comportamiento original. Medir sondeoSMPC y esperaCD/audio, no asumir cargaSSD. El MessageSkip porR descrito por Kayama15048 es exclusivoDreamcast y posterior a completar, no evidencia de avance manualSaturn. No cambiar temporizadores ni forzar fin de voz para ocultar fallo. Auditoría asignada a wide_transitions tras cerrar filasHD.
+- T38: avance de diálogo con voz: comparar A/B/C con pulsos sostenidos y releases, texto revelándose/completo y voz activa/terminada; contrastar AOT/intérprete y referencia Saturn independiente antes de declarar comportamiento original. Medir sondeoSMPC y esperaCD/audio, no asumir cargaSSD. El MessageSkip porR descrito por Kayama15048 es exclusivoDreamcast y posterior a completar, no evidencia de avance manualSaturn. No cambiar temporizadores ni forzar fin de voz para ocultar fallo. Auditoría AOT/intérprete cerrada; falta una referencia Saturn independiente.
 
-### Bloque visual en revisión
+### Bloque visual integrado
 
-- Patches38–41: crop de película288x144; sin bordehostOriginal enMejorado; panel exacto y continuidad floral; mapa con cursorizquierdo verificado200frames; helper deZoom en fundidos con test sintético, aún falta replay integrado.
-- T35 panel: implementado y verificado en office-return-3000 (12hashes iguales, región superior intacta); no incluido en ZIPtest.1.
-- T36 mapa cursorizquierdo: reproducción before/after confirmada; transición mapa↔novela completa sigue en validación.
-- Limpieza: retirados dos candidatos exe sustituidos (1.604.792.320bytes), hashes y sustitutos en local/work/retired-test-binaries.json. Conservar estados y releases.
+Patches38–46 registrados y validados como árbol compuesto. Panel floral, cursor izquierdo, texto de borde, fundido al comedor, elecciones inglesas y transición del primer vídeo tienen evidencia en sus informes de investigación. No están en test.1. Los pétalos16:9 y las transiciones aún no probadas siguenT33/T32.
+
+Limpieza: se retiraron los dos candidatos antiguos sustituidos (1.604.792.320bytes), con hashes y sustitutos en local/work/retired-test-binaries.json. Estados y releases se conservan.
 
 ### Texto de borde: corrección validada
 
 - T37: patch42 convierte las filas reportadas de Sumire/María. PlacaVDP1 con primer píxel anterior y hasta dos glifos escritores; invalidación por tercer escritor, sobreescritura no glifo o escritura guest. Las filas con tinta compartida requieren borrado atómico. Se conserva el clipHD original.
-- Pruebas:12hashes por caso iguales entreOriginal,MejoradoHD,MejoradoSD ytest.1Original; RGBOriginalidéntico; AOTestricto0interpretados. Ver hd-text-row-rejections.md. Cobertura de eleccionesLIPS y todoslosguiones sigue pendiente, no declarar todoeltextoHD completo.
+- Pruebas:12hashes por caso iguales entreOriginal,MejoradoHD,MejoradoSD ytest.1Original; RGBOriginalidéntico; AOTestricto0interpretados. Ver hd-text-row-rejections.md. Cobertura de elecciones fuera de los dos casos deT04 y todoslosguiones sigue pendiente, no declarar todoeltextoHD completo.
 - T38: auditoría voz cerrada para primera línea deSumire: Binterrumpe/avanzaantesqueA/C; inputsSMPC recibidos,460hashes+PCM porbotón igualesAOT/intérprete. FaltaSaturnindependiente.
 - Patch43 contiene primitivas de mezcla exterior mapa/floral; patch44 las consume en la entrada al comedor, con pruebas de continuidad. Otras transiciones siguen pendientes.
 
 ### Integración futura de idiomas
 
 El idioma será una selección del launcher con una variante coherente de guiones, menús, fuentes y recursos. Compartir mapeos de fuente solo cuando el atlas y su codificación coincidan; las cachés de guion/recurso deben incluir idioma/revisión o hash de contenido. No regenerar hojas españolas ni copiar configuración de mandos encima de un perfil ya editado. PR12 integra herramientas privadas de preparación, no declara terminado el selector ni todo el juego traducido. Saturn y las correcciones visuales mantienen prioridad.
-
-
-
-| T42 | P2 | local | Sakura y Sumire integradas en PR #15 y #17 · tercer lote revisado | Checkpoint reproducible de 201/304 y 91/123 del capítulo 1. Del tercer lote, María `0064` en base verificada en juego y cuatro identidades comprobadas en atlas. El ZIP entregado conserva su catálogo. |
-
-| T33a | P1 | local | implementado y probado · patch0046 | Primer video New Game: fondo solo707..879 y5938..6067, video ampliado880..5937;6201hashes y6RGB nativos iguales aOriginal, cero interpretados. Sin ZIP nuevo aún. RestoT33 abierto. |
-
-| T45 | P2 | local | libre | Revisar el retrato `00a1` con ambas tiras activas. El candidato PC 160 mejora al intercambiar las dos tiras de 32 filas durante la preparación offline. Conservar la base, la máscara Saturn y el formato del pack. Aprobar tras comparar ambas tiras en juego. |
