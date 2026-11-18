@@ -121,7 +121,7 @@ def main():
     try:
         if not args.output_project.resolve().is_relative_to(private.resolve()):
             raise ValueError('El proyecto de salida debe quedar en local/work del propietario')
-        if args.reviewed.stat().st_size > 64 * 1024:
+        if args.reviewed.stat().st_size > 256 * 1024:
             raise ValueError('Registro de revisión demasiado grande')
         metadata = json.loads(args.reviewed.read_text(encoding='utf-8'))
         report = write_reviewed_project(args.project, args.output_project, metadata, export=args.export)

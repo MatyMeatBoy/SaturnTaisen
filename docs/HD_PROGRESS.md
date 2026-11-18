@@ -6,7 +6,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
-| Retratos y animación | identidades Saturn | 304/304 (100%) | 201/304 (66,1%) | 201/304 (66,1%) | 201/304 (66,1%) | Sin dato |
+| Retratos y animación | identidades Saturn | 304/304 (100%) | 300/304 (98,6%) | 300/304 (98,6%) | 300/304 (98,6%) | Sin dato |
 | Vídeos | clips únicos | Sin dato | 0 | 0 | 0 | 0 |
 | HUD y menús PC/Saturn | pantallas y piezas compartidas | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
@@ -37,7 +37,7 @@ Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y b
 
 Rangos de ID Saturn pendientes en hexadecimal
 
-`0026` `0038` `0044` `0046` `0049-004a` `004d-004f` `0052-0053` `005b-005c` `005f-0061` `006b` `0071` `0074` `0076-0077` `007a` `007f` `0088` `0091-0095` `0097-0098` `009a-009f` `00a1-00a8` `00ac-00b3` `00be-00c3` `00c5` `00ee-00f8` `00fa-00fb` `0103-0106` `010d` `010f` `0114-0116` `011e-011f` `0121` `013a-013f` `0152-0153` `0169` `0171-0172` `017e` `0185-018a`
+`00a1` `0152-0153` `0169`
 
 - [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 del recibo local `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.
 - [first-sakura-hd-portraits.md](research/first-sakura-hd-portraits.md). SHA-256 del recibo local `8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1`.
