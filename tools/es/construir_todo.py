@@ -4,9 +4,8 @@
   python -X utf8 tools/es/construir_todo.py --disc 2
 
 1. volcar_todo.py --disc N: every dialogue table (and every battle table that has batches)
-2. disc 1 only: menus_es.py builds the Spanish menu graphics (title, interlude, options, load/save,
-   battle bars); the disc-2 program and title (SAKURA, LOGO.SH2) differ from disc 1, so its menus are
-   not ported yet (docs/research/traduccion-espanol.md, Pending)
+2. disc 1: menus_es.py builds the Spanish menu graphics (title, interlude, options, load/save, battle bars);
+   disc 2: menus_disco2.py moves those patches onto disc 2's own SAKURA/LOGO.SH2 and redraws its WKL12-26 bars
 3. iso.py copies local/prepared/discN to local/prepared/discN-es with the tables in fixed slots
 
 Inputs and outputs stay under SAKURA_OWNER_ROOT/local; nothing here is meant for Git data-wise.
@@ -44,6 +43,15 @@ def main():
     if args.disc == 1:
         run('menus_es.py')
         menus = WORK / 'builds/es-cap1/files'
+        for file in menus.rglob('*'):
+            name = file.name.upper()
+            if file.is_file() and not name.endswith(('TBL.BIN', 'MES.BIN')):
+                out = merged / file.relative_to(menus)
+                out.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(file, out)
+    elif args.disc == 2:
+        run('menus_disco2.py')   # needs the disc-1 menus (builds/es-cap1) already built
+        menus = WORK / 'builds/es-all/disc2/menus'
         for file in menus.rglob('*'):
             name = file.name.upper()
             if file.is_file() and not name.endswith(('TBL.BIN', 'MES.BIN')):
