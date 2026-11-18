@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 300/304 (98,6%) | 300/304 (98,6%) | 300/304 (98,6%) | Sin dato |
-| Vídeos | clips únicos | 50/50 (100%) | 44/50 (88%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
+| Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
 | HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | imágenes PC candidatas (147 paquetes) | 3596/3596 (100%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) |
@@ -65,9 +65,10 @@ Rangos de ID Saturn pendientes en hexadecimal
 Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.
 
 - 50 clips Saturn únicos (flujos FILM deduplicados entre ambos discos; el cortometraje de 0,15 s del logo queda fuera) frente a 52 MPEG de PC (51 MOVIE + REDLOGO).
-- 44 pares con duración dentro de 0,5 s y orden consecutivo idéntico (flujo k de /SAKURA4 ↔ MOVIE00k). Seis pares requieren revisión de montaje por diferencia de duración: 743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102 y def7a6↔020 (3,7 s).
 - Sin sustitución integrada: falta decodificación MPEG-1/MP2 en el runtime, sincronía de audio, subtítulos y salto.
-- **Siguiente paso**. Revisar el montaje de los seis pares con diferencia de duración, comprobar audio/subtítulos/saltos y diseñar la reproducción PC dentro del runtime.
+- 44 pares con duración dentro de 0,5 s y orden consecutivo idéntico (flujo k de /SAKURA4 ↔ MOVIE00k).
+- Seis pares con duración distinta (743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102, def7a6↔020 con 3,7 s) se aceptan por contenido: cada clip PC es la mejor coincidencia única en una firma de luminancia de cinco fotogramas frente a los 52 clips PC. Se registran como cortes alternativos.
+- **Siguiente paso**. Comprobar audio, subtítulos y saltos de los seis cortes alternativos y diseñar la reproducción PC dentro del runtime.
 
 - [scene-tagging.md](research/scene-tagging.md).
 - [intro-petals-transition.md](research/intro-petals-transition.md).
