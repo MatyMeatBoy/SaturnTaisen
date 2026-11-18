@@ -1,7 +1,7 @@
 <h1 align="center">🌸 SaturnTaisen</h1>
 <p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Static SH-2 recompilation · Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.0-alpha"><img alt="v0.2.0-alpha first public release" src="https://img.shields.io/badge/release-v0.2.0--alpha-9a4564?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.2-alpha"><img alt="v0.2.2-alpha" src="https://img.shields.io/badge/release-v0.2.2--alpha-9a4564?style=flat-square"></a>
   <img alt="Windows x64 portable" src="https://img.shields.io/badge/Windows-x64_portable-77445b?style=flat-square">
   <a href="docs/research/chapter1-battle-progress.md"><img alt="Static SH-2 AOT" src="https://img.shields.io/badge/SH--2-static_AOT-bf914d?style=flat-square"></a>
   <a href="docs/releases/v0.2.0-test.3.md"><img alt="Local validation documented" src="https://img.shields.io/badge/testing-local_report-5d755d?style=flat-square"></a>
@@ -11,15 +11,24 @@
 
 A return to the Imperial Theater with recompiled SH-2 code, integer-scaled pixels, and optional presentation upgrades. Public project by **MatyMeatBoy**.
 
-**v0.2.0-alpha is the first public release, not the certified complete game.** It includes the AOT fix for the first battle's closing sequence, HD narrative from the preloaded catalog, the 201-portrait checkpoint, and a first Spanish-language draft of chapter 1 (translated and cross-checked against the Japanese script), with all limits documented below. Chapter 1 end-to-end and the full campaign are not yet verified. [Scope of this release](docs/releases/v0.2.0-test.3.md). The [v0.1.2](docs/releases/v0.1.2.md) and [v0.1.5](docs/releases/v0.1.5.md) packages are kept intact. The launcher defaults to English; a Spanish script/menu patch is available (see Development below) and more languages are planned.
+**v0.2.2-alpha is a public alpha, not the certified complete game.** You bring only your own files — the two Sakura Taisen Saturn discs and, optionally, the PC edition — and the launcher prepares everything else on your PC: English or Spanish, and the HD mod. Chapter 1 end-to-end and the full campaign are not yet verified. [Scope of this release](docs/releases/v0.2.2-alpha.md). Earlier packages are kept intact.
 
 ## Play
 
-Extract the Windows release into a writable folder and open **Play.bat**. DLLs and the save importer are bundled: you don't need to install Python, MSYS2, compilers, or an SDK to play. This build boots without an external BIOS.
+1. Extract the Windows release into a writable folder (about 3 GB free) and open **SaturnTaisen.exe**. Nothing has to be installed or downloaded: no Python, MSYS2, compilers, BIOS or SDK.
+2. In **Preparar juego** choose the folder with your files, or any one of them (the rest are looked for beside it), and press **Preparar**. It takes a few minutes the first time.
+3. Pick the language (Español / English) and press **Jugar**.
 
-The standard Git release **does not include discs, BIOS, binary translations, save files, or original PC assets**. Bring your own translated discs. The owner's personal transfer package is separate and not published: it bundles the build with only their own English disc 1 and processed HD assets, already placed for auto-detection.
+| Your file | Accepted forms |
+|---|---|
+| Sakura Taisen disc 1 and disc 2, Sega Saturn (Japan, GS-9037 V1.005) | Original dump, or one already patched with the English translation v2.1. `.cue` with its tracks, a single `.bin`/`.img`, a plain `.iso`, a `.zip`, or a folder with any of them. |
+| PC edition (optional, for the HD mod) | Disc image (`.mdf`/`.iso`), a folder with its cabinets, or the installed game folder. |
 
-The final game is planned as a **unified release with mandatory import of both discs**. A personal single-disc test does not certify that transition or replace the pending work on the final importer.
+Every disc is recognized by the SHA-256 of its data track and each step is checked; your files are only read. What is already prepared is recognized and kept, so extracting a newer release over the folder rebuilds only what changed. The language layers are differences that are useless without your own discs: **no discs, BIOS, save files or original game assets are distributed.** Credits of the English translation team and the layer details: [parches/CREDITOS.md](parches/CREDITOS.md).
+
+Frontends (RecompLauncher / Easy Setup) can drive the same setup from the single entry point: `SaturnTaisen.exe --rom "<file or folder>" --language es --no-launcher`; see [recomp-launcher.json](recomp-launcher.json) and `SaturnTaisen.exe --help`.
+
+The final game is planned as a unified release with both discs; automatic disc changes during play are still pending.
 
 ## Presentation and controls
 
@@ -30,7 +39,7 @@ The final game is planned as a **unified release with mandatory import of both d
 | Original Display | Image and dialogue share a single scale. |
 | Zoom Display | Image and dialogue use independent integer scales to best fit; a shadow sits behind the dialogue. |
 | HD Text | Optional font with uniform proportions and native advance, clipped inside the text box. |
-| HD Mod | Compatible backgrounds and portraits; can use an already-processed pack without a PC install. |
+| HD Mode | One switch on the home page: 19 decorative backgrounds and 302 of 304 portraits prepared from your PC edition. |
 | HD Preload | Loads enabled assets before playing; optional, with higher memory use. |
 | Controllers | SDL3 with remapping; M30 Bluetooth/2.4G profiles, with manual selection when XInput hides the model. |
 
@@ -51,7 +60,7 @@ Pixels are scaled with nearest-neighbor and integer multipliers. Output keeps th
 | Tactical 16:9/HUD | Stage01 enabled in Enhanced mode with corrected menus. Other stages, the full HUD, and the entire battle remain pending. |
 | RetroAchievements | Pending: no online/offline achievements are announced as available. |
 | PC | Assets are used for the Saturn HD mod; running and translating the PC version itself are on hold. |
-| Spanish translation | Chapter 1 complete, translated and cross-checked against Japanese. Chapters 2-7 have a first English→Spanish draft, validated for line/length/choice rules but not yet cross-checked against Japanese. Chapters 8-10 in progress. Menus pending a language selector in the launcher. |
+| Spanish translation | All ten chapters and the battle text of both discs, reviewed against the reconstructed Japanese; menus redrawn. Selected in the launcher. Played in the game: chapters 1 and 2 plus spot checks; chapters 3–6, 9 and 10 verified on the built image only. Episode cards, LOADING, the extra menu and video subtitles remain English. |
 
 PC body assets will keep a single height-based scale, with the head/torso axis aligned to the original; they will not be stretched to fill a box. Full hardware compatibility across all M30 firmware revisions and the target machine's RX 6900 XT still needs checking there.
 
