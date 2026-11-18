@@ -48,7 +48,8 @@
       "patches/0042-sakura-owned-glyph-plates-for-border-text.patch",
       "patches/0043-sakura-map-crossfade-primitives.patch",
       "patches/0044-sakura-continuous-floral-scene-transitions.patch",
-      "patches/0045-sakura-owned-hd-choice-text.patch"
+      "patches/0045-sakura-owned-hd-choice-text.patch",
+      "patches/0046-sakura-first-movie-transition-phases.patch"
     ]
   }
 }

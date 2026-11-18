@@ -1,0 +1,238 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index b027592..b47c658 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -7,6 +7,7 @@
+ #include "hud.h"
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
++#include "movie_phase.h"
+ #include "panel_compositing.h"
+ #include "map_crossfade.h"
+ #include "screen_backdrop.h"
+@@ -457,6 +458,7 @@ int RunWindowed(Port &port) {
+     SDL_Texture *texture = nullptr;
+     uint32_t texW = 0, texH = 0;
+     uint64_t shownSerial = 0;
++    bool shownFirstMoviePhase = false;
+     std::vector<uint32_t> frameCopy;
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
+     std::vector<uint32_t> zoomForeground; // reusable removal of the original picture shadow
+@@ -803,6 +805,10 @@ int RunWindowed(Port &port) {
+                             SDL_RenderTexture(renderer,fadeBackdropTexture,nullptr,&exterior);
+                     }
+                 }
++                const bool firstMovieBlank=FirstMovieBlankFrame(shownFirstMoviePhase,planes.source,
++                    OnlyFirstMovieOrnaments(std::span{planes.sprites}));
++                if(firstMovieBlank) {enhanced=true;presentationKind="movie-transition";}
++                else {
+                 const auto uploadLayer=[&](SDL_Texture*& cachedTexture,int& cachedWidth,int& cachedHeight,
+                         std::vector<uint32_t>& pixels,const IntegerViewport& fit,const SDL_FRect& crop,
+                         const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr) -> bool {
+@@ -947,6 +953,7 @@ int RunWindowed(Port &port) {
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 portraitViewport=!scene.movieOnly;
++                }
+             }
+         }
+         if (!enhanced) {
+@@ -1006,7 +1013,15 @@ int RunWindowed(Port &port) {
+         const int canvasWidth=PresentationWidth(wide,high),canvasLeft=(wide-canvasWidth)/2;
+         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+             static std::string previousKind;
+-            if(previousKind!=presentationKind) {previousKind=presentationKind;std::fprintf(stderr,"presentation layout: %s\n",presentationKind);}
++            if(previousKind!=presentationKind) {
++                previousKind=presentationKind;std::fprintf(stderr,"presentation layout: %s\n",presentationKind);
++                if(std::getenv("SATRECOMP_MOVIE_PHASE_TRACE")) {
++                    const auto& frame=port.videoRenderer->PresentationFrame();
++                    std::fprintf(stderr,"movie phase layout: frame=%llu phase=%d ornaments=%d layers=",static_cast<unsigned long long>(port.frame),int(shownFirstMoviePhase),int(OnlyFirstMovieOrnaments(std::span{frame.sprites})));
++                    for(uint8_t layer=0;layer<7;layer++)std::fprintf(stderr," %zu",size_t(std::count(frame.source.begin(),frame.source.end(),layer)));
++                    std::fprintf(stderr,"\n");
++                }
++            }
+         }
+         if(canvasLeft>0) {
+             SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);SDL_SetRenderDrawColor(renderer,0,0,0,255);
+@@ -1462,6 +1477,7 @@ int RunWindowed(Port &port) {
+                     texW = port.fbWidth;
+                     texH = port.fbHeight;
+                     softwareShown = port.fb;
++                    shownFirstMoviePhase = port.fbFirstMoviePhase;
+                     DrawHud(softwareShown.data(), static_cast<int>(texW), static_cast<int>(texH));
+                     if (!shaded) {
+                         SDL_UpdateTexture(texture, nullptr, softwareShown.data(), static_cast<int>(texW * sizeof(uint32_t)));
+diff --git a/port/main.cpp b/port/main.cpp
+index 7115dbd..add2bae 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -6,6 +6,7 @@
+ #include "pictures.h"
+ #include "port.h"
+ #include "kabe.h"
++#include "movie_phase.h"
+ #include "pc_spr.h"
+ #include "pc_backdrop.h"
+ #include "background_workers.h"
+@@ -107,10 +108,10 @@ bool Movie::Save(const std::string &path) const {
+ static void RegisterPortFeatures() {
+     satrecomp::Game &game = satrecomp::TheGame();
+     game.features.push_back({"pad_profile", "Mandos", "Perfil de mando",
+-                             "Automático reconoce M30 Bluetooth y 2.4G por nombre o identidad USB. Si XInput oculta el modelo, elige M30 manualmente. Tus asignaciones personalizadas tienen prioridad.",
+-                             0, {"Automático", "Estándar SDL", "M30 / Saturn 6 botones"}});
++                             "AutomÃƒÆ’Ã‚Â¡tico reconoce M30 Bluetooth y 2.4G por nombre o identidad USB. Si XInput oculta el modelo, elige M30 manualmente. Tus asignaciones personalizadas tienen prioridad.",
++                             0, {"AutomÃƒÆ’Ã‚Â¡tico", "EstÃƒÆ’Ã‚Â¡ndar SDL", "M30 / Saturn 6 botones"}});
+     game.features.push_back({"run_ahead", "Juego", "Run-ahead",
+-                             "Anticipa uno o dos fotogramas para reducir la latencia de entrada. Aumenta el trabajo de CPU; desactívalo si aparecen tirones.",
++                             "Anticipa uno o dos fotogramas para reducir la latencia de entrada. Aumenta el trabajo de CPU; desactÃƒÆ’Ã‚Â­valo si aparecen tirones.",
+                              0, {"Desactivado", "1 fotograma", "2 fotogramas"}});
+     game.features.push_back({"widescreen", "Display", "Widescreen",
+                              "16:9: fights show more at the sides. The launcher's switch changes with it. Needs high resolution.",
+@@ -119,27 +120,27 @@ static void RegisterPortFeatures() {
+     // is how the port always drew it)
+     game.features.push_back({"display_scaling", "Pantalla", "Escala del juego",
+                              "Solo multiplicadores enteros, centrado y sin suavizado. El marco se adapta al espacio restante.",
+-                             0, {"Entera · automática"}});
+-    game.features.push_back({"display_shape", "Pantalla", "Píxeles originales",
+-                             "Se conserva el tamaño relativo de los píxeles. Sin estiramiento fraccional.",
++                             0, {"Entera Ãƒâ€šÃ‚Â· automÃƒÆ’Ã‚Â¡tica"}});
++    game.features.push_back({"display_shape", "Pantalla", "PÃƒÆ’Ã‚Â­xeles originales",
++                             "Se conserva el tamaÃƒÆ’Ã‚Â±o relativo de los pÃƒÆ’Ã‚Â­xeles. Sin estiramiento fraccional.",
+                              0, {"Original"}});
+-    game.features.push_back({"presentation_mode", "Pantalla", "Presentación",
+-                             "Original conserva la composición Saturn. Mejorado amplía escenas reconocidas sin deformar píxeles ni recortar texto.",
++    game.features.push_back({"presentation_mode", "Pantalla", "PresentaciÃƒÆ’Ã‚Â³n",
++                             "Original conserva la composiciÃƒÆ’Ã‚Â³n Saturn. Mejorado amplÃƒÆ’Ã‚Â­a escenas reconocidas sin deformar pÃƒÆ’Ã‚Â­xeles ni recortar texto.",
+                              0, {"Original (4:3)", "Mejorado (widescreen)"}});
+-    game.features.push_back({"scene_view", "Pantalla", "Visualización de escena",
+-                             "Original mantiene imagen y diálogo juntos. Zoom amplía la imagen arriba y ajusta el diálogo con escalas enteras independientes en escenas mejoradas compatibles.",
++    game.features.push_back({"scene_view", "Pantalla", "VisualizaciÃƒÆ’Ã‚Â³n de escena",
++                             "Original mantiene imagen y diÃƒÆ’Ã‚Â¡logo juntos. Zoom amplÃƒÆ’Ã‚Â­a la imagen arriba y ajusta el diÃƒÆ’Ã‚Â¡logo con escalas enteras independientes en escenas mejoradas compatibles.",
+                              0, {"Original", "Zoom"}});
+-    game.features.push_back({"text_style", "Pantalla", "Texto de diálogos",
+-                             "Nítido redibuja los glifos ingleses reconocidos a resolución de ventana. Las fuentes desconocidas y otros textos conservan el original.",
+-                             0, {"Nítido", "Original"}});
++    game.features.push_back({"text_style", "Pantalla", "Texto de diÃƒÆ’Ã‚Â¡logos",
++                             "NÃƒÆ’Ã‚Â­tido redibuja los glifos ingleses reconocidos a resoluciÃƒÆ’Ã‚Â³n de ventana. Las fuentes desconocidas y otros textos conservan el original.",
++                             0, {"NÃƒÆ’Ã‚Â­tido", "Original"}});
+     game.features.push_back({"hd_preload", "Pantalla", "Precargar mod HD al iniciar",
+-                             "Prepara fondos y retratos HD habilitados antes de jugar. Reduce cargas durante las escenas a cambio de más memoria e inicio más largo.",
++                             "Prepara fondos y retratos HD habilitados antes de jugar. Reduce cargas durante las escenas a cambio de mÃƒÆ’Ã‚Â¡s memoria e inicio mÃƒÆ’Ã‚Â¡s largo.",
+                              0, {"Desactivado", "Activado"}});
+     game.features.push_back({"pc_hd_backgrounds", "Pantalla", "Fondos PC HD",
+                              "Usa el pack local de fondos PC en modo mejorado. Requiere recursos PC compatibles; si faltan, conserva Saturn. No cambia la fuente de texto.",
+                              0, {"Activados", "Desactivados"}});
+     game.features.push_back({"pc_hd_portraits", "Pantalla", "Retratos PC HD",
+-                             "Usa los retratos del pack emparejado en modo mejorado. Requiere tus recursos PC y un pack local válido; si falta una coincidencia segura, conserva Saturn.",
++                             "Usa los retratos del pack emparejado en modo mejorado. Requiere tus recursos PC y un pack local vÃƒÆ’Ã‚Â¡lido; si falta una coincidencia segura, conserva Saturn.",
+                              0, {"Activados", "Desactivados"}});
+     // (custom_soundtrack: soundtrack.h; for a game whose sources name its music)
+     if (!game.songs.empty()) {
+@@ -149,8 +150,8 @@ static void RegisterPortFeatures() {
+                                  "disc named in its soundtrack.ini. The game's volume and fades apply to it.",
+                                  satrecomp::kFeatureEnhanced});
+     }
+-    game.features.push_back({"window_size", "Pantalla", "Tamaño de ventana",
+-                             "Tamaño inicial de la ventana. Puedes redimensionarla o usar F11 para pantalla completa; el juego conserva la escala entera.",
++    game.features.push_back({"window_size", "Pantalla", "TamaÃƒÆ’Ã‚Â±o de ventana",
++                             "TamaÃƒÆ’Ã‚Â±o inicial de la ventana. Puedes redimensionarla o usar F11 para pantalla completa; el juego conserva la escala entera.",
+                              0, {"3x", "2x", "4x", "5x", "6x"}});
+ }
+ 
+@@ -597,8 +598,18 @@ bool Port::Init() {
+     videoRenderer = &sat.Video();
+     videoRenderer->CapturePresentation(!opt.headless);
+     using Mode = satrecomp::video::Renderer::Mode;
+-    const auto onFrame = [this](uint32_t *pixels, uint32_t width, uint32_t height) {
++    std::vector<uint8_t> firstMovieScript;
++    if(!opt.headless && (!discFiles.Read("0100.BIN",firstMovieScript) || !KnownFirstMovieScript(firstMovieScript)))
++        firstMovieScript.clear();
++    const auto onFrame = [this,firstMovieScript=std::move(firstMovieScript)](uint32_t *pixels, uint32_t width, uint32_t height) {
+         std::lock_guard lock(fbMutex);
++        fbFirstMoviePhase = width==320 && height==224 && CaptureFirstMoviePhase(
++            std::span<const uint8_t>(saturn->ramLow,0x100000),std::span<const uint8_t>(saturn->ramHigh,0x100000),firstMovieScript);
++        if(std::getenv("SATRECOMP_MOVIE_PHASE_TRACE") && !firstMovieScript.empty()) {
++            static uint32_t previous=~0u;
++            const auto cursor=FirstMovieCursor(std::span<const uint8_t>(saturn->ramHigh,0x100000));
++            if(cursor!=previous) {previous=cursor;fprintf(stderr,"movie phase cursor: frame=%llu cursor=%08X witness=%d\n",static_cast<unsigned long long>(frame),cursor,int(fbFirstMoviePhase));}
++        }
+         fb.assign(pixels, pixels + static_cast<size_t>(width) * height);
+         fbWidth = width;
+         fbHeight = height;
+diff --git a/port/movie_phase.h b/port/movie_phase.h
+new file mode 100644
+index 0000000..20e10fb
+--- /dev/null
++++ b/port/movie_phase.h
+@@ -0,0 +1,59 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <algorithm>
++#include <cstdint>
++#include <span>
++namespace port {
++inline uint64_t MoviePhaseHash(std::span<const uint8_t> bytes) {
++ uint64_t hash=0xcbf29ce484222325ull;for(auto byte:bytes){hash^=byte;hash*=0x100000001b3ull;}return hash;
++}
++inline bool KnownFirstMovieScript(std::span<const uint8_t> bytes) {
++ return bytes.size()==15404 && MoviePhaseHash(bytes)==0x5DA24532C9356735ull;
++}
++inline uint32_t FirstMovieCursor(std::span<const uint8_t> high) {
++ if(high.size()!=0x100000)return 0;
++ const auto* p=high.data()+0x685B4;
++ return uint32_t(p[0])<<24|uint32_t(p[1])<<16|uint32_t(p[2])<<8|p[3];
++}
++// verifiedScript is the hash-checked complete 0100.BIN, loaded once from disc.
++// Capture with the framebuffer, before run-ahead restores authoritative RAM.
++inline bool CaptureFirstMoviePhase(std::span<const uint8_t> low,std::span<const uint8_t> high,
++                                  std::span<const uint8_t> verifiedScript) {
++ if(low.size()!=0x100000 || high.size()!=0x100000 || verifiedScript.size()!=15404)return false;
++ const uint32_t cursor=FirstMovieCursor(high);
++ if(cursor!=0x204006 && cursor!=0x204462 && cursor!=0x204ED8 &&
++    cursor!=0x204EDE && cursor!=0x204EE4 && cursor!=0x204EE6)return false;
++ return std::equal(verifiedScript.begin(),verifiedScript.end(),low.begin()+0x4000);
++}
++template<typename Sprite>
++bool OnlyFirstMovieOrnaments(std::span<const Sprite> sprites) {
++ if(sprites.size()>4096)return false;
++ unsigned footers=0,badges=0;
++ for(const auto& sprite:sprites) {
++  const auto& cmd=sprite.command.words;const auto type=cmd[0]&15;
++  if(type>=8)continue; // clipping/local-coordinate commands do not draw.
++  if(type!=0 || (cmd[0]&0x8030) || cmd[2]!=0xA0)return false;
++  const auto pixels=std::span<const uint8_t>(sprite.pixels);
++  if(cmd[3]==0xC500 && cmd[5]==0x2640 && sprite.x==8 && sprite.y==152 &&
++     pixels.size()==304*64 && MoviePhaseHash(pixels)==0x924C9C726F152DB2ull) {
++   if(++footers>2)return false;
++  } else if((cmd[3]==0xC400 || cmd[3]==0x4400) && cmd[5]==0x0530 && sprite.x==16 && sprite.y==160 &&
++     pixels.size()==40*48 && MoviePhaseHash(pixels)==0x7CA30C1792ED4682ull) {
++   if(++badges>1)return false;
++  } else return false;
++ }
++ return true; // No sprite is valid too: the old shadow can outlive the footer.
++}
++inline bool FirstMovieBlankFrame(bool phase,std::span<const uint8_t> source,bool ornaments) {
++ if(!phase || !ornaments || source.size()!=320*224)return false;
++ size_t floral=0;
++ for(int y=0;y<224;y++)for(int x=0;x<320;x++) {
++  const auto layer=source[size_t(y)*320+x];
++  if(layer==5){floral++;continue;}
++  if(layer==0 && x>=8 && x<312 && y>=152 && y<216)continue;
++  if(layer==3 && x>=9 && x<315 && y>=8 && y<220)continue;
++  return false;
++ }
++ return floral>=1000;
++}
++}
+diff --git a/port/port.h b/port/port.h
+index f73ef24..64fdd26 100644
+--- a/port/port.h
++++ b/port/port.h
+@@ -102,6 +102,7 @@ struct Port {
+     std::vector<uint32_t> fb;
+     uint32_t fbWidth = 0, fbHeight = 0;
+     uint64_t fbSerial = 0;
++    bool fbFirstMoviePhase = false; // host-only witness captured with this framebuffer
+ 
+     // Pad states (pressed bits) for the current frame
+     std::atomic<uint16_t> pad[2] = {0, 0};
