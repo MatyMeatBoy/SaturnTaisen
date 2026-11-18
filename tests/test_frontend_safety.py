@@ -15,6 +15,12 @@ DEP=ROOT/'local/deps/satrecomp'
                      and (DEP/'port/integer_viewport.h').is_file(),
                      'requires the locally patched Windows SDL/Clang dependency')
 class FrontendTests(unittest.TestCase):
+    def test_choice_preload_requires_exact_resident_script_table_and_cursor(self):
+        self.fixture('choice_preload')
+
+    def test_preloaded_choice_tiles_follow_each_centered_panel_row(self):
+        self.fixture('choice_reveal')
+
     def test_preloaded_rows_reveal_only_matching_native_cells(self):
         self.fixture('dialogue_reveal')
 

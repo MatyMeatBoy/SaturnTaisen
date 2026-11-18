@@ -14,7 +14,7 @@ El launcher ofrece modos y ejemplos y se cierra cuando el juego confirma estar l
 
 1. Leer `AGENTS.md`, esta guía y `docs/PENDIENTES.md`; comprobar fecha y cambios posteriores.
 2. Ejecutar `git status --short`, `git branch --show-current` y consultar colaboradores activos. No limpiar un árbol sucio ajeno.
-3. Base de esta actualización: rama `implementation/enhanced-v011`, HEAD `d5f4424`. Este fue el punto de partida del bloque de integración; consultar el HEAD y el estado presentes antes de trabajar. No inferir el ejecutable local a partir de una versión anterior. `VERSION` actual: 0.2.0-test.2, prerelease publicada.
+3. Base integrada de este bloque: `main` en `d54919e`, tras PR32/33. Consultar siempre HEAD, rama y estado presentes antes de trabajar. `VERSION`: 0.2.0-test.3, prerelease publicada desde `72affb2`. Su runtime es674.182/patch0049 (`377cb29b…`); no inferir el ejecutable local a partir de la versión. T11/patch0050 se integra por PR34 con candidato independiente (`df68e9db…`), sin empaquetar; test.3 conserva patch0049.
 4. Acordar archivos propios y una tarea concreta. No editar a la vez `frontend_sdl.cpp`, renderer o patches; no compilar sobre una edición incompleta de otro bot.
 5. Crear carpeta privada de resultados exclusiva por ensayo. Las imágenes se pueden sobrescribir sin querer: comprobar ruta absoluta, contenido visual y SHA antes de extraer conclusiones.
 
@@ -46,6 +46,8 @@ Nunca publicar discos, BIOS, SPR/FILM/MPG originales, guiones, estados ni imáge
 T02: el cierre del primer combate reveló dos rutinas copiadas a06002000. El estado anterior contiene238bytes de/SAKURA; al ejecutar,0SLG los reemplaza por206bytes. La prueba WATCH del instante de ejecución es la atribución correcta para el fallo06002042. El registro de ambas variantes produce674.182bloques; candidato aisladoe7dd1c0… pasó Save Complete/Resume con3.000hashes y15RGB iguales al intérprete y0interpretados. La cadena109.740frames sigue en prueba. Ver [seguimiento del combate](research/chapter1-victory-followup.md); no usar el candidato674.110 como corrección ni modificar test.2.
 
 Reproducir antes de cambiar. Guardar estado inicial, copia de SRAM, pulsaciones/movie, settings, ejecutable/hash y registros. Aislar perfiles y eliminar variables `SATRECOMP_*` heredadas salvo las elegidas explícitamente. Usar `SATRECOMP_STRICT_NATIVE=1` y comprobar cero bloques interpretados para rutas AOT.
+
+En pruebas de LIPS, un panel todavía visible puede estar ya confirmado y cerrándose. La igualdad entre dos ejecutables prueba paridad, pero no que el ensayo `select` haya cambiado la elección. Exigir postcondiciones: banco de resaltado en otra fila, panel cerrado antes que el control sin pulsaciones y destino de respuesta correspondiente; para timeout, dejar entrada neutra y observar el destino posterior. Si una semilla no permite seleccionar, buscar un estado anterior sin modificar el reloj ni el huésped. En T11 la semilla anterior de tres opciones ya permitió observar esas diferencias; la evidencia y los límites se mantienen en la PR34.
 
 Separar tres preguntas: ¿falla la lógica nativa?, ¿falla la presentación del host?, ¿es un defecto del disco traducido? Comparar Original/Mejorado y, cuando importe, AOT/intérprete del mismo SDK. Esa última comparación **no es independiente**: pueden compartir un defecto de hardware emulado. Beetle Saturn se ha usado únicamente como oráculo de diagnóstico; no sustituye al runtime AOT del proyecto.
 
