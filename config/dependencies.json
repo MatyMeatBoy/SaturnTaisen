@@ -39,7 +39,8 @@
       "patches/0033-sakura-m30-controller-profiles-and-ui-copy.patch",
       "patches/0034-sakura-portable-hd-discovery-v012.patch",
       "patches/0035-sakura-coherent-hd-scenes-and-guid-overrides.patch",
-      "patches/0036-sakura-chapter1-wide-maps-and-menus.patch"
+      "patches/0036-sakura-chapter1-wide-maps-and-menus.patch",
+      "patches/0037-sakura-proven-portrait-white-blends.patch"
     ]
   }
 }

@@ -1,5 +1,6 @@
 // Invented VDP2 bitmaps; exercise the actual renderer, not a duplicate blend formula.
 #include "renderer.h"
+#include "portrait_match.h"
 #include <array>
 #include <cstdint>
 #include <cstdio>
@@ -50,6 +51,16 @@ int main() {
     // VDP1 direct RGB blue over NBG0 red, sprite priority 3.
     fb1[0]=0xfc;fb1[1]=0;reg(0xf0,3);reg(0xe0,0x0320);reg(0x100,15);
     if(draw(0x40,0)!=0x7c007c){fprintf(stderr,"sprite RGB blend failed: %06x\n",pixel);return 1;}
+    // Proven white-blend metadata must describe the actual native compositor,
+    // and the HD transform must produce that same RGB without modifying alpha.
+    vram2[0]=0xFF;vram2[1]=0xFF;
+    for(unsigned weight:{5u,15u,25u}) {
+        reg(0x100,weight-1);draw(0x40,0);
+        assert(renderer.PresentationFrame().spriteWhiteWeight[0]==weight);
+        assert(pixel==(port::ApplyPortraitWhiteMix(0xFFF80000,uint8_t(weight))&0xFFFFFF));
+    }
+    draw(0x140,0);assert(renderer.PresentationFrame().spriteWhiteWeight[0]==255);
+    vram2[0]=0x80;vram2[1]=0x1F;reg(0x100,15);
     reg(0xe0,0x0220); // priority 3 exceeds the threshold: no blend
     if(draw(0x40,0)!=0xf80000){fprintf(stderr,"sprite priority gate failed: %06x\n",pixel);return 1;}
     // Indexed sprite type 0: ratio selector in bits 11..13, palette entry 1 blue.
