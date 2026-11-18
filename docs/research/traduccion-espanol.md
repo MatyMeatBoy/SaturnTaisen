@@ -37,6 +37,18 @@ Reglas de texto en menús: misma letra que el inglés (Century para la serif, Ge
 - `tools/es/parchear_estado.py`: aplica los datos españoles a la RAM/VRAM de un savestate inglés para revisar un menú en segundos; no sustituye a un arranque real.
 - Verificado en el runtime (AOT estricto, 0 interpretados): prólogo y encuentro con Sakura en español desde la ISO española, combate del capítulo 1 en español, título y pantalla de carga desde arranque en frío; intermedio y opciones mediante estados parcheados.
 
+## Modo español en el launcher
+
+Ya funciona sin tocar código: `tools/es/construir_disco_es.py` genera `local/prepared/disc1-es` y `tools/es/perfil_es.py` crea un perfil aparte (`local/profiles/espanol`, copia del perfil base con `[game] disc=` apuntando al disco español) y el acceso local «Jugar en español.bat». Verificado con la build `v0.2-ch1-preview`: el launcher arranca el disco español y el título muestra «Pulsa Start».
+
+Opción integrada propuesta para el launcher (dependencia, requiere coordinar propiedad del SDK):
+
+- Selector «Idioma: English / Español» en la tarjeta del disco; se guarda en `launcher.ini` (`[game] language=es`).
+- Con `es`, `find_nearby` prueba primero `local/prepared/disc1-es/game.cue`, `game/disc1-es/game.cue` y `disc1-es/game.cue`; si no existe, el selector aparece desactivado con el texto «Falta el disco en español (tools/es/construir_disco_es.py)».
+- `check_disc` acepta el disco español: el código del juego es idéntico al inglés; solo cambian tablas, menús y el programa principal en zonas de datos.
+- Partidas: el formato no cambia; compartir o separar carpetas es decisión del propietario (el perfil separado de `perfil_es.py` las separa).
+- El release público nunca incluye el disco español: es una salida local del propietario, igual que el disco inglés preparado.
+
 ## Pendiente
 
 Estado y estadísticas, barra de combate (`WKL##.BIN`, sprites sin comprimir), rótulos «File/System RAM» del marco de carga, rótulo de episodio (`TITLE1.BIN`), pantalla LOADING, menú extra (`OMALL.DAT`), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método.
