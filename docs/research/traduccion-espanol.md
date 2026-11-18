@@ -34,6 +34,10 @@ Compresión LZ propia (rutina SH-2 `0x0600A164`), implementada en `tools/es/red_
 
 Reglas de texto en menús: misma letra que el inglés (Century para la serif, Georgia Bold comprimida para el título); cuatro niveles de tinta [1, 5, 9, 13] para que cada flujo quepa; si una palabra exige comprimirla por debajo del 85 %, se usa su abreviatura («Cancel.», «Habl.», «Cop.», «Bor.»).
 
+## Texto HD con español
+
+Resuelto por construcción, sin cambios de código: `local/deps/satrecomp/port/glyph_text.h` (`DecodeCodepoint`) reconoce todo el rango CP1252 (32-126 y 128-255, con la tabla de puntuación 0x80-0x9F que incluye `…`=0x85), no solo ASCII — así que á/é/í/ó/ú/ñ/¿/¡ reciben el mismo tratamiento HD que cualquier letra inglesa. La condición es que el atlas de glifos coincida con la huella `KnownEnglishAtlas` (0xA6A05DFF441E0C60); el parche español nunca sustituye los `NNNNKNJ.BIN` (fuente), solo tablas `TBL`/`MES` y tiras de menú — confirmado en `tools/es/iso.py::build`, que solo reemplaza lo que recibe explícitamente. La fuente llega intacta, byte a byte igual que en el parche inglés.
+
 ## Pruebas
 
 - `tests/test_es_herramientas.py`: LZ de ida y vuelta, tablas y combate sintéticos, y reconstrucción exacta de todas las tablas del disco del propietario si está disponible.
