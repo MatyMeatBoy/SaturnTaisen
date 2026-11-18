@@ -10,11 +10,17 @@ Signature: 32x20 luminance of the scene area (x 5-95 %, y 4-66 % of the frame), 
 | --- | --- | --- |
 | `SAKURA1/BG1119` | Chapter 1 corridor, day | `BG1120` is the night variant (lights lit) |
 | `SAKURA1/BG1209` | Letter with seals | Saturn frame mid-fade; PC image is the full-brightness version |
+| `SAKURA1/BG2251` | Cherry-blossom avenue | |
+| `SAKURA1/BG1001` | Theatre lobby, front doors | |
+| `SAKURA1/BG1002` | Theatre lobby with visitors (variant) | Actors in the PC image |
+| `SAKURA1/BG1006` | Lobby, staircase and desk | |
+| `SAKURA1/BG1007` | Theatre lobby with crowd (variant) | |
+| `SAKURA1/BG1021` | Lobby staircase, green carpet | |
 
 Rejected: `SAKURA1/BG2173` for the episode title card (false positive, no matching structure).
 
 ## Pass 1: cold New Game, continuous run
 
 - Source: the 297,107-frame cold run (inputs of `local/work/rb-full/input.movie`), one screenshot every 250 frames (about 1,190 frames), strict native mode.
-- Status when written: running; 35 screenshots captured. After it ends: rank all screenshots, confirm candidates visually, and update this table and the scene-images counter in `config/hd-progress.json`.
-- Count so far: 2 of 1,267 scene images matched, 0 integrated.
+- Status when written: running; 537 screenshots captured and ranked (79 strong, 9 distinct candidates, 8 confirmed). After it ends: rank all screenshots, confirm candidates visually, and update this table and the scene-images counter in `config/hd-progress.json`.
+- Count so far: 8 of 1,267 scene images matched, 0 integrated.
