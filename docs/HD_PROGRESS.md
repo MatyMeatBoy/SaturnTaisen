@@ -7,25 +7,29 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 302/304 (99,3%) | 302/304 (99,3%) | 302/304 (99,3%) | Sin dato |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 0/1267 (0%) | 0/1267 (0%) | 0/1267 (0%) | 0/1267 (0%) |
+| Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | 9/166 (5,4%) |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
+| Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) |
 | HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | imágenes PC candidatas (147 paquetes) | 3596/3596 (100%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) |
-| Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | 9/166 (5,4%) |
 
 ## Resumen global de integración
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 302/304 (99,3%) | Sin dato |
+| Imágenes de escena | 0/1267 (0%) | 0/1267 (0%) |
+| Escenas y transiciones | Sin dato | 9/166 (5,4%) |
 | Vídeos | 0/50 (0%) | 0/50 (0%) |
+| Modo táctico | 0/542 (0%) | 0/542 (0%) |
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
-| Escenas y transiciones | Sin dato | 9/166 (5,4%) |
 
-- **Integración global indicativa (media de 5/6 categorías con total): 39,8%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 321/4541 (7%).** Mezcla unidades distintas; solo orienta.
+- **Integración global indicativa (media de 7/8 categorías con total): 28,4%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 321/6350 (5%).** Mezcla unidades distintas; solo orienta.
 - Categorías sin total confirmado: ninguna.
 
 ## Qué cuenta en cada etapa
@@ -61,6 +65,28 @@ Rangos de ID Saturn pendientes en hexadecimal
 - [chapter1-third-hd-portraits.md](research/chapter1-third-hd-portraits.md). SHA-256 del recibo local `182ad5f38ab46b744e8a5ef2682f2e3477792f80c47ef13d7e17b74802ac035e`.
 - [v0.1.2.md](releases/v0.1.2.md). SHA-256 del recibo local `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
 
+### Imágenes de escena
+
+Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
+
+- 1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte.
+- **Siguiente paso**. Emparejar cada archivo con su escena Saturn, empaquetarlo e integrarlo; verificar variantes de iluminación y fundidos.
+
+- [pc-asset-census.md](research/pc-asset-census.md).
+
+### Escenas y transiciones
+
+Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.
+
+- El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.
+- Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.
+- 166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas.
+- **Siguiente paso**. Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.
+
+- [scene-tagging.md](research/scene-tagging.md).
+- [wide-map-crossfades.md](research/wide-map-crossfades.md).
+- [chapter-sweep.md](research/chapter-sweep.md).
+
 ### Vídeos
 
 Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.
@@ -73,6 +99,15 @@ Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje
 
 - [scene-tagging.md](research/scene-tagging.md).
 - [intro-petals-transition.md](research/intro-petals-transition.md).
+
+### Modo táctico
+
+Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y combate Saturn, pegados al mundo y al scroll.
+
+- 542 archivos SPR: 291 UNIT, 194 MAP y 57 ITEM, más 141 MAP DAT y datos de mapa. Ninguno emparejado ni integrado todavía.
+- **Siguiente paso**. Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.
+
+- [pc-asset-census.md](research/pc-asset-census.md).
 
 ### HUD y menús PC/Saturn
 
@@ -105,19 +140,6 @@ Cuerpos y poses fuera del retrato de diálogo. El total de poses y composiciones
 
 - [saturn-hd-characters.md](research/saturn-hd-characters.md).
 - [pc-character-inventory.json](research/pc-character-inventory.json).
-
-### Escenas y transiciones
-
-Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.
-
-- El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.
-- Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.
-- 166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas.
-- **Siguiente paso**. Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.
-
-- [scene-tagging.md](research/scene-tagging.md).
-- [wide-map-crossfades.md](research/wide-map-crossfades.md).
-- [chapter-sweep.md](research/chapter-sweep.md).
 
 ## Actualizar el registro
 

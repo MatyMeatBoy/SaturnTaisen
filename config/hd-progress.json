@@ -48,6 +48,56 @@
       ]
     },
     {
+      "id": "scene-images",
+      "label": "Imágenes de escena",
+      "unit": "archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH)",
+      "scope": "Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.",
+      "sources": [
+        {
+          "path": "docs/research/pc-asset-census.md"
+        }
+      ],
+      "next": "Emparejar cada archivo con su escena Saturn, empaquetarlo e integrarlo; verificar variantes de iluminación y fundidos.",
+      "details": [
+        "1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte."
+      ],
+      "total": 1267,
+      "inventory": 1267,
+      "matched": 0,
+      "prepared": 0,
+      "integrated": 0,
+      "verified": 0
+    },
+    {
+      "id": "scenes",
+      "label": "Escenas y transiciones",
+      "unit": "candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo)",
+      "scope": "Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.",
+      "sources": [
+        {
+          "path": "docs/research/scene-tagging.md"
+        },
+        {
+          "path": "docs/research/wide-map-crossfades.md"
+        },
+        {
+          "path": "docs/research/chapter-sweep.md"
+        }
+      ],
+      "next": "Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.",
+      "details": [
+        "El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.",
+        "Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.",
+        "166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas."
+      ],
+      "total": 166,
+      "inventory": 166,
+      "matched": null,
+      "prepared": null,
+      "integrated": null,
+      "verified": 9
+    },
+    {
       "id": "movies",
       "label": "Vídeos",
       "unit": "clips únicos",
@@ -70,6 +120,27 @@
       "total": 50,
       "inventory": 50,
       "matched": 50,
+      "prepared": 0,
+      "integrated": 0,
+      "verified": 0
+    },
+    {
+      "id": "tactical",
+      "label": "Modo táctico",
+      "unit": "archivos SPR PC candidatos (UNIT, MAP, ITEM)",
+      "scope": "Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y combate Saturn, pegados al mundo y al scroll.",
+      "sources": [
+        {
+          "path": "docs/research/pc-asset-census.md"
+        }
+      ],
+      "next": "Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.",
+      "details": [
+        "542 archivos SPR: 291 UNIT, 194 MAP y 57 ITEM, más 141 MAP DAT y datos de mapa. Ninguno emparejado ni integrado todavía."
+      ],
+      "total": 542,
+      "inventory": 542,
+      "matched": 0,
       "prepared": 0,
       "integrated": 0,
       "verified": 0
@@ -150,35 +221,6 @@
       "prepared": 0,
       "integrated": 0,
       "verified": 0
-    },
-    {
-      "id": "scenes",
-      "label": "Escenas y transiciones",
-      "unit": "candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo)",
-      "scope": "Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.",
-      "sources": [
-        {
-          "path": "docs/research/scene-tagging.md"
-        },
-        {
-          "path": "docs/research/wide-map-crossfades.md"
-        },
-        {
-          "path": "docs/research/chapter-sweep.md"
-        }
-      ],
-      "next": "Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.",
-      "details": [
-        "El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.",
-        "Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.",
-        "166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas."
-      ],
-      "total": 166,
-      "inventory": 166,
-      "matched": null,
-      "prepared": null,
-      "integrated": null,
-      "verified": 9
     }
   ]
 }
