@@ -65,11 +65,106 @@
         "alpha_holes": 0,
         "observed_runtime": "base"
       }
+    },
+    {
+      "id": "0040",
+      "pc_index": 63,
+      "native_raw_sha256": "fa66802a251c8d95e4d9da818751af2aa65a1698369e93cc5b28bfff02912d3f",
+      "pc_rgba_sha256": "48d4289bf90b41702f5e92fe26d1800aac0533cecfad6cfbf95562dbe1aaa8b8",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "6f4714246eba5673580c737d166fe2268bcad2e471ee9d1e03893572d4a5e361",
+        "2": "48d4289bf90b41702f5e92fe26d1800aac0533cecfad6cfbf95562dbe1aaa8b8"
+      },
+      "evidence": {
+        "regional_rmse": {
+          "base": 0.0587,
+          "strip1": 0.05746,
+          "strip2": 0.056257
+        },
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": "first_strip_y16"
+      }
+    },
+    {
+      "id": "0041",
+      "pc_index": 64,
+      "native_raw_sha256": "135836f5b538e683366ce6ba487c035bf73627b3a7f88ff5a1138ed8069d862a",
+      "pc_rgba_sha256": "23c71041131d87d98124723a2175bd172f22a24603ca1c25958a9733a4c27bec",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "80cad0691f8ec59300c235d3e80bfe089c86d7248c76aa41ef0a17e68cd8ecba",
+        "2": "23c71041131d87d98124723a2175bd172f22a24603ca1c25958a9733a4c27bec"
+      },
+      "evidence": {
+        "regional_rmse": {
+          "base": 0.058665,
+          "strip1": 0.057952,
+          "strip2": 0.056752
+        },
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": "first_strip_y16"
+      }
+    },
+    {
+      "id": "0045",
+      "pc_index": 68,
+      "native_raw_sha256": "13065365b367c50235a73ea36d11ef6f25cab2bf1d7b10baf39c69fa3efa9ebb",
+      "pc_rgba_sha256": "255f5eb91200f983990ac2838f0240808aa662507c02eb0b874af7b9576325c1",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "51ae0636775ceb67f9541c46ba44832efb6550bcb0bbf30f2519d2f7f2ad1d83",
+        "2": "255f5eb91200f983990ac2838f0240808aa662507c02eb0b874af7b9576325c1"
+      },
+      "evidence": {
+        "regional_rmse": {
+          "base": 0.059924,
+          "strip1": 0.059211,
+          "strip2": 0.056777
+        },
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": "base"
+      }
     }
   ],
   "evidence": {
     "report": "docs/research/first-sakura-hd-portraits.md",
     "prepared_pack_receipt_sha256": "24286afce17baeb43d0744b0f4b8171c8d044af02462d660ff71da2272d287b5",
     "validation_receipt_sha256": "8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1"
+  },
+  "additional_review": {
+    "report": "docs/research/chapter1-sumire-hd-portraits.md",
+    "prepared_pack_receipt_sha256": "7db33b3dbf185870f7077a695f27ba420927641e112573dbab963746184dfd02",
+    "validation_receipt_sha256": "3ff2e8dfe039d3c64489ebb784a0c3f7f5b56572148197025ff53840fc857f48"
   }
 }
