@@ -87,3 +87,4 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [dialogue-preload-runtime.md](dialogue-preload-runtime.md): Catálogo inmutable, lectura acotada y narrativa precargada con celdas de revelado nativas; cobertura global pendiente.
 - [chapter1-victory-followup.md](chapter1-victory-followup.md): Derrota de Satan, rutinas relocalizadas, bloqueo postcombate y validación de guardado/Resume.
 - [Identificación de grupos LIPS por el cursor](lips-script-cursor.md) — dos paneles verificados con el script, la tabla y los tiles nativos.
+- [Progresión táctica del capítulo 2](chapter2-tactical-progression.md) — Continue, órdenes, fase enemiga y ataque aliado con comparación AOT/intérprete.
