@@ -26,7 +26,10 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | ID | P | Tipo | Estado | Pendiente |
 |---|---|---|---|---|
 | T01 | P0 | agente | integrado · PR #4 | Patches 0035/0036, fondos, táctica, texto, catálogos, pruebas y handoff integrados. Nuevas tareas parten de origin/main; acordar archivos antes de tocar renderer compartido. |
-| T02 | P0 | local | tras T01 | Victoria del primer combate y salida, continuando `tests/battle-multiple-turns.movie` sin cargas intermedias; cero bloques interpretados. |
+| T02 | P0 | local | dividido · ver T02a–T02c | Victoria del primer combate y salida. El movie continuo de 23.443 frames se reproduce en el build actual con 0 interpretados y termina con el menú de órdenes abierto; estado de relevo local `local/work/t02/fin-multiple-turns.state` (SHA-256 4d67dd1a…). |
+| T02a | P0 | local | libre | Desde el estado de relevo, grabar los turnos restantes hasta derrotar a todos los enemigos, con pulsaciones de varios frames (SMPC) y sin forzar HP ni variables. |
+| T02b | P0 | local | tras T02a | Pantalla de victoria y salida del combate hasta el control normal, con hash guest y RGB iguales a la referencia. |
+| T02c | P0 | local | tras T02b | Componer `battle-multiple-turns.movie` + T02a + T02b con `tools/stitch_battle_replay.py` y repetir de una sola carga; registrar en `chapter1-continuous-battle.json`. |
 | T03 | P0 | local | tras T01 | Ruta continua New Game → fin del episodio 1, guardado nativo, reinicio y Continue, dos repeticiones. |
 | T04 | P1 | local | tras T01 | Placa de glifos LIPS: reconocer `C510`/`C570`, filas Y=54/78/102 y 62/94, transformación y recorte por grupo (ver `chapter1-wide-transitions.md`). |
 | T05 | P1 | local | integrado · PR #4 | Solapamiento corregido en Mejorado; cinco pestañas y rutas verificadas. Conservar pruebas y fallback seguro para menús desconocidos. |
