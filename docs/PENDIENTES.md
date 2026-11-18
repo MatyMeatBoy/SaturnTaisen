@@ -61,7 +61,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T30 | P0 | local | libre | Continuar desde la introducción del combate del capítulo2, validar órdenes/ataques/victoria y presentación. Partida y estado9500 privados disponibles; no confundir carga corregida con capítulo completo. |
 | T31 | P0 | local | integrado · PR #10 | Capítulo4: EVT06 registrado por coincidencia completa en RAM; candidato674.023 pasa frontera1200 y carga12000, con todos los hashes/RGB iguales al intérprete y cero interpretados. Integrar PR y continuar combate. |
 | T32 | P0 | local | libre | Completar rutas intermedias, combates, guardados y finales de capítulos2–Finale. El barrido inicial valida entradas de ocho rutas (96.000 frames) y el arreglo de entrada de capítulo4, no capítulos completos. |
-| T33 | P1 | local | coordinador · reproducción | Inicio y New Game: pétalos16:9, flashes sin borde4:3, caja vacía/sombras antes/después del primer vídeo y zoom de vídeo. Mantener posición aprobada de diálogo entre escenas. |
+| T33 | P1 | local | parcial · T33a probado | Primer vídeo: caja vacía y sombras corregidas en patch0046. Siguen pétalos16:9 y tarjeta de episodio/transiciones restantes. Mantener posición Zoom aprobada. |
 | T34 | P1 | local | integrado · PR #11 | Recorte exclusivo del vídeo de novela 288×144; cajas vacías antes/después siguen T33. |
 | T35 | P1 | local | integrado · PR #11 | Continuidad floral y mezcla exacta del relleno del diálogo; fallback para mezclas no probadas. |
 | T36 | P1 | local | integrado · PR #11 | El cursor en el borde izquierdo del mapa conserva el fondo ancho. |
@@ -84,7 +84,7 @@ Al abrir PR indicar ID, archivos propios, prueba y limitaciones. No marcar «hec
 
 - T34: viewport de vídeo de novela: corregido en desarrollo para usar 288x144,16,8; fixture pasa a1440p en x8. Falta comprobar runtime y empaquetar. No resuelve todavía cajas vacías antes/después del vídeo.
 - Viñetas narrativas dentro del combate: auditoría de sombra original en curso; conservar composición por escena, sin imponer sombra de novela.
-- Elecciones LIPS: texto HD pendiente T04; no considerar completo por el diálogo HD.
+- Elecciones LIPS: dos/tres opciones inglesas implementadas y probadas en T04/PR16; vencimiento natural y resto de paneles siguen pendientes.
 
 - T35: continuidad floral del relleno de diálogo en Zoom (reportada por el propietario). Diagnóstico: `Presentation.foreground` guarda RGB final opaco para source<5; al separar/escalar caja se transporta el NBG3 nativo mezclado a otra posición. Investigar captura de top/second/ratio y recomposición sobre el fondo extendido en coordenadas de destino, con aritmética Saturn exacta. No sustituir por opacidad estimada, no regenerar fondos aprobados, preservar Original, marco, retrato y glifos. Pendiente evidencia del estado y prueba de runtime; no incluido en test.1.
 
@@ -117,3 +117,5 @@ El idioma será una selección del launcher con una variante coherente de guione
 
 
 | T42 | P2 | local | Sakura integrada en PR #15 · Sumire revisada | Checkpoint reproducible de 196/304 y 86/123 del capítulo 1. Sakura `0013/0014` con base verificada y Sumire `0045` en base, `0040/0041` con primera tira en Y=16. El ZIP entregado conserva su catálogo. |
+
+| T33a | P1 | local | implementado y probado · patch0046 | Primer video New Game: fondo solo707..879 y5938..6067, video ampliado880..5937;6201hashes y6RGB nativos iguales aOriginal, cero interpretados. Sin ZIP nuevo aún. RestoT33 abierto. |
