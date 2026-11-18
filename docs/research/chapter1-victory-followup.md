@@ -82,3 +82,11 @@ Quedan por unir los relevos anteriores y probar New Game hasta el final del cap�
 Se reinició el candidato de 674.182 bloques con una copia de la SRAM que produjo el guardado del combate. `tests/cold-load.movie` abre Continue, selecciona la ranura 1 y confirma la carga. La pantalla del epílogo de hanami aparece en el fotograma 7.000. La reproducción de 9.500 fotogramas arranca sin cargar estados del emulador. Coinciden todos los hashes guest y 19 capturas RGB entre AOT estricto y la referencia interpretada del mismo ejecutable. La copia de SRAM conserva su SHA-256 inicial y el candidato registra cero bloques interpretados. El último hash guest es `d74aa82a82d17894`.
 
 El informe privado está en `local/work/chapter1-victory-followup/t10-cold-continue/comparison.json`. Quedan pendientes dos repeticiones del recorrido completo desde New Game, con guardado, reinicio y Continue.
+
+## Del pasillo al guardado nocturno
+
+Desde `stairs-scan.state` se avanza por la elección LIPS del pasillo, el regreso al despacho de Yoneda y el diálogo de Sakura antes del intermedio. Se guardó la partida en la ranura 1 con entradas normales y se observó `Save Complete!`. El tramo usa una copia propia de SRAM y el candidato de 674.182 bloques.
+
+Una sola carga inicial reproduce los 29.597 hashes de los cuatro segmentos. Para los mismos 29.597 cuadros, la referencia interpretada coincide en hashes, RGB final y SRAM guardada. El candidato AOT registró cero bloques interpretados. El último hash guest es `f5282806f43e9908`. La película tiene SHA-256 `34df861ba09b6ba1899d4708ce44e3cb31abe4acd7ee5404f247683bc0288596` y la SRAM guardada tiene SHA-256 `2e96cc84378141ecc42d37c1ba1d71976974f6984ce85c791b68d9b95390801c`. La evidencia privada está en `local/work/chapter1-victory-followup/corridor-bridge/verification.json`.
+
+El ancla del pasillo corresponde al fotograma 119.780 de la repetición anterior desde New Game, según la comparación histórica de estados salvo el puntero de RAM de sonido que restaura el lector. Faltan probar el empalme desde New Game y unir este guardado con el inicio del combate.
