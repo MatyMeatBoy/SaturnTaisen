@@ -60,13 +60,13 @@ Las fuentes PC de cuerpos conservarán una sola escala basada en altura, con el 
 
 ## Progreso HD
 
-[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-275%2F304%20%2890.4%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Indeterminado-646464?style=flat-square)](docs/HD_PROGRESS.md)
+[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-300%2F304%20%2898.6%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Indeterminado-646464?style=flat-square)](docs/HD_PROGRESS.md)
 
 **Objetivo global: 100% verificado. Estado: Indeterminado.**
 
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
-| Retratos y animación | 275/304 (90,4%) | Sin dato |
+| Retratos y animación | 300/304 (98,6%) | Sin dato |
 | Vídeos | 0 | 0 |
 | HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
