@@ -75,4 +75,10 @@ Con el candidato de 674.182 bloques se cargó `west-dialogue/finish.state` una v
 
 La película tiene SHA-256 `3e7db4e78a2c498d892864fa850bc363bc5faa769bbfe8c525ab842249732693` y la SRAM resultante tiene SHA-256 `6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df`. El registro de verificación se conserva en `local/work/chapter1-victory-followup/t10-save-resume-native-full/verification.json`.
 
-Quedan por unir los relevos anteriores y probar Continue en frío con la SRAM resultante y New Game hasta el final del capítulo. El ZIP test.2 ya entregado precede a este candidato.
+Quedan por unir los relevos anteriores y probar New Game hasta el final del capítulo. El ZIP test.2 ya entregado precede a este candidato.
+
+## Continue desde un arranque en frío
+
+Se reinició el candidato de 674.182 bloques con una copia de la SRAM que produjo el guardado del combate. `tests/cold-load.movie` abre Continue, selecciona la ranura 1 y confirma la carga. La pantalla del epílogo de hanami aparece en el fotograma 7.000. La reproducción de 9.500 fotogramas arranca sin cargar estados del emulador. Coinciden todos los hashes guest y 19 capturas RGB entre AOT estricto y la referencia interpretada del mismo ejecutable. La copia de SRAM conserva su SHA-256 inicial y el candidato registra cero bloques interpretados. El último hash guest es `d74aa82a82d17894`.
+
+El informe privado está en `local/work/chapter1-victory-followup/t10-cold-continue/comparison.json`. Quedan pendientes dos repeticiones del recorrido completo desde New Game, con guardado, reinicio y Continue.

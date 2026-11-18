@@ -29,5 +29,22 @@
       "final_backup_sha256": "6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df",
       "evidence": "chapter1-victory-followup.md"
     }
-  ]
+  ],
+  "validated_cold_continue": {
+    "scope": "Cold boot and in-game Continue from the newly saved first battle through the hanami epilogue",
+    "frames": 9500,
+    "state_loads": 0,
+    "runtime_exit": 0,
+    "compiled_blocks": 674182,
+    "interpreted": 0,
+    "matching_guest_hashes": 9500,
+    "final_guest_hash": "d74aa82a82d17894",
+    "matching_rgb_samples": 19,
+    "initial_backup_sha256": "6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df",
+    "backup_unchanged": true,
+    "runtime_sha256": "e7dd1c007e0b7610485f4fe98dd0bb2de4f47411e0cbc3cec835e8758fd120ec",
+    "movie": "tests/cold-load.movie",
+    "movie_sha256": "0a54353b4d3a3338010a1d0f033306a1c6e8855d22b978d1f8f69424541419b3",
+    "evidence": "chapter1-victory-followup.md"
+  }
 }
