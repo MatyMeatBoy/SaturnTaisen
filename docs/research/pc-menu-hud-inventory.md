@@ -33,6 +33,8 @@ Dos candidatos decodificados con el exportador nativo (`sakura.exe --export-pc-s
 
 Ambos casos corroboran candidatos por nombre con contenido visual real, no solo coincidencia de cadena. No se verificó todavía paleta, proporción exacta de escalado ni si `WINDOW.SPR` corresponde 1:1 al marco completo o solo a una de sus variantes (Saturn tiene cajas de 176×24 y 144×24 separadas).
 
+Dos verificaciones más: **`SISTEM.SPR` entrada 0** (592×336) es una lista de 4 filas con flechas arriba/abajo — mismo concepto que la lista de partidas de Saturn (`carga()`), con 4 casillas visibles y scroll, confirmando candidato real. **`KARAOKE.SPR` entrada 0** (320×32) contiene texto japonés real entre comillas («引き裂いた　闇が吠え», un título de canción) sobre fondo amarillo: confirma que cada una de las 17 imágenes es una etiqueta de texto independiente, no arte decorativo — el candidato para `OMALL.DAT` es sólido en cuanto a estructura, aunque su texto (japonés, canciones) no es relevante para el guion de capítulo 1.
+
 ## Siguiente paso
 
 Para cada candidato con `found=true`: decodificar ambas imágenes (PC vía el exportador nativo `sakura.exe --export-pc-spr`, Saturn vía las herramientas ya existentes en `tools/es/`), comparar geometría y verificar si el PC separa el texto del fondo de un modo que Saturn no hace. Ninguna coincidencia de nombre aquí demuestra composición, paleta ni geometría compatibles — es una lista de candidatos a verificar, no una integración.
