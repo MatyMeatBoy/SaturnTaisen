@@ -2,58 +2,58 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Preparar ambos discos traducidos con validación reproducible, identificar su código y abrir la vía AOT de Sakura sin sustituirlo por emulación.
+**Goal:** Prepare both translated discs with reproducible validation, identify their code, and open Sakura's AOT path without replacing it with emulation.
 
-**Architecture:** Herramientas Python separan datos locales del código versionado. satrecomp es el primer candidato para el runtime Windows y la interfaz; las decisiones se contrastan con los casos investigados y las llamadas reales del juego.
+**Architecture:** Python tools keep local data separate from versioned code. satrecomp is the first candidate for the Windows runtime and the interface; decisions are checked against the investigated cases and the game's real calls.
 
-**Tech Stack:** Python 3.11, xdelta3 oficial, C++/SDL3 y toolchain Windows disponible. Dependencias fijadas por commit.
+**Tech Stack:** Python 3.11, official xdelta3, C++/SDL3, and an available Windows toolchain. Dependencies pinned by commit.
 
 **Spec:** `docs/superpowers/specs/2026-11-17-saturn-taisen-first-design.md`
 
 ## Global Constraints
 
-- Recomp estático de ambos SH-2; intérprete solo para descubrimiento/referencia.
-- Dumps, BIOS, recursos, ejecutables extraídos y C++ generado permanecen locales.
-- Ambos discos, traducción por defecto, marco y presentación fiel; settings launcher/ingame, Start+Select y perfiles Saturn automáticos.
-- Logros oficiales RA 1:1 online softcore y offline local; no premios de pruebas ni run-ahead.
-- El usuario autorizó continuar hasta completar el proyecto, sin nuevas pausas de planificación. Ejecución nativa en rama `implementation/foundation` dentro del directorio solicitado.
+- Static recompilation of both SH-2s; the interpreter is for discovery/reference only.
+- Dumps, BIOS, resources, extracted executables, and generated C++ stay local.
+- Both discs, default translation, faithful frame and presentation; launcher/in-game settings, Start+Select, and automatic Saturn profiles.
+- Official RA achievements 1:1 online softcore and offline local; no rewards for tests or run-ahead.
+- The user authorized continuing until the project is complete, with no further planning pauses. Native execution on branch `implementation/foundation` inside the requested directory.
 
 ## Review Focus
 
-- Ruta con espacios/corchetes y CUE con varias pistas: no perder audio ni apuntar a archivos incorrectos.
-- Sectores truncados o formato equivocado: fallar antes de escribir una salida válida.
-- Parche incompatible: no desactivar checksums ni reemplazar originales.
-- Imagen traducida distinta: volver a identificar código/hash; no usar código generado de otra variante.
-- Repetición/interrupción: no sobreescribir salida existente ni confundir archivos parciales con preparados.
+- Path with spaces/brackets and a CUE with multiple tracks: don't lose audio or point to the wrong files.
+- Truncated sectors or wrong format: fail before writing a valid output.
+- Incompatible patch: don't disable checksums or replace originals.
+- Different translated image: re-identify code/hash; don't use code generated from another variant.
+- Repeat/interruption: don't overwrite existing output or confuse partial files with prepared ones.
 
-## Task 1: Evidencia y diseño actualizado
+## Task 1: Updated evidence and design
 
-Files: `docs/research/2026-11-17-casos-recomp.md`, `upstream-evidence.json`, `discs-inventory.json`, diseño y este plan.
+Files: `docs/research/2026-11-17-casos-recomp.md`, `upstream-evidence.json`, `discs-inventory.json`, the design doc, and this plan.
 
-- [x] Registrar SHAs de quince candidatos y referencias de doce casos con fallos, soluciones y límites.
-- [x] Registrar inventario real de ambos discos y hashes RA, sin bytes de juego.
-- [x] Verificar JSON y enlaces locales; revisar diff y exclusiones Git; commit.
+- [x] Record SHAs of fifteen candidates and references for twelve failure cases, with fixes and limits.
+- [x] Record a real inventory of both discs and RA hashes, with no game bytes.
+- [x] Verify JSON and local links; review diff and Git exclusions; commit.
 
-## Task 2: Preparación de discos
+## Task 2: Disc preparation
 
-Files: `tools/prepare_discs.py`, `tests/test_prepare_discs.py`; salida privada `local/prepared/disc1`, `disc2`.
+Files: `tools/prepare_discs.py`, `tests/test_prepare_discs.py`; private output at `local/prepared/disc1`, `disc2`.
 
-Interfaces: `extract_mode1(source: Path, destination: Path) -> int` valida sectores raw y devuelve cantidad; `prepare_disc(cue: Path, patch: Path, output: Path, xdelta: Path) -> dict` prepara una salida nueva con manifiesto SHA-256, traducción e identidad RA. Nunca modifica source.
+Interfaces: `extract_mode1(source: Path, destination: Path) -> int` validates raw sectors and returns the count; `prepare_disc(cue: Path, patch: Path, output: Path, xdelta: Path) -> dict` prepares a fresh output with a SHA-256 manifest, translation, and RA identity. Never modifies the source.
 
-- [x] Escribir pruebas con sectores sintéticos: conversión de contenido, rechazo de truncado/mode erróneo, ruta con espacios y rechazo de destino existente. Ejecutarlas y comprobar que fallan por funcionalidad ausente.
-- [x] Implementar extracción validada y conversión CD-DA a WAV conservando índices CUE; xdelta sin flags que desactiven checksums; usar temporales y publicar manifiesto solo al terminar.
-- [x] Ejecutar suite; aplicar ambos parches reales en carpetas privadas; verificar hashes, cabeceras, CUE y audio. Si el delta falla, investigar la representación exacta esperada antes de cambiar nada.
-- [x] Guardar metadatos no propietarios de evidencia y commit.
+- [x] Write tests with synthetic sectors: content conversion, rejection of truncated/wrong mode, path with spaces, and rejection of an existing destination. Run them and confirm they fail due to missing functionality.
+- [x] Implement validated extraction and CD-DA to WAV conversion preserving CUE indices; xdelta with no flags that disable checksums; use temp files and publish the manifest only on completion.
+- [x] Run the suite; apply both real patches in private folders; verify hashes, headers, CUE, and audio. If the delta fails, investigate the exact expected representation before changing anything.
+- [x] Save non-proprietary evidence metadata and commit.
 
-## Task 3: Mapa AOT y viabilidad del runtime
+## Task 3: AOT map and runtime feasibility
 
-Files: configuración del juego y herramientas en `games/sakura/` y `tools/`, dependencias fijadas; salidas en `local/`.
+Files: game configuration and tools under `games/sakura/` and `tools/`, pinned dependencies; outputs under `local/`.
 
-- [ ] Inspeccionar SAKURA, módulos SH2 y overlays en ambas traducciones; registrar direcciones desde crt0/cargas reales, no por nombres de archivo.
-- [ ] Ejecutar herramientas de análisis de satrecomp, contrastar decodificación y supuestos de hardware con saturnkit.
-- [ ] Compilar runtime mínimo y selftests sin juegos; resolver fallos Windows con regresiones dirigidas.
-- [x] Descubrimiento instrumentado; emitir/compilar código guest y probar arranque/primera escena. Registrar todo destino o dispositivo que falte. No ocultar errores con stubs de éxito.
+- [ ] Inspect SAKURA, SH2 modules, and overlays in both translations; record addresses from crt0/real loads, not from file names.
+- [ ] Run satrecomp's analysis tools, checking decoding and hardware assumptions against saturnkit.
+- [ ] Build a minimal runtime and selftests with no games; resolve Windows failures with targeted regressions.
+- [x] Instrumented discovery; emit/compile guest code and test boot/first scene. Record every missing target or device. Don't hide errors with success stubs.
 
-## Continuación del proyecto
+## Project continuation
 
-Cada bloque se detalla al obtener evidencia de sus interfaces reales: cobertura de escenas y overlays; interfaz y settings compartidos; perfiles SDL/M30 y combinación; presentación/marco/mods; adaptador rcheevos y catálogo offline; transición de discos; validación de campaña y paquetes. La etapa inicial no se marcará como recomp completo. La suite de aceptación final incluye diálogos/voz, elección, batalla, minijuegos, guardar/cargar, cambio real 1→2, reapertura y logros oficiales en ambos discos.
+Each block is detailed once evidence of its real interfaces is obtained: scene and overlay coverage; shared interface and settings; SDL/M30 profiles and combination; presentation/frame/mods; rcheevos adapter and offline catalog; disc transition; campaign and package validation. The initial stage will not be marked as a complete recompilation. The final acceptance suite includes dialogue/voice, choices, battle, minigames, save/load, real 1→2 disc swap, reopening, and official achievements on both discs.

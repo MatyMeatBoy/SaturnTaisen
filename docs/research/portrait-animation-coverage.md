@@ -1,30 +1,30 @@
-# Cobertura de retratos HD y animaciones
+# HD portrait and animation coverage
 
-La auditoría compara los atlas de Saturn y PC con el paquete HD preparado. También puede reconstruir el retrato descrito por los comandos VDP1 de estados locales y compararlo con capturas nativas de 320 × 224. Lee los insumos en el lugar y escribe los informes en un directorio nuevo bajo `local/work`.
+The audit compares the Saturn and PC atlases against the prepared HD pack. It can also reconstruct the portrait described by local states' VDP1 commands and compare it against native 320 × 224 captures. It reads inputs in place and writes reports to a new directory under `local/work`.
 
 ```powershell
 python tools/audit_portrait_coverage.py --states local/work/sakura
 python -m unittest discover -s tests -p test_portrait_coverage.py
 ```
 
-Usar `--output` con otro directorio para repetir la ejecución. Se pueden indicar otros insumos con `--project`, `--pack` y `--disc` repetido por disco. `portrait-coverage.csv` sirve para filtrar las identidades por capítulo, estado o región. `portrait-coverage.json` añade los FCE de origen, las puntuaciones, las medidas alfa y las comparaciones con estados y capturas.
+Use `--output` with a different directory to repeat the run. Other inputs can be specified with `--project`, `--pack`, and `--disc` repeated per disc. `portrait-coverage.csv` is used to filter identities by chapter, state, or region. `portrait-coverage.json` adds the source FCEs, scores, alpha measurements, and comparisons against states and captures.
 
-## Cobertura del catálogo
+## Catalog coverage
 
-El auditor comparó los 304 atlas Saturn de 40 × 80 del proyecto con los FCE de ambos discos y verificó por SHA-256 los 394 atlas PC de 80 × 160, con índices continuos del 0 al 393. Verificó también el archivo KAO original. En el paquete, validó el catálogo binario y los hashes FNV de las 382 variantes PNG. Al comparar sus píxeles RGBA con los regenerados a densidad 1× y 2×, las 382 variantes coincidieron. Ninguna tiene un píxel con alfa parcial o cero donde Saturn requiere opacidad.
+The auditor compared the project's 304 40 × 80 Saturn atlases against the FCEs on both discs and verified the 394 80 × 160 PC atlases via SHA-256, with continuous indices from 0 to 393. It also verified the original KAO file. In the pack, it validated the binary catalog and the FNV hashes of the 382 PNG variants. When comparing their RGBA pixels against those regenerated at 1x and 2x density, the 382 variants matched. None has a pixel with partial or zero alpha where Saturn requires opacity.
 
-El capítulo 1 abarca la unión de identidades encontradas en los seis FCE `0100`, `0101`, `0102`, `0103`, `0108` y `0109` en ambos discos.
+Chapter 1 covers the union of identities found across the six FCEs `0100`, `0101`, `0102`, `0103`, `0108`, and `0109` on both discs.
 
-| Ámbito | Saturn | Base HD | Ojos HD | Boca HD | Ambas tiras HD disponibles | PNG verificados | Pendientes |
+| Scope | Saturn | HD base | HD eyes | HD mouth | Both HD strips available | PNGs verified | Pending |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Catálogo | 304 | 191 | 191 | 191 | 191 | 382 | 113 |
-| Capítulo 1 | 123 | 81 | 81 | 81 | 81 | 162 | 42 |
+| Catalog | 304 | 191 | 191 | 191 | 191 | 382 | 113 |
+| Chapter 1 | 123 | 81 | 81 | 81 | 81 | 162 | 42 |
 
-Cada atlas válido tiene 48 filas de base y dos tiras de 16 filas. La columna de ambas tiras confirma su disponibilidad en los PNG. Su dibujo simultáneo depende de los comandos del juego y del fotograma mostrado. El campo `nearest_strip_rows` mide la distancia entre índices de color por fila de colocación y sirve como hipótesis sobre el destino de cada tira.
+Each valid atlas has 48 base rows and two 16-row strips. The "both strips" column confirms their availability in the PNGs. Their simultaneous drawing depends on the game's commands and the displayed frame. The `nearest_strip_rows` field measures the distance between color indices per placement row and serves as a hypothesis about each strip's destination.
 
-Los 191 emparejamientos automáticos respetan `índice PC = ID Saturn - 1`. Entre los pendientes, el candidato visual primero del ranking respeta esa regla en 102 de 113 filas, incluidas 38 de las 42 del capítulo 1. En el primer capítulo, los cuatro pendientes con un candidato distinto son `004f`, `00ef`, `013b` y `013c`. Ningún pendiente obtuvo distancia cero. El índice aporta una señal adicional para revisar cada retrato con sus tres regiones.
+The 191 automatic pairings respect `PC index = Saturn ID - 1`. Among the pending ones, the top visual candidate by ranking respects that rule in 102 of 113 rows, including 38 of the 42 in chapter 1. In chapter 1, the four pending entries with a different candidate are `004f`, `00ef`, `013b`, and `013c`. No pending entry got a zero distance. The index provides an additional signal for reviewing each portrait across its three regions.
 
-Rangos pendientes del capítulo 1 en hexadecimal
+Chapter 1 pending ranges in hexadecimal
 
 ```text
 0013-0014 001d 0040-0041 0044-0045 0049-004a 004f 005b 0064
@@ -32,17 +32,17 @@ Rangos pendientes del capítulo 1 en hexadecimal
 00c0 00c2-00c3 00c5 00ee-00f0 00f2 00f4 013a-013c 013f 0169
 ```
 
-## Estados guardados y retrato de Yoneda
+## Saved states and Yoneda's portrait
 
-En los 160 estados disponibles, 79 tenían un comando de retrato en la posición esperada y usaban la paleta esperada. Se obtuvieron 63 coincidencias únicas con el catálogo HD y 16 sin coincidencia. Los 16 casos sin coincidencia tenían una identidad Saturn exacta entre las pendientes. Se capturaron seis estados con una tira activa y ninguno con dos. Los estados `maria-face-discovery.state` y `maria-exit.state` muestran, respectivamente, ojos y boca de `0176` en la misma fila relativa 16 en momentos distintos.
+Among the 160 available states, 79 had a portrait command at the expected position and used the expected palette. 63 unique matches were obtained against the HD catalog and 16 had no match. The 16 unmatched cases had an exact Saturn identity among the pending ones. Six states were captured with one active strip and none with two. The states `maria-face-discovery.state` and `maria-exit.state` show, respectively, the eyes and mouth of `0176` at the same relative row 16 at different moments.
 
-Las expresiones civiles de Yoneda `00e2–00e7` tienen ambos PNG HD completos. Las dos tiras de cada atlas Saturn tienen su mínimo de distancia en la fila relativa 8. El comando de ojos de `00e2` confirma esa fila en `office-return-6000.state`.
+Yoneda's civilian expressions `00e2–00e7` have both HD PNGs complete. Both strips of each Saturn atlas have their minimum distance at relative row 8. The eyes command of `00e2` confirms that row in `office-return-6000.state`.
 
-| Muestra | Comando guardado | Comparación con la captura |
+| Sample | Saved command | Comparison with the capture |
 | --- | --- | --- |
-| `office-return-3000.state` | Base `00e3` | Los 1.920 píxeles coinciden con los colores de la paleta Saturn. |
-| `office-return-6000.state` | Base `00e2` y ojos en fila 8, una coincidencia HD | Difieren 1.901 píxeles de la base sin mezcla y 1.904 de la composición de los comandos guardados. Los 1.920 píxeles coinciden al mezclar la base sin la tira de ojos hacia blanco. |
+| `office-return-3000.state` | Base `00e3` | The 1,920 pixels match the Saturn palette colors. |
+| `office-return-6000.state` | Base `00e2` and eyes at row 8, an HD match | 1,901 pixels differ from the unblended base and 1,904 from the composite of the saved commands. The 1,920 pixels match when blending the base without the eyes strip toward white. |
 
-La muestra de 6000 cumple exactamente `(canal_base * 27 + 248 * 5) >> 5` por canal, con blanco de RGB555 expandido a 248. El estado describe los comandos pendientes de VDP1. La captura muestra el retrato base bajo mezcla, coherente con un desfase entre los comandos guardados y la imagen presentada. El guardián `PortraitPixelsVisible` exige igualdad con el color Saturn sin mezcla y por ello rechazaría ese retrato. El atlas, la paleta y el reconocedor por bytes sí pasaron las comprobaciones de los comandos guardados.
+The 6000 sample exactly satisfies `(base_channel * 27 + 248 * 5) >> 5` per channel, with RGB555 white expanded to 248. The state describes the pending VDP1 commands. The capture shows the base portrait under blending, consistent with an offset between the saved commands and the presented image. The `PortraitPixelsVisible` guard requires equality with the unblended Saturn color and would therefore reject that portrait. The atlas, palette, and byte-level recognizer did pass the checks against the saved commands.
 
-El informe incluye 42 pares de captura y estado. En 36 pares, la base coincide con la captura sin mezcla. Tres muestran mezcla exacta hacia blanco con pesos 5, 15 y 25 sobre 32. Los tres restantes requieren más evidencia para explicar sus diferencias. La auditoría valida estos fotogramas guardados y la disponibilidad de los atlas. La frecuencia de las caídas en una ejecución continua queda fuera de esta muestra.
+The report includes 42 capture/state pairs. In 36 pairs, the base matches the capture unblended. Three show exact blending toward white with weights 5, 15, and 25 over 32. The remaining three require more evidence to explain their differences. The audit validates these saved frames and atlas availability. The frequency of these dropouts during a continuous run is outside this sample.

@@ -1,20 +1,20 @@
-# Validación jugable del capítulo1
+# Chapter1 playable validation
 
-Objetivo inmediato: demostrar una ruta reproducible desde New Game hasta el final del episodio1, guardado del juego y Continue, antes de afirmar capítulo completo. Mantener Saturn como prioridad y no confundir mejoras visuales con progresión validada.
+Immediate goal: demonstrate a reproducible path from New Game to the end of episode1, in-game save, and Continue, before claiming the chapter is complete. Keep Saturn as the priority and do not confuse visual improvements with validated progression.
 
-1. Inventariar ruta continua existente de119.781 frames: llega a pasillo y no incluye batalla. Registrar anclas de historia, elecciones y acceso a combate.
-2. Desde estado local de combate, avanzar controles y turnos para verificar movimiento/ataque, victoria y salida. Usar copias de backup y movies deterministas; conservar comandos y hashes. Los estados facilitan investigar y no cuentan como ruta continua desde inicio.
-3. Si falta bloque AOT, reproducir y atribuir a módulo real; generar de forma estática los candidatos necesarios sin habilitar intérprete en producción. Comparar el tramo con referencia cuando haya dudas de semántica/estado.
-4. Componer un recorrido continuo desde el arranque, sin saltos mediante estados. Guardar una partida nativa del final del episodio, reiniciar y cargarla con Continue. Verificar dos repeticiones y ningún fallback interpretado.
-5. Documentar por separado pruebas pasadas, rutas alternativas pendientes y estado de campaña/discos. Añadir una regresión por bloqueo corregido, sin tests que solo repitan la implementación.
+1. Inventory the existing continuous path of 119,781 frames: it reaches the corridor and does not include a battle. Record story anchors, choices, and access to combat.
+2. From a local combat state, advance controls and turns to verify movement/attack, victory, and exit. Use backup copies and deterministic movies; keep the commands and hashes. Save states make investigation easier and do not count as a continuous path from the start.
+3. If an AOT block is missing, reproduce it and attribute it to a real module; statically generate the needed candidates without enabling the interpreter in production. Compare the segment against the reference whenever there is doubt about semantics/state.
+4. Compose a continuous playthrough from boot, with no jumps via save states. Save a native save at the end of the episode, restart, and load it with Continue. Verify two repeats with no interpreted fallback.
+5. Document passed tests, pending alternate routes, and campaign/disc status separately. Add a regression for each fixed lockup, with no tests that merely repeat the implementation.
 
-Fuera de esta prueba: cuerpos HD, PixelGen en mapa y combate panorámico no deben cambiar lógica ni colisiones; investigar HUD relativo después de una base de progreso reproducible. Capítulo1 no se considera verificado hasta lograr4.
+Out of scope for this test: HD bodies, PixelGen on the map, and panoramic battle must not change logic or collisions; investigate the relative HUD after a reproducible progress baseline. Chapter1 is not considered verified until reaching 4.
 
 
-## Continuación tras v0.1.2
+## Continuation after v0.1.2
 
-1. Reproducir el ataque normal de Sumire desde fixture local inmutable y fijar su movie público sin datos originales. La v0.1.2 se detiene en AOT estricto en 060783FC.
-2. Atribuir el bloque por sus bytes a K002.BIN (offset03FC, base06078000), ampliar estáticamente el módulo y comprobar hermanos de la familia K mediante punteros propios; no confundir candidatos con cobertura ejecutada.
-3. Recompilar incrementalmente y comparar 1.800 hashes y RGB final AOT/referencia para Sumire; repetir ataque previo de Sakura.
-4. tools/stitch_battle_replay.py compone los probes con desplazamiento frames-1, porque el estado se guarda antes de ejecutar ese frame. Rechazar fuente modificada, pulsación retenida y eventos en la frontera. Cuatro pruebas sintéticas preceden su uso real.
-5. Ejecutar el movie compuesto sin cargas intermedias y contrastar su estado/frame final con la ruta por tramos. La ruta actual empieza después del primer ataque; todavía no demuestra New Game→fin de episodio.
+1. Reproduce Sumire's normal attack from an immutable local fixture and pin its public movie with no original data. v0.1.2 stops at strict AOT at 060783FC.
+2. Attribute the block by its bytes to K002.BIN (offset 03FC, base 06078000), statically extend the module, and check siblings of the K family via their own pointers; do not confuse candidates with executed coverage.
+3. Recompile incrementally and compare 1,800 hashes and final AOT/reference RGB for Sumire; repeat Sakura's previous attack.
+4. tools/stitch_battle_replay.py composes the probes with a frames-1 offset, because the state is saved before executing that frame. Reject modified source, held input, and boundary events. Four synthetic tests precede its real use.
+5. Run the composed movie with no intermediate loads and compare its final state/frame against the segmented path. The current path starts after the first attack; it still does not demonstrate New Game→end of episode.

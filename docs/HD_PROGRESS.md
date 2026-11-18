@@ -1,108 +1,108 @@
-# Progreso HD
+# HD progress
 
-**Objetivo global: 100% verificado. Estado: Indeterminado.**
+**Global goal: 100% verified. Status: Indeterminate.**
 
-Los porcentajes corresponden al inventario definido para cada fila. Una celda «Sin dato» indica una medición pendiente y un cero indica una ausencia confirmada. Los recuentos de candidatos se detallan por separado.
+The percentages correspond to the defined inventory for each row. A "No data" cell indicates a pending measurement, and a zero indicates a confirmed absence. Candidate counts are detailed separately.
 
-| Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
+| Area | Unit | Inventoried | Matched | Prepared | Integrated | Verified in game |
 | --- | --- | --- | --- | --- | --- | --- |
-| Retratos y animación | identidades Saturn | 304/304 (100%) | 300/304 (98,6%) | 300/304 (98,6%) | 300/304 (98,6%) | Sin dato |
-| Vídeos | clips únicos | 50/50 (100%) | 44/50 (88%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
-| HUD y menús PC/Saturn | pantallas y piezas compartidas | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
-| Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | poses y composiciones nativas | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
-| Escenas y transiciones | escenas distintas en ejecución | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
+| Portraits and animation | Saturn identities | 304/304 (100%) | 300/304 (98.6%) | 300/304 (98.6%) | 300/304 (98.6%) | No data |
+| Videos | unique clips | 50/50 (100%) | 44/50 (88%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
+| PC/Saturn HUD and menus | shared screens and pieces | No data | No data | No data | No data | No data |
+| KABE decorative backgrounds | KABE inventory themes | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | No data |
+| Large NC characters | native poses and compositions | No data | No data | No data | No data | No data |
+| Scenes and transitions | distinct scenes in execution | No data | No data | No data | No data | No data |
 
-## Qué cuenta en cada etapa
+## What counts at each stage
 
-- **Inventariado**. Elementos nativos identificados dentro del alcance declarado.
-- **Emparejado**. Correspondencia aprobada del recurso y sus variantes necesarias.
-- **Preparado**. Sustitución empacada y validada con el formato del runtime.
-- **Integrado**. Sustitución conectada a la ruta de ejecución correspondiente.
-- **Verificado en juego**. Elementos distintos validados en capturas o reproducciones trazables.
+- **Inventoried**. Native elements identified within the declared scope.
+- **Matched**. Approved correspondence of the asset and its required variants.
+- **Prepared**. Substitution packaged and validated against the runtime format.
+- **Integrated**. Substitution connected to the corresponding execution path.
+- **Verified in game**. Distinct elements validated in traceable captures or playbacks.
 
-El objetivo global se alcanza cuando cada categoría tiene un total confirmado y todas sus etapas cubren ese total. Las unidades se evalúan por categoría, sin promediarlas.
+The global goal is reached when each category has a confirmed total and all its stages cover that total. Units are evaluated per category, without averaging them.
 
-## Alcance y pendientes
+## Scope and pending items
 
-### Retratos y animación
+### Portraits and animation
 
-Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y boca se cuentan una vez por identidad.
+Identities from the Saturn atlases audited on both discs. Eye and mouth strips are counted once per identity.
 
-- Checkpoint reproducible. 201 identidades con base, ojos y boca disponibles. Se comprobaron 402 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.
-- Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.
-- Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.
-- 394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.
-- **Siguiente paso**. Revisar las identidades pendientes y validar parpadeo, boca, ambas tiras simultáneas, efectos y fallback en juego.
+- Reproducible checkpoint. 201 identities with base, eyes, and mouth available. 402 PNGs were checked at two densities. The delivered v0.1.2 package keeps 191 portraits.
+- Chapter 1. 91/123 identities with all three regions prepared and 32 pending. The six scope FCEs appear in the audit.
+- Verified in game: Sakura 0013 and 0014, Sumire 0045 and María 0064 bases. In Sumire 0040 and 0041 the first strip was observed at Y=16. In the third batch, in-game strips and verification of the other four bases remain pending.
+- 394 PC candidates. The availability of the strips in the package leaves pending the accumulated coverage per identity during gameplay.
+- **Next step**. Review the pending identities and validate blinking, mouth, both strips simultaneously, effects, and in-game fallback.
 
-Rangos de ID Saturn pendientes en hexadecimal
+Pending Saturn ID ranges in hexadecimal
 
 `00a1` `0152-0153` `0169`
 
-- [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 del recibo local `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.
-- [first-sakura-hd-portraits.md](research/first-sakura-hd-portraits.md). SHA-256 del recibo local `8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1`.
-- [chapter1-sumire-hd-portraits.md](research/chapter1-sumire-hd-portraits.md). SHA-256 del recibo local `3ff2e8dfe039d3c64489ebb784a0c3f7f5b56572148197025ff53840fc857f48`.
-- [chapter1-third-hd-portraits.md](research/chapter1-third-hd-portraits.md). SHA-256 del recibo local `182ad5f38ab46b744e8a5ef2682f2e3477792f80c47ef13d7e17b74802ac035e`.
-- [v0.1.2.md](releases/v0.1.2.md). SHA-256 del recibo local `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
+- [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 of the local receipt `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.
+- [first-sakura-hd-portraits.md](research/first-sakura-hd-portraits.md). SHA-256 of the local receipt `8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1`.
+- [chapter1-sumire-hd-portraits.md](research/chapter1-sumire-hd-portraits.md). SHA-256 of the local receipt `3ff2e8dfe039d3c64489ebb784a0c3f7f5b56572148197025ff53840fc857f48`.
+- [chapter1-third-hd-portraits.md](research/chapter1-third-hd-portraits.md). SHA-256 of the local receipt `182ad5f38ab46b744e8a5ef2682f2e3477792f80c47ef13d7e17b74802ac035e`.
+- [v0.1.2.md](releases/v0.1.2.md). SHA-256 of the local receipt `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
 
-### Vídeos
+### Videos
 
-Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.
+Full correspondences between Saturn and PC clips, with their editing variants, subtitles, audio, and skip behavior.
 
-- 50 clips Saturn únicos (flujos FILM deduplicados entre ambos discos; el cortometraje de 0,15 s del logo queda fuera) frente a 52 MPEG de PC (51 MOVIE + REDLOGO).
-- 44 pares con duración dentro de 0,5 s y orden consecutivo idéntico (flujo k de /SAKURA4 ↔ MOVIE00k). Seis pares requieren revisión de montaje por diferencia de duración: 743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102 y def7a6↔020 (3,7 s).
-- Sin sustitución integrada: falta decodificación MPEG-1/MP2 en el runtime, sincronía de audio, subtítulos y salto.
-- **Siguiente paso**. Revisar el montaje de los seis pares con diferencia de duración, comprobar audio/subtítulos/saltos y diseñar la reproducción PC dentro del runtime.
+- 50 unique Saturn clips (FILM streams deduplicated across both discs; the 0.15 s logo short is excluded) versus 52 PC MPEGs (51 MOVIE + REDLOGO).
+- 44 pairs with duration within 0.5 s and identical consecutive order (stream k of /SAKURA4 ↔ MOVIE00k). Six pairs require editing review due to a duration difference: 743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102, and def7a6↔020 (3.7 s).
+- No integrated substitution: MPEG-1/MP2 decoding in the runtime, audio sync, subtitles, and skip are still missing.
+- **Next step**. Review the editing of the six pairs with a duration difference, check audio/subtitles/skip, and design PC playback within the runtime.
 
 - [scene-tagging.md](research/scene-tagging.md).
 - [intro-petals-transition.md](research/intro-petals-transition.md).
 
-### HUD y menús PC/Saturn
+### PC/Saturn HUD and menus
 
-Inventario conjunto por pantalla o pieza equivalente, incluidos elementos de mapa, batalla, estados y guardado.
+Joint inventory per screen or equivalent piece, including map, battle, status, and save elements.
 
-- Se observaron menús tácticos en Saturn y se ajustó su presentación. Falta vincular las piezas HD compartidas y contar las pantallas cubiertas.
-- **Siguiente paso**. Inventariar las pantallas y piezas compartidas por edición. Separar sustitución HD y ajustes del layout Saturn.
+- Tactical menus were observed on Saturn and their presentation was adjusted. Still need to link the shared HD pieces and count the covered screens.
+- **Next step**. Inventory the screens and shared pieces per edition. Separate HD substitution from Saturn layout adjustments.
 
 - [tactical-menu-independent-reference.md](research/tactical-menu-independent-reference.md).
 - [v0.2.0-test.1.md](releases/v0.2.0-test.1.md).
 
-### Fondos decorativos KABE
+### KABE decorative backgrounds
 
-Los 19 temas decorativos únicos del catálogo KABE con alternativas HD, incluidos los pares día/noche catalogados.
+The 19 unique decorative themes from the KABE catalog with HD alternatives, including the cataloged day/night pairs.
 
-- 19 variantes de fondo listas para el runtime. La precarga y la paridad del loader miden los recursos preparados. La cobertura de escenas se registra aparte.
-- **Siguiente paso**. Reunir validaciones por tema y escena, incluidas variantes de iluminación, fundidos, diálogos y transiciones.
+- 19 background variants ready for the runtime. Preload and loader parity measure the prepared assets. Scene coverage is tracked separately.
+- **Next step**. Gather validations per theme and scene, including lighting variants, fades, dialogue, and transitions.
 
 - [provenance.json](../assets/generated/pc-backgrounds/provenance.json).
 - [saturn-background-workers.md](research/saturn-background-workers.md).
-- [v0.1.2.md](releases/v0.1.2.md). SHA-256 del recibo local `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
+- [v0.1.2.md](releases/v0.1.2.md). SHA-256 of the local receipt `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
 
-### Personajes grandes NC
+### Large NC characters
 
-Cuerpos y poses fuera del retrato de diálogo. El total de poses y composiciones nativas permanece abierto.
+Bodies and poses outside the dialogue portrait. The total of native poses and compositions remains open.
 
-- 147 paquetes PC y 3.596 imágenes decodificadas. Hay 147 pares de nombre candidatos. Faltan las equivalencias por pose.
-- **Siguiente paso**. Vincular índices por pose y validar ancla, proporción y animación en capturas Saturn para cada sustitución.
+- 147 PC packages and 3,596 decoded images. There are 147 candidate name pairs. Per-pose equivalences are still missing.
+- **Next step**. Link indexes per pose and validate anchor, proportion, and animation in Saturn captures for each substitution.
 
 - [saturn-hd-characters.md](research/saturn-hd-characters.md).
 - [pc-character-inventory.json](research/pc-character-inventory.json).
 
-### Escenas y transiciones
+### Scenes and transitions
 
-Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.
+Visits, choices, maps, battles, menus, films, and transitions navigated on both discs.
 
-- El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.
-- Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.
-- **Siguiente paso**. Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.
+- The initial index lists 166 asset candidates and nine execution observations. A dialogue table or a video stream can appear in more than one path.
+- Priority pending items: other map-to-room paths, dialogue continuity and animation in later scenes, complete battles, disc change, and clips with subtitles.
+- **Next step**. Link each occurrence to a stable scene or transition, record the native mode, and verify HD, Zoom, and fallback where applicable.
 
 - [scene-tagging.md](research/scene-tagging.md).
 - [wide-map-crossfades.md](research/wide-map-crossfades.md).
 - [chapter-sweep.md](research/chapter-sweep.md).
 
-## Actualizar el registro
+## Updating the record
 
-Añade el resultado revisado a `config/hd-progress.json`. Registra la unidad y el alcance del total, la etapa comprobada y la evidencia pública correspondiente. Usa `null` si falta el inventario o el recuento, y cuenta cada identidad una vez aunque aparezca en varios discos o escenas. Una coincidencia por nombre, la extracción y la decodificación por sí solas cuentan como candidatos. Al aprobar un retrato, actualiza el número de emparejamientos y sus rangos pendientes. Conserva imágenes, vídeos, partidas, guiones y rutas locales de propietario fuera del registro.
+Add the reviewed result to `config/hd-progress.json`. Record the unit and scope of the total, the checked stage, and the corresponding public evidence. Use `null` if the inventory or count is missing, and count each identity once even if it appears on several discs or scenes. A name match, extraction, and decoding alone count as candidates. When approving a portrait, update the number of matches and its pending ranges. Keep images, videos, saves, scripts, and owner-local paths out of the record.
 
 ```powershell
 python tools/build_hd_progress.py

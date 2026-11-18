@@ -1,18 +1,18 @@
-# Reproducción de la ampliación AOT de combate
+# Reproduction of the battle AOT expansion
 
-`tools/discover_battle_overlays.py` sustituye el ensayo privado que amplió la familia K001–K019 después del bloqueo de Sumire en 060783FC. No modifica discos, la base de descubrimiento activa ni ejecutables. Lee una base semilla y emite un candidato y su manifiesto en un directorio privado nuevo.
+`tools/discover_battle_overlays.py` replaces the private trial that expanded the K001–K019 family after the Sumire lock at 060783FC. It does not modify discs, the active discovery base, nor executables. It reads a seed base and emits a candidate and its manifest in a new private directory.
 
-Se reutiliza el analizador estático del proyecto y el SDK fijado. Los módulos deben pertenecer exactamente a la familia conocida, tener tamaño/alineación acotados y punteros absolutos que apoyen la base observada 06078000. El analizador no puede emitir bytes ni direcciones ajenos al módulo. Se deduplican módulos iguales, pero se conservan variantes distintas en una misma dirección de CPU y todos los perfiles de procedencia. Esto genera candidatos; no acredita que cada entrada sea código ejecutado.
+The project's static analyzer and the pinned SDK are reused. Modules must belong exactly to the known family, have bounded size/alignment, and absolute pointers that support the observed base 06078000. The analyzer cannot emit bytes or addresses outside the module. Identical modules are deduplicated, but distinct variants are preserved at the same CPU address, as are all provenance profiles. This generates candidates; it does not certify that every entry is executed code.
 
-## Resultado reproducido
+## Reproduced result
 
-Desde la semilla privada anterior al arreglo, 580.328 entradas, se recuperaron 18 módulos únicos y 33.696 candidatos nuevos: **614.024 entradas**, exactamente el mismo conjunto que usa la build test.1. Ninguna entrada faltó ni sobró. El [manifiesto](battle-overlay-reproduction.json) conserva hashes, perfiles y recuentos; los bytes de código quedan en `local/work`, fuera de Git.
+Starting from the private pre-fix seed of 580,328 entries, 18 unique modules and 33,696 new candidates were recovered: **614,024 entries**, exactly the same set used by the test.1 build. No entry was missing or extra. The [manifest](battle-overlay-reproduction.json) keeps hashes, profiles, and counts; the code bytes stay in `local/work`, outside Git.
 
-No se regeneró ni sustituyó el ejecutable compartido para esta comprobación. La corrección de Sumire y su paridad AOT/intérprete ya se documentaron en [progresión del capítulo 1](chapter1-battle-progress.md). Esta reproducción elimina una dependencia de scripts privados al reconstruir aquel arreglo; no demuestra campaña completa ni resuelve módulos nuevos de otros capítulos.
+The shared executable was neither regenerated nor replaced for this check. Sumire's fix and its AOT/interpreter parity were already documented in [chapter 1 progress](chapter1-battle-progress.md). This reproduction removes a dependency on private scripts by rebuilding that fix; it does not prove the full campaign nor resolve new modules from other chapters.
 
-## Uso
+## Usage
 
-Ejemplo desde la raíz de un checkout con las dos imágenes propias preparadas:
+Example from the root of a checkout with both own images prepared:
 
 ```powershell
 python tools/discover_battle_overlays.py `
@@ -22,8 +22,8 @@ python tools/discover_battle_overlays.py `
   --output local/work/battle-overlay-reproduction
 ```
 
-Para un worktree sin SDK propio, `--sdk-root` puede indicar la dependencia existente y los argumentos de imagen/semilla pueden ser rutas absolutas. El SDK debe tener el commit fijado. El ensayo registrado incluyó también los dos perfiles japoneses disponibles para contrastar variantes. El manifiesto distingue las imágenes efectivamente incluidas en cada ejecución.
+For a worktree without its own SDK, `--sdk-root` can point to the existing dependency, and the image/seed arguments can be absolute paths. The SDK must have the pinned commit. The recorded trial also included the two available Japanese profiles to cross-check variants. The manifest distinguishes the images actually included in each run.
 
-La salida no se promociona automáticamente. Comparar el conjunto, revisar el manifiesto y coordinar la regeneración/compilación antes de sustituir `blocks.txt`. Nunca hacerlo mientras otro colaborador utiliza esa base o compila. La CLI rechaza destinos existentes y destinos fuera de `local/work`.
+The output is not automatically promoted. Compare the set, review the manifest, and coordinate regeneration/compilation before replacing `blocks.txt`. Never do this while another collaborator is using that base or compiling. The CLI rejects existing destinations and destinations outside `local/work`.
 
-Pruebas: `python -m unittest discover -s tests -p test_battle_overlay_discovery.py -v`. Cubren selección de familia, tamaños, punteros, variantes, rechazo de candidatos inválidos y validación de la semilla sin modificarla.
+Tests: `python -m unittest discover -s tests -p test_battle_overlay_discovery.py -v`. They cover family selection, sizes, pointers, variants, rejection of invalid candidates, and validation of the seed without modifying it.

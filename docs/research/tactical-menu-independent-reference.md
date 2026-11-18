@@ -1,41 +1,41 @@
-# Referencia independiente del menú táctico
+# Independent reference for the tactical menu
 
-Beetle Saturn v1.32.1 arrancó el disco 1 inglés, cargó el archivo del capítulo 1 desde la RAM interna y mostró los menús de Move, Atk y Def durante el tutorial del primer combate. En las tres capturas, el submenú emergente cubre parte de la barra horizontal. El solapamiento aparece en el disco traducido bajo emulación independiente.
+Beetle Saturn v1.32.1 booted the English disc 1, loaded the chapter 1 file from internal RAM, and displayed the Move, Atk, and Def menus during the first battle's tutorial. In all three captures, the pop-up submenu covers part of the horizontal bar. The overlap appears on the translated disc under independent emulation.
 
-## Capturas verificadas
+## Verified captures
 
-Las rutas de la tabla son relativas al directorio privado `local/work/worker-menu-oracle/cold-action-sequence`.
+The table paths are relative to the private directory `local/work/worker-menu-oracle/cold-action-sequence`.
 
-| Acción | Fotograma | PNG de 330 × 224 | Estado de Beetle Saturn | SHA-256 del PNG |
+| Action | Frame | 330 × 224 PNG | Beetle Saturn state | PNG SHA-256 |
 | --- | ---: | --- | --- | --- |
 | Move | 14638 | `shot-014638.png` | `state-014638.bin` | `1f5df46eea67792a3d41d0353b44ef89bc01520f86e0464c0b88acb0c02835cc` |
-| Atk, Special y Normal | 15238 | `shot-015238.png` | `state-015238.bin` | `91f1ca0f1e294ca5cb805738cf11b886bb109f8fe8324a7a66725f0e295fa561` |
-| Def, Heal, Defend y Boost | 15388 | `shot-015388.png` | `end.state` | `ecf20d4b923f9b8c9ae28ef0d35e427ac23b42ae4743487d4308bb5977ae4ec7` |
+| Atk, Special, and Normal | 15238 | `shot-015238.png` | `state-015238.bin` | `91f1ca0f1e294ca5cb805738cf11b886bb109f8fe8324a7a66725f0e295fa561` |
+| Def, Heal, Defend, and Boost | 15388 | `shot-015388.png` | `end.state` | `ecf20d4b923f9b8c9ae28ef0d35e427ac23b42ae4743487d4308bb5977ae4ec7` |
 
-Las tres capturas del arranque en frío coinciden byte por byte con las de los ensayos con estados intermedios.
+All three cold-boot captures match byte-for-byte those from the trials with intermediate states.
 
-## Reproducción local
+## Local reproduction
 
 ```powershell
 pwsh -File local/work/worker-menu-oracle/replay-menu.ps1
 ```
 
-El script privado invoca `local/work/mednafen-menu-oracle.py` con los recursos preparados y guarda el resultado en un directorio nuevo. Use `-Output` para cambiar el destino. El `run.json` de la evidencia conserva los 284 eventos, 15.388 fotogramas y 30.776 ciclos de sondeo del mando. `loaded_state_sha256` es nulo en el arranque en frío. Los eventos empiezan en cero y las capturas cuentan las llamadas a `retro_run` desde uno.
+The private script invokes `local/work/mednafen-menu-oracle.py` with the prepared resources and saves the result to a new directory. Use `-Output` to change the destination. The evidence's `run.json` keeps the 284 events, 15,388 frames, and 30,776 controller-poll cycles. `loaded_state_sha256` is null on cold boot. Events start at zero and the captures count `retro_run` calls starting from one.
 
-| Insumo | SHA-256 |
+| Input | SHA-256 |
 | --- | --- |
-| DLL de Beetle Saturn v1.32.1 | `8e62cd7a513c0c0f95c8a18856a68cd37d09a43df3a68b898325ed8e79e1aaa0` |
-| Pista de datos del disco 1 inglés | `5b19031460c87b4773ef2cbd70ef2170bef41c1117ec8cefe27b2af1309205ec` |
-| Semilla local de RAM interna, 32.768 bytes | `4aa58364c1eaa4d0cee384894861caa4cde1e426aa2e43da7aa6b4e94379bc5b` |
+| Beetle Saturn v1.32.1 DLL | `8e62cd7a513c0c0f95c8a18856a68cd37d09a43df3a68b898325ed8e79e1aaa0` |
+| English disc 1 data track | `5b19031460c87b4773ef2cbd70ef2170bef41c1117ec8cefe27b2af1309205ec` |
+| Local internal-RAM seed, 32,768 bytes | `4aa58364c1eaa4d0cee384894861caa4cde1e426aa2e43da7aa6b4e94379bc5b` |
 
-El control desde el mismo estado de título y durante 160 fotogramas permaneció en el título sin entrada. Una pulsación de Start en el índice 20 durante seis fotogramas abrió Program. El núcleo consultó el botón 3 del mando del puerto 0 dos veces por fotograma y recibió doce lecturas activas de Start. El recorrido espera al título y usa Down para Continue y A para confirmar Continue, File 1 y Yes.
+Control from the same title state for 160 frames remained on the title with no input. A Start press at index 20 for six frames opened Program. The core polled button 3 of port 0's controller twice per frame and received twelve active Start reads. The walkthrough waits for the title and uses Down for Continue and A to confirm Continue, File 1, and Yes.
 
-Las muestras documentan el solapamiento en esos tres momentos del tutorial traducido. Las posiciones del menú varían con la cámara, la unidad y la fase de la acción. Esta verificación se limita a la disposición observada del submenú y su barra horizontal.
+The samples document the overlap at those three moments of the translated tutorial. Menu positions vary with the camera, the unit, and the action phase. This verification is limited to the observed layout of the submenu and its horizontal bar.
 
-## Corrección de presentación en desarrollo
+## Presentation fix in development
 
-La vista Mejorada reconoce el conjunto completo de barra, cinco pestañas, marco emergente, opciones y marcador por hashes y geometría. El marco emergente contiene una prolongación ornamental de 24 píxeles que invade la barra. Se recorta esa prolongación y se desplazan ocho píxeles hacia arriba el marco restante, las opciones y su resaltado. Se conserva la etiqueta nativa de la pestaña y el funcionamiento de selección.
+The Enhanced view recognizes the full set of the bar, five tabs, pop-up frame, options, and marker by hashes and geometry. The pop-up frame contains a 24-pixel ornamental extension that invades the bar. That extension is cropped and the remaining frame, options, and their highlight are shifted eight pixels upward. The native tab label and selection behavior are preserved.
 
-El renderer reconstruye un framebuffer auxiliar del host tras completar la lista VDP1. Rechaza la sustitución si hay comandos ambiguos, cambios de VRAM durante el dibujo, contenido retenido en la placa o diferencias fuera de la zona autorizada. La región solo se acepta si el framebuffer nativo terminado coincide antes con el raster auxiliar sin corregir. No escribe el framebuffer del huésped; Original conserva su presentación anterior.
+The renderer rebuilds an auxiliary host framebuffer after completing the VDP1 list. It rejects the substitution if there are ambiguous commands, VRAM changes during drawing, content retained on the board, or differences outside the authorized zone. The region is only accepted if the finished native framebuffer first matches the uncorrected auxiliary raster. It does not write to the guest framebuffer; Original mode keeps its previous presentation.
 
-En la build local se revisaron visualmente Move, Atk, Def, Info y End, Sumire con movimiento deshabilitado y una posición junto al borde del mapa. Las reproducciones compararon 2.965 hashes por fotograma entre Original y Mejorada, con cero bloques interpretados. La regresión `test_chapter1_widescreen_runtime.py` comprueba además que el centro solo cambie en el rectángulo del submenú y que la ruta de ataque/cámara mantenga sus hashes. Estos resultados no acreditan todos los menús de capítulos posteriores. El arreglo sigue en desarrollo y no está en los ZIP anteriores.
+In the local build, Move, Atk, Def, Info, and End were visually reviewed, Sumire with movement disabled and a position next to the map's edge. The playbacks compared 2,965 per-frame hashes between Original and Enhanced, with zero interpreted blocks. The `test_chapter1_widescreen_runtime.py` regression also checks that the center only changes within the submenu's rectangle and that the attack/camera path keeps its hashes. These results do not vouch for all menus in later chapters. The fix remains in development and is not in the previous ZIPs.

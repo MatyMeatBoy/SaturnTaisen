@@ -1,26 +1,26 @@
-# Sombra de la viñeta narrativa en el primer combate
+# Narrative vignette shadow in the first battle
 
-La viñeta con los tres antagonistas aparece en la referencia inglesa `local/work/sakura/battle-entry-ref-002500.png`. La misma imagen sigue activa en el estado `battle-entry-ref-3000.state`, que muestra una línea posterior. Se comprobó la segunda muestra mediante una captura nativa de 320×224 y un sondeo de capas del mismo fotograma. **La viñeta de combate no proyecta una sombra rectangular.**
+The vignette with the three antagonists appears in the English reference `local/work/sakura/battle-entry-ref-002500.png`. The same image is still active in the state `battle-entry-ref-3000.state`, which shows a later line. The second sample was checked via a native 320×224 capture and a layer probe of the same frame. **The battle vignette does not cast a rectangular shadow.**
 
-## Composición nativa
+## Native composition
 
-- La viñeta ocupa exactamente el rectángulo `x=16, y=8, ancho=288, alto=144` en VDP2 NBG3, capa 5 del sondeo. Su máscara contiene 41.472 píxeles válidos, todos dentro del rectángulo. El terreno queda visible a los lados y entre la imagen y el diálogo.
-- Los sprites de las unidades y el cuadro de diálogo con su remate oscuro aparecen en VDP1, capa 0. La viñeta y el cuadro son piezas distintas.
-- Los registros VDP2 del estado tienen `CLOFEN=007F`, `CLOFSL=0000` y `COAR=COAG=COAB=01FC`. Esto resta 4 a cada canal de la composición con saturación en 0. El ajuste afecta también a terreno lejos de la viñeta. `CCCTL=0001` habilita el cálculo de color de NBG0.
+- The vignette occupies exactly the rectangle `x=16, y=8, width=288, height=144` in VDP2 NBG3, layer 5 of the probe. Its mask contains 41,472 valid pixels, all inside the rectangle. Terrain remains visible on the sides and between the image and the dialogue.
+- The unit sprites and the dialogue box with its dark trim appear in VDP1, layer 0. The vignette and the box are separate pieces.
+- The state's VDP2 registers have `CLOFEN=007F`, `CLOFSL=0000`, and `COAR=COAG=COAB=01FC`. This subtracts 4 from each composition channel with saturation at 0. The adjustment also affects terrain far from the vignette. `CCCTL=0001` enables NBG0's color calculation.
 
-Se compararon las franjas donde caería una sombra desplazada hacia abajo y a la derecha, en coordenadas nativas y con límites finales exclusivos.
+The strips where a shadow shifted down and to the right would fall were compared, in native coordinates and with exclusive final bounds.
 
-| Región | Comparación RGB |
+| Region | RGB comparison |
 | --- | --- |
-| Derecha, X=304–308 e Y=8–152 | Los 576 píxeles coinciden con un plano visible tras el ajuste global de −4. |
-| Debajo, X=20–308 e Y=152–156 | 972 píxeles coinciden con el plano visible tras el ajuste global. Otros 97 coinciden con la mezcla de color NBG0 con razón 0. Los 83 restantes coinciden con el oscurecimiento VDP1 a la mitad después del ajuste global, en la huella localizada de un sprite de unidad entre X=235 y X=268. |
+| Right, X=304–308 and Y=8–152 | The 576 pixels match a visible plane after the global −4 adjustment. |
+| Below, X=20–308 and Y=152–156 | 972 pixels match the visible plane after the global adjustment. Another 97 match NBG0's color blend with ratio 0. The remaining 83 match VDP1's half-darkening after the global adjustment, in the localized footprint of a unit sprite between X=235 and X=268. |
 
-La huella VDP1 debajo de la imagen ocupa 17, 20, 22 y 24 píxeles en esas cuatro filas. Está localizada en la unidad que cruza la franja y no forma una banda rectangular bajo el cuadro.
+The VDP1 footprint below the image occupies 17, 20, 22, and 24 pixels in those four rows. It is localized to the unit that crosses the strip and does not form a rectangular band under the box.
 
-## Presentación Mejorada
+## Enhanced presentation
 
-Con el binario aislado de 643.320 bloques, los dos perfiles de prueba registraron `native` para este estado. El área central completa de 320×224 coincide píxel a píxel entre Original y Mejorada, y coinciden los 12 hashes del juego. Una captura previa del mismo estado con la traza `tactical` y la extensión lateral activa también coincide en cada píxel del centro. La ruta táctica amplía terreno a los lados. La escena observada no usa el pase de sombra del Zoom narrativo.
+With the isolated binary of 643,320 blocks, the two test profiles logged `native` for this state. The full central area of 320×224 matches pixel by pixel between Original and Enhanced, and the game's 12 hashes match. An earlier capture of the same state with the `tactical` trace and the side extension active also matches in every center pixel. The tactical route widens terrain on the sides. The observed scene does not use the narrative Zoom's shadow pass.
 
-Si se recompone esa viñeta en una presentación futura, corresponde conservar el borde sin sombra de la imagen, el remate del cuadro de diálogo y las sombras locales de las unidades. La prueba se limita a esta viñeta táctica del capítulo 1.
+If this vignette is recomposed in a future presentation, the shadowless edge of the image, the dialogue box's trim, and the units' local shadows should be preserved. The test is limited to this chapter 1 tactical vignette.
 
-Los artefactos están en `local/work/battle-story-inset-shadow`. `frame1/frame-000001.png` y `frame1/layer-layer{0..5}*.png` contienen la captura y los planos sincronizados. `check-frame1.py` repite el recuento. La captura panorámica anterior está en `local/work/chapter1-wide-state-coverage-v2/battle-entry-ref-3000/shot.png`.
+The artifacts are in `local/work/battle-story-inset-shadow`. `frame1/frame-000001.png` and `frame1/layer-layer{0..5}*.png` contain the capture and the synchronized planes. `check-frame1.py` repeats the count. The earlier panoramic capture is at `local/work/chapter1-wide-state-coverage-v2/battle-entry-ref-3000/shot.png`.

@@ -1,38 +1,38 @@
-# Importación de partidas de Saturn
+# Saturn save import
 
-Requisito autorizado: importar partidas de los distintos emuladores desde el launcher, conservar originales y probar puntos avanzados obtenidos públicamente. La interfaz del launcher permite elegir o pegar el archivo, detectar el formato, crear una copia, activarla y volver a la partida habitual. Se probó con pulsaciones reales de su modo de pruebas y después con una carga del episodio 8 desde el launcher; los originales permanecen intactos.
+Authorized requirement: import saves from various emulators via the launcher, preserve originals, and test advancement points obtained publicly. The launcher interface lets you choose or paste the file, detect the format, create a copy, activate it, and return to the usual save. Tested with real keystrokes from its test mode and then with an episode 8 load from the launcher; the originals remain intact.
 
-Primera herramienta local:
+First local tool:
 
 ```powershell
-python tools/import_saves.py partida.BUP
-python tools/import_saves.py partida.BUP --output local/importada.bin
+python tools/import_saves.py save.BUP
+python tools/import_saves.py save.BUP --output local/imported.bin
 ```
 
-Sin `--output` inspecciona; con él crea una memoria interna nueva de 32 KiB con los archivos `SAKURA___*`. Rechaza un destino existente. No mezcla automáticamente con la partida activa, no copia otros juegos y no cambia datos de progreso ni de RetroAchievements.
+Without `--output` it inspects; with it, it creates a new 32 KiB internal memory with the `SAKURA___*` files. It rejects an existing destination. It does not automatically merge with the active save, does not copy other games, and does not change progress or RetroAchievements data.
 
-## Formatos implementados
+## Implemented formats
 
-- BUP (`Vmem`), con tamaño declarado comprobado.
-- SAROO individual (`SSAVERAW`), con tamaño y CRC comprobados cuando existe CRC.
-- Memoria interna compacta de 32 KiB, bloques de 64 bytes.
-- Memoria externa compacta de 512 KiB, bloques de 512 bytes.
-- Volcados SH-2 de 64 KiB o 1 MiB: byte útil en posición impar.
+- BUP (`Vmem`), with declared size checked.
+- Individual SAROO (`SSAVERAW`), with size and CRC checked when a CRC exists.
+- Compact 32 KiB internal memory, 64-byte blocks.
+- Compact 512 KiB external memory, 512-byte blocks.
+- 64 KiB or 1 MiB SH-2 dumps: useful byte at odd position.
 
-El lector detecta el contenido, valida las cadenas de bloques y rechaza ciclos, solapamientos, tamaños imposibles y falta de espacio. Los estados de máquina y los formatos no reconocidos se rechazan. Todavía faltan, entre otros, XML/B64/SGM, contenedores SAROO completos y geometrías adicionales. No se afirma compatibilidad con todos los emuladores por aceptar una extensión.
+The reader detects the content, validates the block chains, and rejects cycles, overlaps, impossible sizes, and lack of space. Unrecognized machine states and formats are rejected. Still missing, among others: XML/B64/SGM, full SAROO containers, and additional geometries. Compatibility with all emulators is not claimed merely by accepting an extension.
 
-Se leyeron muestras públicas Mednafen, SSF y Yabause del repositorio del conversor de Knight0fDragon. Varias se decodifican; otras revelan formatos aún pendientes o cadenas que requieren investigación. El detalle se conserva en `local/logs/save-format-samples.json`. No confundir decodificar una muestra con verificar que la partida funciona dentro de Sakura.
+Public samples from Mednafen, SSF, and Yabause were read from Knight0fDragon's converter repository. Several decode; others reveal formats still pending or strings that require investigation. Details are kept in `local/logs/save-format-samples.json`. Decoding a sample must not be confused with verifying that the save works inside Sakura.
 
-## Partidas públicas de Sakura
+## Public Sakura saves
 
-[Colección de Bucanero](https://github.com/bucanero/saturn-save-tools/tree/main/docs/sakura-wars), con créditos a privateye y Pimpeaux. Son dos partidas completadas con finales de Sakura y Sumire; se preservan localmente. Las parejas BUP/SAROO contienen los mismos metadatos y 5708 bytes de datos. La primera, importada en una copia para la referencia con el disco inglés 2, muestra episodios 8, 9 y Finale en sus tres casillas. La carga y ejecución de esas escenas en AOT todavía se están verificando.
+[Bucanero's collection](https://github.com/bucanero/saturn-save-tools/tree/main/docs/sakura-wars), with credits to privateye and Pimpeaux. These are two completed saves with Sakura and Sumire endings; preserved locally. The BUP/SAROO pairs contain the same metadata and 5708 bytes of data. The first, imported into a copy for reference with English disc 2, shows episodes 8, 9, and Finale in its three slots. Loading and running those scenes in AOT are still being verified.
 
-Procedencia y hashes: `public-save-fixtures.json`. No se distribuyen las partidas en este repositorio.
+Provenance and hashes: `public-save-fixtures.json`. The saves are not distributed in this repository.
 
-## Referencias de formatos
+## Format references
 
-- [Saturn Save Tools](https://github.com/bucanero/saturn-save-tools), `include/bup_header.h`, `include/sgm-types.h` y `src/ss-converter.c`.
-- [SS Backup RAM Parser](https://github.com/hitomi2500/ss-save-parser), modo SH-2 con bytes intercalados y tablas de asignación.
-- [Saturn Save Converter](https://github.com/knight0fdragon/SaturnSaveConverter), implementaciones y muestras por emulador.
+- [Saturn Save Tools](https://github.com/bucanero/saturn-save-tools), `include/bup_header.h`, `include/sgm-types.h`, and `src/ss-converter.c`.
+- [SS Backup RAM Parser](https://github.com/hitomi2500/ss-save-parser), SH-2 mode with interleaved bytes and allocation tables.
+- [Saturn Save Converter](https://github.com/knight0fdragon/SaturnSaveConverter), per-emulator implementations and samples.
 
-El conversor del proyecto es código propio basado en las estructuras documentadas; no ejecuta los conversores descargados.
+The project's converter is original code based on the documented structures; it does not run the downloaded converters.

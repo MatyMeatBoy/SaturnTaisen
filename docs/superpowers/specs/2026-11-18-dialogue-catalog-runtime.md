@@ -1,21 +1,21 @@
-# Catálogo de diálogo precargado en runtime
+# Preloaded dialogue catalog at runtime
 
-Alcance solicitado por el propietario: usar los guiones del juego como datos internos precargados para el texto HD, conservando fuente/tamaño/espaciado aprobados, revelado, voces, elecciones y Original. Los textos y dumps del propietario permanecen en local/ y no se publican. Esta especificación concreta el trabajo T11 ya solicitado; no cambia el encuadre ni añade una selección nueva al jugador.
+Scope requested by the owner: use the game scripts as preloaded internal data for the HD text, preserving the approved font/size/spacing, reveal, voices, choices, and Original. The owner's texts and dumps stay in local/ and are not published. This spec concretizes the already-requested T11 work; it does not change the framing nor add a new selection for the player.
 
-## Evidencia
+## Evidence
 
-El disco1 inglés contiene56TBL distintos,2.242.176bytes y29.725registros con1.190.080bytes de texto. Hay29.723registros con un máximo de4filas/31columnas y sin controles desconocidos; los dos restantes tienen tabulador. Los mismos56TBL están en disco2. No modificar los tabuladores ni los prefijos sin probar su significado.
+Disc1 English contains 56 distinct TBL, 2,242,176 bytes, and 29,725 records with 1,190,080 bytes of text. There are 29,723 records with a maximum of 4 rows/31 columns and no unknown controls; the remaining two have a tab. The same 56 TBL are on disc2. Do not modify the tabs or prefixes without testing their meaning.
 
-En estados v9, la palabra BE32 de HighWRAM0606851C señala el comienzo del texto: Sumire50039 yMaría50064 en0100TBL, Iris10507 en0102TBL. Las tablas completas coinciden en LowWRAM00224000. El cursor del intérprete060685B4 es otro dato y no debe confundirse con el puntero de texto. En elecciones puede quedar el último texto procesado: no atribuir todas las opciones a ese único registro.
+In v9 states, the BE32 word at HighWRAM 0606851C marks the start of the text: Sumire 50039 and María 50064 in 0100TBL, Iris 10507 in 0102TBL. The full tables match at LowWRAM 00224000. The interpreter cursor 060685B4 is a different piece of data and must not be confused with the text pointer. In choices, the last processed text may remain: do not attribute all options to that single record.
 
-## Diseño
+## Design
 
-Preparar una caché inmutable desde los TBL del disco del usuario. Mantener bytes exactos para identificar la revisión, IDs/prefijos/offsets sin reinterpretar, y líneas UTF32 listas. Acotar lecturas y presupuesto antes de asignar. No generar ni incluir guiones originales en Git.
+Prepare an immutable cache from the user's disc TBL files. Keep exact bytes to identify the revision, IDs/prefixes/offsets unreinterpreted, and ready UTF32 lines. Bound reads and budget before allocating. Do not generate or include original scripts in Git.
 
-Capturar un testigo de contenido con cada framebuffer, antes de restaurar RAM de run-ahead. Solo resolver un registro si la tabla completa coincide y el puntero queda en su texto. No buscar por fragmentos ambiguos ni tratar una cabecera FILM residual como fase. La caché y los testigos son datos host, fuera del estado guest.
+Capture a content witness with each framebuffer, before restoring run-ahead RAM. Only resolve a record if the full table matches and the pointer lands within its text. Do not search by ambiguous fragments nor treat a residual FILM header as a phase. The cache and the witnesses are host data, outside guest state.
 
-La primera etapa prepara y verifica el vínculo; todavía no cambia el dibujo. La siguiente etapa usará líneas precargadas y máscaras de revelado nativas, conservando las placas exactas de glifos, colores, clips y posiciones actuales. Los casos no probados conservan el comportamiento existente. No llamar finalizada T11 por tener un observador.
+The first stage prepares and verifies the link; it does not yet change the drawing. The next stage will use preloaded lines and native reveal masks, keeping the exact current glyph plates, colors, clips, and positions. Untested cases keep the existing behavior. Do not call T11 finished just because an observer exists.
 
-## Invariantes
+## Invariants
 
-Windowsx64, C++20 y SDK fijado. Máximo16:9, escala entera, Original y Zoom aprobados intactos. Hashes guest y RGB nativo iguales antes/después; muestras GUI iguales mientras solo se añade el observador. Catálogo ligado a bytes de origen; una tabla de otra traducción no se acepta por compartir IDs. Sin trabajo auxiliar nuevo en headless o en Original antes de activar HD. Sin sincronización RA ni red dentro de este bloque.
+Windows x64, C++20, and a pinned SDK. Max 16:9, integer scaling, approved Original and Zoom intact. Guest hashes and native RGB equal before/after; GUI samples equal while only the observer is being added. Catalog tied to source bytes; a table from a different translation is not accepted just because it shares IDs. No new auxiliary work in headless or in Original before HD is enabled. No RA sync or networking within this block.

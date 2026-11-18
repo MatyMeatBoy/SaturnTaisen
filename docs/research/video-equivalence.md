@@ -1,15 +1,15 @@
-# Equivalencia de vídeos Saturn ↔ PC
+# Saturn ↔ PC video equivalence
 
-Alcance T20, solo inventario: sin sustituir ninguna reproducción. Las medidas salieron de ffprobe sobre los flujos FILM de ambos discos (extraídos por LBA/desplazamiento del inventario de escenas) y sobre los MPEG de PC extraídos del cabinet; ningún archivo original se versiona.
+T20 scope, inventory only: no playback is replaced. Measurements came from ffprobe on the FILM streams of both discs (extracted by LBA/offset from the scene inventory) and on the PC MPEGs extracted from the cabinet; no original file is version-controlled.
 
-| Dato | Valor |
+| Data | Value |
 | --- | --- |
-| Flujos FILM Saturn únicos | 51 (50 clips + stub de logo de 0,15 s) |
-| MPEG PC | 52 (MOVIE000–MOVIE120 sueltos + REDLOGO) |
-| Pares con orden consecutivo y duración ≤ 0,5 s | 44 |
-| Pares con duración distinta (revisar montaje) | 6: 743bce↔009 (0,65 s), d33904↔105 (0,98), b39c1e↔004 (1,06), ab833c↔011 (1,08), 7b1472↔102 (1,51), def7a6↔020 (3,73) |
-| PC sin pareja Saturn asignada | MOVIE118 (9,43 s, similar a MOVIE015), REDLOGO (5,32 s) |
+| Unique Saturn FILM streams | 51 (50 clips + 0.15 s logo stub) |
+| PC MPEGs | 52 (standalone MOVIE000–MOVIE120 + REDLOGO) |
+| Pairs with consecutive order and duration ≤ 0.5 s | 44 |
+| Pairs with differing duration (review edit) | 6: 743bce↔009 (0.65 s), d33904↔105 (0.98), b39c1e↔004 (1.06), ab833c↔011 (1.08), 7b1472↔102 (1.51), def7a6↔020 (3.73) |
+| PC with no assigned Saturn pair | MOVIE118 (9.43 s, similar to MOVIE015), REDLOGO (5.32 s) |
 
-Método: duración relativa, miniaturas grises de 24×12 en cinco puntos relativos y orden de flujo en `/SAKURA4` (flujo k ↔ `MOVIE00k`). Las miniaturas por sí solas son débiles (la paleta Saturn difiere), por lo que la asignación manda por duración y orden; no se declara montaje, audio ni subtítulos equivalentes.
+Method: relative duration, 24×12 grayscale thumbnails at five relative points, and stream order in `/SAKURA4` (stream k ↔ `MOVIE00k`). Thumbnails alone are weak (the Saturn palette differs), so the assignment is driven by duration and order; no equivalence is declared for edit, audio, or subtitles.
 
-Pendiente: revisar los seis pares, comparar audio/subtítulos/saltos y diseñar la decodificación MPEG-1/MP2 y la sincronía en el runtime. No integrado en test.4.
+Pending: review the six pairs, compare audio/subtitles/cuts, and design MPEG-1/MP2 decoding and runtime sync. Not integrated in test.4.

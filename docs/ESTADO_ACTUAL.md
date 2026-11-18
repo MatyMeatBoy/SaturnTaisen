@@ -1,102 +1,102 @@
-# Pendientes actuales — SaturnTaisenFirst
+# Current pending items — SaturnTaisenFirst
 
-Actualizado: 2026-11-18. Lista de desarrollo; no describe como disponibles cambios que aún no están en un ZIP. Método y entrada para otro bot: [HANDOFF](HANDOFF.md) · [Cola compartida](PENDIENTES.md).
+Updated: 2026-11-18. Development list; it does not describe as available changes that are not yet in a ZIP. Method and entry point for another bot: [HANDOFF](HANDOFF.md) · [Shared queue](PENDIENTES.md).
 
-La prioridad es Saturn. **v0.2.0-test.2 está publicada como prueba y su ZIP privado está preparado y verificado tras extracción.** Incluye las rutas panorámicas y el HD disponibles, con los huecos declarados. El capítulo 1 completo y la campaña siguen sin certificar; los paquetes anteriores se conservan intactos.
+Saturn is the priority. **v0.2.0-test.2 is published as a test build and its private ZIP is prepared and verified after extraction.** It includes the available widescreen paths and HD, with the declared gaps. The full chapter 1 and the campaign are still not certified; previous packages remain intact.
 
-## P0 — antes del siguiente ZIP de prueba
+## P0 — before the next test ZIP
 
-- [x] **Menús tácticos:** solapamiento corregido en Mejorado, cinco pestañas y rutas de confirmación/cámara verificadas; revisión independiente sin bloqueadores y patch actualizado. Incluido en test.1; las regresiones posteriores conservan el ajuste.
+- [x] **Tactical menus:** overlap fixed in Enhanced, five tabs and confirmation/camera paths verified; independent review with no blockers and patch updated. Included in test.1; later regressions preserve the fix.
 
-- [ ] **Ruta continua del capítulo 1:** alcanzar victoria del primer combate, salida, guardado y recarga sin saltos entre estados. Hay ataques y varios turnos probados; no hay todavía victoria/capítulo completo verificados.
+- [ ] **Continuous chapter 1 path:** reach victory of the first battle, exit, save, and reload without jumps between states. There are attacks and several turns tested; there is still no verified victory/complete chapter.
 
-- [x] **Descubrimiento AOT reproducible de K001–K019:** integrado en PR6. Las entradas EVT02 y EVT06 ampliaron el candidato a674.023 bloques. El candidato combinado con patches38–46 repite las cargas de capítulos2/4:21.501 hashes yRGB iguales a la referencia, cero interpretados. Esto no certifica sus combates ni toda la campaña; test.1 conserva su código anterior.
+- [x] **Reproducible AOT discovery of K001–K019:** integrated in PR6. The EVT02 and EVT06 entries extended the candidate to 674,023 blocks. The combined candidate with patches 38–46 repeats the chapter 2/4 loads: 21,501 hashes and RGB matches identical to the reference, zero interpreted. This does not certify their battles or the full campaign; test.1 keeps its earlier code.
 
-- [ ] **Panorámico por escena/transición:** cerrar huecos restantes hasta el final del capítulo, incluidos carga, intermedio, mapas, combate, fundidos y vuelta a título. El barrido de estados es cobertura parcial, no un recorrido completo.
+- [ ] **Widescreen per scene/transition:** close remaining gaps through the end of the chapter, including loading, interlude, maps, battle, fades, and return to title. The state sweep is partial coverage, not a complete playthrough.
 
-- [ ] **Carga:** pulir la fase/unión del mosaico generativo LOADING con el centro nativo. El layout panorámico funciona, pero el empalme sigue provisional.
+- [ ] **Loading:** polish the phase/join of the LOADING generative mosaic with the native center. The widescreen layout works, but the seam is still provisional.
 
-- [ ] **Texto HD de diálogo:** integrar catálogo precargado y sincronización con la página/revelado real. El catálogo inglés ya está exportado localmente; todavía no es la fuente de texto del runtime. Revisar todas las líneas, desbordes, cambio de página, vibración/mezcla con tinta nativa y centrado interior.
+- [ ] **HD dialogue text:** integrate preloaded catalog and synchronization with real pagination/reveal. The English catalog is already exported locally; it is not yet the runtime's text source. Review all lines, overflows, page changes, vibration/blending with native ink, and inner centering.
 
-- [x] **Opciones LIPS HD de dos/tres filas inglesas:** PR16/patch0045, placa de glifos y clip propio en Zoom/conjunto. Diez perfiles conservan240hashes por escena y el cierre sin residuos. Faltan vencimiento natural y cobertura del resto de elecciones; los casos probados están incluidos en test.2.
+- [x] **Two/three-row English HD LIPS choices:** PR16/patch0045, glyph plate and its own clip in Zoom/set. Ten profiles keep 240 hashes per scene and clean closing with no leftovers. Natural expiry and coverage of the remaining choices are still missing; the tested cases are included in test.2.
 
-- [ ] **Retratos/animaciones HD:** cubrir los pendientes del capítulo y mantener HD en parpadeo, boca, idle y mezclas VDP2. 91/123 identidades del capítulo tienen sustitución preparada;32 siguen pendientes. Total201/304. Las nuevas revisiones fijan base y ambas tiras por hash; solo las observaciones runtime declaradas acreditan animación. La mezcla blanca probada de25/32 está corregida en PR9; quedan otras identidades y combinaciones.
+- [ ] **HD portraits/animations:** cover the chapter's pending items and maintain HD in blinking, mouth, idle, and VDP2 blends. 91/123 chapter identities have a prepared replacement; 32 remain pending. Total 201/304. The new reviews pin base and both strips by hash; only declared runtime observations certify animation. The tested white blend for 25/32 is fixed in PR9; other identities and combinations remain.
 
-- [ ] **Vídeos PC:** extraer, identificar e integrar los equivalentes en el mod HD. No están acreditados como integrados. Preservar subtítulos/letras y sincronía; usar el área de imagen máxima en enteros.
+- [ ] **PC videos:** extract, identify, and integrate the equivalents in the HD mod. They are not certified as integrated. Preserve subtitles/lyrics and sync; use the maximum image area in integers.
 
-- [ ] **Cuerpos, poses, HUD y menús HD equivalentes:** completar matches verificables. Mantener proporción uniforme y eje cabeza/columna/torso; no deformar para llenar rectángulos ni promover candidatos ambiguos.
+- [ ] **Bodies, poses, HUD, and equivalent HD menus:** complete verifiable matches. Maintain uniform proportion and the head/spine/torso axis; do not deform to fill rectangles or promote ambiguous candidates.
 
-- [ ] **Revisión y empaquetado:** registrar árbol de patches, pasar regresiones finales y emitir paquete con identidad nueva. ZIP privado único con disco 1 inglés y HD procesado, sin instalación PC completa. Extraer en carpeta nueva y probar con PATH de Windows, sin toolchain/BIOS externa. Prueba física RX 6900 XT queda para destino.
+- [ ] **Review and packaging:** record the patch tree, run final regressions, and issue a package with a new identity. Single private ZIP with English disc 1 and processed HD, without a full PC installation. Extract into a new folder and test with Windows PATH, without an external toolchain/BIOS. Physical RX 6900 XT testing is left for the target.
 
-## Implementado/verificado en desarrollo, pendiente de entrega
+## Implemented/verified in development, pending delivery
 
-- [x] Escala entera y máximo 16:9; Original y Zoom separados. Se mantiene la geometría Zoom aprobada.
+- [x] Integer scale and maximum 16:9; Original and Zoom kept separate. The approved Zoom geometry is maintained.
 
-- [x] Extensión derecha Stage01 en coordenadas del mapa: franja generada de 39×224 en (656,24), anclada al scroll. Sprites fuera del límite se rasterizan aparte; unidades y efectos desconocidos se conservan.
+- [x] Stage01 right extension in map coordinates: generated 39×224 strip at (656,24), anchored to scroll. Sprites outside the boundary are rasterized separately; unknown units and effects are preserved.
 
-- [x] Fondos de mapa día/noche extendidos siguiendo sus filas nativas.
+- [x] Day/night map backgrounds extended following their native rows.
 
-- [x] Intermedio con paleta de logotipo: identidad secundaria validada contra la imagen IC01 presentada, evitando aceptar otras pantallas por una paleta compartida.
+- [x] Interlude with logo palette: secondary identity validated against the presented IC01 image, avoiding accepting other screens due to a shared palette.
 
-- [x] Anclaje sin desfase en ventanas impares, incluido 705×513.
+- [x] Offset-free anchoring on odd windows, including 705×513.
 
-- [x] Cuatro reproducciones de transición: 3.750 hashes por fotograma coincidentes entre Original/Mejorado, cero bloques interpretados. Son rutas desde estados locales.
+- [x] Four transition playbacks: 3,750 hashes per frame matching between Original/Enhanced, zero interpreted blocks. These are paths from local states.
 
-- [x] Ataques Sakura y Sumire probados contra el intérprete del mismo SDK; base local ampliada a 614.024 candidatos/bloques estáticos. Esto no mide cobertura ejecutada de toda la campaña.
+- [x] Sakura and Sumire attacks tested against the same SDK's interpreter; local base extended to 614,024 static candidates/blocks. This does not measure executed coverage of the whole campaign.
 
-- [x] Catálogo local de inglés: 29.725 registros por disco, 59.450 con contexto de ambos discos; offsets, IDs, bytes y hashes preservados. Datos de juego fuera de Git.
+- [x] Local English catalog: 29,725 records per disc, 59,450 with context from both discs; offsets, IDs, bytes, and hashes preserved. Game data outside Git.
 
-- [x] Auditoría de retratos: 191/304 identidades globales aceptadas, 113 pendientes; 382 variantes preparadas revisadas. Cobertura no equivale a todas las animaciones durante gameplay.
+- [x] Portrait audit: 191/304 global identities accepted, 113 pending; 382 prepared variants reviewed. Coverage does not equal all animations during gameplay.
 
-- [x] Empaquetadores: nombres únicos, rechazo de colisiones y comprobación real de dimensiones de la franja táctica; nunca incluir el contexto original del mapa en el release normal.
+- [x] Packagers: unique names, collision rejection, and real dimension check for the tactical strip; never include the original map context in the normal release.
 
-## P1 — completar Saturn y producto unificado
+## P1 — complete Saturn and unified product
 
-- [ ] Validar campaña completa, overlays de todos los capítulos y rutas alternativas, evitando cuelgues y pérdidas de progreso.
+- [ ] Validate the full campaign, overlays of all chapters, and alternate routes, avoiding hangs and progress loss.
 
-- [ ] Ambos discos obligatorios en el producto final; transición real y natural, con guardado/recarga antes y después.
+- [ ] Both discs mandatory in the final product; real and natural transition, with save/reload before and after.
 
-- [ ] Importar y contrastar partidas de formatos de emuladores; conservar fuentes y documentar formatos realmente probados.
+- [ ] Import and compare saves from emulator formats; keep sources and document formats actually tested.
 
-- [ ] Comprobar entradas LIPS y avance/salto de diálogo con animaciones, latencia y pulsaciones sostenidas frente al original.
+- [ ] Check LIPS inputs and dialogue advance/skip with animations, latency, and sustained presses against the original.
 
-- [ ] M30: validar perfil XInput documentado con el usuario y reconocimiento por GUID; comprobar Bluetooth/2.4G físicamente. DInput sigue sin informe. Mantener reasignación y compatibilidad general SDL3.
+- [ ] M30: validate the documented XInput profile with the user and GUID recognition; physically check Bluetooth/2.4G. DInput still has no report. Maintain remapping and general SDL3 compatibility.
 
-- [ ] RetroAchievements juego 16546: catálogo exacto, condiciones 1:1, badges locales, pestaña, popup temático, modo local offline y login/sync softcore. No anunciar soporte disponible: sigue pendiente. No adivinar condiciones ni sustituirlas por logros propios.
+- [ ] RetroAchievements game 16546: exact catalog, 1:1 conditions, local badges, tab, themed popup, offline local mode, and softcore login/sync. Do not announce support as available: it is still pending. Do not guess conditions or replace them with custom achievements.
 
-- [ ] Launcher y ajustes ingame: terminar navegación con mando, selector Original/Mejorado con ejemplos, pruebas de cierre tras juego listo y configuración persistente.
+- [ ] Launcher and in-game settings: finish controller navigation, Original/Enhanced selector with examples, exit tests once the game is ready, and persistent configuration.
 
-- [ ] Completar inventario de fondos por capítulo, empalmes mapa/novela y variantes de paleta; extender cada identidad correcta, sin un fondo global incorrecto entre escenas.
+- [ ] Complete background inventory per chapter, map/novel seams, and palette variants; extend each correct identity, with no incorrect global background between scenes.
 
-- [ ] Medir cargas reales y pausas de primer uso, caché fría/preparada, RAM/VRAM y GPU. Quitar el raster auxiliar panorámico del modo Original cuando sea seguro. No atribuir a SSD/multinúcleo mejoras sin medición.
+- [ ] Measure real loads and first-use pauses, cold/warm cache, RAM/VRAM, and GPU. Remove the auxiliary widescreen raster from Original mode when safe. Do not attribute improvements to SSD/multicore without measurement.
 
-- [ ] README, badges e informes ligados a la versión efectivamente publicada; nunca porcentajes de campaña inventados.
+- [ ] README, badges, and reports tied to the actually published version; never invented campaign percentages.
 
-## P2 — después de Saturn
+## P2 — after Saturn
 
-- [ ] Ruta jugable de PC y adaptación de la traducción inglesa Saturn.
+- [ ] Playable PC path and adaptation of the English Saturn translation.
 
-- [ ] Extensiones de fondos PC cuando se cargue ese mod, manteniendo proporciones.
+- [ ] PC background extensions when that mod is loaded, keeping proportions.
 
-- [ ] Parche español en paralelo, a cargo de Claude por nueva instrucción del usuario. Proporcionar ya los guiones ingleses estructurados y sus controles; no esperar al final de Saturn para esa preparación. Otros idiomas se decidirán después.
+- [ ] Parallel Spanish patch, handled by Claude per the user's new instruction. Already provide the structured English scripts and their controls; do not wait until the end of Saturn for that preparation. Other languages will be decided later.
 
-## Evidencia y documentos
+## Evidence and documents
 
-[Handoff](HANDOFF.md) · [Progresión](research/chapter1-battle-progress.md) · [Transiciones](research/chapter1-wide-transitions.md) · [Referencia independiente de menús](research/tactical-menu-independent-reference.md) · [PixelGen v1](research/pixelgen-v1.md) · [Catálogo](research/dialogue-catalog.md) · [Retratos](research/portrait-animation-coverage.md).
+[Handoff](HANDOFF.md) · [Progression](research/chapter1-battle-progress.md) · [Transitions](research/chapter1-wide-transitions.md) · [Independent menu reference](research/tactical-menu-independent-reference.md) · [PixelGen v1](research/pixelgen-v1.md) · [Catalog](research/dialogue-catalog.md) · [Portraits](research/portrait-animation-coverage.md).
 
-Actualizar esta lista al cerrar cada bloque. Marcar una tarea solo con la prueba correspondiente y anotar si el cambio sigue local o ya está empaquetado.
+Update this list when closing each block. Mark a task only with the corresponding evidence, and note whether the change is still local or already packaged.
 
-## Checkpoint integrado posterior a test.1
+## Integrated checkpoint after test.1
 
-Main `d7e94cd` incluye los patches hasta0046 y los201 retratos revisados. El informe [HD_PROGRESS](HD_PROGRESS.md) separa preparación, integración y verificación. No hay porcentaje global verificado mientras falten denominadores y pruebas de todas las categorías.
+Main `d7e94cd` includes patches up to 0046 and the 201 reviewed portraits. The [HD_PROGRESS](HD_PROGRESS.md) report separates preparation, integration, and verification. There is no verified global percentage while denominators and tests for all categories are still missing.
 
-- PR11/13: panel floral continuo, texto de borde Sumire/María, cursor izquierdo del mapa y entrada directa aZoom durante el fundido al comedor.
-- PR16: texto HD de elecciones inglesas de dos/tres filas.
-- PR18: primera película de New Game con fondo limpio antes/después y vídeo ampliado;6201hashes y seis RGB nativos conservados. Pétalos16:9 y tarjeta del episodio siguen T33.
-- PR15/17/19: diez matches adicionales revisados, preparados de191 a201; animaciones solo verificadas donde consta evidencia.
+- PR11/13: continuous floral panel, Sumire/María border text, left map cursor, and direct Zoom entry during the dining-room fade.
+- PR16: HD text for two/three-row English choices.
+- PR18: first New Game film with clean background before/after and extended video; 6201 hashes and six native RGB preserved. 16:9 petals and episode card are still T33.
+- PR15/17/19: ten additional reviewed matches, prepared from 191 to 201; animations only verified where evidence is recorded.
 
-El candidato combinado de674.023 bloques está en `local/build/polish-test2-final/sakura.exe` del propietario, SHA256 `a12b26d1990cabf9c54da562e4f05a9c842c7078d1b5c8ae3fe935a426c91418`. Sus cargas de capítulo2/4 pasan9501/12000fotogramas respectivamente. Está incluido en test.2 y su traslado está verificado; ver el recibo de la entrega. Los vídeos PC, cuerpos/HUD equivalentes y RetroAchievements continúan pendientes.
+The combined candidate of 674,023 blocks is in the owner's `local/build/polish-test2-final/sakura.exe`, SHA256 `a12b26d1990cabf9c54da562e4f05a9c842c7078d1b5c8ae3fe935a426c91418`. Its chapter 2/4 loads pass 9501/12000 frames respectively. It is included in test.2 and its transfer is verified; see the delivery receipt. PC videos, equivalent bodies/HUD, and RetroAchievements remain pending.
 
-## Entrega test.2
+## test.2 delivery
 
-Release público317.215.196bytes y ZIP personal725.331.460bytes, con fuente limpia92edea7. Las últimas correcciones hasta0046 y el preparado201 están incluidos. Extracción nueva: launcher, escenaHD, combate y primera película6201frames con PATH Windows;402variantes sin fallos y cero interpretados. [Validación](releases/v0.2.0-test.2-validation.json). Test.1 y paquetes anteriores permanecen intactos. Esto no cierraT02/T03 niT26.
+Public release 317,215,196 bytes and personal ZIP 725,331,460 bytes, with clean source 92edea7. The latest fixes up to 0046 and the 201 prepared are included. New extraction: launcher, HD scene, battle, and first film 6201 frames with Windows PATH; 402 variants with no failures and zero interpreted. [Validation](releases/v0.2.0-test.2-validation.json). Test.1 and previous packages remain intact. This does not close T02/T03 or T26.

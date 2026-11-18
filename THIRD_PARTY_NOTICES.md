@@ -1,14 +1,14 @@
-# Componentes y licencias
+# Components and licenses
 
-SaturnTaisenFirst distribuye su código de integración bajo GPL-3.0-only. La investigación y las modificaciones no sustituyen las licencias de sus dependencias.
+SaturnTaisenFirst distributes its integration code under GPL-3.0-only. The research and modifications do not replace the licenses of its dependencies.
 
-- **satrecomp**, Tommy McLeroy, GPL-3.0-only. Commit fijado y parches en `config/dependencies.json`.
-- **recomp-common**, Tommy McLeroy, GPL-3.0-only; algunas partes del launcher proceden de **wiiparty-recomp**, arelkair, GPL-3.0-or-later. Conservar sus avisos de autor y `THIRD_PARTY_NOTICES.md` al distribuir el launcher.
-- **Dear ImGui**, Omar Cornut y colaboradores, MIT. Versión y hash fijados por el CMake del launcher.
-- **SDL3**, autores de SDL, zlib. Se distribuye su licencia junto a la biblioteca.
-- **Inter**, Rasmus Andersson y colaboradores, SIL Open Font License 1.1. La fuente se integra en el launcher; incluir su licencia.
-- **zlib**, Jean-loup Gailly y Mark Adler, zlib.
-- **GNU libiconv**, autores de GNU, LGPL; biblioteca dinámica y textos `COPYING`/`COPYING.LIB` incluidos cuando la requiere SDL.
-- **Python**, Python Software Foundation License; **PyInstaller**, GPL con excepción para binarios empaquetados. El importador empaquetado lleva sus avisos en la carpeta de licencias de la distribución.
+- **satrecomp**, Tommy McLeroy, GPL-3.0-only. Pinned commit and patches in `config/dependencies.json`.
+- **recomp-common**, Tommy McLeroy, GPL-3.0-only; some parts of the launcher come from **wiiparty-recomp**, arelkair, GPL-3.0-or-later. Keep their author notices and `THIRD_PARTY_NOTICES.md` when distributing the launcher.
+- **Dear ImGui**, Omar Cornut and contributors, MIT. Version and hash pinned by the launcher's CMake.
+- **SDL3**, SDL authors, zlib. Its license is distributed alongside the library.
+- **Inter**, Rasmus Andersson and contributors, SIL Open Font License 1.1. The font is embedded in the launcher; include its license.
+- **zlib**, Jean-loup Gailly and Mark Adler, zlib.
+- **GNU libiconv**, GNU authors, LGPL; dynamic library and `COPYING`/`COPYING.LIB` texts included when required by SDL.
+- **Python**, Python Software Foundation License; **PyInstaller**, GPL with exception for packaged binaries. The packaged importer carries its notices in the distribution's licenses folder.
 
-El paquete de desarrollo debe conservar los textos de licencia de los componentes que incluya. El repositorio contiene las fuentes propias y parches reproducibles; los recursos originales del juego, BIOS, dumps y partidas permanecen locales. Sakura Wars y sus imágenes pertenecen a sus titulares; el proyecto no está afiliado a SEGA.
+The development package must keep the license texts of the components it includes. The repository contains its own sources and reproducible patches; the game's original assets, BIOS, dumps, and saves remain local. Sakura Wars and its images belong to their rights holders; the project is not affiliated with SEGA.

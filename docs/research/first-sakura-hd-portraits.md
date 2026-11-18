@@ -1,28 +1,28 @@
-# Primeros retratos de Sakura en HD
+# First HD portraits of Sakura
 
-La revisión aprobó las identidades Saturn `0013` y `0014` con los atlas PC 18 y 19. El parecido de número sirvió para localizar los candidatos. La aprobación se basó en la expresión, el vestuario rosa, la posición de los rasgos y la comparación de las tres regiones del atlas.
+The review approved Saturn identities `0013` and `0014` with PC atlases 18 and 19. The matching numbers helped locate the candidates. The approval was based on the expression, the pink outfit, the position of the features, and comparison of the atlas's three regions.
 
-| Identidad Saturn | Atlas PC | RMSE de la base | Primera tira | Segunda tira |
+| Saturn identity | PC atlas | Base RMSE | First strip | Second strip |
 | --- | ---: | ---: | ---: | ---: |
-| `0013` | 18 | 0,058240 | 0,047862 | 0,043342 |
-| `0014` | 19 | 0,057876 | 0,047865 | 0,042901 |
+| `0013` | 18 | 0.058240 | 0.047862 | 0.043342 |
+| `0014` | 19 | 0.057876 | 0.047865 | 0.042901 |
 
-Las puntuaciones comparan la cuadrícula Saturn de 40×80 con una reducción de área del atlas PC de 80×160 para el análisis. Intercambiar 18 y 19 empeora las tres regiones de cada identidad. Los atlas de vestuario gris 54 y 55 comparten las tiras correspondientes, con diferencia visible en el vestuario de la base. Desplazar cualquiera de los dos candidatos aprobados un píxel en cualquier eje empeoró el ajuste regional. Las variantes conservan el encuadre con `dx=0` y `dy=0`, densidades enteras 1× y 2×, y la máscara Saturn exacta de 3.200 y 12.800 píxeles opacos respectivamente.
+The scores compare the 40×80 Saturn grid against an area-reduced 80×160 PC atlas for the analysis. Swapping 18 and 19 worsens all three regions for each identity. Gray-outfit atlases 54 and 55 share the corresponding strips, with a visible difference in the base outfit. Shifting either approved candidate by one pixel on any axis worsened the regional fit. The variants keep the framing with `dx=0` and `dy=0`, integer densities 1× and 2×, and the exact Saturn mask of 3,200 and 12,800 opaque pixels respectively.
 
-## Preparación y reproducción
+## Preparation and playback
 
-El registro [de revisiones](../../config/hd-portrait-reviewed.json) fija los hashes del archivo KAO, los atlas Saturn y los píxeles RGBA PC y preparados. La herramienta verifica el registro, copia las imágenes y los índices del proyecto de origen y publica un proyecto nuevo. Si se solicita la exportación, el pack se crea dentro del proyecto nuevo.
+The [review registry](../../config/hd-portrait-reviewed.json) fixes the KAO file hashes, the Saturn atlases, and the RGBA PC pixels, both raw and prepared. The tool verifies the registry, copies the images and indices from the source project, and publishes a new project. If export is requested, the pack is created inside the new project.
 
 ```powershell
 python tools/apply_reviewed_hd_portraits.py --output-project local/work/sakura-hd-193/project.json --export
 ```
 
-En un checkout separado se puede indicar `SAKURA_OWNER_ROOT` y usar una ruta absoluta de salida bajo su `local/work`. El comando usa el exportador existente y deja el proyecto original listo para otros flujos de revisión. `match_hd_assets.py --workspace local/work/sakura-hd-193` abre el proyecto con la opción `--serve`. El checkpoint privado de 193 retratos conserva los 19 fondos preparados; el paquete entregado v0.1.2 sigue documentado con 191 retratos.
+In a separate checkout, `SAKURA_OWNER_ROOT` can be set and an absolute output path used under its `local/work`. The command uses the existing exporter and leaves the original project ready for other review flows. `match_hd_assets.py --workspace local/work/sakura-hd-193` opens the project with the `--serve` option. The private 193-portrait checkpoint keeps the 19 prepared backgrounds; the delivered v0.1.2 package is still documented with 191 portraits.
 
-## Evidencia de ejecución
+## Execution evidence
 
-La build v0.2.0-test.1 reconoció `0013` y `0014` en estados nativos del capítulo 1 a 2560×1440, con densidad 2. Se compararon 420 fotogramas por identidad con los packs de 191 y 193. Los hashes del juego y seis muestras RGB nativas coincidieron. Los cambios de GUI del fotograma 8 quedaron dentro de la caja del retrato, en el rectángulo semiabierto (404, 996) a (644, 1284). Ambos ensayos terminaron con cero bloques interpretados.
+Build v0.2.0-test.1 recognized `0013` and `0014` in native chapter 1 states at 2560×1440, density 2. 420 frames per identity were compared against the 191 and 193 packs. The game's hashes and six native RGB samples matched. The GUI changes on frame 8 fell within the portrait box, in the half-open rectangle (404, 996) to (644, 1284). Both trials ended with zero interpreted blocks.
 
-La ejecución observó la base de ambos retratos. La revisión de los PNG verificó la presencia, el ajuste y la máscara de ambas tiras. La sustitución durante el parpadeo, el movimiento de la boca y su combinación queda por observar. El checkpoint abarca 193/304 identidades globales y 83/123 del capítulo 1, con 386 variantes válidas y 111 identidades pendientes en el catálogo.
+The run observed the base of both portraits. The PNG review verified the presence, fit and mask of both strips. Substitution during blinking, mouth movement, and their combination remains to be observed. The checkpoint covers 193/304 global identities and 83/123 from chapter 1, with 386 valid variants and 111 identities still pending in the catalog.
 
-La huella del pack preparado es `24286afce17baeb43d0744b0f4b8171c8d044af02462d660ff71da2272d287b5`. Las capturas, los estados y el recibo local de validación se conservan fuera de Git.
+The prepared pack's fingerprint is `24286afce17baeb43d0744b0f4b8171c8d044af02462d660ff71da2272d287b5`. Captures, states and the local validation receipt are kept outside Git.
