@@ -90,6 +90,14 @@
       "evidence_frame": 164250,
       "score": 0.95,
       "margin": 0.27
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1120.SPR",
+      "pc_sha256": "1442d5d1c5b83bffb6d6a8a7000ad833d03ff7641e47583608fabe21fb0326f4",
+      "pc_image_index": 0,
+      "evidence_frame": 189250,
+      "score": 0.94,
+      "margin": 0.09
     }
   ]
 }
