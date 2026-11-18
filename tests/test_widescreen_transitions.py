@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -9,8 +10,9 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 EXE = Path(os.environ.get('SAKURA_TRANSITION_TEST_EXE', ROOT / 'local/build/sakura/sakura.exe'))
-DISC = ROOT / 'local/prepared/disc1/game.cue'
-WORK = ROOT / 'local/work'
+OWNER = Path(os.environ.get('SAKURA_OWNER_ROOT', ROOT))
+DISC = OWNER / 'local/prepared/disc1/game.cue'
+WORK = OWNER / 'local/work'
 SEED = WORK / 'sakura/prebattle-immutable-seed.bin'
 
 
@@ -19,6 +21,9 @@ SEED = WORK / 'sakura/prebattle-immutable-seed.bin'
 class WidescreenTransitionTests(unittest.TestCase):
     def capture(self, folder, state, movie, frames, mode):
         folder.mkdir()
+        art = OWNER / 'local/releases/SaturnTaisenFirst-v0.2.0-test.1-win64/art'
+        if art.is_dir():
+            shutil.copytree(art, folder / 'art')
         settings = folder / 'settings.ini'
         settings.write_text(
             f'[features]\npreset=custom\npresentation_mode={mode}\nscene_view=1\n'
@@ -68,6 +73,11 @@ class WidescreenTransitionTests(unittest.TestCase):
         self.assertTrue(layouts)
         self.assertEqual((layouts[0], layouts[-1]), (start_layout, end_layout), layouts)
         return layouts
+
+    def test_cursor_at_left_edge_keeps_extended_map(self):
+        layouts = self.replay('sakura/map-room.state', 'map-left-edge.movie',
+                              200, 'row-gradient', 'row-gradient')
+        self.assertEqual(layouts, ['row-gradient'])
 
     def test_opening_skip_reaches_title(self):
         self.replay('intro-enhanced/intro1799.state', 'chapter1-opening-skip.movie',

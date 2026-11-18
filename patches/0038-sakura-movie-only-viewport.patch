@@ -1,0 +1,13 @@
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -115,6 +115,8 @@
+         frame+=layer==0 && y>=153;
+     }
+     if(floral<1000 || picture+actor<20000 || frame<100 || right<left || bottom<top) return {};
+-    return {true,movie>30000 && actor==0 && text==0,left,top,right-left+1,bottom-top+1};
++    // Empty dialogue ornaments are not part of the witnessed movie viewport.
++    if(movie>30000 && actor==0 && text==0) return {true,true,16,8,288,144};
++    return {true,false,left,top,right-left+1,bottom-top+1};
+ }
+ }

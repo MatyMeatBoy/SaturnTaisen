@@ -70,3 +70,33 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 - **Otro worker:** elegir otra fila sin archivos compartidos con la anterior; si requiere renderer, reservar antes el archivo en la descripción de la PR y avisar al coordinador.
 
 Al abrir PR indicar ID, archivos propios, prueba y limitaciones. No marcar «hecho» por una propuesta o por compilar. El coordinador actualiza a «integrado» después del merge. Las tareas `local` necesitan datos del propietario; las `físico` dependen de pruebas en su hardware. Ninguna tarea de PC jugable desplaza Saturn.
+
+## Reproducciones visuales nuevas
+
+- T34: viewport de vídeo de novela: corregido en desarrollo para usar 288x144,16,8; fixture pasa a1440p en x8. Falta comprobar runtime y empaquetar. No resuelve todavía cajas vacías antes/después del vídeo.
+- Viñetas narrativas dentro del combate: auditoría de sombra original en curso; conservar composición por escena, sin imponer sombra de novela.
+- Elecciones LIPS: texto HD pendiente T04; no considerar completo por el diálogo HD.
+
+- T35: continuidad floral del relleno de diálogo en Zoom (reportada por el propietario). Diagnóstico: `Presentation.foreground` guarda RGB final opaco para source<5; al separar/escalar caja se transporta el NBG3 nativo mezclado a otra posición. Investigar captura de top/second/ratio y recomposición sobre el fondo extendido en coordenadas de destino, con aritmética Saturn exacta. No sustituir por opacidad estimada, no regenerar fondos aprobados, preservar Original, marco, retrato y glifos. Pendiente evidencia del estado y prueba de runtime; no incluido en test.1.
+
+- T36: transiciones widescreen: retirar marco rosa host durante fallback de Mejorado (patch39 en desarrollo, falta runtime). Extender también fondos y efectos de transición manteniendo fase/paleta; ocultar el borde no equivale a resolver el fallback nativo ni las flores/pétalos horneados. Revisar entrada muñeco, título/New Game, mapa↔novela y cambios de escena.
+
+- T37: cobertura HD de texto y calidad de los guiones base de traducción. Caso Sumire: registro50039, índice473 de /SAKURA1/0100TBL.BIN, tres filas de27/30/5 caracteres, sin controles desconocidos; la fila intermedia está íntegra en catálogo pero sigue SD en la captura. No corregir prosa ni reescribir la traducción de Claude para ocultar un rechazo de render. Auditoría estructural actual:112 tablas físicas/59450 registros, SHA del JSONL90c3c35f2661f1c8ac7d5bac512655b02d64ea9844a3ca2c17d93230b0ac3684; dos tabuladores no resueltos en el disco1. Falta cobertura visual/elecciones/menús y validación de guiones editados sin sobrescribir target_es.
+
+  T37, segundo testigo: María, registro50064/índice498 de0100TBL, fila3 terminaCP1252 0x85 (puntos suspensivos), texto íntegro y sin controles desconocidos. Sumire reproducida: w enX296,Y172 tiene dos píxeles visibles enX304,Y176–177; `NarrativeInkFits` rechaza la fila completa porX<304. Allí también hay bisel VDP1: no ensanchar ni borrar con underSprites a ciegas. Preparar placa exacta y encaje HD, comprobar María antes de atribuir causa compartida.
+
+- T38: avance de diálogo con voz: comparar A/B/C con pulsos sostenidos y releases, texto revelándose/completo y voz activa/terminada; contrastar AOT/intérprete y referencia Saturn independiente antes de declarar comportamiento original. Medir sondeoSMPC y esperaCD/audio, no asumir cargaSSD. El MessageSkip porR descrito por Kayama15048 es exclusivoDreamcast y posterior a completar, no evidencia de avance manualSaturn. No cambiar temporizadores ni forzar fin de voz para ocultar fallo. Auditoría asignada a wide_transitions tras cerrar filasHD.
+
+### Bloque visual en revisión
+
+- Patches38–41: crop de película288x144; sin bordehostOriginal enMejorado; panel exacto y continuidad floral; mapa con cursorizquierdo verificado200frames; helper deZoom en fundidos con test sintético, aún falta replay integrado.
+- T35 panel: implementado y verificado en office-return-3000 (12hashes iguales, región superior intacta); no incluido en ZIPtest.1.
+- T36 mapa cursorizquierdo: reproducción before/after confirmada; transición mapa↔novela completa sigue en validación.
+- Limpieza: retirados dos candidatos exe sustituidos (1.604.792.320bytes), hashes y sustitutos en local/work/retired-test-binaries.json. Conservar estados y releases.
+
+### Texto de borde: corrección validada
+
+- T37: patch42 convierte las filas reportadas de Sumire/María. PlacaVDP1 con primer píxel anterior y hasta dos glifos escritores; invalidación por tercer escritor, sobreescritura no glifo o escritura guest. Las filas con tinta compartida requieren borrado atómico. Se conserva el clipHD original.
+- Pruebas:12hashes por caso iguales entreOriginal,MejoradoHD,MejoradoSD ytest.1Original; RGBOriginalidéntico; AOTestricto0interpretados. Ver hd-text-row-rejections.md. Cobertura de eleccionesLIPS y todoslosguiones sigue pendiente, no declarar todoeltextoHD completo.
+- T38: auditoría voz cerrada para primera línea deSumire: Binterrumpe/avanzaantesqueA/C; inputsSMPC recibidos,460hashes+PCM porbotón igualesAOT/intérprete. FaltaSaturnindependiente.
+- Patch43 contiene solamente primitivas probadas de mezcla exterior mapa/floral; todavía no consume ese helper elruntime. No presentar como arreglo de todaslastransiciones.
