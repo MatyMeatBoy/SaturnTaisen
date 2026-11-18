@@ -69,3 +69,5 @@
 !/assets/generated/tactical-extensions/*.png
 !/assets/generated/tactical-extensions/*.json
 !/assets/generated/tactical-extensions/*.md
+
+!/docs/releases/v0.2.0-test.4-validation.json
