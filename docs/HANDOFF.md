@@ -43,6 +43,8 @@ Nunca publicar discos, BIOS, SPR/FILM/MPG originales, guiones, estados ni imáge
 
 ## Método de depuración y validación
 
+T02: el cierre del primer combate reveló dos rutinas copiadas a06002000. El estado anterior contiene238bytes de/SAKURA; al ejecutar,0SLG los reemplaza por206bytes. La prueba WATCH del instante de ejecución es la atribución correcta para el fallo06002042. El registro de ambas variantes produce674.182bloques; candidato aisladoe7dd1c0… pasó Save Complete/Resume con3.000hashes y15RGB iguales al intérprete y0interpretados. La cadena109.740frames sigue en prueba. Ver [seguimiento del combate](research/chapter1-victory-followup.md); no usar el candidato674.110 como corrección ni modificar test.2.
+
 Reproducir antes de cambiar. Guardar estado inicial, copia de SRAM, pulsaciones/movie, settings, ejecutable/hash y registros. Aislar perfiles y eliminar variables `SATRECOMP_*` heredadas salvo las elegidas explícitamente. Usar `SATRECOMP_STRICT_NATIVE=1` y comprobar cero bloques interpretados para rutas AOT.
 
 Separar tres preguntas: ¿falla la lógica nativa?, ¿falla la presentación del host?, ¿es un defecto del disco traducido? Comparar Original/Mejorado y, cuando importe, AOT/intérprete del mismo SDK. Esa última comparación **no es independiente**: pueden compartir un defecto de hardware emulado. Beetle Saturn se ha usado únicamente como oráculo de diagnóstico; no sustituye al runtime AOT del proyecto.

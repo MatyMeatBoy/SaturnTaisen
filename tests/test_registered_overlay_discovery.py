@@ -6,6 +6,22 @@ from tools.discover_registered_overlays import registered_module
 
 
 class RegisteredOverlayTests(unittest.TestCase):
+    def test_registered_slice_checks_whole_source_and_emits_only_copied_bytes(self):
+        raw,spec=self.fixture()
+        spec['EVT02'].update(slice_offset=8,slice_bytes=8,base=0x06002000)
+        module=registered_module('EVT02',raw,'disc1',spec)
+        self.assertEqual(module['raw'],raw[8:16])
+        self.assertEqual(module['bytes'],8)
+        self.assertEqual(module['source_bytes'],len(raw))
+        self.assertEqual(module['source_sha256'],hashlib.sha256(raw).hexdigest())
+        self.assertEqual(module['sha256'],hashlib.sha256(raw[8:16]).hexdigest())
+        altered=raw[:-1]+bytes([raw[-1]^1])
+        with self.assertRaises(ValueError):registered_module('EVT02',altered,'disc1',spec)
+        for offset,size in [(-2,8),(1,8),(8,0),(8,7),(30,8)]:
+            spec['EVT02'].update(slice_offset=offset,slice_bytes=size)
+            with self.subTest(offset=offset,size=size),self.assertRaises(ValueError):
+                registered_module('EVT02',raw,'disc1',spec)
+
     def fixture(self):
         raw=bytes.fromhex('000b0009')+bytes(28)
         spec={'EVT02':dict(file='/SAKURA2/EVT02.BIN',base=0x204000,bytes=len(raw),
