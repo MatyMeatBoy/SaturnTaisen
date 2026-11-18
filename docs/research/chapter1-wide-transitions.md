@@ -42,7 +42,7 @@ Para verificar una futura sustitución, repetir la ruta nocturna en HD y Origina
 | Vista Zoom y encuadre original | El texto HD sigue la transformación del panel y queda dentro de sus bordes. El diálogo inferior conserva su propia posición. |
 | Confirmación y vencimiento del temporizador | El texto de opciones desaparece con el cuadro. La respuesta, la selección y los hashes de todos los fotogramas coinciden entre Original y Mejorada. |
 
-La placa aún no está implementada. El replay automatizado actual comprueba layout y paridad del estado. La comparación HD/Original de las capturas 8, 32 y 230 documenta el punto de partida para probar la sustitución.
+Estado de la auditoría inicial: la placa aún no estaba implementada. La implementación posterior y sus pruebas reales están en [texto HD de elecciones](chapter1-choice-hd.md). El replay automatizado actual comprueba layout y paridad del estado. La comparación HD/Original de las capturas 8, 32 y 230 documenta el punto de partida para probar la sustitución.
 
 ## Correcciones posteriores a la auditoría
 

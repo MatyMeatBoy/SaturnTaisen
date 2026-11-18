@@ -1,0 +1,276 @@
+diff --git a/port/choice_text.h b/port/choice_text.h
+new file mode 100644
+index 0000000..6076a37
+--- /dev/null
++++ b/port/choice_text.h
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "glyph_text.h"
++
++#include <algorithm>
++#include <array>
++#include <optional>
++#include <span>
++#include <vector>
++
++namespace port {
++
++struct UiTextLine {
++    int x=0,y=0;
++    std::u32string text;
++    uint32_t color=0xFF181818;
++};
++struct ChoiceTextMatch {
++    std::vector<UiTextLine> lines;
++    std::vector<size_t> ink;
++};
++
++inline std::array<int,4> ChoiceTextClip(int x,int y,int scale,int cropX,int cropY) {
++    return {x+(16-cropX)*scale,y+(48-cropY)*scale,
++            x+(304-cropX)*scale,y+(140-cropY)*scale};
++}
++
++// The caller supplies the verified, untranslated English glyph atlas and the
++// metadata of the same displayed framebuffer. All rows share one native panel.
++template<typename Sprite,typename Plate>
++std::optional<ChoiceTextMatch> MatchChoiceText(std::span<const Sprite> sprites,std::span<const uint8_t> atlas,
++    std::span<const uint8_t> source,std::span<const uint32_t> pixels,std::span<const Plate> plate) {
++    constexpr size_t frameSize=320*224;
++    if(sprites.size()>4096 || atlas.size()!=32768 || source.size()!=frameSize ||
++       pixels.size()!=frameSize || plate.size()!=frameSize)return {};
++
++    struct Cell {int x;char32_t code;};
++    struct Row {
++        std::array<Cell,32> cells{};
++        unsigned count=0,shade=766;
++        uint16_t bank=0;
++        uint32_t color=0;
++    };
++    constexpr std::array<int,5> nativeRows{54,62,78,94,102};
++    std::array<Row,nativeRows.size()> rows{};
++    unsigned clocks=0;
++    std::array<bool,4097> matchedOwners{};
++    ChoiceTextMatch result;
++    for(size_t index=0;index<sprites.size();++index) {
++        const auto& sprite=sprites[index];
++        const auto& cmd=sprite.command.words;
++        if((cmd[0]&15)==1 && cmd[2]==0xA0 && cmd[3]==0xC500 &&
++           cmd[5]==0x0110 && sprite.x==160 && sprite.y==32 && sprite.pixels.size()==128)++clocks;
++        if((cmd[0]&0x3F) || cmd[2]!=0x80 || (cmd[3]!=0xC510 && cmd[3]!=0xC570) ||
++           cmd[5]!=0x0210 || sprite.y<48 || sprite.y>=140)continue;
++        const auto rowPos=std::find(nativeRows.begin(),nativeRows.end(),sprite.y);
++        if(rowPos==nativeRows.end() || sprite.x<40 || sprite.x>288)return {};
++        auto& row=rows[size_t(rowPos-nativeRows.begin())];
++        if(row.count==row.cells.size() || (row.bank && row.bank!=cmd[3]))return {};
++        const auto tile=std::span<const uint8_t>(sprite.pixels);
++        const auto code=DecodeCodepoint(atlas,tile);
++        if(!code)return {};
++        row.bank=cmd[3];
++        const size_t owner=index+1;
++        matchedOwners[owner]=true;
++        row.cells[row.count++]={sprite.x,code};
++        for(int py=0;py<16;++py)for(int px=0;px<16;++px) {
++            const auto packed=tile[py*8+px/2];
++            if(!(px&1?packed&15:packed>>4))continue;
++            const int x=sprite.x+px,y=sprite.y+py;
++            if(x<40 || x>=288 || y<48 || y>=140)return {};
++            const size_t at=size_t(y)*320+x;
++            if(source[at]!=0 || !plate[at].owner ||
++               (plate[at].owner!=owner && plate[at].underOwner!=owner))return {};
++            result.ink.push_back(at);
++            const uint32_t color=pixels[at];
++            const unsigned shade=(color&255)+((color>>8)&255)+((color>>16)&255);
++            if(shade<row.shade) {row.shade=shade;row.color=color|0xFF000000;}
++        }
++    }
++    const bool two=rows[1].count && rows[3].count && !rows[0].count && !rows[2].count && !rows[4].count;
++    const bool three=rows[0].count && rows[2].count && rows[4].count && !rows[1].count && !rows[3].count;
++    if(clocks!=1 || (!two && !three))return {};
++    unsigned selected=0;
++    for(size_t i=0;i<rows.size();++i) {
++        auto& row=rows[i];
++        if(!row.count)continue;
++        if(row.shade==766 || (row.bank==0xC570 && ++selected>1))return {};
++        const auto end=row.cells.begin()+row.count;
++        std::sort(row.cells.begin(),end,[](const auto& a,const auto& b){return a.x<b.x;});
++        if(row.cells.front().x+(end-1)->x+8!=336)return {};
++        UiTextLine line;
++        line.x=row.cells.front().x;
++        line.y=nativeRows[i];
++        line.color=row.color;
++        for(auto cell=row.cells.begin();cell!=end;++cell) {
++            if(cell->x!=line.x+8*int(line.text.size()))return {};
++            line.text+=cell->code;
++        }
++        result.lines.push_back(std::move(line));
++    }
++    // The saved color predates both writers. Erase their shared ink only
++    // when the complete active panel owns every contributing command.
++    for(size_t at:result.ink) {
++        const auto& pixel=plate[at];
++        for(uint16_t owner:{pixel.owner,pixel.underOwner}) {
++            if(owner && (owner>sprites.size() || !matchedOwners[owner]))return {};
++        }
++    }
++    std::sort(result.ink.begin(),result.ink.end());
++    result.ink.erase(std::unique(result.ink.begin(),result.ink.end()),result.ink.end());
++    return result;
++}
++
++} // namespace port
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 917b267..b027592 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -491,7 +491,7 @@ int RunWindowed(Port &port) {
+         return satrecomp::video::Renderer::ScrollMenuLayout{plan->frame,plan->end,plan->frameHeight,plan->deltaY};
+     });
+     std::vector<uint32_t> hdNative,hdForeground;
+-    std::vector<UiTextLine> hdLines;
++    std::vector<UiTextLine> hdLines,hdChoiceLines;
+     std::string windowShot;
+     bool announcedReady = false;
+     bool choiceInputBlocked=false;
+@@ -518,7 +518,8 @@ int RunWindowed(Port &port) {
+         DrawSakuraFrame(renderer, wide, high);
+         const auto baseFit=FitInteger(wide,high,texW,texH);
+         auto textFit=baseFit;int textCropX=0,textCropY=0;
+-        hdLines.clear();hdNative.clear();hdForeground.clear();hdErased.assign(320*224,0);
++        auto choiceTextFit=baseFit;int choiceCropX=0,choiceCropY=0;bool choiceViewport=false;
++        hdLines.clear();hdChoiceLines.clear();hdNative.clear();hdForeground.clear();hdErased.assign(320*224,0);
+         if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
+@@ -852,6 +853,32 @@ int RunWindowed(Port &port) {
+                     }
+                     content=foreground;
+                     SDL_UpdateTexture(content,nullptr,hdLines.empty()?planes.foreground.data():hdForeground.data(),320*sizeof(uint32_t));
++                    if(content && scene.recognized && !port.menu.IsOpen() && !choosing && sakuraUi.HasGameFont() &&
++                       !englishAtlas.empty() && satrecomp::FeatureValue("text_style")==0) {
++                        if(auto choices=MatchChoiceText(std::span{planes.sprites},englishAtlas,planes.source,softwareShown,std::span{planes.glyphPlate})) {
++                            const auto& previousNative=hdNative.empty()?softwareShown:hdNative;
++                            const auto& previousForeground=hdForeground.empty()?planes.foreground:hdForeground;
++                            auto nextNative=previousNative,nextForeground=previousForeground;
++                            for(auto at:choices->ink) {
++                                nextNative[at]=planes.glyphPlate[at].nativeRgb;
++                                nextForeground[at]=planes.glyphPlate[at].foregroundRgba;
++                            }
++                            if(SDL_UpdateTexture(content,nullptr,nextForeground.data(),320*sizeof(uint32_t)) &&
++                               SDL_UpdateTexture(texture,nullptr,nextNative.data(),320*sizeof(uint32_t))) {
++                                hdNative=std::move(nextNative);hdForeground=std::move(nextForeground);
++                                hdChoiceLines=std::move(choices->lines);
++                                for(auto at:choices->ink)hdErased[at]=2;
++                                if(std::getenv("SATRECOMP_HD_TEXT_TRACE")) {
++                                    static std::array<bool,4> traced{};
++                                    const auto count=hdChoiceLines.size();
++                                    if(count<4 && !traced[count]) {traced[count]=true;fprintf(stderr,"hd choices: rows=%zu saved_under=1\n",count);}
++                                }
++                            } else {
++                                SDL_UpdateTexture(content,nullptr,previousForeground.data(),320*sizeof(uint32_t));
++                                SDL_UpdateTexture(texture,nullptr,previousNative.data(),320*sizeof(uint32_t));
++                            }
++                        }
++                    }
+                 }
+                 auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
+                 // Only split the known narrative layout; overhanging artwork retains the original group.
+@@ -874,7 +901,8 @@ int RunWindowed(Port &port) {
+                     const auto zoom=FitSceneZoom(wide,high,scene.w,scene.y+scene.h-153,scene.h,shadowRows);
+                     if(zoom.valid) {
+                         splitZoom=true;
+-                        zoomForeground=hdLines.empty()?planes.foreground:hdForeground;
++                        choiceTextFit=zoom.picture;choiceCropX=16;choiceCropY=8;
++                        zoomForeground=hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground;
+                         for(int y=153;y<156;y++)for(int x=20;x<308;x++)
+                             if(IsOldPictureShadow(x,y,planes.source[y*320+x]))zoomForeground[y*320+x]=0;
+                         SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+@@ -900,6 +928,8 @@ int RunWindowed(Port &port) {
+                         }
+                     }
+                 }
++                if(!splitZoom) {choiceTextFit=fit;choiceCropX=int(crop.x);choiceCropY=int(crop.y);}
++                choiceViewport=!hdChoiceLines.empty();
+                 textFit=fit;textCropX=static_cast<int>(crop.x);textCropY=static_cast<int>(crop.y);
+                 const SDL_FRect target{static_cast<float>(fit.x),static_cast<float>(fit.y),static_cast<float>(fit.w),static_cast<float>(fit.h)};
+                 if(scene.movieOnly) {
+@@ -911,7 +941,7 @@ int RunWindowed(Port &port) {
+                     SDL_RenderFillRect(renderer,&shadow);
+                     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+                 }
+-                const auto& mixedSource=splitZoom?zoomForeground:(hdLines.empty()?planes.foreground:hdForeground);
++                const auto& mixedSource=splitZoom?zoomForeground:(hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground);
+                 if(scene.movieOnly || !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,fit,crop,mixedSource))
+                     SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
+@@ -985,6 +1015,8 @@ int RunWindowed(Port &port) {
+         }
+         if(!choosing && !port.menu.IsOpen() && !hdLines.empty())
+             sakuraUi.GameText(hdLines,textFit.x,textFit.y,textFit.scale,textCropX,textCropY);
++        if(!choosing && !port.menu.IsOpen() && choiceViewport && !hdChoiceLines.empty())
++            sakuraUi.GameChoiceText(hdChoiceLines,choiceTextFit.x,choiceTextFit.y,choiceTextFit.scale,choiceCropX,choiceCropY);
+         if (choosing && sakuraUi.Active()) { if(sakuraUi.Choice(presentationChoice)) acceptChoice(); }
+         else if (port.menu.IsOpen() && sakuraUi.Active()) {
+             const unsigned action=sakuraUi.Draw(port.menu);
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+index 6a92c64..3035f03 100644
+--- a/port/sakura_ui.cpp
++++ b/port/sakura_ui.cpp
+@@ -94,10 +94,16 @@ void SakuraUi::SetGameAtlas(std::span<const uint8_t> atlas) {
+     }
+ }
+ void SakuraUi::GameText(const std::vector<UiTextLine>& lines,int x,int y,int scale,int cropX,int cropY) {
++    DrawGameText(lines,x,y,scale,cropX,cropY,false);
++}
++void SakuraUi::GameChoiceText(const std::vector<UiTextLine>& lines,int x,int y,int scale,int cropX,int cropY) {
++    DrawGameText(lines,x,y,scale,cropX,cropY,true);
++}
++void SakuraUi::DrawGameText(const std::vector<UiTextLine>& lines,int x,int y,int scale,int cropX,int cropY,bool choice) {
+     if(!active || !gameFont || lines.empty()) return;
+     ImGui_ImplSDLRenderer3_NewFrame();ImGui_ImplSDL3_NewFrame();ImGui::NewFrame();
+     auto* draw=ImGui::GetForegroundDrawList();
+-    const auto clip=NarrativeClip(x,y,scale,cropX,cropY);
++    const auto clip=choice?ChoiceTextClip(x,y,scale,cropX,cropY):NarrativeClip(x,y,scale,cropX,cropY);
+     draw->PushClipRect(ImVec2(static_cast<float>(clip[0]),static_cast<float>(clip[1])),
+                        ImVec2(static_cast<float>(clip[2]),static_cast<float>(clip[3])),true);
+     // One pre-baked atlas for every output size. No glyph generation while text advances.
+@@ -115,7 +121,7 @@ void SakuraUi::GameText(const std::vector<UiTextLine>& lines,int x,int y,int sca
+             const auto* glyph=gameFont->GetFontBaked(fontSize)->FindGlyph(code);
+             if(!glyph || natural.scale<=0 || glyph->X1<=glyph->X0 || glyph->Y1<=glyph->Y0) continue;
+             const ImVec2 origin(static_cast<float>(x+(line.x+static_cast<int>(index)*8-cropX)*scale),
+-                                y+NarrativeRowTop(line.y,scale)-cropY*scale);
++                                y+(choice?float(line.y*scale):NarrativeRowTop(line.y,scale))-cropY*scale);
+             const int first=draw->VtxBuffer.Size;
+             draw->AddText(gameFont,fontSize,origin,line.color,letter.c_str());
+             // One uniform transform for the entire font keeps natural proportions
+diff --git a/port/sakura_ui.h b/port/sakura_ui.h
+index 8310bed..d050af0 100644
+--- a/port/sakura_ui.h
++++ b/port/sakura_ui.h
+@@ -1,12 +1,12 @@
+ // SPDX-License-Identifier: GPL-3.0-only
+ #pragma once
+ #include "menu.h"
++#include "choice_text.h"
+ #include <SDL3/SDL.h>
+ #include <span>
+ #include <array>
+ struct ImFont;
+ namespace port {
+-struct UiTextLine { int x=0,y=0;std::u32string text;uint32_t color=0xFF181818; };
+ class SakuraUi {
+ public:
+     bool Open(SDL_Window*,SDL_Renderer*,const std::string& settings);
+@@ -16,9 +16,11 @@ public:
+     bool Choice(int& selection);
+     void SetGameAtlas(std::span<const uint8_t> atlas);
+     void GameText(const std::vector<UiTextLine>&,int x,int y,int scale,int cropX,int cropY);
++    void GameChoiceText(const std::vector<UiTextLine>&,int x,int y,int scale,int cropX,int cropY);
+     bool HasGameFont() const { return gameFont!=nullptr; }
+     bool Active() const { return active; }
+ private:
++    void DrawGameText(const std::vector<UiTextLine>&,int x,int y,int scale,int cropX,int cropY,bool choice);
+     bool active=false;
+     SDL_Renderer* renderer=nullptr;
+     ImFont* gameFont=nullptr;
