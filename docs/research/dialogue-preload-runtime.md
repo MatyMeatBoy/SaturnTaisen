@@ -1,6 +1,6 @@
 # Precarga y testigo del diálogo nativo
 
-Patch0048 prepara un catálogo inmutable del disco antes de dibujar el texto HD. Conserva ID, índice, offset, prefijos y bytes originales; precompila las líneas CP1252 sin corregir la prosa ni las traducciones. El contenido extraído permanece en `local/`. Este bloque añade la precarga y el observador; el render todavía usa su reconocimiento de glifos existente.
+Patch0048 prepara un catálogo inmutable del disco antes de dibujar el texto HD. Conserva ID, índice, offset, prefijos y bytes originales; precompila las líneas CP1252 sin corregir la prosa ni las traducciones. Patch0049 usa vistas de esas líneas para la narrativa verificada. El contenido extraído permanece en `local/`; las elecciones LIPS conservan su reconocimiento por glifos.
 
 ## Identificación
 
@@ -32,4 +32,18 @@ La prueba sintética de lectura falló por ausencia de la API y luego pasó con 
 
 Build de desarrollo de 674.023 bloques: SHA256 `191e2e0a701bc0624727ea09fd06ba4caf836ecf4f824cca451bd09172907bf2`. La comparación integrada usa como referencia el candidato patch0047, sin modificar los paquetes entregados. Resultados privados en `local/work/dialogue-preload-runtime/result.json`, con logs, hashes y capturas por perfil. Catorce ejecuciones cubrieron Sumire, María, Iris, LIPS de dos/tres opciones, Original e Iris con run-ahead2. En cada par coincidieron los60hashes, tres capturas RGB nativas y una captura GUI a1440p:420hashes comparados,21pares nativos y siete pares GUI. Todos terminaron con cero interpretados. Cada ejecución Mejorada registró una sola precarga y el registro esperado; Original no precargó. Los tiempos de preparación de esas ejecuciones no acreditan una mejora del rendimiento de carga del juego.
 
-Pendiente: dibujar desde las líneas precargadas con máscara de revelado nativa, mantener placas/clip/fundidos, identificar todos los registros de elecciones y verificar la cobertura por ruta. Ni el catálogo completo ni cinco testigos prueban que todo el texto HD esté resuelto. No incluido en v0.2.0-test.2.
+## Consumo visual de las líneas precargadas
+
+Patch0049 compara cada mosaico observado con el byte esperado del registro del mismo framebuffer. Una fila solo toma la vista del catálogo si sus celdas coinciden y no faltan letras antes de la última celda visible; los huecos de espacios son válidos. La vista termina en esa última celda, por lo que no adelanta letras. El catálogo sellado pertenece a Port durante toda la sesión; mover la lista de dibujo no deja referencias a cadenas temporales.
+
+La rejilla medida de los comandos empieza en x=64, con avance8 y filas160/172/184/196. El recorte de tinta conserva x=56: son límites distintos. Una prueba real detectó que el prototipo con origen56 permanecía en fallback; además de comparar imágenes, las pruebas exigen trazas `catalog=1`. La inspección de las263filas de31caracteres del corpus encontró un espacio al final de todas ellas. La guarda de tinta sigue rechazando contenido que salga del interior probado.
+
+Se conservan la fuente precocinada, avance, línea base, clip, color y comprobación de placas/propietarios. Cuando no hay una fila probada se conserva la ruta de reconocimiento anterior. Los tres alias de bitmap detectados en el atlas inglés (bytes0x82/0xA0/0xAD) no aparecen en ninguno de los29.725registros; otras localizaciones deberán revisar su desambiguación antes de habilitar el mismo mapeo. Los dos registros con tabulador no se convierten por esta vía.
+
+El candidato674.182/patch0049 tiene SHA256 `377cb29b9e05d2f70d8a97c838e0cd9ccc511046ff690da54953b60dac5a0ba7`. Se comparó contra el host0048 del candidato postcombatee7dd1c0…, conservando el código guest. Los siete casos iniciales comprobaron420hashes,21pares RGB nativos y siete GUI a1440p. Incluyen Original, run-ahead2 y las dos elecciones existentes; estas últimas no acreditan texto LIPS desde el catálogo.
+
+Otros seis casos comprobaron960hashes y50pares RGB nativos/GUI: revelado parcial de cuatro filas, página completa, continuación de segunda fila, biblioteca de cuatro filas, muestra de oficina y avance conB durante una voz. Las trazas verificaron el uso efectivo del catálogo, también en y=196 y desde una sola letra visible. Los1.380hashes y78pares RGB de ambas suites coincidieron, con cero interpretados. Evidencia privada: `local/work/dialogue-render-runtime-v2/result.json` y `local/work/dialogue-render-dynamic/result.json`.
+
+La transición mapa→floral/novela añadió900hashes y26pares RGB iguales (17GUI y nueve nativos), con muestreo de la entrada/fundido entre400y550 y del diálogo posterior. La traza también confirmó consumo del catálogo. Evidencia: `local/work/dialogue-render-map-fade/result.json`. Total de las tres suites:14casos,2.280hashes y104pares RGB, todos iguales a la referencia y con cero interpretados.
+
+Pendientes: identificar los conjuntos completos de elecciones, probar vencimiento de LIPS y ampliar cobertura por ruta/capítulo, transiciones y fuentes de otras traducciones. Ni el catálogo completo ni estas muestras prueban que todo el texto HD esté resuelto. No incluido en v0.2.0-test.2.
