@@ -9,5 +9,25 @@
   "scope": "battle turns after Sakura first attack through Maria second-cycle attack; no victory yet",
   "initial_state_sha256": "87f69986f6428b66a0dfac2e32fb3197adf43762857f8fccb177951909882b39",
   "movie": "tests/battle-multiple-turns.movie",
-  "source_commit": "cd4407e9e1f8e8ef597ca2c196c9b4a6a0e93df2"
+  "source_commit": "cd4407e9e1f8e8ef597ca2c196c9b4a6a0e93df2",
+  "validated_segments": [
+    {
+      "scope": "From the West-front LIPS handoff through the first battle resolution, intermission save and Resume to the hanami epilogue",
+      "frames": 109740,
+      "initial_loads": 1,
+      "intermediate_state_loads": 0,
+      "runtime_exit": 0,
+      "compiled_blocks": 674182,
+      "interpreted": 0,
+      "matching_guest_hashes": 109740,
+      "final_guest_hash": "3cbd8ffb97c0500b",
+      "final_rgb_equal": true,
+      "final_backup_equal": true,
+      "runtime_sha256": "e7dd1c007e0b7610485f4fe98dd0bb2de4f47411e0cbc3cec835e8758fd120ec",
+      "initial_state_sha256": "c527fab10409aa06672d93c48d355840fc7de23a696f73c42f95c3e5ced08d2b",
+      "movie_sha256": "3e7db4e78a2c498d892864fa850bc363bc5faa769bbfe8c525ab842249732693",
+      "final_backup_sha256": "6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df",
+      "evidence": "chapter1-victory-followup.md"
+    }
+  ]
 }
