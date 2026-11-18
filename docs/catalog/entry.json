@@ -1,0 +1,41 @@
+{
+  "key": "sakura",
+  "repo": "SaturnTaisen",
+  "name": "SaturnTaisen",
+  "game": "Sakura Wars / Sakura Taisen",
+  "author": "MatyMeatBoy",
+  "version": "0.2.0-alpha",
+  "origin": "saturn",
+  "repository_url": "https://github.com/MatyMeatBoy/SaturnTaisen",
+  "release_url": "https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.0-alpha",
+  "asset_win": "SaturnTaisen-v*-win64.zip",
+  "icon": "sakura-icon-v1.png",
+  "shot": "sakura-gameplay.png",
+  "blurb": "An experimental native Windows port of Sakura Wars for Sega Saturn, with integer scaling and a themed launcher.",
+  "description": "SaturnTaisen (formerly SaturnTaisenFirst) is an experimental Windows x64 port of the first Sakura Wars / Sakura Taisen for Sega Saturn. It uses static SH-2 recompilation with a supporting hardware runtime. The documented game-execution path is strict AOT; interpreter-only discovery and the sound/hardware runtime are separate.\n\nv0.2.0-alpha is the first public release. It includes a cherry-blossom-themed launcher, integer nearest-neighbor scaling, separate save import, Original/Enhanced presentation choices, recognized-scene widescreen composition, an in-game settings panel, optional crisp English UI glyphs, and a data-only Spanish text language pack for a first draft of chapters 1-7 and 10 (no in-launcher language selector yet). The user supplies the game discs and any English-patched copies.\n\nDocumented tests cover extended adventure exploration, selected saves and entry into the first battle. This is not a completed port: the full campaign, all battles/minigames, complete audio fidelity, real automatic disc changes and physical controller acceptance remain open. PC-version execution and the full HD character pack are not features of this public checkpoint. No discs, BIOS, translation patches, or extracted original Japanese text are included.",
+  "needs": "Your own supported Sega Saturn Sakura Taisen discs. For English, provide your own copies patched with the supported Saturn translation.",
+  "setup_steps": [
+    "Extract the complete Windows release ZIP.",
+    "Run SaturnTaisen.exe.",
+    "Select your own supported Saturn disc images; use your own English-patched copies for English.",
+    "Import an existing save into a separate copy if desired, then launch. Disc selection is manual."
+  ],
+  "features": [
+    "Widescreen",
+    "Mods",
+    "Controller",
+    "Keyboard and mouse"
+  ],
+  "credits": "Maintained by MatyMeatBoy, based on satrecomp and its credited dependencies. Original Sakura Wars / Sakura Taisen by SEGA / RED. Translation authors retain their credits; the patch is user-supplied. Catalog blossom icon generated with AI.",
+  "notes": "First public release, v0.2.0-alpha. Do not describe the entire campaign, PC HD mode, or automatic real-disc transition as verified. Screenshot shows an actual English dialogue scene in the project runtime.",
+  "quiver_kind": "port",
+  "quiver_type": "recomp",
+  "quiver_consoles": [
+    "saturn"
+  ],
+  "ai_assistance": [
+    "code",
+    "art",
+    "text"
+  ]
+}
