@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 302/304 (99,3%) | 302/304 (99,3%) | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 1/1267 (0%) | 0/1267 (0%) | 0/1267 (0%) | 0/1267 (0%) |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 2/1267 (0,1%) | 0/1267 (0%) | 0/1267 (0%) | 0/1267 (0%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | 9/166 (5,4%) |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) |
@@ -70,7 +70,7 @@ Rangos de ID Saturn pendientes en hexadecimal
 Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
 
 - 1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte.
-- Primer par aprobado por captura: corredor del capítulo 1 = SAKURA1/BG1119 (la variante de noche es BG1120). Método y límites en docs/research/pc-asset-census.md.
+- 2 pares aprobados por captura: corredor del capítulo 1 = SAKURA1/BG1119 (noche = BG1120) y la carta con sellos = SAKURA1/BG1209. Registro continuo en docs/research/bg-matching-progress.md.
 - **Siguiente paso**. Emparejar cada archivo con su escena Saturn, empaquetarlo e integrarlo; verificar variantes de iluminación y fundidos.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
