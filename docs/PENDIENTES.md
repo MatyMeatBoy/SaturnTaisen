@@ -45,7 +45,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T15 | P3 | decisión | libre | Revisar y fusionar `codex/catalog-listing` (ficha pública e icono). |
 | T16 | P3 | físico | libre | Probar el ZIP portátil en RX 6900 XT y mandos M30 físicos. |
 | T17 | P1 | local | libre | Cambio real de disco 1→2 e importador final unificado. |
-| T18 | P2 | agente/local | libre | RetroAchievements 16546 softcore: catálogo/condiciones/badges 1:1, desbloqueo local offline, pestaña/popup, login y sync. Alcance ya aprobado, implementación pendiente. |
+| T18 | P2 | agente/local | investigación | RetroAchievements 16546. rcheevos reconoció los dos CUE ingleses por sus hashes oficiales. Mapa Saturn documentado. Pendientes catálogo de condiciones, compatibilidad por variante, local offline y vía de sync Casual. Ver `retroachievements-16546.md`. |
 | T19 | P3 | local | libre | Cuerpos HD (NC): escala única por altura y eje cabeza/torso, con ojos/boca. |
 | T20 | P3 | local | libre | Vídeos MPG del PC (MOVIE000..120): equivalencia, audio y subtítulos antes de sustituir. |
 | T21 | P0 | agente/local | integrado · PR #6 | Herramienta K001–K019 probada: reproduce exactamente 614.024 candidatos desde la semilla anterior. Código derivado solo local. |
