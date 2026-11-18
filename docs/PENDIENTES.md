@@ -15,13 +15,13 @@ Cola compartida para MatyMeatBoy y los agentes que ayudan (Claude, Codex). Cualq
 5. Abrir PR con: fila tomada, qué se verificó (comando y resultado) y qué no. Cambiar el estado de la fila en el mismo PR.
 6. Prioridad ante todo: bloqueos o pérdida de progreso > validación de capítulo 1 > presentación > decoración.
 
-Reglas fijas: autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, recursos PC originales, `local/` ni el ZIP personal; v0.1.0, v0.1.5 y v0.1.2 son inmutables; Saturn tiene prioridad sobre PC; ninguna prueba parcial se presenta como capítulo o campaña completos.
+Reglas fijas: los agentes solo abren PR; fusionar o integrar lo hace únicamente MatyMeatBoy. Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, recursos PC originales, `local/` ni el ZIP personal; v0.1.0, v0.1.5 y v0.1.2 son inmutables; Saturn tiene prioridad sobre PC; ninguna prueba parcial se presenta como capítulo o campaña completos.
 
 ## Lista
 
 | ID | P | Tipo | Estado | Pendiente |
 |---|---|---|---|---|
-| T01 | P0 | decisión | libre | Integrar en una rama el trabajo sin commitear de `implementation/enhanced-v011` (patches 0035/0036, fondos de pantalla, franja táctica, catálogo de diálogo, auditorías y movies). Requiere visto bueno del propietario. |
+| T01 | P0 | decisión | propietario | Integrar en una rama el trabajo sin commitear de `implementation/enhanced-v011` (patches 0035/0036, fondos de pantalla, franja táctica, catálogo de diálogo, auditorías y movies). Solo lo hace el propietario; los agentes no integran. |
 | T02 | P0 | local | tras T01 | Victoria del primer combate y salida, continuando `tests/battle-multiple-turns.movie` sin cargas intermedias; cero bloques interpretados. |
 | T03 | P0 | local | tras T01 | Ruta continua New Game → fin del episodio 1, guardado nativo, reinicio y Continue, dos repeticiones. |
 | T04 | P1 | local | tras T01 | Placa de glifos LIPS: reconocer `C510`/`C570`, filas Y=54/78/102 y 62/94, transformación y recorte por grupo (ver `chapter1-wide-transitions.md`). |
