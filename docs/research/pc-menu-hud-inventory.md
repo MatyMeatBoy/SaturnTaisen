@@ -24,6 +24,15 @@ De los 9 restantes, `KAO.SPR` (394 imágenes) no es un recurso de menú: ya lo c
 | `OMKMOV_W`, `OMKSND_W`, `KARAOKE`, `MINISAKU`, `MSTAFF` | `OMALL.DAT` | Candidatos para el menú extra (T25 lo dejó bloqueado por falta de tabla de punteros en Saturn). `KARAOKE.SPR` tiene 17 imágenes individuales de 32px de alto y ancho variable (192-352px) — compatible con una lista de etiquetas de texto separadas (títulos de canción), a diferencia de una imagen fundida única. Esto apoya que el menú extra de Saturn (271 pares DTE en `OMALL.DAT`) sea una lista real de etiquetas y no datos sin usar, aunque no resuelve su tabla de punteros. `OMKMOV_W`/`OMKSND_W` (500×376/480×376, varias por categoría) parecen paneles de fondo por pestaña, no texto suelto. |
 | `SISTEM`, `SIS_BG`, `SIS_BG2`, `SIS_BG3`, `SIS_ICON` | `ICATALL.DAT` | Candidatos para estado/intermedio, ya traducidos en Saturn; sirven como referencia de diseño, no como bloqueo. |
 
+## Primera verificación visual
+
+Dos candidatos decodificados con el exportador nativo (`sakura.exe --export-pc-spr`, requiere `PATH` con `C:\msys64\clang64\bin`) e inspeccionados localmente (ninguna imagen se sube al repositorio):
+
+- **`OPTION.SPR` entrada 0** (512×386): mismo diseño que el marco de opciones de Saturn — misma paleta rosa/crema, misma pestaña inferior izquierda con esquina cortada (en japonés «オプション»), cinco cajas de texto vacías en la misma disposición que las cinco entradas de `opciones()`. El texto está separado del fondo (las cajas están en blanco), confirmando que el PC sí mantiene fondo y texto en capas distintas para esta pantalla.
+- **`WINDOW.SPR` entrada 0** (544×240): marco con el mismo motivo steampunk (latón, engranajes, un reloj/brújula central) que el marco de carga de Saturn, con un rótulo japonés («制限», limitación) sobre el reloj en el lugar donde Saturn no tiene texto — posible indicio de un elemento que Saturn omite o reubica.
+
+Ambos casos corroboran candidatos por nombre con contenido visual real, no solo coincidencia de cadena. No se verificó todavía paleta, proporción exacta de escalado ni si `WINDOW.SPR` corresponde 1:1 al marco completo o solo a una de sus variantes (Saturn tiene cajas de 176×24 y 144×24 separadas).
+
 ## Siguiente paso
 
 Para cada candidato con `found=true`: decodificar ambas imágenes (PC vía el exportador nativo `sakura.exe --export-pc-spr`, Saturn vía las herramientas ya existentes en `tools/es/`), comparar geometría y verificar si el PC separa el texto del fondo de un modo que Saturn no hace. Ninguna coincidencia de nombre aquí demuestra composición, paleta ni geometría compatibles — es una lista de candidatos a verificar, no una integración.
