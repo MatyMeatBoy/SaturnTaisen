@@ -1,6 +1,6 @@
 # Precarga y testigo del diálogo nativo
 
-Patch0048 prepara un catálogo inmutable del disco antes de dibujar el texto HD. Conserva ID, índice, offset, prefijos y bytes originales; precompila las líneas CP1252 sin corregir la prosa ni las traducciones. Patch0049 usa vistas de esas líneas para la narrativa verificada. El contenido extraído permanece en `local/`; las elecciones LIPS conservan su reconocimiento por glifos.
+Patch0048 prepara un catálogo inmutable del disco antes de dibujar el texto HD. Conserva ID, índice, offset, prefijos y bytes originales; precompila las líneas CP1252 sin corregir la prosa ni las traducciones. Patch0049 usa vistas de esas líneas para la narrativa verificada. El contenido extraído permanece en `local/`. El candidato patch0050 amplía el préstamo a grupos LIPS verificados, conservando la prueba de sus glifos y placas actuales.
 
 ## Identificación
 
@@ -47,3 +47,15 @@ Otros seis casos comprobaron960hashes y50pares RGB nativos/GUI: revelado parcial
 La transición mapa→floral/novela añadió900hashes y26pares RGB iguales (17GUI y nueve nativos), con muestreo de la entrada/fundido entre400y550 y del diálogo posterior. La traza también confirmó consumo del catálogo. Evidencia: `local/work/dialogue-render-map-fade/result.json`. Total de las tres suites:14casos,2.280hashes y104pares RGB, todos iguales a la referencia y con cero interpretados.
 
 Pendientes: identificar los conjuntos completos de elecciones, probar vencimiento de LIPS y ampliar cobertura por ruta/capítulo, transiciones y fuentes de otras traducciones. Ni el catálogo completo ni estas muestras prueban que todo el texto HD esté resuelto. No incluido en v0.2.0-test.2.
+
+## Candidato de grupos LIPS precargados
+
+Patch0050 indexa los comandos completos `2E8000` del script0102.BIN observado. El testigo exige el cursor060685B4, el script residente completo y la tabla completa, asociados al mismo framebuffer bajo `fbMutex`. Se fija tamaño26646 y fingerprintFNV64 `0CE1CF29E7390A98`; otras fuentes y el comando178000 no se habilitan por inferencia. El índice admite128scripts,128KiB por script,8MiB totales y65.535comandos, rechazando ambigüedades. En este script se preparan11comandos; eso no equivale a11elecciones jugadas.
+
+El panel toma vistas del catálogo solo cuando coinciden todas sus filas, centrado, tiles, tinta, reloj y propiedad de las placas. Un desacuerdo devuelve el grupo completo a cadenas propias. No se cambia la lógica de entrada, el reloj ni la posición de las opciones. La vida de las vistas queda ligada al catálogo sellado del Port.
+
+Tres fixtures pasan contra la dependencia real y la pila compuesta0001..0050 coincide con el SDK. La suite Python general pasa167pruebas con88omitidas por sus requisitos locales; los tres fixtures anteriores se ejecutaron explícitamente contra la dependencia compartida, sin omitirlos.
+
+Doce pares de ejecuciones del candidato674.182 (`df68e9db…`) contra patch0049 (`377cb29b…`) comparan3.240hashes y102pares RGB idénticos, con0bloques interpretados. Incluyen paneles de dos/tres filas en Zoom/conjunto, texto nativo, Original y run-ahead2. La traza acredita consumo de los grupos20008/20002. Evidencia privada: `local/work/choice-preload-runtime/result.json`.
+
+La selección, confirmación y expiración siguen pendientes de una prueba con postcondiciones: las semillas actuales abandonan el panel aproximadamente en el mismo serial con o sin pulsaciones, aunque sus hashes sí divergen al recibir entradas. No se considera ese nombre del ensayo una prueba de interacción. El guard SDL de películas se revisó y sí impide sobrescribir las entradas reproducidas. Candidato en desarrollo, sin integrar ni incluir en test.3; los paquetes entregados permanecen inmutables.

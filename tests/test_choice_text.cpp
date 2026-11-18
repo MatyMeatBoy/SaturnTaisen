@@ -1,4 +1,5 @@
 #include "choice_text.h"
+#include "dialogue_preload.h"
 
 #include <array>
 #include <cassert>
@@ -44,6 +45,18 @@ int main() {
     assert(match && match->lines.size()==2 && match->ink.size()==4);
     assert(match->lines[0].x==160 && match->lines[0].y==62 && match->lines[0].text==U"AB" && match->lines[0].color==0xFF303030);
     assert(match->lines[1].y==94 && match->lines[1].color==0xFF101010);
+    port::PreloadedDialogueRecord group;
+    group.simple=true;group.lineCount=2;group.raw="AB\rAB";
+    group.lines[0]={0,U"AB"};group.lines[1]={3,U"AB"};
+    auto preparedMatch=port::MatchChoiceText(std::span<const Sprite>(sprites),atlas,source,screen,std::span<const Plate>(plate),&group);
+    assert(preparedMatch && preparedMatch->catalog && preparedMatch->lines.size()==2);
+    assert(preparedMatch->lines[0].text.empty() && preparedMatch->lines[1].text.empty());
+    assert(preparedMatch->lines[0].Text().data()==group.lines[0].text.data());
+    assert(preparedMatch->lines[1].Text().data()==group.lines[1].text.data());
+    group.raw="AB\rAC";group.lines[1].text=U"AC";
+    auto fallback=port::MatchChoiceText(std::span<const Sprite>(sprites),atlas,source,screen,std::span<const Plate>(plate),&group);
+    assert(fallback && !fallback->catalog && fallback->lines[0].catalogText.empty() && fallback->lines[1].catalogText.empty());
+    assert(fallback->lines[0].Text()==U"AB" && fallback->lines[1].Text()==U"AB");
     const size_t shared=62*320+168;
     atlas[('A'-1)*128+4]=0x10;
     sprites[1].pixels[4]=0x10;
