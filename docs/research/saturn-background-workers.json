@@ -1,0 +1,56 @@
+{
+  "scope": "CPU preparation of 19 Saturn and 19 optional Saturn HD backgrounds",
+  "runs_per_condition": 3,
+  "identical_rgba_images": 38,
+  "median_seconds": {
+    "1": {
+      "cold-derived": 2.1020793999778107,
+      "warm-derived": 0.2615902000106871
+    },
+    "2": {
+      "cold-derived": 1.1473719000350684,
+      "warm-derived": 0.15813980001257733
+    },
+    "4": {
+      "cold-derived": 0.6758561999886297,
+      "warm-derived": 0.11040820000926033
+    },
+    "8": {
+      "cold-derived": 0.478068099997472,
+      "warm-derived": 0.10373299999628216
+    }
+  },
+  "memory_cold_median_bytes": {
+    "1": {
+      "peak_working_set_bytes": 25026560,
+      "peak_private_commit_bytes": 18530304
+    },
+    "2": {
+      "peak_working_set_bytes": 34840576,
+      "peak_private_commit_bytes": 31154176
+    },
+    "4": {
+      "peak_working_set_bytes": 57339904,
+      "peak_private_commit_bytes": 55533568
+    },
+    "8": {
+      "peak_working_set_bytes": 95531008,
+      "peak_private_commit_bytes": 100356096
+    }
+  },
+  "default_workers": {
+    "interactive_on_16_logical_cpus": 4,
+    "offline_on_16_logical_cpus": 8
+  },
+  "hardware": {
+    "cpu": "AMD Ryzen 7 7435HS",
+    "physical_cores": 8,
+    "logical_cpus": 16,
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+  },
+  "production_patch_sha256": "39f916dae6bb47afc621c7a0ea60798d76999dff247d863969ddd8db87ecdc8a",
+  "limits": [
+    "Derived cache cold/warm; OS file cache not flushed.",
+    "CPU-only preparation; excludes GPU upload, game frames and guest CD timing."
+  ]
+}

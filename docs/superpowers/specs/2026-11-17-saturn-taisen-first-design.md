@@ -1,79 +1,79 @@
-# SaturnTaisenFirst — diseño propuesto
+# SaturnTaisenFirst — proposed design
 
-Estado: diseño aprobado por el usuario el 17/11/2026, con ampliaciones posteriores incorporadas abajo. Se autoriza continuar hasta completar el recomp. El runtime concreto se decide con pruebas.
+Status: design approved by the user on 2026-11-17, with later extensions incorporated below. Continuation is authorized until the recomp is complete. The concrete runtime is decided through testing.
 
-## Intención y alcance
+## Intent and scope
 
-Ejecutar Sakura Wars 1 de Saturn como programa nativo, manteniendo su traducción inglesa, ambos discos y la presentación original. Primera plataforma propuesta por el implementador: Windows x64, por ser el entorno disponible. No se presupone que el juego completo sea compatible con un toolkit actual.
+Run Sakura Wars 1 for Saturn as a native program, keeping its English translation, both discs, and the original presentation. First platform proposed by the implementer: Windows x64, as the available environment. It is not assumed that the complete game is compatible with a current toolkit.
 
-El primer hito es una prueba reproducible de viabilidad: identificar ambos discos, preparar copias traducidas validadas y obtener la primera escena interactiva desde SH-2 recompilado. Si falta hardware o cobertura, registrar el bloqueo concreto. Un menú, una importación terminada o un arranque por intérprete no cuentan como recompilación jugable.
+The first milestone is a reproducible feasibility test: identify both discs, prepare validated translated copies, and obtain the first interactive scene from a recompiled SH-2. If hardware or coverage is missing, log the specific blocker. A menu, a finished import, or a boot via interpreter do not count as a playable recompilation.
 
-## Enfoques considerados
+## Approaches considered
 
-1. **AOT de la versión Saturn (elegido).** Evaluar saturnkit/saturn-recomp y satrecomp con los mismos programas y escenas. Conserva el material suministrado; requiere adaptar hardware y descubrir todo el código alcanzable.
-2. **Emulación integrada.** Permitiría una referencia jugable más temprana, pero el usuario eligió recompilación estática. Se puede usar como instrumento de comparación.
-3. **Decomp del port Windows.** Puede aportar comprensión del motor, pero requiere otros archivos y no aplica directamente el parche Saturn. Referencia de investigación.
+1. **AOT of the Saturn version (chosen).** Evaluate saturnkit/saturn-recomp and satrecomp with the same programs and scenes. Preserves the supplied material; requires adapting hardware and discovering all reachable code.
+2. **Integrated emulation.** Would allow an earlier playable reference, but the user chose static recompilation. Can be used as a comparison instrument.
+3. **Decomp of the Windows port.** Can provide engine understanding, but requires other files and does not directly apply the Saturn patch. Research reference.
 
-La selección del toolkit comenzará con análisis de discos, licencia, instrucciones, overlays y compilación mínima. Se elegirá un candidato principal y se probarán escenas allí; solo se llevará otro hasta esas escenas si aparece un bloqueo o una diferencia que lo justifique. No fijar una dependencia por su nombre o por cifras de otros juegos.
+Toolkit selection will start with disc analysis, license, instructions, overlays, and a minimal build. One main candidate will be chosen and scenes tested there; another will only be carried through those scenes if a blocker or a difference appears that justifies it. Do not fix a dependency by its name or by figures from other games.
 
-## Preparación y ejecución
+## Preparation and execution
 
-- Conservar dumps y parches originales. Calcular hashes y verificar CUE, sectores, producto y versión.
-- Convertir copias a la entrada exacta esperada por xdelta; conservar CD-DA, pregaps y relación de pistas. Verificar comprobaciones del delta y registrar hashes de salida. Detener esa preparación si hay incompatibilidad; no forzarla.
-- Analizar ambas versiones traducidas: arranque, ejecutables residentes, overlays y cambios de código. El código añadido por la traducción también debe recompilarse.
-- Mantener el conocimiento de Sakura en una capa específica del juego y fijar el commit del toolkit. Registrar llamadas indirectas no descubiertas y nunca simular un retorno exitoso para ocultarlas.
-- En el hito AOT y el ejecutable final, ambos SH-2 deben ejecutar código recompilado, sin recurrir a un intérprete para completar código faltante. La interpretación solo se admite para descubrimiento o referencia y se registra como tal. Los componentes de hardware que se interpreten, como la CPU de audio, se documentarán separadamente.
+- Keep original dumps and patches. Compute hashes and verify CUE, sectors, product, and version.
+- Convert copies to the exact input expected by xdelta; preserve CD-DA, pregaps, and track relationships. Verify the delta's checks and log output hashes. Stop that preparation on incompatibility; do not force it.
+- Analyze both translated versions: boot, resident executables, overlays, and code changes. Code added by the translation must also be recompiled.
+- Keep Sakura-specific knowledge in a game-specific layer and pin the toolkit commit. Log undiscovered indirect calls and never simulate a successful return to hide them.
+- At the AOT milestone and in the final executable, both SH-2 must run recompiled code, without falling back to an interpreter to complete missing code. Interpretation is only allowed for discovery or reference and is logged as such. Hardware components that are interpreted, such as the audio CPU, will be documented separately.
 
-## Presentación
+## Presentation
 
-Conservar resolución interna y encuadre de cada modo observado. Proponer como predeterminado la proporción de presentación original, con el mayor escalado nítido compatible con ella, sin recorte ni filtrado borroso. Ofrecer además un modo de escala entera estricta de los píxeles fuente si la corrección de proporción impide cumplir ambas propiedades simultáneamente. Confirmar las dimensiones efectivas antes de fijar factores o prometer 4:3 en todos los modos.
+Preserve the internal resolution and framing of each observed mode. Propose as default the original presentation aspect ratio, with the largest crisp scaling compatible with it, with no cropping or blurry filtering. Also offer a strict integer-scale mode of the source pixels if aspect correction prevents meeting both properties at once. Confirm the effective dimensions before fixing factors or promising 4:3 in every mode.
 
-El marco ocupa únicamente el área exterior al juego. Propuesta inicial: marco discreto temático, adaptable a ventana, 16:9 y ultrapanorámico, sin cubrir subtítulos ni interfaz. Su arte concreto queda pendiente; no es condición para probar AOT.
+The frame occupies only the area outside the game. Initial proposal: a discreet thematic frame, adaptable to window, 16:9, and ultrawide, without covering subtitles or the interface. Its concrete art remains pending; it is not a condition for testing AOT.
 
-## Dos discos y persistencia
+## Two discs and persistence
 
-Un solo perfil de juego agrupa ambas imágenes traducidas y una memoria de respaldo persistente compartida. Los identificadores de recursos incluyen el disco para evitar colisiones entre archivos con el mismo nombre.
+A single game profile groups both translated images and one shared persistent backup memory. Resource identifiers include the disc to avoid collisions between files with the same name.
 
-Primero observar en la referencia el cambio real. Después detectar la solicitud mediante estado o función conocida y realizar el montaje y, si el juego lo requiere, la continuación/reinicialización correspondiente. No fusionar ciegamente las ISO ni cambiar disco por tiempo transcurrido. Preservar guardados de forma atómica, mantener copia antes de una migración y restaurar al volver a abrir el programa el disco correcto.
+First observe the actual change in the reference. Then detect the request via known state or function and perform the mount and, if the game requires it, the corresponding continuation/reinitialization. Do not blindly merge the ISOs or switch discs based on elapsed time. Preserve saves atomically, keep a copy before a migration, and restore the correct disc when reopening the program.
 
-## Ajustes, mandos y modificaciones — requisitos añadidos
+## Settings, controllers, and mods — added requirements
 
-Launcher y menú de pausa ingame comparten configuración persistente: imagen, escala, marco, audio, controles, mods y logros. Start + Select abre/cierra el menú; Select es una acción del port, no un botón inventado del Saturn. Reservar la combinación, dispararla una sola vez hasta liberar y evitar que botones mantenidos al cerrar alcancen al juego. Incluir atajo de teclado, navegación completa por mando y reconexión sin teclas retenidas.
+The launcher and the in-game pause menu share persistent configuration: image, scale, frame, audio, controls, mods, and achievements. Start + Select opens/closes the menu; Select is a port action, not a Saturn button that was invented. Reserve the combination, trigger it only once until released, and prevent buttons held while closing from reaching the game. Include a keyboard shortcut, full controller navigation, and reconnection without held keys.
 
-Soporte general mediante SDL para Xbox, PlayStation, Nintendo, mandos genéricos y todos los modelos M30 que expongan entradas accesibles en PC. Perfiles automáticos Saturn para dispositivos/modos reconocidos; remapeo y asistente para desconocidos. Los ajustes del usuario prevalecen. No identificar un M30 únicamente por un nombre Xbox genérico. Tuplas GUID/VID/PID/transporte/modo con procedencia y confianza; perfiles elegibles manualmente cuando el modo oculta el modelo. Mantener etiquetas Saturn A/B/C y X/Y/Z, L/R, Start, y Select del port. Contemplar cruceta como hat o ejes y C/Z o L/R como botones o ejes con histéresis. El propietario tiene M30 Bluetooth pero no disponible para validación física.
+General support via SDL for Xbox, PlayStation, Nintendo, generic controllers, and all M30 models that expose accessible inputs on PC. Automatic Saturn profiles for recognized devices/modes; remapping and a wizard for unrecognized ones. User settings take precedence. Do not identify an M30 solely by a generic Xbox name. GUID/VID/PID/transport/mode tuples with provenance and confidence; manually selectable profiles when the mode hides the model. Keep Saturn A/B/C and X/Y/Z, L/R, Start, and Select labels from the port. Treat the D-pad as a hat or axes, and C/Z or L/R as buttons or axes with hysteresis. The owner has a Bluetooth M30 but it is not available for physical validation.
 
-Traducción inglesa y packs compatibles instalados estarán activados por defecto y se podrán desactivar. Mantener preparaciones japonesa e inglesa separadas, con identidad y código generado de cada variante. No aplicar un código recompilado de otra variante sobre una imagen distinta. Cambios que alteran código/recursos requieren reinicio seguro. Buscar mods HD y mejoras existentes en fuentes de autores; evaluar cobertura, versión, licencia e impacto en memoria/RA. No presentar un shader, un port de PC o un pack de otro juego como mod HD verificado de Sakura Saturn. El marco original sigue disponible.
+English translation and installed compatible packs will be enabled by default and can be disabled. Keep Japanese and English preparations separate, with identity and generated code for each variant. Do not apply recompiled code from one variant onto a different image. Changes that alter code/resources require a safe restart. Look for existing HD mods and enhancements from authors' sources; evaluate coverage, version, license, and memory/RA impact. Do not present a shader, a PC port, or a pack from another game as a verified HD mod for Sakura Saturn. The original frame remains available.
 
-## RetroAchievements y logros locales — requisitos añadidos
+## RetroAchievements and local achievements — added requirements
 
-Set oficial https://retroachievements.org/game/16546 (68 logros al consultar el 17/11/2026). Usar exactamente sus identificadores, condiciones, títulos, descripciones y badges: ningún reto propio. Pestaña Logros en launcher e ingame, filtro/progreso y avisos con badge, título y descripción al desbloquear, similares en función a ReKHCoM.
+Official set https://retroachievements.org/game/16546 (68 achievements as of checking on 2026-11-17). Use exactly its identifiers, conditions, titles, descriptions, and badges: no custom challenges. An Achievements tab in the launcher and in-game, filter/progress, and unlock notices with badge, title, and description, functionally similar to ReKHCoM.
 
-Login opcional, softcore forzado por rc_client; nunca solicitar contraseñas en el chat ni guardarlas. Windows protege el token con DPAPI. Separar cuenta y progreso local. Descargar/cachear el catálogo oficial y badges con versión/procedencia y usar rcheevos para evaluar offline la misma definición. El primer uso totalmente offline necesita un catálogo legítimamente disponible localmente; no prometer descarga sin conexión. Sin catálogo, informar indisponibilidad sin inventar logros.
+Optional login, softcore forced by rc_client; never request passwords in chat nor store them. Windows protects the token with DPAPI. Keep the account and local progress separate. Download/cache the official catalog and badges with version/provenance, and use rcheevos to evaluate the same definition offline. The first fully offline use needs a catalog that is legitimately available locally; do not promise offline download. Without a catalog, report unavailability without inventing achievements.
 
-Los logros offline se guardan localmente de forma atómica por juego/variante/usuario local. Separar evaluación real de previews, run-ahead y regresiones; estos últimos no conceden logros. No reenviar automáticamente premios históricos al conectar otra cuenta ni simular una sesión online offline. La cola/reintento de una sesión online usa solo el flujo admitido por rc_client. Guardar/restaurar estado de evaluación junto al estado del juego, reiniciar del modo adecuado ante reset y notificar cambio de disco mediante rc_client_begin_change_media.
+Offline achievements are saved locally atomically per game/variant/local user. Keep real evaluation separate from previews, run-ahead, and regressions; the latter do not grant achievements. Do not automatically resend historical awards when connecting a different account, nor simulate an online session offline. The queue/retry of an online session uses only the flow supported by rc_client. Save/restore evaluation state alongside game state, restart in the proper mode on reset, and notify disc changes via rc_client_begin_change_media.
 
-El mapa oficial Saturn de rcheevos aplana WRAM-L en 0x000000–0x0FFFFF y WRAM-H en 0x100000–0x1FFFFF. Leer de las memorias reales del runtime con límites y orden de bytes correctos, no de direcciones del host. do_frame se ejecuta una vez por frame lógico real, nunca por frame de presentación. Los dos hashes de los dumps originales coinciden con los registrados en RA; repetir identificación y comprobar las referencias de memoria después del parche. No forzar el game ID ni sustituir hashes para ocultar incompatibilidad.
+rcheevos' official Saturn map flattens WRAM-L at 0x000000–0x0FFFFF and WRAM-H at 0x100000–0x1FFFFF. Read from the runtime's real memories with correct bounds and byte order, not from host addresses. do_frame runs once per real logical frame, never per presentation frame. The two hashes of the original dumps match those registered on RA; repeat identification and check the memory references after the patch. Do not force the game ID nor substitute hashes to hide incompatibility.
 
-## Validación
+## Validation
 
-- Comparar con una referencia madura y los mismos discos traducidos: arranque, vídeo, escena de diálogo con voz, elección, batalla, minijuego y guardar/cargar.
-- Capturas en momentos reproducibles para encuadre, proporción, prioridades, transparencias, fuentes y subtítulos; comprobar además audio y sincronización.
-- Cubrir contenidos exclusivos de ambos discos y probar el paso real 1→2, la primera partida del disco 2 y cerrar/reabrir después de la transición.
-- Registrar qué se probó y qué queda pendiente. Una ruta de prueba no certifica todas las ramas ni una campaña completa.
+- Compare against a mature reference and the same translated discs: boot, video, voiced dialogue scene, choice, battle, minigame, and save/load.
+- Captures at reproducible moments for framing, aspect ratio, priorities, transparencies, fonts, and subtitles; also check audio and sync.
+- Cover exclusive content from both discs and test the actual 1→2 transition, the first save on disc 2, and closing/reopening after the transition.
+- Log what was tested and what remains pending. One test path does not certify every branch nor a full campaign.
 
-## Material disponible y necesidades
+## Available material and needs
 
-Ya hay discos y xdelta para comenzar la investigación. El usuario aportó también la carpeta local `Sega Saturn BIOS`, que contiene once archivos de 512 KiB. Una BIOS propia ayuda a la referencia (por ejemplo Beetle Saturn/Mednafen) y al diagnóstico; la necesidad final depende del runtime seleccionado. Mantenerla local y registrar su hash, sin subirla al repositorio. No asumir que cualquier región o revisión sirve para el emulador elegido.
+Discs and xdelta are already available to start the research. The user also provided the local `Sega Saturn BIOS` folder, containing eleven 512 KiB files. An owned BIOS helps as a reference (for example Beetle Saturn/Mednafen) and for diagnosis; the final need depends on the selected runtime. Keep it local and log its hash, without uploading it to the repository. Do not assume that any region or revision works for the chosen emulator.
 
-Una partida cercana al final del disco 1 será muy útil para probar la transición. No es requisito para analizar el arranque. Si no existe, habrá que obtener ese punto jugando la referencia. No confundir savestate de un emulador con memoria de respaldo portable.
+A save near the end of disc 1 will be very useful for testing the transition. It is not a requirement for analyzing the boot. If it does not exist, that point will have to be reached by playing the reference. Do not confuse an emulator savestate with portable backup memory.
 
-## Límites y decisiones pendientes
+## Limits and pending decisions
 
-No hay todavía código de producto ni una compilación de Sakura. No se prometen mejoras de FPS, widescreen del área del juego ni compatibilidad completa. Quedan pendientes la selección del runtime, la comprobación del parche, los modos gráficos observados y el mecanismo del cambio de disco. El repositorio remoto será privado; solo contendrá documentación, código propio y dependencias que puedan redistribuirse según sus licencias. Se excluyen BIOS, dumps, xdelta, partidas, ejecutables extraídos, recursos y C++ generados desde el juego.
+There is no product code or Sakura build yet. No FPS improvements, widescreen of the game area, or full compatibility are promised. The runtime selection, patch verification, observed graphics modes, and the disc-change mechanism remain pending. The remote repository will be private; it will only contain documentation, own code, and dependencies redistributable under their licenses. BIOS, dumps, xdelta, saves, extracted executables, resources, and C++ generated from the game are excluded.
 
 
-## Ampliación autorizada: importar partidas de emuladores
+## Authorized extension: importing saves from emulators
 
-El usuario pidió importar partidas de los emuladores de Saturn y usar partidas públicas avanzadas para ampliar la validación. El launcher ofrecerá importar memoria de respaldo completa o archivos individuales, detectar el formato por contenido y mostrar las partidas de Sakura encontradas antes de activarlas. Conservar el archivo original y crear una copia; no reemplazar ni formatear silenciosamente una partida existente. Cubrir Mednafen/Beetle, SSF (memoria y archivos individuales), Yabause/Yaba Sanshiro/Kronos, BUP, SAROO y otros formatos documentados. Informar formatos aún no compatibles sin simular que se importaron.
+The user asked to import saves from Saturn emulators and use advanced public saves to extend validation. The launcher will offer importing the full backup memory or individual files, detecting the format by content, and showing the found Sakura saves before activating them. Keep the original file and create a copy; do not silently replace or format an existing save. Cover Mednafen/Beetle, SSF (memory and individual files), Yabause/Yaba Sanshiro/Kronos, BUP, SAROO, and other documented formats. Report formats not yet supported without simulating that they were imported.
 
-Los estados de máquina de un emulador requieren adaptación específica y no equivalen a una partida guardada por el juego. No cargarlos como memoria BUP. Las partidas públicas se conservan localmente con procedencia, autor, versión, hash y resultados. Deben comprobarse en el juego, no solo convertirse sin errores. Incluir pruebas de puntos avanzados, finales, minijuegos y la transición de discos. La importación no debe fabricar desbloqueos de RetroAchievements.
+An emulator's machine states require specific adaptation and are not equivalent to a save made by the game. Do not load them as BUP memory. Public saves are kept locally with provenance, author, version, hash, and results. They must be checked in the game, not merely converted without errors. Include tests of advanced points, endings, minigames, and the disc transition. Importing must not fabricate RetroAchievements unlocks.

@@ -1,0 +1,93 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index a7eb155..160639c 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -349,6 +349,7 @@ int RunWindowed(Port &port) {
+     uint64_t shownSerial = 0;
+     std::vector<uint32_t> frameCopy;
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
++    std::vector<uint32_t> zoomForeground; // reusable removal of the original picture shadow
+     std::vector<uint32_t> shiftedBackdrop; // one reusable fade buffer across all decorative themes
+ 
+     std::vector<uint8_t> englishAtlas;
+@@ -522,7 +523,35 @@ int RunWindowed(Port &port) {
+                     content=foreground;
+                     SDL_UpdateTexture(content,nullptr,hdLines.empty()?planes.foreground.data():hdForeground.data(),320*sizeof(uint32_t));
+                 }
+-                const auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
++                auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
++                // Only split the known narrative layout; overhanging artwork retains the original group.
++                bool zoomSafe=!scene.movieOnly && satrecomp::FeatureValue("scene_view")==1 && scene.y==8 && scene.y+scene.h>153;
++                if(zoomSafe)for(int y=0;y<153 && zoomSafe;y++)for(int x=0;x<320;x++) {
++                    if(planes.source[y*320+x]<3 && (x<16 || x>=304 || y<8 || y>=152)) {zoomSafe=false;break;}
++                }
++                if(!scene.movieOnly && zoomSafe && satrecomp::FeatureValue("scene_view")==1) {
++                    const auto zoom=FitSceneZoom(wide,high,scene.w,scene.y+scene.h-153,scene.h);
++                    if(zoom.valid) {
++                        zoomForeground=hdLines.empty()?planes.foreground:hdForeground;
++                        for(int y=153;y<156;y++)for(int x=20;x<308;x++)
++                            if(IsOldPictureShadow(x,y,planes.source[y*320+x]))zoomForeground[y*320+x]=0;
++                        SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
++                        const SDL_FRect imageCrop{16,8,288,144};
++                        const SDL_FRect imageTarget{float(zoom.picture.x),0,float(zoom.picture.w),float(zoom.picture.h)};
++                        // Shadow belongs to the enlarged image. Draw it first so the dialogue
++                        // and its ornaments always cover it wherever the two layers meet.
++                        const SDL_FRect shadow{imageTarget.x+zoom.shadow,float(zoom.shadow),imageTarget.w,imageTarget.h};
++                        SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
++                        SDL_SetRenderDrawColor(renderer,80,80,80,166);
++                        SDL_RenderFillRect(renderer,&shadow);
++                        SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
++                        SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
++                        crop.y=153;crop.h=float(scene.y+scene.h-153);fit=zoom.dialogue;
++                        if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
++                            static bool logged=false;if(!logged) {logged=true;fprintf(stderr,"scene zoom: image=%dx%d scale=%d dialogue=%dx%d scale=%d y=%d shadow=%d\n",zoom.picture.w,zoom.picture.h,zoom.picture.scale,fit.w,fit.h,fit.scale,fit.y,zoom.shadow);}
++                        }
++                    }
++                }
+                 textFit=fit;textCropX=static_cast<int>(crop.x);textCropY=static_cast<int>(crop.y);
+                 const SDL_FRect target{static_cast<float>(fit.x),static_cast<float>(fit.y),static_cast<float>(fit.w),static_cast<float>(fit.h)};
+                 if(scene.movieOnly) {
+diff --git a/port/main.cpp b/port/main.cpp
+index 8819b3f..0206adb 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -124,6 +124,9 @@ static void RegisterPortFeatures() {
+     game.features.push_back({"presentation_mode", "Pantalla", "Presentación",
+                              "Original conserva la composición Saturn. Mejorado amplía escenas reconocidas sin deformar píxeles ni recortar texto.",
+                              0, {"Original (4:3)", "Mejorado (widescreen)"}});
++    game.features.push_back({"scene_view", "Pantalla", "Visualización de escena",
++                             "Original mantiene imagen y diálogo juntos. Zoom amplía la imagen arriba y ajusta el diálogo con escalas enteras independientes en escenas mejoradas compatibles.",
++                             0, {"Original", "Zoom"}});
+     game.features.push_back({"text_style", "Pantalla", "Texto de diálogos",
+                              "Nítido redibuja los glifos ingleses reconocidos a resolución de ventana. Las fuentes desconocidas y otros textos conservan el original.",
+                              0, {"Nítido", "Original"}});
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index 35cb224..346c364 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -9,6 +9,25 @@ inline IntegerViewport CoverInteger(int width,int height,int columns,int lines)
+     const int k=std::max({1,1+(width-1)/columns,1+(height-1)/lines});
+     return {(width-columns*k)/2,(height-lines*k)/2,columns*k,lines*k,k};
+ }
++inline bool IsOldPictureShadow(int x,int y,int layer) {
++    return layer==3 && x>=20 && x<308 && y>=153 && y<156;
++}
++struct SceneZoomLayout {
++    bool valid=false;
++    IntegerViewport picture{},dialogue{};
++    int shadow=0,gap=0;
++};
++inline SceneZoomLayout FitSceneZoom(int width,int height,int dialogueWidth,int dialogueLines,int groupLines) {
++    if(width<=0 || height<=0 || dialogueWidth<=0 || dialogueLines<=0 || groupLines<=0)return {};
++    const int boxScale=std::min(width/dialogueWidth,height/groupLines);
++    if(boxScale<1)return {};
++    const int gap=std::max(1,boxScale/3);
++    const int pictureScale=std::min(width/296,(height-dialogueLines*boxScale-gap)/148);
++    if(pictureScale<1)return {};
++    const int shadow=4*pictureScale;
++    return {true,{(width-288*pictureScale)/2,0,288*pictureScale,144*pictureScale,pictureScale},
++        {(width-dialogueWidth*boxScale)/2,height-dialogueLines*boxScale,dialogueWidth*boxScale,dialogueLines*boxScale,boxScale},shadow,gap};
++}
+ struct SceneLayout {
+     bool recognized=false,movieOnly=false;
+     int x=0,y=0,w=0,h=0;

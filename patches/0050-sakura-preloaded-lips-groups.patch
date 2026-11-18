@@ -1,0 +1,370 @@
+diff --git a/port/choice_preload.h b/port/choice_preload.h
+new file mode 100644
+index 0000000..8b9dc90
+--- /dev/null
++++ b/port/choice_preload.h
+@@ -0,0 +1,117 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "dialogue_preload.h"
++
++#include <unordered_map>
++
++namespace port {
++
++class ChoicePreload {
++public:
++    static constexpr size_t MaxScripts = 128;
++    static constexpr size_t MaxScriptBytes = 128 * 1024;
++    static constexpr size_t MaxSourceBytes = 8 * 1024 * 1024;
++    static constexpr size_t MaxCommands = 65535;
++
++    bool Add(std::string name, std::span<const uint8_t> bytes, size_t tableIndex,
++             const DialoguePreload& catalog) {
++        const auto tables = catalog.Tables();
++        if (sealed_ || name.empty() || scripts_.size() >= MaxScripts || tableIndex >= tables.size() ||
++            bytes.size() < CommandSize || bytes.size() > MaxScriptBytes ||
++            bytes.size() > MaxSourceBytes - sourceBytes_ ||
++            std::any_of(scripts_.begin(), scripts_.end(), [&](const auto& script) { return script.name == name; }))
++            return false;
++
++        const auto& table = tables[tableIndex];
++        std::unordered_map<uint32_t, const PreloadedDialogueRecord*> byId;
++        for (const auto& record : table.records) {
++            if (record.id > 0xffff) continue;
++            const auto [entry, unique] = byId.emplace(record.id, &record);
++            if (!unique) entry->second = nullptr;
++        }
++
++        Script script;
++        script.name = std::move(name);
++        script.tableIndex = static_cast<uint32_t>(tableIndex);
++        script.tableFingerprint = table.fingerprint;
++        for (size_t offset = 0; offset <= bytes.size() - CommandSize; ++offset) {
++            if (bytes[offset] != 0x2e || bytes[offset + 1] != 0x80 || bytes[offset + 2] != 0) continue;
++            const auto id = uint32_t(bytes[offset + 3]) << 8 | bytes[offset + 4];
++            const auto entry = byId.find(id);
++            if (entry == byId.end() || !IsChoice(entry->second)) continue;
++            if (script.commands.size() == MaxCommands - commandCount_) return false;
++            script.commands.push_back({static_cast<uint32_t>(offset + CommandSize), entry->second->index, id});
++        }
++        if (script.commands.empty()) return false;
++        script.bytes.assign(bytes.begin(), bytes.end());
++        const size_t added = script.commands.size();
++        scripts_.push_back(std::move(script));
++        commandCount_ += added;
++        sourceBytes_ += bytes.size();
++        return true;
++    }
++
++    void Seal() { sealed_ = true; }
++    size_t Commands() const { return commandCount_; }
++
++    DialogueWitness Locate(std::span<const uint8_t> low, std::span<const uint8_t> high,
++                           const DialoguePreload& catalog) const {
++        constexpr size_t bankSize = 0x100000, scriptAt = 0x4000, tableAt = 0x24000, cursorAt = 0x685b4;
++        constexpr uint32_t scriptAddress = 0x00204000;
++        if (!sealed_ || low.size() != bankSize || high.size() != bankSize) return {};
++        const uint32_t cursor = uint32_t(high[cursorAt]) << 24 | uint32_t(high[cursorAt + 1]) << 16 |
++                                uint32_t(high[cursorAt + 2]) << 8 | high[cursorAt + 3];
++        if (cursor < scriptAddress + CommandSize || cursor - scriptAddress > MaxScriptBytes) return {};
++        const uint32_t offset = cursor - scriptAddress;
++        const auto residentScript = low.subspan(scriptAt, MaxScriptBytes);
++        if (residentScript[offset - CommandSize] != 0x2e || residentScript[offset - CommandSize + 1] != 0x80 ||
++            residentScript[offset - CommandSize + 2] != 0) return {};
++
++        const Script* match = nullptr;
++        for (const auto& script : scripts_) {
++            if (offset > script.bytes.size() ||
++                std::memcmp(residentScript.data(), script.bytes.data(), script.bytes.size()) != 0) continue;
++            if (match) return {};
++            match = &script;
++        }
++        if (!match) return {};
++        const auto command = std::lower_bound(match->commands.begin(), match->commands.end(), offset,
++            [](const auto& entry, uint32_t address) { return entry.cursor < address; });
++        if (command == match->commands.end() || command->cursor != offset) return {};
++
++        const auto tables = catalog.Tables();
++        if (match->tableIndex >= tables.size()) return {};
++        const auto& table = tables[match->tableIndex];
++        if (table.fingerprint != match->tableFingerprint || table.bytes.size() > low.size() - tableAt ||
++            std::memcmp(low.data() + tableAt, table.bytes.data(), table.bytes.size()) != 0) return {};
++
++        const DialogueWitness witness{true, match->tableIndex, command->record, 0};
++        const auto* record = catalog.Get(witness);
++        return IsChoice(record) && record->id == command->id ? witness : DialogueWitness{};
++    }
++
++private:
++    static constexpr size_t CommandSize = 9;
++    struct Command { uint32_t cursor, record, id; };
++    struct Script {
++        std::string name;
++        std::vector<uint8_t> bytes;
++        std::vector<Command> commands;
++        uint32_t tableIndex = 0;
++        uint64_t tableFingerprint = 0;
++    };
++
++    static bool IsChoice(const PreloadedDialogueRecord* record) {
++        if (!record || !record->simple || (record->lineCount != 2 && record->lineCount != 3)) return false;
++        for (size_t i = 0; i < record->lineCount; ++i)
++            if (record->lines[i].text.empty()) return false;
++        return true;
++    }
++
++    std::vector<Script> scripts_;
++    size_t sourceBytes_ = 0, commandCount_ = 0;
++    bool sealed_ = false;
++};
++
++} // namespace port
+diff --git a/port/choice_reveal.h b/port/choice_reveal.h
+new file mode 100644
+index 0000000..c1ba33c
+--- /dev/null
++++ b/port/choice_reveal.h
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "dialogue_preload.h"
++
++namespace port {
++
++inline const PreloadedDialogueLine* PreloadedChoiceLine(const PreloadedDialogueRecord& record, int y) {
++    constexpr std::array<int, 2> twoRows{62, 94};
++    constexpr std::array<int, 3> threeRows{54, 78, 102};
++    if (!record.simple || (record.lineCount != 2 && record.lineCount != 3)) return nullptr;
++    const auto rows = record.lineCount == 2 ? std::span<const int>(twoRows) : std::span<const int>(threeRows);
++    const auto at = std::find(rows.begin(), rows.end(), y);
++    if (at == rows.end()) return nullptr;
++    const auto& line = record.lines[static_cast<size_t>(at - rows.begin())];
++    return line.text.empty() || line.text.size() > 31 ? nullptr : &line;
++}
++
++// A matching tile identifies one cell. The caller still validates the complete native panel.
++inline char32_t ExpectedPreloadedChoiceGlyph(const PreloadedDialogueRecord& record, int x, int y,
++        std::span<const uint8_t> atlas, std::span<const uint8_t> tile) {
++    if (atlas.size() != 32768 || tile.size() != 128) return 0;
++    const auto* line = PreloadedChoiceLine(record, y);
++    if (!line) return 0;
++    const int width = static_cast<int>(line->text.size()) * 8;
++    const int left = (336 - width) / 2;
++    if (x < left || x >= left + width || (x - left) % 8) return 0;
++    const auto column = static_cast<size_t>((x - left) / 8);
++    if (line->rawOffset > record.raw.size() || column >= record.raw.size() - line->rawOffset) return 0;
++    const auto byte = static_cast<uint8_t>(record.raw[line->rawOffset + column]);
++    const char32_t character = GlyphCodepoint(byte);
++    if (!character || character != line->text[column]) return 0;
++    const size_t atlasOffset = static_cast<size_t>(byte - 1) * tile.size();
++    return std::memcmp(atlas.data() + atlasOffset, tile.data(), tile.size()) == 0 ? character : 0;
++}
++
++} // namespace port
+diff --git a/port/choice_text.h b/port/choice_text.h
+index dbb3f61..f114953 100644
+--- a/port/choice_text.h
++++ b/port/choice_text.h
+@@ -2,6 +2,7 @@
+ #pragma once
+ 
+ #include "glyph_text.h"
++#include "choice_reveal.h"
+ 
+ #include <algorithm>
+ #include <array>
+@@ -23,6 +24,7 @@ struct UiTextLine {
+ struct ChoiceTextMatch {
+     std::vector<UiTextLine> lines;
+     std::vector<size_t> ink;
++    bool catalog=false;
+ };
+ 
+ inline std::array<int,4> ChoiceTextClip(int x,int y,int scale,int cropX,int cropY) {
+@@ -34,7 +36,8 @@ inline std::array<int,4> ChoiceTextClip(int x,int y,int scale,int cropX,int crop
+ // metadata of the same displayed framebuffer. All rows share one native panel.
+ template<typename Sprite,typename Plate>
+ std::optional<ChoiceTextMatch> MatchChoiceText(std::span<const Sprite> sprites,std::span<const uint8_t> atlas,
+-    std::span<const uint8_t> source,std::span<const uint32_t> pixels,std::span<const Plate> plate) {
++    std::span<const uint8_t> source,std::span<const uint32_t> pixels,std::span<const Plate> plate,
++    const PreloadedDialogueRecord* prepared=nullptr) {
+     constexpr size_t frameSize=320*224;
+     if(sprites.size()>4096 || atlas.size()!=32768 || source.size()!=frameSize ||
+        pixels.size()!=frameSize || plate.size()!=frameSize)return {};
+@@ -45,6 +48,7 @@ std::optional<ChoiceTextMatch> MatchChoiceText(std::span<const Sprite> sprites,s
+         unsigned count=0,shade=766;
+         uint16_t bank=0;
+         uint32_t color=0;
++        bool exact=true;
+     };
+     constexpr std::array<int,5> nativeRows{54,62,78,94,102};
+     std::array<Row,nativeRows.size()> rows{};
+@@ -63,8 +67,10 @@ std::optional<ChoiceTextMatch> MatchChoiceText(std::span<const Sprite> sprites,s
+         auto& row=rows[size_t(rowPos-nativeRows.begin())];
+         if(row.count==row.cells.size() || (row.bank && row.bank!=cmd[3]))return {};
+         const auto tile=std::span<const uint8_t>(sprite.pixels);
+-        const auto code=DecodeCodepoint(atlas,tile);
++        const auto expected=prepared?ExpectedPreloadedChoiceGlyph(*prepared,sprite.x,sprite.y,atlas,tile):0;
++        const auto code=expected?expected:DecodeCodepoint(atlas,tile);
+         if(!code)return {};
++        row.exact&=expected!=0;
+         row.bank=cmd[3];
+         const size_t owner=index+1;
+         matchedOwners[owner]=true;
+@@ -86,6 +92,7 @@ std::optional<ChoiceTextMatch> MatchChoiceText(std::span<const Sprite> sprites,s
+     const bool two=rows[1].count && rows[3].count && !rows[0].count && !rows[2].count && !rows[4].count;
+     const bool three=rows[0].count && rows[2].count && rows[4].count && !rows[1].count && !rows[3].count;
+     if(clocks!=1 || (!two && !three))return {};
++    bool borrow=prepared && prepared->simple && prepared->lineCount==(two?2u:3u);
+     unsigned selected=0;
+     for(size_t i=0;i<rows.size();++i) {
+         auto& row=rows[i];
+@@ -94,15 +101,13 @@ std::optional<ChoiceTextMatch> MatchChoiceText(std::span<const Sprite> sprites,s
+         const auto end=row.cells.begin()+row.count;
+         std::sort(row.cells.begin(),end,[](const auto& a,const auto& b){return a.x<b.x;});
+         if(row.cells.front().x+(end-1)->x+8!=336)return {};
+-        UiTextLine line;
+-        line.x=row.cells.front().x;
+-        line.y=nativeRows[i];
+-        line.color=row.color;
++        const auto* compiled=borrow?PreloadedChoiceLine(*prepared,nativeRows[i]):nullptr;
++        borrow=borrow && row.exact && compiled && compiled->text.size()==row.count;
+         for(auto cell=row.cells.begin();cell!=end;++cell) {
+-            if(cell->x!=line.x+8*int(line.text.size()))return {};
+-            line.text+=cell->code;
++            const size_t column=size_t(cell-row.cells.begin());
++            if(cell->x!=row.cells.front().x+8*int(column))return {};
++            if(borrow && cell->code!=compiled->text[column])borrow=false;
+         }
+-        result.lines.push_back(std::move(line));
+     }
+     // The saved color predates both writers. Erase their shared ink only
+     // when the complete active panel owns every contributing command.
+@@ -114,6 +119,14 @@ std::optional<ChoiceTextMatch> MatchChoiceText(std::span<const Sprite> sprites,s
+     }
+     std::sort(result.ink.begin(),result.ink.end());
+     result.ink.erase(std::unique(result.ink.begin(),result.ink.end()),result.ink.end());
++    result.catalog=borrow;
++    for(size_t i=0;i<rows.size();++i) {
++        const auto& row=rows[i];if(!row.count)continue;
++        UiTextLine line;line.x=row.cells.front().x;line.y=nativeRows[i];line.color=row.color;
++        if(borrow)line.catalogText=PreloadedChoiceLine(*prepared,line.y)->text;
++        else for(size_t column=0;column<row.count;++column)line.text+=row.cells[column].code;
++        result.lines.push_back(std::move(line));
++    }
+     return result;
+ }
+ 
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index baaf6b0..ed1d9ee 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -461,6 +461,7 @@ int RunWindowed(Port &port) {
+     uint64_t shownSerial = 0;
+     bool shownFirstMoviePhase = false;
+     DialogueWitness shownDialogue;
++    DialogueWitness shownChoice;
+     std::vector<uint32_t> frameCopy;
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
+     std::vector<uint32_t> zoomForeground; // reusable removal of the original picture shadow
+@@ -882,7 +883,8 @@ int RunWindowed(Port &port) {
+                     SDL_UpdateTexture(content,nullptr,hdLines.empty()?planes.foreground.data():hdForeground.data(),320*sizeof(uint32_t));
+                     if(content && scene.recognized && !port.menu.IsOpen() && !choosing && sakuraUi.HasGameFont() &&
+                        !englishAtlas.empty() && satrecomp::FeatureValue("text_style")==0) {
+-                        if(auto choices=MatchChoiceText(std::span{planes.sprites},englishAtlas,planes.source,softwareShown,std::span{planes.glyphPlate})) {
++                        const auto* choiceRecord=port.dialogueCatalog?port.dialogueCatalog->Get(shownChoice):nullptr;
++                        if(auto choices=MatchChoiceText(std::span{planes.sprites},englishAtlas,planes.source,softwareShown,std::span{planes.glyphPlate},choiceRecord)) {
+                             const auto& previousNative=hdNative.empty()?softwareShown:hdNative;
+                             const auto& previousForeground=hdForeground.empty()?planes.foreground:hdForeground;
+                             auto nextNative=previousNative,nextForeground=previousForeground;
+@@ -894,6 +896,14 @@ int RunWindowed(Port &port) {
+                                SDL_UpdateTexture(texture,nullptr,nextNative.data(),320*sizeof(uint32_t))) {
+                                 hdNative=std::move(nextNative);hdForeground=std::move(nextForeground);
+                                 hdChoiceLines=std::move(choices->lines);
++                                if(std::getenv("SATRECOMP_DIALOGUE_TRACE")) {
++                                    static uint64_t previous=~uint64_t(0);
++                                    const uint64_t signature=(uint64_t(shownChoice.table)<<48)|(uint64_t(shownChoice.record)<<16)|
++                                        (uint64_t(hdChoiceLines.size())<<1)|uint64_t(choices->catalog);
++                                    if(signature!=previous) {previous=signature;fprintf(stderr,"choice catalog: serial=%llu id=%u rows=%zu used=%d\n",
++                                        static_cast<unsigned long long>(shownSerial),choiceRecord?choiceRecord->id:0,
++                                        hdChoiceLines.size(),int(choices->catalog));}
++                                }
+                                 for(auto at:choices->ink)hdErased[at]=2;
+                                 if(std::getenv("SATRECOMP_HD_TEXT_TRACE")) {
+                                     static std::array<bool,4> traced{};
+@@ -1501,6 +1511,7 @@ int RunWindowed(Port &port) {
+                     softwareShown = port.fb;
+                     shownFirstMoviePhase = port.fbFirstMoviePhase;
+                     shownDialogue = port.fbDialogue;
++                    shownChoice = port.fbChoice;
+                     if (std::getenv("SATRECOMP_DIALOGUE_TRACE")) {
+                         static DialogueWitness previous;
+                         if (!(shownDialogue == previous)) {
+diff --git a/port/main.cpp b/port/main.cpp
+index a81c413..1ba45a7 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -239,15 +239,27 @@ void Port::PrepareDialogueCatalog(std::span<const uint8_t> knownAtlas) {
+             catalog->Add(name, bytes);
+     }
+     catalog->Seal();
++    auto choices=std::make_shared<ChoicePreload>();
++    // Only the complete script observed in both verified LIPS fixtures.
++    for(size_t table=0;table<catalog->Tables().size();++table) {
++        if(catalog->Tables()[table].name!="0102TBL.BIN")continue;
++        std::vector<uint8_t> script;
++        if(discFiles.ReadBounded("0102.BIN",script,ChoicePreload::MaxScriptBytes) &&
++           script.size()==26646 && AtlasFingerprint(script)==0x0CE1CF29E7390A98ull)
++            choices->Add("0102.BIN",script,table,*catalog);
++    }
++    choices->Seal();
+     if (std::getenv("SATRECOMP_DIALOGUE_TRACE")) {
+         const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(
+             std::chrono::steady_clock::now() - started).count();
+         fprintf(stderr,"dialogue preload: tables=%zu records=%zu ready=%zu bytes=%zu us=%lld\n",
+             catalog->TableCount(),catalog->RecordCount(),catalog->ReadyCount(),catalog->SourceBytes(),
+             static_cast<long long>(elapsed));
++        fprintf(stderr,"choice preload: commands=%zu\n",choices->Commands());
+     }
+     std::lock_guard lock(fbMutex);
+     dialogueCatalog = std::move(catalog);
++    choiceCatalog = std::move(choices);
+ }
+ 
+ bool Port::OpenDiscFiles() {
+@@ -634,6 +646,10 @@ bool Port::Init() {
+             satrecomp::FeatureValue("text_style") == 0 ? dialogueCatalog->Locate(
+             std::span<const uint8_t>(saturn->ramLow,0x100000),
+             std::span<const uint8_t>(saturn->ramHigh,0x100000)) : DialogueWitness{};
++        fbChoice = choiceCatalog && dialogueCatalog && satrecomp::FeatureValue("presentation_mode") == 1 &&
++            satrecomp::FeatureValue("text_style") == 0 ? choiceCatalog->Locate(
++            std::span<const uint8_t>(saturn->ramLow,0x100000),
++            std::span<const uint8_t>(saturn->ramHigh,0x100000),*dialogueCatalog) : DialogueWitness{};
+         fbFirstMoviePhase = width==320 && height==224 && CaptureFirstMoviePhase(
+             std::span<const uint8_t>(saturn->ramLow,0x100000),std::span<const uint8_t>(saturn->ramHigh,0x100000),firstMovieScript);
+         if(std::getenv("SATRECOMP_MOVIE_PHASE_TRACE") && !firstMovieScript.empty()) {
+diff --git a/port/port.h b/port/port.h
+index 032f7c5..f69de84 100644
+--- a/port/port.h
++++ b/port/port.h
+@@ -7,6 +7,7 @@
+ 
+ #include "disc_files.h"
+ #include "dialogue_preload.h"
++#include "choice_preload.h"
+ #include "menu.h"
+ #include "soundtrack.h"
+ 
+@@ -105,7 +106,9 @@ struct Port {
+     uint64_t fbSerial = 0;
+     bool fbFirstMoviePhase = false; // host-only witness captured with this framebuffer
+     DialogueWitness fbDialogue;
++    DialogueWitness fbChoice;
+     std::shared_ptr<const DialoguePreload> dialogueCatalog;
++    std::shared_ptr<const ChoicePreload> choiceCatalog;
+     bool dialogueCatalogTried = false;
+     void PrepareDialogueCatalog(std::span<const uint8_t> knownAtlas);
+ 

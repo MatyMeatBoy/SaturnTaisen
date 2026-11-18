@@ -1,0 +1,96 @@
+{
+  "scope": "Saturn backgrounds and its optional HD background pack",
+  "identical_rgba_images": 38,
+  "runs_per_condition": 3,
+  "compression_comparison": {
+    "packed-raw": {
+      "cold-derived": {
+        "runs": 3,
+        "median_seconds": 1.9199434000183828,
+        "median_loader_ms": {
+          "saturn": 961.915,
+          "pc_hd": 931.968
+        }
+      },
+      "warm-derived": {
+        "runs": 3,
+        "median_seconds": 0.25082519999705255,
+        "median_loader_ms": {
+          "saturn": 79.594,
+          "pc_hd": 150.442
+        }
+      }
+    },
+    "packed-deflate": {
+      "cold-derived": {
+        "runs": 3,
+        "median_seconds": 2.058552199974656,
+        "median_loader_ms": {
+          "saturn": 980.352,
+          "pc_hd": 1046.635
+        }
+      },
+      "warm-derived": {
+        "runs": 3,
+        "median_seconds": 0.2898335999925621,
+        "median_loader_ms": {
+          "saturn": 87.163,
+          "pc_hd": 182.793
+        }
+      }
+    }
+  },
+  "cache_file_bytes": {
+    "packed-raw": 16145238,
+    "packed-deflate": 5368794
+  },
+  "pixel_formats": {
+    "1": 23,
+    "3": 15
+  },
+  "selected": "paletted8/RGB555 without additional DEFLATE",
+  "reason": "Additional DEFLATE saved bytes but increased both measured preparation and warm-read latency.",
+  "final_comparison": {
+    "before": {
+      "cold-derived": {
+        "runs": 3,
+        "median_seconds": 5.127973700000439,
+        "median_loader_ms": {
+          "saturn": 1853.062,
+          "pc_hd": 3239.009
+        }
+      },
+      "warm-derived": {
+        "runs": 3,
+        "median_seconds": 0.2677467999747023,
+        "median_loader_ms": {
+          "saturn": 77.902,
+          "pc_hd": 168.75
+        }
+      }
+    },
+    "final-packed": {
+      "cold-derived": {
+        "runs": 3,
+        "median_seconds": 1.9602048000087962,
+        "median_loader_ms": {
+          "saturn": 982.327,
+          "pc_hd": 952.95
+        }
+      },
+      "warm-derived": {
+        "runs": 3,
+        "median_seconds": 0.27393109997501597,
+        "median_loader_ms": {
+          "saturn": 90.681,
+          "pc_hd": 161.42
+        }
+      }
+    }
+  },
+  "limits": [
+    "Derived cache cold/warm only; OS cache was not flushed.",
+    "CPU SDL software-loader benchmark; no whole-game loading-time claim.",
+    "Runtime Direct3D11 scene trace is a single observation, not a frame-pacing benchmark."
+  ]
+}

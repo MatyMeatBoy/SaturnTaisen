@@ -1,0 +1,68 @@
+diff --git a/port/map_crossfade.h b/port/map_crossfade.h
+new file mode 100644
+index 0000000..08e7ce4
+--- /dev/null
++++ b/port/map_crossfade.h
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "integer_viewport.h"
++#include "panel_compositing.h"
++
++namespace port {
++
++// Set only if the renderer proves uniform NBG3-over-NBG0 ratio and offset
++// across both raw map borders. Native pixels remain in the original texture.
++struct MapCrossfade {
++    uint8_t mapWeight = 0;
++    std::array<int16_t,3> postMixOffset{};
++    bool operator==(const MapCrossfade&) const = default;
++};
++
++struct MapFadeEdge {
++    uint32_t mapRgb = 0;
++    MapCrossfade mix;
++};
++
++inline bool ValidMapCrossfade(const MapCrossfade& recipe) {
++    return recipe.mapWeight>0 && recipe.mapWeight<=32 &&
++        std::all_of(recipe.postMixOffset.begin(),recipe.postMixOffset.end(),
++                    [](int channel){return channel>=-256 && channel<=255;});
++}
++
++// Per native row, samples are x=0..15 followed by x=304..319.
++inline std::optional<MapCrossfade> VerifyMapCrossfadeEdges(std::span<const MapFadeEdge> edges,
++                                                            std::vector<uint32_t>& rows) {
++    rows.clear();
++    if(edges.size()!=32*224 || !ValidMapCrossfade(edges.front().mix))return {};
++    const auto mix=edges.front().mix;
++    if(!std::all_of(edges.begin(),edges.end(),[&](const auto& edge){return edge.mix==mix;}))return {};
++    for(size_t y=0;y<224;y++)for(size_t side:{0u,16u})for(size_t x=0;x<8;x++) {
++        const size_t at=y*32+side+x;
++        if((edges[at].mapRgb&0xFFFFFF)!=(edges[at+8].mapRgb&0xFFFFFF))return {};
++    }
++    if(!ResizePanelBuffer(rows,16*224))return {};
++    for(size_t y=0;y<224;y++)for(size_t side=0;side<2;side++)for(size_t x=0;x<8;x++)
++        rows[y*16+side*8+x]=edges[y*32+side*16+x].mapRgb|0xFF000000;
++    return mix;
++}
++
++inline std::optional<uint32_t> SampleMapCrossfade(const MapCrossfade& recipe,
++        std::span<const uint32_t> mapRows, const IntegerViewport& native,
++        int screenX, int screenY, uint32_t unshiftedFloral) {
++    const int64_t scale=native.scale;
++    if(scale<=0 || native.w!=320*scale || native.h!=224*scale || mapRows.size()!=16*224 ||
++       !ValidMapCrossfade(recipe))return {};
++    const int64_t dx=int64_t(screenX)-native.x,dy=int64_t(screenY)-native.y;
++    if(dx>=0 && dx<native.w && dy>=0 && dy<native.h)return {};
++
++    const int64_t tileWidth=8*scale;
++    const int64_t phase=((dx%tileWidth)+tileWidth)%tileWidth/scale;
++    const int64_t y=std::clamp(dy,int64_t{0},int64_t(native.h)-1)/scale;
++    const size_t at=size_t(y*16+phase+(dx>=native.w?8:0));
++    const PanelMix mix{unshiftedFloral,recipe.mapWeight,recipe.postMixOffset};
++    return CompositePanelPixel(mix,mapRows[at],mapRows[at]|0xFF000000);
++}
++
++} // namespace port

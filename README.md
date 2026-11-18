@@ -1,84 +1,104 @@
-<h1 align="center">🌸 SaturnTaisenFirst</h1>
-<p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Recompilación estática para Windows x64</p>
+<h1 align="center">🌸 SaturnTaisen</h1>
+<p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Static SH-2 recompilation · Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases"><img alt="Versión 0.1.5 checkpoint" src="https://img.shields.io/badge/versi%C3%B3n-0.1.5_checkpoint-9a4564?style=flat-square"></a>
-  <img alt="Plataforma Windows x64" src="https://img.shields.io/badge/plataforma-Windows_x64-77445b?style=flat-square">
-  <a href="docs/research/runtime-validation.json"><img alt="SH-2: AOT estática" src="https://img.shields.io/badge/SH--2-AOT_est%C3%A1tica-bf914d?style=flat-square"></a>
-  <a href="LICENSE"><img alt="Licencia GPL-3.0-only" src="https://img.shields.io/badge/licencia-GPL--3.0--only-5d755d?style=flat-square"></a>
-  <img alt="Estado: desarrollo" src="https://img.shields.io/badge/estado-en_desarrollo-d1a0ad?style=flat-square">
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.0-alpha"><img alt="v0.2.0-alpha first public release" src="https://img.shields.io/badge/release-v0.2.0--alpha-9a4564?style=flat-square"></a>
+  <img alt="Windows x64 portable" src="https://img.shields.io/badge/Windows-x64_portable-77445b?style=flat-square">
+  <a href="docs/research/chapter1-battle-progress.md"><img alt="Static SH-2 AOT" src="https://img.shields.io/badge/SH--2-static_AOT-bf914d?style=flat-square"></a>
+  <a href="docs/releases/v0.2.0-test.3.md"><img alt="Local validation documented" src="https://img.shields.io/badge/testing-local_report-5d755d?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/OptiPort"><img alt="OptiPort method" src="https://img.shields.io/badge/method-OptiPort-617b91?style=flat-square"></a>
+  <a href="LICENSE"><img alt="GPL-3.0-only" src="https://img.shields.io/badge/license-GPL--3.0--only-646464?style=flat-square"></a>
 </p>
 
-Un regreso al Teatro Imperial con los píxeles de Saturn, una presentación cuidada y la traducción inglesa suministrada por el propietario. Proyecto público de **MatyMeatBoy**.
+A return to the Imperial Theater with recompiled SH-2 code, integer-scaled pixels, and optional presentation upgrades. Public project by **MatyMeatBoy**.
 
-**v0.1.5 es un checkpoint de desarrollo hacia v0.2.** Añade selección Original/Mejorado, composición panorámica por capas, menú Sakura a resolución de ventana y fuente nítida opcional. Se han generado extensiones decorativas preliminares para las 20 variantes Saturn y las 19 de PC. Las de PC aún requieren integración; su presencia no implica que la versión PC, su traducción o el pack HD completo sean jugables. Consulta las [notas del checkpoint](docs/releases/v0.1.5.md).
+**v0.2.0-alpha is the first public release, not the certified complete game.** It includes the AOT fix for the first battle's closing sequence, HD narrative from the preloaded catalog, the 201-portrait checkpoint, and a first Spanish-language draft of chapter 1 (translated and cross-checked against the Japanese script), with all limits documented below. Chapter 1 end-to-end and the full campaign are not yet verified. [Scope of this release](docs/releases/v0.2.0-test.3.md). The [v0.1.2](docs/releases/v0.1.2.md) and [v0.1.5](docs/releases/v0.1.5.md) packages are kept intact. The launcher defaults to English; a Spanish script/menu patch is available (see Development below) and more languages are planned.
 
-**v0.1 es una versión de desarrollo.** Están verificados el arranque, 119.781 fotogramas continuos de exploración AOT, guardado/carga del episodio 1 y cargas de partidas públicas del episodio 8 y Finale en el disco 2. La entrada al primer combate coincide con la referencia durante 3.001 frames repetidos, y 9.001 más llegan a su primer campo jugable en AOT. La campaña completa, todas las batallas y la transición automática real de discos todavía no están validadas.
+## Play
 
-El launcher usa una temática de cerezos inspirada en NewSnapRecomp, solo la captura local de la pantalla de título e importación de partidas en copias separadas. El juego se centra con **escala entera y nearest**, con un marco adaptable. [Notas de la v0.1](docs/releases/0.1.md) · [Diseño](docs/superpowers/specs/2026-11-17-v01-launcher.md) · [Validación](docs/research/runtime-validation.json) · [Formatos de partidas](docs/research/save-import.md).
+Extract the Windows release into a writable folder and open **Play.bat**. DLLs and the save importer are bundled: you don't need to install Python, MSYS2, compilers, or an SDK to play. This build boots without an external BIOS.
 
-## Objetivos confirmados
+The standard Git release **does not include discs, BIOS, binary translations, save files, or original PC assets**. Bring your own translated discs. The owner's personal transfer package is separate and not published: it bundles the build with only their own English disc 1 and processed HD assets, already placed for auto-detection.
 
-- Recompilar el código SH-2 a código nativo; mantener las funciones necesarias del hardware en un runtime.
-- Incorporar localmente los dos discos y la traducción inglesa.
-- Integrar la transición entre discos y conservar las partidas.
-- Escalar únicamente en enteros, conservar los píxeles originales y rellenar el espacio restante con un marco adaptable.
-- Repositorio público bajo MatyMeatBoy.
-- Ajustes compartidos entre launcher y menú ingame (Start + Select).
-- Mandos generales y perfiles automáticos Saturn para modelos reconocidos, incluidos M30.
-- Logros oficiales RetroAchievements 1:1, online softcore y offline local, con pestaña y avisos con badge.
-- Traducción y mods compatibles instalados activados por defecto, con interruptores individuales.
+The final game is planned as a **unified release with mandatory import of both discs**. A personal single-disc test does not certify that transition or replace the pending work on the final importer.
 
-Los dumps, BIOS, parches binarios, recursos extraídos, código generado del juego y partidas se mantienen locales y fuera del repositorio.
+## Presentation and controls
 
-## Documentación
+| Option | Behavior |
+|---|---|
+| Original | Keeps the original Saturn composition and integer scale of the original raster. |
+| Enhanced | Recomposes recognized scenes, up to 16:9, with an original fallback. |
+| Original Display | Image and dialogue share a single scale. |
+| Zoom Display | Image and dialogue use independent integer scales to best fit; a shadow sits behind the dialogue. |
+| HD Text | Optional font with uniform proportions and native advance, clipped inside the text box. |
+| HD Mod | Compatible backgrounds and portraits; can use an already-processed pack without a PC install. |
+| HD Preload | Loads enabled assets before playing; optional, with higher memory use. |
+| Controllers | SDL3 with remapping; M30 Bluetooth/2.4G profiles, with manual selection when XInput hides the model. |
 
-- [Investigación y referencias](docs/research/2026-11-17-investigacion.md)
-- [Catálogo verificable de proyectos](docs/research/projects.json)
-- [Diseño propuesto](docs/superpowers/specs/2026-11-17-saturn-taisen-first-design.md)
-- [Problemas resueltos en doce recompilaciones y su aplicación](docs/research/2026-11-17-casos-recomp.md)
-- [Plan y alcance de la primera etapa](docs/superpowers/plans/2026-11-17-foundation.md)
+Pixels are scaled with nearest-neighbor and integer multipliers. Output keeps the square raster; no fractional aspect correction is applied. On wider surfaces the 16:9 area is centered, with no ultrawide mode. The frame sits outside the playable content.
 
-## Desarrollo local
+**F11** toggles fullscreen. **Esc/F1** or **Start+Select/Back** opens settings. The launcher and the game share configuration; the launcher closes once the first frame is confirmed ready. **View logs.bat** opens diagnostics. Save import works on copies, without modifying the sources.
 
-Python 3.11+, Git, CMake/Ninja/Clang y SDL3. En esta máquina se usa MSYS2 CLANG64 en `C:/msys64/clang64`; puede indicarse otro prefijo mediante `--toolchain`. La dependencia satrecomp se fija por commit y se le aplican parches revisables; sigue su licencia GPL-3.0-only.
+## Verifiable status
+
+| Area | Status and evidence |
+|---|---|
+| Boot and AOT | Cold boot and tested paths without a guest SH-2 interpreter. |
+| Exploration | 119,781 continuous frames of one exploration route; does not equal a complete chapter. |
+| Save/load | Specific points in episode 1 and research save files; full campaign and real disc swapping still pending. |
+| Combat | Tutorial, movement, defense, and Sakura/Sumire attacks tested. Separate submenus in Enhanced mode; AOT/interpreter SDK tests do not certify victory or campaign completion. |
+| HD | Backgrounds and portraits integrated with validation and fallback. Full bodies/poses/expressions still pending. |
+| PixelGen v1 | Stage01 right-hand strip integrated and anchored to world scroll; camera and sprites checked on specific routes. |
+| Tactical 16:9/HUD | Stage01 enabled in Enhanced mode with corrected menus. Other stages, the full HUD, and the entire battle remain pending. |
+| RetroAchievements | Pending: no online/offline achievements are announced as available. |
+| PC | Assets are used for the Saturn HD mod; running and translating the PC version itself are on hold. |
+| Spanish translation | Chapter 1 complete, translated and cross-checked against Japanese. Chapters 2-7 have a first English→Spanish draft, validated for line/length/choice rules but not yet cross-checked against Japanese. Chapters 8-10 in progress. Menus pending a language selector in the launcher. |
+
+PC body assets will keep a single height-based scale, with the head/torso axis aligned to the original; they will not be stretched to fill a box. Full hardware compatibility across all M30 firmware revisions and the target machine's RX 6900 XT still needs checking there.
+
+[Progression and combat](docs/research/chapter1-battle-progress.md) · [M30 controllers](docs/research/m30-controller-profiles.md) · [PixelGen v1](docs/research/pixelgen-v1.md) · [Saves](docs/research/save-import.md)
+
+<!-- BEGIN HD PROGRESS -->
+
+## HD progress
+
+[![HD portraits ready](https://img.shields.io/badge/HD_portraits_ready-300%2F304%20%2898.6%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![KABE backgrounds ready](https://img.shields.io/badge/KABE_backgrounds_ready-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![Global HD verified](https://img.shields.io/badge/Global_HD-Undetermined-646464?style=flat-square)](docs/HD_PROGRESS.md)
+
+**Global target: 100% verified. Status: Undetermined.**
+
+| Area | Ready | Verified in-game |
+| --- | --- | --- |
+| Portraits and animation | 300/304 (98.6%) | No data |
+| Videos | 0/50 (0%) | 0/50 (0%) |
+| PC/Saturn HUD and menus | No data | No data |
+| KABE decorative backgrounds | 19/19 (100%) | No data |
+| Large NC characters | No data | No data |
+| Scenes and transitions | No data | No data |
+
+[Inventory, percentage scope, and remaining work](docs/HD_PROGRESS.md).
+
+<!-- END HD PROGRESS -->
+
+## OptiPort and performance
+
+We apply [OptiPort](https://github.com/MatyMeatBoy/OptiPort): reproductions, comparisons, bounded changes, and evidence tied to the artifact. The badges describe technology, delivery, and documentation; they are not completion percentages or universal stability guarantees.
+
+CPU preparation of 38 backgrounds went from 2.102s with one worker to 0.478s with eight in the recorded measurement; this is asset preparation, **not a demonstrated FPS improvement or a change to overall game loading**. SDL textures are created on the renderer thread. [Conditions and limits](docs/research/saturn-background-workers.md).
+
+## Development
+
+Contributor entry point: [current pending work](docs/PENDIENTES.md) and [technical/art handoff](docs/HANDOFF.md). They distinguish local work from delivered releases and explain the PixelGen v1 method, testing, and coordination between bots.
+
+Python 3.11+, Git, CMake/Ninja/Clang, and SDL3. The satrecomp dependency is pinned by commit and its changes are distributed as reproducible patches. Dumps, saved states, generated code, and original assets stay in `local/`, outside Git.
 
 ```powershell
 python -m unittest discover -s tests -v
-python tools/build_runtime.py check-disc
-python tools/build_runtime.py check-video
-python tools/build_runtime.py check-machine
 python tools/build_runtime.py build
-python tools/build_runtime.py discover --frames 30000 --movie tests/theater.movie
 python tools/build_runtime.py recompile
-python tools/build_runtime.py run
+python tools/build_launcher.py
 ```
 
-`discover` utiliza interpretación exclusivamente para obtener cobertura. El ejecutable y `run` usan AOT estricto por defecto: se detienen si necesitan interpretar una instrucción SH-2 guest. Las funciones agrupadas y el enlace de llamadas host requieren habilitación experimental explícita; la ruta validada usa el despachador de bloques. Los servicios de hardware/BIOS reimplementados y el 68000 de audio son partes separadas del runtime.
+Interpreter-based discovery is used exclusively to investigate coverage; production rejects SH-2 fallback. The reimplemented BIOS/hardware services and the audio 68000 are separate runtime components. The set of candidate blocks does not represent a decompilation percentage or campaign coverage.
 
-La base de bloques y los C++ generados no se incluyen en Git; cada desarrollador debe generarlos desde sus imágenes. El launcher nativo se construye con `python tools/build_launcher.py`; la transición automática de discos sigue pendiente. `tests/theater.movie` recorre la narración inicial con pulsaciones de A hasta el mapa del teatro; no cubre las ramas, las batallas ni la campaña completa. La preparación japonesa está disponible con `prepare_discs.py --original --cue ... --output ...`; su cobertura AOT y el selector de idioma aún se están integrando. Los avisos del runtime sobre hardware o composición no se consideran resueltos por el simple hecho de que arranque.
+[Design](docs/superpowers/specs/2026-11-17-saturn-taisen-first-design.md) · [Saturn board](docs/superpowers/plans/2026-11-17-saturn-priority.md) · [References](docs/research/2026-11-17-investigacion.md) · [Licenses](THIRD_PARTY_NOTICES.md)
 
-Las comprobaciones sintéticas de vídeo y máquina no necesitan dumps. Comprueban la composición de capas y sprites, búsquedas CD por pista/FAD, invalidación de sectores al cambiar de lector y rechazo de servicios BIOS desconocidos en modo estricto. La comparación larga entre intérprete y AOT se ejecuta así:
-
-```powershell
-python tools/verify_runtime.py --frames 30000 --movie tests/theater.movie --timeout 600
-```
-
-El analizador complementario puede leer directamente el programa inicial de una ISO preparada:
-
-```powershell
-python tools/static_program.py --disc-iso "local/prepared/disc1/Track 01.iso" --output local/work/sakura/static-disc1.txt
-```
-
-`--all-entries` conserva además los prefijos válidos de todas las direcciones alineadas; produce muchos más candidatos y aumenta el tiempo y tamaño de compilación. Sigue punteros, llamadas y ramas, y reconoce tablas de salto relativas con una comprobación de rango. Su salida contiene código derivado del juego y debe permanecer local. Son candidatos adicionales: todavía hacen falta descubrimiento de otros saltos indirectos y overlays, comprobación de bytes en el runtime y pruebas de las rutas reales.
-
-Las pruebas con estos discos corresponden al runtime adaptado de satrecomp y están detalladas en `docs/research/runtime-validation.json`. Los demás proyectos se consultan como referencias de código; su existencia o las afirmaciones de sus autores no prueban que Sakura Taisen completo funcione.
-
-El generador conserva las posiciones de los bloques en `local/work/sakura/block-order.json` para añadir cobertura sin reescribir archivos C++ anteriores. El manifiesto rechaza variantes retiradas o cambios de partición; otra base requiere un directorio y manifiesto nuevos. Sigue siendo necesario comprobar los bytes guest durante la ejecución.
-
-Para contrastar la carga de una partida propia del episodio 1 (archivo 1 en la pausa), el verificador puede iniciar cada modo con una copia independiente de la misma memoria nativa de 32 KiB:
-
-```powershell
-python tools/verify_runtime.py --frames 9098 --movie tests/cold-load.movie --backup-seed "ruta/al/backup.bin" --timeout 240
-```
-
-La imagen de origen se lee y se registra mediante SHA-256; cada ejecución modifica su propia copia privada. Los estados de investigación también necesitan conservar la memoria de guardado de su sesión.
+Guide for moving to another PC and included tools: [portable handoff](docs/releases/PORTABLE-HANDOFF.md).

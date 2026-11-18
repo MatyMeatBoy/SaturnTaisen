@@ -1,0 +1,308 @@
+diff --git a/port/backdrop.h b/port/backdrop.h
+index 42b1d98..fa72bf5 100644
+--- a/port/backdrop.h
++++ b/port/backdrop.h
+@@ -59,13 +59,15 @@ inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::p
+     uint64_t hash=14695981039346656037ull;
+     for(const auto byte:masterBytes)hash=(hash^byte)*1099511628211ull;
+     for(size_t i=0;i<512 && i<kabe.size();i++)hash=(hash^kabe[i])*1099511628211ull;
+-    std::filesystem::path cache,legacy;
++    std::filesystem::path cache,legacy,legacyFast;
+     SDL_Surface* logical=nullptr;
+-    bool fast=false;
++    bool fast=false,migrated=false;
+     if(!cacheDir.empty()) {
+-        cache=cacheDir/(file.stem().string()+"-grid416-v2-"+std::to_string(hash)+".stfb");
++        cache=cacheDir/(file.stem().string()+"-grid416-v3-"+std::to_string(hash)+".stfb");
++        legacyFast=cacheDir/(file.stem().string()+"-grid416-v2-"+std::to_string(hash)+".stfb");
+         legacy=cacheDir/(file.stem().string()+"-grid416-v1-"+std::to_string(hash)+".png");
+         logical=ReadBackgroundCache(cache,416,234);fast=logical!=nullptr;
++        if(!logical) {logical=ReadBackgroundCache(legacyFast,416,234);migrated=logical!=nullptr;}
+         if(!logical)logical=ReadLegacyBackgroundPng(legacy,416,234);
+         if(logical && (logical->w!=416 || logical->h!=234)) {SDL_DestroySurface(logical);logical=nullptr;}
+     }
+@@ -76,7 +78,7 @@ inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::p
+     }
+     if(!cache.empty() && !fast) {
+         std::error_code error;std::filesystem::create_directories(cacheDir,error);
+-        if(!error)WriteBackgroundCache(cache,logical);
++        if(!error && WriteBackgroundCache(cache,logical) && migrated)std::filesystem::remove(legacyFast,error);
+     }
+     return BackdropTexture(renderer,logical,pixels);
+ }
+diff --git a/port/background_cache.h b/port/background_cache.h
+index b3d7d6b..97ccbca 100644
+--- a/port/background_cache.h
++++ b/port/background_cache.h
+@@ -9,6 +9,11 @@
+ #include <fstream>
+ #include <span>
+ #include <vector>
++#include <cstdlib>
++#include "background_codec.h"
++#ifndef SATRECOMP_BACKGROUND_COMPRESSION_DEFAULT
++#define SATRECOMP_BACKGROUND_COMPRESSION_DEFAULT 0
++#endif
+ #ifdef _WIN32
+ #include <process.h>
+ #else
+@@ -48,20 +53,29 @@ inline SDL_Surface* ReadBackgroundCache(const std::filesystem::path& file,int wi
+     if(width<=0 || height<=0 || width>864 || height>486)return nullptr;
+     const size_t bytes=size_t(width)*height*4;
+     std::ifstream input(file,std::ios::binary|std::ios::ate);
+-    if(!input || input.tellg()!=static_cast<std::streamoff>(32+bytes))return nullptr;
++    if(!input || input.tellg()<33 || input.tellg()>static_cast<std::streamoff>(32+bytes))return nullptr;
++    const size_t storedSize=static_cast<size_t>(input.tellg())-32;
+     std::array<uint8_t,32> header{};input.seekg(0);
+     if(!input.read(reinterpret_cast<char*>(header.data()),header.size()))return nullptr;
+     auto word=[&](int at,int count){uint64_t value=0;for(int i=0;i<count;i++)value|=uint64_t(header[at+i])<<(8*i);return value;};
+-    if(std::memcmp(header.data(),"STFBG001",8) || word(8,4)!=unsigned(width) || word(12,4)!=unsigned(height) || word(16,4)!=bytes || word(20,4)!=0)return nullptr;
+-    std::vector<uint8_t> payload(bytes);
+-    if(!input.read(reinterpret_cast<char*>(payload.data()),payload.size()) || BackgroundPayloadHash(payload)!=word(24,8))return nullptr;
++    const bool legacy=std::memcmp(header.data(),"STFBG001",8)==0;
++    if(!legacy && std::memcmp(header.data(),"STFBG002",8))return nullptr;
++    if(word(8,4)!=unsigned(width) || word(12,4)!=unsigned(height))return nullptr;
++    const auto size=word(16,4),flags=word(20,4);
++    if(!size || size>bytes || storedSize>size || (flags&~uint64_t(0x103)))return nullptr;
++    if(legacy && (size!=bytes || flags!=0 || storedSize!=size))return nullptr;
++    const unsigned format=static_cast<unsigned>(flags&3),codec=static_cast<unsigned>((flags>>8)&1);
++    if(format==0 && size!=bytes)return nullptr;
++    if(format>=2 && size!=bytes/2)return nullptr;
++    if(format==1 && (size<size_t(width)*height+6 || size>size_t(width)*height+1026))return nullptr;
++    std::vector<uint8_t> stored(storedSize),payload;
++    if(!input.read(reinterpret_cast<char*>(stored.data()),stored.size()) || !DecompressBackgroundPixels(stored,codec,size,payload) || BackgroundPayloadHash(payload)!=word(24,8))return nullptr;
++    std::vector<uint32_t> pixels;
++    if(!UnpackBackgroundPixels(payload,format,size_t(width)*height,pixels))return nullptr;
+     auto* surface=SDL_CreateSurface(width,height,SDL_PIXELFORMAT_ABGR8888);if(!surface)return nullptr;
+     for(int y=0;y<height;y++) {
+         auto* row=reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(surface->pixels)+y*surface->pitch);
+-        for(int x=0;x<width;x++) {
+-            const auto* p=payload.data()+(size_t(y)*width+x)*4;
+-            row[x]=uint32_t(p[0])|(uint32_t(p[1])<<8)|(uint32_t(p[2])<<16)|(uint32_t(p[3])<<24);
+-        }
++        std::memcpy(row,pixels.data()+size_t(y)*width,size_t(width)*4);
+     }
+     return surface;
+ }
+@@ -71,17 +85,21 @@ inline bool WriteBackgroundCache(const std::filesystem::path& file,SDL_Surface*
+         auto* rgba=SDL_ConvertSurface(surface,SDL_PIXELFORMAT_ABGR8888);if(!rgba)return false;
+         const bool saved=WriteBackgroundCache(file,rgba);SDL_DestroySurface(rgba);return saved;
+     }
+-    const size_t bytes=size_t(surface->w)*surface->h*4;
+-    std::vector<uint8_t> payload(bytes);
++    std::vector<uint32_t> pixels(size_t(surface->w)*surface->h);
+     if(!SDL_LockSurface(surface))return false;
+     for(int y=0;y<surface->h;y++) {
+         const auto* row=reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(surface->pixels)+y*surface->pitch);
+-        for(int x=0;x<surface->w;x++)for(int channel=0;channel<4;channel++)payload[(size_t(y)*surface->w+x)*4+channel]=static_cast<uint8_t>(row[x]>>(8*channel));
++        std::memcpy(pixels.data()+size_t(y)*surface->w,row,size_t(surface->w)*4);
+     }
+     SDL_UnlockSurface(surface);
+-    std::array<uint8_t,32> header{};std::memcpy(header.data(),"STFBG001",8);
++    auto packed=PackBackgroundPixels(pixels);if(packed.bytes.empty())return false;
++    const char* option=std::getenv("SATRECOMP_BACKGROUND_COMPRESSION");
++    const bool compress=option?std::strcmp(option,"0")!=0:SATRECOMP_BACKGROUND_COMPRESSION_DEFAULT!=0;
++    auto stored=CompressBackgroundPixels(packed.bytes,compress);
++    if(stored.bytes.empty())return false;
++    std::array<uint8_t,32> header{};std::memcpy(header.data(),"STFBG002",8);
+     auto put=[&](int at,uint64_t value,int count){for(int i=0;i<count;i++)header[at+i]=static_cast<uint8_t>(value>>(8*i));};
+-    put(8,surface->w,4);put(12,surface->h,4);put(16,bytes,4);put(24,BackgroundPayloadHash(payload),8);
++    put(8,surface->w,4);put(12,surface->h,4);put(16,packed.bytes.size(),4);put(20,packed.format|(stored.codec<<8),4);put(24,BackgroundPayloadHash(packed.bytes),8);
+     static std::atomic_uint64_t serial{0};
+ #ifdef _WIN32
+     const auto process=_getpid();
+@@ -90,7 +108,7 @@ inline bool WriteBackgroundCache(const std::filesystem::path& file,SDL_Surface*
+ #endif
+     auto temporary=file;temporary+="."+std::to_string(process)+"."+std::to_string(serial.fetch_add(1))+".tmp";
+     std::ofstream output(temporary,std::ios::binary|std::ios::trunc);
+-    output.write(reinterpret_cast<const char*>(header.data()),header.size());output.write(reinterpret_cast<const char*>(payload.data()),payload.size());output.close();
++    output.write(reinterpret_cast<const char*>(header.data()),header.size());output.write(reinterpret_cast<const char*>(stored.bytes.data()),stored.bytes.size());output.close();
+     std::error_code error;
+     if(output)std::filesystem::rename(temporary,file,error);
+     if(!output || error) {std::error_code ignored;std::filesystem::remove(temporary,ignored);return false;}
+diff --git a/port/background_codec.h b/port/background_codec.h
+new file mode 100644
+index 0000000..3118409
+--- /dev/null
++++ b/port/background_codec.h
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <algorithm>
++#include <utility>
++#include <cstdint>
++#include <span>
++#include <unordered_map>
++#include <vector>
++#include <zlib.h>
++namespace port {
++inline constexpr size_t kMaxBackgroundPixels=864*486;
++struct PackedBackgroundPixels {unsigned format=0;std::vector<uint8_t> bytes;};
++struct StoredBackgroundPixels {unsigned codec=0;std::vector<uint8_t> bytes;};
++inline PackedBackgroundPixels PackBackgroundPixels(std::span<const uint32_t> pixels) {
++    if(pixels.empty() || pixels.size()>kMaxBackgroundPixels)return {};
++    PackedBackgroundPixels result;result.bytes.resize(pixels.size()*4);
++    std::unordered_map<uint32_t,uint16_t> indices;indices.reserve(257);
++    std::vector<uint32_t> palette;std::vector<uint8_t> indexed;indexed.reserve(pixels.size());
++    bool canIndex=true,shift=true,full=true;
++    for(size_t i=0;i<pixels.size();i++) {
++        const auto p=pixels[i];
++        for(int c=0;c<4;c++)result.bytes[i*4+c]=static_cast<uint8_t>(p>>(8*c));
++        if((p>>24)!=255)shift=full=false;
++        for(unsigned c=0;c<3;c++) {
++            const unsigned value=(p>>(8*c))&255;
++            shift&=value==((value>>3)<<3);full&=value==((value>>3)*255/31);
++        }
++        if(canIndex) {
++            auto [entry,inserted]=indices.emplace(p,static_cast<uint16_t>(palette.size()));
++            if(inserted) {
++                if(palette.size()==256) {canIndex=false;continue;}
++                palette.push_back(p);
++            }
++            indexed.push_back(static_cast<uint8_t>(entry->second));
++        }
++    }
++    if(shift || full) {
++        result.format=shift?2:3;result.bytes.resize(pixels.size()*2);
++        for(size_t i=0;i<pixels.size();i++) {
++            const uint32_t p=pixels[i];const unsigned value=((p&255)>>3)<<10|(((p>>8)&255)>>3)<<5|(((p>>16)&255)>>3);
++            result.bytes[i*2]=static_cast<uint8_t>(value);result.bytes[i*2+1]=static_cast<uint8_t>(value>>8);
++        }
++    }
++    if(canIndex && 2+palette.size()*4+pixels.size()<result.bytes.size()) {
++        result.format=1;result.bytes.resize(2+palette.size()*4+pixels.size());
++        result.bytes[0]=static_cast<uint8_t>(palette.size());result.bytes[1]=static_cast<uint8_t>(palette.size()>>8);
++        for(size_t i=0;i<palette.size();i++)for(int c=0;c<4;c++)result.bytes[2+i*4+c]=static_cast<uint8_t>(palette[i]>>(8*c));
++        std::copy(indexed.begin(),indexed.end(),result.bytes.begin()+2+palette.size()*4);
++    }
++    return result;
++}
++inline bool UnpackBackgroundPixels(std::span<const uint8_t> bytes,unsigned format,size_t count,std::vector<uint32_t>& pixels) {
++    pixels.clear();
++    if(!count || count>kMaxBackgroundPixels || format>3)return false;
++    size_t paletteCount=0,offset=0;
++    if(format==0 && bytes.size()!=count*4)return false;
++    if(format>=2 && bytes.size()!=count*2)return false;
++    if(format==1) {
++        if(bytes.size()<2)return false;
++        paletteCount=bytes[0]|(unsigned(bytes[1])<<8);offset=2+paletteCount*4;
++        if(!paletteCount || paletteCount>256 || bytes.size()!=offset+count)return false;
++    }
++    pixels.resize(count);
++    for(size_t i=0;i<count;i++) {
++        if(format<=1) {
++            size_t at=i*4;
++            if(format==1) {
++                const unsigned index=bytes[offset+i];
++                if(index>=paletteCount) {pixels.clear();return false;}
++                at=2+index*4;
++            }
++            pixels[i]=uint32_t(bytes[at])|(uint32_t(bytes[at+1])<<8)|(uint32_t(bytes[at+2])<<16)|(uint32_t(bytes[at+3])<<24);
++        } else {
++            const unsigned value=bytes[i*2]|(unsigned(bytes[i*2+1])<<8);
++            if(value&0x8000) {pixels.clear();return false;}
++            auto expand=[&](unsigned n){return format==2?n<<3:n*255/31;};
++            pixels[i]=0xFF000000u|expand((value>>10)&31)|(expand((value>>5)&31)<<8)|(expand(value&31)<<16);
++        }
++    }
++    return true;
++}
++inline StoredBackgroundPixels CompressBackgroundPixels(std::span<const uint8_t> bytes,bool compress) {
++    if(bytes.empty() || bytes.size()>kMaxBackgroundPixels*4)return {};
++    StoredBackgroundPixels result{0,std::vector<uint8_t>(bytes.begin(),bytes.end())};
++    if(compress) {
++        uLongf size=compressBound(static_cast<uLong>(bytes.size()));std::vector<uint8_t> packed(size);
++        if(compress2(packed.data(),&size,bytes.data(),static_cast<uLong>(bytes.size()),Z_BEST_SPEED)==Z_OK && size<bytes.size()) {
++            packed.resize(size);result={1,std::move(packed)};
++        }
++    }
++    return result;
++}
++inline bool DecompressBackgroundPixels(std::span<const uint8_t> bytes,unsigned codec,size_t expected,std::vector<uint8_t>& output) {
++    output.clear();
++    if(!expected || expected>kMaxBackgroundPixels*4 || codec>1 || bytes.empty() || bytes.size()>expected)return false;
++    if(!codec) {
++        if(bytes.size()!=expected)return false;
++        output.assign(bytes.begin(),bytes.end());return true;
++    }
++    output.resize(expected);uLongf size=static_cast<uLongf>(expected);uLong sourceSize=static_cast<uLong>(bytes.size());
++    if(uncompress2(output.data(),&size,bytes.data(),&sourceSize)!=Z_OK || size!=expected || sourceSize!=bytes.size()) {output.clear();return false;}
++    return true;
++}
++}
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 304732a..df91ddf 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -232,6 +232,10 @@ int RunWindowed(Port &port) {
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
+         }
++        if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {
++            const char* name=SDL_GetRendererName(renderer);
++            fprintf(stderr,"background renderer: %s\n",name?name:"unknown");
++        }
+         if (!sakuraUi.Open(window,renderer,port.opt.settingsPath)) return false;
+         for(const auto& name:port.discFiles.Names()) if(name.find("KABE")!=std::string::npos && name.ends_with(".BIN")) {
+             std::vector<uint8_t> data;std::vector<uint32_t> pixels;
+@@ -334,6 +338,7 @@ int RunWindowed(Port &port) {
+     uint64_t shownSerial = 0;
+     std::vector<uint32_t> frameCopy;
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
++    std::vector<uint32_t> shiftedBackdrop; // one reusable fade buffer across all decorative themes
+ 
+     std::vector<uint8_t> englishAtlas;
+     for(const auto& name:port.discFiles.Names()) if(name.ends_with("KNJ.BIN")) {
+@@ -431,19 +436,22 @@ int RunWindowed(Port &port) {
+                 if(!backdrop.attempted) {
+                     backdrop.attempted=true;
+                     for(const auto& file:backdrop.files) {
++                        const bool trace=std::getenv("SATRECOMP_BACKGROUND_STATS")!=nullptr;
++                        const auto started=trace?SDL_GetTicksNS():0;
+                         backdrop.texture=backdrop.pc?
+                             LoadPcBackdrop(renderer,file,port.opt.pcAssetsPath,backdrop.id,backdrop.cacheDir,&backdrop.pixels):
+                             LoadBackdrop(renderer,file,backdrop.nativePalette,backdrop.cacheDir,&backdrop.pixels);
++                        if(trace)fprintf(stderr,"background load: source=%s asset=%s us=%llu usable=%d\n",backdrop.pc?"saturn-hd":"saturn",file.filename().string().c_str(),static_cast<unsigned long long>((SDL_GetTicksNS()-started)/1000),backdrop.texture!=nullptr);
+                         if(backdrop.texture)break;
+                     }
+                 }
+                 if(!backdrop.texture)continue; // try Saturn if a PC resource is unavailable
+                 const auto offset=port.videoRenderer->BackgroundColorOffset();
+                 if(offset!=backdrop.offset) {
+-                    std::vector<uint32_t> shifted;shifted.reserve(backdrop.pixels.size());
+-                    for(const auto pixel:backdrop.pixels)shifted.push_back(OffsetBackdropPixel(pixel,offset));
++                    shiftedBackdrop.resize(backdrop.pixels.size());
++                    std::transform(backdrop.pixels.begin(),backdrop.pixels.end(),shiftedBackdrop.begin(),[&](auto pixel){return OffsetBackdropPixel(pixel,offset);});
+                     float gridWidth=0,gridHeight=0;SDL_GetTextureSize(backdrop.texture,&gridWidth,&gridHeight);
+-                    if(SDL_UpdateTexture(backdrop.texture,nullptr,shifted.data(),static_cast<int>(gridWidth)*sizeof(uint32_t)))backdrop.offset=offset;
++                    if(SDL_UpdateTexture(backdrop.texture,nullptr,shiftedBackdrop.data(),static_cast<int>(gridWidth)*sizeof(uint32_t)))backdrop.offset=offset;
+                 }
+                 floral=backdrop.texture;break;
+             }
+diff --git a/port/pc_backdrop.h b/port/pc_backdrop.h
+index afe2ad4..7b59d92 100644
+--- a/port/pc_backdrop.h
++++ b/port/pc_backdrop.h
+@@ -45,10 +45,12 @@ inline SDL_Texture* LoadPcBackdrop(SDL_Renderer* renderer,const std::filesystem:
+        source.size()!=info->bytes || PcBackdropHash(source)!=info->fingerprint ||
+        !ReadBackgroundPng(masterFile,master))return nullptr;
+     const auto hash=PcBackdropHash(master,info->fingerprint);
+-    std::filesystem::path cache;SDL_Surface* logical=nullptr;bool fast=false;
++    std::filesystem::path cache,legacyFast;SDL_Surface* logical=nullptr;bool fast=false,migrated=false;
+     if(!cacheDir.empty()) {
+-        cache=cacheDir/(std::string(info->id)+"-pc864-v2-"+std::to_string(hash)+".stfb");
++        cache=cacheDir/(std::string(info->id)+"-pc864-v3-"+std::to_string(hash)+".stfb");
++        legacyFast=cacheDir/(std::string(info->id)+"-pc864-v2-"+std::to_string(hash)+".stfb");
+         logical=ReadBackgroundCache(cache,864,486);fast=logical!=nullptr;
++        if(!logical) {logical=ReadBackgroundCache(legacyFast,864,486);migrated=logical!=nullptr;}
+         if(!logical)logical=ReadLegacyBackgroundPng(cacheDir/(std::string(info->id)+"-pc864-v1-"+std::to_string(hash)+".png"),864,486);
+         if(logical && (logical->w!=864 || logical->h!=486)) {SDL_DestroySurface(logical);logical=nullptr;}
+     }
+@@ -63,6 +65,7 @@ inline SDL_Texture* LoadPcBackdrop(SDL_Renderer* renderer,const std::filesystem:
+         std::error_code ignored;std::filesystem::create_directories(cacheDir,ignored);
+         const bool saved=!ignored && WriteBackgroundCache(cache,logical);
+         if(!saved && requireCache) {SDL_DestroySurface(logical);return nullptr;}
++        if(saved && migrated)std::filesystem::remove(legacyFast,ignored);
+     }
+     return BackdropTexture(renderer,logical,pixels);
+ }

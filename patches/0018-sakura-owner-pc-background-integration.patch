@@ -1,0 +1,318 @@
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+index d56e7c8..947ae35 100644
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -193,6 +193,10 @@ std::vector<std::string> arguments(const launcher::Launch& launch) {
+     }
+     std::vector<std::string> args = {"--disc", launch.file, "--backup", backup.string(),
+                                      "--settings", (launch.folder / "settings.ini").string()};
++    if(const auto pc=prefs.get("sakura","pc_assets");!pc.empty()) {
++        std::error_code error;
++        if(std::filesystem::is_directory(pc,error)) {args.push_back("--pc-assets");args.push_back(pc);}
++    }
+     if (const std::string extra = find_extra_disc(launch.file); !extra.empty()) {
+         args.push_back("--extra-disc");
+         args.push_back(extra);
+diff --git a/port/backdrop.h b/port/backdrop.h
+index b35f844..3f7e335 100644
+--- a/port/backdrop.h
++++ b/port/backdrop.h
+@@ -43,6 +43,20 @@ inline SDL_Surface* NormalizeBackdrop(SDL_Surface* master,std::span<const uint8_
+     }
+     return logical;
+ }
++inline SDL_Texture* BackdropTexture(SDL_Renderer* renderer,SDL_Surface* logical,std::vector<uint32_t>* pixels) {
++    if(!logical)return nullptr;
++    auto* rgba=SDL_ConvertSurface(logical,SDL_PIXELFORMAT_ABGR8888);SDL_DestroySurface(logical);
++    if(!rgba)return nullptr;
++    if(pixels) {
++        pixels->resize(size_t(rgba->w)*rgba->h);
++        for(int y=0;y<rgba->h;y++)std::memcpy(pixels->data()+size_t(y)*rgba->w,static_cast<uint8_t*>(rgba->pixels)+y*rgba->pitch,size_t(rgba->w)*4);
++    }
++    auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,rgba->w,rgba->h);
++    if(texture && !SDL_UpdateTexture(texture,nullptr,rgba->pixels,rgba->pitch)) {SDL_DestroyTexture(texture);texture=nullptr;}
++    SDL_DestroySurface(rgba);
++    if(texture)SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_NEAREST);
++    return texture;
++}
+ inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::path& file,std::span<const uint8_t> kabe,const std::filesystem::path& cacheDir,std::vector<uint32_t>* pixels=nullptr) {
+     std::ifstream input(file,std::ios::binary);if(!input) return nullptr;
+     uint64_t hash=14695981039346656037ull;
+@@ -65,19 +79,7 @@ inline SDL_Texture* LoadBackdrop(SDL_Renderer* renderer,const std::filesystem::p
+             if(!error) SDL_SavePNG(logical,cache.string().c_str());
+         }
+     }
+-    auto* rgba=SDL_ConvertSurface(logical,SDL_PIXELFORMAT_ABGR8888);
+-    SDL_DestroySurface(logical);
+-    if(!rgba)return nullptr;
+-    if(pixels) {
+-        pixels->resize(size_t(rgba->w)*rgba->h);
+-        for(int y=0;y<rgba->h;y++)std::memcpy(pixels->data()+size_t(y)*rgba->w,static_cast<uint8_t*>(rgba->pixels)+y*rgba->pitch,size_t(rgba->w)*4);
+-    }
+-    // Updates during fades use ABGR bytes; do not let the renderer choose another format.
+-    auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,rgba->w,rgba->h);
+-    if(texture && !SDL_UpdateTexture(texture,nullptr,rgba->pixels,rgba->pitch)) {SDL_DestroyTexture(texture);texture=nullptr;}
+-    SDL_DestroySurface(rgba);
+-    if(texture)SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_NEAREST);
+-    return texture;
++    return BackdropTexture(renderer,logical,pixels);
+ }
+ 
+ }
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 6c93657..304732a 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -9,6 +9,7 @@
+ #include "glyph_text.h"
+ #include "kabe.h"
+ #include "backdrop.h"
++#include "pc_backdrop.h"
+ #include <map>
+ #include "../video/renderer.h"
+ #include <filesystem>
+@@ -168,6 +169,7 @@ int RunWindowed(Port &port) {
+         std::vector<uint32_t> pixels;std::array<int16_t,3> offset{};
+         std::vector<std::filesystem::path> files;std::filesystem::path cacheDir;std::vector<uint8_t> nativePalette;
+         bool attempted=false;
++        bool pc=false;std::string id;
+     };
+     std::vector<Backdrop> backdrops;
+     SDL_Texture *foreground=nullptr;
+@@ -246,6 +248,14 @@ int RunWindowed(Port &port) {
+                 std::error_code error;
+                 if(std::filesystem::is_regular_file(file,error))backdrop.files.push_back(file);
+             }
++            if(!port.opt.pcAssetsPath.empty())if(const auto* info=PcBackdropFor(id)) {
++                auto pc=backdrop;pc.pc=true;pc.id=id;pc.files.clear();
++                for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++                    const auto file=folder/"art"/"pc-backgrounds"/(std::string(info->id)+"-v1.png");
++                    std::error_code error;if(std::filesystem::is_regular_file(file,error))pc.files.push_back(file);
++                }
++                if(!pc.files.empty())backdrops.push_back(std::move(pc));
++            }
+             if(!backdrop.files.empty())backdrops.push_back(std::move(backdrop));
+         }
+         SDL_SetRenderVSync(renderer, 0);
+@@ -415,20 +425,25 @@ int RunWindowed(Port &port) {
+         SDL_Texture* floral=nullptr;
+         if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto palette=port.videoRenderer->BackgroundPaletteFingerprint();
+-            for(auto& backdrop:backdrops) if(backdrop.palette==palette) {
++            const bool preferPc=!port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0;
++            for(int pass=0;pass<(preferPc?2:1) && !floral;pass++)
++            for(auto& backdrop:backdrops) if(backdrop.palette==palette && backdrop.pc==(preferPc && pass==0)) {
+                 if(!backdrop.attempted) {
+                     backdrop.attempted=true;
+                     for(const auto& file:backdrop.files) {
+-                        backdrop.texture=LoadBackdrop(renderer,file,backdrop.nativePalette,backdrop.cacheDir,&backdrop.pixels);
++                        backdrop.texture=backdrop.pc?
++                            LoadPcBackdrop(renderer,file,port.opt.pcAssetsPath,backdrop.id,backdrop.cacheDir,&backdrop.pixels):
++                            LoadBackdrop(renderer,file,backdrop.nativePalette,backdrop.cacheDir,&backdrop.pixels);
+                         if(backdrop.texture)break;
+                     }
+                 }
+-                if(!backdrop.texture)break; // retain the native composition on an unavailable asset
++                if(!backdrop.texture)continue; // try Saturn if a PC resource is unavailable
+                 const auto offset=port.videoRenderer->BackgroundColorOffset();
+                 if(offset!=backdrop.offset) {
+                     std::vector<uint32_t> shifted;shifted.reserve(backdrop.pixels.size());
+                     for(const auto pixel:backdrop.pixels)shifted.push_back(OffsetBackdropPixel(pixel,offset));
+-                    if(SDL_UpdateTexture(backdrop.texture,nullptr,shifted.data(),416*sizeof(uint32_t)))backdrop.offset=offset;
++                    float gridWidth=0,gridHeight=0;SDL_GetTextureSize(backdrop.texture,&gridWidth,&gridHeight);
++                    if(SDL_UpdateTexture(backdrop.texture,nullptr,shifted.data(),static_cast<int>(gridWidth)*sizeof(uint32_t)))backdrop.offset=offset;
+                 }
+                 floral=backdrop.texture;break;
+             }
+diff --git a/port/main.cpp b/port/main.cpp
+index 01b1d8c..1677c26 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -7,6 +7,7 @@
+ #include "port.h"
+ #include "kabe.h"
+ #include "pc_spr.h"
++#include "pc_backdrop.h"
+ 
+ #include "png_write.h"
+ #include "hle_bios.h"
+@@ -125,6 +126,9 @@ static void RegisterPortFeatures() {
+     game.features.push_back({"text_style", "Pantalla", "Texto de diálogos",
+                              "Nítido redibuja los glifos ingleses reconocidos a resolución de ventana. Las fuentes desconocidas y otros textos conservan el original.",
+                              0, {"Nítido", "Original"}});
++    game.features.push_back({"pc_hd_backgrounds", "Pantalla", "Fondos PC HD",
++                             "Usa el pack local de fondos PC en modo mejorado. Requiere recursos PC compatibles; si faltan, conserva Saturn. No cambia la fuente de texto.",
++                             0, {"Activados", "Desactivados"}});
+     // (custom_soundtrack: soundtrack.h; for a game whose sources name its music)
+     if (!game.songs.empty()) {
+         game.features.push_back({"custom_soundtrack", "Sound", "Custom soundtrack",
+@@ -1395,7 +1399,27 @@ int main(int argc, char **argv) {
+             }
+             return argv[++i];
+         };
+-        if (a == "--export-pc-spr") {
++        if(a=="--prepare-pc-backgrounds") {
++            const auto pcRoot=next(),cache=next();
++            auto* surface=SDL_CreateSurface(1,1,SDL_PIXELFORMAT_ABGR8888);
++            auto* renderer=surface?SDL_CreateSoftwareRenderer(surface):nullptr;
++            if(!renderer) {if(surface)SDL_DestroySurface(surface);return 1;}
++            std::vector<std::string> prepared,checked;int failures=0;
++            for(int family=0;family<10;family++)for(int variant=0;variant<2;variant++) {
++                const auto native="KABE"+std::to_string(family)+std::to_string(variant);
++                const auto* info=port::PcBackdropFor(native);if(!info)continue;
++                const std::string id(info->id);
++                if(std::find(checked.begin(),checked.end(),id)!=checked.end())continue;
++                checked.push_back(id);
++                const auto master=std::filesystem::path(SDL_GetBasePath())/"art"/"pc-backgrounds"/(id+"-v1.png");
++                auto* texture=port::LoadPcBackdrop(renderer,master,pcRoot,native,cache,nullptr,true);
++                if(texture) {prepared.push_back(id);SDL_DestroyTexture(texture);}
++                else {failures++;fprintf(stderr,"PC background unavailable or unsupported: %s\n",id.c_str());}
++            }
++            SDL_DestroyRenderer(renderer);SDL_DestroySurface(surface);
++            printf("Prepared %zu/19 verified PC decorative backgrounds; failures=%d\n",prepared.size(),failures);
++            return prepared.size()==19?0:1;
++        } else if (a == "--export-pc-spr") {
+             const auto input=next(),output=next();
+             std::ifstream stream(input,std::ios::binary|std::ios::ate);
+             if(!stream || stream.tellg()<0 || stream.tellg()>64*1024*1024) {
+@@ -1418,6 +1442,8 @@ int main(int argc, char **argv) {
+             o.discPath = next();
+         } else if (a == "--extra-disc") {
+             o.extraDiscPath = next();
++        } else if (a == "--pc-assets") {
++            o.pcAssetsPath = next();
+         } else if (a == "--soundtrack") {
+             o.soundtrack = next();
+         } else if (a == "--list-songs") {
+diff --git a/port/pc_backdrop.h b/port/pc_backdrop.h
+new file mode 100644
+index 0000000..bff275d
+--- /dev/null
++++ b/port/pc_backdrop.h
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include "backdrop.h"
++#include "pc_spr.h"
++#include "pc_backdrop_ids.h"
++#include <algorithm>
++namespace port {
++inline SDL_Surface* NormalizePcBackdrop(SDL_Surface* master,std::span<const uint32_t> native) {
++    if(!master || native.empty() || native.size()>640*480)return nullptr;
++    auto key=[](uint32_t p){return ((p&255)>>3)<<10|(((p>>8)&255)>>3)<<5|(((p>>16)&255)>>3);};
++    std::array<bool,32768> seen{};std::vector<uint32_t> palette;
++    for(auto p:native)if(!seen[key(p)]) {seen[key(p)]=true;palette.push_back(p|0xFF000000u);}
++    auto* logical=SDL_CreateSurface(864,486,SDL_PIXELFORMAT_ABGR8888);if(!logical)return nullptr;
++    SDL_SetSurfaceBlendMode(master,SDL_BLENDMODE_NONE);
++    if(!SDL_BlitSurfaceScaled(master,nullptr,logical,nullptr,SDL_SCALEMODE_NEAREST)) {SDL_DestroySurface(logical);return nullptr;}
++    std::array<uint32_t,32768> mapped{};
++    for(int y=0;y<logical->h;y++) {
++        auto* row=reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(logical->pixels)+y*logical->pitch);
++        for(int x=0;x<logical->w;x++) {
++            const auto q=key(row[x]);
++            if(!mapped[q]) {
++                const int r=int(q>>10)*255/31,g=int((q>>5)&31)*255/31,b=int(q&31)*255/31;
++                int best=200000;uint32_t chosen=palette.front();
++                for(auto p:palette) {
++                    const int dr=r-int(p&255),dg=g-int((p>>8)&255),db=b-int((p>>16)&255);
++                    const int distance=dr*dr+dg*dg+db*db;
++                    if(distance<best) {best=distance;chosen=p;if(!distance)break;}
++                }
++                mapped[q]=chosen;
++            }
++            row[x]=mapped[q];
++        }
++    }
++    return logical;
++}
++inline bool ReadPcBackdropFile(const std::filesystem::path& file,std::vector<uint8_t>& bytes,size_t limit) {
++    std::ifstream in(file,std::ios::binary|std::ios::ate);
++    if(!in || in.tellg()<=0 || static_cast<uint64_t>(in.tellg())>limit)return false;
++    bytes.resize(static_cast<size_t>(in.tellg()));in.seekg(0);
++    return bool(in.read(reinterpret_cast<char*>(bytes.data()),bytes.size()));
++}
++inline uint64_t PcBackdropHash(std::span<const uint8_t> bytes,uint64_t hash=14695981039346656037ull) {
++    for(auto byte:bytes)hash=(hash^byte)*1099511628211ull;
++    return hash;
++}
++inline SDL_Texture* LoadPcBackdrop(SDL_Renderer* renderer,const std::filesystem::path& masterFile,const std::filesystem::path& pcRoot,std::string_view saturn,const std::filesystem::path& cacheDir,std::vector<uint32_t>* pixels,bool requireCache=false) {
++    if(requireCache && cacheDir.empty())return nullptr;
++    const auto* info=PcBackdropFor(saturn);if(!info)return nullptr;
++    std::vector<uint8_t> source,master;
++    if(!ReadPcBackdropFile(pcRoot/"SAKURA1"/"WALL"/(std::string(info->id)+".SPR"),source,4*1024*1024) ||
++       source.size()!=info->bytes || PcBackdropHash(source)!=info->fingerprint ||
++       !ReadPcBackdropFile(masterFile,master,16*1024*1024))return nullptr;
++    const auto hash=PcBackdropHash(master,info->fingerprint);
++    std::filesystem::path cache;SDL_Surface* logical=nullptr;
++    if(!cacheDir.empty()) {
++        cache=cacheDir/(std::string(info->id)+"-pc864-v1-"+std::to_string(hash)+".png");
++        logical=SDL_LoadPNG(cache.string().c_str());
++        if(logical && (logical->w!=864 || logical->h!=486)) {SDL_DestroySurface(logical);logical=nullptr;}
++    }
++    if(!logical) {
++        std::vector<PcSprite> images;std::string error;
++        if(!DecodePcSprites(source,images,error) || images.size()!=1 || images[0].width!=640 || images[0].height!=480)return nullptr;
++        auto* bitmap=SDL_LoadPNG(masterFile.string().c_str());
++        logical=NormalizePcBackdrop(bitmap,images[0].pixels);if(bitmap)SDL_DestroySurface(bitmap);
++        if(!logical)return nullptr;
++        if(!cache.empty()) {
++            std::error_code ignored;std::filesystem::create_directories(cacheDir,ignored);
++            const bool saved=!ignored && SDL_SavePNG(logical,cache.string().c_str());
++            if(!saved && requireCache) {SDL_DestroySurface(logical);return nullptr;}
++        }
++    }
++    return BackdropTexture(renderer,logical,pixels);
++}
++}
+diff --git a/port/pc_backdrop_ids.h b/port/pc_backdrop_ids.h
+new file mode 100644
+index 0000000..da5d7b0
+--- /dev/null
++++ b/port/pc_backdrop_ids.h
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <string_view>
++#include <cstdint>
++#include <cstddef>
++namespace port {
++struct PcBackdropInfo {std::string_view saturn,id;uint64_t fingerprint;std::size_t bytes;};
++inline const PcBackdropInfo* PcBackdropFor(std::string_view id) {
++    static constexpr PcBackdropInfo entries[]={
++        {"KABE00","KABE0100",0xB805053B9EA1CCD8ull,165760},
++        {"KABE01","KABE0101",0x635B6C1F4B077F64ull,186953},
++        {"KABE10","KABE0200",0xB88BB5C43A5BF56Eull,187651},
++        {"KABE11","KABE0201",0xCFBB0D1193F6DFAEull,223730},
++        {"KABE20","KABE0300",0x10835D5EBF005031ull,193425},
++        {"KABE21","KABE0301",0x40452520DC936E84ull,213058},
++        {"KABE30","KABE0400",0x9820B24D1902B87Bull,153874},
++        {"KABE31","KABE0401",0x6539600A34FB8A30ull,189404},
++        {"KABE40","KABE0500",0x11CA09A975FA131Bull,188769},
++        {"KABE41","KABE0501",0x14932637FCD5AE46ull,190241},
++        {"KABE50","KABE0600",0xADE63261E4500827ull,134589},
++        {"KABE51","KABE0601",0x8FDC83CE46C82441ull,194127},
++        {"KABE60","KABE0700",0xA7127701C9833ED0ull,207467},
++        {"KABE61","KABE0701",0xCB5C96B5F3A25834ull,235094},
++        {"KABE70","KABE0800",0x82E4B9C7222605FCull,151754},
++        {"KABE71","KABE0801",0x042E7EA37AEE1A53ull,206876},
++        {"KABE80","KABE0900",0xDC90BCADA6DEDE99ull,177315},
++        {"KABE81","KABE0901",0x3F3011FA7AA7124Aull,200070},
++        {"KABE90","KABE1000",0x37A95B9744D6E9A1ull,157709},
++        {"KABE91","KABE1000",0x37A95B9744D6E9A1ull,157709},
++    };
++    for(const auto& entry:entries)if(entry.saturn==id)return &entry;
++    return nullptr;
++}
++}
+diff --git a/port/port.h b/port/port.h
+index 462248f..f73ef24 100644
+--- a/port/port.h
++++ b/port/port.h
+@@ -67,6 +67,7 @@ struct Options {
+     std::string features;     // comma-separated feature names
+     std::string settingsPath; // settings.ini with the player's feature choices (written when one is changed in the game)
+     std::string exportBackgrounds; // read-only KABE extraction from owner disc
++    std::string pcAssetsPath; // optional locally extracted owner PC resources
+     std::string readyFile; // launcher handshake: first successfully presented window
+     std::string stateSave, stateLoad; // tests: "FRAME:path": save or load a state when that frame is reached
+     std::string dumpRam;      // prefix: write <prefix>high.bin / low.bin (work RAM) at exit

@@ -1,0 +1,18 @@
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index a27114b..b227e99 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -31,8 +31,11 @@ inline SceneZoomLayout FitSceneZoom(int width,int height,int dialogueWidth,int d
+     const int top=centered+std::min(3*boxScale,centered+(shadowRows>0?boxScale:0));
+     const int boxBottom=top+144*pictureScale+gap+dialogueLines*boxScale;
+     gap+=std::max(0,std::min(std::max(1,boxScale/2),height+std::clamp(shadowRows,0,2)*boxScale-boxBottom));
+-    return {true,{(width-288*pictureScale)/2,top,288*pictureScale,144*pictureScale,pictureScale},
+-        {(width-dialogueWidth*boxScale)/2,top+144*pictureScale+gap,dialogueWidth*boxScale,dialogueLines*boxScale,boxScale},shadow,gap};
++    const int pictureTop=std::max(0,top-1);
++    const int dialogueTop=std::min(top+144*pictureScale+gap+1,height+std::clamp(shadowRows,0,2)*boxScale-dialogueLines*boxScale);
++    gap=dialogueTop-pictureTop-144*pictureScale;
++    return {true,{(width-288*pictureScale)/2,pictureTop,288*pictureScale,144*pictureScale,pictureScale},
++        {(width-dialogueWidth*boxScale)/2,dialogueTop,dialogueWidth*boxScale,dialogueLines*boxScale,boxScale},shadow,gap};
+ }
+ struct SceneLayout {
+     bool recognized=false,movieOnly=false;

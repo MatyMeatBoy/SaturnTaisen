@@ -1,0 +1,345 @@
+diff --git a/port/dialogue_preload.h b/port/dialogue_preload.h
+new file mode 100644
+index 0000000..7d20d10
+--- /dev/null
++++ b/port/dialogue_preload.h
+@@ -0,0 +1,155 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "dialogue_catalog.h"
++#include "glyph_text.h"
++
++#include <algorithm>
++#include <array>
++#include <cstddef>
++#include <cstring>
++#include <utility>
++
++namespace port {
++
++struct DialogueWitness {
++    bool valid = false;
++    uint32_t table = 0, record = 0, offset = 0; // Offset from first text byte, including the NUL position.
++    bool operator==(const DialogueWitness&) const = default;
++};
++
++struct PreloadedDialogueLine {
++    uint32_t rawOffset = 0; // Offset from the record's first text byte.
++    std::u32string text;
++};
++
++struct PreloadedDialogueRecord {
++    uint32_t id = 0, index = 0, offset = 0; // Offset from the table start to the four-byte prefix.
++    uint16_t prefix0 = 0, prefix1 = 0;
++    std::string raw;
++    std::array<PreloadedDialogueLine,4> lines;
++    uint32_t lineCount = 0;
++    bool simple = false;
++};
++
++struct PreloadedDialogueTable {
++    std::string name;
++    uint64_t fingerprint = 0;
++    std::vector<uint8_t> bytes;
++    std::vector<PreloadedDialogueRecord> records;
++};
++
++class DialoguePreload {
++public:
++    static constexpr size_t MaxTables = 128;
++    static constexpr size_t MaxSourceBytes = 8 * 1024 * 1024;
++    static constexpr size_t MaxRecords = 65535;
++
++    bool Add(std::string name, std::span<const uint8_t> bytes) {
++        if (sealed_ || name.empty() || tables_.size() >= MaxTables ||
++            bytes.size() > MaxSourceBytes - sourceBytes_ || bytes.size() < 16 ||
++            std::any_of(tables_.begin(), tables_.end(), [&](const auto& table) { return table.name == name; }))
++            return false;
++        const uint64_t start = uint64_t(ReadBe32(bytes)) * 2;
++        if (start < 16 || (start - 8) / 8 > MaxRecords - recordCount_) return false;
++
++        std::vector<DialogueRecord> parsed;
++        if (!ParseEnglishTable(bytes, parsed)) return false;
++        PreloadedDialogueTable table;
++        table.name = std::move(name);
++        table.fingerprint = AtlasFingerprint(bytes);
++        table.bytes.assign(bytes.begin(), bytes.end());
++        table.records.reserve(parsed.size());
++        size_t ready = 0;
++        for (auto& item : parsed) {
++            PreloadedDialogueRecord record;
++            record.id = item.id;
++            record.index = static_cast<uint32_t>(table.records.size());
++            record.offset = item.offset;
++            record.prefix0 = item.prefix0;
++            record.prefix1 = item.prefix1;
++            record.raw = std::move(item.raw);
++            record.simple = PrepareLines(record);
++            ready += record.simple;
++            table.records.push_back(std::move(record));
++        }
++        tables_.push_back(std::move(table));
++        recordCount_ += parsed.size();
++        readyCount_ += ready;
++        sourceBytes_ += bytes.size();
++        return true;
++    }
++
++    void Seal() { sealed_ = true; }
++    bool Sealed() const { return sealed_; }
++    size_t TableCount() const { return tables_.size(); }
++    size_t RecordCount() const { return recordCount_; }
++    size_t ReadyCount() const { return readyCount_; }
++    size_t SourceBytes() const { return sourceBytes_; }
++    std::span<const PreloadedDialogueTable> Tables() const {
++        return sealed_ ? std::span<const PreloadedDialogueTable>(tables_) : std::span<const PreloadedDialogueTable>();
++    }
++
++    const PreloadedDialogueRecord* Get(DialogueWitness witness) const {
++        if (!sealed_ || !witness.valid || witness.table >= tables_.size()) return nullptr;
++        const auto& records = tables_[witness.table].records;
++        if (witness.record >= records.size() || witness.offset > records[witness.record].raw.size()) return nullptr;
++        return &records[witness.record];
++    }
++
++    DialogueWitness Locate(std::span<const uint8_t> low, std::span<const uint8_t> high) const {
++        constexpr size_t bankSize = 0x100000, tableAt = 0x24000, pointerAt = 0x6851c;
++        constexpr uint32_t tableAddress = 0x00224000;
++        if (!sealed_ || low.size() != bankSize || high.size() != bankSize) return {};
++        const uint32_t pointer = ReadBe32(high.subspan(pointerAt, 4));
++        if (pointer < tableAddress || pointer - tableAddress >= bankSize - tableAt) return {};
++        const size_t offset = pointer - tableAddress;
++        auto tableBytes = low.subspan(tableAt);
++        size_t matched = tables_.size();
++        for (size_t i = 0; i < tables_.size(); ++i) {
++            const auto& bytes = tables_[i].bytes;
++            if (bytes.size() > tableBytes.size() || std::memcmp(bytes.data(), tableBytes.data(), bytes.size())) continue;
++            if (matched != tables_.size()) return {};
++            matched = i;
++        }
++        if (matched == tables_.size()) return {};
++        const auto& records = tables_[matched].records;
++        auto next = std::upper_bound(records.begin(), records.end(), offset,
++            [](size_t address, const auto& record) { return address < record.offset; });
++        if (next == records.begin()) return {};
++        const auto& record = *--next;
++        const size_t text = record.offset + 4;
++        if (offset < text || offset - text > record.raw.size()) return {};
++        return {true, static_cast<uint32_t>(matched), record.index, static_cast<uint32_t>(offset - text)};
++    }
++
++private:
++    static uint32_t ReadBe32(std::span<const uint8_t> data) {
++        return uint32_t(data[0]) << 24 | uint32_t(data[1]) << 16 | uint32_t(data[2]) << 8 | data[3];
++    }
++
++    static bool PrepareLines(PreloadedDialogueRecord& record) {
++        std::array<PreloadedDialogueLine,4> lines;
++        size_t row = 0;
++        for (size_t i = 0; i < record.raw.size(); ++i) {
++            const auto byte = static_cast<uint8_t>(record.raw[i]);
++            if (byte == '\r') {
++                if (++row == lines.size()) return false;
++                lines[row].rawOffset = static_cast<uint32_t>(i + 1);
++                continue;
++            }
++            const char32_t character = GlyphCodepoint(byte);
++            if (!character || lines[row].text.size() == 31) return false;
++            lines[row].text.push_back(character);
++        }
++        record.lineCount = static_cast<uint32_t>(row + 1);
++        record.lines = std::move(lines);
++        return true;
++    }
++
++    std::vector<PreloadedDialogueTable> tables_;
++    size_t recordCount_ = 0, readyCount_ = 0, sourceBytes_ = 0;
++    bool sealed_ = false;
++};
++
++} // namespace port
+diff --git a/port/disc_files.cpp b/port/disc_files.cpp
+index 1d82976..c1c71aa 100644
+--- a/port/disc_files.cpp
++++ b/port/disc_files.cpp
+@@ -3,6 +3,7 @@
+ #include "disc_files.h"
+ 
+ #include <array>
++#include <algorithm>
+ #include <cstring>
+ 
+ namespace port {
+@@ -116,6 +117,24 @@ bool DiscFiles::Read(const std::string &name, std::vector<uint8_t> &data) const
+     return it != m_files.end() && ReadExtent(it->second, data);
+ }
+ 
++bool DiscFiles::ReadBounded(const std::string &name, std::vector<uint8_t> &data, size_t maxBytes) const {
++    data.clear();
++    const auto it = m_files.find(Upper(name));
++    if (it == m_files.end() || it->second.size > maxBytes) return false;
++    const auto &file = it->second;
++    // Exact allocation and wide arithmetic avoid rounded-sector size overflow.
++    std::vector<uint8_t> result(file.size);
++    std::array<uint8_t, 2048> sector{};
++    for (size_t at = 0; at < result.size(); at += sector.size()) {
++        const uint64_t lba = uint64_t(file.lba) + at / sector.size();
++        if (lba > UINT32_MAX - 150 || !ReadSector(uint32_t(lba), sector.data())) return false;
++        const size_t count = std::min(sector.size(), result.size() - at);
++        std::memcpy(result.data() + at, sector.data(), count);
++    }
++    data = std::move(result);
++    return true;
++}
++
+ bool DiscFiles::ReadFirstFile(std::vector<uint8_t> &data) const {
+     return m_first.lba && ReadExtent(m_first, data);
+ }
+diff --git a/port/disc_files.h b/port/disc_files.h
+index 4e3c5f9..eefba25 100644
+--- a/port/disc_files.h
++++ b/port/disc_files.h
+@@ -32,6 +32,8 @@ public:
+     }
+     // Reads a whole file by name (upper or lower case; in any directory if the name is not in the root)
+     bool Read(const std::string &name, std::vector<uint8_t> &data) const;
++    // Rejects oversized extents before allocation/I/O. Empty output on failure.
++    bool ReadBounded(const std::string &name, std::vector<uint8_t> &data, size_t maxBytes) const;
+ 
+     // One sector (2048 bytes) of the data track by frame address
+     bool ReadDataSector(uint32_t frameAddress, uint8_t *out) const {
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index b47c658..cb36af8 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -459,6 +459,7 @@ int RunWindowed(Port &port) {
+     uint32_t texW = 0, texH = 0;
+     uint64_t shownSerial = 0;
+     bool shownFirstMoviePhase = false;
++    DialogueWitness shownDialogue;
+     std::vector<uint32_t> frameCopy;
+     std::vector<uint32_t> shadedPixels, softwareShown; // (the GPU's picture read back for a shader; the software one)
+     std::vector<uint32_t> zoomForeground; // reusable removal of the original picture shadow
+@@ -471,6 +472,7 @@ int RunWindowed(Port &port) {
+         break; // fail closed for another translation/Japanese font, never guess its encoding
+     }
+     sakuraUi.SetGameAtlas(englishAtlas);
++    port.PrepareDialogueCatalog(englishAtlas);
+     if(port.videoRenderer)port.videoRenderer->CaptureGlyphPlate(!englishAtlas.empty());
+     // Exact stage01 map-name identity; do not extrapolate unrelated menus/maps.
+     if(port.videoRenderer)port.videoRenderer->CaptureScrollExtension(39,0x1CAF3218B4B0F9F0ull);
+@@ -1110,6 +1112,7 @@ int RunWindowed(Port &port) {
+     const uint64_t startedAt = SDL_GetTicksNS();
+     std::string logged;
+     while (running && !port.quit && (port.opt.frames == 0 || port.frame < port.opt.frames)) {
++        port.PrepareDialogueCatalog(englishAtlas); // also handles first activation through the menu
+         SDL_Event ev;
+         pass++;
+         // The Display page as it is now (the menu may change it): the picture's fit, and the shader, for which the
+@@ -1478,6 +1481,19 @@ int RunWindowed(Port &port) {
+                     texH = port.fbHeight;
+                     softwareShown = port.fb;
+                     shownFirstMoviePhase = port.fbFirstMoviePhase;
++                    shownDialogue = port.fbDialogue;
++                    if (std::getenv("SATRECOMP_DIALOGUE_TRACE")) {
++                        static DialogueWitness previous;
++                        if (!(shownDialogue == previous)) {
++                            previous = shownDialogue;
++                            const auto *record = port.dialogueCatalog ? port.dialogueCatalog->Get(shownDialogue) : nullptr;
++                            if (record) fprintf(stderr,"dialogue shown: serial=%llu table=%s id=%u index=%u offset=%u textOffset=%u\n",
++                                static_cast<unsigned long long>(shownSerial),
++                                port.dialogueCatalog->Tables()[shownDialogue.table].name.c_str(),
++                                record->id,record->index,record->offset,shownDialogue.offset);
++                            else fprintf(stderr,"dialogue shown: serial=%llu invalid\n",static_cast<unsigned long long>(shownSerial));
++                        }
++                    }
+                     DrawHud(softwareShown.data(), static_cast<int>(texW), static_cast<int>(texH));
+                     if (!shaded) {
+                         SDL_UpdateTexture(texture, nullptr, softwareShown.data(), static_cast<int>(texW * sizeof(uint32_t)));
+diff --git a/port/main.cpp b/port/main.cpp
+index add2bae..a81c413 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -7,6 +7,7 @@
+ #include "port.h"
+ #include "kabe.h"
+ #include "movie_phase.h"
++#include "choice_text.h"
+ #include "pc_spr.h"
+ #include "pc_backdrop.h"
+ #include "background_workers.h"
+@@ -30,6 +31,7 @@
+ #include "game_info.h" // generated from games/<id>/game.cfg
+ 
+ #include <algorithm>
++#include <chrono>
+ #include <cstdlib>
+ #include <map>
+ #include <array>
+@@ -223,6 +225,31 @@ void Port::SetWideSplitsOn() {
+     }
+ }
+ 
++void Port::PrepareDialogueCatalog(std::span<const uint8_t> knownAtlas) {
++    if (dialogueCatalogTried || opt.headless || gpu || satrecomp::FeatureValue("presentation_mode") != 1 ||
++        satrecomp::FeatureValue("text_style") != 0 || !KnownEnglishAtlas(knownAtlas)) return;
++    dialogueCatalogTried = true;
++    const auto started = std::chrono::steady_clock::now();
++    auto catalog = std::make_shared<DialoguePreload>();
++    for (const auto &name : discFiles.Names()) {
++        if (!name.ends_with("TBL.BIN")) continue;
++        std::vector<uint8_t> bytes;
++        const size_t remaining = 8 * 1024 * 1024 - catalog->SourceBytes();
++        if (discFiles.ReadBounded(name, bytes, std::min(size_t(4 * 1024 * 1024), remaining)))
++            catalog->Add(name, bytes);
++    }
++    catalog->Seal();
++    if (std::getenv("SATRECOMP_DIALOGUE_TRACE")) {
++        const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(
++            std::chrono::steady_clock::now() - started).count();
++        fprintf(stderr,"dialogue preload: tables=%zu records=%zu ready=%zu bytes=%zu us=%lld\n",
++            catalog->TableCount(),catalog->RecordCount(),catalog->ReadyCount(),catalog->SourceBytes(),
++            static_cast<long long>(elapsed));
++    }
++    std::lock_guard lock(fbMutex);
++    dialogueCatalog = std::move(catalog);
++}
++
+ bool Port::OpenDiscFiles() {
+     if (!discFiles.Open(opt.discPath)) {
+         fprintf(stderr, "Cannot read '%s' as a Saturn disc image\n", opt.discPath.c_str());
+@@ -603,6 +630,10 @@ bool Port::Init() {
+         firstMovieScript.clear();
+     const auto onFrame = [this,firstMovieScript=std::move(firstMovieScript)](uint32_t *pixels, uint32_t width, uint32_t height) {
+         std::lock_guard lock(fbMutex);
++        fbDialogue = dialogueCatalog && satrecomp::FeatureValue("presentation_mode") == 1 &&
++            satrecomp::FeatureValue("text_style") == 0 ? dialogueCatalog->Locate(
++            std::span<const uint8_t>(saturn->ramLow,0x100000),
++            std::span<const uint8_t>(saturn->ramHigh,0x100000)) : DialogueWitness{};
+         fbFirstMoviePhase = width==320 && height==224 && CaptureFirstMoviePhase(
+             std::span<const uint8_t>(saturn->ramLow,0x100000),std::span<const uint8_t>(saturn->ramHigh,0x100000),firstMovieScript);
+         if(std::getenv("SATRECOMP_MOVIE_PHASE_TRACE") && !firstMovieScript.empty()) {
+diff --git a/port/port.h b/port/port.h
+index 64fdd26..032f7c5 100644
+--- a/port/port.h
++++ b/port/port.h
+@@ -6,6 +6,7 @@
+ #include "backend.h" // (which machine: runtime/backend.h)
+ 
+ #include "disc_files.h"
++#include "dialogue_preload.h"
+ #include "menu.h"
+ #include "soundtrack.h"
+ 
+@@ -103,6 +104,10 @@ struct Port {
+     uint32_t fbWidth = 0, fbHeight = 0;
+     uint64_t fbSerial = 0;
+     bool fbFirstMoviePhase = false; // host-only witness captured with this framebuffer
++    DialogueWitness fbDialogue;
++    std::shared_ptr<const DialoguePreload> dialogueCatalog;
++    bool dialogueCatalogTried = false;
++    void PrepareDialogueCatalog(std::span<const uint8_t> knownAtlas);
+ 
+     // Pad states (pressed bits) for the current frame
+     std::atomic<uint16_t> pad[2] = {0, 0};

@@ -1,0 +1,31 @@
+{
+  "source": "Independent synthetic regression against Renesas manual 6.1.31",
+  "before": {
+    "initial": "FFFF000000000000",
+    "a": 0,
+    "b": 0,
+    "s": 1,
+    "expected_active_bits": "000000000000",
+    "native": "00007FFFFFFFFFFF",
+    "interpreter": "FFFF800000000000"
+  },
+  "cases_per_mode": 11616,
+  "modes": [
+    "native production emitter",
+    "own interpreter"
+  ],
+  "cpu_targets": [
+    "master SH-2",
+    "slave SH-2"
+  ],
+  "test_count": 68,
+  "game_blocks": 580328,
+  "generated_files_rewritten": 708,
+  "limits": [
+    "No assertion that this case caused an observed Sakura failure.",
+    "No claim of full campaign validation or measured FPS improvement."
+  ],
+  "game_sha256": "bc416a8e5ca137cd31fa9ad6200cb4cdba8f0fb2533856032ffd99baede90b46",
+  "machine_test_sha256": "df05121c0678009dc45dd6271cbb38891880115ddc461429ef76d02aced54f40",
+  "patch_sha256": "d764867d1fad2037d8257ec20433d9a6f40b2967f4f17e6efdfd7d0e5fa2a73e"
+}

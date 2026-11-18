@@ -1,0 +1,175 @@
+diff --git a/port/choice_text.h b/port/choice_text.h
+index 6076a37..dbb3f61 100644
+--- a/port/choice_text.h
++++ b/port/choice_text.h
+@@ -7,6 +7,7 @@
+ #include <array>
+ #include <optional>
+ #include <span>
++#include <string_view>
+ #include <vector>
+ 
+ namespace port {
+@@ -15,6 +16,9 @@ struct UiTextLine {
+     int x=0,y=0;
+     std::u32string text;
+     uint32_t color=0xFF181818;
++    // The sealed catalog belongs to Port for the whole frontend session.
++    std::u32string_view catalogText;
++    std::u32string_view Text() const { return catalogText.empty() ? std::u32string_view(text) : catalogText; }
+ };
+ struct ChoiceTextMatch {
+     std::vector<UiTextLine> lines;
+diff --git a/port/dialogue_reveal.h b/port/dialogue_reveal.h
+new file mode 100644
+index 0000000..98df77e
+--- /dev/null
++++ b/port/dialogue_reveal.h
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "dialogue_preload.h"
++
++#include <map>
++#include <optional>
++#include <string_view>
++
++namespace port {
++
++struct PreloadedNarrativeRow {
++    int x;
++    std::u32string_view text; // Borrowed from the sealed catalogue owning the record.
++};
++
++inline const PreloadedDialogueLine* PreloadedNarrativeLine(const PreloadedDialogueRecord& record, int y) {
++    if (!record.simple || y < 160 || y > 196 || (y - 160) % 12) return nullptr;
++    const size_t index = static_cast<size_t>((y - 160) / 12);
++    if (index >= record.lineCount) return nullptr;
++    return &record.lines[index];
++}
++
++inline std::optional<size_t> PreloadedNarrativeColumn(int x, size_t lineLength) {
++    // Native command origin; the ink clip starts at 56 and is a separate guard.
++    if (x < 64 || x > 304 || (x - 64) % 8) return std::nullopt;
++    const size_t column = static_cast<size_t>((x - 64) / 8);
++    if (column >= lineLength) return std::nullopt;
++    return column;
++}
++
++inline std::optional<PreloadedNarrativeRow> MatchPreloadedNarrativeRow(
++        const PreloadedDialogueRecord& record, int y, const std::map<int,char32_t>& cells) {
++    const auto* line = PreloadedNarrativeLine(record, y);
++    if (!line || cells.empty()) return std::nullopt;
++    size_t next = 0;
++    for (const auto& [x, character] : cells) {
++        const auto column = PreloadedNarrativeColumn(x, line->text.size());
++        if (!column || character != line->text[*column]) return std::nullopt;
++        for (; next < *column; ++next)
++            if (line->text[next] != U' ') return std::nullopt;
++        next = *column + 1;
++    }
++    const int firstX = cells.begin()->first;
++    const size_t firstColumn = static_cast<size_t>((firstX - 64) / 8);
++    return PreloadedNarrativeRow{firstX, std::u32string_view(line->text).substr(firstColumn, next - firstColumn)};
++}
++
++// Resolve only a tile already observed at this position in the displayed frame.
++inline char32_t ExpectedPreloadedNarrativeGlyph(const PreloadedDialogueRecord& record, int x, int y,
++        std::span<const uint8_t> atlas, std::span<const uint8_t> tile) {
++    if (atlas.size() != 32768 || tile.size() != 128) return 0;
++    const auto* line = PreloadedNarrativeLine(record, y);
++    if (!line) return 0;
++    const auto column = PreloadedNarrativeColumn(x, line->text.size());
++    if (!column || line->rawOffset > record.raw.size() || *column >= record.raw.size() - line->rawOffset) return 0;
++    const auto byte = static_cast<uint8_t>(record.raw[line->rawOffset + *column]);
++    const char32_t character = GlyphCodepoint(byte);
++    if (!character || character != line->text[*column]) return 0;
++    const size_t atlasOffset = static_cast<size_t>(byte - 1) * tile.size();
++    return std::memcmp(atlas.data() + atlasOffset, tile.data(), tile.size()) == 0 ? character : 0;
++}
++
++} // namespace port
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index cb36af8..baaf6b0 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -25,6 +25,7 @@
+ #include <filesystem>
+ #include "png_write.h"
+ #include "port.h"
++#include "dialogue_reveal.h"
+ #include "shading.h"
+ 
+ #include "../video/gpu.h"
+@@ -527,7 +528,8 @@ int RunWindowed(Port &port) {
+         if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
+-                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;std::map<size_t,uint16_t> owners;bool valid=true,needsPlate=false,plateReady=false;};
++                const auto* catalogRecord=port.dialogueCatalog?port.dialogueCatalog->Get(shownDialogue):nullptr;
++                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;std::map<size_t,uint16_t> owners;bool valid=true,needsPlate=false,plateReady=false,catalogExact=true;};
+                 std::map<int,TextRow> rows;
+                 std::map<uint16_t,int> ownerRows;
+                 int localX=0,localY=0;
+@@ -541,7 +543,9 @@ int RunWindowed(Port &port) {
+                     if(y<160 || y>196) continue;
+                     auto& row=rows[y];
+                     const auto tile=std::span<const uint8_t>(shown.pixels);
+-                    const char32_t letter=DecodeCodepoint(englishAtlas,tile);
++                    const auto expected=catalogRecord?ExpectedPreloadedNarrativeGlyph(*catalogRecord,x,y,englishAtlas,tile):0;
++                    const char32_t letter=expected?expected:DecodeCodepoint(englishAtlas,tile);
++                    row.catalogExact&=expected!=0;
+                     if(!letter || row.chars.count(x) || !NarrativeRecognizedInkFits(x,y,tile,letter)) {row.valid=false;continue;}
+                     row.needsPlate|=!NarrativeInkFits(x,y,tile);
+                     ownerRows[uint16_t(&shown-planes.sprites.data()+1)]=y;
+@@ -602,13 +606,28 @@ int RunWindowed(Port &port) {
+                         continue;
+                     }
+                     UiTextLine line;line.x=row.chars.begin()->first;line.y=y;
+-                    int previous=line.x-8;
+-                    for(auto [x,letter]:row.chars) {
+-                        if((x-previous)%8) {row.valid=false;break;}
+-                        for(int gap=previous+8;gap<x;gap+=8)line.text+=' ';
+-                        line.text+=letter;previous=x;
++                    const auto prepared=catalogRecord && row.catalogExact?
++                        MatchPreloadedNarrativeRow(*catalogRecord,y,row.chars):std::nullopt;
++                    if(prepared) {
++                        line.x=prepared->x;
++                        line.catalogText=prepared->text;
++                    } else {
++                        int previous=line.x-8;
++                        for(auto [x,letter]:row.chars) {
++                            if((x-previous)%8) {row.valid=false;break;}
++                            for(int gap=previous+8;gap<x;gap+=8)line.text+=' ';
++                            line.text+=letter;previous=x;
++                        }
+                     }
+                     if(!row.valid) continue;
++                    if(std::getenv("SATRECOMP_DIALOGUE_TRACE") && y>=160 && y<=196 && (y-160)%12==0) {
++                        static std::array<uint64_t,4> previous{};
++                        const uint64_t signature=(uint64_t(shownDialogue.table)<<48)|(uint64_t(shownDialogue.record)<<16)|
++                            (uint64_t(line.Text().size())<<1)|uint64_t(bool(prepared));
++                        auto& last=previous[(y-160)/12];
++                        if(signature!=last) {last=signature;fprintf(stderr,"dialogue row: serial=%llu y=%d id=%u visible=%zu catalog=%d\n",
++                            static_cast<unsigned long long>(shownSerial),y,catalogRecord?catalogRecord->id:0,line.Text().size(),int(bool(prepared)));}
++                    }
+                     // Use actual native ink, including color offsets during fades.
+                     unsigned darkest=766;
+                     for(auto at:row.ink) {
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+index 3035f03..a0e5d70 100644
+--- a/port/sakura_ui.cpp
++++ b/port/sakura_ui.cpp
+@@ -114,8 +114,9 @@ void SakuraUi::DrawGameText(const std::vector<UiTextLine>& lines,int x,int y,int
+     const auto natural=reference?NaturalTextPlacement(reference->AdvanceX,reference->X0,reference->Y0,
+         reference->Y1-reference->Y0,nativeReference[0],nativeReference[1],nativeReference[3]-nativeReference[1]+1,scale):NaturalTextTransform{};
+     for(const auto& line:lines) {
+-        for(size_t index=0;index<line.text.size();index++) {
+-            const char32_t code=line.text[index];
++        const auto text=line.Text();
++        for(size_t index=0;index<text.size();index++) {
++            const char32_t code=text[index];
+             if(code<32) continue;
+             const auto letter=GlyphUtf8(code);
+             const auto* glyph=gameFont->GetFontBaked(fontSize)->FindGlyph(code);

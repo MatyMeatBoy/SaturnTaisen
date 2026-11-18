@@ -1,0 +1,261 @@
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+index f46c260..d6fe1ef 100644
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -7,6 +7,7 @@
+ #include "launcher.h"
+ #include "sakura_saves.h"
+ #include "sakura_hd.h"
++#include "sakura_resources.h"
+ #include <stdexcept>
+ 
+ #include "../../port/bindings.h"
+@@ -177,6 +178,18 @@ launcher::FileCheck check_disc(const std::string& path) {
+     return check;
+ }
+ 
++// The portable owner bundle keeps the two translated discs in sibling folders.
++std::string sibling_sakura_disc(const std::string& disc) {
++    const auto path=std::filesystem::u8path(disc);char own[256]{};
++    if(!read_disc_header(lower_extension(disc)==".iso"?disc:first_track_of(disc),own))return {};
++    if(trimmed(own+0x20,10)!="GS-9037" || trimmed(own+0x2A,6)!="V1.005" || (own[0x3B]!='1' && own[0x3B]!='2'))return {};
++    const auto other=path.parent_path().parent_path()/(own[0x3B]=='1'?"disc2":"disc1")/"game.cue";
++    char header[256]{};const auto text=other.u8string();const std::string filename(text.begin(),text.end());
++    if(!read_disc_header(first_track_of(filename),header) || trimmed(header+0x20,10)!="GS-9037" ||
++       trimmed(header+0x2A,6)!="V1.005" || header[0x3B]!=(own[0x3B]=='1'?'2':'1'))return {};
++    return filename;
++}
++
+ // What the game is started with: the player's disc image (read only) and their saves folder.
+ std::vector<std::string> arguments(const launcher::Launch& launch) {
+     auto backup=launch.folder/"saves"/"backup.bin";
+@@ -194,11 +207,12 @@ std::vector<std::string> arguments(const launcher::Launch& launch) {
+     }
+     std::vector<std::string> args = {"--disc", launch.file, "--backup", backup.string(),
+                                      "--settings", (launch.folder / "settings.ini").string()};
+-    if(const auto pc=prefs.get("sakura","pc_assets");!pc.empty()) {
+-        std::error_code error;
+-        if(std::filesystem::is_directory(pc,error)) {args.push_back("--pc-assets");args.push_back(pc);}
+-    }
+-    if (const std::string extra = find_extra_disc(launch.file); !extra.empty()) {
++    const auto configuredPc=std::filesystem::u8path(prefs.get("sakura","pc_assets"));
++    const auto pc=PortableHdRoot(configuredPc,std::filesystem::u8path(SDL_GetBasePath()));
++    if(!pc.empty()) {args.push_back("--pc-assets");const auto text=pc.u8string();args.emplace_back(text.begin(),text.end());}
++    std::string extra=find_extra_disc(launch.file);
++    if(extra.empty())extra=sibling_sakura_disc(launch.file);
++    if (!extra.empty()) {
+         args.push_back("--extra-disc");
+         args.push_back(extra);
+     }
+diff --git a/launcher/src/sakura_hd.cpp b/launcher/src/sakura_hd.cpp
+index 3f6a5ba..fe1d4b0 100644
+--- a/launcher/src/sakura_hd.cpp
++++ b/launcher/src/sakura_hd.cpp
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-3.0-only
+ #include "sakura_hd.h"
++#include "sakura_resources.h"
+ #include "game_process.h"
+ #include "layout.h"
+ #include "ui.h"
+@@ -40,7 +41,9 @@ bool SakuraHdBusy() {return state && state->worker && state->worker->running();}
+ void DrawSakuraHd(launcher::PageContext& page) {
+     if(!state) {
+         state=std::make_shared<HdState>();
+-        const auto configured=page.prefs.get("sakura","pc_assets");
++        auto configured=page.prefs.get("sakura","pc_assets");
++        const auto portable=PortableHdRoot(std::filesystem::u8path(configured),page.program_folder);
++        if(!portable.empty()) {const auto text=portable.u8string();configured.assign(text.begin(),text.end());}
+         SDL_strlcpy(state->source.data(),configured.c_str(),state->source.size());
+     }
+     auto& s=*state;bool dialog=false;
+@@ -73,19 +76,19 @@ void DrawSakuraHd(launcher::PageContext& page) {
+     ui::gap(24);ui::text("MOD HD · SATURN",ui::Font::Semibold,ui::size::kDetail,p.secondary);ui::gap(10);
+     {
+         layout::Card card(page.width);
+-        layout::row(page.width,"Fondos de tu versión PC","Añade los fondos extendidos al modo mejorado de Saturn. Necesitas tus recursos PC extraídos; no se ejecuta la versión PC.",150,36,[&] {
++        layout::row(page.width,"Recursos HD de Saturn","Usa tus recursos PC o un pack HD ya preparado. Los recursos preparados no requieren la instalación PC.",150,36,[&] {
+             if(ui::button("Elegir carpeta…",ui::Kind::Secondary,150,!running && !dialog && !page.playing)) {
+                 {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
+                 SDL_ShowOpenFolderDialog(PickedHd,new std::shared_ptr<HdState>(state),page.window,nullptr,false);
+             }
+         });
+         layout::inset_separator(page.width);
+-        layout::row(page.width,"Carpeta de recursos","Selecciona la carpeta que contiene SAKURA1, o pega su ruta.",270,36,[&] {
++        layout::row(page.width,"Carpeta de recursos","Selecciona la carpeta de recursos o del pack preparado.",270,36,[&] {
+             ImGui::BeginDisabled(running || dialog || page.playing);
+             ui::text_field("##sakura-hd-source",s.source.data(),s.source.size(),"Carpeta extraída de PC",270);
+             ImGui::EndDisabled();
+         });
+-        layout::row(page.width,running?"Preparando fondos…":"Verificar y preparar","Comprueba los 19 originales y prepara su caché. Los discos y tus partidas permanecen intactos.",150,36,[&] {
++        layout::row(page.width,running?"Preparando fondos…":"Verificar y preparar","Comprueba los fondos disponibles y prepara su caché. Los discos y tus partidas permanecen intactos.",150,36,[&] {
+             if(ui::button("Preparar mod HD",ui::Kind::Primary,150,s.source[0] && !running && !dialog && !page.playing)) {
+                 s.submitted=ResourceRoot(s.source.data());s.finished=false;s.error=false;s.message.clear();
+                 std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
+diff --git a/launcher/src/sakura_resources.h b/launcher/src/sakura_resources.h
+new file mode 100644
+index 0000000..91cf809
+--- /dev/null
++++ b/launcher/src/sakura_resources.h
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <filesystem>
++// Portable owner resources are optional; each runtime loader still verifies its own source hashes.
++inline std::filesystem::path PortableHdRoot(const std::filesystem::path& configured,const std::filesystem::path& program) {
++    std::error_code error;
++    if(!configured.empty() && std::filesystem::is_directory(configured,error))return configured;
++    const auto bundled=program/"hd-resources";
++    error.clear();if(std::filesystem::is_directory(bundled/"SAKURA1/WALL",error) || std::filesystem::is_regular_file(bundled/"hd-pack.stfp",error))return bundled;
++    return {};
++}
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 889c9b5..13f410c 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -214,7 +214,7 @@ int RunWindowed(Port &port) {
+         }
+         flags |= SDL_WINDOW_RESIZABLE | (port.gpu || shade ? SDL_WINDOW_HIGH_PIXEL_DENSITY : 0) | (shade ? SDL_WINDOW_OPENGL : 0) |
+                  (testHidden ? SDL_WINDOW_HIDDEN : 0);
+-        window = SDL_CreateWindow("SaturnTaisenFirst 0.2-dev", width, height, flags);
++        window = SDL_CreateWindow("SaturnTaisenFirst 0.1.2", width, height, flags);
+         if (!window) {
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
+@@ -317,7 +317,7 @@ int RunWindowed(Port &port) {
+             if(usePortraits)portraitPack.Preload([&](size_t ready,size_t){progress(backgroundCount+ready);});
+             backgroundWarmupStarted=true;
+             if(std::getenv("SATRECOMP_HD_STATS"))fprintf(stderr,"HD preload: backgrounds=%zu/%zu portrait_variants=%zu\n",loaded,backgroundCount,portraitCount);
+-            SDL_SetWindowTitle(window,"SaturnTaisenFirst 0.2-dev");
++            SDL_SetWindowTitle(window,"SaturnTaisenFirst 0.1.2");
+         }
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
+diff --git a/port/pc_backdrop.h b/port/pc_backdrop.h
+index 8eef92d..78e1d03 100644
+--- a/port/pc_backdrop.h
++++ b/port/pc_backdrop.h
+@@ -3,6 +3,7 @@
+ #include "backdrop.h"
+ #include "pc_spr.h"
+ #include "pc_backdrop_ids.h"
++#include "prepared_hd.h"
+ #include <algorithm>
+ namespace port {
+ inline SDL_Surface* NormalizePcBackdrop(SDL_Surface* master,std::span<const uint32_t> native) {
+@@ -41,6 +42,11 @@ inline uint64_t PcBackdropHash(std::span<const uint8_t> bytes,uint64_t hash=1469
+ inline SDL_Surface* PreparePcBackdrop(const std::filesystem::path& masterFile,const std::filesystem::path& pcRoot,std::string_view saturn,const std::filesystem::path& cacheDir,bool requireCache=false) {
+     if(requireCache && cacheDir.empty())return nullptr;
+     const auto* info=PcBackdropFor(saturn);if(!info)return nullptr;
++    PreparedHdPack prepared;
++    if(ReadPreparedHd(pcRoot,prepared))if(const auto* entry=FindPreparedBackdrop(prepared,info->id,info->fingerprint)) {
++        const auto file=pcRoot/"backgrounds"/(std::string(info->id)+".stfb");
++        if(PreparedFileMatches(file,entry->bytes,entry->hash,2097152))if(auto* surface=ReadBackgroundCache(file,864,486))return surface;
++    }
+     std::vector<uint8_t> source,master;
+     if(!ReadPcBackdropFile(pcRoot/"SAKURA1"/"WALL"/(std::string(info->id)+".SPR"),source,4*1024*1024) ||
+        source.size()!=info->bytes || PcBackdropHash(source)!=info->fingerprint ||
+diff --git a/port/portrait_pack.h b/port/portrait_pack.h
+index 0b7fb98..19aa32d 100644
+--- a/port/portrait_pack.h
++++ b/port/portrait_pack.h
+@@ -3,6 +3,7 @@
+ #include "portrait_match.h"
+ #include "glyph_text.h"
+ #include "background_cache.h"
++#include "prepared_hd.h"
+ #include "../recomp-common/settings.h"
+ #include <charconv>
+ #include <cstdio>
+@@ -76,8 +77,16 @@ public:
+     ~PortraitPack() {Close();}
+     void Open(const std::filesystem::path& folder,const std::filesystem::path& pcRoot) {
+         Close();folder_=folder;
+-        if(!ReadPortraitPack(folder_,data_) || !KnownPortraitSource(pcRoot)) {data_={};return;}
+-        if(std::getenv("SATRECOMP_HD_STATS"))std::fprintf(stderr,"portrait pack: records=%zu source=verified\n",data_.records.size());
++        if(!ReadPortraitPack(folder_,data_)) {
++            folder_=pcRoot/"portraits";
++            if(!ReadPortraitPack(folder_,data_)) {data_={};return;}
++        }
++        const bool original=KnownPortraitSource(pcRoot);
++        PreparedHdPack prepared;
++        const bool derived=ReadPreparedHd(pcRoot,prepared) && prepared.portraitBytes==kPortraitSourceBytes && prepared.portraitSource==kPortraitSourceHash &&
++            prepared.portraitCount==data_.records.size() && PreparedFileMatches(folder_/"manifest.ini",0,prepared.portraitManifest,1048576);
++        if(!original && !derived) {data_={};return;}
++        if(std::getenv("SATRECOMP_HD_STATS"))std::fprintf(stderr,"portrait pack: records=%zu source=%s\n",data_.records.size(),original?"verified":"prepared");
+     }
+     void Close() {
+         SDL_DestroyTexture(texture_);texture_=nullptr;data_={};atlas_.clear();
+diff --git a/port/prepared_hd.h b/port/prepared_hd.h
+new file mode 100644
+index 0000000..a3961b3
+--- /dev/null
++++ b/port/prepared_hd.h
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <filesystem>
++#include <fstream>
++#include <vector>
++#include <array>
++#include <string>
++#include <string_view>
++#include <span>
++#include <cstdint>
++#include <cstring>
++namespace port {
++inline uint64_t PreparedHash(std::span<const uint8_t> bytes) {
++    uint64_t hash=14695981039346656037ull;for(auto byte:bytes)hash=(hash^byte)*1099511628211ull;return hash;
++}
++struct PreparedBackdrop {std::string id;uint64_t source=0,hash=0,bytes=0;};
++struct PreparedHdPack {uint64_t portraitBytes=0,portraitSource=0,portraitManifest=0;uint32_t portraitCount=0;std::vector<PreparedBackdrop> backgrounds;};
++inline bool ReadPreparedHd(const std::filesystem::path& root,PreparedHdPack& result) {
++    result={};std::ifstream input(root/"hd-pack.stfp",std::ios::binary|std::ios::ate);
++    if(!input || input.tellg()<48 || input.tellg()>48+19*32)return false;
++    std::vector<uint8_t> bytes(size_t(input.tellg()));input.seekg(0);if(!input.read(reinterpret_cast<char*>(bytes.data()),bytes.size()))return false;
++    if(std::memcmp(bytes.data(),"STFHD01",8))return false;
++    auto word=[&](size_t at,int count){uint64_t value=0;for(int i=0;i<count;i++)value|=uint64_t(bytes[at+i])<<(8*i);return value;};
++    const auto count=word(12,4);
++    if(word(8,4)!=1 || count>19 || bytes.size()!=48+count*32 || word(40,4)>394 || word(44,4))return false;
++    PreparedHdPack parsed;parsed.portraitBytes=word(16,8);parsed.portraitSource=word(24,8);parsed.portraitManifest=word(32,8);parsed.portraitCount=uint32_t(word(40,4));
++    for(size_t i=0;i<count;i++) {
++        const size_t at=48+i*32;PreparedBackdrop record;
++        record.id.assign(reinterpret_cast<const char*>(bytes.data()+at),8);
++        if(record.id.substr(0,4)!="KABE")return false;
++        for(int j=4;j<8;j++)if(record.id[j]<'0' || record.id[j]>'9')return false;
++        for(const auto& existing:parsed.backgrounds)if(existing.id==record.id)return false;
++        record.source=word(at+8,8);record.hash=word(at+16,8);record.bytes=word(at+24,8);
++        if(!record.bytes || record.bytes>2097152)return false;
++        parsed.backgrounds.push_back(std::move(record));
++    }
++    result=std::move(parsed);return true;
++}
++inline const PreparedBackdrop* FindPreparedBackdrop(const PreparedHdPack& pack,std::string_view id,uint64_t source) {
++    for(const auto& item:pack.backgrounds)if(item.id==id && item.source==source)return &item;return nullptr;
++}
++inline bool PreparedFileMatches(const std::filesystem::path& file,uint64_t size,uint64_t hash,size_t limit) {
++    std::error_code error;if(std::filesystem::is_symlink(file,error))return false;
++    std::ifstream input(file,std::ios::binary|std::ios::ate);
++    if(!input || input.tellg()<=0 || uint64_t(input.tellg())>limit || (size && uint64_t(input.tellg())!=size))return false;
++    std::vector<uint8_t> bytes(size_t(input.tellg()));input.seekg(0);
++    return bool(input.read(reinterpret_cast<char*>(bytes.data()),bytes.size())) && PreparedHash(bytes)==hash;
++}
++}
+diff --git a/recomp-common/launcher/src/app.cpp b/recomp-common/launcher/src/app.cpp
+index 81bcc0c..0745813 100644
+--- a/recomp-common/launcher/src/app.cpp
++++ b/recomp-common/launcher/src/app.cpp
+@@ -383,6 +383,13 @@ int play_directly(const std::string& id, const std::vector<std::string>& extra)
+     const launcher::Description& about = *target->about;
+     recomp::Ini prefs(player_folder(LAUNCHER_GAME_NAME, LAUNCHER_HOME_ENV) / "launcher.ini");
+     prefs.load();
++    if(about.game_page && about.find_nearby && !about.check(prefs.get(target->file_section,about.file_key)).usable()) {
++        const auto nearby=about.find_nearby(program_path(target->exe).parent_path());
++        if(!nearby.empty() && about.check(nearby).usable()) {
++            prefs.set(target->file_section,about.file_key,nearby);
++            prefs.save(); // an unwritable profile can still use the discovered file in this run
++        }
++    }
+     if (about.game_page && !about.check(prefs.get(target->file_section, about.file_key)).usable()) {
+         say(SDL_MESSAGEBOX_INFORMATION, target->name, about.file_not_set_up);
+         return 1;

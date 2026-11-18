@@ -1,0 +1,56 @@
+{
+  "candidate": {
+    "schema": 1,
+    "scope": "static candidates from registered overlays, not executed campaign coverage",
+    "sdk_commit": "67a5fd456609f702817c08164e77e1420dc91138",
+    "opcode_sha256": "23b09fb871050a0a4bb191d67a0069dba18fa086c48d1864325dfc7dec401e7b",
+    "iso_sha256": "5b19031460c87b4773ef2cbd70ef2170bef41c1117ec8cefe27b2af1309205ec",
+    "seed_sha256": "69e20d421b2afddd983f50841fcef807c77c77373dde205141a4ea4e94f933e8",
+    "profiles": [
+      {
+        "file": "/SAKURA2/EVT06.BIN",
+        "base": "00204000",
+        "bytes": 77716,
+        "sha256": "3214506d26f1b9fbec18190e993acf4ef5502532522790d7a327efe7125c89e5",
+        "evidence": "Episode4 cold load: all 77716 bytes equal LowRAM at 00204000 in states6677-6680; strict first missing PC00204000 after6678 complete frames",
+        "profile": "owner-disc",
+        "lba": 221800,
+        "candidate_blocks": 30813
+      }
+    ],
+    "before": 643320,
+    "after": 674023,
+    "added": 30703,
+    "candidate_database_sha256": "222f07a0f1a4e0218772e369ac68626224a893d7bd31403f4f67ba8f73d18a05"
+  },
+  "validation": {
+    "executable_sha256": "130c01f6a29c03a035a5dcb220197a445edd49edb170dd9efcfbb8fc1d4c5816",
+    "seed_sha256": "ed2f71f1996faa34299cc39653fefc6d442787140ccfd16dfebd7feb3010a0cc",
+    "movie_sha256": "bdd45ca0b3093cede7d3e9d772389baccffe71fdeeee01536602ec37295b0acd",
+    "per_frame_hashes_equal": true,
+    "rgb_equal": true,
+    "results": [
+      {
+        "mode": "native",
+        "exit": 0,
+        "frames": 12000,
+        "last_hash": "12000 c8f0bd57666eb8e9"
+      },
+      {
+        "mode": "interpreter",
+        "exit": 0,
+        "frames": 12000,
+        "last_hash": "12000 c8f0bd57666eb8e9"
+      }
+    ],
+    "validation_note": "Image comparison finalized with correct six-digit PNG filename after runner formatting error; no guest replay changed."
+  },
+  "boundary": {
+    "state_sha256": "42ab8d52f4b844bd45ae80ca799b98a7732e84f8e0814164a4b89a1f718cba14",
+    "frames": 1200,
+    "all_hashes_equal": true,
+    "final_rgb_equal": true,
+    "interpreted_blocks": 0
+  },
+  "scope": "Episode4 EVT06 entry and Continue to initial tactical field; not chapter completion"
+}

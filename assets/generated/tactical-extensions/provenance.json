@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "generated_only": true,
+  "original_map_context_included": false,
+  "max_aspect": "16:9",
+  "stage_map_signature": "1CAF3218B4B0F9F0",
+  "world_origin": [
+    656,
+    24
+  ],
+  "logical_size": [
+    39,
+    224
+  ],
+  "reference_output_size": [
+    940,
+    448
+  ],
+  "reference_native_size": [
+    438,
+    224
+  ],
+  "reference_world_origin": [
+    277,
+    24
+  ],
+  "approved_composition_sha256": "0e079c68bbb89c3aced98e2db933499a494750d324312a417865846681a3b6e6",
+  "files": [
+    {
+      "path": "STAGE01-right-v1.png",
+      "bytes": 12932,
+      "sha256": "ae5010039e71997b020a4fbbe3c16c73d15ec3cf25f10ab1d784edda0874d95e"
+    }
+  ],
+  "backgrounds": [
+    {
+      "file": "STAGE01-right-v1.png",
+      "sha256": "ae5010039e71997b020a4fbbe3c16c73d15ec3cf25f10ab1d784edda0874d95e"
+    }
+  ],
+  "source_pixels_included": false
+}

@@ -1,0 +1,41 @@
+diff --git a/machine/sh2.cpp b/machine/sh2.cpp
+index 9fe4b40..10bb214 100644
+--- a/machine/sh2.cpp
++++ b/machine/sh2.cpp
+@@ -934,8 +934,10 @@ void SH2::Execute(uint16 opcode) {
+         Rm += 4;
+         const sint64 product = a * b;
+         if (SR.S) {
+-            // (the sum saturates at 48 bits)
+-            const __int128 sum = static_cast<__int128>(static_cast<sint64>(MAC.u64)) + product;
++            // Only the low 48 accumulator bits participate when S is set.
++            // Bias/unbias the sign bit without shifting a signed negative value.
++            const sint64 accumulator = static_cast<sint64>((MAC.u64 & 0x0000FFFFFFFFFFFFull) ^ 0x0000800000000000ull) - 0x0000800000000000ll;
++            const sint64 sum = accumulator + product;
+             const sint64 high = 0x00007FFFFFFFFFFFll, low = -0x0000800000000000ll;
+             MAC.u64 = static_cast<uint64>(sum > high ? high : sum < low ? low : static_cast<sint64>(sum));
+         } else {
+diff --git a/tools/sh2emit.py b/tools/sh2emit.py
+index c88dc16..08f0763 100644
+--- a/tools/sh2emit.py
++++ b/tools/sh2emit.py
+@@ -265,12 +265,13 @@ def emit(name, op, pcx, on_wait, in_slot=False, fallback=None):
+     if name == "MACL":
+         return Instr(["SN_RD32N(v2, %s)" % Rn, "%s += 4u;" % Rn,
+                       "SN_RD32N(v1, %s)" % Rm, "%s += 4u;" % Rm,
+-                      "const sint64 op1 = (sint64)(sint32)v1; const sint64 op2 = (sint64)(sint32)v2;",
+-                      "uint64 result = (uint64)(op1 * op2) + c.MAC.u64;",
+-                      # (48-bit saturation; the bounds are compared unsigned, as the interpreter does)
+-                      "if (c.SR.S && result > 0x00007FFFFFFFFFFFull && result < 0xFFFF800000000000ull) {",
+-                      "result = (sint32)(op1 ^ op2) < 0 ? 0xFFFF800000000000ull : 0x00007FFFFFFFFFFFull; }",
+-                      "c.MAC.u64 = result;"], mem=True)
++                      "const sint64 product = (sint64)(sint32)v1 * (sint64)(sint32)v2;",
++                      "if (c.SR.S) {",
++                      # Signed low 48-bit accumulator; the inactive high 16 bits are ignored.
++                      "const sint64 accumulator = (sint64)((c.MAC.u64 & 0x0000FFFFFFFFFFFFull) ^ 0x0000800000000000ull) - 0x0000800000000000LL;",
++                      "const sint64 sum = accumulator + product;",
++                      "c.MAC.u64 = (uint64)(sum < -0x0000800000000000LL ? -0x0000800000000000LL : sum > 0x00007FFFFFFFFFFFLL ? 0x00007FFFFFFFFFFFLL : sum);",
++                      "} else { c.MAC.u64 += (uint64)product; }"], mem=True)
+ 
+     # --- anything not translated here: the interpreter's handler does it (nothing, at present) ---
+     if fallback:

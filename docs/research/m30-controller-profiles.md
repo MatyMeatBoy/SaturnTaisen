@@ -1,0 +1,9 @@
+# M30 and SDL controllers
+
+Auto-detects VID/PID 2dc8:5006, 2dc8:0651 (Bluetooth/USB family) and 0ca3:0024 (2.4G receiver / shared identity 6B), plus the M30 name. The Controller Profile option allows Automatic, Standard SDL, or M30 / Saturn 6-button. Generic XInput identities do not allow certain recognition of the model: manual selection is available. Do not confuse recognition with validation of each firmware.
+
+The M30 profile preserves the physical A/B/C and X/Y/Z and L/R layout using SDL normalization. Explicit user assignments, even none, take priority. M30 accepts direction from dpad, left stick, or right stick depending on the controller's own mode. Select/Back or Heart/Guide (if exposed by SDL) opens settings, alone or with Start. Name, VID/PID, and profile are logged on connection. gamecontrollerdb.txt in the profile allows adding local SDL mappings for unrecognized devices; this does not globally replace the mapping of other controllers.
+
+Primary sources: [SDL database](https://github.com/libsdl-org/SDL/blob/main/src/joystick/SDL_gamepad_db.h), [RetroArch Bluetooth profile](https://github.com/libretro/retroarch-joypad-autoconfig/blob/master/dinput/8Bitdo_M30_BT.cfg), [RetroArch 2.4G profile](https://github.com/libretro/retroarch-joypad-autoconfig/blob/master/sdl2/8Bitdo_M30_24G.cfg). These were consulted to interpret identities and buttons; no copy of the external repository is incorporated.
+
+Automated verification: identities from both families, rejection of Xbox/Pro2 identification as M30, binding priority, 8 Saturn buttons, and virtual SDL controller with axes/triggers. Physical Bluetooth/2.4G/Switch/XInput hardware and adapters pending. Other controllers use standard SDL and reassignment is available; universal compatibility with devices the system does not expose is not promised.

@@ -1,0 +1,119 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index e46f180..695c57a 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -7,6 +7,7 @@
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
+ #include "glyph_text.h"
++#include "narrative_text.h"
+ #include "kabe.h"
+ #include "backdrop.h"
+ #include "pc_backdrop.h"
+@@ -393,11 +394,11 @@ int RunWindowed(Port &port) {
+                     if(type==10) {localX=coordinate(cmd.words[6]);localY=coordinate(cmd.words[7]);continue;}
+                     if(type!=0 || (cmd.words[0]&0x30) || cmd.words[2]!=0x80 || cmd.words[3]!=0xC510 || cmd.words[5]!=0x210) continue;
+                     const int x=coordinate(cmd.words[6])+localX,y=coordinate(cmd.words[7])+localY;
+-                    if(x<56 || x+16>304 || y<160 || y>196) continue;
++                    if(y<160 || y>196) continue;
+                     auto& row=rows[y];
+                     const auto tile=port.videoRenderer->SpriteBytes(static_cast<uint32_t>(cmd.words[4])*8,128);
+                     const char letter=DecodeGlyph(englishAtlas,tile);
+-                    if(!letter || row.chars.count(x)) {row.valid=false;continue;}
++                    if(!letter || row.chars.count(x) || !NarrativeInkFits(x,y,tile)) {row.valid=false;continue;}
+                     row.chars[x]=letter;
+                     for(int py=0;py<16;py++)for(int px=0;px<16;px++) {
+                         const uint8_t packed=tile[py*8+px/2];
+diff --git a/port/narrative_text.h b/port/narrative_text.h
+new file mode 100644
+index 0000000..fd32540
+--- /dev/null
++++ b/port/narrative_text.h
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <array>
++#include <cstdint>
++#include <span>
++#include <algorithm>
++namespace port {
++struct NaturalTextTransform {float scale=0,offsetX=0,offsetY=0;};
++inline NaturalTextTransform NaturalTextPlacement(float advance,float capX,float capY,float capHeight,
++                                                int nativeLeft,int nativeTop,int nativeCapHeight,int displayScale) {
++    if(advance<=0 || capHeight<=0 || nativeCapHeight<=0 || displayScale<1)return {};
++    const float uniform=std::min(8.0f*displayScale/advance,float(nativeCapHeight*displayScale)/capHeight);
++    return {uniform,nativeLeft*displayScale-capX*uniform,nativeTop*displayScale-capY*uniform};
++}
++// Native dialogue interior, excluding the speaker portrait and ornate frame.
++inline constexpr int kTextLeft=56,kTextTop=160,kTextRight=304,kTextBottom=208;
++inline bool NarrativeInkFits(int x,int y,std::span<const uint8_t> tile) {
++    if(tile.size()!=128)return false;
++    for(int py=0;py<16;py++)for(int px=0;px<16;px++) {
++        const uint8_t packed=tile[py*8+px/2];
++        if(!(px&1?packed&15:packed>>4))continue;
++        if(x+px<kTextLeft || x+px>=kTextRight || y+py<kTextTop || y+py>=kTextBottom)return false;
++    }
++    return true;
++}
++inline std::array<int,4> NarrativeClip(int x,int y,int scale,int cropX,int cropY) {
++    return {x+(kTextLeft-cropX)*scale,y+(kTextTop-cropY)*scale,
++            x+(kTextRight-cropX)*scale,y+(kTextBottom-cropY)*scale};
++}
++}
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+index 13023fe..3925006 100644
+--- a/port/sakura_ui.cpp
++++ b/port/sakura_ui.cpp
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-3.0-only
+ #include "sakura_ui.h"
++#include "narrative_text.h"
+ #include "glyph_text.h"
+ #include "../recomp-common/launcher/src/ui.h"
+ #include <imgui_impl_sdl3.h>
+@@ -81,8 +82,15 @@ void SakuraUi::GameText(const std::vector<UiTextLine>& lines,int x,int y,int sca
+     if(!active || !gameFont || lines.empty()) return;
+     ImGui_ImplSDLRenderer3_NewFrame();ImGui_ImplSDL3_NewFrame();ImGui::NewFrame();
+     auto* draw=ImGui::GetForegroundDrawList();
++    const auto clip=NarrativeClip(x,y,scale,cropX,cropY);
++    draw->PushClipRect(ImVec2(static_cast<float>(clip[0]),static_cast<float>(clip[1])),
++                       ImVec2(static_cast<float>(clip[2]),static_cast<float>(clip[3])),true);
+     const float fontSize=13.0f*scale;
+     ImGui::PushFont(gameFont,fontSize);
++    const auto* reference=gameFont->GetFontBaked(fontSize)->FindGlyph('H');
++    const auto& nativeReference=glyphBounds['H'-32];
++    const auto natural=reference?NaturalTextPlacement(reference->AdvanceX,reference->X0,reference->Y0,
++        reference->Y1-reference->Y0,nativeReference[0],nativeReference[1],nativeReference[3]-nativeReference[1]+1,scale):NaturalTextTransform{};
+     for(const auto& line:lines) {
+         for(size_t index=0;index<line.text.size();index++) {
+             const unsigned char code=line.text[index];
+@@ -90,23 +98,21 @@ void SakuraUi::GameText(const std::vector<UiTextLine>& lines,int x,int y,int sca
+             const auto& box=glyphBounds[code-32];if(box[2]<box[0]) continue;
+             const char letter[2]={static_cast<char>(code),0};
+             const auto* glyph=gameFont->GetFontBaked(fontSize)->FindGlyph(code);
+-            if(!glyph || glyph->X1<=glyph->X0 || glyph->Y1<=glyph->Y0) continue;
++            if(!glyph || natural.scale<=0 || glyph->X1<=glyph->X0 || glyph->Y1<=glyph->Y0) continue;
+             const ImVec2 origin(static_cast<float>(x+(line.x+static_cast<int>(index)*8-cropX)*scale),
+                                 static_cast<float>(y+(line.y-cropY)*scale));
+             const int first=draw->VtxBuffer.Size;
+             draw->AddText(gameFont,fontSize,origin,line.color,letter);
+-            // Preserve each native glyph's exact ink box, baseline and 8-pixel advance.
+-            // Only the font raster is high resolution; game pixels remain integer-scaled.
+-            const float sx=static_cast<float>((box[2]-box[0]+1)*scale)/(glyph->X1-glyph->X0);
+-            const float sy=static_cast<float>((box[3]-box[1]+1)*scale)/(glyph->Y1-glyph->Y0);
++            // One uniform transform for the entire font keeps natural proportions
++            // and a common baseline. The original 8-pixel cell advance stays fixed.
+             for(int v=first;v<draw->VtxBuffer.Size;v++) {
+                 auto& at=draw->VtxBuffer[v].pos;
+-                at.x=origin.x+box[0]*scale+(at.x-origin.x-glyph->X0)*sx;
+-                at.y=origin.y+box[1]*scale+(at.y-origin.y-glyph->Y0)*sy;
++                at.x=origin.x+natural.offsetX+(at.x-origin.x)*natural.scale;
++                at.y=origin.y+natural.offsetY+(at.y-origin.y)*natural.scale;
+             }
+         }
+     }
+-    ImGui::PopFont();
++    ImGui::PopFont();draw->PopClipRect();
+     ImGui::Render();ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
+ }
+ unsigned SakuraUi::Draw(Menu& menu) {

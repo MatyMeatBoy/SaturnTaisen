@@ -1,0 +1,54 @@
+{
+  "candidate": {
+    "schema": 1,
+    "scope": "static candidates from registered overlays, not executed campaign coverage",
+    "sdk_commit": "67a5fd456609f702817c08164e77e1420dc91138",
+    "iso_sha256": "5b19031460c87b4773ef2cbd70ef2170bef41c1117ec8cefe27b2af1309205ec",
+    "seed_sha256": "b2303917af99dcbaeb28ac615e311649788be33e68de2ef8cf6f199f34a9fe85",
+    "profiles": [
+      {
+        "file": "/SAKURA2/EVT02.BIN",
+        "base": "00204000",
+        "bytes": 76180,
+        "sha256": "701d68ab48e67eabce1e1eb89bd4a8b790aa0f6a40ff68bbfa0600489b97c660",
+        "evidence": "Episode2 cold load: all 76180 bytes equal LowRAM at 00204000 in strict/interpreter state frame6688; strict first missing PC00204000",
+        "profile": "owner-disc",
+        "lba": 221648,
+        "candidate_blocks": 29382
+      }
+    ],
+    "before": 614024,
+    "after": 643320,
+    "added": 29296,
+    "candidate_database_sha256": "69e20d421b2afddd983f50841fcef807c77c77373dde205141a4ea4e94f933e8"
+  },
+  "validation": {
+    "executable_sha256": "a5fabd38b0b2fd80d877482903d9d5537c2c7920f9ad36042d4ca1075fcb0e2e",
+    "seed_sha256": "4c22bf1edd1437b082ccd05e12df5bbf46bdcc5c9058fa3cc869db281f043908",
+    "movie_sha256": "0a54353b4d3a3338010a1d0f033306a1c6e8855d22b978d1f8f69424541419b3",
+    "per_frame_hashes_equal": true,
+    "rgb_equal": true,
+    "results": [
+      {
+        "mode": "native",
+        "exit": 0,
+        "frames": 9501,
+        "last_hash": "9501 332fc7fa22f639e9"
+      },
+      {
+        "mode": "interpreter",
+        "exit": 0,
+        "frames": 9501,
+        "last_hash": "9501 332fc7fa22f639e9"
+      }
+    ]
+  },
+  "boundary": {
+    "state_sha256": "61b8cbb898f59c116509640a496ce8fb25e8b4d9d85c46d9ccef2d3533c05333",
+    "frames": 1200,
+    "all_hashes_equal": true,
+    "final_rgb_equal": true,
+    "interpreted_blocks": 0
+  },
+  "scope": "EVT02 entry and 9501-frame Continue route; not episode completion"
+}

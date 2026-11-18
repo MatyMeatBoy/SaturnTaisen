@@ -1,0 +1,51 @@
+diff --git a/port/portrait_pack.h b/port/portrait_pack.h
+index 517621c..3133e7f 100644
+--- a/port/portrait_pack.h
++++ b/port/portrait_pack.h
+@@ -76,20 +76,36 @@ public:
+     PortraitPack& operator=(const PortraitPack&)=delete;
+     ~PortraitPack() {Close();}
+     void Open(const std::filesystem::path& folder,const std::filesystem::path& pcRoot) {
+-        Close();folder_=folder;
+-        if(!ReadPortraitPack(folder_,data_)) {
+-            folder_=pcRoot/"portraits";
+-            if(!ReadPortraitPack(folder_,data_)) {data_={};return;}
+-        }
++        Close();
+         const bool original=KnownPortraitSource(pcRoot);
+         PreparedHdPack prepared;
+-        const bool derived=ReadPreparedHd(pcRoot,prepared) && prepared.portraitBytes==kPortraitSourceBytes && prepared.portraitSource==kPortraitSourceHash &&
+-            prepared.portraitCount==data_.records.size() && PreparedFileMatches(folder_/"manifest.ini",0,prepared.portraitManifest,1048576);
+-        if(!original && !derived) {data_={};return;}
+-        if(std::getenv("SATRECOMP_HD_STATS"))std::fprintf(stderr,"portrait pack: records=%zu source=%s\n",data_.records.size(),original?"verified":"prepared");
++        const bool receiptValid=!original && ReadPreparedHd(pcRoot,prepared) &&
++            prepared.portraitBytes==kPortraitSourceBytes && prepared.portraitSource==kPortraitSourceHash;
++        const bool stats=std::getenv("SATRECOMP_HD_STATS")!=nullptr;
++        const auto tryPack=[&](const std::filesystem::path& path,const char* location) {
++            PortraitPackData candidate;
++            const char* rejection=nullptr;
++            if(!ReadPortraitPack(path,candidate))rejection="catalog missing or invalid";
++            else if(!original) {
++                if(!receiptValid)rejection="prepared receipt missing or invalid";
++                else if(prepared.portraitCount!=candidate.records.size())rejection="prepared count mismatch";
++                else if(!PreparedFileMatches(path/"manifest.ini",0,prepared.portraitManifest,1048576))
++                    rejection="prepared manifest mismatch";
++            }
++            if(rejection) {
++                if(stats)std::fprintf(stderr,"portrait pack rejected: location=%s reason=%s\n",location,rejection);
++                return false;
++            }
++            folder_=path;
++            data_=std::move(candidate);
++            if(stats)std::fprintf(stderr,"portrait pack: records=%zu source=%s\n",data_.records.size(),original?"verified":"prepared");
++            return true;
++        };
++        const auto bundled=pcRoot/"portraits";
++        if(!tryPack(folder,"profile") && folder!=bundled)tryPack(bundled,"bundled");
+     }
+     void Close() {
+-        SDL_DestroyTexture(texture_);texture_=nullptr;data_={};atlas_.clear();
++        SDL_DestroyTexture(texture_);texture_=nullptr;folder_.clear();data_={};atlas_.clear();
+         atlasRecord_=std::numeric_limits<size_t>::max();hasProbe_=false;probeUsable_=false;disabled_=false;
+     }
+     size_t VariantCount() const {return data_.records.size()*2;}

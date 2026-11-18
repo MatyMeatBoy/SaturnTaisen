@@ -1,0 +1,762 @@
+{
+  "schema": 1,
+  "base": "06078000",
+  "scope": "static candidates, not executed coverage",
+  "base_evidence": "K002 witnessed at PC060783FC, file offset03FC; absolute self pointers support family placement",
+  "sdk_commit": "67a5fd456609f702817c08164e77e1420dc91138",
+  "opcode_sha256": "23b09fb871050a0a4bb191d67a0069dba18fa086c48d1864325dfc7dec401e7b",
+  "seed_sha256": "a5cd0d9442c85cf15f87849d7dfefca6c858c3267698cbb6537b54585ccc2c6f",
+  "inputs": [
+    {
+      "profile": "disc1",
+      "image_name": "Track 01.iso",
+      "sha256": "5b19031460c87b4773ef2cbd70ef2170bef41c1117ec8cefe27b2af1309205ec",
+      "modules": 18
+    },
+    {
+      "profile": "disc2",
+      "image_name": "Track 01.iso",
+      "sha256": "fb813e8fe15caf03887321a5ceacb32d5d8822801fba460af726a59a6753770b",
+      "modules": 18
+    },
+    {
+      "profile": "japanese-disc1",
+      "image_name": "Track 01.iso",
+      "sha256": "70ea8fc64cb4bcc9652cf05cf53116136b0fe5e9f98a17d710d9a5b56ca19843",
+      "modules": 18
+    },
+    {
+      "profile": "japanese-disc2",
+      "image_name": "Track 01.iso",
+      "sha256": "5235007a8fb83994b38ebfd60201de8f481a5b7dc324c0bb0b94a44ba1a31636",
+      "modules": 18
+    }
+  ],
+  "unique_modules": 18,
+  "profiles": [
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K001.BIN",
+      "base": "06078000",
+      "bytes": 4504,
+      "sha256": "d4cb29666383dd12f786e046c303ce911282e295e88d8141bfbf8299d8d16ca8",
+      "self_pointer_count": 21,
+      "lba": 230955,
+      "candidate_blocks": 2031
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K002.BIN",
+      "base": "06078000",
+      "bytes": 5952,
+      "sha256": "8ce336483ca256b87e0d96eb1575afca07959a42e7ce48eccbde67684253cbcb",
+      "self_pointer_count": 26,
+      "lba": 230958,
+      "candidate_blocks": 2755
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K003.BIN",
+      "base": "06078000",
+      "bytes": 11644,
+      "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515",
+      "self_pointer_count": 83,
+      "lba": 230961,
+      "candidate_blocks": 5378
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K004.BIN",
+      "base": "06078000",
+      "bytes": 8384,
+      "sha256": "1e64b39b8d1f4a622928b3190149d6c345afeec288d2b06c9cb7ddb0c21ad93a",
+      "self_pointer_count": 40,
+      "lba": 230967,
+      "candidate_blocks": 3848
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K005.BIN",
+      "base": "06078000",
+      "bytes": 6792,
+      "sha256": "21d3bb93c51c503d28b0b6d40074293b9fd078cc4d4f0ca03a0802e932ec1e4d",
+      "self_pointer_count": 27,
+      "lba": 230972,
+      "candidate_blocks": 3126
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K006.BIN",
+      "base": "06078000",
+      "bytes": 3956,
+      "sha256": "b54cee4eccbf5ce84e7e2896a460d94263875c0c42f916f988f9cc76108791ee",
+      "self_pointer_count": 24,
+      "lba": 230976,
+      "candidate_blocks": 1801
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K008.BIN",
+      "base": "06078000",
+      "bytes": 7036,
+      "sha256": "4143e03c2b8ebf10d8d35895314434923d68d79058a5a7b641924994eaa7eb4e",
+      "self_pointer_count": 30,
+      "lba": 230978,
+      "candidate_blocks": 3203
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K009.BIN",
+      "base": "06078000",
+      "bytes": 5444,
+      "sha256": "f06839b83c274e9b8989b65d2cefdb67f1bb5bcf59f99c9d2409db1ec329d714",
+      "self_pointer_count": 24,
+      "lba": 230982,
+      "candidate_blocks": 2512
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K010.BIN",
+      "base": "06078000",
+      "bytes": 3792,
+      "sha256": "494802e4826ede8886811396ab26018e3a5022d64aaaa969b989b8f9481e25d2",
+      "self_pointer_count": 21,
+      "lba": 230985,
+      "candidate_blocks": 1728
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K011.BIN",
+      "base": "06078000",
+      "bytes": 6704,
+      "sha256": "18fd139629f3ae842d44401e441849c2f124af82d2c187ce45b211f6e05f0be7",
+      "self_pointer_count": 27,
+      "lba": 230987,
+      "candidate_blocks": 3088
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K012.BIN",
+      "base": "06078000",
+      "bytes": 7584,
+      "sha256": "b0a576fb2a030317a17618437e227f444350d976308ea27f50d62a9551e331e1",
+      "self_pointer_count": 35,
+      "lba": 230991,
+      "candidate_blocks": 3505
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K013.BIN",
+      "base": "06078000",
+      "bytes": 6136,
+      "sha256": "30de71defe6cc1fcf30ea09cad7c1a65311fdb93ed13496ee52265765dac6369",
+      "self_pointer_count": 30,
+      "lba": 230995,
+      "candidate_blocks": 2785
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K014.BIN",
+      "base": "06078000",
+      "bytes": 1520,
+      "sha256": "18077bebad65ca8555b37bd3efe94a7953ce9f5578f9cc7c482ec50372e7b53d",
+      "self_pointer_count": 3,
+      "lba": 230998,
+      "candidate_blocks": 720
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K015.BIN",
+      "base": "06078000",
+      "bytes": 920,
+      "sha256": "5d1ab289bf44c8d594f312756b0727a91e0ecf406b1a1be67fcfa1dedcaf2923",
+      "self_pointer_count": 6,
+      "lba": 230999,
+      "candidate_blocks": 424
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K016.BIN",
+      "base": "06078000",
+      "bytes": 1524,
+      "sha256": "cd22693913a982cab7d964da805d08212ce0db9973deca127cecd0cb24a725ee",
+      "self_pointer_count": 9,
+      "lba": 231000,
+      "candidate_blocks": 710
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K017.BIN",
+      "base": "06078000",
+      "bytes": 868,
+      "sha256": "1e56800324d21333c7c4f8bfdbd461f156e4b72f6ae3c724111b7c09e41eba30",
+      "self_pointer_count": 3,
+      "lba": 231001,
+      "candidate_blocks": 405
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K018.BIN",
+      "base": "06078000",
+      "bytes": 1016,
+      "sha256": "2834aecb46b65440e8e2b3205cfa9d575621f3b6e114a32c15adac6b287b00f7",
+      "self_pointer_count": 6,
+      "lba": 231002,
+      "candidate_blocks": 479
+    },
+    {
+      "profile": "disc1",
+      "file": "/SAKURA2/K019.BIN",
+      "base": "06078000",
+      "bytes": 2628,
+      "sha256": "04379b01cde88e7b887c9245b99b766ac7019615bcfddee5af4f093138ca167f",
+      "self_pointer_count": 18,
+      "lba": 231003,
+      "candidate_blocks": 1214
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K001.BIN",
+      "base": "06078000",
+      "bytes": 4504,
+      "sha256": "d4cb29666383dd12f786e046c303ce911282e295e88d8141bfbf8299d8d16ca8",
+      "self_pointer_count": 21,
+      "lba": 218408,
+      "candidate_blocks": 2031
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K002.BIN",
+      "base": "06078000",
+      "bytes": 5952,
+      "sha256": "8ce336483ca256b87e0d96eb1575afca07959a42e7ce48eccbde67684253cbcb",
+      "self_pointer_count": 26,
+      "lba": 218411,
+      "candidate_blocks": 2755
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K003.BIN",
+      "base": "06078000",
+      "bytes": 11644,
+      "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515",
+      "self_pointer_count": 83,
+      "lba": 218414,
+      "candidate_blocks": 5378
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K004.BIN",
+      "base": "06078000",
+      "bytes": 8384,
+      "sha256": "1e64b39b8d1f4a622928b3190149d6c345afeec288d2b06c9cb7ddb0c21ad93a",
+      "self_pointer_count": 40,
+      "lba": 218420,
+      "candidate_blocks": 3848
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K005.BIN",
+      "base": "06078000",
+      "bytes": 6792,
+      "sha256": "21d3bb93c51c503d28b0b6d40074293b9fd078cc4d4f0ca03a0802e932ec1e4d",
+      "self_pointer_count": 27,
+      "lba": 218425,
+      "candidate_blocks": 3126
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K006.BIN",
+      "base": "06078000",
+      "bytes": 3956,
+      "sha256": "b54cee4eccbf5ce84e7e2896a460d94263875c0c42f916f988f9cc76108791ee",
+      "self_pointer_count": 24,
+      "lba": 218429,
+      "candidate_blocks": 1801
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K008.BIN",
+      "base": "06078000",
+      "bytes": 7036,
+      "sha256": "4143e03c2b8ebf10d8d35895314434923d68d79058a5a7b641924994eaa7eb4e",
+      "self_pointer_count": 30,
+      "lba": 218431,
+      "candidate_blocks": 3203
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K009.BIN",
+      "base": "06078000",
+      "bytes": 5444,
+      "sha256": "f06839b83c274e9b8989b65d2cefdb67f1bb5bcf59f99c9d2409db1ec329d714",
+      "self_pointer_count": 24,
+      "lba": 218435,
+      "candidate_blocks": 2512
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K010.BIN",
+      "base": "06078000",
+      "bytes": 3792,
+      "sha256": "494802e4826ede8886811396ab26018e3a5022d64aaaa969b989b8f9481e25d2",
+      "self_pointer_count": 21,
+      "lba": 218438,
+      "candidate_blocks": 1728
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K011.BIN",
+      "base": "06078000",
+      "bytes": 6704,
+      "sha256": "18fd139629f3ae842d44401e441849c2f124af82d2c187ce45b211f6e05f0be7",
+      "self_pointer_count": 27,
+      "lba": 218440,
+      "candidate_blocks": 3088
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K012.BIN",
+      "base": "06078000",
+      "bytes": 7584,
+      "sha256": "b0a576fb2a030317a17618437e227f444350d976308ea27f50d62a9551e331e1",
+      "self_pointer_count": 35,
+      "lba": 218444,
+      "candidate_blocks": 3505
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K013.BIN",
+      "base": "06078000",
+      "bytes": 6136,
+      "sha256": "30de71defe6cc1fcf30ea09cad7c1a65311fdb93ed13496ee52265765dac6369",
+      "self_pointer_count": 30,
+      "lba": 218448,
+      "candidate_blocks": 2785
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K014.BIN",
+      "base": "06078000",
+      "bytes": 1520,
+      "sha256": "18077bebad65ca8555b37bd3efe94a7953ce9f5578f9cc7c482ec50372e7b53d",
+      "self_pointer_count": 3,
+      "lba": 218451,
+      "candidate_blocks": 720
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K015.BIN",
+      "base": "06078000",
+      "bytes": 920,
+      "sha256": "5d1ab289bf44c8d594f312756b0727a91e0ecf406b1a1be67fcfa1dedcaf2923",
+      "self_pointer_count": 6,
+      "lba": 218452,
+      "candidate_blocks": 424
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K016.BIN",
+      "base": "06078000",
+      "bytes": 1524,
+      "sha256": "cd22693913a982cab7d964da805d08212ce0db9973deca127cecd0cb24a725ee",
+      "self_pointer_count": 9,
+      "lba": 218453,
+      "candidate_blocks": 710
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K017.BIN",
+      "base": "06078000",
+      "bytes": 868,
+      "sha256": "1e56800324d21333c7c4f8bfdbd461f156e4b72f6ae3c724111b7c09e41eba30",
+      "self_pointer_count": 3,
+      "lba": 218454,
+      "candidate_blocks": 405
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K018.BIN",
+      "base": "06078000",
+      "bytes": 1016,
+      "sha256": "2834aecb46b65440e8e2b3205cfa9d575621f3b6e114a32c15adac6b287b00f7",
+      "self_pointer_count": 6,
+      "lba": 218455,
+      "candidate_blocks": 479
+    },
+    {
+      "profile": "disc2",
+      "file": "/SAKURA2/K019.BIN",
+      "base": "06078000",
+      "bytes": 2628,
+      "sha256": "04379b01cde88e7b887c9245b99b766ac7019615bcfddee5af4f093138ca167f",
+      "self_pointer_count": 18,
+      "lba": 218456,
+      "candidate_blocks": 1214
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K001.BIN",
+      "base": "06078000",
+      "bytes": 4504,
+      "sha256": "d4cb29666383dd12f786e046c303ce911282e295e88d8141bfbf8299d8d16ca8",
+      "self_pointer_count": 21,
+      "lba": 220855,
+      "candidate_blocks": 2031
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K002.BIN",
+      "base": "06078000",
+      "bytes": 5952,
+      "sha256": "8ce336483ca256b87e0d96eb1575afca07959a42e7ce48eccbde67684253cbcb",
+      "self_pointer_count": 26,
+      "lba": 221421,
+      "candidate_blocks": 2755
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K003.BIN",
+      "base": "06078000",
+      "bytes": 11644,
+      "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515",
+      "self_pointer_count": 83,
+      "lba": 221424,
+      "candidate_blocks": 5378
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K004.BIN",
+      "base": "06078000",
+      "bytes": 8384,
+      "sha256": "1e64b39b8d1f4a622928b3190149d6c345afeec288d2b06c9cb7ddb0c21ad93a",
+      "self_pointer_count": 40,
+      "lba": 221430,
+      "candidate_blocks": 3848
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K005.BIN",
+      "base": "06078000",
+      "bytes": 6792,
+      "sha256": "21d3bb93c51c503d28b0b6d40074293b9fd078cc4d4f0ca03a0802e932ec1e4d",
+      "self_pointer_count": 27,
+      "lba": 221435,
+      "candidate_blocks": 3126
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K006.BIN",
+      "base": "06078000",
+      "bytes": 3956,
+      "sha256": "b54cee4eccbf5ce84e7e2896a460d94263875c0c42f916f988f9cc76108791ee",
+      "self_pointer_count": 24,
+      "lba": 221503,
+      "candidate_blocks": 1801
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K008.BIN",
+      "base": "06078000",
+      "bytes": 7036,
+      "sha256": "4143e03c2b8ebf10d8d35895314434923d68d79058a5a7b641924994eaa7eb4e",
+      "self_pointer_count": 30,
+      "lba": 224531,
+      "candidate_blocks": 3203
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K009.BIN",
+      "base": "06078000",
+      "bytes": 5444,
+      "sha256": "f06839b83c274e9b8989b65d2cefdb67f1bb5bcf59f99c9d2409db1ec329d714",
+      "self_pointer_count": 24,
+      "lba": 224634,
+      "candidate_blocks": 2512
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K010.BIN",
+      "base": "06078000",
+      "bytes": 3792,
+      "sha256": "494802e4826ede8886811396ab26018e3a5022d64aaaa969b989b8f9481e25d2",
+      "self_pointer_count": 21,
+      "lba": 225011,
+      "candidate_blocks": 1728
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K011.BIN",
+      "base": "06078000",
+      "bytes": 6704,
+      "sha256": "18fd139629f3ae842d44401e441849c2f124af82d2c187ce45b211f6e05f0be7",
+      "self_pointer_count": 27,
+      "lba": 225013,
+      "candidate_blocks": 3088
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K012.BIN",
+      "base": "06078000",
+      "bytes": 7584,
+      "sha256": "b0a576fb2a030317a17618437e227f444350d976308ea27f50d62a9551e331e1",
+      "self_pointer_count": 35,
+      "lba": 225017,
+      "candidate_blocks": 3505
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K013.BIN",
+      "base": "06078000",
+      "bytes": 6136,
+      "sha256": "30de71defe6cc1fcf30ea09cad7c1a65311fdb93ed13496ee52265765dac6369",
+      "self_pointer_count": 30,
+      "lba": 225021,
+      "candidate_blocks": 2785
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K014.BIN",
+      "base": "06078000",
+      "bytes": 1520,
+      "sha256": "18077bebad65ca8555b37bd3efe94a7953ce9f5578f9cc7c482ec50372e7b53d",
+      "self_pointer_count": 3,
+      "lba": 221505,
+      "candidate_blocks": 720
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K015.BIN",
+      "base": "06078000",
+      "bytes": 920,
+      "sha256": "5d1ab289bf44c8d594f312756b0727a91e0ecf406b1a1be67fcfa1dedcaf2923",
+      "self_pointer_count": 6,
+      "lba": 222039,
+      "candidate_blocks": 424
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K016.BIN",
+      "base": "06078000",
+      "bytes": 1524,
+      "sha256": "cd22693913a982cab7d964da805d08212ce0db9973deca127cecd0cb24a725ee",
+      "self_pointer_count": 9,
+      "lba": 224530,
+      "candidate_blocks": 710
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K017.BIN",
+      "base": "06078000",
+      "bytes": 868,
+      "sha256": "1e56800324d21333c7c4f8bfdbd461f156e4b72f6ae3c724111b7c09e41eba30",
+      "self_pointer_count": 3,
+      "lba": 225024,
+      "candidate_blocks": 405
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K018.BIN",
+      "base": "06078000",
+      "bytes": 1016,
+      "sha256": "2834aecb46b65440e8e2b3205cfa9d575621f3b6e114a32c15adac6b287b00f7",
+      "self_pointer_count": 6,
+      "lba": 225025,
+      "candidate_blocks": 479
+    },
+    {
+      "profile": "japanese-disc1",
+      "file": "/SAKURA2/K019.BIN",
+      "base": "06078000",
+      "bytes": 2628,
+      "sha256": "04379b01cde88e7b887c9245b99b766ac7019615bcfddee5af4f093138ca167f",
+      "self_pointer_count": 18,
+      "lba": 225026,
+      "candidate_blocks": 1214
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K001.BIN",
+      "base": "06078000",
+      "bytes": 4504,
+      "sha256": "d4cb29666383dd12f786e046c303ce911282e295e88d8141bfbf8299d8d16ca8",
+      "self_pointer_count": 21,
+      "lba": 202200,
+      "candidate_blocks": 2031
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K002.BIN",
+      "base": "06078000",
+      "bytes": 5952,
+      "sha256": "8ce336483ca256b87e0d96eb1575afca07959a42e7ce48eccbde67684253cbcb",
+      "self_pointer_count": 26,
+      "lba": 202766,
+      "candidate_blocks": 2755
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K003.BIN",
+      "base": "06078000",
+      "bytes": 11644,
+      "sha256": "90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515",
+      "self_pointer_count": 83,
+      "lba": 202769,
+      "candidate_blocks": 5378
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K004.BIN",
+      "base": "06078000",
+      "bytes": 8384,
+      "sha256": "1e64b39b8d1f4a622928b3190149d6c345afeec288d2b06c9cb7ddb0c21ad93a",
+      "self_pointer_count": 40,
+      "lba": 202775,
+      "candidate_blocks": 3848
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K005.BIN",
+      "base": "06078000",
+      "bytes": 6792,
+      "sha256": "21d3bb93c51c503d28b0b6d40074293b9fd078cc4d4f0ca03a0802e932ec1e4d",
+      "self_pointer_count": 27,
+      "lba": 202780,
+      "candidate_blocks": 3126
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K006.BIN",
+      "base": "06078000",
+      "bytes": 3956,
+      "sha256": "b54cee4eccbf5ce84e7e2896a460d94263875c0c42f916f988f9cc76108791ee",
+      "self_pointer_count": 24,
+      "lba": 202848,
+      "candidate_blocks": 1801
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K008.BIN",
+      "base": "06078000",
+      "bytes": 7036,
+      "sha256": "4143e03c2b8ebf10d8d35895314434923d68d79058a5a7b641924994eaa7eb4e",
+      "self_pointer_count": 30,
+      "lba": 205876,
+      "candidate_blocks": 3203
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K009.BIN",
+      "base": "06078000",
+      "bytes": 5444,
+      "sha256": "f06839b83c274e9b8989b65d2cefdb67f1bb5bcf59f99c9d2409db1ec329d714",
+      "self_pointer_count": 24,
+      "lba": 205979,
+      "candidate_blocks": 2512
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K010.BIN",
+      "base": "06078000",
+      "bytes": 3792,
+      "sha256": "494802e4826ede8886811396ab26018e3a5022d64aaaa969b989b8f9481e25d2",
+      "self_pointer_count": 21,
+      "lba": 206356,
+      "candidate_blocks": 1728
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K011.BIN",
+      "base": "06078000",
+      "bytes": 6704,
+      "sha256": "18fd139629f3ae842d44401e441849c2f124af82d2c187ce45b211f6e05f0be7",
+      "self_pointer_count": 27,
+      "lba": 206358,
+      "candidate_blocks": 3088
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K012.BIN",
+      "base": "06078000",
+      "bytes": 7584,
+      "sha256": "b0a576fb2a030317a17618437e227f444350d976308ea27f50d62a9551e331e1",
+      "self_pointer_count": 35,
+      "lba": 206362,
+      "candidate_blocks": 3505
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K013.BIN",
+      "base": "06078000",
+      "bytes": 6136,
+      "sha256": "30de71defe6cc1fcf30ea09cad7c1a65311fdb93ed13496ee52265765dac6369",
+      "self_pointer_count": 30,
+      "lba": 206366,
+      "candidate_blocks": 2785
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K014.BIN",
+      "base": "06078000",
+      "bytes": 1520,
+      "sha256": "18077bebad65ca8555b37bd3efe94a7953ce9f5578f9cc7c482ec50372e7b53d",
+      "self_pointer_count": 3,
+      "lba": 202850,
+      "candidate_blocks": 720
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K015.BIN",
+      "base": "06078000",
+      "bytes": 920,
+      "sha256": "5d1ab289bf44c8d594f312756b0727a91e0ecf406b1a1be67fcfa1dedcaf2923",
+      "self_pointer_count": 6,
+      "lba": 203384,
+      "candidate_blocks": 424
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K016.BIN",
+      "base": "06078000",
+      "bytes": 1524,
+      "sha256": "cd22693913a982cab7d964da805d08212ce0db9973deca127cecd0cb24a725ee",
+      "self_pointer_count": 9,
+      "lba": 205875,
+      "candidate_blocks": 710
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K017.BIN",
+      "base": "06078000",
+      "bytes": 868,
+      "sha256": "1e56800324d21333c7c4f8bfdbd461f156e4b72f6ae3c724111b7c09e41eba30",
+      "self_pointer_count": 3,
+      "lba": 206369,
+      "candidate_blocks": 405
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K018.BIN",
+      "base": "06078000",
+      "bytes": 1016,
+      "sha256": "2834aecb46b65440e8e2b3205cfa9d575621f3b6e114a32c15adac6b287b00f7",
+      "self_pointer_count": 6,
+      "lba": 206370,
+      "candidate_blocks": 479
+    },
+    {
+      "profile": "japanese-disc2",
+      "file": "/SAKURA2/K019.BIN",
+      "base": "06078000",
+      "bytes": 2628,
+      "sha256": "04379b01cde88e7b887c9245b99b766ac7019615bcfddee5af4f093138ca167f",
+      "self_pointer_count": 18,
+      "lba": 206371,
+      "candidate_blocks": 1214
+    }
+  ],
+  "before": 580328,
+  "after": 614024,
+  "added": 33696,
+  "candidate_database_sha256": "f8ea2c91fadf32721a3ca4e87ccd1597b02e17bf3263555d1efde67b25063981"
+}

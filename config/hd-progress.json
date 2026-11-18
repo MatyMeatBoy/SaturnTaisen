@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "categories": [
+    {
+      "id": "portraits",
+      "label": "Retratos y animación",
+      "unit": "identidades Saturn",
+      "scope": "Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y boca se cuentan una vez por identidad.",
+      "sources": [
+        {
+          "path": "docs/research/portrait-animation-coverage.md",
+          "receipt_sha256": "f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac"
+        },
+        {
+          "path": "docs/research/first-sakura-hd-portraits.md",
+          "receipt_sha256": "8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1"
+        },
+        {
+          "path": "docs/research/chapter1-sumire-hd-portraits.md",
+          "receipt_sha256": "3ff2e8dfe039d3c64489ebb784a0c3f7f5b56572148197025ff53840fc857f48"
+        },
+        {
+          "path": "docs/research/chapter1-third-hd-portraits.md",
+          "receipt_sha256": "182ad5f38ab46b744e8a5ef2682f2e3477792f80c47ef13d7e17b74802ac035e"
+        },
+        {
+          "path": "docs/releases/v0.1.2.md",
+          "receipt_sha256": "e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f"
+        }
+      ],
+      "next": "Revisar las identidades pendientes y validar parpadeo, boca, ambas tiras simultáneas, efectos y fallback en juego.",
+      "details": [
+        "Checkpoint reproducible. 201 identidades con base, ojos y boca disponibles. Se comprobaron 402 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.",
+        "Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.",
+        "Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.",
+        "394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay."
+      ],
+      "total": 304,
+      "inventory": 304,
+      "matched": 300,
+      "prepared": 300,
+      "integrated": 300,
+      "verified": null,
+      "pending_ids": [
+        "00a1",
+        "0152-0153",
+        "0169"
+      ]
+    },
+    {
+      "id": "movies",
+      "label": "Vídeos",
+      "unit": "clips únicos",
+      "scope": "Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.",
+      "sources": [
+        {
+          "path": "docs/research/scene-tagging.md"
+        },
+        {
+          "path": "docs/research/intro-petals-transition.md"
+        }
+      ],
+      "next": "Revisar el montaje de los seis pares con diferencia de duración, comprobar audio/subtítulos/saltos y diseñar la reproducción PC dentro del runtime.",
+      "details": [
+        "50 clips Saturn únicos (flujos FILM deduplicados entre ambos discos; el cortometraje de 0,15 s del logo queda fuera) frente a 52 MPEG de PC (51 MOVIE + REDLOGO).",
+        "44 pares con duración dentro de 0,5 s y orden consecutivo idéntico (flujo k de /SAKURA4 ↔ MOVIE00k). Seis pares requieren revisión de montaje por diferencia de duración: 743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102 y def7a6↔020 (3,7 s).",
+        "Sin sustitución integrada: falta decodificación MPEG-1/MP2 en el runtime, sincronía de audio, subtítulos y salto."
+      ],
+      "total": 50,
+      "inventory": 50,
+      "matched": 44,
+      "prepared": 0,
+      "integrated": 0,
+      "verified": 0
+    },
+    {
+      "id": "hud-menus",
+      "label": "HUD y menús PC/Saturn",
+      "unit": "pantallas y piezas compartidas",
+      "scope": "Inventario conjunto por pantalla o pieza equivalente, incluidos elementos de mapa, batalla, estados y guardado.",
+      "sources": [
+        {
+          "path": "docs/research/tactical-menu-independent-reference.md"
+        },
+        {
+          "path": "docs/releases/v0.2.0-test.1.md"
+        }
+      ],
+      "next": "Inventariar las pantallas y piezas compartidas por edición. Separar sustitución HD y ajustes del layout Saturn.",
+      "details": [
+        "Se observaron menús tácticos en Saturn y se ajustó su presentación. Falta vincular las piezas HD compartidas y contar las pantallas cubiertas."
+      ],
+      "total": null,
+      "inventory": null,
+      "matched": null,
+      "prepared": null,
+      "integrated": null,
+      "verified": null
+    },
+    {
+      "id": "backgrounds",
+      "label": "Fondos decorativos KABE",
+      "unit": "temas del inventario KABE",
+      "scope": "Los 19 temas decorativos únicos del catálogo KABE con alternativas HD, incluidos los pares día/noche catalogados.",
+      "sources": [
+        {
+          "path": "assets/generated/pc-backgrounds/provenance.json"
+        },
+        {
+          "path": "docs/research/saturn-background-workers.md"
+        },
+        {
+          "path": "docs/releases/v0.1.2.md",
+          "receipt_sha256": "e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f"
+        }
+      ],
+      "next": "Reunir validaciones por tema y escena, incluidas variantes de iluminación, fundidos, diálogos y transiciones.",
+      "details": [
+        "19 variantes de fondo listas para el runtime. La precarga y la paridad del loader miden los recursos preparados. La cobertura de escenas se registra aparte."
+      ],
+      "total": 19,
+      "inventory": 19,
+      "matched": 19,
+      "prepared": 19,
+      "integrated": 19,
+      "verified": null
+    },
+    {
+      "id": "large-characters",
+      "label": "Personajes grandes NC",
+      "unit": "poses y composiciones nativas",
+      "scope": "Cuerpos y poses fuera del retrato de diálogo. El total de poses y composiciones nativas permanece abierto.",
+      "sources": [
+        {
+          "path": "docs/research/saturn-hd-characters.md"
+        },
+        {
+          "path": "docs/research/pc-character-inventory.json"
+        }
+      ],
+      "next": "Vincular índices por pose y validar ancla, proporción y animación en capturas Saturn para cada sustitución.",
+      "details": [
+        "147 paquetes PC y 3.596 imágenes decodificadas. Hay 147 pares de nombre candidatos. Faltan las equivalencias por pose."
+      ],
+      "total": null,
+      "inventory": null,
+      "matched": null,
+      "prepared": null,
+      "integrated": null,
+      "verified": null
+    },
+    {
+      "id": "scenes",
+      "label": "Escenas y transiciones",
+      "unit": "escenas distintas en ejecución",
+      "scope": "Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.",
+      "sources": [
+        {
+          "path": "docs/research/scene-tagging.md"
+        },
+        {
+          "path": "docs/research/wide-map-crossfades.md"
+        },
+        {
+          "path": "docs/research/chapter-sweep.md"
+        }
+      ],
+      "next": "Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.",
+      "details": [
+        "El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.",
+        "Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos."
+      ],
+      "total": null,
+      "inventory": null,
+      "matched": null,
+      "prepared": null,
+      "integrated": null,
+      "verified": null
+    }
+  ]
+}
