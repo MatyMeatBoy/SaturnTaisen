@@ -31,6 +31,8 @@ class FormatError(ValueError):
 
 def decompress_ex(data: bytes, start: int = 0, limit: int = 1 << 24):
     """Descomprime desde data[start]; devuelve (salida, bytes_consumidos)."""
+    if type(start) is not int or type(limit) is not int or not 0 <= start <= len(data) or limit < 0:
+        raise FormatError('origen o límite inválido')
     out = bytearray()
     pos = start
     n = len(data)
@@ -57,6 +59,8 @@ def decompress_ex(data: bytes, start: int = 0, limit: int = 1 << 24):
 
     while True:
         if bit():
+            if len(out) >= limit:
+                raise FormatError('salida demasiado larga')
             out.append(byte())
             continue
         if bit():
@@ -76,10 +80,10 @@ def decompress_ex(data: bytes, start: int = 0, limit: int = 1 << 24):
         src = len(out) - dist
         if src < 0:
             raise FormatError('referencia antes del inicio (pos %#x)' % pos)
+        if count > limit - len(out):
+            raise FormatError('salida demasiado larga')
         for i in range(count):
             out.append(out[src + i])
-        if len(out) > limit:
-            raise FormatError('salida demasiado larga')
     return bytes(out), pos - start
 
 
