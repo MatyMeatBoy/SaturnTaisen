@@ -98,7 +98,7 @@ La prioridad es Saturn. El siguiente paquete privado debe servir para probar en 
 
 - [ ] Extensiones de fondos PC cuando se cargue ese mod, manteniendo proporciones.
 
-- [ ] Otros idiomas sobre el catálogo estructurado, tras completar y verificar inglés/Saturn.
+- [ ] Parche español en paralelo, a cargo de Claude por nueva instrucción del usuario. Proporcionar ya los guiones ingleses estructurados y sus controles; no esperar al final de Saturn para esa preparación. Otros idiomas se decidirán después.
 
 
 

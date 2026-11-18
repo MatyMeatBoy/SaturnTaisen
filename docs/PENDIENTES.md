@@ -47,9 +47,11 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T20 | P3 | local | libre | Vídeos MPG del PC (MOVIE000..120): equivalencia, audio y subtítulos antes de sustituir. |
 
 | T21 | P0 | agente/local | libre | Automatizar la cobertura AOT de la familia K001–K019 y reproducir el arreglo de Sumire desde entradas propias, sin publicar código/datos del juego. |
-| T22 | P0 | local | tras T02/T03 y huecos HD | Nuevo ZIP privado: disco1 inglés + HD procesado; extracción limpia sin SDK/Python/BIOS externa. No renombrar un checkpoint viejo como capítulo terminado. |
+| T22 | P0 | local | coordinador · en preparación | v0.2.0-test.1 y ZIP privado para probar ya: disco1 inglés + HD procesado; extracción limpia sin SDK/Python/BIOS externa. Declarar los huecos y no presentarlo como capítulo terminado. |
 | T23 | P1 | local | libre | Menús/HUD equivalentes PC: inventario y matches verificados para Saturn, sin deformar proporciones. |
 | T24 | P2 | agente/local | libre | Medir y desactivar trabajo auxiliar táctico en Original sin cambiar píxeles/guest; declarar caché y condiciones. |
+| T25 | P1 | agente/local | Claude · en curso | Parche al español. Reutilizar catálogo inglés validado, sin publicar guiones extraídos. Coordinador prepara workspace con IDs/contexto/controles para evitar transcribir dos veces ambos discos. |
+| T26 | P0 | local | tras T02/T03 y huecos HD | Entrega posterior con el capítulo1 completo y su mod HD verificados. El test.1 solicitado para otro PC no cierra esta tarea. |
 
 ## División para colaboradores
 

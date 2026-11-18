@@ -67,7 +67,7 @@ index c072c58..ba37958 100644
  
  }
 diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
-index d4a903b..3876a1c 100644
+index d4a903b..7d50e6d 100644
 --- a/port/frontend_sdl.cpp
 +++ b/port/frontend_sdl.cpp
 @@ -8,6 +8,8 @@
@@ -101,6 +101,15 @@ index d4a903b..3876a1c 100644
      SakuraUi sakuraUi;
      Shading shading;
      bool shaded = false;
+@@ -218,7 +223,7 @@ int RunWindowed(Port &port) {
+         }
+         flags |= SDL_WINDOW_RESIZABLE | (port.gpu || shade ? SDL_WINDOW_HIGH_PIXEL_DENSITY : 0) | (shade ? SDL_WINDOW_OPENGL : 0) |
+                  (testHidden ? SDL_WINDOW_HIDDEN : 0);
+-        window = SDL_CreateWindow("SaturnTaisenFirst 0.1.2", width, height, flags);
++        window = SDL_CreateWindow("SaturnTaisenFirst 0.2.0-test.1", width, height, flags);
+         if (!window) {
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
 @@ -267,6 +272,19 @@ int RunWindowed(Port &port) {
              fprintf(stderr,"background renderer: %s\n",name?name:"unknown");
          }
@@ -141,6 +150,15 @@ index d4a903b..3876a1c 100644
              if(item.texture)backdrops.push_back(std::move(item));
          }
          if(!port.opt.settingsPath.empty() && !port.opt.pcAssetsPath.empty())
+@@ -337,7 +359,7 @@ int RunWindowed(Port &port) {
+             if(usePortraits)portraitPack.Preload([&](size_t ready,size_t){progress(backgroundCount+ready);});
+             backgroundWarmupStarted=true;
+             if(std::getenv("SATRECOMP_HD_STATS"))fprintf(stderr,"HD preload: backgrounds=%zu/%zu portrait_variants=%zu\n",loaded,backgroundCount,portraitCount);
+-            SDL_SetWindowTitle(window,"SaturnTaisenFirst 0.1.2");
++            SDL_SetWindowTitle(window,"SaturnTaisenFirst 0.2.0-test.1");
+         }
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
 @@ -351,6 +373,10 @@ int RunWindowed(Port &port) {
          backdrops.clear();
          if (foreground) SDL_DestroyTexture(foreground);

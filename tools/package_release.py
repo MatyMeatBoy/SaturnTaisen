@@ -122,6 +122,7 @@ def package(destination,toolchain,archive=True):
                             'tests':['*.py','*.cpp','*.movie'],'tests/native':['*.cpp','CMakeLists.txt'],
                             'games/sakura':['game.cfg'],'docs/superpowers/specs':['*.md'],
                             'docs/superpowers/plans':['*.md'],
+                            'docs':['PENDIENTES.md','HANDOFF.md','ESTADO_ACTUAL.md'],
                             'docs/research':['*.md','*.json'],'docs/releases':['*.md']}.items():
         target=destination/folder
         target.mkdir(parents=True,exist_ok=True)

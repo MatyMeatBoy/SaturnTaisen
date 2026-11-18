@@ -60,7 +60,9 @@ class PresentationRuntimeTests(unittest.TestCase):
                                     '--backup',str(backup),'--mute'],env=env,capture_output=True,timeout=30)
                 self.assertEqual(run.returncode,0,run.stderr.decode(errors='replace'))
                 with Image.open(shot) as image:images.append(image.convert('RGBA').tobytes())
-                self.assertEqual(len(list(profile.rglob('*.stfb'))),19 if workers else 1)
+                # Startup screen art has its own eager caches; this contract
+                # measures only the 19 narrative KABE themes warmed by workers.
+                self.assertEqual(len(list(profile.rglob('KABE*.stfb'))),19 if workers else 1)
                 self.assertFalse(list(profile.rglob('*.tmp')),'preparation left partial cache files')
                 if workers:self.assertIn(b'background warmup: jobs=19 workers=4',run.stderr)
             self.assertEqual(images[0],images[1],'multicore preparation changed the presented scene')
@@ -90,7 +92,7 @@ class PresentationRuntimeTests(unittest.TestCase):
                                     '--backup',str(backup),'--mute'],env=env,capture_output=True,timeout=30)
                 self.assertEqual(run.returncode,0,run.stderr.decode(errors='replace'))
                 with Image.open(shot) as image:return [image.getpixel((x,y)) for x in range(0,150,3) for y in range(0,720,3)]
-            original=capture('original');cached=list(folder.rglob('*.stfb'));self.assertEqual(len(cached),1)
+            original=capture('original');cached=list(folder.rglob('KABE*.stfb'));self.assertEqual(len(cached),1)
             expected=cached[0].read_bytes();broken=bytearray(expected);broken[-1]^=1;cached[0].write_bytes(broken)
             self.assertEqual(capture('regenerated'),original)
             self.assertEqual(cached[0].read_bytes(),expected)
