@@ -1,0 +1,63 @@
+{
+  "schema": 2,
+  "version": "0.1",
+  "video_file": "/SAKURA4",
+  "discs": {
+    "1": {
+      "original_sha256": "70ea8fc64cb4bcc9652cf05cf53116136b0fe5e9f98a17d710d9a5b56ca19843",
+      "original_bytes": 553723904,
+      "video_offset": 522240,
+      "video_bytes": 255995904,
+      "video_original_sha256": "6b1d70b7636864d28a4e3d3199614ad236fcf5c1508fd1b68780ebc5d7322e3b",
+      "video_subtitled_sha256": "7569607b917979182ef81ec7d26fe66cb91bbc90e950118676777112a0639594",
+      "english": {
+        "patch": "ingles-v0.1-disc1.xdelta",
+        "patch_sha256": "7eec8be62b7efdde4889ef1f0e8319ca5396c9028703d0681640f15b233eadee",
+        "output_sha256": "1bfc86868402d2cc79a7526e09d72e327d33a1686401bb768dc78f1f8328a78e",
+        "output_subtitled_sha256": "5b19031460c87b4773ef2cbd70ef2170bef41c1117ec8cefe27b2af1309205ec",
+        "output_bytes": 554635264
+      },
+      "spanish": {
+        "patch": "espanol-v0.1-disc1.xdelta",
+        "patch_sha256": "009e8dad0d4eeab3464f3cc5bf5746a9c214b83fabd94a956cc7b4fbba009846",
+        "blank_sha256": "816a22e170fc3189393a941498bbcb68ee334e82bce51f2da79845d90a7b7039",
+        "output_sha256": "2afc35768019ce2afb105b038246bfe3ac3c215055e89ce32fcc27dc8a04a615",
+        "output_subtitled_sha256": "f0850f4d77995c25e185b44079dc5f5bc830bd3d63657182a825370398bba748",
+        "output_bytes": 563679232
+      },
+      "videos": {
+        "patch": "videos-en-v0.1-disc1.xdelta",
+        "patch_sha256": "c8a3b6644a9c64e1fd648a7f101fb0ea7a0ec781de5b6f5ff5fe66cf5387aac1",
+        "optional": true
+      }
+    },
+    "2": {
+      "original_sha256": "5235007a8fb83994b38ebfd60201de8f481a5b7dc324c0bb0b94a44ba1a31636",
+      "original_bytes": 538032128,
+      "video_offset": 522240,
+      "video_bytes": 208545792,
+      "video_original_sha256": "9833bf8b6c9c5bf198bfaa69acd447f661feeb440d8f03301694eebd1dd90884",
+      "video_subtitled_sha256": "4521fc288f146a9920732077337ccf58af0bcbf3cb9108e79ce99d3abd377fb5",
+      "english": {
+        "patch": "ingles-v0.1-disc2.xdelta",
+        "patch_sha256": "46fa8c75d51224990bdb73ac60b7cc69913c8ca6f865a0216c2f5f3d4c1d2949",
+        "output_sha256": "d06e591bc6f86c1ede1e5849180bc87d9aee86f131705fdc37bc342c480cec6e",
+        "output_subtitled_sha256": "fb813e8fe15caf03887321a5ceacb32d5d8822801fba460af726a59a6753770b",
+        "output_bytes": 538929152
+      },
+      "spanish": {
+        "patch": "espanol-v0.1-disc2.xdelta",
+        "patch_sha256": "0fd0d3cfd17323cfbd9deb91cee6cdba82079b9dc75cebb2785b9099e064038d",
+        "blank_sha256": "534197eae3cefc4de60660ac405a1236d2322c5d70c2bb68cd89a64af7b99e5f",
+        "output_sha256": "14aa3ed0701d091507dd649c318ca176df56feb320b17d31e844c6d93083a8c3",
+        "output_subtitled_sha256": "64aadba82a261e33338940ec61cacffa40c39b62b052065fe1b33b78e8da9870",
+        "output_bytes": 547973120
+      },
+      "videos": {
+        "patch": "videos-en-v0.1-disc2.xdelta",
+        "patch_sha256": "c80139ac0c31184a20733aae2b0f694aeca6e89a6800ab3295dca8a21a8aeb79",
+        "optional": true
+      }
+    }
+  }
+}
