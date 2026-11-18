@@ -10,14 +10,36 @@ supported way to play in Spanish.
 """
 import argparse
 import re
-import shutil
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from _rutas import OWNER  # noqa: E402
+from _rutas import OWNER, distinct_output, private_path, write_bytes  # noqa: E402
 
+
+
+def disc_settings(ini: str, disc: Path) -> str:
+    section = re.search(r'(?m)^\s*\[game\][ \t]*$', ini)
+    if not section:
+        return ini.rstrip('\n') + f'\n[game]\ndisc={disc}\n'
+    next_section = re.search(r'(?m)^[ \t]*\[', ini[section.end():])
+    end = section.end() + next_section.start() if next_section else len(ini)
+    game = ini[section.end():end]
+    game, replaced = re.subn(r'(?m)^[ \t]*disc[ \t]*=.*$', lambda _: f'disc={disc}', game)
+    if not replaced:
+        game = f'\ndisc={disc}\n' + game.lstrip('\n')
+    return ini[:section.end()] + game + ini[end:]
+
+
+def launcher_shortcut(profile: Path, app: Path) -> bytes:
+    def quote(path):
+        return str(path).replace('%', '%%')
+
+    return ('@chcp 65001 >nul\r\n@echo off\r\nsetlocal DisableDelayedExpansion\r\n'
+            f'set "SATURN_TAISEN_FIRST_HOME={quote(profile)}"\r\n'
+            'set "SATRECOMP_STRICT_NATIVE=1"\r\n'
+            f'start "" /d "{quote(app)}" "{quote(app / "SaturnTaisenFirst.exe")}" --play\r\n').encode('utf-8')
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
@@ -28,23 +50,28 @@ def main():
     disc = (OWNER / 'local/prepared/disc1-es/game.cue').resolve()
     if not disc.is_file():
         raise SystemExit(f'falta {disc}: ejecuta antes tools/es/construir_disco_es.py')
-    base, profile, app = a.base.resolve(), a.perfil.resolve(), a.app.resolve()
+    base, app = a.base.resolve(), a.app.resolve()
     if not (app / 'SaturnTaisenFirst.exe').is_file():
         raise SystemExit(f'no hay SaturnTaisenFirst.exe en {app}')
-    profile.mkdir(parents=True, exist_ok=True)
-    ini = (base / 'launcher.ini').read_text(encoding='utf-8') if (base / 'launcher.ini').is_file() else '[game]\n'
-    if re.search(r'(?m)^disc=', ini):
-        ini = re.sub(r'(?m)^disc=.*$', lambda _: f'disc={disc}', ini)
-    else:
-        ini = ini.replace('[game]\n', f'[game]\ndisc={disc}\n') if '[game]' in ini else ini + f'\n[game]\ndisc={disc}\n'
-    (profile / 'launcher.ini').write_text(ini, encoding='utf-8')
-    if (base / 'settings.ini').is_file() and not (profile / 'settings.ini').exists():
-        shutil.copy2(base / 'settings.ini', profile / 'settings.ini')
-    bat = OWNER / 'Jugar en español.bat'
-    bat.write_text('@echo off\r\nsetlocal\r\n'
-                   f'set "SATURN_TAISEN_FIRST_HOME={profile}"\r\n'
-                   'set "SATRECOMP_STRICT_NATIVE=1"\r\n'
-                   f'start "" /d "{app}" "{app}\\SaturnTaisenFirst.exe" --play\r\n', encoding='cp1252')
+    try:
+        profile = private_path(a.perfil, OWNER)
+        distinct_output(profile, base)
+        ini_src, settings_src = base / 'launcher.ini', base / 'settings.ini'
+        ini_dst, settings_dst = profile / 'launcher.ini', profile / 'settings.ini'
+        bat = OWNER / 'Jugar en español.bat'
+        for output in (ini_dst, settings_dst, bat):
+            distinct_output(output, ini_src, settings_src, disc)
+        template = ini_dst if ini_dst.is_file() else ini_src
+        ini = template.read_text(encoding='utf-8-sig') if template.is_file() else '[game]\n'
+        shortcut = launcher_shortcut(profile, app)
+        data = disc_settings(ini, disc).encode('utf-8')
+        settings = settings_src.read_bytes() if settings_src.is_file() and not settings_dst.exists() else None
+        write_bytes(ini_dst, data)
+        if settings is not None:
+            write_bytes(settings_dst, settings)
+        write_bytes(bat, shortcut)
+    except (OSError, ValueError) as error:
+        raise SystemExit(str(error)) from error
     print('perfil español:', profile)
     print('acceso:', bat)
 

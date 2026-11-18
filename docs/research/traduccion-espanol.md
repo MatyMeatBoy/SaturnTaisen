@@ -34,12 +34,15 @@ Reglas de texto en menús: misma letra que el inglés (Century para la serif, Ge
 ## Pruebas
 
 - `tests/test_es_herramientas.py`: LZ de ida y vuelta, tablas y combate sintéticos, y reconstrucción exacta de todas las tablas del disco del propietario si está disponible.
+- `tests/test_es_output_safety.py`: prueba límites de la ISO, escritura atómica y conservación de discos, estados y perfiles de entrada con datos sintéticos.
 - `tools/es/parchear_estado.py`: aplica los datos españoles a la RAM/VRAM de un savestate inglés para revisar un menú en segundos; no sustituye a un arranque real.
 - Verificado en el runtime (AOT estricto, 0 interpretados): prólogo y encuentro con Sakura en español desde la ISO española, combate del capítulo 1 en español, título y pantalla de carga desde arranque en frío; intermedio y opciones mediante estados parcheados.
 
 ## Modo español en el launcher
 
 Ya funciona sin tocar código: `tools/es/construir_disco_es.py` genera `local/prepared/disc1-es` y `tools/es/perfil_es.py` crea un perfil aparte (`local/profiles/espanol`, copia del perfil base con `[game] disc=` apuntando al disco español) y el acceso local «Jugar en español.bat». Verificado con la build `v0.2-ch1-preview`: el launcher arranca el disco español y el título muestra «Pulsa Start».
+
+Las herramientas de línea de comandos guardan los discos, estados de prueba y perfiles bajo `SAKURA_OWNER_ROOT/local`. El constructor verifica la ISO en un archivo temporal antes de publicar la imagen. Al repetir la creación del perfil se actualiza solo `[game] disc` en el INI del launcher y se conservan los ajustes y partidas del perfil. El acceso de Windows usa UTF-8 y admite rutas con espacios y caracteres Unicode; para reproducciones automatizadas con límite de tiempo, ejecuta el runtime directamente con `--disc`, `--settings` y `--backup`.
 
 Opción integrada propuesta para el launcher (dependencia, requiere coordinar propiedad del SDK):
 

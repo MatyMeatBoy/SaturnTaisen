@@ -8,9 +8,13 @@ the directory record and the PVD volume size are updated. The source image is on
 import argparse
 import hashlib
 import json
+import mmap
+import re
 import shutil
 import struct
 from pathlib import Path
+
+from _rutas import atomic_output, distinct_output, private_path, write_bytes
 
 SECTOR = 2048
 
@@ -19,36 +23,55 @@ def both(value: int) -> bytes:
     return struct.pack('<I', value) + struct.pack('>I', value)
 
 
-def directory_records(iso: bytearray):
-    """Yield (path, record_offset, lba, size) for every file."""
+def directory_records(iso):
+    """Yield (path, record_offset, lba, size) for every bounded file extent."""
     pvd = 16 * SECTOR
-    if iso[pvd:pvd + 6] != b'\x01CD001':
+    if len(iso) < pvd + SECTOR or iso[pvd:pvd + 7] != b'\x01CD001\x01':
         raise ValueError('not an ISO9660 image')
-    root = pvd + 156
     seen = set()
 
+    def both_at(offset):
+        little, big = struct.unpack_from('<I', iso, offset)[0], struct.unpack_from('>I', iso, offset + 4)[0]
+        if little != big:
+            raise ValueError(f'inconsistent both-endian field at {offset}')
+        return little
+
+    def extent(record_at):
+        lba, size = both_at(record_at + 2), both_at(record_at + 10)
+        if lba * SECTOR + size > len(iso):
+            raise ValueError(f'extent falls outside the ISO at {record_at}')
+        return lba, size
+
     def walk(record_at, parent, depth):
-        lba, size = struct.unpack_from('<I', iso, record_at + 2)[0], struct.unpack_from('<I', iso, record_at + 10)[0]
+        lba, size = extent(record_at)
         if (lba, size) in seen or depth > 32:
-            return
+            raise ValueError(f'repeated or deeply nested directory: {parent}')
         seen.add((lba, size))
         at, end = lba * SECTOR, lba * SECTOR + size
         while at < end:
             length = iso[at]
+            sector_end = (at // SECTOR + 1) * SECTOR
             if not length:
-                at = (at // SECTOR + 1) * SECTOR
+                at = sector_end
                 continue
-            name = bytes(iso[at + 33:at + 33 + iso[at + 32]])
+            if length < 34 or at + length > min(end, sector_end):
+                raise ValueError(f'invalid directory record at {at}')
+            name_length = iso[at + 32]
+            if not 0 < name_length <= length - 33:
+                raise ValueError(f'invalid directory name at {at}')
+            name = bytes(iso[at + 33:at + 33 + name_length])
             if name not in (b'\0', b'\1'):
                 name = name.decode('ascii').split(';')[0]
+                if not name or name in ('.', '..') or '/' in name or '\\' in name:
+                    raise ValueError(f'invalid ISO path component: {name!r}')
                 path = f'{parent}/{name}'
                 if iso[at + 25] & 2:
                     yield from walk(at, path, depth + 1)
                 else:
-                    yield path, at, *struct.unpack_from('<I', iso, at + 2), struct.unpack_from('<I', iso, at + 10)[0]
+                    yield path, at, *extent(at)
             at += length
 
-    yield from walk(root, '', 0)
+    yield from walk(pvd + 156, '', 0)
 
 
 SLOT_SECTORS = 64  # 128 KiB per table; layout is fixed so savestates stay valid across rebuilds
@@ -57,10 +80,17 @@ SLOT_SECTORS = 64  # 128 KiB per table; layout is fixed so savestates stay valid
 def build(source: Path, output: Path, replacements: dict[str, bytes]) -> dict:
     """Every *TBL.BIN of the source moves to a fixed slot at the end, in sorted path order.
     Tables without a replacement keep their original bytes, so the layout never changes."""
+    distinct_output(output, source)
     iso = bytearray(source.read_bytes())
+    source_sha256 = hashlib.sha256(iso).hexdigest()
     if len(iso) % SECTOR:
         raise ValueError('data track is not sector aligned')
-    records = {path.upper(): (at, lba, size) for path, at, lba, size in directory_records(iso)}
+    records = {}
+    for path, at, lba, size in directory_records(iso):
+        key = path.upper()
+        if key in records:
+            raise ValueError(f'duplicate ISO path: {path}')
+        records[key] = (at, lba, size)
     unknown = set(p.upper() for p in replacements) - set(records)
     if unknown:
         raise ValueError(f'not in the image: {sorted(unknown)}')
@@ -90,15 +120,16 @@ def build(source: Path, output: Path, replacements: dict[str, bytes]) -> dict:
         iso[lba * SECTOR:lba * SECTOR + size] = data
         report.append(dict(path=path, lba=lba, size=size, mode='in-place', sha256=hashlib.sha256(data).hexdigest()))
     iso[16 * SECTOR + 80:16 * SECTOR + 88] = both(len(iso) // SECTOR)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(iso)
-    # Verify: every replaced file reads back exactly through the rewritten directory.
-    check = {p.upper(): (lba, size) for p, _, lba, size in directory_records(iso)}
-    for path, data in wanted.items():
-        lba, size = check[path]
-        if bytes(iso[lba * SECTOR:lba * SECTOR + size]) != data:
-            raise ValueError('read-back mismatch: ' + path)
-    return dict(source=str(source), source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+    # Read back directory entries and replacements from the staged image before publishing.
+    with atomic_output(output) as temporary:
+        temporary.write_bytes(iso)
+        with temporary.open('rb') as stream, mmap.mmap(stream.fileno(), 0, access=mmap.ACCESS_READ) as staged:
+            check = {p.upper(): (lba, size) for p, _, lba, size in directory_records(staged)}
+            for path, data in wanted.items():
+                lba, size = check[path]
+                if staged[lba * SECTOR:lba * SECTOR + size] != data:
+                    raise ValueError('read-back mismatch: ' + path)
+    return dict(source=str(source), source_sha256=source_sha256,
                 output=str(output), output_sha256=hashlib.sha256(iso).hexdigest(), files=report)
 
 
@@ -108,18 +139,32 @@ def main():
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--files', type=Path, required=True, help='folder of replacement files named as in the ISO')
     args = parser.parse_args()
-    if args.output_dir.resolve() == args.source_dir.resolve():
-        raise SystemExit('output must differ from the source')
-    replacements = {}
-    for file in sorted(args.files.rglob('*')):
-        if file.is_file():
-            replacements['/' + file.relative_to(args.files).as_posix()] = file.read_bytes()
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    report = build(args.source_dir / 'Track 01.iso', args.output_dir / 'Track 01.iso', replacements)
-    for name in ('Track 02.wav', 'game.cue'):
-        if (args.source_dir / name).exists() and not (args.output_dir / name).exists():
-            shutil.copy2(args.source_dir / name, args.output_dir / name)
-    (args.output_dir / 'es-build.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+    source_dir = args.source_dir.resolve()
+    try:
+        output_dir = private_path(args.output_dir)
+        distinct_output(output_dir, source_dir)
+        track_names = ('Track 01.iso', 'Track 02.wav', 'game.cue')
+        originals = tuple(source_dir / name for name in track_names)
+        outputs = tuple(output_dir / name for name in (*track_names, 'es-build.json'))
+        for output in outputs:
+            distinct_output(output, *originals)
+        cue = originals[2].read_bytes()
+        references = re.findall(rb'(?im)^\s*FILE\s+"([^"]+)"\s+\w+\s*$', cue)
+        if references != [b'Track 01.iso', b'Track 02.wav'] or not originals[1].is_file():
+            raise ValueError('the prepared CUE must reference the two local track filenames')
+        replacements = {}
+        for file in sorted(args.files.rglob('*')):
+            if file.is_file():
+                replacements['/' + file.relative_to(args.files).as_posix()] = file.read_bytes()
+        report = build(originals[0], outputs[0], replacements)
+        # Audio is immutable across revisions. Copy a fresh track only when absent.
+        if not outputs[1].is_file():
+            with atomic_output(outputs[1]) as output:
+                shutil.copyfile(originals[1], output)
+        write_bytes(outputs[2], cue)
+        write_bytes(outputs[3], json.dumps(report, indent=2).encode('utf-8'))
+    except (OSError, ValueError) as error:
+        raise SystemExit(str(error)) from error
     print(json.dumps({k: v for k, v in report.items() if k != 'files'} | {'files': len(report['files'])}, indent=2))
 
 
