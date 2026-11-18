@@ -84,3 +84,4 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [first-film-script-phase.md](first-film-script-phase.md): Investigación del cursor de0100.BIN y límites de las fases sin imagen.
 
 - [RetroAchievements 16546 en Saturn](retroachievements-16546.md)
+- [dialogue-preload-runtime.md](dialogue-preload-runtime.md): Catálogo inmutable, lectura acotada y testigo nativo capturado con el framebuffer; conexión visual pendiente.

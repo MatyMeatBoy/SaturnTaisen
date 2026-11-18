@@ -15,6 +15,12 @@ DEP=ROOT/'local/deps/satrecomp'
                      and (DEP/'port/integer_viewport.h').is_file(),
                      'requires the locally patched Windows SDL/Clang dependency')
 class FrontendTests(unittest.TestCase):
+    def test_dialogue_preload_bounds_seals_and_requires_exact_native_table(self):
+        self.fixture('dialogue_preload')
+
+    def test_disc_file_read_is_bounded_and_discards_partial_output(self):
+        self.fixture('disc_files_bounded',[DEP/'port/disc_files.cpp',DEP/'port/disc_image.cpp'])
+
     def test_first_movie_phase_preserves_other_scene_and_unknown_sprite_frames(self):
         self.fixture('movie_phase')
     def test_choice_text_requires_complete_owned_panel(self):
