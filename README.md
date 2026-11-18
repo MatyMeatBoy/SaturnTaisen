@@ -1,17 +1,17 @@
 <h1 align="center">🌸 SaturnTaisenFirst</h1>
 <p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Recompilación estática SH-2 · Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases/tag/v0.2.0-test.2"><img alt="v0.2.0-test.2 de prueba" src="https://img.shields.io/badge/release-v0.2.0--test.2-9a4564?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisenFirst/releases/tag/v0.2.0-test.3"><img alt="v0.2.0-test.3 de prueba" src="https://img.shields.io/badge/release-v0.2.0--test.3-9a4564?style=flat-square"></a>
   <img alt="Windows x64 portátil" src="https://img.shields.io/badge/Windows-x64_portable-77445b?style=flat-square">
   <a href="docs/research/chapter1-battle-progress.md"><img alt="SH-2 AOT estática" src="https://img.shields.io/badge/SH--2-AOT_est%C3%A1tica-bf914d?style=flat-square"></a>
-  <a href="docs/releases/v0.2.0-test.2.md"><img alt="Validación local documentada" src="https://img.shields.io/badge/pruebas-informe_local-5d755d?style=flat-square"></a>
+  <a href="docs/releases/v0.2.0-test.3.md"><img alt="Validación local documentada" src="https://img.shields.io/badge/pruebas-informe_local-5d755d?style=flat-square"></a>
   <a href="https://github.com/MatyMeatBoy/OptiPort"><img alt="Método OptiPort" src="https://img.shields.io/badge/m%C3%A9todo-OptiPort-617b91?style=flat-square"></a>
   <a href="LICENSE"><img alt="GPL-3.0-only" src="https://img.shields.io/badge/licencia-GPL--3.0--only-646464?style=flat-square"></a>
 </p>
 
 Un regreso al Teatro Imperial con el código SH-2 recompilado, píxeles enteros y mejoras opcionales de presentación. Proyecto público de **MatyMeatBoy**.
 
-**La v0.2.0-test.2 es una prerelease de prueba, no el juego completo certificado.** Incluye nuevas correcciones de transiciones, texto HD de elecciones y el checkpoint de201 retratos preparados, con los límites documentados. No está verificado todavía el capítulo 1 de principio a fin ni la campaña completa. [Alcance de esta entrega](docs/releases/v0.2.0-test.2.md). Los paquetes [v0.1.2](docs/releases/v0.1.2.md) y [v0.1.5](docs/releases/v0.1.5.md) se conservan intactos.
+**La v0.2.0-test.3 es una prerelease de prueba, no el juego completo certificado.** Incluye la corrección AOT del cierre del primer combate, narrativa HD desde el catálogo precargado y el checkpoint de201 retratos preparados, con los límites documentados. No está verificado todavía el capítulo 1 de principio a fin ni la campaña completa. [Alcance de esta entrega](docs/releases/v0.2.0-test.3.md). Los paquetes [v0.1.2](docs/releases/v0.1.2.md) y [v0.1.5](docs/releases/v0.1.5.md) se conservan intactos.
 
 ## Jugar
 
