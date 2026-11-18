@@ -76,7 +76,7 @@ Reglas fijas: Autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 
 | T47 | P0 | local | entregado y traslado verificado | v0.2.0-test.2 público317.215.196bytes y personal725.331.460bytes. Fuente limpia92edea7, runtime674.023/patch0046 y HD201. Perfiles nuevos, PATH Windows,402variantes sin fallos y0interpretados; película6201hashes y6RGB iguales. RX6900XT/M30 físicos pendientes. |
 
-| T48 | P1 | local | dialogue_tables · implementación congelada | Si un catálogo antiguo del perfil falla autenticación, probar el preparado incluido; conservar la prioridad de mods personales válidos. Headerportrait_pack.h reservado; root debe revisar/capturarpatch0047 antes de compilar. Test.2 usa perfil nuevo y permanece inmutable. |
+| T48 | P1 | local | coordinador · integración | Mod personal válido conserva prioridad; si un catálogo antiguo falla autenticación, probar el preparado incluido. Fixture191→201 con402variantes; root revisa/capturapatch0047 y prueba build. Test.2 permanece inmutable. |
 
 ## División para colaboradores
 
