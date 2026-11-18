@@ -64,7 +64,11 @@ Opción integrada propuesta para el launcher (dependencia, requiere coordinar pr
 
 Rótulo de episodio (`TITLE1.BIN`) y pantalla LOADING, menú extra (`OMALL.DAT`), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método para el guion.
 
-**Capítulo 2**: borrador completo sin revisar (1.775 textos únicos, 6 lotes, `0201TBL.BIN`-`0206TBL.BIN`), traducido solo desde el inglés — la ISO preparada del disco japonés no está materializada en este equipo ahora mismo, así que falta la revisión japonés → inglés → español que en el capítulo 1 cambió entre el 25 % y el 70 % de las líneas por lote. El guion vive solo en `local/work/guion-es/capitulo2` (nunca se sube) con su propio `ESTADO.md`; no tratar como terminado hasta pasar esa revisión.
+**Japonés disponible**: el dump crudo del disco japonés (.cue/.bin) sí está en el equipo del propietario; se preparó con `tools/prepare_discs.py --original` en `local/prepared/japanese-disc1` y `-disc2`. Ya no está bloqueada la revisión con japonés.
+
+**Capítulo 2**: 1.775 textos únicos (6 lotes, `0201TBL.BIN`-`0206TBL.BIN`) traducidos y validados. 125 glifos nuevos transcritos (`glifos_nuevos.py`), `japones.json` reconstruido (2.692 registros, 1,3 % dudoso, igual que el 1,2 % de capítulo 1 con `japones.py`). Revisión japonés → inglés → español: lote01 completo línea a línea (2 correcciones reales); lotes 02-06 solo con un barrido automático de divergencias numéricas, sin lectura humana todavía. El guion vive solo en `local/work/guion-es/capitulo2` (nunca se sube) con su propio `ESTADO.md`; no tratar como terminado hasta terminar esa revisión.
+
+**Capítulo 3**: en curso, 3 de 7 lotes (990 de 2.060 textos) traducidos y validados desde el inglés, sin revisión japonesa todavía.
 
 Investigado y descartado por ahora (no intentar de nuevo sin lo que falta):
 
