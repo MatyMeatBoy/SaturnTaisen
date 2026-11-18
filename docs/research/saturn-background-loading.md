@@ -1,36 +1,36 @@
-# Cargas de fondos de Saturn y su mod HD
+# Saturn background loading and its HD mod
 
-Prioridad confirmada por el usuario: terminar Saturn; la ejecución y traducción PC quedan para después. Los recursos PC usados por el mod HD de Saturn sí están dentro de este trabajo.
+Priority confirmed by the user: finish Saturn first; PC execution and translation are left for later. PC resources used by the Saturn HD mod are within scope for this work.
 
-## Comparación reproducible
+## Reproducible comparison
 
-Base77b43c6, SDK fijado por config/dependencies.json. Herramienta `tools/benchmark_backgrounds.py`, Clang23.1.3, optimizaciónO3 y SDL software renderer. Se invocan los mismos loaders que utiliza la presentación Saturn. Entradas:19 fondos Saturn únicos y19 alternativas del pack HD. Los originales90/91 son idénticos y no se cuentan dos veces.
+Base 77b43c6, SDK pinned by config/dependencies.json. Tool `tools/benchmark_backgrounds.py`, Clang 23.1.3, optimization O3 and SDL software renderer. The same loaders used by the Saturn presentation are invoked. Inputs: 19 unique Saturn backgrounds and 19 HD pack alternatives. Originals 90/91 are identical and are not counted twice.
 
-Se conservaron binarios baseline/cambio, hashes de entradas y salidas y registros por recurso. Tres repeticiones por condición, alternando el orden. Caché fría significa caché derivada de fondos vacía; no se vació la caché del sistema operativo. Una ejecución concurrente con la suite de pruebas se conservó para correctitud y quedó excluida de las cifras de tiempo.
+Baseline/change binaries, input/output hashes, and per-resource logs were kept. Three repetitions per condition, alternating order. Cold cache means an empty derived-background cache; the OS cache was not flushed. A concurrent run with the test suite was kept for correctness and excluded from the timing figures.
 
-| Preparación del conjunto de38 fondos | Antes | Cambio |
+| Preparation of the 38-background set | Before | Change |
 | --- | ---: | ---: |
-| Mediana, caché derivada vacía |5,284s|1,911s|
-| Mediana, caché derivada preparada |0,279s|0,280s|
+| Median, empty derived cache |5.284s|1.911s|
+| Median, prepared derived cache |0.279s|0.280s|
 
-Los38 resultados son idénticos píxel a píxel en todas las comparaciones. Son tiempos del componente, no una medición del arranque completo, los frames del juego ni sus esperas de CD. La caché caliente no muestra una mejora general en esta comparación.
+The 38 results are pixel-identical across all comparisons. These are component timings, not a full boot measurement, game frames, or CD wait times. The hot cache shows no overall improvement in this comparison.
 
-## Cambios verificados
+## Verified changes
 
-- Caché binaria de superficies preparadas, con dimensiones, orden de bytes definido, versión, tamaño exacto y checksum de datos. Los archivos truncados, alterados o con dimensiones incorrectas se rechazan y regeneran. La escritura temporal se publica por reemplazo, conservando el archivo anterior si falla.
-- Migración de las cachés PNG existentes. El contenido original y los masters generados no se modifican.
-- Búsqueda acelerada del color más cercano, conservando exactamente la métrica RGB y el primer color en caso de empate. Contrastada con búsqueda exhaustiva para paletas de hasta1693 colores.
-- Lectura acotada del master PNG y comprobación de dimensiones antes de decodificar. Hash y decodificación usan los mismos bytes leídos, evitando mezclar revisiones si se cambia el archivo durante la carga.
-- Prueba con una escena nocturna real: una caché corrupta se regenera, restaura sus bytes y conserva el fondo mostrado.
+- Binary cache of prepared surfaces, with dimensions, defined byte order, version, exact size, and data checksum. Truncated, altered, or incorrectly-dimensioned files are rejected and regenerated. Temporary writes are published by replacement, preserving the previous file on failure.
+- Migration of existing PNG caches. The original content and generated masters are not modified.
+- Accelerated nearest-color search, preserving exactly the RGB metric and the first color on ties. Checked against exhaustive search for palettes of up to 1693 colors.
+- Bounded reading of the master PNG and dimension check before decoding. Hashing and decoding use the same bytes read, avoiding mixed revisions if the file changes during loading.
+- Test with a real night scene: a corrupted cache is regenerated, restores its bytes, and preserves the displayed background.
 
-La representación final usa paleta de 8 bits o RGB555 cuando reproduce exactamente todos los colores, con RGBA como alternativa. El conjunto ocupa 16.145.238 bytes frente a 39.312.064 de RGBA directo. DEFLATE reduce a 5.368.794 bytes, pero eleva la mediana caliente de 0,251 a 0,290 segundos y la preparación de 1,920 a 2,059 segundos: queda desactivado por defecto. La lectura admite la versión anterior de caché y rechaza datos sobrantes o truncados. Resultados numéricos y límites en `saturn-background-loading.json`; evidencia detallada local bajo local/work/background-bench y local/logs.
+The final representation uses 8-bit palette or RGB555 when it exactly reproduces every color, with RGBA as a fallback. The set occupies 16,145,238 bytes versus 39,312,064 for direct RGBA. DEFLATE reduces it to 5,368,794 bytes, but raises the hot median from 0.251 to 0.290 seconds and preparation from 1.920 to 2.059 seconds: it stays disabled by default. Reading supports the previous cache version and rejects extra or truncated data. Numeric results and limits in `saturn-background-loading.json`; detailed evidence is local under local/work/background-bench and local/logs.
 
-La metodología OptiPort se comprobó contra9673006504bf6712b320da70965bc3f65f2dd41a. No se cambiaron los comandos ni los tiempos del CD invitado.
+The OptiPort methodology was checked against 9673006504bf6712b320da70965bc3f65f2dd41a. Guest CD commands and timings were not changed.
 
-## Comparación final y límites de la siguiente etapa
+## Final comparison and limits for the next stage
 
-La comparación final independiente, tres repeticiones alternadas con 38 imágenes idénticas, registra 5,128 → 1,960 segundos con caché derivada vacía, y 0,268 → 0,274 segundos preparada. No hay mejora general demostrada en caliente. Las 64 pruebas pasan; incluyen round-trip de formatos, compatibilidad anterior, corrupción y regeneración en escena real. Resultados en `saturn-background-compression.json`.
+The independent final comparison, three alternated repetitions with 38 identical images, records 5.128 → 1.960 seconds with an empty derived cache, and 0.268 → 0.274 seconds prepared. No overall hot-cache improvement is demonstrated. The 64 tests pass; they include format round-trips, backward compatibility, corruption, and regeneration in a real scene. Results in `saturn-background-compression.json`.
 
-Una observación de la escena nocturna a 1280×720 con Direct3D 11 registra 55,374/5,277 ms de CPU para cargar el fondo Saturn en frío/caliente, y 61,309/12,559 ms para HD. Incluye llamadas de subida, pero no espera de GPU ni demuestra frame pacing. Queda trabajo para evitar el coste de primer uso.
+An observation of the night scene at 1280×720 with Direct3D 11 records 55.374/5.277 ms of CPU to load the Saturn background cold/hot, and 61.309/12.559 ms for HD. Includes upload calls, but not GPU wait or frame-pacing proof. Work remains to avoid the first-use cost.
 
-El equipo observado tiene Ryzen 7 7435HS (8 núcleos, 16 hilos) y RTX 4060 Laptop. La composición SDL ya usa Direct3D 11; la rasterización Saturn sigue en CPU. Preparar recursos independientes es candidato a paralelismo acotado. Las texturas del renderer de ventana deben crearse/usarse en su hilo; la preparación CPU debe separarse antes de introducir trabajadores. No se paralelizan los SH-2 sin preservar su memoria y temporización compartidas.
+The observed system has a Ryzen 7 7435HS (8 cores, 16 threads) and an RTX 4060 Laptop. SDL compositing already uses Direct3D 11; Saturn rasterization remains on the CPU. Preparing independent resources is a candidate for bounded parallelism. Window-renderer textures must be created/used on their thread; CPU preparation must be separated before introducing workers. The SH-2s are not parallelized without preserving their shared memory and timing.

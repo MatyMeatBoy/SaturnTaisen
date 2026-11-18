@@ -1,49 +1,49 @@
-# Transiciones panorámicas del capítulo 1
+# Chapter 1 widescreen transitions
 
-Se usó el ejecutable nativo de Windows, el disco 1 traducido y estados locales del propietario. Las capturas corresponden a una ventana SDL oculta de 1280×720 con vista Zoom. Cada ejecución usó una copia independiente de la memoria de respaldo. Los fotogramas son relativos a la carga del estado indicado.
+The native Windows executable, the translated disc 1, and the owner's local states were used. Captures correspond to a hidden 1280×720 SDL window with the Zoom view. Each run used an independent copy of backup memory. Frames are relative to the loading of the indicated state.
 
-| Inicio | Reproducción | Resultado observado |
+| Start | Replay | Observed result |
 | --- | --- | --- |
-| `intro1799.state` | `tests/chapter1-opening-skip.movie` | `opening → row-gradient → title → native → title`. Las capturas 91 y 181 son negras. El título aparece a más tardar en la captura 271. |
-| `title-final.state` | `tests/chapter1-title-new-game.movie` | `title → native → row-gradient → native → row-gradient → backdrop → movie`. Menú de título en 200, pantalla LOADING con marco 4:3 en 400 y 650, película narrativa panorámica en 1000 y 1450. |
-| `map-room.state` | `tests/chapter1-map-dining-hall.movie` | `row-gradient → native → backdrop → narrative`. Mapa en 250 y 330, fundido hacia el comedor en 500, diálogo en 750. |
-| `theater.state` | `tests/theater-dialogues.movie` | La misma secuencia de layouts del mapa al diálogo. Escena con Sumire en 250 y conversación en 1000–2700. |
-| `resume-chapter-6000.state` | `tests/chapter1-lips-confirm.movie` | El menú LIPS nocturno se ve en 8 y 32, desaparece a más tardar en 59 y la respuesta está completa en 230. Los 450 fotogramas mantienen `narrative`. Otro LIPS, desde `prebattle-3000.state`, conservó el mismo layout. |
+| `intro1799.state` | `tests/chapter1-opening-skip.movie` | `opening → row-gradient → title → native → title`. Captures 91 and 181 are black. The title appears by capture 271 at the latest. |
+| `title-final.state` | `tests/chapter1-title-new-game.movie` | `title → native → row-gradient → native → row-gradient → backdrop → movie`. Title menu at 200, LOADING screen with 4:3 frame at 400 and 650, panoramic narrative movie at 1000 and 1450. |
+| `map-room.state` | `tests/chapter1-map-dining-hall.movie` | `row-gradient → native → backdrop → narrative`. Map at 250 and 330, fade to the dining hall at 500, dialogue at 750. |
+| `theater.state` | `tests/theater-dialogues.movie` | The same layout sequence from map to dialogue. Scene with Sumire at 250 and conversation at 1000–2700. |
+| `resume-chapter-6000.state` | `tests/chapter1-lips-confirm.movie` | The night-time LIPS menu is visible at 8 and 32, disappears by frame 59 at the latest, and the answer is complete at 230. All 450 frames stay on `narrative`. Another LIPS, from `prebattle-3000.state`, kept the same layout. |
 
-Ejecutar las pruebas con `python -m unittest discover -s tests -p test_widescreen_transitions.py -v`. Verifican las transiciones de apertura, New Game, comedor y LIPS y comparan los hashes de todos los fotogramas entre las presentaciones Original y Mejorada. Omiten cada ruta cuando faltan sus estados privados. Los videos de entrada contienen únicamente pulsaciones del mando.
+Run the tests with `python -m unittest discover -s tests -p test_widescreen_transitions.py -v`. They verify the opening, New Game, dining-hall and LIPS transitions and compare the hashes of every frame between the Original and Enhanced presentations. Each route is skipped when its private states are missing. The input videos contain only controller presses.
 
-## Hallazgos en la compilación examinada
+## Findings in the build examined
 
-- **Pantalla de carga.** Un estado guardado antes del fotograma 400 de la ruta New Game contiene toda la pantalla LOADING en la capa 4. La huella FNV-1a de 512 bytes de la paleta es `74EA8ADC9B0340CC`, correspondiente al inicio de `SAKURA1/LOAD.BIN` (76.672 bytes). Coinciden 93 bloques no triviales de 256 bytes con la VRAM del estado.
-- **Intermedio.** `intermission-down.state`, `intermission-up.state` y `night-patrol-12000.state` mostraron el menú Save/Status/Resume con marco 4:3. La capa 4 contiene el fondo completo, Sakura y el logotipo. La capa 0 contiene el recuadro de selección. La paleta de capa 4 `E9107F892185CCC8` coincide con `ICLOGO.BIN` y `LOAD01.BIN`, así que la huella por sí sola es ambigua. Los tres estados comparten la firma de página `79F284B5622630A4`. En `intermission-down.state` se recuperaron 86 bloques de `IC01.BIN` en VRAM, principalmente con desplazamiento de archivo `+0x48C80`, y 41 de `ICLOGO.BIN` en `+0x34280`. `exit-battle-save.state` ya usa `anchored-menu`, con la paleta `530FF280499422C3` de `IC01.BIN`. La capa 4 está desactivada en `intermission-save.state`, que muestra la pantalla de estado.
-- **Texto HD en LIPS.** Dos ejecuciones de la misma ruta nocturna con Estilo de texto HD y Original producen capturas idénticas mientras se ven las opciones en los fotogramas 8 y 32. En 230, tras la selección, cambian 8.008 píxeles de la línea de respuesta dentro del rectángulo `(346,510)–(946,542)` de la captura. El filtro actual admite filas de diálogo desde la coordenada de origen Y=160. Las opciones del cuadro superior quedan fuera de ese filtro. Estas ejecuciones no registraron sustituciones verificadas de retratos.
-- **Fundidos.** La traza emite cambios de layout sin número de fotograma. Las capturas muestreadas sustentan los fotogramas indicados y dejan sin medir los límites exactos del fallback `native` durante los fundidos. La auditoría de estados locales tampoco establece cobertura continua del capítulo.
+- **Loading screen.** A state saved before frame 400 of the New Game route contains the entire LOADING screen on layer 4. The 512-byte FNV-1a fingerprint of the palette is `74EA8ADC9B0340CC`, matching the start of `SAKURA1/LOAD.BIN` (76,672 bytes). 93 non-trivial 256-byte blocks match the state's VRAM.
+- **Intermission.** `intermission-down.state`, `intermission-up.state` and `night-patrol-12000.state` showed the Save/Status/Resume menu with a 4:3 frame. Layer 4 contains the full background, Sakura, and the logo. Layer 0 contains the selection box. Layer 4's palette `E9107F892185CCC8` matches both `ICLOGO.BIN` and `LOAD01.BIN`, so the fingerprint alone is ambiguous. All three states share the page signature `79F284B5622630A4`. In `intermission-down.state`, 86 blocks of `IC01.BIN` were recovered in VRAM, mostly at file offset `+0x48C80`, and 41 of `ICLOGO.BIN` at `+0x34280`. `exit-battle-save.state` already uses `anchored-menu`, with the `IC01.BIN` palette `530FF280499422C3`. Layer 4 is disabled in `intermission-save.state`, which shows the status screen.
+- **HD text in LIPS.** Two runs of the same night-time route with HD Text Style and Original produce identical captures while the options are visible at frames 8 and 32. At 230, after selection, 8,008 pixels of the answer line change within the capture rectangle `(346,510)–(946,542)`. The current filter only accepts dialogue rows from source coordinate Y=160. The upper box's options fall outside that filter. These runs recorded no verified portrait substitutions.
+- **Fades.** The trace emits layout changes without a frame number. The sampled captures support the indicated frames and leave the exact boundaries of the `native` fallback during fades unmeasured. The local-states audit also does not establish continuous chapter coverage.
 
-Los registros, capturas y sondeos de capas están en `local/work/worker-wide-transitions`. Las subcarpetas `opening-skip`, `title-start`, `map-room`, `theater-dialogues`, `lips-patrol` y `lips-original-text` corresponden a las rutas de la tabla y a la comparación de texto.
+Logs, captures and layer probes are in `local/work/worker-wide-transitions`. The `opening-skip`, `title-start`, `map-room`, `theater-dialogues`, `lips-patrol` and `lips-original-text` subfolders correspond to the routes in the table and to the text comparison.
 
-## Captura de glifos LIPS
+## LIPS glyph capture
 
-El listado VDP1 de `resume-chapter-6000.state` contiene sprites normales de glifo con modo `0080` y tamaño `0210` (16×16). Los glifos coinciden byte a byte con el atlas inglés que usa el diálogo. Las opciones inactivas usan color `C510`. La opción seleccionada usa `C570` y también conserva el resaltado en la capa VDP2. Las tres filas empiezan en Y=54, 78 y 102. El LIPS de `prebattle-3000.state` usa Y=62 y 94. Estos dos cuadros requieren reconocer ambos colores y distintas alturas.
+The VDP1 listing of `resume-chapter-6000.state` contains normal glyph sprites with mode `0080` and size `0210` (16×16). The glyphs match byte for byte with the English atlas used by dialogue. Inactive options use color `C510`. The selected option uses `C570` and also keeps the highlight on the VDP2 layer. All three rows start at Y=54, 78 and 102. The LIPS in `prebattle-3000.state` uses Y=62 and 94. These two cases require recognizing both colors and different heights.
 
-`frontend_sdl.cpp` admite `C510` y Y=160–196. `NarrativeInkFits` restringe la tinta al recuadro inferior y `SakuraUi::GameText` aplica `NarrativeClip`. En vista Zoom, el cuadro de opciones pertenece a la transformación de la imagen. El diálogo inferior usa otra transformación. Se necesita asignar una transformación y un recorte a cada grupo de líneas.
+`frontend_sdl.cpp` accepts `C510` and Y=160–196. `NarrativeInkFits` restricts ink to the lower box and `SakuraUi::GameText` applies `NarrativeClip`. In Zoom view, the options box belongs to the image transform. The lower dialogue uses a different transform. A transform and a crop need to be assigned to each line group.
 
-El sondeo de capas muestra el marco, el temporizador, la figura de Sakura y la tinta de las opciones en VDP1. La capa 3 de VDP2 contiene el relleno y resaltado del recuadro. `underSprites` vuelve a componer el píxel sin toda la capa VDP1. Restaurar así los píxeles de tinta de una opción puede retirar también los píxeles de Sakura que deben verse bajo el cuadro translúcido. Una sustitución fiel requiere componer cada píxel sin el glifo y conservar el valor VDP1 anterior a ese comando. Los datos auxiliares pueden mantenerse fuera de la serialización del estado.
+The layer probe shows the frame, the timer, Sakura's figure, and the options' ink on VDP1. VDP2 layer 3 contains the box's fill and highlight. `underSprites` recomposes the pixel without the entire VDP1 layer. Restoring an option's ink pixels this way can also remove Sakura's pixels that should show through under the translucent box. A faithful substitution requires compositing each pixel without the glyph and keeping the VDP1 value prior to that command. Auxiliary data can be kept outside of state serialization.
 
-Para verificar una futura sustitución, repetir la ruta nocturna en HD y Original. El cambio debe ceñirse al texto del recuadro mientras se ven las opciones, preservar marco, temporizador, resaltado y retrato, y conservar la igualdad de los hashes del juego. Repetir en vista Zoom y en la vista que conserva el encuadre original.
+To verify a future substitution, repeat the night-time route in HD and Original. The change must stay confined to the box's text while the options are visible, preserve frame, timer, highlight and portrait, and keep the game's hashes equal. Repeat in Zoom view and in the view that preserves the original framing.
 
-### Casos para validar una placa de glifos
+### Cases to validate a glyph plate
 
-| Caso | Evidencia esperada |
+| Case | Expected evidence |
 | --- | --- |
-| Tres opciones nocturnas desde `resume-chapter-6000.state` | HD modifica únicamente la zona de los glifos respecto de Original, incluidos los de la fila seleccionada. El resaltado VDP2, el temporizador y el marco coinciden para el mismo fotograma. |
-| Dos opciones desde `prebattle-3000.state` | Se reconocen las filas a Y=62 y Y=94. La fila seleccionada mantiene su color. |
-| Tinta por encima de la figura VDP1 | Al ocultar una fila, la placa conserva la figura bajo el panel con su mezcla de color. Un caso sintético con el mismo valor VDP1 escrito por un glifo y por un sprite posterior comprueba que la visibilidad se siga por orden de dibujo. |
-| Glifo no reconocido, fila ocluida o placa sin datos del framebuffer mostrado | Los píxeles nativos de esa fila permanecen intactos. Tras restaurar un estado, se espera una placa válida antes de retirar tinta. |
-| Vista Zoom y encuadre original | El texto HD sigue la transformación del panel y queda dentro de sus bordes. El diálogo inferior conserva su propia posición. |
-| Confirmación y vencimiento del temporizador | El texto de opciones desaparece con el cuadro. La respuesta, la selección y los hashes de todos los fotogramas coinciden entre Original y Mejorada. |
+| Three night-time options from `resume-chapter-6000.state` | HD modifies only the glyph area relative to Original, including those of the selected row. The VDP2 highlight, timer and frame match for the same frame. |
+| Two options from `prebattle-3000.state` | The rows are recognized at Y=62 and Y=94. The selected row keeps its color. |
+| Ink above the VDP1 figure | When a row is hidden, the plate preserves the figure under the panel with its color blend. A synthetic case with the same VDP1 value written by a glyph and by a later sprite verifies that visibility follows draw order. |
+| Unrecognized glyph, occluded row, or a plate with no data from the displayed framebuffer | The row's native pixels remain intact. After restoring a state, a valid plate is expected before removing ink. |
+| Zoom view and original framing | HD text follows the panel's transform and stays within its edges. The lower dialogue keeps its own position. |
+| Confirmation and timer expiry | The options text disappears with the box. The answer, the selection, and every frame's hashes match between Original and Enhanced. |
 
-Estado de la auditoría inicial: la placa aún no estaba implementada. La implementación posterior y sus pruebas reales están en [texto HD de elecciones](chapter1-choice-hd.md). El replay automatizado actual comprueba layout y paridad del estado. La comparación HD/Original de las capturas 8, 32 y 230 documenta el punto de partida para probar la sustitución.
+Initial audit status: the plate was not yet implemented. The later implementation and its real tests are in [HD choice text](chapter1-choice-hd.md). The current automated replay checks layout and state parity. The HD/Original comparison of captures 8, 32 and 230 documents the starting point for testing the substitution.
 
-## Correcciones posteriores a la auditoría
+## Fixes after the audit
 
-El intermedio acepta la paleta secundaria del logotipo únicamente si la imagen nativa IC01 coincide con el framebuffer presentado: al menos 80 % de muestras, al menos 60 % por cuadrante y diversidad visible suficiente. Un fundido uniforme no satisface esta comprobación. Se verificaron los tres estados afectados y el menú de salida del combate con el layout `anchored-menu`. La pantalla LOAD.BIN dispone ahora de un fondo generativo provisional y conserva su columna animada original. El ajuste de fase entre sus mosaicos y el centro protegido aún requiere pulido visual; disponer de layout panorámico no acredita una transición visual terminada.
+The intermission accepts the logo's secondary palette only if the native IC01 image matches the displayed framebuffer: at least 80% of samples, at least 60% per quadrant, and sufficient visible diversity. A uniform fade does not satisfy this check. All three affected states and the battle-exit menu with the `anchored-menu` layout were verified. The LOAD.BIN screen now has a provisional generative background and keeps its original animated column. The phase alignment between its tiles and the protected center still needs visual polishing; having a widescreen layout does not prove a finished visual transition.

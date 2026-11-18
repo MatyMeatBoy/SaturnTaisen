@@ -1,90 +1,90 @@
-# Prioridad Saturn hasta completar su alcance
+# Saturn priority until its scope is complete
 
-El usuario confirmó que Saturn tiene prioridad. La ejecución y traducción de PC quedan aparcadas; se anotan hallazgos útiles, pero no se integra esa plataforma ahora. Sigue autorizado usar recursos PC para el mod HD de Saturn, incluidos sus fondos extendidos.
+The user confirmed that Saturn has priority. PC execution and translation are shelved; useful findings are noted, but that platform is not integrated now. Using PC resources for the Saturn HD mod, including its extended backgrounds, remains authorized.
 
-## Protección y evidencia
+## Protection and evidence
 
-- v0.1.5 publicada e inmutable: e6910ec5152e070e10636e606dc219c3af94e62c. BAT principal y paquete estable conservados.
-- Desarrollo: implementation/enhanced-v011, base77b43c6;0.2.0-dev. Sin trabajadores delegados.
-- Los dumps, partidas del propietario y referencias originales permanecen locales. Pruebas con copias y perfiles separados.
-- OptiPort comprobado contra9673006504bf6712b320da70965bc3f65f2dd41a; copia instalada idéntica. Se consultaron protocolo general, profiling, gráficos/memoria y adaptación de runtimes.
+- v0.1.5 published and immutable: e6910ec5152e070e10636e606dc219c3af94e62c. Main BAT and stable package preserved.
+- Development: implementation/enhanced-v011, base 77b43c6; 0.2.0-dev. No delegated workers.
+- Dumps, the owner's saves, and original references stay local. Tests use copies and separate profiles.
+- OptiPort checked against 9673006504bf6712b320da70965bc3f65f2dd41a; installed copy identical. Consulted the general protocol, profiling, graphics/memory, and runtime adaptation.
 
-## Orden de trabajo
+## Work order
 
-1. Medir y reducir la preparación de fondos de Saturn/HD sin cambiar sus píxeles, su calidad ni los tiempos del CD invitado. Comparar caché de fondos vacía y preparada, declarando que no se vacía la caché del sistema operativo.
-2. Completar la integración del mod HD para Saturn y el selector de recursos, conservando texto opcional e identidades verificadas. No presentar una ruta PC jugable.
-3. Revisar escenas, subtítulos, sombras, motivos y paletas; composición en enteros y máximo conjunto que cabe a distintas resoluciones. Mantener fallback original cuando falta una sustitución usable.
-4. Completar ejemplos locales de presentación en launcher y selector inicial, ajustes y navegación con mandos; el launcher se cierra solo tras confirmar el juego listo.
-5. Continuar validación de guardado, importación, progresión/batallas y cambio real de disco. Priorizar cualquier reproducción de bloqueo o pérdida de progreso sobre optimizaciones o decoración.
-6. Completar mandos y RetroAchievements dentro del alcance confirmado, con pruebas y limitaciones explícitas.
+1. Measure and reduce Saturn/HD background preparation without changing their pixels, their quality, or the guest CD's timings. Compare empty and primed background cache, noting that the OS cache is not cleared.
+2. Complete the HD mod integration for Saturn and the resource selector, keeping optional text and verified identities. Do not present a playable PC path.
+3. Review scenes, subtitles, shadows, motifs, and palettes; integer composition and the maximum set that fits different resolutions. Keep the original fallback when a usable substitution is missing.
+4. Complete local presentation examples in the launcher and initial selector, settings, and controller navigation; the launcher closes only after confirming the game is ready.
+5. Continue validation of saving, importing, progression/battles, and a real disc swap. Prioritize any reproduction of a lockup or progress loss over optimizations or decoration.
+6. Complete controllers and RetroAchievements within the confirmed scope, with explicit tests and limitations.
 
-## Hallazgos para más adelante
+## Findings for later
 
-Registrar información de PC en la documentación de investigación existente, distinguiendo recursos útiles para Saturn de trabajo necesario para ejecutar/traducir PC. Las 19 identidades de fondos y su importación experimental siguen siendo útiles para el mod HD Saturn; la ruta de juego PC y sus guiones permanecen pendientes.
+Record PC information in the existing research documentation, distinguishing resources useful for Saturn from work needed to run/translate PC. The 19 background identities and their experimental import remain useful for the Saturn HD mod; the PC game path and its scripts remain pending.
 
-No usar una suite aprobada ni un checkpoint como prueba de campaña completa. Registrar trabajo implementado, verificado e integrado por separado.
+Do not use an approved suite or a checkpoint as proof of a complete campaign. Record implemented, verified, and integrated work separately.
 
-## Bloque de caché compacta verificado
+## Verified compact cache block
 
-Patch20: caché lossless paleta8/RGB555/RGBA, migración de formato anterior, DEFLATE evaluado y desactivado por latencia. 64 pruebas aprobadas y 38 imágenes idénticas; comparación final 5,128 → 1,960 s de preparación, sin mejora general caliente. No equivale a acelerar toda carga del juego. Diagnóstico optativo del renderer y carga por fondo; búfer de tintado reutilizado.
+Patch 20: lossless cache for palette 8/RGB555/RGBA, migration from the previous format, DEFLATE evaluated and disabled for latency. 64 approved tests and 38 identical images; final comparison 5.128 → 1.960 s of preparation, with no general hot-path improvement. This does not equal speeding up every game load. Optional renderer diagnostics and per-background loading; reused tint buffer.
 
-Pendiente inmediato: separar preparación CPU de subida de texturas, medir trabajadores 1/2/4/8 según memoria y coste, y evitar preparación pesada en primer uso. GPU actual: composición Direct3D11 verificada; rasterizador Saturn GPU todavía no validado. Mantener los dos SH-2 coordinados.
+Immediate pending item: separate CPU preparation from texture upload, measure 1/2/4/8 workers against memory and cost, and avoid heavy preparation on first use. Current GPU: Direct3D11 composition verified; Saturn GPU rasterizer not yet validated. Keep the two SH-2s coordinated.
 
-## Ejecución: preparación multinúcleo
+## Execution: multi-core preparation
 
-Base 7b2b126. Se ejecuta en la rama de desarrollo existente, sin agentes y sin tocar v0.1.5.
+Base 7b2b126. Runs on the existing development branch, with no agents and without touching v0.1.5.
 
-1. Separar preparación CPU de subida GPU, conservando los loaders públicos. Prueba: preparar desde trabajador sin renderer y contrastar caché/píxeles con carga existente.
-2. Añadir preparación anticipada con trabajadores acotados, tareas que poseen sus entradas, parada y unión antes de cerrar SDL. Solo caché derivada; no se tocan discos ni partidas. Probar límites, cancelación, error y reinicio.
-3. Medir 1/2/4/8 trabajadores sobre los mismos 38 fondos, comparando hashes y caché fría/caliente. Elegir configuración por evidencia.
-4. Compilar runtime, validar escena real y suite, registrar patch21, revisar y subir bloque.
+1. Separate CPU preparation from GPU upload, keeping the public loaders. Test: prepare from a worker with no renderer and compare cache/pixels against the existing load.
+2. Add early preparation with bounded workers, tasks that own their inputs, stop and join before closing SDL. Only derived cache; discs and saves are untouched. Test limits, cancellation, error, and restart.
+3. Measure 1/2/4/8 workers on the same 38 backgrounds, comparing hashes and cold/hot cache. Choose a configuration from evidence.
+4. Build the runtime, validate the real scene and suite, record patch 21, review, and push the block.
 
-Ruling: la primera fase precalienta cachés sin retener superficies ni crear texturas desde trabajadores; la subida sigue en el hilo de ventana y el loader síncrono conserva su fallback. Evita cambiar la imagen mostrada mientras llegan resultados y acota memoria a los recursos en curso. No promete eliminar todavía toda pausa de primer uso.
+Ruling: the first phase pre-warms caches without holding onto surfaces or creating textures from workers; the upload stays on the window thread and the synchronous loader keeps its fallback. It avoids changing the displayed image while results arrive and bounds memory to the resources in flight. It does not yet promise to eliminate every first-use pause.
 
-Preparación multinúcleo: tareas 1–4 completadas. Patch21 validado contra árbol compuesto; build nativo aprobado; suite completa 67 pruebas en 122,711s. Escena completa idéntica con 0/4 trabajadores, 19 cachés futuras preparadas. Benchmark final de 38 imágenes: 2,102s (1 trabajador) → 0,478s (8), caché preparada 0,262 → 0,104s. Límites y memoria en docs/research/saturn-background-workers.*.
+Multi-core preparation: tasks 1–4 completed. Patch 21 validated against the composed tree; native build approved; full suite 67 tests in 122.711s. Full scene identical with 0/4 workers, 19 future caches prepared. Final benchmark of 38 images: 2.102s (1 worker) → 0.478s (8), prepared cache 0.262 → 0.104s. Limits and memory in docs/research/saturn-background-workers.*.
 
-Revisión propia separada (sin delegación): se revisaron propiedad de entradas/superficies, afinidad SDL, cancelación antes de cierre, límites del pool, fallos de publicación concurrentes y ausencia de cambios en estado invitado. Se reprodujo y corrigió acceso denegado de Windows con ocho productores; aceptación solo tras comparación íntegra del resultado existente. Sin hallazgos críticos adicionales en este bloque. No sustituye revisión independiente ni campaña completa.
+Separate self-review (no delegation): reviewed input/surface ownership, SDL affinity, cancellation before shutdown, pool limits, concurrent publication failures, and absence of changes to guest state. Reproduced and fixed a Windows access-denied error with eight producers; acceptance only after a full comparison against the existing result. No additional critical findings in this block. This does not replace independent review or a complete campaign.
 
-Launcher HD: tarjeta MOD HD · SATURN implementada. Selección de carpeta o ruta escrita, normalización de carpetas SAKURA1/WALL, verificación/preparación en proceso aparte, selección persistida solo después de completar los 19 fondos y control Activados/Desactivados independiente del texto. El launcher sigue dibujando mientras prepara; el callback de diálogo conserva estado compartido hasta el cierre. Build y prueba de descripción aprobados. Captura real y activación con mando virtual verificadas en perfil aislado: 19/19 preparados con 8 trabajadores, cero fallos. No ejecuta el juego PC ni importa su traducción.
+Launcher HD: HD MOD · SATURN card implemented. Folder selection or typed path, normalization of SAKURA1/WALL folders, verification/preparation in a separate process, selection persisted only after completing the 19 backgrounds, and an Enabled/Disabled control independent of the text one. The launcher keeps drawing while preparing; the dialog callback keeps shared state until closing. Build and description test approved. Real capture and activation with a virtual controller verified in an isolated profile: 19/19 prepared with 8 workers, zero failures. It does not run the PC game or import its translation.
 
-Ampliación explícita del usuario: el HD Saturn incluye sprites de chicas, otros personajes, retratos y expresiones. Inventario reproducible y decodificación del runtime: 147 NC, 3.596 imágenes, 147 nombres con candidatos en Saturn. KAO/KAO_P inventariados aparte. Máscaras y composición aún pendientes; todavía no se dibujan personajes HD. Véase docs/research/saturn-hd-characters.md.
+Explicit user expansion: Saturn HD includes girl sprites, other characters, portraits, and expressions. Reproducible inventory and runtime decoding: 147 NC, 3,596 images, 147 names with Saturn candidates. KAO/KAO_P inventoried separately. Masks and compositing are still pending; HD characters are not drawn yet. See docs/research/saturn-hd-characters.md.
 
-Hallazgo derivado de la investigación solicitada: MAC.L saturado incluía bits inactivos en ambas rutas; reproducción sintética registrada antes del cambio. Ruling: corregir esta semántica antes de seguir con integración visual, porque es un defecto concreto compartido por nativo/referencia. Patch23 registrado; 11.616 casos por ruta y 11 pruebas de máquina aprobados. Regeneración AOT y build del juego aprobados; suite completa en curso. No se atribuye este caso a un bloqueo observado ni se afirma campaña completa.
+Finding derived from requested research: saturated MAC.L included inactive bits on both paths; synthetic reproduction recorded before the change. Ruling: fix this semantics before continuing with visual integration, because it's a concrete defect shared by native/reference. Patch 23 recorded; 11,616 cases per path and 11 approved machine tests. AOT regeneration and game build approved; full suite in progress. This case is not attributed to any observed lockup, nor is a complete campaign claimed.
 
-MAC.L: build completo aprobado (580.328 bloques, 708 archivos regenerados), suite completa 68 pruebas en103,707s, incluidas rutas reales de600 y4.200 frames con cero instrucciones guest interpretadas. Revisión propia de cambios y pruebas: acumulación y saturación sin desbordamiento firmado, S=0 modular sin cambios, orden de lecturas/alias y flags conservados. Sin delegación ni afirmación de campaña completa.
+MAC.L: full build approved (580,328 blocks, 708 files regenerated), full suite 68 tests in 103.707s, including real paths of 600 and 4,200 frames with zero interpreted guest instructions. Self-review of changes and tests: accumulation and saturation with no signed overflow, modular S=0 unchanged, read/alias order and flags preserved. No delegation and no claim of a complete campaign.
 
-Personajes: además de3.596 NC, el decoder del runtime procesó394 retratos KAO y25 KAO_P:4.015 imágenes verificadas en total. Sigue pendiente la correspondencia y el dibujo HD ingame. Los campos exploratorios solo coinciden en59 de147 pares, de modo que no se usa una correspondencia universal por índice.
-
-
-Avance posterior: patches24–30 incorporan fuente HD de proporciones uniformes y límites de tinta/clip, herramienta local de matching, primer consumidor de retratos HD validado por bytes/paleta/origen y modo Zoom opcional. El catálogo tiene304 identidades nativas,394 candidatos PC,191 propuestas conservadoras y113 pendientes. La primera escena real cambia únicamente el retrato; no equivale a cuerpos NC completos. Suite de integración de ese bloque:76 pruebas aprobadas. Zoom se probó geométricamente a varias resoluciones y en escena real1440p con igualdad de imagen/tinta; Original continúa como opción por defecto. La composición final añade un ajuste de1px arriba/abajo.
-
-Pendiente próximo: activar y validar el pack de retratos en el perfil de desarrollo, probar densidades/expresiones/fallbacks y avanzar identificación de los cuerpos NC. Después continúan campaña, cambio de disco, mandos y RA; ninguno se declara completo por estas pruebas visuales.
+Characters: besides 3,596 NC, the runtime decoder processed 394 KAO portraits and 25 KAO_P: 4,015 images verified in total. Correspondence and in-game HD drawing are still pending. The exploratory fields only match on 59 of 147 pairs, so no universal index-based correspondence is used.
 
 
-Checkpoint de prueba solicitado en20 minutos: build0.2-dev para probar capítulo1, sin declarar capítulo/campaña completos. Añadidos límite16:9 (bandas en superficies más anchas), precarga de todos los recursos HD habilitados, perfiles M30 Bluetooth/2.4G con override XInput y bindings explícitos prioritarios, copia de menús revisada e inventario nativoNC con enlace exacto de Iris. Verificación final:82 pruebas en148,379s, build nativo y launcher correctos. Precarga real:38/38 fondos y382 variantes de191 retratos sin fallos. Los cuerpos PC conservarán una sola escala basada en altura y eje cabeza/torso; su base sin ojos/boca no se publica como reemplazo terminado. Táctico16:9/HUD y extensiones PixelGen v1 ancladas al mapa siguen pendientes; pruebaGPU temporal restaurada y excluida de producción. Accesos locales y perfil independiente en docs/releases/v0.2-chapter1-preview.md.
+Later progress: patches 24–30 add an HD font with uniform proportions and ink/clip limits, a local matching tool, a first HD-portrait consumer validated by bytes/palette/origin, and an optional Zoom mode. The catalog has 304 native identities, 394 PC candidates, 191 conservative proposals, and 113 pending. The first real scene changes only the portrait; this does not equal complete NC bodies. Integration suite for that block: 76 approved tests. Zoom was tested geometrically at several resolutions and in a real 1440p scene with identical image/ink; Original remains the default option. The final composite adds a 1px adjustment top/bottom.
+
+Next pending item: enable and validate the portrait pack in the development profile, test densities/expressions/fallbacks, and advance NC body identification. After that, campaign, disc swap, controllers, and RA continue; none of these are declared complete by these visual tests.
 
 
-## Checkpoint portátil 0.1.2
-
-- OptiPort 58843a2: README y badges con alcance real, sin porcentajes de estabilidad.
-- 88 pruebas aprobadas; HD procesado idéntico a originales y fallback de corrupción validado.
-- Launcher detecta disco y recursos preparados junto al ejecutable; traslado sin toolchain probado a 1440p.
-- Entrega personal autorizada: únicamente disco 1 inglés y recursos HD procesados; nunca publicar ese ZIP. Release Git sin entradas originales.
-- Pendientes: prueba RX 6900 XT/M30 físicos, capítulo 1 continuo completo, cuerpos HD, táctico 16:9 y transición natural de discos.
+Test checkpoint requested in 20 minutes: 0.2-dev build to test chapter 1, without declaring the chapter/campaign complete. Added: 16:9 limit (bars on wider surfaces), preload of all enabled HD resources, M30 Bluetooth/2.4G profiles with XInput override and explicit priority bindings, reviewed menu copy, and native NC inventory with an exact link to Iris. Final verification: 82 tests in 148.379s, native build and launcher correct. Real preload: 38/38 backgrounds and 382 variants of 191 portraits with no failures. PC bodies will keep a single scale based on height and the head/torso axis; their base with no eyes/mouth is not published as a finished replacement. 16:9 tactical/HUD and PixelGen v1 extensions anchored to the map are still pending; the temporary GPU test was restored and excluded from production. Local shortcuts and an independent profile in docs/releases/v0.2-chapter1-preview.md.
 
 
-## Feedback visual del checkpoint 0.1.2 (prioridad actual)
+## 0.1.2 portable checkpoint
 
-- Intro anterior al título: ampliar área real288×144 situada en16,24 a la mayor escala entera; conservar subtítulos ingleses incrustados. El vídeo posterior a Comenzar ya funciona.
-- Fondo lila de intro y fondo rosado de título: PixelGen v1 a16:9 con sus capas originales separadas. Masters generados; integración y verificación pendientes.
-- Mantener fondos extendidos durante todas las escenas y transiciones en que aparece un fondo conocido, aunque la composición no reconozca el diálogo.
-- Zoom global en Mejorado: cuadros de imagen/diálogo, sprites sobre imagen y eleccionesLIPS; táctico mantiene su plano real/integro y HUD relativo.
-- TextoHD: corregir filas mezcladas con nativas, cuarta línea/descendentes, estabilidad al avanzar, bajar ligeramente baseline y centrar; glifos/fuente preparados antes de mostrar y reemplazo coherente por frame. Incluir eleccionesLIPS.
-- Recoger texto reconocido en tablas locales con IDs/contexto para futura localización; no afirmar corpus completo ni publicar la traducción íntegra del propietario.
-- ModHD PC incluye vídeosMPG (MOVIE000..120 encontrados), menús/HUD equivalentes además de fondos/retratos; validar equivalencia, subtítulos/audio/inglés y proporciones antes de sustituir. Sin ejecución PC prioritaria.
+- OptiPort 58843a2: README and badges with real scope, no stability percentages.
+- 88 approved tests; HD processed identical to originals and corruption fallback validated.
+- Launcher detects the disc and resources prepared alongside the executable; move with no toolchain tested at 1440p.
+- Authorized personal delivery: English disc 1 only and processed HD resources; that ZIP is never published. Git release with no original entries.
+- Pending: physical RX 6900 XT/M30 test, full continuous chapter 1, HD bodies, 16:9 tactical, and a natural disc transition.
 
-### Ajuste del margen inferior del texto HD
 
-Reproducido con `post-3000.state`, diálogo de Sumire de cuatro líneas. El reconocimiento nativo conserva hasta y212 para reconocer descendentes; el dibujo HD ahora recorta en y208 y coloca filas con paso fijo de11 píxeles, frente a12, con origen un píxel más arriba. Se conservan fuente, tamaño, avance horizontal y geometría Zoom. La posición depende de la fila original, nunca de las letras visibles durante el tecleo.
+## Visual feedback on the 0.1.2 checkpoint (current priority)
 
-Captura real revisada a2560×1440: `local/work/text-safe-margin/shot.png`, detalle `dialogue.png`; primera y cuarta líneas completas y separadas del marco. Build local correcto,22 pruebas del frontend aprobadas en34,580s, prueba de geometría Zoom aprobada y árbol compuesto de35 parches verificado. Ajuste en build de desarrollo; ZIPs anteriores sin modificar. El lector validado de tablas inglesas está añadido como base, todavía sin integración del catálogo precargado.
+- Pre-title intro: scale the real 288×144 area located at 16,24 up to the largest integer scale; keep the embedded English subtitles. The video after Start already works.
+- Intro's lilac background and title's pink background: PixelGen v1 at 16:9 with its original layers separated. Masters generated; integration and verification pending.
+- Keep extended backgrounds during all scenes and transitions where a known background appears, even if the compositor doesn't recognize the dialogue.
+- Global Zoom in Enhanced: image/dialogue boxes, sprites over the image, and LIPS choices; tactical keeps its real/whole plane and relative HUD.
+- HD text: fix rows mixed with native ones, fourth line/descenders, stability while advancing, slightly lower the baseline and center it; glyphs/font prepared before display and coherent per-frame replacement. Include LIPS choices.
+- Collect recognized text in local tables with IDs/context for future localization; do not claim a complete corpus nor publish the owner's full translation.
+- PC ModHD includes MPG videos (MOVIE000..120 found), equivalent menus/HUD besides backgrounds/portraits; validate equivalence, subtitles/audio/English, and proportions before replacing. No PC execution priority.
+
+### HD text bottom-margin adjustment
+
+Reproduced with `post-3000.state`, Sumire's four-line dialogue. Native recognition keeps up to y212 to recognize descenders; HD drawing now clips at y208 and places rows with a fixed step of 11 pixels, versus 12, with the origin one pixel higher. Font, size, horizontal advance, and Zoom geometry are preserved. The position depends on the original row, never on the letters visible while typing.
+
+Real capture reviewed at 2560×1440: `local/work/text-safe-margin/shot.png`, detail `dialogue.png`; first and fourth lines complete and separate from the frame. Correct local build, 22 frontend tests approved in 34.580s, Zoom geometry test approved, and a composed tree of 35 patches verified. Adjustment in the development build; previous ZIPs unmodified. The validated reader for English tables is added as a base, still without integration of the preloaded catalog.

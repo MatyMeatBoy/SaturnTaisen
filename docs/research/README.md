@@ -1,94 +1,94 @@
-# Índice de investigación
+# Research index
 
-Una línea por documento. Los JSON son la evidencia legible por máquina de su documento; los que no tienen documento propio aparecen al final. `tests/test_research_index.py` comprueba que todo archivo de esta carpeta figure aquí.
+One line per document. The JSON files are the machine-readable evidence for their document; those without their own document appear at the end. `tests/test_research_index.py` checks that every file in this folder is listed here.
 
-## Recompilación y CPU
+## Recompilation and CPU
 
-- [2026-11-17-investigacion.md](2026-11-17-investigacion.md) — investigación inicial, proyectos candidatos y referencias ([projects.json](projects.json), [upstream-evidence.json](upstream-evidence.json)).
-- [2026-11-17-casos-recomp.md](2026-11-17-casos-recomp.md) — casos de recompilaciones Saturn y decisiones para Sakura.
-- [2026-11-17-cobertura-estatica.md](2026-11-17-cobertura-estatica.md) — ampliación de cobertura estática ([static-program-analysis.json](static-program-analysis.json), [static-program-eager-analysis.json](static-program-eager-analysis.json)).
-- [2026-11-17-validacion-nativa.md](2026-11-17-validacion-nativa.md) — arranque nativo y llegada al teatro ([runtime-validation.json](runtime-validation.json)).
-- [macl-48bit-regression.md](macl-48bit-regression.md) — MAC.L con acumulación saturada de 48 bits ([macl-48bit-regression.json](macl-48bit-regression.json)).
-- [cheviman-saturn-toolchain.md](cheviman-saturn-toolchain.md) — referencias del hilo de cheviman.
+- [2026-11-17-investigacion.md](2026-11-17-investigacion.md) — initial research, candidate projects, and references ([projects.json](projects.json), [upstream-evidence.json](upstream-evidence.json)).
+- [2026-11-17-casos-recomp.md](2026-11-17-casos-recomp.md) — Saturn recompilation cases and decisions for Sakura.
+- [2026-11-17-cobertura-estatica.md](2026-11-17-cobertura-estatica.md) — static coverage expansion ([static-program-analysis.json](static-program-analysis.json), [static-program-eager-analysis.json](static-program-eager-analysis.json)).
+- [2026-11-17-validacion-nativa.md](2026-11-17-validacion-nativa.md) — native boot and arrival at the theater ([runtime-validation.json](runtime-validation.json)).
+- [macl-48bit-regression.md](macl-48bit-regression.md) — MAC.L with 48-bit saturated accumulation ([macl-48bit-regression.json](macl-48bit-regression.json)).
+- [cheviman-saturn-toolchain.md](cheviman-saturn-toolchain.md) — references from cheviman's thread.
 
-## Motor, discos y progreso
+## Engine, discs, and progress
 
-- [sakura-engine-notes.md](sakura-engine-notes.md) — conocimiento específico del motor de Sakura.
-- [sakura-sdk-and-loading.md](sakura-sdk-and-loading.md) — SDK de Sakura y cargas ([sakura-sdk-inventory.json](sakura-sdk-inventory.json)).
-- [chapter1-battle-progress.md](chapter1-battle-progress.md) — validación de combate del capítulo 1 ([chapter1-battle-progress.json](chapter1-battle-progress.json)).
-- [save-import.md](save-import.md) — importación de partidas ([public-save-fixtures.json](public-save-fixtures.json)).
+- [sakura-engine-notes.md](sakura-engine-notes.md) — Sakura engine-specific knowledge.
+- [sakura-sdk-and-loading.md](sakura-sdk-and-loading.md) — Sakura SDK and loading ([sakura-sdk-inventory.json](sakura-sdk-inventory.json)).
+- [chapter1-battle-progress.md](chapter1-battle-progress.md) — chapter 1 battle validation ([chapter1-battle-progress.json](chapter1-battle-progress.json)).
+- [save-import.md](save-import.md) — save import ([public-save-fixtures.json](public-save-fixtures.json)).
 
-## Presentación y HD
+## Presentation and HD
 
-- [saturn-background-loading.md](saturn-background-loading.md) — cargas de fondos y mod HD ([saturn-background-loading.json](saturn-background-loading.json), [saturn-background-compression.json](saturn-background-compression.json)).
-- [saturn-background-workers.md](saturn-background-workers.md) — preparación multinúcleo de fondos ([saturn-background-workers.json](saturn-background-workers.json)).
-- [saturn-hd-characters.md](saturn-hd-characters.md) — personajes PC para el mod HD ([pc-character-inventory.json](pc-character-inventory.json)).
-- [pc-menu-hud-inventory.md](pc-menu-hud-inventory.md) — inventario T23 de menús/HUD PC y candidatos Saturn ([pc-menu-hud-inventory.json](pc-menu-hud-inventory.json)).
-- [pc-spred-resources.md](pc-spred-resources.md) — primera decodificación verificada de recursos PC ([pc-background-inventory.json](pc-background-inventory.json)).
-- [hd-font-proportions.md](hd-font-proportions.md) — proporciones de la fuente HD.
-- [pixelgen-v1.md](pixelgen-v1.md) — PixelGen v1, extensiones decorativas.
-- [v011-floral-background.md](v011-floral-background.md) — fondo floral panorámico de v0.1.1 ([kabe-backgrounds.json](kabe-backgrounds.json)).
+- [saturn-background-loading.md](saturn-background-loading.md) — background loading and HD mod ([saturn-background-loading.json](saturn-background-loading.json), [saturn-background-compression.json](saturn-background-compression.json)).
+- [saturn-background-workers.md](saturn-background-workers.md) — multi-core background preparation ([saturn-background-workers.json](saturn-background-workers.json)).
+- [saturn-hd-characters.md](saturn-hd-characters.md) — PC characters for the HD mod ([pc-character-inventory.json](pc-character-inventory.json)).
+- [pc-menu-hud-inventory.md](pc-menu-hud-inventory.md) — T23 inventory of PC menus/HUD and Saturn candidates ([pc-menu-hud-inventory.json](pc-menu-hud-inventory.json)).
+- [pc-spred-resources.md](pc-spred-resources.md) — first verified decoding of PC assets ([pc-background-inventory.json](pc-background-inventory.json)).
+- [hd-font-proportions.md](hd-font-proportions.md) — HD font proportions.
+- [pixelgen-v1.md](pixelgen-v1.md) — PixelGen v1, decorative extensions.
+- [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 
-## Mandos
+## Controllers
 
-- [m30-controller-profiles.md](m30-controller-profiles.md) — mandos M30 y SDL.
-- [controller-mapper.md](controller-mapper.md) — mapeador por entradas físicas.
+- [m30-controller-profiles.md](m30-controller-profiles.md) — M30 controllers and SDL.
+- [controller-mapper.md](controller-mapper.md) — mapper by physical inputs.
 
-## Evidencia sin documento propio
+## Evidence without its own document
 
-- [discs-inventory.json](discs-inventory.json) — inventario de discos.
-- [prepared-disc1.json](prepared-disc1.json), [prepared-disc2.json](prepared-disc2.json), [prepared-japanese-discs.json](prepared-japanese-discs.json) — preparación de imágenes.
-- [translation-code-impact.json](translation-code-impact.json) — código afectado por la traducción.
-- [logo-module-analysis.json](logo-module-analysis.json), [ending-module-analysis.json](ending-module-analysis.json) — análisis de módulos LOGO y final.
-- [mods-status.json](mods-status.json) — estado de mods evaluados.
+- [discs-inventory.json](discs-inventory.json) — disc inventory.
+- [prepared-disc1.json](prepared-disc1.json), [prepared-disc2.json](prepared-disc2.json), [prepared-japanese-discs.json](prepared-japanese-discs.json) — image preparation.
+- [translation-code-impact.json](translation-code-impact.json) — code affected by the translation.
+- [logo-module-analysis.json](logo-module-analysis.json), [ending-module-analysis.json](ending-module-analysis.json) — LOGO and ending module analysis.
+- [mods-status.json](mods-status.json) — status of evaluated mods.
 
-## Integración del 2026-11-18
+## 2026-11-18 integration
 
-- [chapter-sweep.md](chapter-sweep.md) — nueve rutas posteriores, residencias verificadas y ampliación EVT06 del episodio4 ([resultado](episode4-aot-fix.json)).
-- [portrait-white-blends.md](portrait-white-blends.md) — metadatos exactos de mezcla blanca y preservación del fundido en retratos HD.
-- [later-chapter-validation.md](later-chapter-validation.md) — partidas verificadas, bloqueo de EVT02 y seguimiento de la carga de episodios posteriores ([arreglo AOT](episode2-aot-fix.json)).
-- [battle-overlay-reproduction.md](battle-overlay-reproduction.md) — reconstrucción verificable de la ampliación de combate ([manifiesto](battle-overlay-reproduction.json)).
-- [spanish-translation-workflow.md](spanish-translation-workflow.md) — guiones ingleses con IDs, controles y alias entre discos para el parche español de Claude.
-- [scene-tagging.md](scene-tagging.md) — seis etiquetas sencillas, inventario de ambos discos y vínculos con los guiones, distinguiendo candidatos de observaciones.
-- [battle-overlay-family.json](battle-overlay-family.json) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
-- [chapter1-continuous-battle.json](chapter1-continuous-battle.json) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
-- [chapter1-wide-transitions.md](chapter1-wide-transitions.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
-- [dialogue-catalog.md](dialogue-catalog.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
-- [portrait-animation-coverage.md](portrait-animation-coverage.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
-- [tactical-menu-independent-reference.md](tactical-menu-independent-reference.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
+- [chapter-sweep.md](chapter-sweep.md) — nine later routes, verified residencies, and EVT06 expansion for episode 4 ([result](episode4-aot-fix.json)).
+- [portrait-white-blends.md](portrait-white-blends.md) — exact white-blend metadata and fade preservation in HD portraits.
+- [later-chapter-validation.md](later-chapter-validation.md) — verified saves, EVT02 lock, and tracking of later-episode loading ([AOT fix](episode2-aot-fix.json)).
+- [battle-overlay-reproduction.md](battle-overlay-reproduction.md) — verifiable reconstruction of the battle expansion ([manifest](battle-overlay-reproduction.json)).
+- [spanish-translation-workflow.md](spanish-translation-workflow.md) — English scripts with IDs, controls, and aliases across discs for Claude's Spanish patch.
+- [scene-tagging.md](scene-tagging.md) — six simple tags, inventory of both discs, and links to the scripts, distinguishing candidates from observations.
+- [battle-overlay-family.json](battle-overlay-family.json) — evidence or report of the presentation block and chapter 1 coverage.
+- [chapter1-continuous-battle.json](chapter1-continuous-battle.json) — evidence or report of the presentation block and chapter 1 coverage.
+- [chapter1-wide-transitions.md](chapter1-wide-transitions.md) — evidence or report of the presentation block and chapter 1 coverage.
+- [dialogue-catalog.md](dialogue-catalog.md) — evidence or report of the presentation block and chapter 1 coverage.
+- [portrait-animation-coverage.md](portrait-animation-coverage.md) — evidence or report of the presentation block and chapter 1 coverage.
+- [tactical-menu-independent-reference.md](tactical-menu-independent-reference.md) — evidence or report of the presentation block and chapter 1 coverage.
 
-- [dialogue-panel-compositing.md](dialogue-panel-compositing.md): Mezcla Saturn exacta y continuidad del fondo dentro del panel.
+- [dialogue-panel-compositing.md](dialogue-panel-compositing.md): Exact Saturn blend and background continuity inside the panel.
 
-- [hd-text-row-rejections.md](hd-text-row-rejections.md): Reproducciones de Sumire y María: glifos válidos fuera del límite.
+- [hd-text-row-rejections.md](hd-text-row-rejections.md): Sumire and María replays: valid glyphs outside the bound.
 
-- [intro-petals-transition.md](intro-petals-transition.md): Pétalos horneados, fallback durante destellos y primer vídeo.
+- [intro-petals-transition.md](intro-petals-transition.md): Baked petals, fallback during flashes, and the first video.
 
-- [battle-story-inset-shadow.md](battle-story-inset-shadow.md): Prueba por capas de ausencia de sombra en la viñeta táctica.
+- [battle-story-inset-shadow.md](battle-story-inset-shadow.md): Layer-by-layer test for the absence of shadow in the tactical vignette.
 
-- [dialogue-voice-advance.md](dialogue-voice-advance.md): Pulsaciones A/B/C, voz real y comparación AOT/intérprete.
+- [dialogue-voice-advance.md](dialogue-voice-advance.md): A/B/C presses, real voice, and AOT/interpreter comparison.
 
-- [wide-map-crossfades.md](wide-map-crossfades.md): Fundido mapa/floral con continuidad a16:9, entrada directa aZoom y paridad nativa.
+- [wide-map-crossfades.md](wide-map-crossfades.md): Map/floral crossfade with 16:9 continuity, direct entry to Zoom, and native parity.
 
-## Traducción
+## Translation
 
-- [traduccion-espanol.md](traduccion-espanol.md) — parche al español: método japonés → inglés → español, formatos de diálogo, combate y menús, ISO con ranuras fijas.
+- [traduccion-espanol.md](traduccion-espanol.md) — Spanish patch: Japanese → English → Spanish method, dialogue/battle/menu formats, ISO with fixed slots.
 
-- [first-sakura-hd-portraits.md](first-sakura-hd-portraits.md): Matches revisados de Sakura0013/0014, reproducción y límites de la prueba en juego.
-- [Segundo lote de retratos HD del capítulo 1](chapter1-sumire-hd-portraits.md)
-- [Tercer lote de retratos HD del capítulo 1](chapter1-third-hd-portraits.md)
-- [Cuarto lote de retratos HD](chapter1-fourth-hd-portraits.md)
-- [Equivalencia de vídeos Saturn y PC](video-equivalence.md)
-- [Selección del paquete de retratos HD](portrait-pack-profile-fallback.md)
+- [first-sakura-hd-portraits.md](first-sakura-hd-portraits.md): Reviewed matches for Sakura0013/0014, reproduction, and in-game test limits.
+- [Second batch of chapter 1 HD portraits](chapter1-sumire-hd-portraits.md)
+- [Third batch of chapter 1 HD portraits](chapter1-third-hd-portraits.md)
+- [Fourth batch of HD portraits](chapter1-fourth-hd-portraits.md)
+- [Saturn and PC video equivalence](video-equivalence.md)
+- [HD portrait pack selection](portrait-pack-profile-fallback.md)
 
-- [chapter1-choice-hd.md](chapter1-choice-hd.md): Texto HD LIPS de dos/tres opciones, propiedad de glifos y diez perfiles reales.
+- [chapter1-choice-hd.md](chapter1-choice-hd.md): HD LIPS text for two/three options, glyph ownership, and ten real profiles.
 
-- [first-film-transition-fix.md](first-film-transition-fix.md): Fase verificada del primer video, fondo limpio y prueba continua de6201fotogramas.
+- [first-film-transition-fix.md](first-film-transition-fix.md): Verified phase of the first video, clean background, and continuous test of 6,201 frames.
 
-- [first-film-script-phase.md](first-film-script-phase.md): Investigación del cursor de0100.BIN y límites de las fases sin imagen.
+- [first-film-script-phase.md](first-film-script-phase.md): Research on the 0100.BIN cursor and limits of the image-less phases.
 
-- [RetroAchievements 16546 en Saturn](retroachievements-16546.md)
-- [dialogue-preload-runtime.md](dialogue-preload-runtime.md): Catálogo inmutable, lectura acotada y narrativa precargada con celdas de revelado nativas; cobertura global pendiente.
-- [chapter1-victory-followup.md](chapter1-victory-followup.md): Derrota de Satan, rutinas relocalizadas, bloqueo postcombate y validación de guardado/Resume.
-- [Identificación de grupos LIPS por el cursor](lips-script-cursor.md) — dos paneles verificados con el script, la tabla y los tiles nativos.
-- [Progresión táctica del capítulo 2](chapter2-tactical-progression.md) — Continue, órdenes, fase enemiga y ataque aliado con comparación AOT/intérprete.
-- [Registro de overlays EVT](evt-overlay-registry.md)
+- [RetroAchievements 16546 on Saturn](retroachievements-16546.md)
+- [dialogue-preload-runtime.md](dialogue-preload-runtime.md): Immutable catalog, bounded reading, and preloaded narrative with native reveal cells; global coverage pending.
+- [chapter1-victory-followup.md](chapter1-victory-followup.md): Satan's defeat, relocated routines, post-battle lock, and save/Resume validation.
+- [LIPS group identification via the cursor](lips-script-cursor.md) — two panels verified with the script, the table, and native tiles.
+- [Chapter 2 tactical progression](chapter2-tactical-progression.md) — Continue, orders, enemy phase, and ally attack with AOT/interpreter comparison.
+- [EVT overlay registry](evt-overlay-registry.md)

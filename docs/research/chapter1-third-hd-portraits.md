@@ -1,23 +1,23 @@
-# Tercer lote de retratos HD del capítulo 1
+# Third batch of chapter 1 HD portraits
 
-La revisión comparó la base y ambas tiras por identidad y vestuario. Sakura `001d` lleva bufanda, María `0064` lleva cuello oscuro y `006d/006e` comparten el cuello claro con expresiones distintas. Iris `0096` conserva los ojos abiertos, la boca redonda y el mismo vestuario que su atlas Saturn.
+The review compared the base and both strips per identity and outfit. Sakura `001d` wears a scarf, Maria `0064` has a dark collar, and `006d/006e` share the light collar with different expressions. Iris `0096` keeps the eyes open, the round mouth, and the same outfit as her Saturn atlas.
 
-| ID Saturn | Candidato PC | Evidencia |
+| Saturn ID | PC candidate | Evidence |
 | --- | ---: | --- |
-| `001d` | 28 | Base y ambas tiras verificadas en atlas |
-| `0064` | 99 | Base y ambas tiras verificadas en atlas. Base observada antes del primer combate |
-| `006d` | 108 | Base y ambas tiras verificadas en atlas |
-| `006e` | 109 | Base y ambas tiras verificadas en atlas |
-| `0096` | 149 | Base y ambas tiras verificadas en atlas |
+| `001d` | 28 | Base and both strips verified on atlas |
+| `0064` | 99 | Base and both strips verified on atlas. Base observed before the first battle |
+| `006d` | 108 | Base and both strips verified on atlas |
+| `006e` | 109 | Base and both strips verified on atlas |
+| `0096` | 149 | Base and both strips verified on atlas |
 
-Las tres regiones de cada atlas obtuvieron su mejor alineación con desplazamiento cero frente a desplazamientos de un píxel nativo. La concordancia de las tiras disminuyó al intercambiarlas. Ambas densidades conservaron la máscara Saturn completa, con 3.200 píxeles opacos a 1× y 12.800 a 2×, sin huecos. Las diferencias de color de Iris se conservan como parte del arte PC. `0093`, `0095`, `00a1`, `00c2` y `0169` quedan fuera de este lote.
+All three regions of each atlas got their best alignment at zero offset versus one-native-pixel offsets. Strip agreement decreased when they were swapped. Both densities preserved the full Saturn mask, with 3,200 opaque pixels at 1× and 12,800 at 2×, with no gaps. Iris's color differences are kept as part of the PC art. `0093`, `0095`, `00a1`, `00c2` and `0169` are left out of this batch.
 
-El [registro de revisiones](../../config/hd-portrait-reviewed.json) fija el KAO y los hashes de los atlas nativos, los píxeles PC y ambas variantes preparadas. La reproducción desde el proyecto inicial de 191 retratos aplica los diez emparejamientos aprobados y exporta un proyecto nuevo. La reproducción obtuvo los mismos 404 archivos del candidato, con un manifiesto SHA-256 `b3ee89d7bea42ed2d50df70389059c9f8d4c2adba5a94dedf8d0d4c718ea0a25`.
+The [review registry](../../config/hd-portrait-reviewed.json) pins the KAO and the native atlas hashes, the PC pixels, and both prepared variants. Reproducing from the initial 191-portrait project applies the ten approved pairings and exports a new project. The reproduction obtained the same 404 candidate files, with an SHA-256 manifest `b3ee89d7bea42ed2d50df70389059c9f8d4c2adba5a94dedf8d0d4c718ea0a25`.
 
 ```powershell
 python tools/apply_reviewed_hd_portraits.py --output-project local/work/chapter1-hd-201/project.json --export
 ```
 
-El checkpoint alcanza 201/304 identidades globales y 91/123 del capítulo 1. La auditoría verificó 402 variantes, con cero errores, y deja 103 pendientes en el catálogo, 32 en el capítulo 1. Los 19 fondos del checkpoint de 196 coinciden byte por byte con los preparados junto a los 201 retratos. El recibo del paquete privado tiene SHA-256 `e1fb09fed81cfd4450ee2b3f4058178f48086a7fb2f5904b1da1e64b70b5be7b`.
+The checkpoint reaches 201/304 global identities and 91/123 for chapter 1. The audit verified 402 variants, with zero errors, and leaves 103 pending in the catalog, 32 in chapter 1. The 19 backgrounds from the 196 checkpoint match byte for byte with the ones prepared alongside the 201 portraits. The private package receipt has SHA-256 `e1fb09fed81cfd4450ee2b3f4058178f48086a7fb2f5904b1da1e64b70b5be7b`.
 
-La build v0.2.0-test.1 mostró la base de María `0064` a 2560×1440 y densidad 2. Al comparar los paquetes de 196 y 201 coincidieron los 180 hashes del juego y tres capturas RGB nativas. La diferencia de la GUI en el fotograma 8 quedó dentro del retrato `[404,644) × [996,1284)`. Ambas ejecuciones registraron cero bloques interpretados. Las tiras de María y los otros cuatro retratos esperan verificación en juego.
+Build v0.2.0-test.1 showed Maria's `0064` base at 2560×1440 and density 2. Comparing the 196 and 201 packages matched all 180 game hashes and three native RGB captures. The GUI difference at frame 8 stayed within the portrait rectangle `[404,644) × [996,1284)`. Both runs logged zero interpreted blocks. Maria's strips and the other four portraits await in-game verification.

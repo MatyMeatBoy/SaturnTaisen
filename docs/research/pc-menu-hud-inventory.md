@@ -1,27 +1,27 @@
-# Inventario de menús/HUD PC para el mod HD (T23)
+# PC menu/HUD inventory for the HD mod (T23)
 
-Evidencia legible por máquina: [pc-menu-hud-inventory.json](pc-menu-hud-inventory.json).
+Machine-readable evidence: [pc-menu-hud-inventory.json](pc-menu-hud-inventory.json).
 
-Primer paso de T23: identificar qué recursos PC de menú/interfaz (`SAKURA1/SYSTEM/*.SPR`) tienen un archivo Saturn candidato equivalente, antes de intentar ninguna sustitución visual. `tools/audit_pc_menus.py` sigue el mismo patrón de solo-cabecera que `audit_hd_characters.py`: no copia píxeles ni arte al repositorio, solo cuenta imágenes y hashes.
+First step of T23: identify which PC menu/interface resources (`SAKURA1/SYSTEM/*.SPR`) have an equivalent candidate Saturn file, before attempting any visual substitution. `tools/audit_pc_menus.py` follows the same header-only pattern as `audit_hd_characters.py`: it does not copy pixels or art into the repository, only counts images and hashes.
 
-## Resultado
+## Result
 
 ```
-python tools/audit_pc_menus.py --pc-root <extracción PC> --disc local/prepared/disc1/Track\ 01.iso --disc local/prepared/disc2/Track\ 01.iso --output <informe local>
+python tools/audit_pc_menus.py --pc-root <PC extraction> --disc local/prepared/disc1/Track\ 01.iso --disc local/prepared/disc2/Track\ 01.iso --output <local report>
 ```
 
-29 archivos `.SPR` en `SAKURA1/SYSTEM`, 572 imágenes no vacías, 0 errores de cabecera. 20 de 29 tienen un archivo Saturn candidato por nombre; los otros 9 (`BURO_W`, `FONT_CSL`, `JYOUKI`, `KAO`, `OP_WIN`, `R_HARI`, `SHADE_WA`, `SHADE_WB`, `TUIKA_W`) no tienen todavía una correspondencia propuesta.
+29 `.SPR` files in `SAKURA1/SYSTEM`, 572 non-empty images, 0 header errors. 20 of 29 have a candidate Saturn file by name; the other 9 (`BURO_W`, `FONT_CSL`, `JYOUKI`, `KAO`, `OP_WIN`, `R_HARI`, `SHADE_WA`, `SHADE_WB`, `TUIKA_W`) do not yet have a proposed match.
 
-## Candidatos por nombre (sin verificar geometría ni paleta)
+## Candidates by name (geometry and palette unverified)
 
-| PC (`SYSTEM/*.SPR`) | Saturn candidato | Nota |
+| PC (`SYSTEM/*.SPR`) | Saturn candidate | Note |
 | --- | --- | --- |
-| `TITLE`, `SEGALOGO`, `REDLOGO`, `CAUTION`, `TL_BG0`, `TL_ROGO0` | `LOGO.SH2` | Pantalla de título; ya tiene texto propio traducido (ver `traduccion-espanol.md`). |
-| `OPTION`, `WINDOW`, `EXIT_W` | `SAKURA` | Opciones/carga; coincide con las pantallas ya traducidas (`opciones()`, `carga()` en `tools/es/menus_es.py`). |
-| `NOWLOAD` | `LOAD.BIN` | Descartado como atajo: `NOWLOAD.SPR` tiene una sola imagen de 640×480 (formato 0x15), igual de fundida que la pantalla LOADING de Saturn — el PC tampoco separa el texto del fondo aquí. `FONT_CSL.SPR` (16×32×2, nombre sugiere fuente) es la pista que queda por revisar si se busca una fuente propia para LOADING/episodio; no se ha verificado todavía. |
-`OMKMOV_W`, `OMKSND_W`, `KARAOKE`, `MINISAKU`, `MSTAFF` | `OMALL.DAT` | Candidatos para el menú extra (T25 lo dejó bloqueado por falta de tabla de punteros en Saturn). `KARAOKE.SPR` tiene 17 imágenes individuales de 32px de alto y ancho variable (192-352px) — compatible con una lista de etiquetas de texto separadas (títulos de canción), a diferencia de una imagen fundida única. Esto apoya que el menú extra de Saturn (271 pares DTE en `OMALL.DAT`) sea una lista real de etiquetas y no datos sin usar, aunque no resuelve su tabla de punteros. `OMKMOV_W`/`OMKSND_W` (500×376/480×376, varias por categoría) parecen paneles de fondo por pestaña, no texto suelto. |
-| `SISTEM`, `SIS_BG`, `SIS_BG2`, `SIS_BG3`, `SIS_ICON` | `ICATALL.DAT` | Candidatos para estado/intermedio, ya traducidos en Saturn; sirven como referencia de diseño, no como bloqueo. |
+| `TITLE`, `SEGALOGO`, `REDLOGO`, `CAUTION`, `TL_BG0`, `TL_ROGO0` | `LOGO.SH2` | Title screen; already has its own translated text (see `traduccion-espanol.md`). |
+| `OPTION`, `WINDOW`, `EXIT_W` | `SAKURA` | Options/load; matches screens already translated (`opciones()`, `carga()` in `tools/es/menus_es.py`). |
+| `NOWLOAD` | `LOAD.BIN` | Dropped as a shortcut: `NOWLOAD.SPR` has a single 640x480 image (format 0x15), just as fused as Saturn's LOADING screen — the PC doesn't separate text from the background here either. `FONT_CSL.SPR` (16x32x2, name suggests a font) is the lead still to review if a dedicated font for LOADING/episode is wanted; not yet verified. |
+`OMKMOV_W`, `OMKSND_W`, `KARAOKE`, `MINISAKU`, `MSTAFF` | `OMALL.DAT` | Candidates for the extra menu (T25 left it blocked for lack of a pointer table on Saturn). `KARAOKE.SPR` has 17 individual images 32px tall with variable width (192-352px) — consistent with a list of separate text labels (song titles), unlike a single fused image. This supports the Saturn extra menu (271 DTE pairs in `OMALL.DAT`) being a real list of labels and not unused data, though it does not resolve its pointer table. `OMKMOV_W`/`OMKSND_W` (500x376/480x376, several per category) look like per-tab background panels, not loose text. |
+| `SISTEM`, `SIS_BG`, `SIS_BG2`, `SIS_BG3`, `SIS_ICON` | `ICATALL.DAT` | Candidates for status/intermediate, already translated on Saturn; serve as a design reference, not a blocker. |
 
-## Siguiente paso
+## Next step
 
-Para cada candidato con `found=true`: decodificar ambas imágenes (PC vía el exportador nativo `sakura.exe --export-pc-spr`, Saturn vía las herramientas ya existentes en `tools/es/`), comparar geometría y verificar si el PC separa el texto del fondo de un modo que Saturn no hace. Ninguna coincidencia de nombre aquí demuestra composición, paleta ni geometría compatibles — es una lista de candidatos a verificar, no una integración.
+For each candidate with `found=true`: decode both images (PC via the native exporter `sakura.exe --export-pc-spr`, Saturn via the tools already existing in `tools/es/`), compare geometry, and check whether the PC separates text from the background in a way Saturn does not. No name match here demonstrates compatible composition, palette, or geometry — this is a list of candidates to verify, not an integration.

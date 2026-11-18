@@ -1,7 +1,7 @@
-# Proporciones de la fuente HD
+# HD font proportions
 
-El escalado independiente de cada glifo a su caja de tinta nativa ensanchaba letras estrechas y alteraba sus proporciones. Ahora toda la fuente recibe una transformación uniforme, calculada con el avance y la altura de mayúsculas de referencia. Se conserva el avance del juego de ocho píxeles y una línea base común.
+Scaling each glyph independently to its native ink box widened narrow letters and distorted their proportions. Now the whole font receives a uniform transform, computed from the reference advance and cap height. The game's eight-pixel advance and a shared baseline are preserved.
 
-La detección verifica los píxeles de tinta dentro del interior nativo (56,160)–(304,208), permitiendo el último glifo cuando su textura contiene margen transparente. El dibujo HD se recorta al mismo interior proyectado. Texto original y HD siguen siendo opciones independientes.
+Detection checks ink pixels within the native interior (56,160)–(304,208), allowing the last glyph when its texture contains transparent margin. The HD drawing is clipped to the same projected interior. Original text and HD remain independent options.
 
-Verificación: fixture tests/test_text_layout.cpp cubre bordes, tamaños inválidos, letras estrechas, altura y línea base, y viewports enteros a varias resoluciones. Captura real local: local/work/text-layout-qa/natural/scene.png. Compilación nativa correcta; conjunto frontend/matching: 24 pruebas correctas. Esto no constituye una revisión de todos los diálogos.
+Verification: fixture tests/test_text_layout.cpp covers edges, invalid sizes, narrow letters, height and baseline, and whole viewports at several resolutions. Real local capture: local/work/text-layout-qa/natural/scene.png. Native build correct; frontend/matching set: 24 tests passed. This is not a review of all dialogue.
