@@ -76,7 +76,7 @@
     {
       "id": "hud-menus",
       "label": "HUD y menús PC/Saturn",
-      "unit": "pantallas y piezas compartidas",
+      "unit": "imágenes PC candidatas (29 archivos de menú/HUD)",
       "scope": "Inventario conjunto por pantalla o pieza equivalente, incluidos elementos de mapa, batalla, estados y guardado.",
       "sources": [
         {
@@ -86,16 +86,17 @@
           "path": "docs/releases/v0.2.0-test.1.md"
         }
       ],
-      "next": "Inventariar las pantallas y piezas compartidas por edición. Separar sustitución HD y ajustes del layout Saturn.",
+      "next": "Emparejar cada entrada con su pantalla o pieza Saturn, empaquetarla y conectarla al renderizador; separar sustitución HD y ajuste del layout Saturn.",
       "details": [
-        "Se observaron menús tácticos en Saturn y se ajustó su presentación. Falta vincular las piezas HD compartidas y contar las pantallas cubiertas."
+        "Se observaron menús tácticos en Saturn y se ajustó su presentación. Falta vincular las piezas HD compartidas y contar las pantallas cubiertas.",
+        "Inventario de cabeceras PC: 29 archivos y 572 entradas de imagen sin errores de cabecera (pc-menu-hud-inventory.json). Ninguna está emparejada todavía con una pieza Saturn."
       ],
-      "total": null,
-      "inventory": null,
-      "matched": null,
-      "prepared": null,
-      "integrated": null,
-      "verified": null
+      "total": 572,
+      "inventory": 572,
+      "matched": 0,
+      "prepared": 0,
+      "integrated": 0,
+      "verified": 0
     },
     {
       "id": "backgrounds",
@@ -128,7 +129,7 @@
     {
       "id": "large-characters",
       "label": "Personajes grandes NC",
-      "unit": "poses y composiciones nativas",
+      "unit": "imágenes PC candidatas (147 paquetes)",
       "scope": "Cuerpos y poses fuera del retrato de diálogo. El total de poses y composiciones nativas permanece abierto.",
       "sources": [
         {
@@ -140,14 +141,14 @@
       ],
       "next": "Vincular índices por pose y validar ancla, proporción y animación en capturas Saturn para cada sustitución.",
       "details": [
-        "147 paquetes PC y 3.596 imágenes decodificadas. Hay 147 pares de nombre candidatos. Faltan las equivalencias por pose."
+        "147 paquetes PC y 3.596 imágenes decodificadas sin errores de cabecera; 147 pares de nombre candidatos. Faltan las equivalencias por pose y el dibujo en runtime."
       ],
-      "total": null,
-      "inventory": null,
-      "matched": null,
-      "prepared": null,
-      "integrated": null,
-      "verified": null
+      "total": 3596,
+      "inventory": 3596,
+      "matched": 0,
+      "prepared": 0,
+      "integrated": 0,
+      "verified": 0
     },
     {
       "id": "scenes",

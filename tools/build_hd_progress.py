@@ -105,6 +105,31 @@ def global_status(data):
     return 'Verificación pendiente'
 
 
+def percent(count, total):
+    tenths = 1000 * count // total
+    return f'{tenths // 10}' + (f',{tenths % 10}' if tenths % 10 else '') + '%'
+
+
+def global_summary(data):
+    """Indicative global figures: only categories with a confirmed total count."""
+    known = [row for row in data['categories'] if row['total'] is not None and row['integrated'] is not None]
+    lines = ['| Área | Integrado | Verificado en juego |', '| --- | --- | --- |']
+    for row in data['categories']:
+        lines.append(f"| {row['label']} | {format_count(row['integrated'], row['total'])} | "
+                     f"{format_count(row['verified'], row['total'])} |")
+    if known:
+        pooled_done = sum(row['integrated'] for row in known)
+        pooled_total = sum(row['total'] for row in known)
+        mean = sum(1000 * row['integrated'] // row['total'] for row in known) // len(known)
+        text = f',{mean % 10}' if mean % 10 else ''
+        lines += ['', f"- **Integración global indicativa (media de {len(known)}/{len(data['categories'])} categorías con total): "
+                  f"{mean // 10}{text}%.** Cada categoría pesa igual.",
+                  f"- **Integración global ponderada por unidad: {pooled_done}/{pooled_total} "
+                  f"({percent(pooled_done, pooled_total)}).** Mezcla unidades distintas; solo orienta.",
+                  '- Categorías sin total confirmado: ' + (', '.join(r['label'] for r in data['categories'] if r['total'] is None) or 'ninguna') + '.']
+    return '\n'.join(lines)
+
+
 def table(data, detailed=False):
     columns = ('Área', 'Unidad', 'Inventariado', 'Emparejado', 'Preparado', 'Integrado', 'Verificado en juego') if detailed \
         else ('Área', 'Preparado', 'Verificado en juego')
@@ -125,6 +150,7 @@ def render_report(data):
         'Una celda «Sin dato» indica una medición pendiente y un cero indica una ausencia confirmada. '
         'Los recuentos de candidatos se detallan por separado.', '',
         table(data, detailed=True), '',
+        '## Resumen global de integración', '', global_summary(data), '',
         '## Qué cuenta en cada etapa', '',
         '- **Inventariado**. Elementos nativos identificados dentro del alcance declarado.',
         '- **Emparejado**. Correspondencia aprobada del recurso y sus variantes necesarias.',
@@ -132,7 +158,7 @@ def render_report(data):
         '- **Integrado**. Sustitución conectada a la ruta de ejecución correspondiente.',
         '- **Verificado en juego**. Elementos distintos validados en capturas o reproducciones trazables.', '',
         'El objetivo global se alcanza cuando cada categoría tiene un total confirmado y todas '
-        'sus etapas cubren ese total. Las unidades se evalúan por categoría, sin promediarlas.', '',
+        'sus etapas cubren ese total. Las unidades se evalúan por categoría; el resumen global es solo indicativo.', '',
         '## Alcance y pendientes', '',
     ]
     for row in data['categories']:
@@ -188,6 +214,7 @@ def replace_readme(readme, data):
         BEGIN, '', '## Progreso HD', '', badges(data), '',
         f'**Objetivo global: 100% verificado. Estado: {global_status(data)}.**', '',
         table(data), '',
+        global_summary(data), '',
         '[Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).', '', END,
     ))
     return readme[:readme.index(BEGIN)] + summary + readme[readme.index(END) + len(END):]

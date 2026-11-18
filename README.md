@@ -59,22 +59,35 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 
 <!-- BEGIN HD PROGRESS -->
 
-## HD progress
+## Progreso HD
 
-[![HD portraits ready](https://img.shields.io/badge/HD_portraits_ready-300%2F304%20%2898.6%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![KABE backgrounds ready](https://img.shields.io/badge/KABE_backgrounds_ready-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![Global HD verified](https://img.shields.io/badge/Global_HD-Undetermined-646464?style=flat-square)](docs/HD_PROGRESS.md)
+[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-300%2F304%20%2898.6%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Indeterminado-646464?style=flat-square)](docs/HD_PROGRESS.md)
 
-**Global target: 100% verified. Status: Undetermined.**
+**Objetivo global: 100% verificado. Estado: Indeterminado.**
 
-| Area | Ready | Verified in-game |
+| Área | Preparado | Verificado en juego |
 | --- | --- | --- |
-| Portraits and animation | 300/304 (98.6%) | No data |
-| Videos | 0/50 (0%) | 0/50 (0%) |
-| PC/Saturn HUD and menus | No data | No data |
-| KABE decorative backgrounds | 19/19 (100%) | No data |
-| Large NC characters | No data | No data |
-| Scenes and transitions | No data | No data |
+| Retratos y animación | 300/304 (98,6%) | Sin dato |
+| Vídeos | 0/50 (0%) | 0/50 (0%) |
+| HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
+| Fondos decorativos KABE | 19/19 (100%) | Sin dato |
+| Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
+| Escenas y transiciones | Sin dato | Sin dato |
 
-[Inventory, percentage scope, and remaining work](docs/HD_PROGRESS.md).
+| Área | Integrado | Verificado en juego |
+| --- | --- | --- |
+| Retratos y animación | 300/304 (98,6%) | Sin dato |
+| Vídeos | 0/50 (0%) | 0/50 (0%) |
+| HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
+| Fondos decorativos KABE | 19/19 (100%) | Sin dato |
+| Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
+| Escenas y transiciones | Sin dato | Sin dato |
+
+- **Integración global indicativa (media de 5/6 categorías con total): 39,7%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 319/4541 (7%).** Mezcla unidades distintas; solo orienta.
+- Categorías sin total confirmado: Escenas y transiciones.
+
+[Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
 
 <!-- END HD PROGRESS -->
 
