@@ -445,6 +445,19 @@ def carga(files: Files, preview):
     size = put_stream(prog, 0x5C654, 0x5E190 - 0x5C654, bytes(raw), 'fuente de la carga')
     print(f'  carga: tira {size} bytes comprimidos de {0x5E190 - 0x5C654}')
     preview.append(('carga', rows, tiles_n))
+    # Frame labels painted into the bitmap itself: «File 1/2/3» and «System RAM» (stream 0x5E190..0x5EB4C)
+    from rotulos import load_palette, read_indices, replace_text, write_indices
+    marco_start, marco_end = 0x5E190, 0x5EB4C
+    raw = bytearray(decompress(bytes(prog[marco_start:marco_end])))
+    fr = read_indices(raw, 0, 288, 184, 4)
+    pal = load_palette(('load', 'cram', 0x2C0), 4)
+    ink, bg, allowed = 5, 2, [2, 5]
+    for n, y in ((1, 40), (2, 80), (3, 120)):
+        replace_text(fr, pal, (196, y, 60, 16), f'Partida {n}', 'CENTURY.TTF', 15, ink=ink, bg=bg, allowed=allowed)
+    replace_text(fr, pal, (2, 162, 108, 16), 'RAM del sistema', 'CENTURY.TTF', 15, ink=ink, bg=bg, allowed=allowed)
+    write_indices(raw, 0, fr, 4)
+    used = put_stream(prog, marco_start, marco_end - marco_start, bytes(raw), 'marco de carga')
+    print(f'  marco de carga: {used} bytes comprimidos de {marco_end - marco_start}')
 
 
 def titulo_rotulos(files: Files, preview, compare):
