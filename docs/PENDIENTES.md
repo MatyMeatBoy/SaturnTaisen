@@ -42,7 +42,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T12 | P2 | local | after T01 | Battle camera with the STAGE01 tactical extension anchored at 656,24 throughout the whole battle. |
 | T13 | P2 | agent | integrated · PR #2 | Normalize line endings (CRLF/LF warnings) with `.gitattributes`, without changing content. |
 | T14 | P3 | agent | integrated · PR #3 | Index of `docs/research` with one line per document. |
-| T15 | P3 | decision | free | Review and merge `codex/catalog-listing` (public listing and icon). |
+| T15 | P3 | decision | merged · PR #53 | Catalog listing updated from the stale SaturnTaisenFirst v0.1.5 draft to SaturnTaisen v0.2.0-alpha. Still not submitted to Quiver/RecompLauncher (needs authenticated portal access). |
 | T16 | P3 | physical | free | Test the portable ZIP on physical RX 6900 XT and M30 controllers. |
 | T17 | P1 | local | free | Real disc 1→2 switch and unified final importer. |
 | T18 | P2 | agent/local | research | RetroAchievements 16546. rcheevos recognized both English CUEs by their official hashes. Saturn map documented. Pending: condition catalog, per-variant compatibility, local offline, and Casual sync path. See `retroachievements-16546.md`. |
