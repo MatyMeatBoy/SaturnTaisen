@@ -1,18 +1,10 @@
 # Pendientes actuales — SaturnTaisenFirst
 
+Actualizado: 2026-11-18. Lista de desarrollo; no describe como disponibles cambios que aún no están en un ZIP. Método y entrada para otro bot: [HANDOFF](HANDOFF.md) · [Cola compartida](PENDIENTES.md).
 
-
-Actualizado: 2026-11-18. Lista de desarrollo; no describe como disponibles cambios que aún no están en un ZIP. Método y entrada para otro bot: [HANDOFF](HANDOFF.md) · [Cola compartida](PENDIENTES.md) · [Cola compartida](PENDIENTES.md).
-
-
-
-La prioridad es Saturn. El siguiente paquete privado debe servir para probar en el otro PC el capítulo 1 panorámico y el mod HD, con los huecos declarados. **Todavía no está emitido ese ZIP ni certificado el capítulo 1 completo.** `VERSION` sigue en 0.1.2; los paquetes anteriores se conservan intactos.
-
-
+La prioridad es Saturn. **v0.2.0-test.1 ya está publicada como prueba y su ZIP privado está preparado y verificado tras extracción.** Incluye las rutas panorámicas y el HD disponibles, con los huecos declarados. El capítulo 1 completo y la campaña siguen sin certificar; los paquetes anteriores se conservan intactos.
 
 ## P0 — antes del siguiente ZIP de prueba
-
-
 
 - [x] **Menús tácticos:** solapamiento corregido en Mejorado, cinco pestañas y rutas de confirmación/cámara verificadas; revisión independiente sin bloqueadores y patch actualizado. Sigue en desarrollo, no en un ZIP entregado.
 
@@ -36,11 +28,7 @@ La prioridad es Saturn. El siguiente paquete privado debe servir para probar en 
 
 - [ ] **Revisión y empaquetado:** registrar árbol de patches, pasar regresiones finales y emitir paquete con identidad nueva. ZIP privado único con disco 1 inglés y HD procesado, sin instalación PC completa. Extraer en carpeta nueva y probar con PATH de Windows, sin toolchain/BIOS externa. Prueba física RX 6900 XT queda para destino.
 
-
-
 ## Implementado/verificado en desarrollo, pendiente de entrega
-
-
 
 - [x] Escala entera y máximo 16:9; Original y Zoom separados. Se mantiene la geometría Zoom aprobada.
 
@@ -62,11 +50,7 @@ La prioridad es Saturn. El siguiente paquete privado debe servir para probar en 
 
 - [x] Empaquetadores: nombres únicos, rechazo de colisiones y comprobación real de dimensiones de la franja táctica; nunca incluir el contexto original del mapa en el release normal.
 
-
-
 ## P1 — completar Saturn y producto unificado
-
-
 
 - [ ] Validar campaña completa, overlays de todos los capítulos y rutas alternativas, evitando cuelgues y pérdidas de progreso.
 
@@ -88,11 +72,7 @@ La prioridad es Saturn. El siguiente paquete privado debe servir para probar en 
 
 - [ ] README, badges e informes ligados a la versión efectivamente publicada; nunca porcentajes de campaña inventados.
 
-
-
 ## P2 — después de Saturn
-
-
 
 - [ ] Ruta jugable de PC y adaptación de la traducción inglesa Saturn.
 
@@ -100,14 +80,8 @@ La prioridad es Saturn. El siguiente paquete privado debe servir para probar en 
 
 - [ ] Parche español en paralelo, a cargo de Claude por nueva instrucción del usuario. Proporcionar ya los guiones ingleses estructurados y sus controles; no esperar al final de Saturn para esa preparación. Otros idiomas se decidirán después.
 
-
-
 ## Evidencia y documentos
 
-
-
 [Handoff](HANDOFF.md) · [Progresión](research/chapter1-battle-progress.md) · [Transiciones](research/chapter1-wide-transitions.md) · [Referencia independiente de menús](research/tactical-menu-independent-reference.md) · [PixelGen v1](research/pixelgen-v1.md) · [Catálogo](research/dialogue-catalog.md) · [Retratos](research/portrait-animation-coverage.md).
-
-
 
 Actualizar esta lista al cerrar cada bloque. Marcar una tarea solo con la prueba correspondiente y anotar si el cambio sigue local o ya está empaquetado.

@@ -44,6 +44,7 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 ## Integración del 2026-11-18
 
 - [spanish-translation-workflow.md](spanish-translation-workflow.md) — guiones ingleses con IDs, controles y alias entre discos para el parche español de Claude.
+- [scene-tagging.md](scene-tagging.md) — seis etiquetas sencillas, inventario de ambos discos y vínculos con los guiones, distinguiendo candidatos de observaciones.
 - [battle-overlay-family.json](battle-overlay-family.json) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
 - [chapter1-continuous-battle.json](chapter1-continuous-battle.json) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
 - [chapter1-wide-transitions.md](chapter1-wide-transitions.md) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
