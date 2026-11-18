@@ -55,7 +55,9 @@
 
 **Files:** frontend/UiTextLine y helper separado de máscara de revelado; coordinar propiedad antes de editar.
 
-- [ ] Probar máscara/celda esperada contra atlas y comandos del mismo framebuffer, sin adelantar letras ni borrar glifos desconocidos.
-- [ ] Usar vistas a líneas inmutables y la fuente ya precocinada; conservar posiciones, placas, color y clip aprobados.
-- [ ] Repetir revelado, avance,4filas, fundidos y entradas/salidas de retratos; medir cobertura y fallback. Las elecciones requieren identificar su conjunto completo por separado.
-- [ ] Actualizar pendientes/evidencia y cerrar solo los casos probados, sin modificar test.2.
+- [x] Probar máscara/celda esperada contra atlas y comandos del mismo framebuffer, sin adelantar letras ni borrar glifos desconocidos.
+- [x] Usar vistas a líneas inmutables y la fuente ya precocinada; conservar posiciones, placas, color y clip aprobados.
+- [x] Repetir revelado, avance,4filas, fundidos y entradas/salidas de retratos; medir cobertura y fallback. Las elecciones requieren identificar su conjunto completo por separado.
+- [x] Actualizar pendientes/evidencia y cerrar solo los casos probados, sin modificar test.2.
+
+Evidencia Task3: patch0049, candidato377cb29…;14casos/2.280hashes/104pares RGB iguales. Narrativa con origen64, clip56 intacto y trazas de catálogo efectivas. T11 sigue parcial: elecciones por conjunto y cobertura global pendientes.

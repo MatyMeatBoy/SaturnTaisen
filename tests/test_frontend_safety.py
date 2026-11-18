@@ -15,6 +15,9 @@ DEP=ROOT/'local/deps/satrecomp'
                      and (DEP/'port/integer_viewport.h').is_file(),
                      'requires the locally patched Windows SDL/Clang dependency')
 class FrontendTests(unittest.TestCase):
+    def test_preloaded_rows_reveal_only_matching_native_cells(self):
+        self.fixture('dialogue_reveal')
+
     def test_dialogue_preload_bounds_seals_and_requires_exact_native_table(self):
         self.fixture('dialogue_preload')
 

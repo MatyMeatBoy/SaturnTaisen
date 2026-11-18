@@ -9,6 +9,16 @@ struct Sprite {Command command;std::array<uint8_t,128> pixels{};int x=0,y=0;};
 struct Plate {uint16_t owner=0,underOwner=0;};
 
 int main() {
+    port::UiTextLine owned;
+    owned.text=U"Choice";
+    assert(owned.Text()==U"Choice");
+    const std::u32string prepared=U"Prepared dialogue";
+    port::UiTextLine borrowed;
+    borrowed.catalogText=std::u32string_view(prepared).substr(0,8);
+    assert(borrowed.Text()==U"Prepared" && borrowed.Text().data()==prepared.data());
+    std::vector<port::UiTextLine> moved;
+    moved.push_back(std::move(borrowed));moved.push_back(std::move(owned));
+    assert(moved[0].Text().data()==prepared.data() && moved[1].Text()==U"Choice");
     std::array<uint8_t,32768> atlas{};
     atlas[('A'-1)*128]=0x10;
     atlas[('B'-1)*128]=0x20;
