@@ -33,7 +33,7 @@ Reglas fijas: autor siempre MatyMeatBoy; nunca subir discos, BIOS, partidas, rec
 | T10 | P2 | local | libre | Mezcla hacia blanco de retratos: aceptar en `PortraitPixelsVisible` las mezclas exactas 5/15/25 sobre 32. |
 | T11 | P2 | agente | tras T01 | Integrar el catálogo de diálogo precargado con el lector de tablas inglesas validado. |
 | T12 | P2 | local | tras T01 | Cámara de combate con la extensión táctica STAGE01 anclada en 656,24 durante todo el combate. |
-| T13 | P2 | agente | libre | Normalizar finales de línea (avisos CRLF/LF) con `.gitattributes`, sin cambiar contenido. |
+| T13 | P2 | agente | hecho (PR) | Normalizar finales de línea (avisos CRLF/LF) con `.gitattributes`, sin cambiar contenido. |
 | T14 | P3 | agente | libre | Índice de `docs/research` con una línea por documento. |
 | T15 | P3 | decisión | libre | Revisar y fusionar `codex/catalog-listing` (ficha pública e icono). |
 | T16 | P3 | físico | libre | Probar el ZIP portátil en RX 6900 XT y mandos M30 físicos. |
