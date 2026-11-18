@@ -6,7 +6,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
-| Retratos y animación | identidades Saturn | 304/304 (100%) | 196/304 (64,4%) | 196/304 (64,4%) | 196/304 (64,4%) | Sin dato |
+| Retratos y animación | identidades Saturn | 304/304 (100%) | 201/304 (66,1%) | 201/304 (66,1%) | 201/304 (66,1%) | Sin dato |
 | Vídeos | clips únicos | Sin dato | 0 | 0 | 0 | 0 |
 | HUD y menús PC/Saturn | pantallas y piezas compartidas | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
@@ -29,19 +29,20 @@ El objetivo global se alcanza cuando cada categoría tiene un total confirmado y
 
 Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y boca se cuentan una vez por identidad.
 
-- Checkpoint reproducible. 196 identidades con base, ojos y boca disponibles. Se comprobaron 392 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.
-- Capítulo 1. 86/123 identidades con las tres regiones preparadas y 37 pendientes. Los seis FCE de alcance figuran en la auditoría.
-- Se verificaron en juego las bases de Sakura 0013 y 0014 y Sumire 0045. En Sumire 0040 y 0041 se observó la primera tira a Y=16. Falta comprobar la segunda tira y el uso simultáneo en estos retratos.
+- Checkpoint reproducible. 201 identidades con base, ojos y boca disponibles. Se comprobaron 402 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.
+- Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.
+- Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.
 - 394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.
 - **Siguiente paso**. Revisar las identidades pendientes y validar parpadeo, boca, ambas tiras simultáneas, efectos y fallback en juego.
 
 Rangos de ID Saturn pendientes en hexadecimal
 
-`001d` `0026` `0038` `0044` `0046` `0049-004a` `004d-004f` `0052-0053` `005b-005c` `005f-0061` `0064` `006b` `006d-006e` `0071` `0074` `0076-0077` `007a` `007f` `0088` `0091-0098` `009a-009f` `00a1-00a8` `00ac-00b3` `00be-00c3` `00c5` `00ee-00f8` `00fa-00fb` `0103-0106` `010d` `010f` `0114-0116` `011e-011f` `0121` `013a-013f` `0152-0153` `0169` `0171-0172` `017e` `0185-018a`
+`0026` `0038` `0044` `0046` `0049-004a` `004d-004f` `0052-0053` `005b-005c` `005f-0061` `006b` `0071` `0074` `0076-0077` `007a` `007f` `0088` `0091-0095` `0097-0098` `009a-009f` `00a1-00a8` `00ac-00b3` `00be-00c3` `00c5` `00ee-00f8` `00fa-00fb` `0103-0106` `010d` `010f` `0114-0116` `011e-011f` `0121` `013a-013f` `0152-0153` `0169` `0171-0172` `017e` `0185-018a`
 
 - [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 del recibo local `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.
 - [first-sakura-hd-portraits.md](research/first-sakura-hd-portraits.md). SHA-256 del recibo local `8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1`.
 - [chapter1-sumire-hd-portraits.md](research/chapter1-sumire-hd-portraits.md). SHA-256 del recibo local `3ff2e8dfe039d3c64489ebb784a0c3f7f5b56572148197025ff53840fc857f48`.
+- [chapter1-third-hd-portraits.md](research/chapter1-third-hd-portraits.md). SHA-256 del recibo local `182ad5f38ab46b744e8a5ef2682f2e3477792f80c47ef13d7e17b74802ac035e`.
 - [v0.1.2.md](releases/v0.1.2.md). SHA-256 del recibo local `e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f`.
 
 ### Vídeos

@@ -20,25 +20,28 @@
           "receipt_sha256": "3ff2e8dfe039d3c64489ebb784a0c3f7f5b56572148197025ff53840fc857f48"
         },
         {
+          "path": "docs/research/chapter1-third-hd-portraits.md",
+          "receipt_sha256": "182ad5f38ab46b744e8a5ef2682f2e3477792f80c47ef13d7e17b74802ac035e"
+        },
+        {
           "path": "docs/releases/v0.1.2.md",
           "receipt_sha256": "e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f"
         }
       ],
       "next": "Revisar las identidades pendientes y validar parpadeo, boca, ambas tiras simultáneas, efectos y fallback en juego.",
       "details": [
-        "Checkpoint reproducible. 196 identidades con base, ojos y boca disponibles. Se comprobaron 392 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.",
-        "Capítulo 1. 86/123 identidades con las tres regiones preparadas y 37 pendientes. Los seis FCE de alcance figuran en la auditoría.",
-        "Se verificaron en juego las bases de Sakura 0013 y 0014 y Sumire 0045. En Sumire 0040 y 0041 se observó la primera tira a Y=16. Falta comprobar la segunda tira y el uso simultáneo en estos retratos.",
+        "Checkpoint reproducible. 201 identidades con base, ojos y boca disponibles. Se comprobaron 402 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.",
+        "Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.",
+        "Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.",
         "394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay."
       ],
       "total": 304,
       "inventory": 304,
-      "matched": 196,
-      "prepared": 196,
-      "integrated": 196,
+      "matched": 201,
+      "prepared": 201,
+      "integrated": 201,
       "verified": null,
       "pending_ids": [
-        "001d",
         "0026",
         "0038",
         "0044",
@@ -48,16 +51,15 @@
         "0052-0053",
         "005b-005c",
         "005f-0061",
-        "0064",
         "006b",
-        "006d-006e",
         "0071",
         "0074",
         "0076-0077",
         "007a",
         "007f",
         "0088",
-        "0091-0098",
+        "0091-0095",
+        "0097-0098",
         "009a-009f",
         "00a1-00a8",
         "00ac-00b3",
