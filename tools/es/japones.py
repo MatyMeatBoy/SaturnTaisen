@@ -1,10 +1,12 @@
-"""Rebuild the Japanese chapter-one script from the prepared Japanese disc.
+"""Rebuild a chapter's Japanese script from the prepared Japanese disc: python japones.py
+[--tables 0201 0202 ... --capitulo capitulo2]. Defaults to chapter 1's own tables.
 
 Japanese TBL records hold 16-bit codes: 0 ends the record, 0x0A0D is a line break,
 any other code c is glyph c-1 of the table's own ????KNJ.BIN sheet (16x16, 4 bpp).
 Glyph bitmaps are identified by MD5 and mapped to characters transcribed by eye in
 japones-glifos/mapNN.txt (〓 = not read with confidence).
 """
+import argparse
 import hashlib
 import json
 import mmap
@@ -20,7 +22,7 @@ from audit_sdk import files  # noqa: E402
 TABLES = ('0100', '0101', '0102', '0103', '0108', '0109')
 
 
-def main():
+def main(tables=TABLES, capitulo='capitulo1'):
     glyphs = HERE / 'japones-glifos'
     order = json.loads((glyphs / 'order.json').read_text())
     chars = []
@@ -36,7 +38,7 @@ def main():
             lba, size = extents[name]
             return bytes(iso[lba * 2048:lba * 2048 + size])
 
-        for table in TABLES:
+        for table in tables:
             data, sheet = read(f'/SAKURA1/{table}TBL.BIN'), read(f'/SAKURA1/{table}KNJ.BIN')
             sheet_chars = [glyph_char[hashlib.md5(sheet[g * 128:(g + 1) * 128]).hexdigest()] for g in range(len(sheet) // 128)]
             start, footer = (2 * v for v in struct.unpack_from('>HH', data))
@@ -56,10 +58,14 @@ def main():
                     total += 1
                     unknown += char == '〓'
                 out[f'{table}-{index:04d}'] = dict(record_id=record_id, ja=''.join(text))
-    target = HERE / 'capitulo1/japones.json'
+    target = HERE / capitulo / 'japones.json'
     target.write_text(json.dumps(out, ensure_ascii=False, indent=0), encoding='utf-8')
     print(f'{len(out)} records, {total} glyphs, {unknown} unread ({unknown / total:.1%}) -> {target}')
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--tables', nargs='+', default=list(TABLES))
+    parser.add_argument('--capitulo', default='capitulo1')
+    args = parser.parse_args()
+    main(args.tables, args.capitulo)
