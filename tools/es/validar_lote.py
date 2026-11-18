@@ -1,22 +1,24 @@
-"""Validate a translated batch: python validar_lote.py loteNN
+"""Validate a translated batch: python validar_lote.py loteNN [--capitulo capitulo2]
 
-Reads loteNN.in.jsonl and loteNN.out.jsonl in capitulo1/lotes. Prints every problem;
-exit status 0 only when every input id has exactly one valid Spanish text.
+Reads loteNN.in.jsonl and loteNN.out.jsonl in <capitulo>/lotes (capitulo1 by default).
+Prints every problem; exit status 0 only when every input id has exactly one valid
+Spanish text.
 """
+import argparse
 import json
-import sys
 from pathlib import Path
+import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tablas import MAX_COLS, MAX_LINES, check, wrap  # noqa: E402
 
 from _rutas import WORK  # noqa: E402
-LOTES = WORK / 'capitulo1' / 'lotes'
 
 
-def main(name: str) -> int:
-    source = [json.loads(line) for line in (LOTES / f'{name}.in.jsonl').read_text(encoding='utf-8').splitlines() if line.strip()]
-    out_path = LOTES / f'{name}.out.jsonl'
+def main(name: str, capitulo: str = 'capitulo1') -> int:
+    lotes = WORK / capitulo / 'lotes'
+    source = [json.loads(line) for line in (lotes / f'{name}.in.jsonl').read_text(encoding='utf-8').splitlines() if line.strip()]
+    out_path = lotes / f'{name}.out.jsonl'
     done = {}
     problems = []
     if out_path.exists():
@@ -53,4 +55,8 @@ def main(name: str) -> int:
 
 
 if __name__ == '__main__':
-    raise SystemExit(main(sys.argv[1]))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('lote')
+    parser.add_argument('--capitulo', default='capitulo1')
+    args = parser.parse_args()
+    raise SystemExit(main(args.lote, args.capitulo))

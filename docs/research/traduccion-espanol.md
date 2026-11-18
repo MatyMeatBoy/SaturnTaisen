@@ -7,6 +7,7 @@ Primer objetivo: todos los menús y el capítulo 1. Las herramientas viven en `t
 1. **Japonés reconstruido**: las tablas japonesas `NNNNTBL.BIN` guardan códigos de 16 bits (`0` fin, `0x0A0D` salto, `c` = glifo `c-1` de `NNNNKNJ.BIN`, 16×16 a 4 bpp). Los glifos se identifican por MD5 y se transcriben una vez a mano; `tools/es/japones.py` regenera el guion alineado con el inglés (mismos IDs y número de registros). Capítulo 1: 3.971 registros, 1,2 % de glifos dudosos. Los combates (`SAKURA2/M##MES.BIN` + `.FNT`) usan el mismo esquema.
 2. **Inglés v2.1** como adaptación de referencia, revisada por humanos.
 3. **Español**: neutro (ustedes, sin voseo); giro leve de España solo si mejora el modismo. Pasos: traducción por lotes (~330 textos únicos en orden de guion), revisión línea a línea japonés → inglés → español, unificación de términos y trato en la guía de estilo privada, validación (`tools/es/validar_lote.py`). En el capítulo 1 la revisión con japonés cambió entre un 25 % y un 70 % de las líneas por lote y corrigió errores del inglés (休演日 = día sin función, 大将 = general de ejército, 人を呼びますわよ = «llamaré a alguien», dialecto de Osaka de Kohran, juego 舞台/部隊 resuelto con «compañía»).
+4. **Extracción de lotes por capítulo**: `tools/es/lotes.py --tables 02XX... --out capitulo2/lotes` genera los lotes de un capítulo desde el catálogo de diálogo inglés ya existente (`local/work/dialogue-catalog-worker/dialogue.jsonl`, de todo el juego), filtrando los marcadores `NNNNTBL:idx` (no se traducen, los resuelve el motor en tiempo de ejecución). `tools/es/validar_lote.py loteNN --capitulo capitulo2` valida cualquier capítulo, no solo el primero.
 
 ## Diálogo y combate
 
@@ -62,6 +63,8 @@ Opción integrada propuesta para el launcher (dependencia, requiere coordinar pr
 ## Pendiente
 
 Rótulo de episodio (`TITLE1.BIN`) y pantalla LOADING, menú extra (`OMALL.DAT`), revisión del texto HD con el español y opción de idioma en el launcher. Los capítulos 2–10 siguen el mismo método para el guion.
+
+**Capítulo 2**: borrador completo sin revisar (1.775 textos únicos, 6 lotes, `0201TBL.BIN`-`0206TBL.BIN`), traducido solo desde el inglés — la ISO preparada del disco japonés no está materializada en este equipo ahora mismo, así que falta la revisión japonés → inglés → español que en el capítulo 1 cambió entre el 25 % y el 70 % de las líneas por lote. El guion vive solo en `local/work/guion-es/capitulo2` (nunca se sube) con su propio `ESTADO.md`; no tratar como terminado hasta pasar esa revisión.
 
 Investigado y descartado por ahora (no intentar de nuevo sin lo que falta):
 
