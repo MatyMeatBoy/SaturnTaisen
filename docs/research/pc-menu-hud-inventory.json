@@ -1,0 +1,5217 @@
+{
+  "schema": 1,
+  "scope": "Saturn menu/HUD PC candidates for the HD mod; header inventory only; no import/mapping inferred",
+  "pc_files": 29,
+  "pc_image_entries": 572,
+  "pc_header_errors": 0,
+  "named_without_candidate": [
+    "BURO_W",
+    "FONT_CSL",
+    "JYOUKI",
+    "KAO",
+    "OP_WIN",
+    "R_HARI",
+    "SHADE_WA",
+    "SHADE_WB",
+    "TUIKA_W"
+  ],
+  "menus": [
+    {
+      "id": "BURO_W",
+      "pc_path": "SAKURA1/SYSTEM/BURO_W.SPR",
+      "bytes": 43933,
+      "sha256": "a94a35689344d3a032b364c54b7e0219063fa9039d9294acd15b081aa30ee43c",
+      "images": [
+        {
+          "index": 0,
+          "width": 208,
+          "height": 384,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 19610
+        },
+        {
+          "index": 1,
+          "width": 208,
+          "height": 384,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 19611
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "CAUTION",
+      "pc_path": "SAKURA1/SYSTEM/CAUTION.SPR",
+      "bytes": 641607,
+      "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 78411
+        },
+        {
+          "index": 1,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 78421
+        },
+        {
+          "index": 2,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 78637
+        },
+        {
+          "index": 3,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 84638
+        },
+        {
+          "index": 4,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 81772
+        },
+        {
+          "index": 5,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 78800
+        },
+        {
+          "index": 6,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 77860
+        },
+        {
+          "index": 7,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 77516
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/LOGO.SH2",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXIT_W",
+      "pc_path": "SAKURA1/SYSTEM/EXIT_W.SPR",
+      "bytes": 10402,
+      "sha256": "e4090cadfc04495cd71a3abd50af8d1b840b69ff0b9dadd4d77baafe27c64833",
+      "images": [
+        {
+          "index": 0,
+          "width": 512,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5830
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA",
+              "bytes": 391712,
+              "sha256": "f9fc1dd16e3684558b22e857c876b682ad65a7c6b9416d453cd4304453021197"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA",
+              "bytes": 392024,
+              "sha256": "333494474a6eeb2885d50d0d12a6c3f64cc83db867184d4459cc282f70c2b584"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FONT_CSL",
+      "pc_path": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+      "bytes": 4995,
+      "sha256": "b2859bb85ed4ecc319d53bae88556e1b255be4c3ce3b4018aad838882bf0613b",
+      "images": [
+        {
+          "index": 0,
+          "width": 16,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 139
+        },
+        {
+          "index": 1,
+          "width": 16,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 144
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "JYOUKI",
+      "pc_path": "SAKURA1/SYSTEM/JYOUKI.SPR",
+      "bytes": 27574,
+      "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+      "images": [
+        {
+          "index": 0,
+          "width": 64,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1320
+        },
+        {
+          "index": 1,
+          "width": 80,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 985
+        },
+        {
+          "index": 2,
+          "width": 32,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 732
+        },
+        {
+          "index": 3,
+          "width": 64,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 878
+        },
+        {
+          "index": 4,
+          "width": 64,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1254
+        },
+        {
+          "index": 5,
+          "width": 48,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1025
+        },
+        {
+          "index": 6,
+          "width": 48,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1203
+        },
+        {
+          "index": 7,
+          "width": 64,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 993
+        },
+        {
+          "index": 8,
+          "width": 64,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1565
+        },
+        {
+          "index": 9,
+          "width": 64,
+          "height": 16,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 413
+        },
+        {
+          "index": 10,
+          "width": 64,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1499
+        },
+        {
+          "index": 11,
+          "width": 48,
+          "height": 16,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 333
+        },
+        {
+          "index": 12,
+          "width": 64,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1432
+        },
+        {
+          "index": 13,
+          "width": 48,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1038
+        },
+        {
+          "index": 14,
+          "width": 48,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 833
+        },
+        {
+          "index": 15,
+          "width": 48,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 583
+        },
+        {
+          "index": 16,
+          "width": 80,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 986
+        },
+        {
+          "index": 17,
+          "width": 48,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1185
+        },
+        {
+          "index": 18,
+          "width": 48,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 772
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "KAO",
+      "pc_path": "SAKURA1/SYSTEM/KAO.SPR",
+      "bytes": 5505346,
+      "sha256": "a87fa674bffa73a575509761c90f8fcbd55663b61a9cfe0ff43383e00f5e0c33",
+      "images": [
+        {
+          "index": 0,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10759
+        },
+        {
+          "index": 1,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10658
+        },
+        {
+          "index": 2,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10723
+        },
+        {
+          "index": 3,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10721
+        },
+        {
+          "index": 4,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10346
+        },
+        {
+          "index": 5,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10993
+        },
+        {
+          "index": 6,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10853
+        },
+        {
+          "index": 7,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11311
+        },
+        {
+          "index": 8,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11030
+        },
+        {
+          "index": 9,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11584
+        },
+        {
+          "index": 10,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11470
+        },
+        {
+          "index": 11,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11407
+        },
+        {
+          "index": 12,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11504
+        },
+        {
+          "index": 13,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11360
+        },
+        {
+          "index": 14,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11664
+        },
+        {
+          "index": 15,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11867
+        },
+        {
+          "index": 16,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12060
+        },
+        {
+          "index": 17,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11836
+        },
+        {
+          "index": 18,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13741
+        },
+        {
+          "index": 19,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13774
+        },
+        {
+          "index": 20,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13881
+        },
+        {
+          "index": 21,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14013
+        },
+        {
+          "index": 22,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13741
+        },
+        {
+          "index": 23,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13795
+        },
+        {
+          "index": 24,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13776
+        },
+        {
+          "index": 25,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14451
+        },
+        {
+          "index": 26,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13923
+        },
+        {
+          "index": 27,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14157
+        },
+        {
+          "index": 28,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14207
+        },
+        {
+          "index": 29,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14294
+        },
+        {
+          "index": 30,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14428
+        },
+        {
+          "index": 31,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14170
+        },
+        {
+          "index": 32,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14181
+        },
+        {
+          "index": 33,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14187
+        },
+        {
+          "index": 34,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14874
+        },
+        {
+          "index": 35,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14352
+        },
+        {
+          "index": 36,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13587
+        },
+        {
+          "index": 37,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13623
+        },
+        {
+          "index": 38,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13708
+        },
+        {
+          "index": 39,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13860
+        },
+        {
+          "index": 40,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13574
+        },
+        {
+          "index": 41,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13618
+        },
+        {
+          "index": 42,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13621
+        },
+        {
+          "index": 43,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14294
+        },
+        {
+          "index": 44,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13767
+        },
+        {
+          "index": 45,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13685
+        },
+        {
+          "index": 46,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13718
+        },
+        {
+          "index": 47,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13830
+        },
+        {
+          "index": 48,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13946
+        },
+        {
+          "index": 49,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13706
+        },
+        {
+          "index": 50,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13723
+        },
+        {
+          "index": 51,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13713
+        },
+        {
+          "index": 52,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14385
+        },
+        {
+          "index": 53,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13873
+        },
+        {
+          "index": 54,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14033
+        },
+        {
+          "index": 55,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14056
+        },
+        {
+          "index": 56,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14145
+        },
+        {
+          "index": 57,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14302
+        },
+        {
+          "index": 58,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14020
+        },
+        {
+          "index": 59,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14052
+        },
+        {
+          "index": 60,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14040
+        },
+        {
+          "index": 61,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14739
+        },
+        {
+          "index": 62,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14210
+        },
+        {
+          "index": 63,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14168
+        },
+        {
+          "index": 64,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14264
+        },
+        {
+          "index": 65,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14301
+        },
+        {
+          "index": 66,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14221
+        },
+        {
+          "index": 67,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14198
+        },
+        {
+          "index": 68,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14447
+        },
+        {
+          "index": 69,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14586
+        },
+        {
+          "index": 70,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14993
+        },
+        {
+          "index": 71,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14351
+        },
+        {
+          "index": 72,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14569
+        },
+        {
+          "index": 73,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14646
+        },
+        {
+          "index": 74,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14696
+        },
+        {
+          "index": 75,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14600
+        },
+        {
+          "index": 76,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14593
+        },
+        {
+          "index": 77,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14799
+        },
+        {
+          "index": 78,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14978
+        },
+        {
+          "index": 79,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15378
+        },
+        {
+          "index": 80,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14746
+        },
+        {
+          "index": 81,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13994
+        },
+        {
+          "index": 82,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14019
+        },
+        {
+          "index": 83,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14044
+        },
+        {
+          "index": 84,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13910
+        },
+        {
+          "index": 85,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13986
+        },
+        {
+          "index": 86,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14284
+        },
+        {
+          "index": 87,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14357
+        },
+        {
+          "index": 88,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14808
+        },
+        {
+          "index": 89,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14149
+        },
+        {
+          "index": 90,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14176
+        },
+        {
+          "index": 91,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14275
+        },
+        {
+          "index": 92,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14319
+        },
+        {
+          "index": 93,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14225
+        },
+        {
+          "index": 94,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14219
+        },
+        {
+          "index": 95,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14452
+        },
+        {
+          "index": 96,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14610
+        },
+        {
+          "index": 97,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15020
+        },
+        {
+          "index": 98,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14378
+        },
+        {
+          "index": 99,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14428
+        },
+        {
+          "index": 100,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13709
+        },
+        {
+          "index": 101,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13729
+        },
+        {
+          "index": 102,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13611
+        },
+        {
+          "index": 103,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13673
+        },
+        {
+          "index": 104,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14080
+        },
+        {
+          "index": 105,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14318
+        },
+        {
+          "index": 106,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13982
+        },
+        {
+          "index": 107,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13749
+        },
+        {
+          "index": 108,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14961
+        },
+        {
+          "index": 109,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14976
+        },
+        {
+          "index": 110,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14986
+        },
+        {
+          "index": 111,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14966
+        },
+        {
+          "index": 112,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15004
+        },
+        {
+          "index": 113,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15163
+        },
+        {
+          "index": 114,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15179
+        },
+        {
+          "index": 115,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14761
+        },
+        {
+          "index": 116,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15183
+        },
+        {
+          "index": 117,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14306
+        },
+        {
+          "index": 118,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14280
+        },
+        {
+          "index": 119,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14312
+        },
+        {
+          "index": 120,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14627
+        },
+        {
+          "index": 121,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14251
+        },
+        {
+          "index": 122,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14933
+        },
+        {
+          "index": 123,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14448
+        },
+        {
+          "index": 124,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14576
+        },
+        {
+          "index": 125,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14395
+        },
+        {
+          "index": 126,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14141
+        },
+        {
+          "index": 127,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14172
+        },
+        {
+          "index": 128,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14192
+        },
+        {
+          "index": 129,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14262
+        },
+        {
+          "index": 130,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13634
+        },
+        {
+          "index": 131,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14027
+        },
+        {
+          "index": 132,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14296
+        },
+        {
+          "index": 133,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15144
+        },
+        {
+          "index": 134,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14020
+        },
+        {
+          "index": 135,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14279
+        },
+        {
+          "index": 136,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14302
+        },
+        {
+          "index": 137,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14328
+        },
+        {
+          "index": 138,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14348
+        },
+        {
+          "index": 139,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13767
+        },
+        {
+          "index": 140,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14177
+        },
+        {
+          "index": 141,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14428
+        },
+        {
+          "index": 142,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15256
+        },
+        {
+          "index": 143,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14155
+        },
+        {
+          "index": 144,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17437
+        },
+        {
+          "index": 145,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17356
+        },
+        {
+          "index": 146,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17705
+        },
+        {
+          "index": 147,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17571
+        },
+        {
+          "index": 148,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17687
+        },
+        {
+          "index": 149,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17329
+        },
+        {
+          "index": 150,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17703
+        },
+        {
+          "index": 151,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17957
+        },
+        {
+          "index": 152,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17625
+        },
+        {
+          "index": 153,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17102
+        },
+        {
+          "index": 154,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17046
+        },
+        {
+          "index": 155,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17377
+        },
+        {
+          "index": 156,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17233
+        },
+        {
+          "index": 157,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17358
+        },
+        {
+          "index": 158,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16981
+        },
+        {
+          "index": 159,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17373
+        },
+        {
+          "index": 160,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17609
+        },
+        {
+          "index": 161,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17297
+        },
+        {
+          "index": 162,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17758
+        },
+        {
+          "index": 163,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17710
+        },
+        {
+          "index": 164,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18038
+        },
+        {
+          "index": 165,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17914
+        },
+        {
+          "index": 166,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18012
+        },
+        {
+          "index": 167,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17679
+        },
+        {
+          "index": 168,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18032
+        },
+        {
+          "index": 169,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18257
+        },
+        {
+          "index": 170,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17947
+        },
+        {
+          "index": 171,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17068
+        },
+        {
+          "index": 172,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17001
+        },
+        {
+          "index": 173,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17347
+        },
+        {
+          "index": 174,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17185
+        },
+        {
+          "index": 175,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17324
+        },
+        {
+          "index": 176,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16952
+        },
+        {
+          "index": 177,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17342
+        },
+        {
+          "index": 178,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17532
+        },
+        {
+          "index": 179,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17242
+        },
+        {
+          "index": 180,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16713
+        },
+        {
+          "index": 181,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16630
+        },
+        {
+          "index": 182,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16980
+        },
+        {
+          "index": 183,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16861
+        },
+        {
+          "index": 184,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16954
+        },
+        {
+          "index": 185,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16585
+        },
+        {
+          "index": 186,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16969
+        },
+        {
+          "index": 187,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17192
+        },
+        {
+          "index": 188,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16847
+        },
+        {
+          "index": 189,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16632
+        },
+        {
+          "index": 190,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16564
+        },
+        {
+          "index": 191,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16888
+        },
+        {
+          "index": 192,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16787
+        },
+        {
+          "index": 193,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16897
+        },
+        {
+          "index": 194,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16475
+        },
+        {
+          "index": 195,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16917
+        },
+        {
+          "index": 196,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17127
+        },
+        {
+          "index": 197,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16804
+        },
+        {
+          "index": 198,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13776
+        },
+        {
+          "index": 199,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13893
+        },
+        {
+          "index": 200,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14274
+        },
+        {
+          "index": 201,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13969
+        },
+        {
+          "index": 202,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14019
+        },
+        {
+          "index": 203,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14273
+        },
+        {
+          "index": 204,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13671
+        },
+        {
+          "index": 205,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14595
+        },
+        {
+          "index": 206,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13694
+        },
+        {
+          "index": 207,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13769
+        },
+        {
+          "index": 208,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13856
+        },
+        {
+          "index": 209,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14270
+        },
+        {
+          "index": 210,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13943
+        },
+        {
+          "index": 211,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14005
+        },
+        {
+          "index": 212,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14228
+        },
+        {
+          "index": 213,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13660
+        },
+        {
+          "index": 214,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14567
+        },
+        {
+          "index": 215,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13679
+        },
+        {
+          "index": 216,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14893
+        },
+        {
+          "index": 217,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15037
+        },
+        {
+          "index": 218,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15415
+        },
+        {
+          "index": 219,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15091
+        },
+        {
+          "index": 220,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15187
+        },
+        {
+          "index": 221,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15374
+        },
+        {
+          "index": 222,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14841
+        },
+        {
+          "index": 223,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15744
+        },
+        {
+          "index": 224,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14837
+        },
+        {
+          "index": 225,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12185
+        },
+        {
+          "index": 226,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12323
+        },
+        {
+          "index": 227,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12688
+        },
+        {
+          "index": 228,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12679
+        },
+        {
+          "index": 229,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12417
+        },
+        {
+          "index": 230,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13107
+        },
+        {
+          "index": 231,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12614
+        },
+        {
+          "index": 232,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12563
+        },
+        {
+          "index": 233,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12506
+        },
+        {
+          "index": 234,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12878
+        },
+        {
+          "index": 235,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13069
+        },
+        {
+          "index": 236,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12966
+        },
+        {
+          "index": 237,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13044
+        },
+        {
+          "index": 238,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12992
+        },
+        {
+          "index": 239,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13083
+        },
+        {
+          "index": 240,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13124
+        },
+        {
+          "index": 241,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12985
+        },
+        {
+          "index": 242,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12981
+        },
+        {
+          "index": 243,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13268
+        },
+        {
+          "index": 244,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12881
+        },
+        {
+          "index": 245,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12946
+        },
+        {
+          "index": 246,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12861
+        },
+        {
+          "index": 247,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12979
+        },
+        {
+          "index": 248,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13013
+        },
+        {
+          "index": 249,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12877
+        },
+        {
+          "index": 250,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12863
+        },
+        {
+          "index": 251,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13182
+        },
+        {
+          "index": 252,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12775
+        },
+        {
+          "index": 253,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13137
+        },
+        {
+          "index": 254,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13757
+        },
+        {
+          "index": 255,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13391
+        },
+        {
+          "index": 256,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14334
+        },
+        {
+          "index": 257,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13611
+        },
+        {
+          "index": 258,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14907
+        },
+        {
+          "index": 259,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14656
+        },
+        {
+          "index": 260,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15143
+        },
+        {
+          "index": 261,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14674
+        },
+        {
+          "index": 262,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14677
+        },
+        {
+          "index": 263,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14935
+        },
+        {
+          "index": 264,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13502
+        },
+        {
+          "index": 265,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13916
+        },
+        {
+          "index": 266,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13442
+        },
+        {
+          "index": 267,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14499
+        },
+        {
+          "index": 268,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13707
+        },
+        {
+          "index": 269,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10542
+        },
+        {
+          "index": 270,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10417
+        },
+        {
+          "index": 271,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10987
+        },
+        {
+          "index": 272,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10485
+        },
+        {
+          "index": 273,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11329
+        },
+        {
+          "index": 274,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10823
+        },
+        {
+          "index": 275,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10785
+        },
+        {
+          "index": 276,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10984
+        },
+        {
+          "index": 277,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10897
+        },
+        {
+          "index": 278,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12155
+        },
+        {
+          "index": 279,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11016
+        },
+        {
+          "index": 280,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13178
+        },
+        {
+          "index": 281,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13632
+        },
+        {
+          "index": 282,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13606
+        },
+        {
+          "index": 283,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14113
+        },
+        {
+          "index": 284,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13840
+        },
+        {
+          "index": 285,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12091
+        },
+        {
+          "index": 286,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12182
+        },
+        {
+          "index": 287,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12216
+        },
+        {
+          "index": 288,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11885
+        },
+        {
+          "index": 289,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13116
+        },
+        {
+          "index": 290,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12095
+        },
+        {
+          "index": 291,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13327
+        },
+        {
+          "index": 292,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13274
+        },
+        {
+          "index": 293,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13371
+        },
+        {
+          "index": 294,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13555
+        },
+        {
+          "index": 295,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13977
+        },
+        {
+          "index": 296,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14288
+        },
+        {
+          "index": 297,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14736
+        },
+        {
+          "index": 298,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14313
+        },
+        {
+          "index": 299,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14823
+        },
+        {
+          "index": 300,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14830
+        },
+        {
+          "index": 301,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11090
+        },
+        {
+          "index": 302,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11209
+        },
+        {
+          "index": 303,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10846
+        },
+        {
+          "index": 304,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10866
+        },
+        {
+          "index": 305,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11239
+        },
+        {
+          "index": 306,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14134
+        },
+        {
+          "index": 307,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11624
+        },
+        {
+          "index": 308,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11588
+        },
+        {
+          "index": 309,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11665
+        },
+        {
+          "index": 310,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11513
+        },
+        {
+          "index": 311,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11712
+        },
+        {
+          "index": 312,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12002
+        },
+        {
+          "index": 313,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12436
+        },
+        {
+          "index": 314,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12456
+        },
+        {
+          "index": 315,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12624
+        },
+        {
+          "index": 316,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12494
+        },
+        {
+          "index": 317,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12576
+        },
+        {
+          "index": 318,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12828
+        },
+        {
+          "index": 319,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12892
+        },
+        {
+          "index": 320,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12874
+        },
+        {
+          "index": 321,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12769
+        },
+        {
+          "index": 322,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12784
+        },
+        {
+          "index": 323,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13003
+        },
+        {
+          "index": 324,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13078
+        },
+        {
+          "index": 325,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14588
+        },
+        {
+          "index": 326,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14570
+        },
+        {
+          "index": 327,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15382
+        },
+        {
+          "index": 328,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15179
+        },
+        {
+          "index": 329,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15368
+        },
+        {
+          "index": 330,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11982
+        },
+        {
+          "index": 331,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12221
+        },
+        {
+          "index": 332,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12109
+        },
+        {
+          "index": 333,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12437
+        },
+        {
+          "index": 334,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11190
+        },
+        {
+          "index": 335,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11452
+        },
+        {
+          "index": 336,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13306
+        },
+        {
+          "index": 337,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11560
+        },
+        {
+          "index": 338,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14861
+        },
+        {
+          "index": 339,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11572
+        },
+        {
+          "index": 340,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11330
+        },
+        {
+          "index": 341,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11138
+        },
+        {
+          "index": 342,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12867
+        },
+        {
+          "index": 343,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13035
+        },
+        {
+          "index": 344,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12257
+        },
+        {
+          "index": 345,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12229
+        },
+        {
+          "index": 346,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11124
+        },
+        {
+          "index": 347,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10628
+        },
+        {
+          "index": 348,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11954
+        },
+        {
+          "index": 349,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12619
+        },
+        {
+          "index": 350,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12622
+        },
+        {
+          "index": 351,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12194
+        },
+        {
+          "index": 352,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12691
+        },
+        {
+          "index": 353,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 8650
+        },
+        {
+          "index": 354,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 8466
+        },
+        {
+          "index": 355,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13055
+        },
+        {
+          "index": 356,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13071
+        },
+        {
+          "index": 357,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10306
+        },
+        {
+          "index": 358,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10303
+        },
+        {
+          "index": 359,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11854
+        },
+        {
+          "index": 360,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11949
+        },
+        {
+          "index": 361,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 15255
+        },
+        {
+          "index": 362,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17784
+        },
+        {
+          "index": 363,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13113
+        },
+        {
+          "index": 364,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11937
+        },
+        {
+          "index": 365,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11920
+        },
+        {
+          "index": 366,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12014
+        },
+        {
+          "index": 367,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12667
+        },
+        {
+          "index": 368,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12697
+        },
+        {
+          "index": 369,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 12785
+        },
+        {
+          "index": 370,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13247
+        },
+        {
+          "index": 371,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13241
+        },
+        {
+          "index": 372,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13348
+        },
+        {
+          "index": 373,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10660
+        },
+        {
+          "index": 374,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10563
+        },
+        {
+          "index": 375,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10596
+        },
+        {
+          "index": 376,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10640
+        },
+        {
+          "index": 377,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10912
+        },
+        {
+          "index": 378,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10759
+        },
+        {
+          "index": 379,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 11173
+        },
+        {
+          "index": 380,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14056
+        },
+        {
+          "index": 381,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14139
+        },
+        {
+          "index": 382,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14172
+        },
+        {
+          "index": 383,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14094
+        },
+        {
+          "index": 384,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14069
+        },
+        {
+          "index": 385,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14315
+        },
+        {
+          "index": 386,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14469
+        },
+        {
+          "index": 387,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16693
+        },
+        {
+          "index": 388,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 17039
+        },
+        {
+          "index": 389,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16903
+        },
+        {
+          "index": 390,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 16649
+        },
+        {
+          "index": 391,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13847
+        },
+        {
+          "index": 392,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14258
+        },
+        {
+          "index": 393,
+          "width": 80,
+          "height": 160,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 14222
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "KARAOKE",
+      "pc_path": "SAKURA1/SYSTEM/KARAOKE.SPR",
+      "bytes": 73276,
+      "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+      "images": [
+        {
+          "index": 0,
+          "width": 320,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4941
+        },
+        {
+          "index": 1,
+          "width": 224,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3420
+        },
+        {
+          "index": 2,
+          "width": 256,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4161
+        },
+        {
+          "index": 3,
+          "width": 288,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4306
+        },
+        {
+          "index": 4,
+          "width": 224,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3584
+        },
+        {
+          "index": 5,
+          "width": 224,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3344
+        },
+        {
+          "index": 6,
+          "width": 256,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3931
+        },
+        {
+          "index": 7,
+          "width": 288,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4309
+        },
+        {
+          "index": 8,
+          "width": 352,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5209
+        },
+        {
+          "index": 9,
+          "width": 192,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3259
+        },
+        {
+          "index": 10,
+          "width": 288,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3463
+        },
+        {
+          "index": 11,
+          "width": 320,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4705
+        },
+        {
+          "index": 12,
+          "width": 224,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3426
+        },
+        {
+          "index": 13,
+          "width": 288,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4222
+        },
+        {
+          "index": 14,
+          "width": 224,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3445
+        },
+        {
+          "index": 15,
+          "width": 256,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3601
+        },
+        {
+          "index": 16,
+          "width": 224,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3478
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/OMALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MINISAKU",
+      "pc_path": "SAKURA1/SYSTEM/MINISAKU.SPR",
+      "bytes": 78859,
+      "sha256": "c857aa638bfb5f5cfe609ab912bbd2e57a417b7c16d3a0946dd3af8a4fd2d35d",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 74443
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/OMALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MSTAFF",
+      "pc_path": "SAKURA1/SYSTEM/MSTAFF.SPR",
+      "bytes": 91792,
+      "sha256": "0b3075ddc8b854a60b9adaccf0939c6e76e64e4600d545f0a98ab966a4b084ed",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 87376
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/OMALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOWLOAD",
+      "pc_path": "SAKURA1/SYSTEM/NOWLOAD.SPR",
+      "bytes": 151845,
+      "sha256": "cfc29796343420e45f95c1b91e5cfd140a2db7adb2723b19e9ffd012f6b9e446",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 147429
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/LOAD.BIN",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/LOAD.BIN",
+              "bytes": 76672,
+              "sha256": "459af355001728b4e5e45442bfa7f2d04182eb5e24480008b4c4cf2e2bbb488c"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/LOAD.BIN",
+              "bytes": 76672,
+              "sha256": "459af355001728b4e5e45442bfa7f2d04182eb5e24480008b4c4cf2e2bbb488c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OMKMOV_W",
+      "pc_path": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+      "bytes": 341209,
+      "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+      "images": [
+        {
+          "index": 0,
+          "width": 500,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 47885
+        },
+        {
+          "index": 1,
+          "width": 500,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 47960
+        },
+        {
+          "index": 2,
+          "width": 500,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 48003
+        },
+        {
+          "index": 3,
+          "width": 500,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 47926
+        },
+        {
+          "index": 4,
+          "width": 500,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 47910
+        },
+        {
+          "index": 5,
+          "width": 500,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 48055
+        },
+        {
+          "index": 6,
+          "width": 500,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 48058
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/OMALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OMKSND_W",
+      "pc_path": "SAKURA1/SYSTEM/OMKSND_W.SPR",
+      "bytes": 232928,
+      "sha256": "3b84fdd1a7cc6c6b5bf11026ee5ebca2f9c5470df15653f29264b2ce1fc00402",
+      "images": [
+        {
+          "index": 7,
+          "width": 480,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 45472
+        },
+        {
+          "index": 8,
+          "width": 480,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 45558
+        },
+        {
+          "index": 9,
+          "width": 480,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 45600
+        },
+        {
+          "index": 10,
+          "width": 480,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 45477
+        },
+        {
+          "index": 11,
+          "width": 480,
+          "height": 376,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 45353
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/OMALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/OMALL.DAT",
+              "bytes": 503808,
+              "sha256": "ace9f3f7f0f8833e26c187dc930833a0f535b012428c862328686b815b252295"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OP_WIN",
+      "pc_path": "SAKURA1/SYSTEM/OP_WIN.SPR",
+      "bytes": 42784,
+      "sha256": "7eeafa10b1a7398d210445b44dddcdba24e5c7dec0d487dde103304fa2e25f93",
+      "images": [
+        {
+          "index": 0,
+          "width": 416,
+          "height": 304,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 38232
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "OPTION",
+      "pc_path": "SAKURA1/SYSTEM/OPTION.SPR",
+      "bytes": 162227,
+      "sha256": "4509f8e1697cae2070e7973b1eefd5f0665291e7365b22fe1045923fe0d169f2",
+      "images": [
+        {
+          "index": 0,
+          "width": 512,
+          "height": 386,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 47715
+        },
+        {
+          "index": 1,
+          "width": 400,
+          "height": 290,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 28085
+        },
+        {
+          "index": 2,
+          "width": 536,
+          "height": 314,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 40564
+        },
+        {
+          "index": 3,
+          "width": 536,
+          "height": 314,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 40871
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA",
+              "bytes": 391712,
+              "sha256": "f9fc1dd16e3684558b22e857c876b682ad65a7c6b9416d453cd4304453021197"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA",
+              "bytes": 392024,
+              "sha256": "333494474a6eeb2885d50d0d12a6c3f64cc83db867184d4459cc282f70c2b584"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R_HARI",
+      "pc_path": "SAKURA1/SYSTEM/R_HARI.SPR",
+      "bytes": 13816,
+      "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+      "images": [
+        {
+          "index": 0,
+          "width": 32,
+          "height": 44,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1212
+        },
+        {
+          "index": 1,
+          "width": 32,
+          "height": 44,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1249
+        },
+        {
+          "index": 2,
+          "width": 32,
+          "height": 44,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1219
+        },
+        {
+          "index": 3,
+          "width": 32,
+          "height": 44,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1191
+        },
+        {
+          "index": 4,
+          "width": 32,
+          "height": 44,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1170
+        },
+        {
+          "index": 5,
+          "width": 32,
+          "height": 44,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1206
+        },
+        {
+          "index": 6,
+          "width": 32,
+          "height": 44,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1209
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "REDLOGO",
+      "pc_path": "SAKURA1/SYSTEM/REDLOGO.SPR",
+      "bytes": 85722,
+      "sha256": "6deb879fec22a7d841fc665058db28cf47086216a02cf2deb7cd6303494bd731",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 81306
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/LOGO.SH2",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEGALOGO",
+      "pc_path": "SAKURA1/SYSTEM/SEGALOGO.SPR",
+      "bytes": 79357,
+      "sha256": "1432786a60a6817ac82154e255d6a4fc05bb62d983840d386ea8c8c423fd5b87",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 74941
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/LOGO.SH2",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SHADE_WA",
+      "pc_path": "SAKURA1/SYSTEM/SHADE_WA.SPR",
+      "bytes": 47939,
+      "sha256": "5832cbc76a7afdd004ff6ab60d79f2ba761fb5160f08c4fe4abc063f4094dbdd",
+      "images": [
+        {
+          "index": 0,
+          "width": 576,
+          "height": 320,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 43523
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "SHADE_WB",
+      "pc_path": "SAKURA1/SYSTEM/SHADE_WB.SPR",
+      "bytes": 22834,
+      "sha256": "9ef57aa32f0f4c0760e4a54852f52e5fee8fbbf66c1b3d81cc77585c5b43dddf",
+      "images": [
+        {
+          "index": 0,
+          "width": 608,
+          "height": 128,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18418
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "SIS_BG",
+      "pc_path": "SAKURA1/SYSTEM/SIS_BG.SPR",
+      "bytes": 162807,
+      "sha256": "254648b5e7287d1d44fc42690e171416d084cfe430814877a11c089c24235579",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 158391
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/ICATALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIS_BG2",
+      "pc_path": "SAKURA1/SYSTEM/SIS_BG2.SPR",
+      "bytes": 126350,
+      "sha256": "97ebacc5fff64583c36e69c86832c98e80434aa92914e842d239f20915aedd0c",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 121934
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/ICATALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIS_BG3",
+      "pc_path": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+      "bytes": 365283,
+      "sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 360867
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/ICATALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIS_ICON",
+      "pc_path": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+      "bytes": 42586,
+      "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+      "images": [
+        {
+          "index": 0,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1588
+        },
+        {
+          "index": 1,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1671
+        },
+        {
+          "index": 2,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4064
+        },
+        {
+          "index": 3,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4138
+        },
+        {
+          "index": 4,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4195
+        },
+        {
+          "index": 5,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4274
+        },
+        {
+          "index": 6,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4161
+        },
+        {
+          "index": 7,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4112
+        },
+        {
+          "index": 8,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4302
+        },
+        {
+          "index": 9,
+          "width": 80,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4249
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/ICATALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SISTEM",
+      "pc_path": "SAKURA1/SYSTEM/SISTEM.SPR",
+      "bytes": 285236,
+      "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+      "images": [
+        {
+          "index": 0,
+          "width": 592,
+          "height": 336,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 47427
+        },
+        {
+          "index": 1,
+          "width": 352,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4015
+        },
+        {
+          "index": 2,
+          "width": 288,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 3293
+        },
+        {
+          "index": 3,
+          "width": 512,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5830
+        },
+        {
+          "index": 4,
+          "width": 288,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 4399
+        },
+        {
+          "index": 5,
+          "width": 384,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5857
+        },
+        {
+          "index": 6,
+          "width": 224,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2653
+        },
+        {
+          "index": 7,
+          "width": 224,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2585
+        },
+        {
+          "index": 8,
+          "width": 16,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 159
+        },
+        {
+          "index": 9,
+          "width": 16,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 157
+        },
+        {
+          "index": 10,
+          "width": 112,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 1353
+        },
+        {
+          "index": 11,
+          "width": 576,
+          "height": 288,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 40132
+        },
+        {
+          "index": 12,
+          "width": 224,
+          "height": 352,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18704
+        },
+        {
+          "index": 13,
+          "width": 384,
+          "height": 400,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 36374
+        },
+        {
+          "index": 14,
+          "width": 224,
+          "height": 176,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 9977
+        },
+        {
+          "index": 15,
+          "width": 544,
+          "height": 272,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 35058
+        },
+        {
+          "index": 17,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2378
+        },
+        {
+          "index": 18,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2383
+        },
+        {
+          "index": 19,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2467
+        },
+        {
+          "index": 20,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2390
+        },
+        {
+          "index": 21,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2445
+        },
+        {
+          "index": 22,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2437
+        },
+        {
+          "index": 23,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2326
+        },
+        {
+          "index": 24,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2442
+        },
+        {
+          "index": 25,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2450
+        },
+        {
+          "index": 26,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2307
+        },
+        {
+          "index": 27,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2218
+        },
+        {
+          "index": 28,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2318
+        },
+        {
+          "index": 29,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2338
+        },
+        {
+          "index": 30,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2303
+        },
+        {
+          "index": 31,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2356
+        },
+        {
+          "index": 32,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2356
+        },
+        {
+          "index": 33,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2261
+        },
+        {
+          "index": 34,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2363
+        },
+        {
+          "index": 35,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2364
+        },
+        {
+          "index": 36,
+          "width": 176,
+          "height": 40,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2385
+        },
+        {
+          "index": 37,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 291
+        },
+        {
+          "index": 38,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 310
+        },
+        {
+          "index": 39,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 303
+        },
+        {
+          "index": 40,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 293
+        },
+        {
+          "index": 41,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 294
+        },
+        {
+          "index": 42,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 312
+        },
+        {
+          "index": 43,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 302
+        },
+        {
+          "index": 44,
+          "width": 32,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 296
+        },
+        {
+          "index": 45,
+          "width": 160,
+          "height": 64,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 2471
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/ICATALL.DAT",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/ICATALL.DAT",
+              "bytes": 114688,
+              "sha256": "cdb2406525a0b78cd6182bf1f4b4e564a1b680fff09db1f0cf6a05a9586b632d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TITLE",
+      "pc_path": "SAKURA1/SYSTEM/TITLE.SPR",
+      "bytes": 247979,
+      "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+      "images": [
+        {
+          "index": 0,
+          "width": 257,
+          "height": 298,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 48039
+        },
+        {
+          "index": 2,
+          "width": 116,
+          "height": 340,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10873
+        },
+        {
+          "index": 3,
+          "width": 116,
+          "height": 340,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10776
+        },
+        {
+          "index": 4,
+          "width": 116,
+          "height": 340,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18121
+        },
+        {
+          "index": 5,
+          "width": 134,
+          "height": 156,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5652
+        },
+        {
+          "index": 6,
+          "width": 134,
+          "height": 156,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5573
+        },
+        {
+          "index": 7,
+          "width": 134,
+          "height": 156,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 13624
+        },
+        {
+          "index": 8,
+          "width": 134,
+          "height": 158,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 6048
+        },
+        {
+          "index": 9,
+          "width": 134,
+          "height": 158,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 6008
+        },
+        {
+          "index": 10,
+          "width": 134,
+          "height": 158,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 18156
+        },
+        {
+          "index": 11,
+          "width": 36,
+          "height": 38,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 489
+        },
+        {
+          "index": 12,
+          "width": 376,
+          "height": 46,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 6689
+        },
+        {
+          "index": 13,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5682
+        },
+        {
+          "index": 14,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5683
+        },
+        {
+          "index": 15,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5448
+        },
+        {
+          "index": 16,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5327
+        },
+        {
+          "index": 17,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5357
+        },
+        {
+          "index": 18,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5324
+        },
+        {
+          "index": 19,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5328
+        },
+        {
+          "index": 20,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5438
+        },
+        {
+          "index": 21,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5561
+        },
+        {
+          "index": 22,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5684
+        },
+        {
+          "index": 23,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5630
+        },
+        {
+          "index": 24,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5572
+        },
+        {
+          "index": 25,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5461
+        },
+        {
+          "index": 26,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5601
+        },
+        {
+          "index": 27,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5541
+        },
+        {
+          "index": 28,
+          "width": 366,
+          "height": 36,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 5578
+        },
+        {
+          "index": 29,
+          "width": 16,
+          "height": 16,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 64
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/LOGO.SH2",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TL_BG0",
+      "pc_path": "SAKURA1/SYSTEM/TL_BG0.SPR",
+      "bytes": 148739,
+      "sha256": "332733c050bd109b159882bc545c170471a92ee5274649729b03e9d309a01ecd",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 144323
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/LOGO.SH2",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TL_ROGO0",
+      "pc_path": "SAKURA1/SYSTEM/TL_ROGO0.SPR",
+      "bytes": 140621,
+      "sha256": "efdef8d6f8b3c3433da188d77ba57175dc7198693c9147a6841e39955db6bbfd",
+      "images": [
+        {
+          "index": 0,
+          "width": 640,
+          "height": 480,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 136205
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA1/LOGO.SH2",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "0745216059e495e7ba45faf1657bc045317579186bc539802d35b9567cb483ca"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA1/LOGO.SH2",
+              "bytes": 243200,
+              "sha256": "084dac119534d151c86c3b48619bf553f93f161089a8f52a40bf30fa0bc87064"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TUIKA_W",
+      "pc_path": "SAKURA1/SYSTEM/TUIKA_W.SPR",
+      "bytes": 29598,
+      "sha256": "09ae84738c3dafff43db3817ecdc1f59602a0c150161805448c5a56c7e474e90",
+      "images": [
+        {
+          "index": 0,
+          "width": 576,
+          "height": 48,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 6555
+        },
+        {
+          "index": 1,
+          "width": 576,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 10907
+        },
+        {
+          "index": 2,
+          "width": 384,
+          "height": 80,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 7284
+        }
+      ],
+      "saturn_candidates": []
+    },
+    {
+      "id": "WINDOW",
+      "pc_path": "SAKURA1/SYSTEM/WINDOW.SPR",
+      "bytes": 93941,
+      "sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+      "images": [
+        {
+          "index": 0,
+          "width": 544,
+          "height": 240,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 44700
+        },
+        {
+          "index": 1,
+          "width": 608,
+          "height": 128,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 20008
+        },
+        {
+          "index": 2,
+          "width": 512,
+          "height": 176,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 23301
+        },
+        {
+          "index": 3,
+          "width": 16,
+          "height": 32,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 508
+        },
+        {
+          "index": 4,
+          "width": 16,
+          "height": 16,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 67
+        },
+        {
+          "index": 5,
+          "width": 16,
+          "height": 16,
+          "format": 21,
+          "palette_bank": 0,
+          "stored_bytes": 69
+        }
+      ],
+      "saturn_candidates": [
+        {
+          "saturn_path": "/SAKURA",
+          "found": [
+            {
+              "disc": 1,
+              "path": "/SAKURA",
+              "bytes": 391712,
+              "sha256": "f9fc1dd16e3684558b22e857c876b682ad65a7c6b9416d453cd4304453021197"
+            },
+            {
+              "disc": 2,
+              "path": "/SAKURA",
+              "bytes": 392024,
+              "sha256": "333494474a6eeb2885d50d0d12a6c3f64cc83db867184d4459cc282f70c2b584"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

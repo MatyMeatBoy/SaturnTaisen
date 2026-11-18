@@ -23,6 +23,7 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 - [saturn-background-loading.md](saturn-background-loading.md) — cargas de fondos y mod HD ([saturn-background-loading.json](saturn-background-loading.json), [saturn-background-compression.json](saturn-background-compression.json)).
 - [saturn-background-workers.md](saturn-background-workers.md) — preparación multinúcleo de fondos ([saturn-background-workers.json](saturn-background-workers.json)).
 - [saturn-hd-characters.md](saturn-hd-characters.md) — personajes PC para el mod HD ([pc-character-inventory.json](pc-character-inventory.json)).
+- [pc-menu-hud-inventory.md](pc-menu-hud-inventory.md) — inventario T23 de menús/HUD PC y candidatos Saturn ([pc-menu-hud-inventory.json](pc-menu-hud-inventory.json)).
 - [pc-spred-resources.md](pc-spred-resources.md) — primera decodificación verificada de recursos PC ([pc-background-inventory.json](pc-background-inventory.json)).
 - [hd-font-proportions.md](hd-font-proportions.md) — proporciones de la fuente HD.
 - [pixelgen-v1.md](pixelgen-v1.md) — PixelGen v1, extensiones decorativas.
