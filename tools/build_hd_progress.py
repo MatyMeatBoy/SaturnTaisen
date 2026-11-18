@@ -6,7 +6,7 @@ import re
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-CATEGORY_IDS = ('portraits', 'movies', 'hud-menus', 'backgrounds', 'large-characters', 'scenes')
+CATEGORY_IDS = ('portraits', 'scene-images', 'scenes', 'movies', 'tactical', 'hud-menus', 'backgrounds', 'large-characters')
 STAGES = {
     'inventory': 'Inventariado',
     'matched': 'Emparejado',
