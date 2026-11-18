@@ -66,6 +66,30 @@
       "evidence_frame": 59750,
       "score": 0.85,
       "margin": 0.12
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1116.SPR",
+      "pc_sha256": "bedfb134c9862116fe386ac5ea0121814d358e801b8a65a1bd4c41b061cdb631",
+      "pc_image_index": 0,
+      "evidence_frame": 135500,
+      "score": 0.82,
+      "margin": 0.36
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG2039.SPR",
+      "pc_sha256": "ba239d9c453071ae713d27d211432f7c11500475b174ba35a26ad7a0da9564f3",
+      "pc_image_index": 0,
+      "evidence_frame": 143250,
+      "score": 0.86,
+      "margin": 0.29
+    },
+    {
+      "pc_file": "SAKURA1/BG/BG1075.SPR",
+      "pc_sha256": "7bb44e3992763aa4f096d3b66ec670b05813bfc7a3e3e5563f0569adec32cc9e",
+      "pc_image_index": 0,
+      "evidence_frame": 164250,
+      "score": 0.95,
+      "margin": 0.27
     }
   ]
 }
