@@ -43,6 +43,7 @@ Una línea por documento. Los JSON son la evidencia legible por máquina de su d
 
 ## Integración del 2026-11-18
 
+- [battle-overlay-reproduction.md](battle-overlay-reproduction.md) — reconstrucción verificable de la ampliación de combate ([manifiesto](battle-overlay-reproduction.json)).
 - [spanish-translation-workflow.md](spanish-translation-workflow.md) — guiones ingleses con IDs, controles y alias entre discos para el parche español de Claude.
 - [scene-tagging.md](scene-tagging.md) — seis etiquetas sencillas, inventario de ambos discos y vínculos con los guiones, distinguiendo candidatos de observaciones.
 - [battle-overlay-family.json](battle-overlay-family.json) — evidencia o informe del bloque de presentación y cobertura del capítulo 1.
