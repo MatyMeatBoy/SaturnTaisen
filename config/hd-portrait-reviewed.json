@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "source": {
+    "bytes": 5505346,
+    "sha256": "a87fa674bffa73a575509761c90f8fcbd55663b61a9cfe0ff43383e00f5e0c33",
+    "fnv64": 17275614850567186526
+  },
+  "matches": [
+    {
+      "id": "0013",
+      "pc_index": 18,
+      "native_raw_sha256": "47d96f9954b39b320b87677d9d633a737dcbe28f928fe6f79a033028ff5045ad",
+      "pc_rgba_sha256": "eb5958f71734a0a39bc56063d3e218102d9600b5aa9c3753d99a986510f56dd0",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "f062c1feb25dacc46c75db5e2fb4e1cdaf0d2a61cd9a649a75a9c61b01e0750d",
+        "2": "eb5958f71734a0a39bc56063d3e218102d9600b5aa9c3753d99a986510f56dd0"
+      },
+      "evidence": {
+        "regional_rmse": {
+          "base": 0.05824,
+          "strip1": 0.047862,
+          "strip2": 0.043342
+        },
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": "base"
+      }
+    },
+    {
+      "id": "0014",
+      "pc_index": 19,
+      "native_raw_sha256": "f7a58153c1efedf22c440914d177ea0317598559d81731976bc49f72b835a0e4",
+      "pc_rgba_sha256": "4c865785fea6a3fc468ca30c68fc8b315abb0471b7098cfc8d89ffe77622b1fd",
+      "dx": 0,
+      "dy": 0,
+      "parts": [
+        "base",
+        "eyes",
+        "mouth"
+      ],
+      "variants_rgba_sha256": {
+        "1": "e88be4cf1e1c9c5d2222a5adec449378ead289140a478719fd3ebcf45d762913",
+        "2": "4c865785fea6a3fc468ca30c68fc8b315abb0471b7098cfc8d89ffe77622b1fd"
+      },
+      "evidence": {
+        "regional_rmse": {
+          "base": 0.057876,
+          "strip1": 0.047865,
+          "strip2": 0.042901
+        },
+        "best_shift_native_pixels": [
+          0,
+          0
+        ],
+        "alpha_holes": 0,
+        "observed_runtime": "base"
+      }
+    }
+  ],
+  "evidence": {
+    "report": "docs/research/first-sakura-hd-portraits.md",
+    "prepared_pack_receipt_sha256": "24286afce17baeb43d0744b0f4b8171c8d044af02462d660ff71da2272d287b5",
+    "validation_receipt_sha256": "8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1"
+  }
+}

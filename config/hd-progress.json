@@ -12,24 +12,28 @@
           "receipt_sha256": "f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac"
         },
         {
+          "path": "docs/research/first-sakura-hd-portraits.md",
+          "receipt_sha256": "8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1"
+        },
+        {
           "path": "docs/releases/v0.1.2.md",
           "receipt_sha256": "e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f"
         }
       ],
       "next": "Revisar las identidades pendientes y validar parpadeo, boca, ambas tiras simultáneas, efectos y fallback en juego.",
       "details": [
-        "191 identidades con base, ojos y boca disponibles. Se comprobaron 382 PNG a dos densidades.",
-        "Capítulo 1. 81/123 identidades con las tres regiones preparadas y 42 pendientes. Los seis FCE de alcance figuran en la auditoría.",
+        "Checkpoint reproducible. 193 identidades con base, ojos y boca disponibles. Se comprobaron 386 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.",
+        "Capítulo 1. 83/123 identidades con las tres regiones preparadas y 40 pendientes. Los seis FCE de alcance figuran en la auditoría.",
+        "Los nuevos retratos 0013 y 0014 se verificaron en juego en su estado base. Las tiras de esas dos identidades siguen pendientes de observación durante el juego.",
         "394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay."
       ],
       "total": 304,
       "inventory": 304,
-      "matched": 191,
-      "prepared": 191,
-      "integrated": 191,
+      "matched": 193,
+      "prepared": 193,
+      "integrated": 193,
       "verified": null,
       "pending_ids": [
-        "0013-0014",
         "001d",
         "0026",
         "0038",
