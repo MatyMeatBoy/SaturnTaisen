@@ -24,6 +24,14 @@ Trabajo útil para un segundo bot sin pisar esa integración: mejorar el inventa
 
 ## Mapa del workspace
 
+### Limpieza y traslado — 2026-11-18
+
+Se retiraron seis worktrees antiguos mediante Git, conservando sus commits. Quedan el repositorio principal y una única copia auxiliar. Las nuevas tareas deben respetar el límite y las reglas de limpieza de `AGENTS.md`.
+
+La medición posterior a la limpieza fue de **19.857.953.183 bytes (18,494 GiB), 67.822 archivos** en el proyecto principal. Se retiraron duplicados verificados e intermediarios regenerables; se conservaron dumps, BIOS, guiones, recursos preparados, checkpoints seleccionados y paquetes emitidos. La referencia SDK48 se conserva comprimida, con CRC y SHA del ejecutable restaurado comprobados. Los informes privados detallados están junto a la entrega, fuera del proyecto.
+
+El ZIP de desarrollo ya entregado permanece inmutable: `D:\01Claude\SaturnTaisenFirst-DEV-transfer-20261118\SaturnTaisenFirst-Development-Completo.zip`, 6.315.009.692 bytes, SHA256 `806b9e8803574e9fdea58ffce9b8ca1247a691f1e49295499f399ee5425e2059`. Tras restaurarlo en el otro PC, actualizar desde Git para obtener estas reglas posteriores a su creación. La limpieza no acredita nuevos avances de campaña ni cambia la versión de prueba.
+
 | Ruta relativa a `D:\01Claude\Sakurawars` | Uso |
 | --- | --- |
 | `local/deps/satrecomp` | SDK fijado en `config/dependencies.json`; edición local, cambios exportados como patches. |

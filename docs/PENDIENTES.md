@@ -13,7 +13,7 @@ Cola compartida para MatyMeatBoy y los agentes que ayudan (Claude, Codex). Cualq
    - `físico`: hardware (RX 6900 XT, mandos M30); lo prueba el propietario.
    - `decisión`: necesita respuesta del propietario antes de tocar código.
 3. Si la fila no cabe en ~15 minutos, hacer la parte mínima verificable y dividir el resto en filas nuevas.
-4. Trabajar en un worktree desde `origin/main`, rama `pendientes/<id>-<tema>`. Nunca mezclar el trabajo sin commitear de otra copia.
+4. Trabajar desde `origin/main`, rama `pendientes/<id>-<tema>`, reutilizando la única copia auxiliar permitida por `AGENTS.md`. Si está ocupada, coordinar y esperar; no crear más worktrees. Nunca mezclar el trabajo sin commitear de otra copia.
 5. Abrir PR con: fila tomada, qué se verificó (comando y resultado) y qué no. Cambiar el estado de la fila en el mismo PR.
 6. Prioridad ante todo: bloqueos o pérdida de progreso > validación de capítulo 1 > presentación > decoración.
 
