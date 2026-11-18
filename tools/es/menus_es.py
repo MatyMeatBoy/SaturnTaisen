@@ -268,41 +268,112 @@ def battle_bar_sprites(data: bytes):
     return sprites
 
 
-# Text labels for sprites 0-24 (25-27 are icons, left untouched). Each English word verified by eye
-# against local/work/guion-es/menus/tmp/combate_bar_idx_{a,b}.png before choosing these.
+# Text labels of the 28 command-bar sprites (all 28 are words; "*" variants are the highlighted ones).
+# English order: Mov, Mov*, Move, Atk, Atk*, Normal, Normal*, Special, Special*, Combo, Combo*, Def, Def*,
+# Rest, Rest*, Defend, Defend*, Heal, Heal*, Info, Info*, Map, Advice, End, End*, Spcl, Spcl*, Cover.
 BATTLE_BAR_ES = [
     'Mov', 'Mov', 'Mover', 'Atq', 'Atq', 'Normal', 'Normal', 'Espec.', 'Espec.', 'Combo', 'Combo',
-    'Def', 'Def', 'Descan.', 'Descan.', 'Proteg.', 'Proteg.', 'Curar', 'Curar', 'Info', 'Info',
-    'Mapa', 'Consej.', 'Fin', 'Fin',
+    'Def', 'Def', 'Desc.', 'Desc.', 'Prot.', 'Prot.', 'Curar', 'Curar', 'Info', 'Info',
+    'Mapa', 'Aviso', 'Fin', 'Fin', 'Esp.', 'Esp.', 'Cubrir',
 ]
+
+# The English bar uses a condensed pixel font: strokes 1 px wide, 8 rows of capital/ascender (rows 4-11 of the
+# 16 px sprite), x-height 6 rows, descenders 2 more rows, one empty column between letters, and a 1 px dark
+# outline (palette index 3) shared between neighbours (4-connected, no corners). Only the "fill" of each letter is stored here
+# (10 rows: row 0 = sprite row 4). The letters were read from the English sprites themselves (WKL02.BIN);
+# P, F, u, q and "." do not occur there and are derived (R without leg, E without base, n turned 180 degrees,
+# p mirrored, one pixel on the baseline).
+_PIXEL_FONT = {
+    'M': ('#...#', '#...#', '#...#', '##.##', '#.#.#', '#.#.#', '#...#', '#...#', '.....', '.....'),
+    'o': ('...', '...', '.#.', '#.#', '#.#', '#.#', '#.#', '.#.', '...', '...'),
+    'v': ('...', '...', '#.#', '#.#', '#.#', '#.#', '#.#', '##.', '...', '...'),
+    'A': ('.#.', '#.#', '#.#', '#.#', '###', '#.#', '#.#', '#.#', '...', '...'),
+    't': ('...', '.#.', '###', '.#.', '.#.', '.#.', '.#.', '..#', '...', '...'),
+    'k': ('#...', '#...', '#..#', '#.#.', '##..', '##..', '#.#.', '#..#', '....', '....'),
+    'N': ('#..#', '#..#', '##.#', '#.##', '#.##', '#..#', '#..#', '#..#', '....', '....'),
+    'r': ('...', '...', '##.', '#.#', '#..', '#..', '#..', '#..', '...', '...'),
+    'm': ('.....', '.....', '##.#.', '#.#.#', '#.#.#', '#.#.#', '#.#.#', '#.#.#', '.....', '.....'),
+    'a': ('...', '...', '.#.', '#.#', '.##', '#.#', '#.#', '.##', '...', '...'),
+    'l': ('#', '#', '#', '#', '#', '#', '#', '#', '.', '.'),
+    'S': ('.#.', '#.#', '#..', '.#.', '..#', '..#', '#.#', '.#.', '...', '...'),
+    'p': ('...', '...', '##.', '#.#', '#.#', '#.#', '#.#', '##.', '#..', '#..'),
+    'e': ('...', '...', '.#.', '#.#', '###', '#..', '#.#', '.#.', '...', '...'),
+    'c': ('...', '...', '.#.', '#.#', '#..', '#..', '#.#', '.#.', '...', '...'),
+    'i': ('#', '.', '#', '#', '#', '#', '#', '#', '.', '.'),
+    'C': ('.#.', '#.#', '#..', '#..', '#..', '#..', '#.#', '.#.', '...', '...'),
+    'b': ('#..', '#..', '##.', '#.#', '#.#', '#.#', '#.#', '##.', '...', '...'),
+    'D': ('##.', '#.#', '#.#', '#.#', '#.#', '#.#', '#.#', '##.', '...', '...'),
+    'R': ('##.', '#.#', '#.#', '#.#', '##.', '#.#', '#.#', '#.#', '...', '...'),
+    's': ('....', '....', '.##.', '#..#', '.#..', '..#.', '#..#', '.##.', '....', '....'),
+    'I': ('###', '.#.', '.#.', '.#.', '.#.', '.#.', '.#.', '###', '...', '...'),
+    'n': ('...', '...', '##.', '#.#', '#.#', '#.#', '#.#', '#.#', '...', '...'),
+    'f': ('..#', '.#.', '###', '.#.', '.#.', '.#.', '.#.', '.#.', '...', '...'),
+    'E': ('###', '#..', '#..', '###', '#..', '#..', '#..', '###', '...', '...'),
+    'd': ('..#', '..#', '.##', '#.#', '#.#', '#.#', '#.#', '.##', '...', '...'),
+}
+_PIXEL_FONT['P'] = _PIXEL_FONT['R'][:5] + ('#..',) * 3 + ('...',) * 2
+_PIXEL_FONT['F'] = _PIXEL_FONT['E'][:7] + ('#..', '...', '...')
+_PIXEL_FONT['u'] = ('...', '...') + tuple(r[::-1] for r in reversed(_PIXEL_FONT['n'][2:8])) + ('...', '...')
+_PIXEL_FONT['q'] = tuple(r[::-1] for r in _PIXEL_FONT['p'])
+_PIXEL_FONT['.'] = ('.',) * 7 + ('#',) + ('.',) * 2
+_PIXEL_KERN = {('r', 'm'): 0}  # the English "rm" of "Normal" touches; every other pair has 1 empty column
+# Sprites 9-10 ("Combo") sit one row higher than the rest of the bar in the original.
+_BAR_RISE = {9: 1, 10: 1}
+
+
+def pixel_word(text: str, w: int, h: int = 16, rise: int = 0):
+    """Rows of a w x h sprite as chars ('.' empty, 'f' letter fill, 'o' outline) with the word in the bar's
+    pixel font centred as the English sprites are. Raises SystemExit if it does not fit."""
+    cols, x = [], 0
+    for i, ch in enumerate(text):
+        glyph = _PIXEL_FONT[ch]
+        if i:
+            x += _PIXEL_KERN.get((text[i - 1], ch), 1)
+        cols.append((x, glyph))
+        x += len(glyph[0])
+    fill_w = x
+    left = max(0, (w - fill_w - 2) // 2 + 1)
+    if left + fill_w > w:
+        raise SystemExit(f'combate: {text!r} no cabe en {w}px')
+    fill = [[False] * w for _ in range(h)]
+    for gx, glyph in cols:
+        for gy, row in enumerate(glyph):
+            for dx, c in enumerate(row):
+                y = 4 - rise + gy
+                if c == '#' and 0 <= y < h:
+                    fill[y][left + gx + dx] = True
+    out = [['.'] * w for _ in range(h)]
+    for y in range(h):
+        for x in range(w):
+            if fill[y][x]:
+                out[y][x] = 'f'
+            elif ((y and fill[y - 1][x]) or (y < h - 1 and fill[y + 1][x])
+                  or (x and fill[y][x - 1]) or (x < w - 1 and fill[y][x + 1])):
+                out[y][x] = 'o'
+    return [''.join(r) for r in out]
 
 
 def combate(files: Files, preview):
-    """Battle command bar, every stage (WKL01..WKL22.BIN): raw uncompressed 4bpp sprites, no LZ
-    budget to respect. Words are redrawn with a small font size (native HUD text is far narrower
-    than the 15pt used elsewhere) and binarised to the sprite's own 2-tone ink (index 3 ink, 1 edge)."""
-    from fuente import render
-    face, size, base = 'CENTURY.TTF', 9, 8
-    ink, edge = 3, 1
+    """Battle command bar, every stage (WKL01..WKL26.BIN): raw uncompressed 4bpp sprites, no LZ budget to
+    respect. Every word is composed with the bar's own condensed pixel font (see _PIXEL_FONT) so it looks
+    like the English one: letter fill keeps the original sprite's colour (1 normal, 12 highlighted),
+    outline is index 3, background 0."""
     for stage in WKL_STAGES:
         wkl = files[f'/SAKURA2/{stage}.BIN']
         sprites = battle_bar_sprites(bytes(wkl))
-        for text, (start, w, h) in zip(BATTLE_BAR_ES, sprites):
-            rows, ww = render(text, face, size, base, height=h, gamma=1.3)
-            squeeze = 1.0
-            while ww > w and squeeze > 0.72:
-                squeeze -= 0.02
-                rows, ww = render(text, face, size, base, squeeze=squeeze, height=h, gamma=1.3)
-            if ww > w:
-                raise SystemExit(f'combate {stage}: {text!r} no cabe en {w}px')
-            left = max(0, (w - ww) // 2)
+        if len(sprites) != len(BATTLE_BAR_ES):
+            raise SystemExit(f'combate {stage}: {len(sprites)} sprites, se esperaban {len(BATTLE_BAR_ES)}')
+        for k, (text, (start, w, h)) in enumerate(zip(BATTLE_BAR_ES, sprites)):
+            old = [((wkl[start + i // 2] >> 4) if i % 2 == 0 else (wkl[start + i // 2] & 15)) for i in range(w * h)]
+            tones = {v for v in old if v not in (0, 3)}
+            if len(tones) != 1:
+                raise SystemExit(f'combate {stage}: sprite {k} con relleno {tones}')
+            fill = tones.pop()
+            rows = pixel_word(text, w, h, _BAR_RISE.get(k, 0))
             for y in range(h):
                 for x in range(w):
+                    v = {'.': 0, 'o': 3, 'f': fill}[rows[y][x]]
                     i_byte = start + (y * w + x) // 2
-                    v = 0
-                    if left <= x < left + ww:
-                        cell = rows[y][x - left]
-                        v = ink if cell and cell <= 6 else (edge if cell else 0)
                     b = wkl[i_byte]
                     if x % 2 == 0:
                         wkl[i_byte] = (v << 4) | (b & 0x0F)
