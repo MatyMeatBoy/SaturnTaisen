@@ -1,0 +1,86 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index ed1d9ee..e57d030 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -8,6 +8,7 @@
+ #include "sakura_ui.h"
+ #include "presentation_layout.h"
+ #include "movie_phase.h"
++#include "title_flash.h"
+ #include "panel_compositing.h"
+ #include "map_crossfade.h"
+ #include "screen_backdrop.h"
+@@ -649,9 +650,21 @@ int RunWindowed(Port &port) {
+                 if(!hdLines.empty()) SDL_UpdateTexture(texture,nullptr,hdNative.data(),320*sizeof(uint32_t));
+             }
+         }
+-        bool enhanced=false,portraitViewport=false;
++        bool enhanced=false,portraitViewport=false,titleFlash=false;
+         const char* presentationKind="native";
+         if(texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
++            const auto& shown=port.videoRenderer->PresentationFrame();
++            if(auto color=AnalyzeTitleFlash(std::span<const uint32_t>(softwareShown),
++                    std::span<const uint8_t>(shown.source),port.videoRenderer->BackgroundPaletteFingerprint(),
++                    std::span{shown.sprites})) {
++                const int canvasWidth=PresentationWidth(wide,high);
++                const SDL_FRect canvas{float((wide-canvasWidth)/2),0,float(canvasWidth),float(high)};
++                SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
++                SDL_SetRenderDrawColor(renderer,uint8_t(*color),uint8_t(*color>>8),uint8_t(*color>>16),255);
++                if(SDL_RenderFillRect(renderer,&canvas)) {enhanced=true;titleFlash=true;presentationKind="title-flash";}
++            }
++        }
++        if(!enhanced && texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& shown=port.videoRenderer->PresentationFrame();std::vector<uint32_t> rows;
+             if(AnalyzeRowBackdrop(softwareShown,shown.source,rows,shown.underSprites,shown.underSource)) {
+                 const auto fit=FitInteger(wide,high,320,224);
+@@ -772,7 +785,7 @@ int RunWindowed(Port &port) {
+                 }
+             }
+         }
+-        if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
++        if (!titleFlash && texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(anchoredBackdrop && planes.width==320 && planes.height==224) {
+                 const auto bg=FitAnchoredBackdrop(wide,high),native=FitInteger(wide,high,320,224);
+diff --git a/port/title_flash.h b/port/title_flash.h
+new file mode 100644
+index 0000000..aa67ab3
+--- /dev/null
++++ b/port/title_flash.h
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <algorithm>
++#include <cstdint>
++#include <optional>
++#include <span>
++
++namespace port {
++// LOGO.SH2's observed direct-RGB full-screen flash, not a generic flat-frame rule.
++// Metadata and pixels must belong to the same presented framebuffer.
++template<class Sprite>
++std::optional<uint32_t> AnalyzeTitleFlash(std::span<const uint32_t> frame,
++        std::span<const uint8_t> source, uint64_t titlePalette,
++        std::span<const Sprite> sprites) {
++    constexpr size_t area=320*224;
++    if(titlePalette!=0x91E480C617AD7F6Cull || frame.size()!=area || source.size()!=area ||
++       sprites.empty() || sprites.size()>4096) return {};
++    const Sprite* flash=nullptr;
++    for(auto at=sprites.rbegin();at!=sprites.rend();++at) {
++        if((at->command.words[0]&15)>=8) continue;
++        flash=&*at;break;
++    }
++    if(!flash) return {};
++    const auto& cmd=flash->command.words;
++    if(cmd[0]!=0x1000 || cmd[2]!=0x00a8 || cmd[3]!=0 || cmd[5]!=0x28e0 ||
++       flash->x!=0 || flash->y!=0 || flash->pixels.size()!=area*2) return {};
++    // Exact observed surface. A partially covered petal field must not be promoted.
++    for(size_t i=0;i<flash->pixels.size();i+=2)
++        if(flash->pixels[i]!=0xff || flash->pixels[i+1]!=0xbf) return {};
++    const auto color=frame.front();
++    if((color>>24)!=0xff ||
++       !std::all_of(frame.begin(),frame.end(),[&](auto p){return p==color;}) ||
++       !std::all_of(source.begin(),source.end(),[](auto layer){return layer==0;})) return {};
++    return color;
++}
++}

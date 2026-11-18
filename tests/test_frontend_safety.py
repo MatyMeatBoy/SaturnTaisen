@@ -15,6 +15,9 @@ DEP=ROOT/'local/deps/satrecomp'
                      and (DEP/'port/integer_viewport.h').is_file(),
                      'requires the locally patched Windows SDL/Clang dependency')
 class FrontendTests(unittest.TestCase):
+    def test_title_flash_requires_exact_surface_and_presented_uniform_pixels(self):
+        self.fixture('title_flash')
+
     def test_choice_preload_requires_exact_resident_script_table_and_cursor(self):
         self.fixture('choice_preload')
 
