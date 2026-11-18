@@ -15,6 +15,8 @@ DEP=ROOT/'local/deps/satrecomp'
                      and (DEP/'port/integer_viewport.h').is_file(),
                      'requires the locally patched Windows SDL/Clang dependency')
 class FrontendTests(unittest.TestCase):
+    def test_first_movie_phase_preserves_other_scene_and_unknown_sprite_frames(self):
+        self.fixture('movie_phase')
     def test_choice_text_requires_complete_owned_panel(self):
         self.fixture('choice_text')
     def test_tactical_menu_recognition_rejects_unknown_or_ambiguous_groups(self):
