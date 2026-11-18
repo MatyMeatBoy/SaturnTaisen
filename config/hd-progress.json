@@ -153,7 +153,7 @@
     {
       "id": "scenes",
       "label": "Escenas y transiciones",
-      "unit": "escenas distintas en ejecución",
+      "unit": "candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo)",
       "scope": "Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.",
       "sources": [
         {
@@ -169,14 +169,15 @@
       "next": "Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.",
       "details": [
         "El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.",
-        "Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos."
+        "Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.",
+        "166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas."
       ],
-      "total": null,
-      "inventory": null,
+      "total": 166,
+      "inventory": 166,
       "matched": null,
       "prepared": null,
       "integrated": null,
-      "verified": null
+      "verified": 9
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Progreso HD
 
-**Objetivo global: 100% verificado. Estado: Indeterminado.**
+**Objetivo global: 100% verificado. Estado: Verificación pendiente.**
 
 Los porcentajes corresponden al inventario definido para cada fila. Una celda «Sin dato» indica una medición pendiente y un cero indica una ausencia confirmada. Los recuentos de candidatos se detallan por separado.
 
@@ -11,7 +11,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | imágenes PC candidatas (147 paquetes) | 3596/3596 (100%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) |
-| Escenas y transiciones | escenas distintas en ejecución | Sin dato | Sin dato | Sin dato | Sin dato | Sin dato |
+| Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | 9/166 (5,4%) |
 
 ## Resumen global de integración
 
@@ -22,11 +22,11 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
-| Escenas y transiciones | Sin dato | Sin dato |
+| Escenas y transiciones | Sin dato | 9/166 (5,4%) |
 
 - **Integración global indicativa (media de 5/6 categorías con total): 39,7%.** Cada categoría pesa igual.
 - **Integración global ponderada por unidad: 319/4541 (7%).** Mezcla unidades distintas; solo orienta.
-- Categorías sin total confirmado: Escenas y transiciones.
+- Categorías sin total confirmado: ninguna.
 
 ## Qué cuenta en cada etapa
 
@@ -110,6 +110,7 @@ Visitas, elecciones, mapas, combates, menús, películas y transiciones navegada
 
 - El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.
 - Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.
+- 166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas.
 - **Siguiente paso**. Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.
 
 - [scene-tagging.md](research/scene-tagging.md).
