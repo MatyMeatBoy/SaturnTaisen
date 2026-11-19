@@ -1,16 +1,89 @@
+diff --git a/port/eve_inset.h b/port/eve_inset.h
+new file mode 100644
+index 0000000..f3d007a
+--- /dev/null
++++ b/port/eve_inset.h
+@@ -0,0 +1,66 @@
++#pragma once
++
++#include <cstddef>
++#include <cstdint>
++#include <span>
++
++namespace port {
++
++struct EveRect {
++    int x;
++    int y;
++    int width;
++    int height;
++    constexpr bool operator==(const EveRect&) const = default;
++};
++
++inline constexpr std::uint64_t kEve202Palette = 0x0D97B7C3CC0B3C31;
++inline constexpr EveRect kEve202NativeRect{16, 8, 288, 144};
++inline constexpr EveRect kEve202PcCrop{0, 20, 564, 282};
++inline constexpr int kEve202PcWidth = 576;
++inline constexpr int kEve202PcHeight = 320;
++inline constexpr char kEve202PcFile[] = "SAKURA2/BG/BBG202.SPR";
++inline constexpr unsigned kEve202PcImage = 0;
++
++struct EveInsetFrame {
++    std::span<const std::uint8_t> source;
++    std::uint64_t layer5Palette;
++    int width;
++    int height;
++    bool layer5OpaqueAtUnitScroll;
++};
++
++inline bool IsEve202Inset(const EveInsetFrame& frame) {
++    constexpr int nativeWidth = 320;
++    constexpr int nativeHeight = 224;
++    constexpr std::uint8_t insetLayer = 5;
++    if (frame.layer5Palette != kEve202Palette || !frame.layer5OpaqueAtUnitScroll ||
++        frame.width != nativeWidth || frame.height != nativeHeight ||
++        frame.source.size() != nativeWidth * nativeHeight) {
++        return false;
++    }
++
++    for (int y = 0; y < nativeHeight; ++y) {
++        for (int x = 0; x < nativeWidth; ++x) {
++            const bool insideInset = x >= kEve202NativeRect.x &&
++                                     x < kEve202NativeRect.x + kEve202NativeRect.width &&
++                                     y >= kEve202NativeRect.y &&
++                                     y < kEve202NativeRect.y + kEve202NativeRect.height;
++            if (insideInset != (frame.source[std::size_t(y) * nativeWidth + x] == insetLayer)) {
++                return false;
++            }
++        }
++    }
++    return true;
++}
++
++constexpr EveRect Eve202Destination(int canvasX, int canvasY, int integerScale) {
++    return {
++        canvasX + kEve202NativeRect.x * integerScale,
++        canvasY + kEve202NativeRect.y * integerScale,
++        kEve202NativeRect.width * integerScale,
++        kEve202NativeRect.height * integerScale,
++    };
++}
++
++}  // namespace port
 diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 5457fa3..728e046 100644
 --- a/port/frontend_sdl.cpp
 +++ b/port/frontend_sdl.cpp
-@@ -22,6 +22,7 @@
- #include "pc_backdrop.h"
+@@ -23,6 +23,7 @@
  #include "pc_spr.h"
+ #include "bg2533_verified_pan.h"
  #include "scene_bg_table.h"
 +#include "eve_inset.h"
  #include "body_table.h"
  #include "verified_body_faces.h"
  #include "film_clip_table.h"
-@@ -608,6 +609,9 @@
-     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
+@@ -612,6 +613,9 @@ int RunWindowed(Port &port) {
+     std::vector<uint32_t> bg2533Native;
      std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
      std::vector<uint32_t> sceneHdForeground;
 +    SceneHd eve202;
@@ -19,10 +92,10 @@ diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
      // T113/S3: the PC clip (MOVIEnnn.MPG) that replaces a Saturn FILM in the picture. Armed by a CD play command whose start FAD is in
      // the table; the clip starts when the film plane fills the picture and follows the guest's frame count; the guest is untouched.
      port::MovieDecoder clipDecoder;
-@@ -1818,6 +1822,97 @@
-                 SDL_RenderFillRect(renderer,&edge);
-             }
-             SDL_RenderTexture(renderer, texture, nullptr, &where);
+@@ -1812,6 +1816,97 @@ int RunWindowed(Port &port) {
+                                         const float outputScale = imageTarget.w / kPanInsetWidth;
+                                         const auto drawRange = [&](unsigned first, unsigned count, uint8_t alpha) {
+                                             const SDL_FRect pcCrop{float((match->offset + first) * 2), 16,
 +            // Replace a previously witnessed opaque tactical inset after its native frame has been drawn.
 +            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && !port.opt.pcAssetsPath.empty() &&
 +                satrecomp::FeatureValue("presentation_mode") == 1 && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
@@ -114,77 +187,6 @@ diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
 +                    }
 +                }
 +            }
-         }
-         }
-         if(portraitViewport && !choosing && !port.menu.IsOpen() && satrecomp::FeatureValue("pc_hd_portraits")==0) {
-diff --git a/port/eve_inset.h b/port/eve_inset.h
-new file mode 100644
---- /dev/null
-+++ b/port/eve_inset.h
-@@ -0,0 +1,66 @@
-+#pragma once
-+
-+#include <cstddef>
-+#include <cstdint>
-+#include <span>
-+
-+namespace port {
-+
-+struct EveRect {
-+    int x;
-+    int y;
-+    int width;
-+    int height;
-+    constexpr bool operator==(const EveRect&) const = default;
-+};
-+
-+inline constexpr std::uint64_t kEve202Palette = 0x0D97B7C3CC0B3C31;
-+inline constexpr EveRect kEve202NativeRect{16, 8, 288, 144};
-+inline constexpr EveRect kEve202PcCrop{0, 20, 564, 282};
-+inline constexpr int kEve202PcWidth = 576;
-+inline constexpr int kEve202PcHeight = 320;
-+inline constexpr char kEve202PcFile[] = "SAKURA2/BG/BBG202.SPR";
-+inline constexpr unsigned kEve202PcImage = 0;
-+
-+struct EveInsetFrame {
-+    std::span<const std::uint8_t> source;
-+    std::uint64_t layer5Palette;
-+    int width;
-+    int height;
-+    bool layer5OpaqueAtUnitScroll;
-+};
-+
-+inline bool IsEve202Inset(const EveInsetFrame& frame) {
-+    constexpr int nativeWidth = 320;
-+    constexpr int nativeHeight = 224;
-+    constexpr std::uint8_t insetLayer = 5;
-+    if (frame.layer5Palette != kEve202Palette || !frame.layer5OpaqueAtUnitScroll ||
-+        frame.width != nativeWidth || frame.height != nativeHeight ||
-+        frame.source.size() != nativeWidth * nativeHeight) {
-+        return false;
-+    }
-+
-+    for (int y = 0; y < nativeHeight; ++y) {
-+        for (int x = 0; x < nativeWidth; ++x) {
-+            const bool insideInset = x >= kEve202NativeRect.x &&
-+                                     x < kEve202NativeRect.x + kEve202NativeRect.width &&
-+                                     y >= kEve202NativeRect.y &&
-+                                     y < kEve202NativeRect.y + kEve202NativeRect.height;
-+            if (insideInset != (frame.source[std::size_t(y) * nativeWidth + x] == insetLayer)) {
-+                return false;
-+            }
-+        }
-+    }
-+    return true;
-+}
-+
-+constexpr EveRect Eve202Destination(int canvasX, int canvasY, int integerScale) {
-+    return {
-+        canvasX + kEve202NativeRect.x * integerScale,
-+        canvasY + kEve202NativeRect.y * integerScale,
-+        kEve202NativeRect.width * integerScale,
-+        kEve202NativeRect.height * integerScale,
-+    };
-+}
-+
-+}  // namespace port
+                                                                   float(count * 2), 288};
+                                             const SDL_FRect target{imageTarget.x + first * outputScale, imageTarget.y,
+                                                                    count * outputScale, imageTarget.h};
