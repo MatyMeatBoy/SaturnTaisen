@@ -116,13 +116,15 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T98 | P1 | shard | implemented · `config/film-fad-map.json` | S1: `tools/gen_film_fad_map.py` maps the start FAD of every Saturn FILM (54 entries, duplicates share a clip) to its MOVIEnnn by measured duration. 52 paired; the six alternate cuts (004, 009, 011, 020, 102, 105) are flagged `alternate_cut`; MOVIE118 and REDLOGO unpaired. Names, FADs and durations only. Needs the discs only to regenerate. |
 | T99 | P1 | shard | implemented and tested · patch0072 | S2 MPEG decode: `port/movie_decoder.h` (pl_mpeg worker thread, double-buffered RGBA frames, float stereo audio) with `tests/test_movie_decoder.cpp`. Tested standalone on PC clips MOVIE001 and MOVIE009: 48 and 60 frames and over 129,000 audio floats in 2 s against a wall clock. Not yet used by the runtime (S3, T100) and not in a package. |
 | T100 | P1 | shard | open · see docs/SHARDS.md | S3 clip hook: play-command start FAD to PC clip drawn in 16:9, guest untouched. |
-| T101 | P1 | shard | open · see docs/SHARDS.md | S4 clip audio: PC MP2 audio for the 44 duration-matched pairs. |
+| T101 | P1 | shard | partial · table and tests only; no runtime audio | S4 clip audio: PC MP2 audio for the 44 duration-matched pairs. Done: `config/clip-audio-map.json` (44 clips `audio: pc`, 6 alternate cuts `saturn`, every disc/FAD start), `tools/gen_clip_audio_map.py`, `tests/test_clip_audio_map.py`, design in `docs/research/video-equivalence.md`. Not done: runtime mixing, resampling, drift handling (T111, T112); audio content and lip sync not compared. |
 | T102 | P1 | shard | open · see docs/SHARDS.md | S5 HUD and menus recogniser from the T23/T54 inventory. |
 | T103 | P1 | shard | open · see docs/SHARDS.md | S6 VDP software drawing speed, pixel-identical (about 7 ms per frame). |
 | T104 | P1 | shard | open · see docs/SHARDS.md | S7 SH-2 block dispatch speed, identical guest hashes (about 6.5 ms per frame). |
 | T105 | P1 | shard | open · see docs/SHARDS.md | S8 scrolling and battle backgrounds (BBG/EVE, variant-B wide pictures). |
 | T106 | P1 | shard | open · see docs/SHARDS.md | S9 native-face patches for NC30/NC20 and fade-in of bodies. |
 | T107 | P1 | shard | open · see docs/SHARDS.md | S10 Spanish cards: widening for their fingerprints, painted art (owner reviews T87). |
+| T111 | P1 | shard | open | S4a mix the PC MP2 float stereo of a `audio: pc` clip into the output (resample, mute only the Saturn FILM audio), after T108/T109; needs a runtime build. |
+| T112 | P2 | shard | open | S4b audio/video sync and loudness check of the 44 pairs, drift re-seek; owner listens to a sample. |
 
 ## Split for collaborators
 
