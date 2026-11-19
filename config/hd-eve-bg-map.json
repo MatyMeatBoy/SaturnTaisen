@@ -1,0 +1,457 @@
+{
+ "schema": 1,
+ "scope": "EVE pictures and scrolling variant-B pictures recognised by the runtime (T105)",
+ "eve": [
+  {
+   "eve": "EVE002",
+   "discs": [
+    "1"
+   ],
+   "palette": "5D66F0207B8DD266",
+   "pc_file": "SAKURA2/BG/BBG002.SPR",
+   "pc_image_index": 0,
+   "window": null,
+   "fit": null,
+   "enabled": false,
+   "witness": null
+  },
+  {
+   "eve": "EVE0101",
+   "discs": [
+    "1",
+    "2"
+   ],
+   "palette": "D3C319A0279AEDB3",
+   "pc_file": "SAKURA2/BG/BBG001.SPR",
+   "pc_image_index": 0,
+   "window": [
+    -16,
+    -16,
+    648,
+    346
+   ],
+   "fit": 0.911,
+   "enabled": true,
+   "witness": "battle-entry-ref-3000"
+  },
+  {
+   "eve": "EVE0116",
+   "discs": [
+    "1",
+    "2"
+   ],
+   "palette": "BABF974513C7F5B4",
+   "pc_file": "SAKURA2/BG/BBG201.SPR",
+   "pc_image_index": 0,
+   "window": null,
+   "fit": null,
+   "enabled": false,
+   "witness": null
+  },
+  {
+   "eve": "EVE0118",
+   "discs": [
+    "1",
+    "2"
+   ],
+   "palette": "D53405084F3310B9",
+   "pc_file": "SAKURA2/BG/BBG101.SPR",
+   "pc_image_index": 0,
+   "window": null,
+   "fit": null,
+   "enabled": false,
+   "witness": null
+  },
+  {
+   "eve": "EVE102",
+   "discs": [
+    "1"
+   ],
+   "palette": "4308595E86AF5A10",
+   "pc_file": "SAKURA2/BG/BBG102.SPR",
+   "pc_image_index": 0,
+   "window": null,
+   "fit": null,
+   "enabled": false,
+   "witness": null
+  },
+  {
+   "eve": "EVE105",
+   "discs": [
+    "1"
+   ],
+   "palette": "87AEDEC945E0F9C3",
+   "pc_file": "SAKURA2/BG/BBG105.SPR",
+   "pc_image_index": 0,
+   "window": null,
+   "fit": null,
+   "enabled": false,
+   "witness": null
+  },
+  {
+   "eve": "EVE202",
+   "discs": [
+    "1"
+   ],
+   "palette": "0D97B7C3CC0B3C31",
+   "pc_file": "SAKURA2/BG/BBG202.SPR",
+   "pc_image_index": 0,
+   "window": [
+    -8,
+    12,
+    576,
+    310
+   ],
+   "fit": 0.885,
+   "enabled": true,
+   "witness": "chapter-2 cold-native finish"
+  },
+  {
+   "eve": "EVE205",
+   "discs": [
+    "1"
+   ],
+   "palette": "C37A14C8F1D98E80",
+   "pc_file": "SAKURA2/BG/BBG205.SPR",
+   "pc_image_index": 0,
+   "window": null,
+   "fit": null,
+   "enabled": false,
+   "witness": null
+  },
+  {
+   "eve": "EVE207",
+   "discs": [
+    "1"
+   ],
+   "palette": "3816EDE30024F930",
+   "pc_file": "SAKURA2/BG/BBG207.SPR",
+   "pc_image_index": 0,
+   "window": null,
+   "fit": null,
+   "enabled": false,
+   "witness": null
+  }
+ ],
+ "scroll": [
+  {
+   "file": "SAKURA1/BG2267.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "06A6087696AA1A72",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2533.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "09884FF240CB5BF3",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2269.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "09CE9EC2F1BB4A9D",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG1282.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "1D0FF907BAB974CB",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG1283.BIN",
+   "class": "wide_scroll",
+   "size": [
+    472,
+    144
+   ],
+   "palette": "26F18F4F1E59358D",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2176.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "2D7CB74664182158",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG1257.BIN",
+   "class": "wide_scroll",
+   "size": [
+    456,
+    144
+   ],
+   "palette": "448239D6432A9B55",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2207.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "45D633A0744CE417",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2247.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "524ED18124B313CB",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2252.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "524ED18124B313CB",
+   "draw": false,
+   "reason": "PC redraw failed the scene alignment check (T105c)"
+  },
+  {
+   "file": "SAKURA1/BG2295.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    208
+   ],
+   "palette": "5B088DCCBE6E471B",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2238.BIN",
+   "class": "wide_scroll",
+   "size": [
+    320,
+    144
+   ],
+   "palette": "5DEDEF54BF2F059D",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2093.BIN",
+   "class": "wide_scroll",
+   "size": [
+    320,
+    144
+   ],
+   "palette": "65D40E5ACD068572",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2268.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "6A7265C4FB3D58C9",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG1207.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "6EE7138F39DF8CFE",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2518.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "87B5B9962558B0C2",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG1285.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "8B6362BE73FB2551",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2290.BIN",
+   "class": "wide_scroll",
+   "size": [
+    432,
+    144
+   ],
+   "palette": "9215200C4EBC0C10",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG1280.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "94A0F3C8D42BFDF3",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2515.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "9D943456BFD21B9A",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG1310.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "AED8F5CB44782A19",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2130.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "B23A4255D836A48A",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2172.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    280
+   ],
+   "palette": "C3DDD60B21EBD1A9",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2077.BIN",
+   "class": "wide_scroll",
+   "size": [
+    440,
+    144
+   ],
+   "palette": "C8472F16A1D8EDBF",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG4302.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "D44DD8EED0AAEFF6",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2265.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "DB8E755239A7A38D",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2266.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "DC3B5A452E7BE06E",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG4372.BIN",
+   "class": "wide_scroll",
+   "size": [
+    512,
+    144
+   ],
+   "palette": "EC27F86E7B6DEFC5",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  },
+  {
+   "file": "SAKURA1/BG2248.BIN",
+   "class": "tall_scroll",
+   "size": [
+    288,
+    296
+   ],
+   "palette": "F0AFCDD75EBA9DA2",
+   "draw": false,
+   "reason": "no per-identity transform and no gameplay scroll witness (T105c2)"
+  }
+ ]
+}

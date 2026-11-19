@@ -89,7 +89,8 @@
       "patches/0084-sakura-sh2-wait-detector-in-place.patch",
       "patches/0085-sakura-episode-surround.patch",
       "patches/0086-sakura-spanish-episode-lettering.patch",
-      "patches/0089-sakura-verified-body-faces.patch"
+      "patches/0089-sakura-verified-body-faces.patch",
+      "patches/0090-sakura-eve-scroll-runtime.patch"
     ]
   }
 }
