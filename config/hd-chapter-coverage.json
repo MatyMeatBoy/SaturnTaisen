@@ -18,6 +18,14 @@
             "pc": "SAKURA1/NC/NC20.SPR",
             "runtime_evidence": "docs/research/saturn-bg-format.md",
             "status": "hd"
+          },
+          "1:/SAKURA1/NC30.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC30.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd"
           }
         },
         "film": {
@@ -2113,13 +2121,6 @@
         "association": "unknown",
         "pc": "SAKURA1/NC/NC28.SPR",
         "status": "wired-unverified"
-      },
-      "1:/SAKURA1/NC30.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC30.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
       },
       "1:/SAKURA1/NC3001.BIN": {
         "association": "unknown",
