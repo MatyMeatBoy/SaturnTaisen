@@ -127,7 +127,8 @@
       "patches/0129-sakura-bg1306-guarded-viewport.patch",
       "patches/0130-sakura-body-cutout-mask.patch",
       "patches/0131-sakura-restore-tactical-inset-crop.patch",
-      "patches/0132-sakura-forest-vertical-pans.patch"
+      "patches/0132-sakura-forest-vertical-pans.patch",
+      "patches/0133-sakura-bg2260-fixed-viewport.patch"
     ]
   }
 }
