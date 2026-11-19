@@ -133,7 +133,8 @@
       "patches/0135-sakura-scroll-picture-table.patch",
       "patches/0136-sakura-eve0101-registered-inset.patch",
       "patches/0137-sakura-ending-photos.patch",
-      "patches/0138-sakura-map02-pc-ground.patch"
+      "patches/0138-sakura-map02-pc-ground.patch",
+      "patches/0139-sakura-map06-pc-ground.patch"
     ]
   }
 }
