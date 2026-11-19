@@ -819,3 +819,33 @@ The 900-frame opening-skip replay matched all guest hashes and three
 measured 54,336,384,331 logical bytes with hard links counted once and
 reparse points excluded, above the 20 GB cap. The delivered development
 ZIP remains 6,315,009,692 bytes.
+
+
+### BG2260 bounded PC crop (TP4b)
+
+Both Saturn discs carry the same 45,120-byte BG2260.BIN, a 288×144
+classic background. Its file FNV-1a is `41BC14EBE753681F`. The matching
+PC picture is subimage 0 of BG2260.SPR, 576×320, with file FNV-1a
+`83804DDDE0CA0D5C`. A fit to 294 visual landmarks placed the leftmost two
+native columns outside the PC frame. The compositor keeps those columns
+from Saturn and draws the PC crop at (2,17), 551×298, over the remaining
+286×144 native pixels. The overlap luminance correlation is 0.998679.
+
+The guard requires palette `2A98A004725586E8` on layer 2 or 4, ownership
+of the entire native viewport by that same layer, and RGB FNV-1a
+`3A96088E941C8595`. This retains the native render for fades, overlays and
+other layouts. The runtime pins the PC file size and fingerprint before
+decoding. Coverage records a guarded connection on both discs. A live
+BG2260 game witness and packaging remain pending.
+
+
+The compiled 125-patch candidate has SHA-256
+`77254777905a49336c54b0efe1603b3936713a386c755f817ecf036aeda2bf51`.
+The same 900-frame opening replay matched patch 0132 in every guest
+hash and in three 2560×1440 captures, with zero interpreted blocks.
+An isolated guard check used the decoded native picture and rejected
+a changed pixel and a changed foreground owner. The generic scene
+table was byte-identical after regeneration. The main workspace
+measured 59,000,907,790 logical bytes with hard links counted once and
+reparse points excluded, above the 20 GB cap. The delivered development
+ZIP remains 6,315,009,692 bytes.

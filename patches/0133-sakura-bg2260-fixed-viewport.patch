@@ -1,0 +1,72 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -672,6 +672,7 @@
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
++    SceneHd bg2260;
+     SceneHd bg1306;
+     std::vector<uint32_t> bg1306Native;
+     SceneHd bg2238;
+@@ -2283,6 +2284,30 @@
+                                     break;
+                                 }
+                             }
++                            if (!drewHd && !drewClip && !choosing && !port.menu.IsOpen() &&
++                                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0) {
++                                constexpr uint64_t palette = 0x2A98A004725586E8ull;
++                                constexpr uint64_t rgb = 0x3A96088E941C8595ull;
++                                for (uint8_t layer : {2u, 4u}) {
++                                    if (port.videoRenderer->BackgroundPaletteFingerprint(layer) != palette ||
++                                        !MatchesFixedViewport(softwareShown, planes.topSource, layer, rgb)) continue;
++                                    if (!bg2260.tried) {
++                                        bg2260.tried = true;
++                                        queuePinnedPan(bg2260, "SAKURA1/BG/BG2260.SPR", 141985, 0x83804DDDE0CA0D5Cull, 576, 320);
++                                    }
++                                    finishPinnedPan(bg2260);
++                                    if (bg2260.texture) {
++                                        // The PC crop begins two columns into the native picture.
++                                        const float left = 2 * imageTarget.w / 288;
++                                        const SDL_FRect target{imageTarget.x + left, imageTarget.y,
++                                                               imageTarget.w - left, imageTarget.h};
++                                        constexpr SDL_FRect pcCrop{2, 17, 551, 298};
++                                        SDL_RenderTexture(renderer, content, &imageCrop, &imageTarget);
++                                        drewHd = SDL_RenderTexture(renderer, bg2260.texture, &pcCrop, &target);
++                                    }
++                                    break;
++                                }
++                            }
+                             if(!drewClip && !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 && port.videoRenderer &&
+                                planes.source.size()==320*224) {
+                                 for(const uint32_t layer:{2u,4u}) {
+diff --git a/port/bg2238_verified_still.h b/port/bg2238_verified_still.h
+--- a/port/bg2238_verified_still.h
++++ b/port/bg2238_verified_still.h
+@@ -10,17 +10,22 @@
+ inline constexpr uint64_t kBG2238Cells = 0xCA9BDE72C500A276ull;
+ inline constexpr unsigned kBG2238CellBytes = 46016;
+ 
+-inline bool MatchesBG2238Still(std::span<const uint32_t> rgb, std::span<const uint8_t> layers) {
+-    if (rgb.size() != 320 * 224 || layers.size() != rgb.size()) return false;
++inline bool MatchesFixedViewport(std::span<const uint32_t> rgb, std::span<const uint8_t> layers,
++                                 uint8_t layer, uint64_t expectedRgb) {
++    if ((layer != 2 && layer != 4) || rgb.size() != 320 * 224 || layers.size() != rgb.size()) return false;
+     uint64_t fingerprint = 14695981039346656037ull;
+     for (int y = 8; y < 152; ++y) {
+         for (int x = 16; x < 304; ++x) {
+             const auto at = y * 320 + x;
+-            if (layers[at] != 2) return false;
++            if (layers[at] != layer) return false;
+             for (unsigned shift = 0; shift < 24; shift += 8)
+                 fingerprint = (fingerprint ^ uint8_t(rgb[at] >> shift)) * 1099511628211ull;
+         }
+     }
+-    return fingerprint == 0x095A6EAF8E529EE5ull;
++    return fingerprint == expectedRgb;
++}
++
++inline bool MatchesBG2238Still(std::span<const uint32_t> rgb, std::span<const uint8_t> layers) {
++    return MatchesFixedViewport(rgb, layers, 2, 0x095A6EAF8E529EE5ull);
+ }
+ }

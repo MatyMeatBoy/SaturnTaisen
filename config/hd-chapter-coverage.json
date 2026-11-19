@@ -8930,7 +8930,8 @@
       },
       "1:/SAKURA1/BG2260.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/BG/BG2260.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2261.BIN": {
         "association": "unknown",
@@ -12849,7 +12850,8 @@
       },
       "2:/SAKURA1/BG2260.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/BG/BG2260.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2261.BIN": {
         "association": "unknown",

@@ -188,6 +188,7 @@
     "BG4296",
     "BG4299",
     "BG4376",
+    "BG2260",
     "EVE002",
     "EVE0116",
     "EVE0118",
@@ -199,6 +200,7 @@
   "guarded_viewport": [
     "BG1306",
     "BG2207",
+    "BG2260",
     "BG2265",
     "BG2266",
     "BG2267",
@@ -231,7 +233,6 @@
     "BG2240": "composition or colour grading differs",
     "BG2241": "composition or colour grading differs",
     "BG2243": "composition or colour grading differs",
-    "BG2260": "composition or colour grading differs",
     "BG2263": "composition or colour grading differs",
     "BG2119": "composition or colour grading differs",
     "BG4053": "same figures but another grouping/animation frame than the PC picture of that number",
