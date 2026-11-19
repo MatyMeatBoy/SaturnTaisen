@@ -28,9 +28,9 @@ EVE_PAIRS = {
     'EVE202': 'BBG202', 'EVE205': 'BBG205', 'EVE207': 'BBG207',
 }
 # The documented draws include partial native faces and conditional fallbacks.
-BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
+BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
 # Only the disc and scenes shown in the 1440p office-return replays.
-OFFICE_BG_DRAWS = {(1, f'/SAKURA1/BG{number}.BIN') for number in (1001, 1006, 1011, 1012, 1017, 1209, 2159, 2250, 2251)}  # 1001, 1006, 1209, 2159, 2250, 2251: docs/research/coverage-campaign-v026.md
+OFFICE_BG_DRAWS = {(1, f'/SAKURA1/BG{number}.BIN') for number in (1001, 1006, 1011, 1012, 1017, 1045, 1209, 2159, 2250, 2251)}  # 1001, 1006, 1209, 2159, 2250, 2251: docs/research/coverage-campaign-v026.md
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
