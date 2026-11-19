@@ -129,7 +129,8 @@
       "patches/0131-sakura-restore-tactical-inset-crop.patch",
       "patches/0132-sakura-forest-vertical-pans.patch",
       "patches/0133-sakura-bg2260-fixed-viewport.patch",
-      "patches/0134-sakura-square-battle-insets.patch"
+      "patches/0134-sakura-square-battle-insets.patch",
+      "patches/0135-sakura-scroll-picture-table.patch"
     ]
   }
 }

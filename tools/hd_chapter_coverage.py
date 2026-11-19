@@ -20,6 +20,7 @@ SWEEP_REPORT = 'docs/research/chapter-sweep.md'
 BG1285_REPORT = 'docs/research/bg1285-pan.md'
 BG1207_REPORT = 'docs/research/bg1207-pan.md'
 BG2248_REPORT = 'docs/research/bg2248-pan.md'
+SCROLL_REPORT = 'docs/research/scroll-table.md'
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
 CHAPTER1_ROUTE_REPORT = 'docs/research/hd-chapter-1.md#observations-from-the-full-cold-route'
 # The replay identifies active donors. BG2004 shares native cells and palette
@@ -177,6 +178,7 @@ def build(root, index_dir, portrait_audit):
     films = {(r['disc'], r['fad']): r for r in config('film-fad-map')['streams']}
     bg = pairs(config('hd-scene-bg-map'))
     bg_review = config('hd-scene-bg-review')
+    scroll_rows = {row['name'] for row in config('hd-scroll-pictures')['rows']}
     bg_table, bg_cell_table = runtime_bg_entries(root)
     donor_hashes = {
         (row['pc_file'], str(row['pc_image_index'])): row.get('pc_sha256')
@@ -325,6 +327,10 @@ def build(root, index_dir, portrait_audit):
                     row['status'] = 'hd'
                     if (disc, path) in SCENE_DRAWS:
                         row.update(verified_in_game=True, runtime_evidence=SCENE_DRAWS[(disc, path)][1])
+                elif name in scroll_rows:
+                    # TP2: a row of the scroll-picture table (config/hd-scroll-pictures.json) is drawn by the runtime's table path.
+                    row['status'] = 'hd'
+                    row.setdefault('runtime_evidence', SCROLL_REPORT)
                 elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
                     row['runtime_evidence'] = SCENE_DRAWS[(disc, path)][1]
