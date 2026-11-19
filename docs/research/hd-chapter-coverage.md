@@ -16,3 +16,7 @@ python -m unittest discover -s tests -p "test_hd*.py"
 ```
 
 The progress panel counts accepted matches, source-level integration and in-game validation separately. Its updated scene-image count uses distinct PC filenames, while the chapter index lists Saturn files by disc and FILM streams by disc and offset. The NC panel uses Saturn body packages as its unit and counts six integrated bodies with documented draws. A measured preparation count or a complete in-game verification count is still pending in these updated categories.
+
+## Status vocabulary (corrected 2026-11-19)
+
+`hd`, `wired-unverified`, `excluded`, `unsupported-size`, `paired-not-wired`, `unpaired` and `unknown` are defined in the `status` block of the JSON and in `docs/SHARDS.md` ("How to read the coverage numbers"). The first version of this register reported every accepted pair that was not a documented draw as `paired-not-wired`; that counted bodies already in the runtime table, cut-outs excluded on purpose and pictures of a size the runtime does not draw, so the pool of work looked far larger than it is.

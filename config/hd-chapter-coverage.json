@@ -2027,17 +2027,20 @@
   ],
   "schema": 1,
   "status": {
+    "excluded": "Paired but never replaced by design (key-colour character cut-outs, the blank picture).",
     "hd": "Runtime supports this substitution or a documented partial draw. Scene occurrence and full replay verification are separate.",
-    "paired-not-wired": "Accepted counterpart without a confirmed per-identity runtime draw. Alternate film cuts stay native.",
+    "paired-not-wired": "Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette) or an alternate film cut, which stays native. Not a to-do list: check `reason` first.",
     "unknown": "Pairing or integration is not established by the input catalogs.",
-    "unpaired": "The catalog records a rejected or absent counterpart."
+    "unpaired": "The catalog records a rejected or absent counterpart.",
+    "unsupported-size": "Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).",
+    "wired-unverified": "The runtime table holds this body and tries to draw it when it appears; no in-game observation is recorded yet (hd means a documented draw)."
   },
   "unassigned": {
     "bodies": {
       "1:/SAKURA1/NC10.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC10.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC11.BIN": {
         "association": "unknown",
@@ -2049,67 +2052,67 @@
       "1:/SAKURA1/NC12.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC12.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC13.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC13.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC14.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC14.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC15.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC15.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC16.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC16.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC21.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC21.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC22.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC22.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC23.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC23.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC24.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC24.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC25.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC25.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC26.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC26.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC27.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC27.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC28.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC28.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC30.BIN": {
         "association": "unknown",
@@ -2121,57 +2124,57 @@
       "1:/SAKURA1/NC3001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3001.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3002.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3003.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3004.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3005.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3006.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3007.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3007.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3008.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3008.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3009.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3009.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3010.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3010.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3011.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3013.BIN": {
         "association": "unknown",
@@ -2180,112 +2183,112 @@
       "1:/SAKURA1/NC3014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3014.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3015.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3016.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3017.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3017.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3018.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3021.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3021.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3022.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3022.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3023.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3023.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3024.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3024.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3025.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3025.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3027.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3027.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3028.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3028.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3029.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3029.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3030.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3030.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3031.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3031.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3032.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3032.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3037.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3038.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3040.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3042.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3042.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3043.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3043.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3045.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3045.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3047.BIN": {
         "association": "unknown",
@@ -2294,12 +2297,12 @@
       "1:/SAKURA1/NC3050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3050.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3056.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3056.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3057.BIN": {
         "association": "unknown",
@@ -2312,7 +2315,7 @@
       "1:/SAKURA1/NC3059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3059.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
@@ -2321,32 +2324,32 @@
       "1:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3071.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC31.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC31.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3101.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3102.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3106.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3107.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
@@ -2379,47 +2382,47 @@
       "1:/SAKURA1/NC32.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC32.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3210.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3210.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3222.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3222.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3250.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3250.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3254.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3254.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3255.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3255.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3256.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3256.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3261.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3261.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3264.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3264.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3285.BIN": {
         "association": "unknown",
@@ -2436,32 +2439,32 @@
       "1:/SAKURA1/NC33.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC33.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC34.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC34.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC35.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC35.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3502.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3503.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3503.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3516.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3516.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
@@ -2470,32 +2473,32 @@
       "1:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3518.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3519.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3519.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC3525.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3525.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC36.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC36.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC40.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC40.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC41.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC41.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
@@ -2504,112 +2507,112 @@
       "1:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4182.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4199.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4199.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC42.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC42.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4281.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4281.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC43.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC43.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4329.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4329.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4332.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4332.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4335.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4335.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4336.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4336.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4338.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4338.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4339.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4339.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4341.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4341.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4342.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4342.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4344.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4344.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4355.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4355.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC4384.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4384.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC44.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC44.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC50.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC50.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC51.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC51.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC52.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC52.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC53.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC53.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC54.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC54.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC55.BIN": {
         "association": "unknown",
@@ -2621,77 +2624,77 @@
       "1:/SAKURA1/NC56.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC56.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC60.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC60.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC61.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC61.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC62.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC62.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC63.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC63.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC64.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC64.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC65.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC65.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC70.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC70.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC71.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC71.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC72.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC72.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC73.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC73.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC75.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC75.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC76.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC76.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC80.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC80.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC81.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC81.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC82.BIN": {
         "association": "unknown",
@@ -2703,17 +2706,17 @@
       "1:/SAKURA1/NC83.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC83.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC90.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC90.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC91.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC91.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC92.BIN": {
         "association": "unknown",
@@ -2722,22 +2725,22 @@
       "1:/SAKURA1/NC93.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC93.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC94.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC94.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC95.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC95.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC96.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC96.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC97.BIN": {
         "association": "unknown",
@@ -2749,17 +2752,17 @@
       "1:/SAKURA1/NC98.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC98.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "1:/SAKURA1/NC99.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC99.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC10.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC10.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC11.BIN": {
         "association": "unknown",
@@ -2771,27 +2774,27 @@
       "2:/SAKURA1/NC12.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC12.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC13.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC13.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC14.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC14.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC15.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC15.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC16.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC16.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC20.BIN": {
         "association": "unknown",
@@ -2803,42 +2806,42 @@
       "2:/SAKURA1/NC21.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC21.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC22.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC22.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC23.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC23.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC24.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC24.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC25.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC25.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC26.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC26.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC27.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC27.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC28.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC28.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC30.BIN": {
         "association": "unknown",
@@ -2850,57 +2853,57 @@
       "2:/SAKURA1/NC3001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3001.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3002.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3003.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3004.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3005.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3006.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3007.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3007.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3008.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3008.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3009.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3009.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3010.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3010.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3011.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3013.BIN": {
         "association": "unknown",
@@ -2909,112 +2912,112 @@
       "2:/SAKURA1/NC3014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3014.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3015.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3016.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3017.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3017.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3018.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3021.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3021.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3022.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3022.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3023.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3023.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3024.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3024.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3025.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3025.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3027.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3027.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3028.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3028.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3029.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3029.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3030.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3030.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3031.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3031.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3032.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3032.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3037.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3038.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3040.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3042.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3042.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3043.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3043.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3045.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3045.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3047.BIN": {
         "association": "unknown",
@@ -3023,12 +3026,12 @@
       "2:/SAKURA1/NC3050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3050.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3056.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3056.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3057.BIN": {
         "association": "unknown",
@@ -3041,7 +3044,7 @@
       "2:/SAKURA1/NC3059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3059.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
@@ -3050,32 +3053,32 @@
       "2:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3071.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC31.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC31.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3101.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3102.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3106.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3107.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
@@ -3108,47 +3111,47 @@
       "2:/SAKURA1/NC32.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC32.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3210.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3210.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3222.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3222.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3250.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3250.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3254.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3254.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3255.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3255.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3256.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3256.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3261.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3261.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3264.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3264.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3285.BIN": {
         "association": "unknown",
@@ -3165,32 +3168,32 @@
       "2:/SAKURA1/NC33.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC33.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC34.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC34.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC35.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC35.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3502.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3503.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3503.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3516.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3516.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
@@ -3199,32 +3202,32 @@
       "2:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3518.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3519.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3519.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC3525.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3525.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC36.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC36.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC40.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC40.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC41.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC41.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
@@ -3233,112 +3236,112 @@
       "2:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4182.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4199.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4199.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC42.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC42.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4281.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4281.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC43.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC43.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4329.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4329.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4332.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4332.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4335.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4335.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4336.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4336.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4338.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4338.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4339.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4339.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4341.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4341.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4342.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4342.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4344.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4344.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4355.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4355.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC4384.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4384.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC44.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC44.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC50.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC50.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC51.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC51.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC52.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC52.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC53.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC53.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC54.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC54.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC55.BIN": {
         "association": "unknown",
@@ -3350,77 +3353,77 @@
       "2:/SAKURA1/NC56.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC56.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC60.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC60.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC61.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC61.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC62.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC62.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC63.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC63.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC64.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC64.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC65.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC65.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC70.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC70.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC71.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC71.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC72.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC72.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC73.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC73.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC75.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC75.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC76.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC76.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC80.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC80.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC81.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC81.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC82.BIN": {
         "association": "unknown",
@@ -3432,17 +3435,17 @@
       "2:/SAKURA1/NC83.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC83.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC90.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC90.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC91.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC91.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC92.BIN": {
         "association": "unknown",
@@ -3451,22 +3454,22 @@
       "2:/SAKURA1/NC93.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC93.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC94.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC94.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC95.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC95.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC96.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC96.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC97.BIN": {
         "association": "unknown",
@@ -3478,12 +3481,12 @@
       "2:/SAKURA1/NC98.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC98.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/NC99.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC99.SPR",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       }
     },
     "film": {
@@ -5910,21 +5913,25 @@
       "1:/SAKURA1/BG1011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1011.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1012.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1012.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1014.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1015.BIN": {
@@ -5935,6 +5942,7 @@
       "1:/SAKURA1/BG1016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1016.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1017.BIN": {
@@ -6041,21 +6049,25 @@
       "1:/SAKURA1/BG1037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1039.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1040.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1041.BIN": {
@@ -6106,21 +6118,25 @@
       "1:/SAKURA1/BG1050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1050.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1051.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1051.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1052.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1053.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1053.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1054.BIN": {
@@ -6252,11 +6268,13 @@
       "1:/SAKURA1/BG1079.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1079.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1080.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1080.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1081.BIN": {
@@ -6267,16 +6285,19 @@
       "1:/SAKURA1/BG1082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1082.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1083.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1084.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1085.BIN": {
@@ -6287,11 +6308,13 @@
       "1:/SAKURA1/BG1086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1086.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1087.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1087.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1088.BIN": {
@@ -6302,11 +6325,13 @@
       "1:/SAKURA1/BG1089.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1089.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1090.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1090.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1091.BIN": {
@@ -6317,11 +6342,13 @@
       "1:/SAKURA1/BG1092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1092.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1093.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1094.BIN": {
@@ -6332,11 +6359,13 @@
       "1:/SAKURA1/BG1095.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1095.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1096.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1097.BIN": {
@@ -6347,31 +6376,37 @@
       "1:/SAKURA1/BG1098.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1098.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1099.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1100.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1100.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1101.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1102.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1103.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1104.BIN": {
@@ -6497,6 +6532,7 @@
       "1:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1132.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1134.BIN": {
@@ -6512,16 +6548,19 @@
       "1:/SAKURA1/BG1136.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1136.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1143.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1144.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1144.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1148.BIN": {
@@ -6722,7 +6761,8 @@
       "1:/SAKURA1/BG1207.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1207.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG1208.BIN": {
         "association": "unknown",
@@ -6920,7 +6960,8 @@
       "1:/SAKURA1/BG1257.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1257.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [456, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG1259.BIN": {
         "association": "unknown",
@@ -6985,7 +7026,8 @@
       "1:/SAKURA1/BG1280.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1280.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG1281.BIN": {
         "association": "unknown",
@@ -6995,12 +7037,14 @@
       "1:/SAKURA1/BG1282.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1282.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG1283.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1283.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [472, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG1284.BIN": {
         "association": "unknown",
@@ -7010,7 +7054,8 @@
       "1:/SAKURA1/BG1285.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1285.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG1289.BIN": {
         "association": "unknown",
@@ -7040,11 +7085,13 @@
       "1:/SAKURA1/BG1295.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1295.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1296.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1296.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG1297.BIN": {
@@ -7114,7 +7161,8 @@
       "1:/SAKURA1/BG1310.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1310.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG1311.BIN": {
         "association": "unknown",
@@ -7340,16 +7388,19 @@
       "1:/SAKURA1/BG2001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2002.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2003.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2004.BIN": {
@@ -7360,31 +7411,37 @@
       "1:/SAKURA1/BG2005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2005.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2006.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2007.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2007.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2008.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2008.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2009.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2009.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2010.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2010.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2011.BIN": {
@@ -7400,6 +7457,7 @@
       "1:/SAKURA1/BG2013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2013.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2014.BIN": {
@@ -7410,6 +7468,7 @@
       "1:/SAKURA1/BG2015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2015.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2016.BIN": {
@@ -7425,6 +7484,7 @@
       "1:/SAKURA1/BG2018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2018.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2019.BIN": {
@@ -7445,6 +7505,7 @@
       "1:/SAKURA1/BG2022.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2022.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2023.BIN": {
@@ -7514,16 +7575,19 @@
       "1:/SAKURA1/BG2036.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2037.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2038.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2039.BIN": {
@@ -7716,7 +7780,8 @@
       "1:/SAKURA1/BG2077.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2077.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [440, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2078.BIN": {
         "association": "unknown",
@@ -7786,7 +7851,8 @@
       "1:/SAKURA1/BG2093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2093.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2094.BIN": {
         "association": "unknown",
@@ -7836,6 +7902,7 @@
       "1:/SAKURA1/BG2103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2103.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2104.BIN": {
@@ -7851,11 +7918,13 @@
       "1:/SAKURA1/BG2106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2106.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2107.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2109.BIN": {
@@ -7918,17 +7987,20 @@
       "1:/SAKURA1/BG2128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2129.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2130.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2130.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2131.BIN": {
         "association": "unknown",
@@ -8112,7 +8184,8 @@
       "1:/SAKURA1/BG2172.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2172.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 280], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2173.BIN": {
         "association": "unknown",
@@ -8132,7 +8205,8 @@
       "1:/SAKURA1/BG2176.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2176.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2177.BIN": {
         "association": "unknown",
@@ -8187,7 +8261,8 @@
       "1:/SAKURA1/BG2207.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2207.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2208.BIN": {
         "association": "unknown",
@@ -8322,12 +8397,14 @@
       "1:/SAKURA1/BG2237.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2237.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2238.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2238.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2239.BIN": {
         "association": "unknown",
@@ -8354,27 +8431,32 @@
       "1:/SAKURA1/BG2244.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2244.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2245.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2245.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2246.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2246.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2247.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2247.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2248.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2248.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
@@ -8437,27 +8519,32 @@
       "1:/SAKURA1/BG2265.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2265.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2266.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2266.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2267.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2267.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2268.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2268.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2269.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2269.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2270.BIN": {
         "association": "unknown",
@@ -8557,7 +8644,8 @@
       "1:/SAKURA1/BG2290.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2290.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [432, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2291.BIN": {
         "association": "unknown",
@@ -8582,7 +8670,8 @@
       "1:/SAKURA1/BG2295.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2295.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 208], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2296.BIN": {
         "association": "unknown",
@@ -8592,6 +8681,7 @@
       "1:/SAKURA1/BG2337.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2337.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG2338.BIN": {
@@ -8626,7 +8716,8 @@
       "1:/SAKURA1/BG2515.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2515.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2516.BIN": {
         "association": "unknown",
@@ -8715,7 +8806,8 @@
       "1:/SAKURA1/BG2533.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2533.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2534.BIN": {
         "association": "unknown",
@@ -8730,37 +8822,44 @@
       "1:/SAKURA1/BG3012.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3012.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3020.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3020.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3026.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3026.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3034.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3034.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3035.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3035.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3036.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3036.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3041.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3041.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3044.BIN": {
         "association": "unknown",
@@ -8769,17 +8868,20 @@
       "1:/SAKURA1/BG3046.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3046.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3051.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3051.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3052.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3054.BIN": {
         "association": "unknown",
@@ -8788,7 +8890,8 @@
       "1:/SAKURA1/BG3055.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3055.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3060.BIN": {
         "association": "unknown",
@@ -8797,12 +8900,14 @@
       "1:/SAKURA1/BG3067.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3067.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3068.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3068.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3069.BIN": {
         "association": "unknown",
@@ -8811,57 +8916,68 @@
       "1:/SAKURA1/BG3075.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3075.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3076.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3076.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3081.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3081.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3082.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3083.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3084.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3085.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3086.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3087.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3087.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3088.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3088.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3091.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3091.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3092.BIN": {
         "association": "unknown",
@@ -8874,7 +8990,8 @@
       "1:/SAKURA1/BG3099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3099.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3100.BIN": {
         "association": "unknown",
@@ -8883,17 +9000,20 @@
       "1:/SAKURA1/BG3103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3103.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3104.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3104.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3105.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3105.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3119.BIN": {
         "association": "unknown",
@@ -8902,92 +9022,110 @@
       "1:/SAKURA1/BG3120.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3120.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3121.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3121.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3123.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3123.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3131.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3131.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3132.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3132.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3133.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3133.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3134.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3134.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3135.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3135.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3136.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3136.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3138.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3138.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3139.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3139.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3140.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3140.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3143.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3144.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3144.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3145.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3145.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3146.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3146.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3163.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3163.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3164.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3164.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3165.BIN": {
         "association": "unknown",
@@ -8996,82 +9134,98 @@
       "1:/SAKURA1/BG3232.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3232.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3253.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3253.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3289.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3289.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3291.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3291.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3292.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3292.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3293.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3293.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3500.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3500.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3501.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3501.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3520.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3520.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3521.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3521.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3522.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3522.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3523.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3523.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3524.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3524.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG3534.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3534.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4017.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4017.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4018.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4049.BIN": {
         "association": "unknown",
@@ -9104,22 +9258,26 @@
       "1:/SAKURA1/BG4059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4059.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4060.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4060.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4063.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4063.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4064.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4064.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4067.BIN": {
         "association": "unknown",
@@ -9132,117 +9290,140 @@
       "1:/SAKURA1/BG4084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4084.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4085.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4088.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4088.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4092.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4093.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4094.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4094.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4096.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4097.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4097.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4100.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4100.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4104.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4104.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4107.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4110.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4110.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4113.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4113.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4114.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4114.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4116.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4116.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4119.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4119.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4122.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4122.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4123.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4123.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4126.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4126.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4130.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4130.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4131.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4131.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4134.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4134.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4148.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4148.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4162.BIN": {
         "association": "unknown",
@@ -9251,32 +9432,38 @@
       "1:/SAKURA1/BG4165.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4165.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4168.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4168.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4171.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4171.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4174.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4174.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4177.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4177.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4187.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4187.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4204.BIN": {
         "association": "unknown",
@@ -9285,57 +9472,68 @@
       "1:/SAKURA1/BG4205.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4205.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4278.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4278.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4284.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4284.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4287.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4287.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4296.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4296.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4299.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4299.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4302.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4302.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4351.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4351.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4354.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4354.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4362.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4362.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4370.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4370.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4372.BIN": {
         "association": "unknown",
@@ -9344,52 +9542,62 @@
       "1:/SAKURA1/BG4373.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4373.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4374.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4374.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4375.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4375.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4376.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4376.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4377.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4377.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4378.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4378.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4379.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4379.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4380.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4380.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4381.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4381.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG4383.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4383.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "1:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",
@@ -9654,21 +9862,25 @@
       "2:/SAKURA1/BG1011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1011.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1012.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1012.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1014.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1015.BIN": {
@@ -9679,6 +9891,7 @@
       "2:/SAKURA1/BG1016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1016.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1017.BIN": {
@@ -9784,21 +9997,25 @@
       "2:/SAKURA1/BG1037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1039.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1040.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1041.BIN": {
@@ -9849,21 +10066,25 @@
       "2:/SAKURA1/BG1050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1050.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1051.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1051.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1052.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1053.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1053.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1054.BIN": {
@@ -9994,11 +10215,13 @@
       "2:/SAKURA1/BG1079.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1079.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1080.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1080.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1081.BIN": {
@@ -10009,16 +10232,19 @@
       "2:/SAKURA1/BG1082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1082.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1083.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1084.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1085.BIN": {
@@ -10029,11 +10255,13 @@
       "2:/SAKURA1/BG1086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1086.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1087.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1087.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1088.BIN": {
@@ -10044,11 +10272,13 @@
       "2:/SAKURA1/BG1089.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1089.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1090.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1090.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1091.BIN": {
@@ -10059,11 +10289,13 @@
       "2:/SAKURA1/BG1092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1092.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1093.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1094.BIN": {
@@ -10074,11 +10306,13 @@
       "2:/SAKURA1/BG1095.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1095.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1096.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1097.BIN": {
@@ -10089,31 +10323,37 @@
       "2:/SAKURA1/BG1098.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1098.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1099.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1100.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1100.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1101.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1102.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1103.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1104.BIN": {
@@ -10242,6 +10482,7 @@
       "2:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1132.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1134.BIN": {
@@ -10257,16 +10498,19 @@
       "2:/SAKURA1/BG1136.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1136.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1143.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1144.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1144.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1148.BIN": {
@@ -10467,7 +10711,8 @@
       "2:/SAKURA1/BG1207.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1207.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1208.BIN": {
         "association": "unknown",
@@ -10664,7 +10909,8 @@
       "2:/SAKURA1/BG1257.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1257.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [456, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1259.BIN": {
         "association": "unknown",
@@ -10729,7 +10975,8 @@
       "2:/SAKURA1/BG1280.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1280.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1281.BIN": {
         "association": "unknown",
@@ -10739,12 +10986,14 @@
       "2:/SAKURA1/BG1282.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1282.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1283.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1283.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [472, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1284.BIN": {
         "association": "unknown",
@@ -10754,7 +11003,8 @@
       "2:/SAKURA1/BG1285.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1285.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1289.BIN": {
         "association": "unknown",
@@ -10784,11 +11034,13 @@
       "2:/SAKURA1/BG1295.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1295.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1296.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1296.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG1297.BIN": {
@@ -10858,7 +11110,8 @@
       "2:/SAKURA1/BG1310.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1310.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1311.BIN": {
         "association": "unknown",
@@ -11084,16 +11337,19 @@
       "2:/SAKURA1/BG2001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2002.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2003.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2004.BIN": {
@@ -11104,31 +11360,37 @@
       "2:/SAKURA1/BG2005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2005.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2006.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2007.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2007.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2008.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2008.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2009.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2009.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2010.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2010.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2011.BIN": {
@@ -11144,6 +11406,7 @@
       "2:/SAKURA1/BG2013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2013.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2014.BIN": {
@@ -11154,6 +11417,7 @@
       "2:/SAKURA1/BG2015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2015.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2016.BIN": {
@@ -11169,6 +11433,7 @@
       "2:/SAKURA1/BG2018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2018.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2019.BIN": {
@@ -11189,6 +11454,7 @@
       "2:/SAKURA1/BG2022.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2022.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2023.BIN": {
@@ -11258,16 +11524,19 @@
       "2:/SAKURA1/BG2036.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2037.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2038.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2039.BIN": {
@@ -11459,7 +11728,8 @@
       "2:/SAKURA1/BG2077.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2077.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [440, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2078.BIN": {
         "association": "unknown",
@@ -11529,7 +11799,8 @@
       "2:/SAKURA1/BG2093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2093.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2094.BIN": {
         "association": "unknown",
@@ -11579,6 +11850,7 @@
       "2:/SAKURA1/BG2103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2103.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2104.BIN": {
@@ -11594,11 +11866,13 @@
       "2:/SAKURA1/BG2106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2106.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2107.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2109.BIN": {
@@ -11661,17 +11935,20 @@
       "2:/SAKURA1/BG2128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2129.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2130.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2130.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2131.BIN": {
         "association": "unknown",
@@ -11855,7 +12132,8 @@
       "2:/SAKURA1/BG2172.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2172.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 280], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2173.BIN": {
         "association": "unknown",
@@ -11875,7 +12153,8 @@
       "2:/SAKURA1/BG2176.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2176.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2177.BIN": {
         "association": "unknown",
@@ -11930,7 +12209,8 @@
       "2:/SAKURA1/BG2207.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2207.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2208.BIN": {
         "association": "unknown",
@@ -12065,12 +12345,14 @@
       "2:/SAKURA1/BG2237.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2237.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2238.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2238.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2239.BIN": {
         "association": "unknown",
@@ -12097,27 +12379,32 @@
       "2:/SAKURA1/BG2244.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2244.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2245.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2245.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2246.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2246.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2247.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2247.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2248.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2248.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
@@ -12179,27 +12466,32 @@
       "2:/SAKURA1/BG2265.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2265.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2266.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2266.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2267.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2267.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2268.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2268.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2269.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2269.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2270.BIN": {
         "association": "unknown",
@@ -12299,7 +12591,8 @@
       "2:/SAKURA1/BG2290.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2290.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [432, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2291.BIN": {
         "association": "unknown",
@@ -12324,7 +12617,8 @@
       "2:/SAKURA1/BG2295.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2295.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 208], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2296.BIN": {
         "association": "unknown",
@@ -12334,6 +12628,7 @@
       "2:/SAKURA1/BG2337.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2337.SPR",
+        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG2338.BIN": {
@@ -12368,7 +12663,8 @@
       "2:/SAKURA1/BG2515.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2515.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2516.BIN": {
         "association": "unknown",
@@ -12457,7 +12753,8 @@
       "2:/SAKURA1/BG2533.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2533.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2534.BIN": {
         "association": "unknown",
@@ -12472,37 +12769,44 @@
       "2:/SAKURA1/BG3012.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3012.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3020.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3020.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3026.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3026.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3034.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3034.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3035.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3035.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3036.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3036.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3041.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3041.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3044.BIN": {
         "association": "unknown",
@@ -12511,17 +12815,20 @@
       "2:/SAKURA1/BG3046.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3046.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3051.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3051.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3052.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3054.BIN": {
         "association": "unknown",
@@ -12530,7 +12837,8 @@
       "2:/SAKURA1/BG3055.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3055.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3060.BIN": {
         "association": "unknown",
@@ -12539,12 +12847,14 @@
       "2:/SAKURA1/BG3067.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3067.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3068.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3068.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3069.BIN": {
         "association": "unknown",
@@ -12553,57 +12863,68 @@
       "2:/SAKURA1/BG3075.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3075.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3076.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3076.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3081.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3081.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3082.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3083.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3084.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3085.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3086.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3087.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3087.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3088.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3088.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3091.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3091.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3092.BIN": {
         "association": "unknown",
@@ -12616,7 +12937,8 @@
       "2:/SAKURA1/BG3099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3099.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3100.BIN": {
         "association": "unknown",
@@ -12625,17 +12947,20 @@
       "2:/SAKURA1/BG3103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3103.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3104.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3104.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3105.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3105.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3119.BIN": {
         "association": "unknown",
@@ -12644,92 +12969,110 @@
       "2:/SAKURA1/BG3120.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3120.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3121.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3121.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3123.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3123.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3131.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3131.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3132.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3132.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3133.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3133.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3134.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3134.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3135.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3135.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3136.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3136.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3138.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3138.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3139.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3139.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3140.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3140.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3143.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3144.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3144.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3145.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3145.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3146.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3146.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3163.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3163.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3164.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3164.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3165.BIN": {
         "association": "unknown",
@@ -12738,82 +13081,98 @@
       "2:/SAKURA1/BG3232.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3232.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3253.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3253.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3289.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3289.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3291.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3291.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3292.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3292.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3293.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3293.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3500.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3500.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3501.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3501.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3520.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3520.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3521.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3521.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3522.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3522.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3523.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3523.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3524.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3524.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG3534.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3534.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4017.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4017.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4018.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4049.BIN": {
         "association": "unknown",
@@ -12846,22 +13205,26 @@
       "2:/SAKURA1/BG4059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4059.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4060.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4060.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4063.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4063.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4064.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4064.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4067.BIN": {
         "association": "unknown",
@@ -12874,117 +13237,140 @@
       "2:/SAKURA1/BG4084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4084.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4085.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4088.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4088.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4092.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4093.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4094.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4094.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4096.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4097.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4097.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4100.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4100.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4104.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4104.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4107.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4110.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4110.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4113.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4113.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4114.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4114.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4116.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4116.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4119.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4119.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4122.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4122.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4123.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4123.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4126.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4126.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4130.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4130.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4131.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4131.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4134.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4134.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4148.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4148.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4162.BIN": {
         "association": "unknown",
@@ -12993,32 +13379,38 @@
       "2:/SAKURA1/BG4165.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4165.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4168.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4168.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4171.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4171.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4174.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4174.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4177.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4177.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4187.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4187.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4204.BIN": {
         "association": "unknown",
@@ -13027,57 +13419,68 @@
       "2:/SAKURA1/BG4205.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4205.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4278.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4278.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4284.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4284.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4287.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4287.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4296.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4296.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4299.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4299.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4302.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4302.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4351.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4351.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4354.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4354.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4362.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4362.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4370.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4370.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4372.BIN": {
         "association": "unknown",
@@ -13086,52 +13489,62 @@
       "2:/SAKURA1/BG4373.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4373.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4374.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4374.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4375.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4375.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4376.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4376.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4377.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4377.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4378.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4378.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4379.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4379.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4380.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4380.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4381.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4381.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG4383.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4383.SPR",
-        "status": "paired-not-wired"
+        "reason": "cut-out on a key colour or blank picture, not replaced by design",
+        "status": "excluded"
       },
       "2:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",
@@ -13268,117 +13681,140 @@
       "2:/SAKURA2/BBG107.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG107.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG108.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG108.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG208.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG208.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG209.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG209.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG210.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG210.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG211.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG211.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG213.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG213.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG214.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG214.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG218.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG218.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG236.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG236.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG238.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG238.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG239.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG239.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG240.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG240.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG241.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG241.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG242.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG242.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG243.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG243.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG244.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG244.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG245.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG245.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG246.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG246.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG247.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG247.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG248.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG248.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG249.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG249.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/BBG300.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG300.SPR",
-        "status": "paired-not-wired"
+        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA2/EVE0101.BIN": {
         "association": "unknown",

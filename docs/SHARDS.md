@@ -55,3 +55,16 @@ Rows TH0-TH10, TS11 and TS12 in `docs/PENDIENTES.md` mirror this list; update th
 7. **A PR says**: which row it closes or advances, the commands run with their output, and what is still not verified. Mark "implemented", "tested" and "in a package" separately. A saved state or a screenshot does not complete a chapter.
 8. **Runtime changes** must keep the guest per-frame hashes identical to the previous build (strict native replay, `interpreted 0`); say which replay.
 9. **One dev runtime at a time** builds in `local/build/sakura`: workers without a compiler or the discs do the code, tests and data halves and say so; do not run `build_runtime.py` while another worker has unrecorded dependency edits.
+
+## How to read the coverage numbers (read before picking work from them)
+
+`config/hd-chapter-coverage.json` and `docs/HD_PROGRESS.md` count catalog entries, not pictures a player sees, and the two discs share many files, so a count is up to twice the real number. Statuses (regenerated 2026-11-19 after a miscount: the first version called every accepted pair that is not a documented draw "paired-not-wired", which made 246 bodies and 474 pictures look like unfinished wiring when 129 bodies and 459 pictures were already in the runtime tables):
+
+- `hd`: the runtime draws it (a documented draw for a body, a table entry for a picture or clip).
+- `wired-unverified`: in the runtime table and tried whenever it appears, but nobody has recorded seeing it in game. The work is **verification**, not wiring.
+- `excluded`: paired but never replaced by design (character cut-outs on a key colour, the blank picture). Do not wire it.
+- `unsupported-size`: accepted pair whose size the runtime cannot draw yet (not 288x144). The work is runtime scroll/size support (T105c), not pairing.
+- `paired-not-wired`: genuinely missing from the runtime. Read its `reason` first. Today: 128 BG entries (64 per disc) share a palette with a picture that maps to another PC file, so the palette fingerprint cannot identify them (they need a second key, for example a hash of the layer's tile data); 32 IC and 12 EVE pictures wait for their recogniser (T96); alternate film cuts stay native on purpose.
+- `unpaired`: rejected or without a counterpart. `unknown`: not established.
+
+Rules for a worker: never turn a `paired-not-wired` count into a to-do list without reading the `reason`; do not re-review pictures or bodies the review files already decide (`config/hd-scene-bg-review.json`, `config/hd-body-review.json`: 15 NC bodies and 45 pictures are rejected, 118 are cut-outs); a number that disagrees with the runtime tables is a bug in the generator (`tools/hd_chapter_coverage.py`), fix it there and regenerate with the command in `docs/research/hd-chapter-coverage.md`.

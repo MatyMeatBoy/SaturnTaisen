@@ -105,6 +105,12 @@ def build(root, index_dir, portrait_audit):
     screens = pairs(config('hd-screen-map'))
     bodies = pairs(config('hd-body-map'))
     body_review = config('hd-body-review')
+    # Bodies in the runtime table: content pairs or eye-confirmed candidates, not rejected (the filter of tools/gen_body_table.py).
+    body_runtime = {
+        Path(path).stem for path, pair in bodies.items()
+        if Path(path).stem not in body_review['rejected']
+        and (pair['tier'] == 'content' or Path(path).stem in body_review['eye_confirmed_candidates'])
+    }
     items = pairs(config('hd-item-map'))
     item_review = pairs(config('hd-item-review'))
     cold_bg = {
@@ -174,6 +180,17 @@ def build(root, index_dir, portrait_audit):
                 key = (pair['palette_fnv'], pair['pc_file'], str(pair['pc_image_index']))
                 row = {'status': 'hd' if key in bg_table else 'paired-not-wired',
                        'pc': pair['pc_file']}
+                if key not in bg_table:
+                    if name[2:3] in '34' or name == 'BG0000':
+                        # Character cut-outs on a key colour and the blank picture are never replaced (tools/gen_scene_bg_table.py).
+                        row['status'] = 'excluded'
+                        row['reason'] = 'cut-out on a key colour or blank picture, not replaced by design'
+                    elif pair.get('size') != [288, 144] or not path.startswith('/SAKURA1/'):
+                        # The runtime draws a 288x144 picture only; wide and tall ones need scroll support (T105c).
+                        row['status'] = 'unsupported-size'
+                        row['reason'] = 'size %s, the runtime draws 288x144 pictures only' % (pair.get('size'),)
+                    else:
+                        row['reason'] = 'palette shared with a picture that maps to another PC file (ambiguous)'
             elif name in bg_review['rejected'] or pair.get('tier') == 'missing':
                 row['status'] = 'unpaired'
         elif path in screens and screens[path]['tier'] == 'content':
@@ -185,7 +202,7 @@ def build(root, index_dir, portrait_audit):
             if name in body_review['rejected']:
                 row['status'] = 'unpaired'
             elif pair['tier'] == 'content' or name in body_review['eye_confirmed_candidates']:
-                row = {'status': 'hd' if name in BODY_DRAWS else 'paired-not-wired',
+                row = {'status': 'hd' if name in BODY_DRAWS else 'wired-unverified' if name in body_runtime else 'paired-not-wired',
                        'pc': 'SAKURA1/NC/' + (pair['best_pc'] if pair['tier'] == 'content' else pair['same_name_pc'])}
                 if name in BODY_DRAWS:
                     row['native_face_fallback'] = True
@@ -239,7 +256,10 @@ def build(root, index_dir, portrait_audit):
         'schema': 1,
         'status': {
             'hd': 'Runtime supports this substitution or a documented partial draw. Scene occurrence and full replay verification are separate.',
-            'paired-not-wired': 'Accepted counterpart without a confirmed per-identity runtime draw. Alternate film cuts stay native.',
+            'wired-unverified': 'The runtime table holds this body and tries to draw it when it appears; no in-game observation is recorded yet (hd means a documented draw).',
+            'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette) or an alternate film cut, which stays native. Not a to-do list: check `reason` first.',
+            'excluded': 'Paired but never replaced by design (key-colour character cut-outs, the blank picture).',
+            'unsupported-size': 'Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).',
             'unpaired': 'The catalog records a rejected or absent counterpart.',
             'unknown': 'Pairing or integration is not established by the input catalogs.',
         },
