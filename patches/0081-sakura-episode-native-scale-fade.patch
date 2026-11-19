@@ -1,0 +1,154 @@
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -71,6 +71,8 @@
+         std::vector<uint32> foreground,underSprites;
+         std::vector<::port::PanelMix> panelMix,underPanelMix;
+         std::vector<::port::PanelMix> floralCoverMix;
++        uint32 episodeBlendSamples = 0;
++        uint8 episodeWeight = 0;
+         // Raw NBG0 edge pixels proven under the floral plane, in native row order.
+         std::vector<::port::MapFadeEdge> mapFadeEdges;
+         std::vector<uint8> source;
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -430,6 +430,8 @@
+         m_presentation.glyphPlate.assign(m_captureGlyphPlate?m_presentation.spriteWhiteWeight.size():0,{});
+         m_presentation.underPanelMix.assign(m_presentation.panelMix.size(), {});
+         m_presentation.floralCoverMix.assign(m_presentation.panelMix.size(), {});
++        m_presentation.episodeBlendSamples = 0;
++        m_presentation.episodeWeight = 0;
+         m_presentation.mapFadeEdges.assign(m_width==320 && m_height==224?32*224:0, {});
+         m_presentation.source.assign(static_cast<size_t>(m_width)*m_height,6);
+         m_presentation.underSource.assign(static_cast<size_t>(m_width)*m_height,6);
+@@ -775,6 +777,7 @@
+         ::port::PanelMix panel;
+         ::port::PanelMix floralCover;
+         uint8 mapWeight;
++        uint8 episodeWeight;
+         bool unshadowedPanel;
+     };
+     const auto composite = [&](uint32 x,const Line& sprite) -> ComposedPixel {
+@@ -807,6 +810,7 @@
+         ::port::PanelMix panel;
+         ::port::PanelMix floralCover;
+         uint8 mapWeight=0;
++        uint8 episodeWeight = 0;
+         uint8 whiteWeight=top==kSprites?0:255;
+         const bool calcTop = top == kSprites ? sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
+                            : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
+@@ -824,6 +828,7 @@
+             if (capturePanel && top == 5 && second < 5) {
+                 floralCover = mixRecipe(below, 31 - ratio, top);
+                 if(second == 2)mapWeight=static_cast<uint8>(ratio + 1);
++                if(second == 4 && !regs2.colorCalcAdd) episodeWeight = static_cast<uint8>(ratio + 1);
+             }
+             whiteWeight=255;
+             if(captureWhiteWeight && !regs2.colorCalcAdd) {
+@@ -854,11 +859,11 @@
+                 whiteWeight=255;
+             }
+         }
+-        return {color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,capturesUnshadowedPanel};
++        return {color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,episodeWeight,capturesUnshadowedPanel};
+     };
+     const bool glyphLine=supported && PrepareGlyphLine(line);
+     for (uint32 x = 0; x < width; x++) {
+-        const auto [color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
++        const auto [color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,episodeWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
+         if(glyphLine && presentationSource==kSprites && m_glyphLineOwners[x]) {
+             const auto restored=composite(x,m_glyphSprite);
+             const auto rgba=restored.color.u32|0xFF000000;
+@@ -879,6 +884,12 @@
+             if (capturesUnshadowedPanel) {
+                 m_presentation.panelMix[at] = panel;
+                 m_presentation.floralCoverMix[at] = floralCover;
++                if (episodeWeight) {
++                    auto& weight = m_presentation.episodeWeight;
++                    auto& count = m_presentation.episodeBlendSamples;
++                    if (count++ == 0) weight = episodeWeight;
++                    else if (weight != episodeWeight) weight = 0;
++                }
+                 if(mapEdge && mapWeight)
+                     m_presentation.mapFadeEdges[edgeAt]={floralCover.topRgb,{mapWeight,floralCover.postMixOffset}};
+             }
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1774,12 +1774,9 @@
+                         for(auto* texture:loaded)if(texture)SDL_DestroyTexture(texture);
+                     }
+                 }
+-                float cardSf=0;
+-                if(cardSide[cardIndex][0] && cardSide[cardIndex][1]) {
+-                    cardSf=std::min(float(canvasWidth)/398.0f,float(high)/224.0f);
+-                    const int fullW=int(398.0f*cardSf),cardW=int(320.0f*cardSf),cardH=int(224.0f*cardSf),sideW=int(39.0f*cardSf);
+-                    cardFit.w=cardW;cardFit.h=cardH;cardFit.x=canvasLeft+(canvasWidth-fullW)/2+sideW;cardFit.y=(high-cardH)/2;
+-                }
++                const auto& frame = port.videoRenderer->PresentationFrame();
++                const unsigned fade = frame.episodeBlendSamples >= 320*224/2 ? frame.episodeWeight : 0;
++                const bool generatedSides = cardSide[cardIndex][0] && cardSide[cardIndex][1] && fade > 0;
+                 if(!cardWideTried[cardIndex]) {
+                     cardWideTried[cardIndex]=true;
+                     char name[40];std::snprintf(name,sizeof name,"TITLE%d.png",cardIndex+1);
+@@ -1849,9 +1846,9 @@
+                     }
+                     auto drawSide=[&](int s,const SDL_FRect& area) {
+                         if(!cardMirror[s] || area.w<=0)return;
+-                        const float sc=cardSf>0?cardSf:float(cardFit.scale);
++                        const float sc=float(cardFit.scale);
+                         const float nativeWidth=area.w/sc;                                    // native pixels the area spans
+-                        const float shown=std::min(nativeWidth,float(cardSf>0?mirrorCols:28));
++                        const float shown=std::min(nativeWidth, generatedSides ? 8.0f : 28.0f);
+                         // the columns nearest the seam; any area beyond the mirrored band keeps the strip colour
+                         SDL_FRect src{s==0?float(mirrorCols)-shown:0.0f,0,shown,224};
+                         SDL_FRect dst=area;dst.w=shown*sc;if(s==0)dst.x=area.x+area.w-dst.w;
+@@ -1859,15 +1856,43 @@
+                     };
+                     if(cardStrip[0] && leftArea.w>0)SDL_RenderTexture(renderer,cardStrip[0],nullptr,&leftArea);
+                     if(cardStrip[1] && rightArea.w>0)SDL_RenderTexture(renderer,cardStrip[1],nullptr,&rightArea);
+-                    if(cardSf>0) {
++                    if(generatedSides) {
+                         // Under the generated sides, the card's own edge mirrored: it matches the card exactly at the seam, so the
+                         // sides' transparent seam fades into the picture without a step in tone.
+                         drawSide(0,leftArea);drawSide(1,rightArea);
+-                        const float sideW=39.0f*cardSf;
++                        const float sideW=39.0f*cardFit.scale;
+                         const SDL_FRect left{float(cardFit.x)-sideW,float(cardFit.y),sideW,float(cardFit.h)};
+                         const SDL_FRect right{float(cardFit.x+cardFit.w),float(cardFit.y),sideW,float(cardFit.h)};
+-                        SDL_RenderTexture(renderer,cardSide[cardIndex][0],nullptr,&left);
+-                        SDL_RenderTexture(renderer,cardSide[cardIndex][1],nullptr,&right);
++                        const SDL_Rect clip{canvasLeft, 0, canvasWidth, high};
++                        SDL_SetRenderClipRect(renderer, &clip);
++                        const uint8_t alpha = static_cast<uint8_t>((fade * 255 + 16) / 32);
++                        SDL_SetTextureAlphaMod(cardSide[cardIndex][0], alpha);
++                        SDL_SetTextureAlphaMod(cardSide[cardIndex][1], alpha);
++                        auto drawGeneratedSide = [&](SDL_Texture* side, const SDL_FRect& band, bool rightSide) {
++                            // Keep the strip on the native integer grid. Clamp the generated edge into
++                            // the extra viewport pixels left over at non-multiple window sizes.
++                            const float edgeX = rightSide ? 38.0f : 0.0f;
++                            const float outsideX = rightSide ? band.x + band.w : float(canvasLeft);
++                            const float outsideWidth = rightSide ? float(canvasLeft + canvasWidth) - outsideX
++                                                                : band.x - outsideX;
++                            auto drawRow = [&](float sourceY, float sourceHeight, float y, float height) {
++                                if (height <= 0) return;
++                                const SDL_FRect src{0, sourceY, 39, sourceHeight};
++                                const SDL_FRect dst{band.x, y, band.w, height};
++                                SDL_RenderTexture(renderer, side, &src, &dst);
++                                if (outsideWidth > 0) {
++                                    const SDL_FRect edge{edgeX, sourceY, 1, sourceHeight};
++                                    const SDL_FRect padding{outsideX, y, outsideWidth, height};
++                                    SDL_RenderTexture(renderer, side, &edge, &padding);
++                                }
++                            };
++                            drawRow(0, 1, 0, band.y);
++                            drawRow(0, 224, band.y, band.h);
++                            drawRow(223, 1, band.y + band.h, high - band.y - band.h);
++                        };
++                        drawGeneratedSide(cardSide[cardIndex][0], left, false);
++                        drawGeneratedSide(cardSide[cardIndex][1], right, true);
++                        SDL_SetRenderClipRect(renderer, nullptr);
+                     } else {drawSide(0,leftArea);drawSide(1,rightArea);}
+                 }
+                 // The native card again on top (anything the areas above covered at its edge is restored).
