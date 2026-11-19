@@ -235,7 +235,9 @@
     "BG3069": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour",
     "BG3097": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour",
     "BG3119": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour",
-    "BG3165": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour"
+    "BG3165": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour",
+    "BG1130": "same corridor as the PC BG1132/BG1134/BG1136 variants (grey correlation 0.935) but those variants differ in the door signs; no same-number PC picture, so it stays native rather than drawing a variant with another detail",
+    "BG1131": "same corridor as the PC BG1132/BG1134/BG1136 variants (grey correlation 0.935) but those variants differ in the door signs; no same-number PC picture, so it stays native rather than drawing a variant with another detail"
   },
   "cutouts": "BG3xxx and BG4xxx are character cut-outs on a key colour (magenta on Saturn, cyan on PC): never drawn as full pictures",
   "note": "Tier-number pairs: all reviewed side by side. Tier-content pairs: 96 with the lowest correlation reviewed side by side, the other 300 reviewed on the Saturn side only for baked-in English text (none found; the text that appears, letters, newspaper, posters, radar screens, is Japanese on both sides). Characters baked into the PC picture were only checked side by side for the 96 lowest-correlation pairs.",
