@@ -7,6 +7,7 @@ import struct
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import wave
 import zipfile
 from pathlib import Path
@@ -14,6 +15,36 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import taisen_setup as setup  # noqa: E402
+
+
+class PcMovieSourceTests(unittest.TestCase):
+    def test_cabinet_folder_movies_stay_at_their_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            source, work = base / 'source', base / 'work'
+            source.mkdir()
+            work.mkdir()
+            for cabinet in setup.CABINETS:
+                (source / cabinet).touch()
+            clip = source / 'MOVIE' / 'MOVIE000.MPG'
+            clip.parent.mkdir()
+            clip.write_bytes(b'mpeg fixture')
+            extracted = work / 'pc' / 'game'
+
+            def extract(*args):
+                kao = extracted / 'SAKURA1' / 'SYSTEM' / 'KAO.SPR'
+                kao.parent.mkdir(parents=True)
+                kao.touch()
+                return argparse.Namespace(returncode=0)
+
+            paths = argparse.Namespace(unshield='unshield')
+            with patch.object(setup, 'run', side_effect=extract):
+                root, movies = setup.open_pc(paths, source, work)
+            pack = base / 'pack'
+            report = setup.build_pc_pack(root, pack, 0, 1, movies=movies)
+            self.assertEqual(clip.read_bytes(), b'mpeg fixture')
+            self.assertEqual(report['videos'], 1)
+            self.assertEqual((pack / 'MOVIE/MOVIE000.MPG').read_bytes(), clip.read_bytes())
 
 
 def directory_record(name: bytes, lba: int, size: int, folder: bool = False) -> bytes:
