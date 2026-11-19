@@ -1616,6 +1616,24 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1001.BIN": {
+            "association": "observed",
+            "cold_run_frame": 22000,
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1001.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1006.BIN": {
+            "association": "observed",
+            "cold_run_frame": 29500,
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1006.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1011.BIN": {
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
@@ -1646,6 +1664,40 @@
             "evidence": "docs/research/bg-matching-progress.md",
             "pc": "SAKURA1/BG/BG1119.SPR",
             "status": "hd"
+          },
+          "1:/SAKURA1/BG1209.BIN": {
+            "association": "observed",
+            "cold_run_frame": 8750,
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1209.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2159.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG2159.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2250.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG2250.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2251.BIN": {
+            "association": "observed",
+            "cold_run_frame": 12500,
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG2251.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/IC01.BIN": {
             "association": "observed",
@@ -2108,9 +2160,11 @@
     "bodies": {
       "1:/SAKURA1/NC10.BIN": {
         "association": "unknown",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC10.SPR",
+        "runtime_evidence": "docs/research/saturn-bg-format.md",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "1:/SAKURA1/NC11.BIN": {
         "association": "unknown",
@@ -2518,9 +2572,11 @@
       },
       "1:/SAKURA1/NC3250.BIN": {
         "association": "unknown",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3250.SPR",
+        "runtime_evidence": "docs/research/saturn-bg-format.md",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "1:/SAKURA1/NC3254.BIN": {
         "association": "unknown",
@@ -2748,9 +2804,11 @@
       },
       "1:/SAKURA1/NC50.BIN": {
         "association": "unknown",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC50.SPR",
+        "runtime_evidence": "docs/research/saturn-bg-format.md",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "1:/SAKURA1/NC51.BIN": {
         "association": "unknown",
@@ -2950,9 +3008,11 @@
       },
       "2:/SAKURA1/NC10.BIN": {
         "association": "unknown",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC10.SPR",
+        "runtime_evidence": "docs/research/saturn-bg-format.md",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC11.BIN": {
         "association": "unknown",
@@ -3376,9 +3436,11 @@
       },
       "2:/SAKURA1/NC3250.BIN": {
         "association": "unknown",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3250.SPR",
+        "runtime_evidence": "docs/research/saturn-bg-format.md",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC3254.BIN": {
         "association": "unknown",
@@ -3606,9 +3668,11 @@
       },
       "2:/SAKURA1/NC50.BIN": {
         "association": "unknown",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC50.SPR",
+        "runtime_evidence": "docs/research/saturn-bg-format.md",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC51.BIN": {
         "association": "unknown",
@@ -6174,12 +6238,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/BG1001.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 22000,
-        "pc": "SAKURA1/BG/BG1001.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1002.BIN": {
         "association": "unknown",
         "cold_run_frame": 74500,
@@ -6199,12 +6257,6 @@
       "1:/SAKURA1/BG1005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1005.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1006.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 29500,
-        "pc": "SAKURA1/BG/BG1006.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1007.BIN": {
@@ -7044,12 +7096,6 @@
       "1:/SAKURA1/BG1208.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1208.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1209.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 8750,
-        "pc": "SAKURA1/BG/BG1209.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1210.BIN": {
@@ -8404,11 +8450,6 @@
         "pc": "SAKURA1/BG/BG2158.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG2159.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2159.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG2160.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2160.SPR",
@@ -8731,17 +8772,6 @@
       "1:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2249.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2250.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2250.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2251.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 12500,
-        "pc": "SAKURA1/BG/BG2251.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2252.BIN": {
