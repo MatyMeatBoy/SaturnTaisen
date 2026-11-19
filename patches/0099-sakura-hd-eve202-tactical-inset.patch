@@ -71,7 +71,7 @@ index 0000000..f3d007a
 +
 +}  // namespace port
 diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
-index 5457fa3..728e046 100644
+index 5457fa3..2e05441 100644
 --- a/port/frontend_sdl.cpp
 +++ b/port/frontend_sdl.cpp
 @@ -23,6 +23,7 @@
@@ -92,10 +92,10 @@ index 5457fa3..728e046 100644
      // T113/S3: the PC clip (MOVIEnnn.MPG) that replaces a Saturn FILM in the picture. Armed by a CD play command whose start FAD is in
      // the table; the clip starts when the film plane fills the picture and follows the guest's frame count; the guest is untouched.
      port::MovieDecoder clipDecoder;
-@@ -1812,6 +1816,97 @@ int RunWindowed(Port &port) {
-                                         const float outputScale = imageTarget.w / kPanInsetWidth;
-                                         const auto drawRange = [&](unsigned first, unsigned count, uint8_t alpha) {
-                                             const SDL_FRect pcCrop{float((match->offset + first) * 2), 16,
+@@ -1963,6 +1967,97 @@ int RunWindowed(Port &port) {
+                 SDL_RenderFillRect(renderer,&edge);
+             }
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
 +            // Replace a previously witnessed opaque tactical inset after its native frame has been drawn.
 +            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && !port.opt.pcAssetsPath.empty() &&
 +                satrecomp::FeatureValue("presentation_mode") == 1 && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
@@ -187,6 +187,6 @@ index 5457fa3..728e046 100644
 +                    }
 +                }
 +            }
-                                                                   float(count * 2), 288};
-                                             const SDL_FRect target{imageTarget.x + first * outputScale, imageTarget.y,
-                                                                    count * outputScale, imageTarget.h};
+             if(port.videoRenderer && texW==320 && texH==224) {
+                 const int scale=static_cast<int>(where.h/224);
+                 if(where.w==320*scale && where.h==224*scale)
