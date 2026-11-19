@@ -77,7 +77,8 @@
       "patches/0072-sakura-movie-decoder.patch",
       "patches/0073-sakura-film-clip-hook.patch",
       "patches/0074-sakura-film-clip-audio.patch",
-      "patches/0075-sakura-vdp-scroll-dot-colour.patch"
+      "patches/0075-sakura-vdp-scroll-dot-colour.patch",
+      "patches/0076-sakura-card-wide-mirror.patch"
     ]
   }
 }
