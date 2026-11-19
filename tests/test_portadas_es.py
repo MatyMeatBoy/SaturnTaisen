@@ -27,6 +27,16 @@ class SpanishCardTests(unittest.TestCase):
             self.assertEqual(image.size, (320, 224))
             self.assertNotEqual(card, original)
 
+    def test_loading_scroll_keeps_the_layout(self):
+        if not (CARDS / 'LOAD.BIN').is_file():
+            self.skipTest('LOAD.BIN draft missing')
+        original = bg.Iso(ISO).content(dict(bg.Iso(ISO).files('SAKURA1'))['LOAD.BIN'])
+        card = (CARDS / 'LOAD.BIN').read_bytes()
+        self.assertEqual(len(card), len(original))
+        self.assertEqual(card[:512 + 4480], original[:512 + 4480])
+        self.assertNotEqual(card, original)
+        self.assertEqual(bg.decode(card).size, (320, 224))
+
 
 if __name__ == '__main__':
     unittest.main()
