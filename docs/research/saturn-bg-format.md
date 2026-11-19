@@ -395,3 +395,22 @@ VRAM 0x46C40, offset 46,480 and PC index 11, while `morning-9000` has
 VRAM 0x46F40, offset 47,248 and PC index 12. T106b2 will compare the
 HD placement and expression progression using these states. The present
 witnesses establish native texture identity and command placement.
+
+### NC82 body fade-in witness (T106c)
+
+Replayed English disc 1 from office-return-3000.state with frames 3000 onward
+of office-return.movie rebased to zero. Both 1280×720 Enhanced profiles used
+the v0.2.4 reference (SHA-256
+1a94790eefc8492ca80499bbbd3e7517cb4db565908bcee86ae5b12f44c94b9e).
+Only one profile could see NC82.SPR. Its isolated PC directory shared that
+file with the owner's assets and provided no PC backgrounds.
+
+Both runs produced 3,000 identical guest hashes and zero interpreted blocks.
+At captures 2972–2984, sampled every three frames, Yoneda faded in over his
+office. Every full-window RGB pair in that interval was identical. The HD
+trace reported a blend over NC82 and the native fallback. At 2987–2996 the
+opaque body switched to HD. All four differences stayed within the same
+body bounding box (346,50)–(853,482), right and bottom exclusive. Earlier
+captures 2960–2969 also matched before the body appeared. This is a
+character alpha fade from transparent, not a white or black full-screen fade.
+No runtime or package was rebuilt.
