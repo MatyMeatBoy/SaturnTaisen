@@ -45,9 +45,40 @@ def decode(data):
     table = _table(data)
     if table:
         return _mapped(data, *table)
+    screen = _screen(data)
+    if screen is not None:
+        return screen
     if len(data) != SIZE or data[:4] != b'\x00\x01\x00\x01':
         return None
     return _cells(data, PALETTE_AT, HEADER, CELLS_W, CELLS_H)
+
+
+def _screen_ok(data):
+    return 76000 <= len(data) <= 77000 and struct.unpack_from('>4I', data, 512) == (0, 2, 4, 6)
+
+
+def _screen(data):
+    """Variant D: full-screen pictures (IC, OMAKE, LOAD, KABE, TITLE): 256 palette words, a table of 40x28 big-endian
+    u32 entries (2 x cell number), then the 8x8 8 bpp cells. 320x224."""
+    if not _screen_ok(data):
+        return None
+    entries = struct.unpack_from('>1120I', data, 512)
+    tiles = (len(data) - 512 - 4480) // 64
+    words = struct.unpack_from('>256H', data, 0)
+    palette = [((w & 31) * 255 // 31, ((w >> 5) & 31) * 255 // 31, ((w >> 10) & 31) * 255 // 31) for w in words]
+    image = Image.new('RGB', (320, 224))
+    pixels = image.load()
+    for cell, entry in enumerate(entries):
+        tile = entry >> 1
+        if tile >= tiles:
+            continue
+        base = 512 + 4480 + tile * 64
+        left, top = (cell % 40) * 8, (cell // 40) * 8
+        for y in range(8):
+            row = data[base + y * 8: base + y * 8 + 8]
+            for x in range(8):
+                pixels[left + x, top + y] = palette[row[x]]
+    return image
 
 
 def _cells(data, palette_at, picture_at, cells_w, cells_h):
@@ -73,6 +104,8 @@ def picture_bytes(data):
     table = _table(data)
     if table:
         return data[table[0]:table[0] + table[1]]
+    if _screen_ok(data):
+        return data[512 + 4480:]
     if len(data) == SIZE and data[:4] == b'\x00\x01\x00\x01':
         return data[HEADER:PALETTE_AT]
     return None
@@ -111,6 +144,8 @@ def palette_bytes(data):
     table = _table(data)
     if table:
         return data[table[4]:table[4] + 512]
+    if _screen_ok(data):
+        return data[:512]
     if len(data) == SIZE and data[:4] == bytes([0, 1, 0, 1]):
         return data[PALETTE_AT:PALETTE_AT + 512]
     return None
