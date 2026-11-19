@@ -195,11 +195,22 @@ def nc_records(data):
 
 
 def nc_stride(data):
-    """Row stride of the body bitmap at 0x610 (the lag with the smallest mean difference), or None."""
-    segment = data[0x610:0x610 + 6000]
+    """Row stride of the body bitmap at 0x610: the lag with the smallest mean difference between a pixel and the
+    one a row below, counting only pairs where either pixel is not the transparent index 0 (the body is mostly
+    transparent, so plain differences prefer wrong, longer lags). Searched from 60 to 419; None if the file is short."""
+    segment = data[0x610:0x610 + 16000]
     if len(segment) < 3000:
         return None
-    best = min(range(60, 260), key=lambda w: sum(abs(segment[i] - segment[i + w]) for i in range(0, len(segment) - w, 3)))
+    best, best_score = None, None
+    for w in range(60, 420):
+        total = count = 0
+        for i in range(0, len(segment) - w, 3):
+            a, b = segment[i], segment[i + w]
+            if a or b:
+                total += abs(a - b)
+                count += 1
+        if count > 150 and (best_score is None or total / count < best_score):
+            best, best_score = w, total / count
     return best
 
 
