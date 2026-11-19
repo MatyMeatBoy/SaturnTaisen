@@ -105,7 +105,8 @@
       "patches/0104-sakura-scene-table-battle-backgrounds.patch",
       "patches/0106-sakura-retroachievements.patch",
       "patches/0107-sakura-hd-ic01-intermission.patch",
-      "patches/0108-sakura-eve0116-tactical-inset.patch"
+      "patches/0108-sakura-eve0116-tactical-inset.patch",
+      "patches/0109-sakura-eve0118-tactical-inset.patch"
     ]
   }
 }

@@ -1672,6 +1672,14 @@
             "runtime_evidence": "docs/research/eve0116-tactical-inset.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA2/EVE0118.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/eve0118-tactical-inset.md",
+            "pc": "SAKURA2/BG/BBG101.SPR",
+            "runtime_evidence": "docs/research/eve0118-tactical-inset.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-maps": {
@@ -10011,11 +10019,6 @@
       "1:/SAKURA2/EVE002.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG002.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA2/EVE0118.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA2/BG/BBG101.SPR",
         "status": "hd"
       },
       "1:/SAKURA2/EVE102.BIN": {
