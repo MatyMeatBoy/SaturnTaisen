@@ -122,19 +122,19 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T108 | P1 | tested offline · PR | S5 follow-up | Reviewed all 68 top-ranked candidates: 26 full-card matches approved, three icon-only equivalents and 39 incorrect matches excluded. The table generator accepts the exact approved file, subimage and SHA-256 in `config/hd-item-review.json`. No runtime or package verification; see T109. |
 | T109 | P1 | ITEM07 runtime witness; rendering open | The active 112×112 ITEM07 command points to exact Saturn picture bytes in VDP1 and the exact palette in CRAM at 0xC00. Replay and command in pc-menu-hud-inventory.md. Bind to the presented command, verify more cards and add the integer-scale replacement with fallback and guest parity. No package change. |
 | T110 | P1 | open | S5 follow-up | Menus/HUD beyond items: geometry and palette check of the 9 PC menu images from T23 without a candidate, and a recogniser table for the remaining menu/HUD pictures (SYSTEM/WALL), after T109 proves the VDP1 path. |
-| T120 | P1 | shard | open | H0 coverage tool per chapter and refresh of the stale HD_PROGRESS table |
-| T121 | P1 | shard | open | H1 chapter 1: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T122 | P1 | shard | open | H2 chapter 2: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T123 | P1 | shard | open | H3 chapter 3: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T124 | P1 | shard | open | H4 chapter 4: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T125 | P1 | shard | open | H5 chapter 5: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T126 | P1 | shard | open | H6 chapter 6: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T127 | P1 | shard | open | H7 chapter 7: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T128 | P1 | shard | open | H8 chapter 8: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T129 | P1 | shard | open | H9 chapter 9: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T130 | P1 | shard | open | H10 chapter 10: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
-| T131 | P1 | shard | open | S11 tactical mode UNIT/MAP/ITEM: pairing, recogniser, wide maps |
-| T132 | P1 | shard | open | S12 packaging gate and clean-machine run for the generated and paired art, clips and cards |
+| TH0 | P1 | shard | open | H0 coverage tool per chapter and refresh of the stale HD_PROGRESS table |
+| TH1 | P1 | shard | open | H1 chapter 1: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH2 | P1 | shard | open | H2 chapter 2: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH3 | P1 | shard | open | H3 chapter 3: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH4 | P1 | shard | open | H4 chapter 4: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH5 | P1 | shard | open | H5 chapter 5: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH6 | P1 | shard | open | H6 chapter 6: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH7 | P1 | shard | open | H7 chapter 7: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH8 | P1 | shard | open | H8 chapter 8: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH9 | P1 | shard | open | H9 chapter 9: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TH10 | P1 | shard | open | H10 chapter 10: scene pictures, bodies and portraits, FILM clips, tactical list and replay report (see docs/SHARDS.md) |
+| TS11 | P1 | shard | open | S11 tactical mode UNIT/MAP/ITEM: pairing, recogniser, wide maps |
+| TS12 | P1 | shard | open | S12 packaging gate and clean-machine run for the generated and paired art, clips and cards |
 | T103 | P1 | shard | open · see docs/SHARDS.md | S6 VDP software drawing speed, pixel-identical (about 7 ms per frame). Baseline 2026-11-19 (3,000 frames of the intro film from `title-final.state`, hidden window, unthrottled, `SATRECOMP_FRAME_PROFILE=1`, runtime 855,908,864 bytes): emulation 8.88 ms avg (p95 12.3, max 74), of which SH-2 3.06, sound 1.26, VDP phases 4.40 (p95 5.76); presentation 0.41 ms. Build flags are `-O2` only (`tools/build_runtime.py` line 112): `-O3`, LTO or PGO are untried and must keep output pixel-identical (no `-ffast-math`). No sampling profiler is wired in: add per-phase timers in `video/layers.cpp` first (`NormalLine`, `RotationLine`, sprites). |
 | T104 | P1 | shard | done for the chain walk · PR · patch 0074 | S7 SH-2 block dispatch speed, identical guest hashes. Profile and measurements in `docs/research/sh2-dispatch-speed.md`: `Dispatch` walked about 9 chain entries per block run in office (7 of them mid-block entries it always skips); a second table with only liftable/start-0 entries (patch 0074) cuts the SH-2 phase from 3.57 to 2.73 ms (office) and 3.90 to 2.86 ms (resume), emulation 9.61 to 8.73 and 10.32 to 9.26 ms; `attack` unchanged. 1,200 of 1,200 hashes and the shot identical to `sakura-674182-validated.exe` in the three scenarios. Not run: `after-options-3000`, play test, `build_runtime.py` rebuild. |
 | T120 | P1 | open | S7 follow-up | Per-dispatch fixed cost in the idle loops (about 103,000 block runs per frame in office): wait-detector register snapshot, `Run` bookkeeping, `Matches`. Re-profile the T104 build first; identical hashes. |
