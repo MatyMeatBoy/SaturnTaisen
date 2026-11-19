@@ -1,0 +1,21 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 6063532..e3c8fbe 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -854,12 +854,14 @@ int RunWindowed(Port &port) {
+                 // Large VDP1 textures (candidates for the NC bodies), once per distinct hash.
+                 static std::set<uint64_t> seen;
+                 for(const auto& sprite:planes.sprites) {
+-                    if(sprite.pixels.size()<3000)continue;
++                    static const size_t minimum=std::getenv("SATRECOMP_BODY_TRACE_MIN")?size_t(std::atoi(std::getenv("SATRECOMP_BODY_TRACE_MIN"))):3000;
++                    if(sprite.pixels.size()<minimum)continue;
+                     const uint64_t hash=AtlasFingerprint(sprite.pixels);
+-                    if(!seen.insert(hash).second || seen.size()>64)continue;
++                    if(!seen.insert(hash).second || seen.size()>200)continue;
+                     const auto& cmd=sprite.command.words;
+                     fprintf(stderr,"vdp1 texture: type=%u x=%d y=%d size=%ux%u color=%04X mode=%04X bytes=%zu hash=%016llX",
+                         cmd[0]&15,sprite.x,sprite.y,((cmd[5]>>8)&63)*8,cmd[5]&255,cmd[3],cmd[2],sprite.pixels.size(),static_cast<unsigned long long>(hash));
++                    if(std::getenv("SATRECOMP_BODY_TRACE_BYTES")) {fprintf(stderr," head=");for(size_t i=0;i<24 && i<sprite.pixels.size();i++)fprintf(stderr,"%02X",sprite.pixels[i]);}
+                     fputc(10,stderr);
+                 }
+             }
