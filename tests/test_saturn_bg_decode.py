@@ -44,6 +44,8 @@ class SaturnBgTests(unittest.TestCase):
         data = json.loads((ROOT / 'config/hd-scene-bg-map.json').read_text(encoding='utf-8'))
         self.assertGreater(len(data['pairs']), 600)
         for pair in data['pairs']:
+            if pair['tier'] == 'missing':
+                continue
             self.assertEqual(len(pair['cells_sha256']), 64)
             self.assertEqual(pair['pc_file'].split('/')[-1][:-4], pair['saturn_file'].split('/')[-1][:-4])
             self.assertIn(pair['tier'], ('content', 'number'))

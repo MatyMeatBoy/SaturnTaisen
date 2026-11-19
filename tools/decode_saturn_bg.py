@@ -42,6 +42,9 @@ def decode(data):
         if not cells_w or not cells_h or 0x210 + cells_w * cells_h * 64 > len(data):
             return None
         return _cells(data, 0x10, 0x210, cells_w, cells_h)
+    table = _table(data)
+    if table:
+        return _mapped(data, *table)
     if len(data) != SIZE or data[:4] != b'\x00\x01\x00\x01':
         return None
     return _cells(data, PALETTE_AT, HEADER, CELLS_W, CELLS_H)
@@ -60,6 +63,64 @@ def _cells(data, palette_at, picture_at, cells_w, cells_h):
             for x in range(8):
                 pixels[left + x, top + y] = palette[row[x]]
     return image
+
+
+def picture_bytes(data):
+    """The cell data the game copies to VDP2 (hash key for runtime recognition), or None."""
+    if data[:4] == b'\x00\x01\x00\x02' and len(data) >= 0x210:
+        cells_w, cells_h = struct.unpack_from('>HH', data, 4)
+        return data[0x210:0x210 + cells_w * cells_h * 64]
+    table = _table(data)
+    if table:
+        return data[table[0]:table[0] + table[1]]
+    if len(data) == SIZE and data[:4] == b'\x00\x01\x00\x01':
+        return data[HEADER:PALETTE_AT]
+    return None
+
+
+def _mapped(data, picture_at, picture_size, map_at, map_size, palette_at):
+    """Variant C picture: unique 8x8 tiles plus a map (u16 per cell = 2 x tile number, VDP2 pattern names)."""
+    entries = map_size // 2
+    dims = {648: (36, 18), 1120: (40, 28)}.get(entries)
+    if dims is None:
+        return None
+    cells_w, cells_h = dims
+    words = struct.unpack_from('>256H', data, palette_at)
+    palette = [((w & 31) * 255 // 31, ((w >> 5) & 31) * 255 // 31, ((w >> 10) & 31) * 255 // 31) for w in words]
+    image = Image.new('RGB', (cells_w * 8, cells_h * 8))
+    pixels = image.load()
+    names = struct.unpack_from('>%dH' % entries, data, map_at)
+    tiles = picture_size // 64
+    for cell, name in enumerate(names):
+        tile = (name & 0x3FFF) >> 1
+        if tile >= tiles:
+            continue
+        base = picture_at + tile * 64
+        left, top = (cell % cells_w) * 8, (cell // cells_w) * 8
+        for y in range(8):
+            row = data[base + y * 8: base + y * 8 + 8]
+            for x in range(8):
+                pixels[left + x, top + y] = palette[row[x]]
+    return image
+
+
+def _table(data):
+    """Variant C (disc 2 battle backgrounds `BBG*.BIN`): big-endian (offset, size) pairs from 0x00, ended by a
+    zero pair: the unique tiles, the map (1296 or 2240 bytes) and the 512-byte palette.
+    Returns (picture_at, picture_size, map_at, map_size, palette_at) or None."""
+    pairs = []
+    for at in range(0, 64, 8):
+        if at + 8 > len(data):
+            return None
+        offset, size = struct.unpack_from('>II', data, at)
+        if not offset and not size:
+            break
+        if offset + size > len(data):
+            return None
+        pairs.append((offset, size))
+    if len(pairs) != 3 or pairs[0][0] != 0x18 or pairs[2][1] != 512 or pairs[1][1] not in (1296, 2240):
+        return None
+    return pairs[0][0], pairs[0][1], pairs[1][0], pairs[1][1], pairs[2][0]
 
 
 class Iso:
