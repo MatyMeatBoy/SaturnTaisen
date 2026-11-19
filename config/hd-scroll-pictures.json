@@ -39,6 +39,30 @@
    "crop_cross": 16
   },
   {
+   "min_crop_correlation": 0.9624,
+   "name": "BG1283",
+   "axis": "x",
+   "width": 472,
+   "height": 144,
+   "native_bytes": 73384,
+   "native_fnv": "D87BE6D07511C001",
+   "palette": "26F18F4F1E59358D",
+   "cells": "C08532D52E335092",
+   "pc_file": "SAKURA1/BG/BG1283.SPR",
+   "pc_bytes": 330403,
+   "pc_fnv": "F55E389A4B3EFF08",
+   "pc_width": 944,
+   "pc_height": 320,
+   "crop_cross": 8,
+   "fit": {
+    "rate_milli": 1992,
+    "origin": 0,
+    "length": 569,
+    "cross": 8,
+    "cross_length": 312
+   }
+  },
+  {
    "min_crop_correlation": 0.9389,
    "name": "BG1285",
    "axis": "x",
@@ -54,6 +78,30 @@
    "pc_width": 1024,
    "pc_height": 320,
    "crop_cross": 16
+  },
+  {
+   "min_crop_correlation": 0.9475,
+   "name": "BG1310",
+   "axis": "x",
+   "width": 512,
+   "height": 144,
+   "native_bytes": 79056,
+   "native_fnv": "9559E84A4BA8B420",
+   "palette": "AED8F5CB44782A19",
+   "cells": "09888D7C5CF638EF",
+   "pc_file": "SAKURA1/BG/BG1310.SPR",
+   "pc_bytes": 380137,
+   "pc_fnv": "87F307C6DDD24F49",
+   "pc_width": 1024,
+   "pc_height": 320,
+   "crop_cross": 8,
+   "fit": {
+    "rate_milli": 1930,
+    "origin": 32,
+    "length": 559,
+    "cross": 8,
+    "cross_length": 312
+   }
   },
   {
    "min_crop_correlation": 0.9963,
@@ -335,8 +383,6 @@
  "skipped": {
   "BG1257": "PC 1181x320 is not 2x of native 456x144",
   "BG1280": "PC 1241x320 is not 2x of native 512x144",
-  "BG1283": "PC art does not follow the native picture (min crop correlation 0.877)",
-  "BG1310": "PC art does not follow the native picture (min crop correlation 0.750)",
   "BG2093": "PC 592x320 is not 2x of native 320x144",
   "BG2247": "PC art does not follow the native picture (min crop correlation 0.200)",
   "BG2252": "PC art does not follow the native picture (min crop correlation 0.256)",
