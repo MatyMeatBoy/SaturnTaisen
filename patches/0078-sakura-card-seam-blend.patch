@@ -1,0 +1,37 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 7fb6373..e226923 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1826,7 +1826,7 @@ int RunWindowed(Port &port) {
+                 // Sides: the picture's own edge mirrored outward (distance d from the seam shows column d), so the seam is exact and
+                 // the extension is background only; the 1-pixel strips above stay as the fallback under it.
+                 {
+-                    const int mirrorCols=28;
++                    const int mirrorCols=39;   // the generated sides are 39 columns; the fallback shows only the first 28 (the title starts near column 34)
+                     if(!cardMirror[0]) {
+                         for(int s=0;s<2;s++) {
+                             cardMirror[s]=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,mirrorCols,224);
+@@ -1845,16 +1845,20 @@ int RunWindowed(Port &port) {
+                     }
+                     auto drawSide=[&](int s,const SDL_FRect& area) {
+                         if(!cardMirror[s] || area.w<=0)return;
+-                        const float nativeWidth=area.w/float(cardFit.scale);               // native pixels the area spans
+-                        const float shown=std::min(nativeWidth,float(mirrorCols));
++                        const float sc=cardSf>0?cardSf:float(cardFit.scale);
++                        const float nativeWidth=area.w/sc;                                    // native pixels the area spans
++                        const float shown=std::min(nativeWidth,float(cardSf>0?mirrorCols:28));
+                         // the columns nearest the seam; any area beyond the mirrored band keeps the strip colour
+                         SDL_FRect src{s==0?float(mirrorCols)-shown:0.0f,0,shown,224};
+-                        SDL_FRect dst=area;dst.w=shown*float(cardFit.scale);if(s==0)dst.x=area.x+area.w-dst.w;
++                        SDL_FRect dst=area;dst.w=shown*sc;if(s==0)dst.x=area.x+area.w-dst.w;
+                         SDL_RenderTexture(renderer,cardMirror[s],&src,&dst);
+                     };
+                     if(cardStrip[0] && leftArea.w>0)SDL_RenderTexture(renderer,cardStrip[0],nullptr,&leftArea);
+                     if(cardStrip[1] && rightArea.w>0)SDL_RenderTexture(renderer,cardStrip[1],nullptr,&rightArea);
+                     if(cardSf>0) {
++                        // Under the generated sides, the card's own edge mirrored: it matches the card exactly at the seam, so the
++                        // sides' transparent seam fades into the picture without a step in tone.
++                        drawSide(0,leftArea);drawSide(1,rightArea);
+                         const float sideW=39.0f*cardSf;
+                         const SDL_FRect left{float(cardFit.x)-sideW,float(cardFit.y),sideW,float(cardFit.h)};
+                         const SDL_FRect right{float(cardFit.x+cardFit.w),float(cardFit.y),sideW,float(cardFit.h)};
