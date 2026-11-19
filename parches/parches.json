@@ -19,10 +19,10 @@
       },
       "spanish": {
         "patch": "espanol-v0.1-disc1.xdelta",
-        "patch_sha256": "009e8dad0d4eeab3464f3cc5bf5746a9c214b83fabd94a956cc7b4fbba009846",
-        "blank_sha256": "816a22e170fc3189393a941498bbcb68ee334e82bce51f2da79845d90a7b7039",
-        "output_sha256": "2afc35768019ce2afb105b038246bfe3ac3c215055e89ce32fcc27dc8a04a615",
-        "output_subtitled_sha256": "f0850f4d77995c25e185b44079dc5f5bc830bd3d63657182a825370398bba748",
+        "patch_sha256": "01d10af50ae24732595a1a0540e7feec8a1481d80d91e5bd42708fd2fa5b591d",
+        "blank_sha256": "844902b1c213aeec9e3fed0cc3b662e7fce46a9e4d030b1deed389d2294ce971",
+        "output_sha256": "346435c5f9819ecf893c10283a37593065b8c48ba681f1ee1295b94f06763e95",
+        "output_subtitled_sha256": "f3294095774170c50e1a2375765c6d75d3e70a125d6352939fefde0e4fc58990",
         "output_bytes": 563679232
       },
       "videos": {
