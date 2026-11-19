@@ -1,0 +1,136 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index ec55d37..3885c41 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -617,7 +617,7 @@ int RunWindowed(Port &port) {
+     std::vector<BodyHd> bodyHd(kBodyCount);
+     using PresentationSprite=satrecomp::video::Renderer::PresentationSprite;
+     struct BodyFace {int x=0,y=0,w=0,h=0;unsigned ordinal=0;};
+-    struct BodyDraw {bool valid=false;int slot=-1,x=0,y=0,w=0,h=0;std::vector<BodyFace> faces;};
++    struct BodyDraw {bool valid=false;int slot=-1,x=0,y=0,w=0,h=0;std::vector<BodyFace> faces;std::vector<std::array<int,4>> keep;};
+     auto showSoftware = [&]() {
+         ProfileScope presentScope(frameProfile.present);
+         if (!renderer) {
+@@ -1246,6 +1246,7 @@ int RunWindowed(Port &port) {
+                                 const size_t bodyEnd=0x610+size_t(entry.stride)*144;
+                                 bool ok=st.body && !st.nc.empty() && st.nc.size()>bodyEnd && bw>0 && bh>0 && !st.parts.empty();
+                                 std::vector<std::pair<long,const PresentationSprite*>> found;
++                                std::vector<std::array<int,4>> keep;
+                                 const char* why=nullptr;
+                                 if(!ok)why=st.body?"no PC parts":"PC picture not ready";
+                                 if(ok)for(const auto& sp:planes.sprites) {
+@@ -1308,37 +1309,68 @@ int RunWindowed(Port &port) {
+                                             const unsigned fw=unsigned(spriteWidth(*sp)),fh=unsigned(spriteHeight(*sp));
+                                             std::vector<uint32_t> rgba(sp->pixels.size());
+                                             for(size_t i=0;i<rgba.size();i++)rgba[i]=sp->pixels[i]?palette[sp->pixels[i]]:0u;
+-                                            const auto signature=BodySignature(rgba,fw,fh);
+-                                            // A wrong expression is worse than the native one, so a match must be clear: a minimum
+-                                            // correlation (lower for small frames, which carry less detail) and a lead over the second best.
+-                                            const double minimum=fw*fh<=600?0.30:0.50;
+-                                            double best=minimum,second=-1.0;
+                                             size_t opaqueCount=0;for(uint32_t px:rgba)opaqueCount+=(px>>24)!=0;
++                                            double best=0.0,rawBest=0.0,rawSecond=0.0;
+                                             if(opaqueCount*100<rgba.size()*3) {
+                                                 // A frame that is (nearly) clear, such as a closed mouth drawn only by the body: the PC
+-                                                // part with the fewest opaque pixels, if that is also nearly clear.
++                                                // part with the fewest opaque pixels, if that part is also nearly clear.
+                                                 float least=0.10f;
+                                                 for(size_t k=0;k<st.partOpaque.size();k++)if(st.partOpaque[k]<least) {least=st.partOpaque[k];part=int(k);}
+-                                                best=0.0;
+                                             } else {
+-                                                for(size_t k=0;k<st.partSig.size();k++) {
+-                                                    double dot=0;for(size_t i=0;i<signature.size();i++)dot+=double(signature[i])*st.partSig[k][i];
+-                                                    if(dot>best) {second=best>minimum?best:second;best=dot;part=int(k);}
+-                                                    else if(dot>second)second=dot;
++                                                // The SHAPE of the frame is compared: pixels that are dark (outlines, pupils, lips) in the Saturn frame
++                                                // against the same pixels of each PC part, resampled onto the frame's grid at the place the frame
++                                                // predicts and shifted by up to 3 frame pixels each way (the prediction is only approximate); the
++                                                // score is the Dice overlap of the two dark masks, the best shift of each part.
++                                                const float kxp=float(st.bodyW)/float(bw),kyp=float(st.bodyH)/float(bh);
++                                                const float cxp=(sp->x-bx+fw*0.5f)*kxp,cyp=(sp->y-by+fh*0.5f)*kyp;
++                                                auto dark=[](uint32_t px){
++                                                    return (px>>24) && (0.299*(px&255)+0.587*((px>>8)&255)+0.114*((px>>16)&255))<80.0;
++                                                };
++                                                std::vector<char> saturnMask(rgba.size(),0);
++                                                size_t saturnDark=0;
++                                                for(size_t i=0;i<rgba.size();i++) {saturnMask[i]=dark(rgba[i]);saturnDark+=saturnMask[i];}
++                                                double second=-1.0;
++                                                best=-1.0;
++                                                if(saturnDark>=6)for(size_t k=0;k<st.parts.size() && k<st.partPixels.size();k++) {
++                                                    const int pw1=int(st.partW[k]),ph1=int(st.partH[k]);
++                                                    const float tlx0=cxp-pw1*0.5f,tly0=cyp-ph1*0.5f;
++                                                    double bestShift=0;
++                                                    for(int sy=-3;sy<=3;sy++)for(int sx=-3;sx<=3;sx++) {
++                                                        size_t inter=0,pcDark=0;
++                                                        for(unsigned v=0;v<fh;v++)for(unsigned u=0;u<fw;u++) {
++                                                            const float gx=(sp->x-bx+u+0.5f+sx)*kxp,gy=(sp->y-by+v+0.5f+sy)*kyp;
++                                                            const int qx=int(gx-tlx0),qy=int(gy-tly0);
++                                                            bool isDark=false;
++                                                            if(qx>=0 && qy>=0 && qx<pw1 && qy<ph1)isDark=dark(st.partPixels[k][size_t(qy)*pw1+qx]);
++                                                            pcDark+=isDark;
++                                                            inter+=isDark && saturnMask[size_t(v)*fw+u];
++                                                        }
++                                                        const double dice=(saturnDark+pcDark)?2.0*double(inter)/double(saturnDark+pcDark):0.0;
++                                                        if(dice>bestShift)bestShift=dice;
++                                                    }
++                                                    if(bestShift>best) {second=best;best=bestShift;part=int(k);}
++                                                    else if(bestShift>second)second=bestShift;
+                                                 }
+-                                                if(part>=0 && second>0 && best-second<0.05)part=-1;
++                                                rawBest=best;rawSecond=second;
++                                                // Near-ties are between parts of almost the same shape, so either gives the same expression.
++                                                if(part>=0 && best<0.50)part=-1;
+                                             }
+                                             st.matches[hash]=part;
+-                                            if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body frame %ux%u -> PC part %d (correlation %.2f)",fw,fh,part,part>=0?best:0.0);fputc(10,stderr);}
++                                            if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body frame %ux%u -> PC part %d (best %.2f, second %.2f)",fw,fh,part,rawBest,rawSecond);fputc(10,stderr);}
+                                         }
+                                         frameIndex++;
+-                                        if(part<0 || !st.parts[size_t(part)]) {ok=false;why="no PC part resembles a frame";break;}
++                                        if(part<0 || !st.parts[size_t(part)]) {
++                                            // No clear PC part: this frame stays as the native sprite over the HD body (its expression is
++                                            // right, only its sharpness is not). The body is drawn if at least one frame was matched.
++                                            keep.push_back({sp->x,sp->y,spriteWidth(*sp),spriteHeight(*sp)});
++                                            continue;
++                                        }
+                                         const unsigned ordinal=unsigned(part);
+                                         bodyDraw.faces.push_back({sp->x,sp->y,spriteWidth(*sp),spriteHeight(*sp),ordinal});
+                                     }
+                                 }
+                                 // Nothing may blend over the body (fades, white mixes): every sprite pixel inside must be plain.
+-                                if(ok && !bodyDraw.faces.empty()) {
++                                if(ok && (!bodyDraw.faces.empty() || !keep.empty())) {
+                                     for(int y=std::max(by,0);y<std::min(by+bh,152) && ok;y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++) {
+                                         const size_t at=size_t(y)*320+x;
+                                         if(planes.source[at]==0 && planes.spriteWhiteWeight[at]!=0) {ok=false;why="a blend over the body";break;}
+@@ -1348,10 +1380,13 @@ int RunWindowed(Port &port) {
+                                         if(offset[0]||offset[1]||offset[2])ok=false;
+                                     }
+                                 }
+-                                if(ok && !bodyDraw.faces.empty()) {
+-                                    bodyDraw.valid=true;bodyDraw.slot=slot;bodyDraw.x=bx;bodyDraw.y=by;bodyDraw.w=bw;bodyDraw.h=bh;
+-                                    for(int y=std::max(by,0);y<std::min(by+bh,152);y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++)
+-                                        if(planes.source[size_t(y)*320+x]==0)zoomForeground[size_t(y)*320+x]=0;
++                                if(ok && (!bodyDraw.faces.empty() || !keep.empty())) {
++                                    bodyDraw.valid=true;bodyDraw.slot=slot;bodyDraw.x=bx;bodyDraw.y=by;bodyDraw.w=bw;bodyDraw.h=bh;bodyDraw.keep=keep;
++                                    for(int y=std::max(by,0);y<std::min(by+bh,152);y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++) {
++                                        bool kept=false;
++                                        for(const auto& r:keep)if(x>=r[0] && x<r[0]+r[2] && y>=r[1] && y<r[1]+r[3]) {kept=true;break;}
++                                        if(!kept && planes.source[size_t(y)*320+x]==0)zoomForeground[size_t(y)*320+x]=0;
++                                    }
+                                 } else {
+                                     bodyDraw.faces.clear();
+                                     static std::set<std::string> reported;
+@@ -1484,6 +1519,12 @@ int RunWindowed(Port &port) {
+                                 }
+                                 SDL_RenderTexture(renderer,st.parts[face.ordinal],nullptr,&partTarget);
+                             }
++                            // Face frames with no clear PC part stay as the native sprite, drawn again over the HD body.
++                            for(const auto& r:bodyDraw.keep) {
++                                const SDL_FRect source{float(r[0]),float(r[1]),float(r[2]),float(r[3])};
++                                const SDL_FRect target{imageTarget.x+(r[0]-16)*scale,imageTarget.y+(r[1]-8)*scale,r[2]*scale,r[3]*scale};
++                                SDL_RenderTexture(renderer,content,&source,&target);
++                            }
+                         }
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
