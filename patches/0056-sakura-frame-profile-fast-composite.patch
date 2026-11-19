@@ -68,13 +68,16 @@ index ad74b42..b5aae70 100644
  struct Disc {
      struct Track {
 diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
-index 8dd79e5..88a1394 100644
+index 8dd79e5..5b7ad50 100644
 --- a/port/frontend_sdl.cpp
 +++ b/port/frontend_sdl.cpp
-@@ -34,12 +34,46 @@
+@@ -34,12 +34,61 @@
  #include <SDL3/SDL.h>
  
  #include <algorithm>
++#include <tuple>
++#include <atomic>
++#include "parallel_rows.h"
 +#ifdef SATRECOMP_OWN_MACHINE
 +#include "../machine/machine.h"
 +#endif
@@ -96,6 +99,18 @@ index 8dd79e5..88a1394 100644
 +    uint64_t mark=0;
 +    // (the time since the last mark goes to `section`)
 +    void Mark(Section& section) {if(!on)return;const uint64_t now=SDL_GetTicksNS();if(mark)section.ms.push_back(float(now-mark)/1e6f);mark=now;}
++    // SATRECOMP_FRAME_PROFILE_SLOW=ms: every frame whose emulation and presentation together take longer is
++    // printed with its parts and the presentation it used, to find which scenes are slow.
++    double slowMs=std::getenv("SATRECOMP_FRAME_PROFILE_SLOW")?std::atof(std::getenv("SATRECOMP_FRAME_PROFILE_SLOW")):0.0;
++    const char* kind="";
++    void SlowFrame(uint64_t frame) {
++        if(!on || slowMs<=0 || run.ms.empty() || present.ms.empty())return;
++        const double total=run.ms.back()+present.ms.back();
++        if(total<slowMs)return;
++        fprintf(stderr,"slow frame %llu: %.2f ms = emulation %.2f (sh2 %.2f vdp %.2f sound %.2f) + presentation %.2f (composite %.2f) kind=%s\n",
++                static_cast<unsigned long long>(frame),total,run.ms.back(),cpu.ms.empty()?0.0:cpu.ms.back(),vdp.ms.empty()?0.0:vdp.ms.back(),
++                sound.ms.empty()?0.0:sound.ms.back(),present.ms.back(),backdrop.ms.empty()?0.0:backdrop.ms.back(),kind);
++    }
 +    void Report() {
 +        if(!on)return;
 +        for(Section* one:{&run,&cpu,&sound,&vdp,&present,&decor,&hdText,&early,&backdrop,&ui,&flip}) {
@@ -118,9 +133,12 @@ index 8dd79e5..88a1394 100644
  namespace {
  
      void DrawSakuraFrame(SDL_Renderer* renderer, int width, int height) {
-@@ -516,17 +550,21 @@ int RunWindowed(Port &port) {
+@@ -515,18 +564,24 @@ int RunWindowed(Port &port) {
+         shading.Show(pixels, static_cast<int>(width), static_cast<int>(height), where, shade);
      };
      // The software picture through the SDL renderer, fitted as the Display page says
++    ParallelRows parallelRows;
++    struct HeldZoom {bool valid=false;int x=0,width=0,lines=0,group=0,shadowRows=0;} heldZoom;
      auto showSoftware = [&]() {
 +        ProfileScope presentScope(frameProfile.present);
          if (!renderer) {
@@ -140,7 +158,7 @@ index 8dd79e5..88a1394 100644
              const auto& planes=port.videoRenderer->PresentationFrame();
              if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
                  const auto* catalogRecord=port.dialogueCatalog?port.dialogueCatalog->Get(shownDialogue):nullptr;
-@@ -709,6 +747,7 @@ int RunWindowed(Port &port) {
+@@ -709,6 +764,7 @@ int RunWindowed(Port &port) {
                  }
              }
          }
@@ -148,7 +166,7 @@ index 8dd79e5..88a1394 100644
          SDL_Texture* floral=nullptr;const Backdrop* selectedBackdrop=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false,mixedFloralAvailable=false;
          std::vector<uint32_t> mapFadeRows;std::optional<MapCrossfade> mapFade;
          if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
-@@ -807,11 +846,19 @@ int RunWindowed(Port &port) {
+@@ -807,11 +863,31 @@ int RunWindowed(Port &port) {
                      const auto native=FitInteger(wide,high,320,224);
                      if(ResizePanelBuffer(fadeBackdropPixels,size_t(canvasWidth)*high)) {
                          std::fill(fadeBackdropPixels.begin(),fadeBackdropPixels.end(),0);
@@ -161,7 +179,19 @@ index 8dd79e5..88a1394 100644
 +                        // stays clear, so those columns are skipped (the same pixels, without the per-pixel work
 +                        // over most of a large window).
 +                        const int skipFrom=std::clamp(native.x-canvasLeft,0,canvasWidth),skipTo=std::clamp(native.x+native.w-canvasLeft,0,canvasWidth);
++                        // (a row equal to the one above in its backdrop row, its native gradient row and whether
++                        // it crosses the native picture is a copy of it)
++                        const auto fadeKey=[&](int py) {
++                            const int64_t dy=int64_t(py)-int64_t(bg.y),backRow=dy<0 || cover.scale<=0 || dy>=int64_t(bgh)*cover.scale?-1:dy/cover.scale;
++                            const int64_t nativeRow=native.scale>0?std::clamp<int64_t>(int64_t(py)-native.y,0,int64_t(native.h)-1)/native.scale:-1;
++                            const bool inside=py>=native.y && py<native.y+native.h;
++                            return std::tuple<int64_t,int64_t,bool>{backRow,nativeRow,inside};
++                        };
 +                        for(int py=0;py<high;py++) {
++                            if(py>0 && fadeKey(py)==fadeKey(py-1)) {
++                                std::copy_n(fadeBackdropPixels.begin()+size_t(py-1)*canvasWidth,canvasWidth,fadeBackdropPixels.begin()+size_t(py)*canvasWidth);
++                                continue;
++                            }
 +                            const bool insideRows=py>=native.y && py<native.y+native.h;
 +                            for(int px=0;px<canvasWidth;px++) {
 +                                if(insideRows && px>=skipFrom && px<skipTo) {px=skipTo-1;continue;}
@@ -173,7 +203,7 @@ index 8dd79e5..88a1394 100644
                          }
                          if(fadeBackdropWidth!=canvasWidth || fadeBackdropHeight!=high) {
                              if(fadeBackdropTexture)SDL_DestroyTexture(fadeBackdropTexture);
-@@ -839,19 +886,47 @@ int RunWindowed(Port &port) {
+@@ -839,20 +915,74 @@ int RunWindowed(Port &port) {
                     planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
                     size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
                      if(sourcePixels.size()==320*224 && ResizePanelBuffer(pixels,size_t(fit.w)*fit.h)) {
@@ -208,9 +238,28 @@ index 8dd79e5..88a1394 100644
 +                            }
 +                        }
 +                        bool hasMix=false;
-+                        if(mayMix)for(int py=0;py<fit.h;py++) {
++                        // A window row depends only on its native row and on the backdrop row under it: a row
++                        // equal in both to the one above is a copy of it. Within a row, a mixed native pixel
++                        // takes one backdrop pixel per run of the backdrop's own scale. Same pixels as sampling
++                        // every window pixel, with work that no longer grows with the window (fades, panels).
++                        const int backW=int(bgw),backH=int(bgh),backX=int(bg.x),backY=int(bg.y),backScale=cover.scale;
++                        const std::span<const uint32_t> back{selectedBackdrop->pixels};
++                        const bool backOk=backW>0 && backH>0 && backScale>0 && size_t(backW)*size_t(backH)==back.size();
++                        auto backRow=[&](int screenY) -> int64_t {
++                            const int64_t dy=int64_t(screenY)-backY;
++                            return !backOk || dy<0 || dy>=int64_t(backH)*backScale?-1:dy/backScale;
++                        };
++                        std::atomic<bool> anyMix{false};
++                        // (bands of rows on the spare cores: each band writes only its own rows)
++                        if(mayMix)parallelRows.For(fit.h,[&](int firstRow,int lastRow) {
++                        bool bandMix=false;
++                        int previousNative=-2;int64_t previousBack=-2;
++                        for(int py=firstRow;py<lastRow;py++) {
 +                            const int sy=top+py/scale;
 +                            uint32_t* row=pixels.data()+size_t(py)*fit.w;
++                            const int64_t by=backRow(fit.y+py);
++                            if(py>firstRow && sy==previousNative && by==previousBack) {std::copy_n(row-fit.w,fit.w,row);continue;}
++                            previousNative=sy;previousBack=by;
 +                            if(sy<0 || sy>=224) {std::fill_n(row,fit.w,0u);continue;}
 +                            for(int px=0;px<fit.w;) {
 +                                const int end=std::min(fit.w,(px/scale+1)*scale),sx=left+px/scale;
@@ -218,21 +267,54 @@ index 8dd79e5..88a1394 100644
 +                                const size_t at=size_t(sy)*320+sx;
 +                                const auto& recipe=recipeAt(at);
 +                                const uint32_t source=solidRecipe?0xFF000000:sourcePixels[at];
-+                                if(!(source>>24) || !recipe.lowerWeight) {std::fill(row+px,row+end,source);px=end;continue;}
-+                                for(;px<end;px++) {
-+                                    uint32_t pixel=source;
-+                                    if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
-+                                            int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
-+                                        pixel=CompositePanelPixel(recipe,*below,pixel);hasMix=true;
++                                if(!(source>>24) || !recipe.lowerWeight || by<0) {std::fill(row+px,row+end,source);px=end;continue;}
++                                while(px<end) {
++                                    const int64_t dx=int64_t(fit.x+px)-backX;
++                                    if(dx<0 || dx>=int64_t(backW)*backScale) {
++                                        // (outside the backdrop: unmixed, up to where it starts or the block ends)
++                                        const int stop=dx<0?int(std::min<int64_t>(end,px-dx)):end;
++                                        std::fill(row+px,row+stop,source);px=stop;continue;
 +                                    }
-+                                    row[px]=pixel;
++                                    const int stop=int(std::min<int64_t>(end,px+(backScale-dx%backScale)));
++                                    const uint32_t below=back[size_t(by)*size_t(backW)+size_t(dx/backScale)];
++                                    std::fill(row+px,row+stop,CompositePanelPixel(recipe,below,source));bandMix=true;
++                                    px=stop;
 +                                }
                              }
 -                            pixels[size_t(py)*fit.w+px]=pixel;
                          }
++                        if(bandMix)anyMix=true;
++                        });
++                        hasMix=anyMix;
                          if(hasMix) {
                              if(cachedWidth!=fit.w || cachedHeight!=fit.h) {
-@@ -1059,6 +1134,7 @@ int RunWindowed(Port &port) {
+                                 if(cachedTexture)SDL_DestroyTexture(cachedTexture);
+@@ -965,6 +1095,24 @@ int RunWindowed(Port &port) {
+                         }
+                     }
+                 }
++                // Zoom held between scenes: when the picture has gone and only the box is left on the floral
++                // plane (a load between two scenes), the box keeps the Zoom place instead of jumping back to
++                // the original one. Any other screen ends the hold.
++                if(splitZoom) {
++                    heldZoom={true,scene.x,scene.w,scene.y+scene.h-153,scene.h,0};
++                } else if(heldZoom.valid && satrecomp::FeatureValue("scene_view")==1 && !scene.movieOnly &&
++                          DialogueOnly(planes.source,planes.width,planes.height)) {
++                    const auto zoom=FitSceneZoom(wide,high,heldZoom.width,heldZoom.lines,heldZoom.group,heldZoom.shadowRows);
++                    if(zoom.valid) {
++                        splitZoom=true;
++                        crop=SDL_FRect{float(heldZoom.x),153,float(heldZoom.width),float(heldZoom.lines)};fit=zoom.dialogue;
++                        choiceTextFit=zoom.picture;choiceCropX=16;choiceCropY=8;
++                        zoomForeground=hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground;
++                        SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
++                    }
++                } else {
++                    heldZoom.valid=false;
++                }
+                 if(!splitZoom) {choiceTextFit=fit;choiceCropX=int(crop.x);choiceCropY=int(crop.y);}
+                 choiceViewport=!hdChoiceLines.empty();
+                 textFit=fit;textCropX=static_cast<int>(crop.x);textCropY=static_cast<int>(crop.y);
+@@ -1059,6 +1207,7 @@ int RunWindowed(Port &port) {
              const SDL_FRect left{0,0,float(canvasLeft),float(high)},right{float(canvasLeft+canvasWidth),0,float(wide-canvasLeft-canvasWidth),float(high)};
              SDL_RenderFillRect(renderer,&left);SDL_RenderFillRect(renderer,&right);
          }
@@ -240,19 +322,20 @@ index 8dd79e5..88a1394 100644
          if(!choosing && !port.menu.IsOpen() && !hdLines.empty())
              sakuraUi.GameText(hdLines,textFit.x,textFit.y,textFit.scale,textCropX,textCropY);
          if(!choosing && !port.menu.IsOpen() && choiceViewport && !hdChoiceLines.empty())
-@@ -1075,7 +1151,10 @@ int RunWindowed(Port &port) {
+@@ -1075,7 +1224,11 @@ int RunWindowed(Port &port) {
              }
              windowShot.clear();
          }
 -        if (SDL_RenderPresent(renderer) && !announcedReady) {
 +        frameProfile.Mark(frameProfile.ui);
++        frameProfile.kind=presentationKind;
 +        bool presented=false;
 +        {ProfileScope flipScope(frameProfile.flip);presented=SDL_RenderPresent(renderer);}
 +        if (presented && !announcedReady) {
              announcedReady = recomp::PublishLaunchReady(port.opt.readyFile);
          }
      };
-@@ -1477,7 +1556,19 @@ int RunWindowed(Port &port) {
+@@ -1477,7 +1630,19 @@ int RunWindowed(Port &port) {
          stepFrame = false;
          if (runs) {
              port.stepping = paused; // (a frame at a time: no run-ahead)
@@ -273,7 +356,15 @@ index 8dd79e5..88a1394 100644
          } else {
              audio.pending.clear();
          }
-@@ -1573,6 +1664,7 @@ int RunWindowed(Port &port) {
+@@ -1562,6 +1727,7 @@ int RunWindowed(Port &port) {
+             }
+         }
+ 
++        frameProfile.SlowFrame(port.frame);
+         if (!port.opt.unthrottled) {
+             nextFrame += static_cast<uint64_t>(kFrameNs * 100 / port.menu.Speed());
+             const uint64_t now = SDL_GetTicksNS();
+@@ -1573,6 +1739,7 @@ int RunWindowed(Port &port) {
          }
      }
  
@@ -281,3 +372,122 @@ index 8dd79e5..88a1394 100644
      port.audioSink = nullptr;
      if (audio.stream) {
          SDL_DestroyAudioStream(audio.stream);
+diff --git a/port/parallel_rows.h b/port/parallel_rows.h
+new file mode 100644
+index 0000000..f2a0c1b
+--- /dev/null
++++ b/port/parallel_rows.h
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++// A small persistent pool that splits a picture's rows among the CPU's spare cores. Used by the enhanced
++// presentation (panel and picture blending over the HD backdrop), whose rows are independent: each band is
++// worked by one thread and writes only its own rows, so the result is the same as one thread's.
++#include <algorithm>
++#include <atomic>
++#include <condition_variable>
++#include <functional>
++#include <mutex>
++#include <thread>
++#include <vector>
++
++namespace port {
++
++class ParallelRows {
++public:
++    ParallelRows() {
++        const unsigned cores = std::max(1u, std::thread::hardware_concurrency());
++        // (one core stays with the game thread, which also works a band; at most 8 helpers)
++        const unsigned helpers = std::min(8u, cores > 2 ? cores - 2 : 0u);
++        for (unsigned i = 0; i < helpers; i++) threads_.emplace_back([this, i] { Work(i + 1); });
++    }
++    ~ParallelRows() {
++        {
++            std::lock_guard lock(mutex_);
++            stop_ = true;
++            generation_++;
++        }
++        wake_.notify_all();
++        for (auto& thread : threads_) thread.join();
++    }
++    ParallelRows(const ParallelRows&) = delete;
++    ParallelRows& operator=(const ParallelRows&) = delete;
++
++    // Calls band(first, last) for consecutive bands covering [0, rows); returns when all are done.
++    void For(int rows, const std::function<void(int, int)>& band) {
++        const int bands = int(threads_.size()) + 1;
++        if (rows < 64 || bands == 1) {
++            band(0, rows);
++            return;
++        }
++        {
++            std::lock_guard lock(mutex_);
++            job_ = &band;
++            rows_ = rows;
++            bands_ = bands;
++            pending_ = bands - 1;
++            generation_++;
++        }
++        wake_.notify_all();
++        Band(0);
++        std::unique_lock lock(mutex_);
++        done_.wait(lock, [this] { return pending_ == 0; });
++        job_ = nullptr;
++    }
++
++private:
++    void Band(int index) {
++        const int first = int(int64_t(rows_) * index / bands_), last = int(int64_t(rows_) * (index + 1) / bands_);
++        if (first < last) (*job_)(first, last);
++    }
++    void Work(int index) {
++        uint64_t seen = 0;
++        for (;;) {
++            {
++                std::unique_lock lock(mutex_);
++                wake_.wait(lock, [&] { return generation_ != seen; });
++                seen = generation_;
++                if (stop_) return;
++            }
++            Band(index);
++            {
++                std::lock_guard lock(mutex_);
++                if (--pending_ == 0) done_.notify_one();
++            }
++        }
++    }
++    std::vector<std::thread> threads_;
++    std::mutex mutex_;
++    std::condition_variable wake_, done_;
++    const std::function<void(int, int)>* job_ = nullptr;
++    int rows_ = 0, bands_ = 1, pending_ = 0;
++    uint64_t generation_ = 0;
++    bool stop_ = false;
++};
++
++}  // namespace port
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index d032c75..cab6820 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -102,6 +102,20 @@ inline SceneLayout AnalyzeOpeningPresentation(const std::vector<uint8_t>& source
+     }
+     return movie>=20000 && background>=1000?SceneLayout{true,true,16,24,288,144}:SceneLayout{};
+ }
++// A dialogue box alone on the floral plane (between two scenes, while the next picture loads): the panel is
++// there and nothing above the box but the floral plane. Cropping to the box then hides nothing.
++inline bool DialogueOnly(const std::vector<uint8_t>& source,int width,int height) {
++    if(width!=320 || height!=224 || source.size()!=320*224) return false;
++    int panel=0,floral=0;
++    for(int y=0;y<224;y++) for(int x=0;x<320;x++) {
++        const int layer=source[y*320+x];
++        if(y<153 && layer!=5 && layer<6) return false;   // a picture, a sprite or a panel above the box
++        panel+=layer==3 && y>=155 && y<220;
++        floral+=layer==5;
++    }
++    return panel>=8000 && floral>=1000;
++}
++
+ inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int width,int height,
+                                        std::span<const uint8_t> underSource={}) {
+     if(width!=320 || height!=224 || source.size()!=320*224) return {};

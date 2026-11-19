@@ -7,6 +7,7 @@
 #include <cassert>
 #include <cstdio>
 #include <random>
+#include <tuple>
 #include <vector>
 
 namespace {
@@ -55,7 +56,7 @@ bool OldComposite(const Planes& p,const std::vector<uint32_t>& backdrop,int bgw,
     return hasMix;
 }
 
-// The composite as it is now: decided per native pixel, blocks copied, only mixed pixels sampled per window pixel.
+// The composite as it is now: decided per native pixel, rows reused, mixed pixels taken per backdrop run.
 bool NewComposite(const Planes& p,const std::vector<uint32_t>& backdrop,int bgw,int bgh,int bgx,int bgy,int coverScale,
                   const port::IntegerViewport& fit,int cropX,int cropY,const port::PanelMix* solid,std::vector<uint32_t>& pixels) {
     pixels.assign(size_t(fit.w)*fit.h,0xDEADBEEF);
@@ -76,9 +77,20 @@ bool NewComposite(const Planes& p,const std::vector<uint32_t>& backdrop,int bgw,
         }
     }
     bool hasMix=false;
+    const int backW=bgw,backH=bgh,backX=bgx,backY=bgy,backScale=coverScale;
+    const std::vector<uint32_t>& back=backdrop;
+    const bool backOk=backW>0 && backH>0 && backScale>0 && size_t(backW)*size_t(backH)==back.size();
+    auto backRow=[&](int screenY) -> int64_t {
+        const int64_t dy=int64_t(screenY)-backY;
+        return !backOk || dy<0 || dy>=int64_t(backH)*backScale?-1:dy/backScale;
+    };
+    int previousNative=-2;int64_t previousBack=-2;
     if(mayMix)for(int py=0;py<fit.h;py++) {
         const int sy=top+py/scale;
         uint32_t* row=pixels.data()+size_t(py)*fit.w;
+        const int64_t by=backRow(fit.y+py);
+        if(py>0 && sy==previousNative && by==previousBack) {std::copy_n(row-fit.w,fit.w,row);continue;}
+        previousNative=sy;previousBack=by;
         if(sy<0 || sy>=224) {std::fill_n(row,fit.w,0u);continue;}
         for(int px=0;px<fit.w;) {
             const int end=std::min(fit.w,(px/scale+1)*scale),sx=left+px/scale;
@@ -86,13 +98,17 @@ bool NewComposite(const Planes& p,const std::vector<uint32_t>& backdrop,int bgw,
             const size_t at=size_t(sy)*320+sx;
             const auto& recipe=recipeAt(at);
             const uint32_t source=solid?0xFF000000:p.source[at];
-            if(!(source>>24) || !recipe.lowerWeight) {std::fill(row+px,row+end,source);px=end;continue;}
-            for(;px<end;px++) {
-                uint32_t pixel=source;
-                if(const auto below=port::SamplePanelBackdrop(backdrop,bgw,bgh,bgx,bgy,coverScale,fit.x+px,fit.y+py)) {
-                    pixel=port::CompositePanelPixel(recipe,*below,pixel);hasMix=true;
+            if(!(source>>24) || !recipe.lowerWeight || by<0) {std::fill(row+px,row+end,source);px=end;continue;}
+            while(px<end) {
+                const int64_t dx=int64_t(fit.x+px)-backX;
+                if(dx<0 || dx>=int64_t(backW)*backScale) {
+                    const int stop=dx<0?int(std::min<int64_t>(end,px-dx)):end;
+                    std::fill(row+px,row+stop,source);px=stop;continue;
                 }
-                row[px]=pixel;
+                const int stop=int(std::min<int64_t>(end,px+(backScale-dx%backScale)));
+                const uint32_t below=back[size_t(by)*size_t(backW)+size_t(dx/backScale)];
+                std::fill(row+px,row+stop,port::CompositePanelPixel(recipe,below,source));hasMix=true;
+                px=stop;
             }
         }
     }
@@ -116,7 +132,17 @@ void NewFade(const port::MapCrossfade& fade,const std::vector<uint32_t>& rows,co
              std::vector<uint32_t>& out) {
     out.assign(size_t(canvasWidth)*high,0);
     const int skipFrom=std::clamp(native.x-canvasLeft,0,canvasWidth),skipTo=std::clamp(native.x+native.w-canvasLeft,0,canvasWidth);
+    const auto fadeKey=[&](int py) {
+        const int64_t dy=int64_t(py)-int64_t(bgy),backRow=dy<0 || coverScale<=0 || dy>=int64_t(bgh)*coverScale?-1:dy/coverScale;
+        const int64_t nativeRow=native.scale>0?std::clamp<int64_t>(int64_t(py)-native.y,0,int64_t(native.h)-1)/native.scale:-1;
+        const bool inside=py>=native.y && py<native.y+native.h;
+        return std::tuple<int64_t,int64_t,bool>{backRow,nativeRow,inside};
+    };
     for(int py=0;py<high;py++) {
+        if(py>0 && fadeKey(py)==fadeKey(py-1)) {
+            std::copy_n(out.begin()+size_t(py-1)*canvasWidth,canvasWidth,out.begin()+size_t(py)*canvasWidth);
+            continue;
+        }
         const bool insideRows=py>=native.y && py<native.y+native.h;
         for(int px=0;px<canvasWidth;px++) {
             if(insideRows && px>=skipFrom && px<skipTo) {px=skipTo-1;continue;}
