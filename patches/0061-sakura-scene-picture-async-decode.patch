@@ -1,0 +1,68 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index e82f628..c568656 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -17,6 +17,7 @@
+ #include "narrative_text.h"
+ #include "kabe.h"
+ #include "backdrop.h"
++#include <future>
+ #include "pc_backdrop.h"
+ #include "pc_spr.h"
+ #include "scene_bg_table.h"
+@@ -573,7 +574,8 @@ int RunWindowed(Port &port) {
+     ParallelRows parallelRows;
+     struct HeldZoom {bool valid=false;int x=0,width=0,lines=0,group=0,shadowRows=0;} heldZoom;
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+-    struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;};
++    struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
++    struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
+     std::vector<SceneHd> sceneHd(kSceneBgCount);
+     std::vector<uint32_t> sceneHdForeground;
+     auto showSoftware = [&]() {
+@@ -1138,22 +1140,33 @@ int RunWindowed(Port &port) {
+                                     if(visible<12000)continue;
+                                     auto& hd=sceneHd[slot];
+                                     if(!hd.tried) {
++                                        // Decode the PC picture on a worker thread: doing it here cost about 20 ms
++                                        // the first time a picture appeared. Until it is ready the native one shows.
+                                         hd.tried=true;
+                                         const auto& entry=kSceneBg[slot];
+-                                        std::vector<uint8_t> bytes;
+-                                        if(ReadPcBackdropFile(std::filesystem::u8path(port.opt.pcAssetsPath)/entry.file,bytes,64u<<20)) {
++                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/entry.file,index=entry.index]() {
++                                            SceneHdPixels result;
++                                            std::vector<uint8_t> bytes;
++                                            if(!ReadPcBackdropFile(file,bytes,64u<<20))return result;
+                                             std::vector<PcSprite> images;std::string error;
+-                                            if(DecodePcSprites(bytes,images,error))
+-                                                for(const auto& image:images)if(image.index==entry.index && image.width && image.height) {
+-                                                    if(auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,int(image.width),int(image.height))) {
+-                                                        if(SDL_UpdateTexture(texture,nullptr,image.pixels.data(),int(image.width*4))) {
+-                                                            SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_LINEAR);hd.texture=texture;
+-                                                        } else SDL_DestroyTexture(texture);
+-                                                    }
+-                                                    break;
+-                                                }
++                                            if(!DecodePcSprites(bytes,images,error))return result;
++                                            for(auto& image:images)if(image.index==index && image.width && image.height) {
++                                                result.width=image.width;result.height=image.height;result.pixels=std::move(image.pixels);break;
++                                            }
++                                            return result;
++                                        });
++                                    }
++                                    if(hd.pending.valid()) {
++                                        if(hd.pending.wait_for(std::chrono::seconds(0))!=std::future_status::ready)continue;
++                                        auto decoded=hd.pending.get();
++                                        if(decoded.width && decoded.height) {
++                                            if(auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,int(decoded.width),int(decoded.height))) {
++                                                if(SDL_UpdateTexture(texture,nullptr,decoded.pixels.data(),int(decoded.width*4))) {
++                                                    SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_LINEAR);hd.texture=texture;
++                                                } else SDL_DestroyTexture(texture);
++                                            }
+                                         }
+-                                        if(std::getenv("SATRECOMP_BACKGROUND_STATS")){fprintf(stderr,"scene picture: %s usable=%d",entry.file,hd.texture!=nullptr);fputc(10,stderr);}
++                                        if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"scene picture: %s usable=%d",kSceneBg[slot].file,hd.texture!=nullptr);fputc(10,stderr);}
+                                     }
+                                     if(!hd.texture)continue;
+                                     sceneHdForeground=zoomForeground;
