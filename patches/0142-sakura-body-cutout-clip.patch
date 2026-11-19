@@ -1,0 +1,121 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -926,7 +926,8 @@
+     struct BodyPixels {uint64_t pcAsset=0;std::vector<unsigned> originalIndex;unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;};
+     struct BodyHd {
+         bool tried=false;SDL_Texture* body=nullptr;unsigned bodyW=0,bodyH=0;
+-        bool cutout=false;SDL_Texture* maskTexture=nullptr;uint64_t maskHash=0;
++        bool cutout=false;SDL_Texture* maskTexture=nullptr;std::optional<uint64_t> maskHash;
++        std::vector<std::array<int,3>> maskRuns;
+         VerifiedBodyFaces verified;bool verifiedAssets=false;std::vector<unsigned> originalIndex;
+         std::future<BodyPixels> pending;std::vector<SDL_Texture*> parts;std::vector<unsigned> partW,partH,runCount;
+         std::vector<uint8_t> nc;std::unordered_map<uint64_t,long> offsets;
+@@ -934,6 +935,8 @@
+         std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;std::unordered_map<uint64_t,int> matches;std::unordered_map<unsigned,std::array<float,2>> refinedPos;
+     };
+     std::vector<BodyHd> bodyHd(kBodyCount);
++    std::vector<SDL_Vertex> bodyMaskVertices;
++    std::vector<int> bodyMaskIndices;
+     using ItemCapture=satrecomp::video::Renderer::ItemCardCapture;
+     constexpr int nativeItemSize=satrecomp::video::Renderer::kItemCardSize;
+     constexpr int hdItemSize=2*nativeItemSize;
+@@ -2427,13 +2430,14 @@
+                             const auto& st=bodyHd[size_t(bodyDraw.slot)];
+                             const float scale=imageTarget.w/288.0f;
+                             const SDL_FRect bodyTarget{imageTarget.x+(bodyDraw.x-16)*scale,imageTarget.y+(bodyDraw.y-8)*scale,bodyDraw.w*scale,bodyDraw.h*scale};
+-                            SDL_Texture* bodyTexture=st.body;
++                            SDL_Texture* bodyTexture=bodyDraw.mask.empty()?st.body:nullptr;
+                             if(!bodyDraw.mask.empty() && st.bodyPixels.size()==size_t(st.bodyW)*st.bodyH) {
+                                 auto& ms=bodyHd[size_t(bodyDraw.slot)];
+                                 if(!ms.maskTexture) {
+                                     ms.maskTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,int(ms.bodyW),int(ms.bodyH));
+                                     if(ms.maskTexture) {SDL_SetTextureBlendMode(ms.maskTexture,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(ms.maskTexture,SDL_SCALEMODE_LINEAR);}
+-                                    ms.maskHash=0;
++                                    ms.maskHash.reset();
++                                    ms.maskRuns.clear();
+                                 }
+                                 if(ms.maskTexture) {
+                                     const uint64_t maskHash=AtlasFingerprint(bodyDraw.mask)^(uint64_t(bodyDraw.w)<<32)^uint64_t(bodyDraw.h);
+@@ -2443,14 +2447,68 @@
+                                             const int sx=int(uint64_t(px)*unsigned(bodyDraw.w)/ms.bodyW),sy=int(uint64_t(py)*unsigned(bodyDraw.h)/ms.bodyH);
+                                             if(!bodyDraw.mask[size_t(sy)*bodyDraw.w+sx])masked[size_t(py)*ms.bodyW+px]&=0x00FFFFFFu;
+                                         }
+-                                        if(SDL_UpdateTexture(ms.maskTexture,nullptr,masked.data(),int(ms.bodyW*4)))ms.maskHash=maskHash;
++                                        if(SDL_UpdateTexture(ms.maskTexture,nullptr,masked.data(),int(ms.bodyW*4))) {
++                                            ms.maskHash=maskHash;
++                                            ms.maskRuns.clear();
++                                            for(int y=0;y<bodyDraw.h;y++) {
++                                                const auto* line=bodyDraw.mask.data()+size_t(y)*bodyDraw.w;
++                                                const auto* end=line+bodyDraw.w;
++                                                for(auto* x=line;x!=end;) {
++                                                    const auto* first=std::find(x,end,uint8_t(1));
++                                                    if(first==end)break;
++                                                    x=std::find(first,end,uint8_t(0));
++                                                    ms.maskRuns.push_back({y,int(first-line),int(x-line)});
++                                                }
++                                            }
++                                        }
+                                     }
+                                     if(ms.maskHash==maskHash)bodyTexture=ms.maskTexture;
+                                 }
+                             }
+-                            SDL_RenderTexture(renderer,bodyTexture,nullptr,&bodyTarget);
++                            // Clip in native coordinates after mapping the source UVs. A
++                            // linearly filtered alpha edge alone spills onto the underlay.
++                            const auto drawBodyTexture = [&](SDL_Texture* texture,const SDL_FRect& target) {
++                                if(!texture)return false;
++                                if(bodyDraw.mask.empty())return SDL_RenderTexture(renderer,texture,nullptr,&target);
++                                auto& vertices=bodyMaskVertices;
++                                auto& indices=bodyMaskIndices;
++                                vertices.clear();
++                                indices.clear();
++                                vertices.reserve(st.maskRuns.size()*4);
++                                indices.reserve(st.maskRuns.size()*6);
++                                constexpr SDL_FColor white{1,1,1,1};
++                                const auto vertex = [&](float x,float y) {
++                                    vertices.push_back({{x,y},white,{(x-target.x)/target.w,(y-target.y)/target.h}});
++                                };
++                                for(const auto& [y,first,last]:st.maskRuns) {
++                                    const float left=std::max({target.x,imageTarget.x,bodyTarget.x+first*scale});
++                                    const float right=std::min({target.x+target.w,imageTarget.x+imageTarget.w,bodyTarget.x+last*scale});
++                                    const float top=std::max({target.y,imageTarget.y,bodyTarget.y+y*scale});
++                                    const float bottom=std::min({target.y+target.h,imageTarget.y+imageTarget.h,bodyTarget.y+(y+1)*scale});
++                                    if(left>=right || top>=bottom)continue;
++                                    const int i=int(vertices.size());
++                                    vertex(left,top);vertex(right,top);vertex(right,bottom);vertex(left,bottom);
++                                    indices.insert(indices.end(),{i,i+1,i+2,i,i+2,i+3});
++                                }
++                                return vertices.empty() || SDL_RenderGeometry(renderer,texture,vertices.data(),int(vertices.size()),indices.data(),int(indices.size()));
++                            };
++                            const auto restoreNativeBody = [&](int x,int y,int w,int h) {
++                                const int left=std::max(16,x),top=std::max(8,y);
++                                const int right=std::min(304,x+w),bottom=std::min(152,y+h);
++                                if(left>=right || top>=bottom)return;
++                                const SDL_FRect source{float(left),float(top),float(right-left),float(bottom-top)};
++                                const SDL_FRect target{imageTarget.x+(left-16)*scale,imageTarget.y+(top-8)*scale,
++                                    source.w*scale,source.h*scale};
++                                if(SDL_UpdateTexture(content,nullptr,planes.foreground.data(),320*sizeof(uint32_t))) {
++                                    SDL_RenderTexture(renderer,content,&source,&target);
++                                    SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
++                                }
++                            };
++                            const bool drewBody=drawBodyTexture(bodyTexture,bodyTarget);
++                            if(!drewBody && !bodyDraw.mask.empty())
++                                restoreNativeBody(bodyDraw.x,bodyDraw.y,bodyDraw.w,bodyDraw.h);
+                             const float kx=bodyTarget.w/float(st.bodyW),ky=bodyTarget.h/float(st.bodyH);
+-                            for(const auto& face:bodyDraw.faces) {
++                            if(drewBody || bodyDraw.mask.empty())for(const auto& face:bodyDraw.faces) {
+                                 const float pw=st.partW[face.ordinal]*kx,ph=st.partH[face.ordinal]*ky;
+                                 const unsigned run=face.ordinal<st.runCount[0]?0u:1u;
+                                 // Centred on the Saturn sprite: the prediction, in PC picture pixels. It is refined once per run by sliding
+@@ -2486,7 +2544,8 @@
+                                 if(refined!=mutableState.refinedPos.end()) {
+                                     partTarget.x=bodyTarget.x+refined->second[0]*kx;partTarget.y=bodyTarget.y+refined->second[1]*ky;
+                                 }
+-                                SDL_RenderTexture(renderer,st.parts[face.ordinal],nullptr,&partTarget);
++                                if(!drawBodyTexture(st.parts[face.ordinal],partTarget) && !bodyDraw.mask.empty())
++                                    restoreNativeBody(face.x,face.y,face.w,face.h);
+                             }
+                             // Face frames with no clear PC part stay as the native sprite, drawn again over the HD body.
+                             for(const auto& r:bodyDraw.keep) {
