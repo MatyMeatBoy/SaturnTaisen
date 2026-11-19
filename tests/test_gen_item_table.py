@@ -11,7 +11,7 @@ import gen_item_table as g  # noqa: E402
 
 
 def pair(pal, pc, tier='content', idx=0):
-    return {'saturn_file': 'SAKURA1/ITEM01.BIN', 'palette_fnv': pal, 'pc_file': pc, 'pc_image_index': idx, 'tier': tier}
+    return {'saturn_file': 'SAKURA1/ITEM01.BIN', 'palette_fnv': pal, 'pc_file': pc, 'pc_image_index': idx, 'tier': tier, 'pc_sha256': 'original'}
 
 
 class ItemTable(unittest.TestCase):
@@ -22,6 +22,17 @@ class ItemTable(unittest.TestCase):
             pair('CC', 'C.SPR'), pair('EE', 'E.SPR', idx=2)]})
         self.assertEqual(rows, [('AA', ('A.SPR', 0)), ('EE', ('E.SPR', 2))])
 
+    def test_only_exact_approved_candidate_is_used(self):
+        reviewed = pair('BB', 'B.SPR', 'candidate')
+        icon = pair('CC', 'C.SPR', 'candidate')
+        review = [dict(reviewed, verdict='confirmed'), dict(icon, verdict='icon_only')]
+        data = {'pairs': [reviewed, icon]}
+        self.assertEqual(g.build_rows(data, review), [('BB', ('B.SPR', 0))])
+        for changed_field, value in [('pc_sha256', 'changed'), ('pc_image_index', 1), ('pc_file', 'D.SPR')]:
+            with self.subTest(changed_field=changed_field):
+                changed = dict(reviewed, **{changed_field: value})
+                self.assertEqual(g.build_rows({'pairs': [changed]}, review), [])
+
     def test_render_cli_and_real_map(self):
         with tempfile.TemporaryDirectory() as d:
             out = Path(d) / 'item.h'
@@ -30,7 +41,11 @@ class ItemTable(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stderr)
             text = out.read_text(encoding='utf-8')
             real = json.loads((ROOT / 'config/hd-item-map.json').read_text(encoding='utf-8'))
-            self.assertEqual(text.count('ull,"'), real['summary']['content'])
+            review = json.loads((ROOT / 'config/hd-item-review.json').read_text(encoding='utf-8'))['pairs']
+            candidates = {g.review_key(row) for row in real['pairs'] if row['tier'] == 'candidate'}
+            self.assertEqual({g.review_key(row) for row in review}, candidates)
+            self.assertEqual(len(review), len(candidates))
+            self.assertEqual(text.count('ull,"'), real['summary']['content'] + 26)
             self.assertIn('kItemCount', text)
 
 
