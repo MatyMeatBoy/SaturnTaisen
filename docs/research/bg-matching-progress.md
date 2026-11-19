@@ -91,3 +91,23 @@ BG2251 scene itself. No package was built.
 The main workspace measured 51,405,524,876 logical bytes with hard links counted
 once and reparse points excluded. The delivered development ZIP remains
 6,315,009,692 bytes.
+
+## TP4a re-search of the 13 unpaired BG1xxx files (2026-11-19)
+
+`tools/match_bg_files.py` was run again over all 718 disc 1 Saturn backgrounds against every PC `BG*.SPR` (luminance signature, lower score is better). Result: 222 firm, 496 ambiguous overall, and **none of the 13 unpaired files obtains a firm counterpart**. Names and scores only.
+
+| Saturn | Best PC | Score | Runner-up | Margin | Decision |
+|---|---|---|---|---|---|
+| BG1130 | BG1132 | 0.1756 | BG1134 | 0.000 | stays unpaired: tie between door-sign variants |
+| BG1131 | BG1132 | 0.1754 | BG1134 | 0.000 | stays unpaired: tie between door-sign variants |
+| BG1211 | BG1211 | 0.0472 | BG4110 | 0.154 | same-number picture, English text vs Japanese text baked in; rejected |
+| BG1212 | BG1212 | 0.1561 | BG2212 | 0.036 | rejected as in the review (baked text) |
+| BG1213 | BG2282 | 0.0818 | BG2525 | 0.092 | no same-number match; candidate not confirmed |
+| BG1331 | BG1244 | 0.0966 | BG1328 | 0.001 | tie; lighting differs from BG1331 |
+| BG1338 | BG1338 | 0.1661 | BG2082 | 0.034 | lighting differs; rejected |
+| BG1339 | BG1332 | 0.1340 | BG1334 | 0.001 | tie |
+| BG1340 | BG2133 | 0.1293 | BG1332 | 0.098 | not confirmed |
+| BG1358, BG1360 | BG1080 | 0.1442, 0.1496 | BG1093 | 0.000 | tie; room variant differs |
+| BG1359, BG1361 | BG1082 | 0.1412, 0.1455 | BG1095 | 0.000 | tie; room variant differs |
+
+No pair was added: every best score is `ambiguous` and the earlier eye review reasons (baked text, lighting, room variant) still stand. BG0000 and BG1341 are blank placeholders. A counterpart would need a side-by-side review of the tied candidates, which the eye review of 2026-11-19 already did for the same-number files.
