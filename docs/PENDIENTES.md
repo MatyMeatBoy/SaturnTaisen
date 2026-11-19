@@ -4,6 +4,8 @@ Updated 2026-11-18. Verifiable detail: [current status](ESTADO_ACTUAL.md). Techn
 
 Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can add rows; each PR takes **one** row. Technical detail continues in [Saturn Priority](superpowers/plans/2026-11-17-saturn-priority.md) and [Chapter 1](superpowers/plans/2026-11-17-chapter1-progression.md).
 
+**Finishing the HD mod from another PC:** start with [the HD completion handoff](research/hd-completion-handoff.md); rows T52, T53, T54, T67, T74, T76–T79, T710, T711.
+
 ## How to take a pending item
 
 1. `git fetch` and read this list on `origin/main`, plus open PRs (`gh pr list`). A row with a branch or open PR is already taken.

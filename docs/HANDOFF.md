@@ -194,7 +194,11 @@ The current runtime is kept once, unpacked, in `local/releases/SaturnTaisen-v0.2
 
 ### Delivered packages moved out of the project — 2026-11-18
 
-At the owner's request the delivered ZIPs were moved (not copied, not modified) out of the project folder: the 17 package ZIPs with their checksums to `D:Claude\SaturnTaisen-entregas\`, and the development ZIP with its reports to `D:Claude\SaturnTaisenFirst-DEV-transfer-20261118\`, the location the earlier note already named. Every ZIP was hashed again after the move and matches its recorded SHA-256. They remain immutable. `local/releases/ENTREGAS-MOVIDAS.txt` points to them.
+At the owner's request the delivered ZIPs were moved (not copied, not modified) out of the project folder: the 17 package ZIPs with their checksums to `D:Claude\SaturnTaisen-entregas\`, and the development ZIP with its reports to `D:Claude\SaturnTaisenFirst-DEV-transfer-20261118\`, the location the earlier note already named. Every ZIP was hashed again after the move and matches its recorded SHA-256. They remain immutable. `local/releases/ENTREGAS-MOVIDAS.txt` points to them. The personal v0.2.2 package was moved back into `local/releases/` afterwards so the owner can reach it from the project; 16 package ZIPs stay outside.
 
 Measured afterwards: **15,457,405,993 bytes** (hard links counted once), below the 20,000,000,000-byte limit. `local/releases` keeps the current release unpacked (`SaturnTaisen-v0.2.2-alpha-win64`, with the current runtime), the archived SDK48 reference and the validation receipts.
+
+## Finishing the HD mod from another PC
+
+Everything needed to continue is in [docs/research/hd-completion-handoff.md](research/hd-completion-handoff.md): the state per area, what travels through Git and what must be copied, the order of work (T67 format decoding first, then the T74 runtime consumer, with BG matching by shard in parallel) and the rules. The release already ships everything that is integrated; reaching 100 % is runtime work plus bulk matching.
 
