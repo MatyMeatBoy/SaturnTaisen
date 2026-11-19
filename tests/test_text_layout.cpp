@@ -6,9 +6,11 @@
 #include <vector>
 #include <cassert>
 #include <array>
+#include <filesystem>
 #include <cmath>
 int main(int argc,char** argv) {
-    if(argc==2) {
+    // (the harness passes its temporary folder; only a real file is an atlas)
+    if(argc==2 && std::filesystem::is_regular_file(argv[1])) {
         std::ifstream file(argv[1],std::ios::binary);
         std::vector<uint8_t> atlas((std::istreambuf_iterator<char>(file)),{});
         assert(port::KnownEnglishAtlas(atlas));
