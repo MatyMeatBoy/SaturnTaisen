@@ -122,7 +122,10 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T104 | P1 | shard | open · see docs/SHARDS.md | S7 SH-2 block dispatch speed, identical guest hashes (about 6.5 ms per frame). |
 | T105 | P1 | shard | open · see docs/SHARDS.md | S8 scrolling and battle backgrounds (BBG/EVE, variant-B wide pictures). |
 | T106 | P1 | shard | open · see docs/SHARDS.md | S9 native-face patches for NC30/NC20 and fade-in of bodies. |
-| T107 | P1 | shard | open · see docs/SHARDS.md | S10 Spanish cards: widening for their fingerprints, painted art (owner reviews T87). |
+| T107 | P1 | shard | partly done - split into T107a-c | S10 Spanish cards: widening for their fingerprints, painted art (owner reviews T87). Done offline: the widening of patch0071 needs no extra fingerprints, because the Spanish cards keep size, palette and cell table of the English ones (`portadas_es.py` writes only the picture cells, bytes 0..4991 untouched), so they hit the same ten FNV-1a values listed in T87; `tools/es/verificar_portadas.py DIR` checks this for any built or painted set (tested on English cards with a pixel change = OK, a palette change = rejected). Not done: running it on the real Spanish build (this machine lacks Arial Rounded Bold, `ARLRDBD.TTF`, so `portadas_es.py` could not run here, and no Spanish disc is in `local`), seeing the Spanish card widened in game, and the painted art. |
+| T107a | P1 | open | verify | Run `tools/es/verificar_portadas.py` on the Spanish disc 1 TITLE files (and on any painted set) and view one Spanish card widened in the runtime from `tests/chapter1-title-new-game.movie`. Needs the font or the built disc, and a runtime run. |
+| T107b | P1 | open - owner | painted art | Painted Spanish cards (owner art or image tool): deliver 320x224 pictures; a converter must requantise to the original palette and cell table so the fingerprint stays (verify with `verificar_portadas.py`). Owner decision on the style needed. |
+| T107c | P2 | open | language layers | Check the card in the shipped Spanish layer after repainting: rebuild with `construir_todo.py --disc 1 --portadas` and `build_taisen_patches.py`. |
 
 ## Split for collaborators
 
