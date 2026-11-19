@@ -28,3 +28,7 @@ Rejected: `SAKURA1/BG2173` for the episode title card (false positive, no matchi
 - Source: the 297,107-frame cold run (inputs of `local/work/rb-full/input.movie`), one screenshot every 250 frames (about 1,190 frames), strict native mode.
 - Status when written: running; 875 screenshots ranked (93 strong, 13 distinct candidates, 12 confirmed). After it ends: rank all screenshots, confirm candidates visually, and update this table and the scene-images counter in `config/hd-progress.json`.
 - Count so far: 12 of 1,267 scene images matched, 0 integrated.
+
+## T710: shard E, number-tier eye review
+
+Method: `config/hd-scene-bg-map.json` (T67) pairs by file number; contact sheets of Saturn picture next to PC picture, reviewed by eye. Reviewed 25 tier-number pairs of shard E (BG40xx-BG43xx): 14 confirmed (cut-outs), 11 rejected: BG4053-BG4058 different figure grouping than the PC picture of that number (frames look swapped between numbers, to re-pair by content later); BG4067, BG4071, BG4162 PC picture has the background baked in; BG4204 partial Saturn decode; BG4302 garbage decode. The 41 content-tier pairs were already covered by the T74 review. Results are in `config/hd-scene-bg-review.json`; no screenshots needed. Not verified in the runtime.
