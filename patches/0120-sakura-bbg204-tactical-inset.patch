@@ -1,0 +1,21 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -676,6 +676,8 @@
+     bool eve202Examined = false;
+     SceneHd eve002;
+     bool eve002Traced = false;
++    SceneHd bbg204;
++    bool bbg204Traced = false;
+     struct NativeEveInset {
+         const char* name;
+         uint64_t palette;
+@@ -692,6 +694,8 @@
+          0x622D0EBC1CEA8E03ull, port::kEve202PcCrop, eve202, eve202Traced},
+         {"EVE002", 0x5D66F0207B8DD266ull, 0xCE6250F015B307EDull, "SAKURA2/BG/BBG002.SPR", 175825,
+          0x7FF1A8354F5328C7ull, {0, 24, 576, 288}, eve002, eve002Traced},
++        {"BBG204", 0xFB7D81F5464F27B2ull, 0xD3B104F491C0C105ull, "SAKURA2/BG/BBG204.SPR", 101141,
++         0x7218D90427AB8E97ull, {0, 0, 568, 284}, bbg204, bbg204Traced},
+     };
+     SceneHd eve0116;
+     bool eve0116Traced = false;
