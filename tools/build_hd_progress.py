@@ -168,7 +168,21 @@ def apply_register(data, register_path):
                 files[kind].update(row['pc'] for row in rows.values() if row.get('status') == 'hd' and row.get('pc'))
                 if kind == 'scene-pictures':
                     excluded.update(row['pc'] for row in rows.values() if row.get('status') == 'excluded' and row.get('pc'))
+    hud_images, hud_excluded = set(), 0
+    for group in groups:
+        for resource in group.get('menus-hud', {}).values():
+            if resource.get('status') == 'hd' and resource.get('pc') and 'pc_image_index' in resource:
+                hud_images.add((resource['pc'], resource['pc_image_index']))
+            elif resource.get('status') == 'excluded' and resource.get('images'):
+                hud_excluded += resource['images']
+    census = register.get('hud_census')
     for row in data['categories']:
+        if row['id'] == 'hud-menus' and census:
+            # distinct PC menu/HUD pictures: SYSTEM census minus files counted in another category, plus the item cards
+            row['total'] = census['system_images'] - hud_excluded + census['item_images']
+            row['inventory'] = row['total']
+            row['integrated'] = len(hud_images)
+            continue
         kind = REGISTER_COUNTS.get(row['id'])
         if kind == 'bodies':
             if row['total'] is not None and len(body_inventory) == row['total']:

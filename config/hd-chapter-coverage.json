@@ -4953,6 +4953,10 @@
       }
     }
   ],
+  "hud_census": {
+    "item_images": 50,
+    "system_images": 572
+  },
   "schema": 1,
   "status": {
     "excluded": "Native by design (key-colour cut-outs, blank pictures, alternate film edits or native transitions).",
@@ -7014,12 +7018,16 @@
       "1:/SAKURA1/ITEM01.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM01.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM02.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM02.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM03.BIN": {
         "association": "unknown",
@@ -7028,27 +7036,37 @@
       "1:/SAKURA1/ITEM04.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM04.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM05.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM05.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM06.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM06.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM07.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM07.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM08.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM08.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM09.BIN": {
         "association": "unknown",
@@ -7057,12 +7075,16 @@
       "1:/SAKURA1/ITEM10.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM10.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM11.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM11.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM12.BIN": {
         "association": "unknown",
@@ -7071,72 +7093,100 @@
       "1:/SAKURA1/ITEM13.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM13.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM14.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM14.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM15.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM15.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM16.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM16.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM17.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM17.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM18.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM18.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM19.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM19.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM20.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM20.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM21.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM21.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM22.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM22.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM23.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM23.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM24.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM24.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM25.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM25.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM26.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM26.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM27.BIN": {
         "association": "unknown",
@@ -7145,12 +7195,16 @@
       "1:/SAKURA1/ITEM28.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM28.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM40.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM40.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM41.BIN": {
         "association": "unknown",
@@ -7207,7 +7261,9 @@
       "1:/SAKURA1/ITEM54.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM54.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM55.BIN": {
         "association": "unknown",
@@ -7260,7 +7316,9 @@
       "1:/SAKURA1/ITEM67.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM67.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM68.BIN": {
         "association": "unknown",
@@ -7277,17 +7335,23 @@
       "1:/SAKURA1/ITEM71.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM71.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM72.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM72.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM73.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM73.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM74.BIN": {
         "association": "unknown",
@@ -7296,17 +7360,23 @@
       "1:/SAKURA1/ITEM75.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM75.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM76.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM76.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM77.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM77.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM78.BIN": {
         "association": "unknown",
@@ -7327,27 +7397,37 @@
       "1:/SAKURA1/ITEM82.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM82.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM83.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM83.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM84.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM84.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM85.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM85.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM86.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM86.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM87.BIN": {
         "association": "unknown",
@@ -7440,12 +7520,16 @@
       "2:/SAKURA1/ITEM01.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM01.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM02.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM02.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM03.BIN": {
         "association": "unknown",
@@ -7454,27 +7538,37 @@
       "2:/SAKURA1/ITEM04.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM04.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM05.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM05.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM06.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM06.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM07.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM07.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM08.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM08.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM09.BIN": {
         "association": "unknown",
@@ -7483,12 +7577,16 @@
       "2:/SAKURA1/ITEM10.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM10.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM11.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM11.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM12.BIN": {
         "association": "unknown",
@@ -7497,72 +7595,100 @@
       "2:/SAKURA1/ITEM13.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM13.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM14.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM14.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM15.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM15.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM16.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM16.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM17.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM17.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM18.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM18.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM19.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM19.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM20.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM20.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM21.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM21.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM22.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM22.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM23.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM23.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM24.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM24.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM25.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM25.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM26.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM26.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM27.BIN": {
         "association": "unknown",
@@ -7571,12 +7697,16 @@
       "2:/SAKURA1/ITEM28.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM28.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM40.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM40.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM41.BIN": {
         "association": "unknown",
@@ -7633,7 +7763,9 @@
       "2:/SAKURA1/ITEM54.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM54.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM55.BIN": {
         "association": "unknown",
@@ -7686,7 +7818,9 @@
       "2:/SAKURA1/ITEM67.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM67.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM68.BIN": {
         "association": "unknown",
@@ -7703,17 +7837,23 @@
       "2:/SAKURA1/ITEM71.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM71.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM72.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM72.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM73.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM73.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM74.BIN": {
         "association": "unknown",
@@ -7722,17 +7862,23 @@
       "2:/SAKURA1/ITEM75.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM75.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM76.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM76.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM77.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM77.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM78.BIN": {
         "association": "unknown",
@@ -7753,27 +7899,37 @@
       "2:/SAKURA1/ITEM82.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM82.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM83.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM83.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM84.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM84.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM85.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM85.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM86.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ITEM/ITEM86.SPR",
-        "status": "paired-not-wired"
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item-detail-sprite-witness-t109",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM87.BIN": {
         "association": "unknown",
@@ -7866,6 +8022,37 @@
       "2:/SAKURA2/WKL26.BIN": {
         "association": "unknown",
         "status": "unknown"
+      },
+      "pc:SAKURA1/SYSTEM/FONT_CSL.SPR#0": {
+        "association": "unknown",
+        "draw": "patch 0093, port/system_brackets.h: left inventory bracket",
+        "pc": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110a-inventory-brackets-in-game",
+        "status": "hd"
+      },
+      "pc:SAKURA1/SYSTEM/FONT_CSL.SPR#1": {
+        "association": "unknown",
+        "draw": "patch 0093, port/system_brackets.h: right inventory bracket",
+        "pc": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+        "pc_image_index": 1,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110a-inventory-brackets-in-game",
+        "status": "hd"
+      },
+      "pc:SAKURA1/SYSTEM/KAO.SPR": {
+        "association": "unknown",
+        "images": 394,
+        "pc": "SAKURA1/SYSTEM/KAO.SPR",
+        "reason": "portrait atlas (394 faces): counted in the portraits category through the FCE recipe and portrait pack",
+        "status": "excluded"
+      },
+      "pc:SAKURA1/SYSTEM/SIS_ICON.SPR#2": {
+        "association": "unknown",
+        "draw": "patch 0112, port/load_disc_icon.h: CD-1 load emblem",
+        "pc": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+        "pc_image_index": 2,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110b-cd-1-emblem-in-the-load-menu",
+        "status": "hd"
       }
     },
     "portraits": {

@@ -163,7 +163,7 @@
     {
       "id": "hud-menus",
       "label": "HUD y menús PC/Saturn",
-      "unit": "imágenes PC candidatas (29 archivos de menú/HUD)",
+      "unit": "imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto)",
       "scope": "Inventario conjunto por pantalla o pieza equivalente, incluidos elementos de mapa, batalla, estados y guardado.",
       "sources": [
         {
@@ -180,10 +180,10 @@
       "details": [
         "Las pruebas de presentación de Saturn cubrieron menús tácticos. Las sustituciones de recursos se verifican por pieza y por pantalla.",
         "El censo PC reúne 29 archivos y 572 entradas de imagen con cabeceras validadas.",
-        "El inventario tiene tarjetas completas y marcos de SYSTEM verificados en juego. El recuento sigue pendiente para las 572 imágenes candidatas del censo."
+        "El censo PC reúne 572 imágenes SYSTEM; las 394 de KAO cuentan como retratos y se suman las 50 imágenes de objeto candidatas: 228. Integradas 41 (38 tarjetas de objeto, 2 marcos FONT_CSL, 1 emblema CD-1), medidas desde el registro."
       ],
-      "total": 572,
-      "inventory": 572,
+      "total": 228,
+      "inventory": 228,
       "matched": null,
       "prepared": null,
       "integrated": null,
