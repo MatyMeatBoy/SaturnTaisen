@@ -96,5 +96,22 @@
     },
     "ending_binary_bytes": 178968,
     "sakura_bank_bytes": 407908
+  },
+  "private_bounded_aot_candidate": {
+    "exact_ending_variants": 353,
+    "base_variants": 674182,
+    "candidate_variants": 674535,
+    "strict_executable_sha256": "b4b2747b500d00867ce38a69ad129e730b8ace22e860936d6e3b185cbd724a5a",
+    "sections": {
+      "entry": {
+        "frames": 5305,
+        "matching_guest_hash_log_sha256": "218e67cedc3cf58931fdc51fd28f5a47e9f20328de11c2fa6f531617d05e4fc7"
+      },
+      "full": {
+        "frames": 18605,
+        "matching_guest_hash_log_sha256": "0572b894e3187fd79be001a2ff16ff32046ed395cccdff1767c70c970b6edb71"
+      }
+    },
+    "included_in_package": false
   }
 }

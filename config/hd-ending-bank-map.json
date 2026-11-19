@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Confirmed ending-bank subimages on identical Saturn disc copies. Metadata only. Runtime application pending.",
+  "scope": "Confirmed ending-bank subimages on identical Saturn disc copies. The two tested full-width group photo compositions are recorded in verified_runtime.",
   "pairs": [
     {
       "saturn_file": "SAKURA1/AI_CG.BIN",
@@ -346,5 +346,23 @@
         }
       ]
     }
-  ]
+  ],
+  "verified_runtime": {
+    "disc": 2,
+    "language": "en",
+    "saturn_file": "SAKURA1/SA_CG.BIN",
+    "records": [
+      6,
+      7
+    ],
+    "donor": "SAKURA1/ENDING/END_SA.SPR",
+    "native_rect_ltrb": [
+      0,
+      16,
+      320,
+      176
+    ],
+    "evidence": "docs/research/ending-bank-pairs.md",
+    "included_in_package": false
+  }
 }
