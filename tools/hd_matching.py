@@ -67,11 +67,17 @@ def choose_density(viewport_scale):
     return 2 if viewport_scale%2==0 else 1
 
 
-def prepare_variant(pc,indices,density,dx=0,dy=0):
+def prepare_variant(pc,indices,density,dx=0,dy=0,*,swap_strips=False):
     if density not in (1,2) or type(density) is not int:raise ValueError('Densidad no admitida')
     if type(dx) is not int or type(dy) is not int or abs(dx)>4 or abs(dy)>4:raise ValueError('Ajuste debe ser entero entre -4 y 4')
     if len(indices)!=3200:raise ValueError('Retrato nativo incompleto')
+    if type(swap_strips) is not bool:raise ValueError('Intercambio de tiras no admitido')
     image=pc.convert('RGBA').resize((40*density,80*density),Image.Resampling.NEAREST)
+    if swap_strips:
+        upper = image.crop((0, 48*density, image.width, 64*density))
+        lower = image.crop((0, 64*density, image.width, 80*density))
+        image.paste(lower, (0, 48*density))
+        image.paste(upper, (0, 64*density))
     if dx or dy:
         # Clamp to edge pixels; keep the fixed native rectangle instead of leaving
         # a strip of the original portrait behind the shifted replacement.
@@ -183,7 +189,7 @@ def export_pack(project,workspace):
         if fingerprint(file)!=candidate['sha256']:raise ValueError('Cambió una imagen PC; recalcula el matching')
         image=load_image(file);variants=[]
         for density in (1,2):
-            prepared=prepare_variant(image,raw,density,row['dx'],row['dy'])
+            prepared=prepare_variant(image,raw,density,row['dx'],row['dy'],swap_strips=row.get('swap_strips',False))
             buffer=io.BytesIO();prepared.save(buffer,format='PNG');blob=buffer.getvalue()
             name=hashlib.sha256(blob).hexdigest()+'.png';path=output/name
             if not path.exists():path.write_bytes(blob)

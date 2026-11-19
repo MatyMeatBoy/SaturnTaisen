@@ -363,7 +363,8 @@ def audit_catalog(project_file, pack_folder, discs):
                 try:
                     verified_blob(variant, hash_)
                     image = load_image(variant)
-                    expected = prepare_variant(candidate, raw, density, entry["dx"], entry["dy"])
+                    expected = prepare_variant(candidate, raw, density, entry["dx"], entry["dy"],
+                                               swap_strips=entry.get("swap_strips", False))
                     if image.size != expected.size or image.tobytes() != expected.tobytes():
                         raise ValueError("RGBA differs from matcher output")
                     variants[density] = alpha_coverage(image, raw, density)

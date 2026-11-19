@@ -36,9 +36,15 @@ def build(project: dict, reviewed: dict) -> dict:
         if match:
             if row['raw_sha256'] != match['native_raw_sha256']:
                 raise ValueError(f"{row['id']}: reviewed identity differs from the project")
-            rows.append(dict(id=row['id'], pc_index=match['pc_index'], dx=match['dx'], dy=match['dy'],
-                             native_raw_sha256=match['native_raw_sha256'],
-                             variants_rgba_sha256=match['variants_rgba_sha256']))
+            recipe_row = dict(id=row['id'], pc_index=match['pc_index'], dx=match['dx'], dy=match['dy'],
+                              native_raw_sha256=match['native_raw_sha256'],
+                              variants_rgba_sha256=match['variants_rgba_sha256'])
+            swap_strips = match.get('swap_strips', False)
+            if type(swap_strips) is not bool:
+                raise ValueError(f"{row['id']}: invalid strip swap")
+            if swap_strips:
+                recipe_row['swap_strips'] = True
+            rows.append(recipe_row)
         elif row['status'] in ('auto', 'accepted'):
             rows.append(dict(id=row['id'], pc_index=row['selected'], dx=row['dx'], dy=row['dy'],
                              native_raw_sha256=row['raw_sha256']))

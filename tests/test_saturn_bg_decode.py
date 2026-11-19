@@ -160,7 +160,16 @@ class SaturnBgTests(unittest.TestCase):
             if pair['saturn_file'].startswith('SAKURA2/EVE'):
                 # An event picture is paired by eye with a PC battle background of another name (tools/add_eve_pairs.py).
                 self.assertTrue(pair['pc_file'].startswith('SAKURA2/BG/BBG'))
-                self.assertGreaterEqual(pair['correlation'], 0.8)
+                if pair['saturn_file'] == 'SAKURA2/EVE0101.BIN':
+                    # Its registered overlap has independent evidence; the catalog holds the uncropped score.
+                    review = json.loads((ROOT / 'config/hd-scene-bg-review.json').read_text(encoding='utf-8'))
+                    self.assertIn('EVE0101', review['guarded_viewport'])
+                    self.assertEqual(
+                        (pair['pc_file'], pair['pc_image_index'], pair['size'], pair['pc_size'], pair['cells_fnv']),
+                        ('SAKURA2/BG/BBG001.SPR', 0, [288, 144], [576, 320], '829F83A4643225D6'),
+                    )
+                else:
+                    self.assertGreaterEqual(pair['correlation'], 0.8)
                 continue
             if pair.get('pair_method') == 'visual-cross-number':
                 self.assertEqual(

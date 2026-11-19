@@ -838,7 +838,8 @@ def build_portraits(paths: Paths, pc_root: Path, discs: list[Path], work: Path, 
             continue
         variants = []
         for density in (1, 2):
-            prepared = matching.prepare_variant(image, raw, density, row['dx'], row['dy'])
+            prepared = matching.prepare_variant(image, raw, density, row['dx'], row['dy'],
+                                                swap_strips=row.get('swap_strips', False))
             expected = row.get('variants_rgba_sha256', {}).get(str(density))
             if expected and hashlib.sha256(prepared.tobytes()).hexdigest() != expected:
                 variants = None

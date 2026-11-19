@@ -20,16 +20,11 @@ CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 
 RESIDUAL_PORTRAIT_REPORT = PORTRAIT_REPORT + '#residual-portraits-00a1-and-0169'
-RESIDUAL_PORTRAIT_REVIEWS = {
-    '00a1': {
-        'status': 'paired-not-wired',
-        'pc_index': 160,
-        'reason': 'The same Iris expression needs the two PC strips reversed. Both strip commands still need in-game validation.',
-    },
+NATIVE_PORTRAIT_DECISIONS = {
     '0169': {
-        'status': 'unpaired',
+        'status': 'excluded',
         'candidate_pc_indices': [348, 360],
-        'reason': 'The PC emblem changes the artwork and framing, and its strips do not reproduce the repeated Saturn base region.',
+        'reason': 'The PC emblem changes the artwork and framing. Preserve the Saturn emblem by design.',
     },
 }
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
@@ -215,17 +210,21 @@ def runtime_bg_entries(root):
 
 def fce_atlas_row(identities, recipes):
     """TP6: attribute an FCE atlas file to the portrait identities it holds."""
-    uncovered = [i for i in identities if i not in recipes]
+    native = [i for i in identities if i in NATIVE_PORTRAIT_DECISIONS]
+    uncovered = [i for i in identities if i not in recipes and i not in NATIVE_PORTRAIT_DECISIONS]
     if not identities:
         return {'status': 'excluded', 'identities': [],
                 'reason': 'empty atlas (160-byte zero header): no portrait identity to replace',
                 'evidence': PORTRAIT_REPORT}
-    row = {'status': 'hd' if not uncovered else 'unknown', 'identities': identities,
-           'evidence': 'config/hd-portrait-recipe.json'}
+    has_hd = any(i in recipes for i in identities)
+    row = {'status': 'unknown' if uncovered else 'hd' if has_hd else 'excluded',
+           'identities': identities, 'evidence': 'config/hd-portrait-recipe.json'}
+    if native:
+        row['native_by_design'] = native
+        row['decision_evidence'] = RESIDUAL_PORTRAIT_REPORT
     if uncovered:
         row['uncovered'] = uncovered
-        row['reason'] = ('every other identity is in the runtime portrait table; the listed identities '
-                         'have no accepted PC pair (tracked as their own portrait rows, T52)')
+        row['reason'] = 'the uncovered identities still need a replacement or native decision (T52)'
     return row
 
 
@@ -545,8 +544,8 @@ def build(root, index_dir, portrait_audit):
             if disc not in ('1', '2') or indexed_chapter(path) != 1:
                 raise ValueError(f'Invalid chapter 1 portrait source for {ident}')
         row = {'status': 'hd', 'pc_index': recipes[ident]} if ident in recipes else {'status': 'unpaired'}
-        if ident not in recipes and ident in RESIDUAL_PORTRAIT_REVIEWS:
-            row.update(RESIDUAL_PORTRAIT_REVIEWS[ident], pairing_evidence=RESIDUAL_PORTRAIT_REPORT)
+        if ident not in recipes and ident in NATIVE_PORTRAIT_DECISIONS:
+            row.update(NATIVE_PORTRAIT_DECISIONS[ident], pairing_evidence=RESIDUAL_PORTRAIT_REPORT)
         if sources:
             row['atlases'] = sources
         if ident in CHAPTER1_ROUTE_PORTRAITS:

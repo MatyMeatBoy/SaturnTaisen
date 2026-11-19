@@ -70,12 +70,12 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 
 ## Progreso HD
 
-[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-302%2F304%20%2899.3%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Verificaci%C3%B3n%20pendiente-646464?style=flat-square)](docs/HD_PROGRESS.md)
+[![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-303%2F304%20%2899.6%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Verificaci%C3%B3n%20pendiente-646464?style=flat-square)](docs/HD_PROGRESS.md)
 
 
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
-| Retratos y animación | 302/304 (99,3%) | Sin dato |
+| Retratos y animación | 303/304 (99,6%) | Sin dato |
 | Imágenes de escena | Sin dato | Sin dato |
 | Escenas y transiciones | Sin dato | Sin dato |
 | Vídeos | Sin dato | Sin dato |
@@ -86,7 +86,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 
 | Sección | Integrado |
 | --- | --- |
-| Retratos y animación | 302/304 (99,3%) |
+| Retratos y animación | 303/304 (99,6%) |
 | Imágenes de escena | 558/1146 (48,6%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 44/50 (88%) |
@@ -95,7 +95,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 142/147 (96,5%) |
 
-**HD total: 1106/1894 (58,3%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+**HD total: 1107/1894 (58,4%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
