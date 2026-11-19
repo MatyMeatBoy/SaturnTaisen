@@ -142,3 +142,7 @@ Scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, T
 - **Chapter jump:** `tools/chapter_jump.py` states at frame 11,999 are inside dialogue; pressing Start there does not open any menu. For a menu or an intermission you need a save made there.
 - **Do not re-anchor patches by script without compiling:** a re-anchored hunk can land outside its scope (it broke main once).
 - **When you finish:** update the row in docs/PENDIENTES.md in the same PR and say what you drew, what you compared and what you did not run.
+
+## Speed rule: no scene-by-scene verification (owner, 2026-11-19)
+
+Shard workers do **not** verify every picture one by one in game. For a scene picture, body, portrait or clip it is enough to: match it to its PC counterpart with the method already used and proven on the pictures that were tried in game, connect it, make sure it compiles (`tools/check_patch_stack.py`, build) and that the opening-film replay hashes are unchanged. Assume the matching is right unless a witnessed case says otherwise. Do not spend time on per-picture screenshots, 1440p A/B captures or campaign runs; the integration desk and the later cleanup phase (TP8) look at what is visible. If you do see something wrong, say so in the PR. Send the PR as soon as it is connected.
