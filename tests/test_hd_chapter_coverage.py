@@ -357,13 +357,14 @@ class ChapterCoverageTest(unittest.TestCase):
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         portraits = catalog['chapters'][2]['resources']['portraits']
         atlas = '1:/SAKURA1/0301FCE.BIN'
-        for identity, donor in (('0068', 103), ('0116', 277)):
+        for identity, donor in (('0068', 103), ('00fe', 253), ('0116', 277), ('013d', 316)):
             row = portraits[identity]
             self.assertEqual((row['association'], row['status'], row['pc_index']), ('observed', 'hd', donor))
             self.assertEqual(row['atlases'], [atlas])
             self.assertTrue(row['verified_in_game'])
             self.assertTrue(row['runtime_evidence'].endswith('#witnessed-0301fce-portrait-bases'))
         self.assertFalse(portraits[atlas].get('verified_in_game'))
+        self.assertFalse(portraits.get('0001', {}).get('verified_in_game'))
         self.assertFalse(catalog['chapters'][0]['resources']['portraits']['0068'].get('verified_in_game'))
         self.assertNotIn('0116', catalog['unassigned']['portraits'])
 

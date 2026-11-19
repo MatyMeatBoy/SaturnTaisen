@@ -2744,6 +2744,17 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "00fe": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 253,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "0116": {
             "association": "observed",
             "atlases": [
@@ -2751,6 +2762,17 @@
             ],
             "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
             "pc_index": 277,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "013d": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 316,
             "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
             "status": "hd",
             "verified_in_game": true
@@ -9015,11 +9037,6 @@
         "pc_index": 247,
         "status": "hd"
       },
-      "00fe": {
-        "association": "unknown",
-        "pc_index": 253,
-        "status": "hd"
-      },
       "0100": {
         "association": "unknown",
         "pc_index": 255,
@@ -9173,11 +9190,6 @@
       "0137": {
         "association": "unknown",
         "pc_index": 310,
-        "status": "hd"
-      },
-      "013d": {
-        "association": "unknown",
-        "pc_index": 316,
         "status": "hd"
       },
       "013e": {
