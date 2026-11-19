@@ -5261,7 +5261,9 @@
       },
       "1:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3060.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
@@ -5301,11 +5303,15 @@
       },
       "1:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3109.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3124.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3124.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
@@ -5323,11 +5329,15 @@
       },
       "1:/SAKURA1/NC3128.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3128.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3129.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3129.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3173.BIN": {
         "association": "unknown",
@@ -6082,7 +6092,9 @@
       },
       "2:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3060.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
@@ -6122,11 +6134,15 @@
       },
       "2:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3109.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3124.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3124.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
@@ -6144,11 +6160,15 @@
       },
       "2:/SAKURA1/NC3128.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3128.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3129.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3129.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3173.BIN": {
         "association": "unknown",

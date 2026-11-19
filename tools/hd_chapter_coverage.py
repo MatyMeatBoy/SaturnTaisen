@@ -186,11 +186,12 @@ def build(root, index_dir, portrait_audit):
     endings = pairs(config('hd-ending-bank-map'))
     bodies = pairs(config('hd-body-map'))
     body_review = config('hd-body-review')
-    # Bodies in the runtime table: content pairs or eye-confirmed candidates, not rejected (the filter of tools/gen_body_table.py).
+    # Match tools/gen_body_table.py, including reviewed cut-outs with a candidate-tier pair.
+    confirmed_bodies = set(body_review['eye_confirmed_candidates']) | set(body_review.get('cutout', {}))
     body_runtime = {
         Path(path).stem for path, pair in bodies.items()
         if Path(path).stem not in body_review['rejected']
-        and (pair['tier'] == 'content' or Path(path).stem in body_review['eye_confirmed_candidates'])
+        and (pair['tier'] == 'content' or Path(path).stem in confirmed_bodies)
     }
     items = pairs(config('hd-item-map'))
     item_review = pairs(config('hd-item-review'))
@@ -370,8 +371,8 @@ def build(root, index_dir, portrait_audit):
             pair = bodies[path]
             if name in body_review['rejected']:
                 row['status'] = 'unpaired'
-            elif pair['tier'] == 'content' or name in body_review['eye_confirmed_candidates']:
-                row = {'status': 'hd' if name in BODY_DRAWS or name in body_runtime else 'paired-not-wired',
+            elif name in body_runtime:
+                row = {'status': 'hd',
                        'pc': 'SAKURA1/NC/' + (pair['best_pc'] if pair['tier'] == 'content' else pair['same_name_pc'])}
                 row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:

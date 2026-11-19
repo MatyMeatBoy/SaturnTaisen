@@ -876,3 +876,13 @@ scene around them. The generated body table is byte-identical.
 At block close the main workspace measured 59,916,175,934 logical
 bytes with hard links counted once and reparse points excluded, above
 the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+The coverage register now uses the same reviewed cut-outs as
+`tools/gen_body_table.py`. It includes NC3060, NC3109, NC3124, NC3128 and
+NC3129, five candidate-tier pairs already in the runtime table. Each
+has an HD entry on both discs. This brings the register to 142 connected
+bodies and 147 matches. Its nine in-game witnesses are the same.
+
+At the coverage correction close the workspace measured
+60,143,213,623 logical bytes. The delivered development ZIP remains
+6,315,009,692 bytes.
