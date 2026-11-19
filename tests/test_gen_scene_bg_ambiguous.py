@@ -40,6 +40,17 @@ class AmbiguousPaletteTable(unittest.TestCase):
         first, second = generate([pair('BG1011', 'AA', 'BG1011', '01'), pair('BG1012', 'AA', 'BG1012', '01')])
         self.assertEqual((first, second), ([], []))
 
+    def test_shared_cells_accept_identical_pc_container_and_image_index(self):
+        left = pair('BG1011', 'AA', 'BG1011', '01')
+        right = pair('BG1012', 'AA', 'BG1012', '01')
+        left['pc_sha256'] = right['pc_sha256'] = 'a' * 64
+        for rows in ([left, right], [right, left]):
+            self.assertEqual(generate(rows), ([], [('AA', '01', 'SAKURA1/BG/BG1011.SPR', '0')]))
+        changed_image = dict(right, pc_image_index=1)
+        changed_bytes = dict(right, pc_sha256='b' * 64)
+        self.assertEqual(generate([left, changed_image]), ([], []))
+        self.assertEqual(generate([left, changed_bytes]), ([], []))
+
     def test_rejected_and_cut_out_pictures_never_enter(self):
         first, second = generate([pair('BG3011', 'AA', 'BG3011', '01'), pair('BG1012', 'AA', 'BG1012', '02')])
         self.assertEqual([(p, f) for p, f, _ in first], [('AA', 'SAKURA1/BG/BG1012.SPR')])

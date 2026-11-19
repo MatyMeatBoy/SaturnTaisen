@@ -107,9 +107,9 @@ def runtime_bg_entries(root):
         ], check=True, capture_output=True, text=True)
         text = header.read_text(encoding='utf-8')
         first = set(re.findall(r'\{0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text))
-        # the second table (shared palettes, told apart by the cell hash) is wired as well: same key shape (palette, file, index)
-        second = {(p, f, i) for p, _, f, i in re.findall(r'\{0x([0-9A-F]+)ull,0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text)}
-        return first | second
+        cells = {(palette, fnv): (file, index) for palette, fnv, file, index in re.findall(
+            r'\{0x([0-9A-F]+)ull,0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text)}
+        return first, cells
 
 
 def build(root, index_dir, portrait_audit):
@@ -126,7 +126,11 @@ def build(root, index_dir, portrait_audit):
     films = {(r['disc'], r['fad']): r for r in config('film-fad-map')['streams']}
     bg = pairs(config('hd-scene-bg-map'))
     bg_review = config('hd-scene-bg-review')
-    bg_table = runtime_bg_entries(root)
+    bg_table, bg_cell_table = runtime_bg_entries(root)
+    donor_hashes = {
+        (row['pc_file'], str(row['pc_image_index'])): row.get('pc_sha256')
+        for row in bg.values() if row.get('pc_file') and 'pc_image_index' in row
+    }
     screens = pairs(config('hd-screen-map'))
     bodies = pairs(config('hd-body-map'))
     body_review = config('hd-body-review')
@@ -218,12 +222,17 @@ def build(root, index_dir, portrait_audit):
             )
             if accepted:
                 key = (pair['palette_fnv'], pair['pc_file'], str(pair['pc_image_index']))
-                row = {'status': 'hd' if key in bg_table else 'paired-not-wired',
-                       'pc': pair['pc_file']}
+                donor = bg_cell_table.get((pair['palette_fnv'], pair.get('cells_fnv')))
+                same_image = donor == key[1:] or (
+                    donor is not None and pair.get('pc_sha256') and donor[1] == key[2] and
+                    donor_hashes.get(donor) == pair['pc_sha256'] and pair['size'] == [288, 144] and
+                    path.startswith(('/SAKURA1/', '/SAKURA2/EVE', '/SAKURA2/BBG')) and name[2:3] not in '34')
+                row = {'status': 'hd' if key in bg_table or same_image else 'paired-not-wired',
+                       'pc': donor[0] if same_image else pair['pc_file']}
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
-                elif key in bg_table and (disc, path) in SCENE_DRAWS:
+                elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
                     row['runtime_evidence'] = SCENE_DRAWS[(disc, path)][1]
                 elif (disc, path) == (1, '/SAKURA2/EVE0116.BIN'):
@@ -232,7 +241,7 @@ def build(root, index_dir, portrait_audit):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE002_REPORT)
                 elif (disc, path) == (1, '/SAKURA2/EVE0118.BIN'):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE0118_REPORT)
-                elif key not in bg_table:
+                elif row['status'] != 'hd':
                     if name[2:3] in '34' or name == 'BG0000':
                         # Character cut-outs on a key colour and the blank picture are never replaced (tools/gen_scene_bg_table.py).
                         row['status'] = 'excluded'
