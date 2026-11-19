@@ -145,15 +145,25 @@ def apply_register(data, register_path):
         return
     register = json.loads(register_path.read_text(encoding='utf-8'))
     files = {kind: set() for kind in REGISTER_COUNTS.values()}
+    excluded = set()
     groups = [register.get('unassigned', {})] + [chapter.get('resources', {}) for chapter in register.get('chapters', [])]
     for group in groups:
         for kind, rows in group.items():
             if kind in files and isinstance(rows, dict):
                 files[kind].update(row['pc'] for row in rows.values() if row.get('status') == 'hd' and row.get('pc'))
+                if kind == 'scene-pictures':
+                    excluded.update(row['pc'] for row in rows.values() if row.get('status') == 'excluded' and row.get('pc'))
     for row in data['categories']:
         kind = REGISTER_COUNTS.get(row['id'])
         if kind and row['integrated'] is not None and len(files[kind]) >= row['integrated']:
             row['integrated'] = len(files[kind])
+        if row['id'] == 'scene-images' and row['total'] is not None:
+            # pictures excluded by design (Japanese-lettered title cards, key-colour cut-outs) are not part of the goal
+            drop = len(excluded - files[kind])
+            row['total'] -= drop
+            for stage in ('inventory', 'paired'):
+                if row.get(stage) is not None:
+                    row[stage] = min(row[stage], row['total'])
 
 
 def render_report(data):
