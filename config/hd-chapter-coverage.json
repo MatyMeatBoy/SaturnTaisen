@@ -1140,7 +1140,10 @@
               "2:/SAKURA1/0102FCE.BIN"
             ],
             "evidence": "docs/research/portrait-animation-coverage.md",
-            "status": "unpaired"
+            "pairing_evidence": "docs/research/portrait-animation-coverage.md#residual-portraits-00a1-and-0169",
+            "pc_index": 160,
+            "reason": "The same Iris expression needs the two PC strips reversed. Both strip commands still need in-game validation.",
+            "status": "paired-not-wired"
           },
           "00c0": {
             "association": "inferred",
@@ -1668,7 +1671,13 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
+            "candidate_pc_indices": [
+              348,
+              360
+            ],
             "evidence": "docs/research/portrait-animation-coverage.md",
+            "pairing_evidence": "docs/research/portrait-animation-coverage.md#residual-portraits-00a1-and-0169",
+            "reason": "The PC emblem changes the artwork and framing, and its strips do not reproduce the repeated Saturn base region.",
             "status": "unpaired"
           },
           "0176": {

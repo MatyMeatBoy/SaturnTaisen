@@ -49,4 +49,40 @@ The report includes 42 capture/state pairs. In 36 pairs, the base matches the ca
 
 ## FCE atlas attribution (TP6)
 
-`audit_portrait_coverage.py` now writes `fce_atlases` (per `disc:file`, the identities each FCE holds) and `hd_chapter_coverage.py` uses it for the atlas-file rows of `portraits`. Of 112 atlas files, 16 hold only identities in `config/hd-portrait-recipe.json` (`hd`), 4 are empty 160-byte atlases (`excluded`), and 92 also hold `0169` (four also `00a1`), the only two identities without an accepted PC pair, so they stay `unknown` with the `uncovered` list. The 302 identities are `hd`; `00a1` (strips swapped, T45) and `0169` (different PC card design) remain T52.
+`audit_portrait_coverage.py` now writes `fce_atlases` (per `disc:file`, the identities each FCE holds) and `hd_chapter_coverage.py` uses it for the atlas-file rows of `portraits`. Of 112 atlas files, 16 hold only identities in `config/hd-portrait-recipe.json` (`hd`), 4 are empty 160-byte atlases (`excluded`), and 92 also hold `0169` (four also `00a1`), the only two identities outside the runtime recipe, so they stay `unknown` with the `uncovered` list. The 302 identities are `hd`; `00a1` (strips swapped, T45) and `0169` (different PC card design) remain T52.
+
+
+## Residual portraits 00a1 and 0169
+
+The stock 40×80 atlases agree byte-for-byte across the two prepared
+discs. `00a1` occurs in `0102FCE` and `0700FCE` on each disc, and
+`0169` occurs in 46 atlases per disc. Their whole-atlas FNV-1a
+fingerprints are `12CC7FF05270E3C5` and `7D561BC49817D46E`.
+
+**00a1.** The base is the same Iris expression as KAO.SPR subimage 160,
+which ranks first out of 394 PC bases with the decoded native palette
+`B20B13D34869E11A`. Holding the base fixed and exchanging the two
+32-row PC strips reduces their RGB RMSE from 47.93 to 31.06 and from
+48.07 to 33.57 on the 40×80 Saturn grid. The prepared alpha at both 1×
+and 2× exactly matches the Saturn mask. Both native strips independently
+best match the region starting at base row 16. The archive review
+checked 438 candidate state files and found no exact active `00a1` portrait
+command. The coverage register records the pairing. The swapped
+strips still need a scene that exercises each of the two commands.
+
+**0169.** The Saturn portrait shows the troupe emblem. The two
+40×16 strips both equal the base region at row 16 exactly. In three
+archived states, an active strip starts at row 16 and matches both
+native strip payloads, so those commands reference the unchanged
+base region. KAO.SPR indices 348 and 360 have the same PC base,
+also identical to KAO_P.SPR subimage 24. These alternatives use the
+same emblem motif with different proportions and framing. Their PC
+strip data differs from the static native region. The register records
+the examined PC candidates and retains Saturn artwork.
+
+The two portraits stay outside the runtime recipe. The approved
+302 replacements and the FCE attribution are unchanged.
+
+The measured workspace was 60,240,718,418 logical bytes with hard
+links counted once and reparse points excluded, above the 20 GB cap.
+The delivered development ZIP remains 6,315,009,692 bytes.
