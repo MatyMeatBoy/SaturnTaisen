@@ -28,12 +28,13 @@ def main():
     body_map = json.loads((ROOT / 'config/hd-body-map.json').read_text(encoding='utf-8'))
     review = json.loads((ROOT / 'config/hd-body-review.json').read_text(encoding='utf-8'))
     confirmed, rejected = set(review['eye_confirmed_candidates']), set(review['rejected'])
+    cutout = set(review.get('cutout', {}))
     iso = saturn.Iso(sys.argv[1])
     files = dict(iso.files('SAKURA1'))
     rows, seen = [], {}
     for pair in body_map['pairs']:
         name = pair['saturn_file'].split('/')[-1][:-4]
-        if name in rejected or not (pair['tier'] == 'content' or name in confirmed):
+        if name in rejected or not (pair['tier'] == 'content' or name in confirmed or name in cutout):
             continue
         data = iso.content(files[name + '.BIN'])
         stride = saturn.nc_stride(data)
@@ -47,7 +48,11 @@ def main():
              'struct BodyEntry {uint64_t hash;const char* disc;const char* pc;unsigned stride;};',
              'inline constexpr BodyEntry kBodies[]={']
     lines += ['    {0x%016Xull,"%s.BIN","SAKURA1/NC/%s.SPR",%d},' % (h, n, n, w) for h, n, w in rows]
-    lines += ['};', 'inline constexpr unsigned kBodyCount=sizeof(kBodies)/sizeof(kBodies[0]);', '}']
+    lines += ['};']
+    # Cut-out bodies: the PC picture has the scene painted in, so it is drawn only inside the Saturn silhouette.
+    lines += ['inline constexpr const char* kCutoutBodies[]={'] + ['    "%s.BIN",' % r[1] for r in rows if r[1] in cutout] + ['};']
+    lines += ['inline constexpr unsigned kCutoutBodyCount=sizeof(kCutoutBodies)/sizeof(kCutoutBodies[0]);']
+    lines += ['inline constexpr unsigned kBodyCount=sizeof(kBodies)/sizeof(kBodies[0]);', '}']
     Path(sys.argv[2]).write_text('\n'.join(lines) + '\n', encoding='utf-8')
     print(len(rows), 'bodies')
 

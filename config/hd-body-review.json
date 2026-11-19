@@ -37,17 +37,6 @@
   "NC99"
  ],
  "rejected": {
-  "NC3057": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3058": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3060": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3109": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3124": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3128": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3129": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3173": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3285": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3286": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC92": "the PC picture is a full frame with its background painted in (it would cover the scene)",
   "NC3290": "the Saturn body decodes wrongly (stride) and the PC picture is a full frame",
   "NC3517": "the Saturn body decodes wrongly (stride) and the PC picture is nearly a full frame"
  },
@@ -55,5 +44,18 @@
  "paired_full_frame": {
   "NC3013": "Reviewed again (TP5): the Saturn body is itself an opaque full frame (0% transparent before the face hole), so the PC full frame replaces it without covering a scene; connected.",
   "NC3047": "Reviewed again (TP5): the Saturn body is itself an opaque full frame (7.8% transparent before the face hole), so the PC full frame replaces it without covering a scene; connected."
+ },
+ "cutout": {
+  "NC3057": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3058": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3060": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3109": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3124": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3128": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3129": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3173": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3285": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC3286": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays",
+  "NC92": "TP5b: the Saturn body is a cut-out on a transparent background and the PC picture has the scene painted in; the runtime draws the PC picture only inside the Saturn silhouette (body mask), so the scene stays"
  }
 }

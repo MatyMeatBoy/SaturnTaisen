@@ -1,0 +1,145 @@
+diff --git a/port/body_table.h b/port/body_table.h
+index 981b7a3..3658fc9 100644
+--- a/port/body_table.h
++++ b/port/body_table.h
+@@ -58,13 +58,21 @@ inline constexpr BodyEntry kBodies[]={
+     {0x5AB6C933BB9EF584ull,"NC3047.BIN","SAKURA1/NC/NC3047.SPR",288},
+     {0x2B35C03FBB46FBA8ull,"NC3050.BIN","SAKURA1/NC/NC3050.SPR",192},
+     {0x23A452552FB8C761ull,"NC3056.BIN","SAKURA1/NC/NC3056.SPR",288},
++    {0x7F0130E5EA446536ull,"NC3057.BIN","SAKURA1/NC/NC3057.SPR",288},
++    {0x16BC42F123C0E1D9ull,"NC3058.BIN","SAKURA1/NC/NC3058.SPR",288},
+     {0x6AB392A165BBFAB8ull,"NC3059.BIN","SAKURA1/NC/NC3059.SPR",288},
++    {0xB237284D7FCD044Cull,"NC3060.BIN","SAKURA1/NC/NC3060.SPR",264},
+     {0xE39188FF3C166079ull,"NC3071.BIN","SAKURA1/NC/NC3071.SPR",232},
+     {0x40FB98F2A8D34849ull,"NC31.BIN","SAKURA1/NC/NC31.SPR",168},
+     {0x5839FD1B7DA3091Full,"NC3101.BIN","SAKURA1/NC/NC3101.SPR",120},
+     {0x84E3E7BA67385AF3ull,"NC3102.BIN","SAKURA1/NC/NC3102.SPR",144},
+     {0x98FBDA3460BAFBB5ull,"NC3106.BIN","SAKURA1/NC/NC3106.SPR",288},
+     {0x18509BCE019BB7CFull,"NC3107.BIN","SAKURA1/NC/NC3107.SPR",288},
++    {0x961BF93458CFEB6Dull,"NC3109.BIN","SAKURA1/NC/NC3109.SPR",272},
++    {0x6A27AF876FADBE5Dull,"NC3124.BIN","SAKURA1/NC/NC3124.SPR",216},
++    {0x1CEC24BF5B14DF52ull,"NC3128.BIN","SAKURA1/NC/NC3128.SPR",176},
++    {0x47470DE7047EC461ull,"NC3129.BIN","SAKURA1/NC/NC3129.SPR",176},
++    {0xDFCDCED99D89E442ull,"NC3173.BIN","SAKURA1/NC/NC3173.SPR",176},
+     {0x2E5433ACBE9D8FBEull,"NC32.BIN","SAKURA1/NC/NC32.SPR",144},
+     {0x1E4E7E54C52BD5EBull,"NC3210.BIN","SAKURA1/NC/NC3210.SPR",176},
+     {0x5CFADD9EED5C8EFDull,"NC3222.BIN","SAKURA1/NC/NC3222.SPR",224},
+@@ -74,6 +82,8 @@ inline constexpr BodyEntry kBodies[]={
+     {0x50FED0B438ADB215ull,"NC3256.BIN","SAKURA1/NC/NC3256.SPR",216},
+     {0x297B87F6C22004D8ull,"NC3261.BIN","SAKURA1/NC/NC3261.SPR",216},
+     {0x41A7BA4DF8061F23ull,"NC3264.BIN","SAKURA1/NC/NC3264.SPR",216},
++    {0x8607327D414A4A9Aull,"NC3285.BIN","SAKURA1/NC/NC3285.SPR",288},
++    {0xEDEB190DB6BE8263ull,"NC3286.BIN","SAKURA1/NC/NC3286.SPR",288},
+     {0xA8F10E7948514E51ull,"NC33.BIN","SAKURA1/NC/NC33.SPR",152},
+     {0x399785521F2E2CACull,"NC34.BIN","SAKURA1/NC/NC34.SPR",144},
+     {0x4F373DE7035EF141ull,"NC35.BIN","SAKURA1/NC/NC35.SPR",200},
+@@ -128,6 +138,7 @@ inline constexpr BodyEntry kBodies[]={
+     {0x20522A5E08C299FAull,"NC83.BIN","SAKURA1/NC/NC83.SPR",176},
+     {0xA89941ED4BB898BBull,"NC90.BIN","SAKURA1/NC/NC90.SPR",288},
+     {0xBAA6B4CCFC313702ull,"NC91.BIN","SAKURA1/NC/NC91.SPR",240},
++    {0x79949E754130387Dull,"NC92.BIN","SAKURA1/NC/NC92.SPR",224},
+     {0x1EB0EFEC4B611B90ull,"NC93.BIN","SAKURA1/NC/NC93.SPR",160},
+     {0x8489764761F402E7ull,"NC94.BIN","SAKURA1/NC/NC94.SPR",232},
+     {0x8CB41598D7FE8FC0ull,"NC95.BIN","SAKURA1/NC/NC95.SPR",144},
+@@ -136,5 +147,19 @@ inline constexpr BodyEntry kBodies[]={
+     {0x0203D9E6E4724594ull,"NC98.BIN","SAKURA1/NC/NC98.SPR",288},
+     {0x8FFF518D7745CD79ull,"NC99.BIN","SAKURA1/NC/NC99.SPR",136},
+ };
++inline constexpr const char* kCutoutBodies[]={
++    "NC3057.BIN",
++    "NC3058.BIN",
++    "NC3060.BIN",
++    "NC3109.BIN",
++    "NC3124.BIN",
++    "NC3128.BIN",
++    "NC3129.BIN",
++    "NC3173.BIN",
++    "NC3285.BIN",
++    "NC3286.BIN",
++    "NC92.BIN",
++};
++inline constexpr unsigned kCutoutBodyCount=sizeof(kCutoutBodies)/sizeof(kCutoutBodies[0]);
+ inline constexpr unsigned kBodyCount=sizeof(kBodies)/sizeof(kBodies[0]);
+ }
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 05bc2d4..62d56ca 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -777,7 +777,7 @@ int RunWindowed(Port &port) {
+                     if (!DecodePcSprites(bytes, images, error)) return result;
+                     for (auto& image : images) {
+                         if (image.index != port::kEve202PcImage ||
+-                            !port::EveCropFits(crop, image.width, image.height)) continue;
++                            image.width != port::kEve202PcWidth || image.height != port::kEve202PcHeight) continue;
+                         result.width = crop.width;
+                         result.height = crop.height;
+                         result.pixels.reserve(size_t(crop.width) * crop.height);
+@@ -874,6 +874,7 @@ int RunWindowed(Port &port) {
+     struct BodyPixels {uint64_t pcAsset=0;std::vector<unsigned> originalIndex;unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;};
+     struct BodyHd {
+         bool tried=false;SDL_Texture* body=nullptr;unsigned bodyW=0,bodyH=0;
++        bool cutout=false;SDL_Texture* maskTexture=nullptr;uint64_t maskHash=0;
+         VerifiedBodyFaces verified;bool verifiedAssets=false;std::vector<unsigned> originalIndex;
+         std::future<BodyPixels> pending;std::vector<SDL_Texture*> parts;std::vector<unsigned> partW,partH,runCount;
+         std::vector<uint8_t> nc;std::unordered_map<uint64_t,long> offsets;
+@@ -1074,7 +1075,7 @@ int RunWindowed(Port &port) {
+     };
+     using PresentationSprite=satrecomp::video::Renderer::PresentationSprite;
+     struct BodyFace {int x=0,y=0,w=0,h=0;unsigned ordinal=0;};
+-    struct BodyDraw {bool valid=false;int slot=-1,x=0,y=0,w=0,h=0;std::vector<BodyFace> faces;std::vector<std::array<int,4>> keep;};
++    struct BodyDraw {bool valid=false;int slot=-1,x=0,y=0,w=0,h=0;std::vector<uint8_t> mask;std::vector<BodyFace> faces;std::vector<std::array<int,4>> keep;};
+     auto showSoftware = [&]() {
+         bool drewPcClip = false;
+         ProfileScope presentScope(frameProfile.present);
+@@ -1823,6 +1824,7 @@ int RunWindowed(Port &port) {
+                                 const auto& entry=kBodies[slot];
+                                 if(!st.tried) {
+                                     st.tried=true;
++                                    for(unsigned c=0;c<kCutoutBodyCount;c++)if(std::strcmp(kCutoutBodies[c],entry.disc)==0)st.cutout=true;
+                                     st.verified=VerifiedFacesFor(entry.disc);
+                                     if(port.discFiles.Read(entry.disc,st.nc)) {
+                                         st.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/entry.pc]() {
+@@ -2059,6 +2061,13 @@ int RunWindowed(Port &port) {
+                                 }
+                                 if(ok && (!bodyDraw.faces.empty() || !keep.empty())) {
+                                     bodyDraw.valid=true;bodyDraw.slot=slot;bodyDraw.x=bx;bodyDraw.y=by;bodyDraw.w=bw;bodyDraw.h=bh;bodyDraw.keep=keep;
++                                    // TP5b: a cut-out body (the PC picture has the scene painted in) is drawn only where the Saturn
++                                    // sprites are opaque; everything else keeps the scene behind it.
++                                    if(st.cutout && bw>0 && bh>0) {
++                                        bodyDraw.mask.assign(size_t(bw)*bh,0);
++                                        for(int y=std::max(by,0);y<std::min(by+bh,152);y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++)
++                                            if(planes.source[size_t(y)*320+x]==0)bodyDraw.mask[size_t(y-by)*bw+(x-bx)]=1;
++                                    }
+                                     for(int y=std::max(by,0);y<std::min(by+bh,152);y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++) {
+                                         bool kept=false;
+                                         for(const auto& r:keep)if(x>=r[0] && x<r[0]+r[2] && y>=r[1] && y<r[1]+r[3]) {kept=true;break;}
+@@ -2385,7 +2394,28 @@ int RunWindowed(Port &port) {
+                             const auto& st=bodyHd[size_t(bodyDraw.slot)];
+                             const float scale=imageTarget.w/288.0f;
+                             const SDL_FRect bodyTarget{imageTarget.x+(bodyDraw.x-16)*scale,imageTarget.y+(bodyDraw.y-8)*scale,bodyDraw.w*scale,bodyDraw.h*scale};
+-                            SDL_RenderTexture(renderer,st.body,nullptr,&bodyTarget);
++                            SDL_Texture* bodyTexture=st.body;
++                            if(!bodyDraw.mask.empty() && st.bodyPixels.size()==size_t(st.bodyW)*st.bodyH) {
++                                auto& ms=bodyHd[size_t(bodyDraw.slot)];
++                                if(!ms.maskTexture) {
++                                    ms.maskTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,int(ms.bodyW),int(ms.bodyH));
++                                    if(ms.maskTexture) {SDL_SetTextureBlendMode(ms.maskTexture,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(ms.maskTexture,SDL_SCALEMODE_LINEAR);}
++                                    ms.maskHash=0;
++                                }
++                                if(ms.maskTexture) {
++                                    const uint64_t maskHash=AtlasFingerprint(bodyDraw.mask)^(uint64_t(bodyDraw.w)<<32)^uint64_t(bodyDraw.h);
++                                    if(maskHash!=ms.maskHash) {
++                                        std::vector<uint32_t> masked(ms.bodyPixels);
++                                        for(unsigned py=0;py<ms.bodyH;py++)for(unsigned px=0;px<ms.bodyW;px++) {
++                                            const int sx=int(uint64_t(px)*unsigned(bodyDraw.w)/ms.bodyW),sy=int(uint64_t(py)*unsigned(bodyDraw.h)/ms.bodyH);
++                                            if(!bodyDraw.mask[size_t(sy)*bodyDraw.w+sx])masked[size_t(py)*ms.bodyW+px]&=0x00FFFFFFu;
++                                        }
++                                        if(SDL_UpdateTexture(ms.maskTexture,nullptr,masked.data(),int(ms.bodyW*4)))ms.maskHash=maskHash;
++                                    }
++                                    if(ms.maskHash==maskHash)bodyTexture=ms.maskTexture;
++                                }
++                            }
++                            SDL_RenderTexture(renderer,bodyTexture,nullptr,&bodyTarget);
+                             const float kx=bodyTarget.w/float(st.bodyW),ky=bodyTarget.h/float(st.bodyH);
+                             for(const auto& face:bodyDraw.faces) {
+                                 const float pw=st.partW[face.ordinal]*kx,ph=st.partH[face.ordinal]*ky;
