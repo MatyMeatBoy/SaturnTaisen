@@ -92,8 +92,9 @@ def fnv64(data: bytes) -> int:
     return value
 
 
-def run(command, **kwargs):
+def run(command, extra_env=None, **kwargs):
     env = os.environ.copy()
+    env.update(extra_env or {})
     bundled = getattr(sys, '_MEIPASS', None)
     if bundled:  # the frozen helper carries the C runtime the bundled tools were built against
         env['PATH'] = bundled + os.pathsep + env.get('PATH', '')
@@ -1040,6 +1041,37 @@ def saved_language(paths: Paths) -> str:
     return language if language in ALL_LANGUAGES else 'es'
 
 
+PREVIEW_FILES = {'0': 'presentation-original.png', '1': 'presentation-enhanced.png'}
+
+
+def make_previews(paths: Paths, disc: Path, force: bool = False) -> int:
+    """The two pictures of the presentation chooser («Tu aventura, a tu manera»): the player's own title screen
+    in Original 4:3 and in Mejorada 16:9, taken by the runtime in a hidden window. They are pictures of the
+    game, so they are made here from the player's disc and never shipped. Returns how many were made."""
+    art = paths.home / 'art'
+    wanted = {mode: art / name for mode, name in PREVIEW_FILES.items() if force or not (art / name).is_file()}
+    if not wanted or not paths.runtime.is_file() or not disc.is_file():
+        return 0
+    art.mkdir(parents=True, exist_ok=True)
+    made = 0
+    with tempfile.TemporaryDirectory(prefix='.vista-', dir=paths.home) as scratch:
+        work = Path(scratch)
+        (work / 'title.movie').write_text('650 0800 0\n655 0 0\n', encoding='ascii')  # Start: the title screen
+        for mode, target in wanted.items():
+            settings = work / f'settings-{mode}.ini'
+            settings.write_text(f'[features]\npreset=custom\npresentation_mode={mode}\nscene_view=1\n', encoding='ascii')
+            shot = work / f'shot-{mode}.png'
+            keys = f'1:SIZE=960x540,1480:WINDOWSHOT={shot},1490:QUIT'  # (the finished title, Press Start shown)
+            run([paths.runtime, '--disc', disc, '--settings', settings, '--backup', work / f'backup-{mode}.bin',
+                 '--video', 'software', '--unthrottled', '--mute', '--frames', '1500', '--movie', work / 'title.movie'],
+                extra_env={'SATRECOMP_WINDOW_HIDDEN': '1', 'SATRECOMP_SKIP_CHOOSER': '1', 'SATRECOMP_WINDOW_KEYS': keys},
+                cwd=paths.runtime.parent, timeout=300)
+            if shot.is_file() and shot.read_bytes()[:8] == b'\x89PNG\r\n\x1a\n':
+                os.replace(shot, target)
+                made += 1
+    return made
+
+
 def write_default_settings(paths: Paths) -> None:
     """First-run defaults (Mejorada, Zoom, HD preload…). The launcher may already have written settings.ini
     (its preset choice) before the helper runs, so missing keys are filled in; choices already there stay."""
@@ -1108,6 +1140,11 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
         language = 'es' if language == 'en' else 'en'
     disc = set_language(paths, language)
     write_default_settings(paths)
+    try:
+        if make_previews(paths, disc):
+            say(99, 'Vistas previas de la presentación listas.')
+    except (OSError, subprocess.SubprocessError):
+        pass  # (the chooser shows plain cards without them; never a reason to fail the setup)
     if hd_ready(paths):  # the profile always points at this install's own pack (a moved or copied profile too)
         set_values(paths.home / 'launcher.ini', {('sakura', 'pc_assets'): str(paths.hd)})
     return dict(disc=str(disc), language=language, hd=hd, hd_ready=hd_ready(paths))

@@ -651,7 +651,7 @@ index e2cbeae..1209fd6 100644
  void ShutdownSakuraSetup();
  bool SakuraSetupBusy();
 diff --git a/recomp-common/launcher/launcher.cmake b/recomp-common/launcher/launcher.cmake
-index 78f5866..b883a7c 100644
+index 78f5866..29099cd 100644
 --- a/recomp-common/launcher/launcher.cmake
 +++ b/recomp-common/launcher/launcher.cmake
 @@ -63,7 +63,14 @@ add_library(launcher_imgui STATIC
@@ -670,12 +670,13 @@ index 78f5866..b883a7c 100644
  
  # The fonts, compiled in (blob("font_regular") / blob("font_semibold") for ui.cpp).
  set(LAUNCHER_FONTS "${CMAKE_CURRENT_BINARY_DIR}/fonts.cpp")
-@@ -101,6 +108,9 @@ if(ANDROID)
+@@ -101,6 +108,10 @@ if(ANDROID)
  endif()
  if(WIN32)
      target_link_libraries(launcher PRIVATE iphlpapi ws2_32) # (online.cpp: this machine's addresses)
 +    if(LAUNCHER_STATIC)
-+        target_link_options(launcher PRIVATE -static)
++        # (a window program: a double click never opens a console; main.cpp borrows the parent's for --help)
++        target_link_options(launcher PRIVATE -static -mwindows)
 +    endif()
  endif()
  if(LAUNCHER_VERSION)
@@ -798,10 +799,10 @@ index b7b21bd..51782c4 100644
      void (*shutdown)() = nullptr;
      // false: no Game page (and no game file, check or Display card): the port's pages have Play
 diff --git a/recomp-common/launcher/src/main.cpp b/recomp-common/launcher/src/main.cpp
-index ded4d1f..57d3e30 100644
+index ded4d1f..c2c7bfa 100644
 --- a/recomp-common/launcher/src/main.cpp
 +++ b/recomp-common/launcher/src/main.cpp
-@@ -249,6 +249,36 @@ struct TouchScroll {
+@@ -249,7 +249,81 @@ struct TouchScroll {
  
  }  // namespace
  
@@ -831,14 +832,68 @@ index ded4d1f..57d3e30 100644
 +        set(hwnd, 33 /* DWMWA_WINDOW_CORNER_PREFERENCE */, &corners, sizeof corners);
 +    }
 +}
++// Built as a window program, the launcher has no console of its own. Started from a terminal it prints there
++// (--help, --integration-info); started by a frontend with its output redirected, that redirection is kept.
++void borrow_parent_console() {
++    const HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
++    if (out && out != INVALID_HANDLE_VALUE && GetFileType(out) != FILE_TYPE_UNKNOWN) {
++        return;  // (a pipe or a file: already where the caller wants it)
++    }
++    if (AttachConsole(ATTACH_PARENT_PROCESS)) {
++        FILE* ignored = nullptr;
++        freopen_s(&ignored, "CONOUT$", "w", stdout);
++        freopen_s(&ignored, "CONOUT$", "w", stderr);
++    }
++}
 +#else
 +void match_title_bar(SDL_Window*) {}
++void borrow_parent_console() {}
 +#endif
 +
++// The window shown at once, before the launcher's first page is ready: its colours and a word, so a slow start
++// (a large game program, a disc being read) never looks like nothing happened.
++void show_loading(SDL_Window* window, SDL_Renderer* renderer) {
++    const ui::Palette& p = ui::palette();
++    match_title_bar(window);
++    SDL_ShowWindow(window);
++    ImGui_ImplSDLRenderer3_NewFrame();
++    ImGui_ImplSDL3_NewFrame();
++    ImGui::NewFrame();
++    int w = 0, h = 0;
++    SDL_GetRenderOutputSize(renderer, &w, &h);
++    ImDrawList* draw = ImGui::GetBackgroundDrawList();
++    draw->AddRectFilled(ImVec2(0, 0), ImVec2(float(w), float(h)), p.background);
++    const char* word = "Cargando\xE2\x80\xA6";
++    ImGui::PushFont(nullptr, ui::px(22));
++    const ImVec2 size = ImGui::CalcTextSize(word);
++    draw->AddText(ImVec2((w - size.x) * 0.5f, (h - size.y) * 0.5f), p.primary, word);
++    ImGui::PopFont();
++    const float bar = ui::px(160), y = (h + size.y) * 0.5f + ui::px(14);
++    draw->AddRectFilled(ImVec2((w - bar) * 0.5f, y), ImVec2((w + bar) * 0.5f, y + ui::px(6)), ui::fade(p.primary, .25f), ui::px(3));
++    draw->AddRectFilled(ImVec2((w - bar) * 0.5f, y), ImVec2((w - bar) * 0.5f + bar * 0.35f, y + ui::px(6)), p.primary, ui::px(3));
++    ImGui::Render();
++    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
++    SDL_RenderClear(renderer);
++    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
++    SDL_RenderPresent(renderer);
++    SDL_PumpEvents();
++}
++
  int main(int argc, char** argv) {
++    borrow_parent_console();
      std::string screenshot_prefix;
      std::string press;
-@@ -383,6 +413,7 @@ int main(int argc, char** argv) {
+     bool pressing = false;
+@@ -377,12 +451,16 @@ int main(int argc, char** argv) {
+ 
+     ui::set_dark(false);
+     ui::apply_style(SDL_GetWindowDisplayScale(window));
++    if (screenshot_prefix.empty()) {
++        show_loading(window, renderer);
++    }
+     { // App, its textures and worker callbacks must end before SDL shuts down.
+     App app(window);
+     if (!page_id.empty()) {
          app.set_page(page_id);
      }
      if (screenshot_prefix.empty()) {  // (pictures are taken with nothing put on the screen)

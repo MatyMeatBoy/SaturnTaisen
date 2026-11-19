@@ -123,6 +123,13 @@ def main():
     if args.action == 'recompile':
         if not (WORK / 'blocks.txt').is_file():
             raise RuntimeError('No discovery database: build, then discover before recompiling')
+        # The generator only writes; CMake compiles every gen/blocks_*.cpp it finds. Files of an earlier
+        # generation left there were compiled and registered too, doubling the executable (T91: 1,357,536
+        # blocks for 674,182). Generated sources are always rebuilt from blocks.txt, so they are cleared first.
+        gen = WORK / 'gen'
+        if gen.is_dir():
+            for stale in list(gen.glob('blocks_*.cpp')):
+                stale.unlink()
         run(sys.executable, DEP / 'tools/recomp.py', '--blocks', WORK / 'blocks.txt',
             '--ops', DEP / 'machine/sh2_ops.h', '--out', WORK / 'gen',
             '--max-function-blocks', '1',
