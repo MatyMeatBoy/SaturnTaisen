@@ -26,6 +26,21 @@ class SaturnBgTests(unittest.TestCase):
         self.assertEqual(image.getpixel((8 + 3, 8 + 5)), (8 * 255 // 31, 16 * 255 // 31, 255))
         self.assertEqual(image.getpixel((0, 0)), (0, 0, 0))
 
+    def test_fixed_cell_picture_with_40_columns_and_20_rows(self):
+        data = bytearray(0xD640)
+        data[:4] = bytes([0, 1, 0, 1])
+        last_pixel = 0x50 + 799 * 64 + 63
+        data[last_pixel] = 13
+        struct.pack_into('>H', data, 0xC850 + 13 * 2, 31)
+        image = bg.decode(data)
+        self.assertEqual(image.size, (320, 160))
+        self.assertEqual(image.getpixel((319, 159)), (255, 0, 0))
+        self.assertEqual(bg.picture_bytes(data), data[0x50:0xC850])
+        self.assertEqual(bg.palette_bytes(data), data[0xC850:0xCA50])
+        self.assertIsNone(bg.decode(data[:-1]))
+        data[-1] = 1
+        self.assertIsNone(bg.decode(data))
+
     def variant_b_sample(self):
         table_at = 0x610
         tile_at = table_at + 4 * 4
@@ -146,6 +161,13 @@ class SaturnBgTests(unittest.TestCase):
                 # An event picture is paired by eye with a PC battle background of another name (tools/add_eve_pairs.py).
                 self.assertTrue(pair['pc_file'].startswith('SAKURA2/BG/BBG'))
                 self.assertGreaterEqual(pair['correlation'], 0.8)
+                continue
+            if pair.get('pair_method') == 'visual-cross-number':
+                self.assertEqual(
+                    (pair['saturn_file'], pair['size'], pair['pc_file'], pair['pc_image_index']),
+                    ('SAKURA1/BG2338.BIN', [320, 160], 'SAKURA1/BG/BG2238.SPR', 17),
+                )
+                self.assertGreaterEqual(pair['correlation'], 0.92)
                 continue
             self.assertEqual(pair['pc_file'].split('/')[-1][:-4], pair['saturn_file'].split('/')[-1][:-4])
             self.assertIn(pair['tier'], ('content', 'number'))

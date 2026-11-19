@@ -66,3 +66,12 @@ class ChapterCoverageTest(unittest.TestCase):
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
         self.assertEqual(len({row['pc'] for row in alternate_cuts}), 6)
         self.assertTrue(all(row['status'] == 'paired-not-wired' for row in alternate_cuts))
+
+    def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        for disc in (1, 2):
+            row = catalog['unassigned']['scene-pictures'][f'{disc}:/SAKURA1/BG2338.BIN']
+            self.assertEqual(row['pc'], 'SAKURA1/BG/BG2238.SPR')
+            self.assertEqual(row['status'], 'unsupported-size')
+            self.assertFalse(row.get('verified_in_game'))
