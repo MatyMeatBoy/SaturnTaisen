@@ -15,3 +15,13 @@ Method: relative duration, 24×12 grayscale thumbnails at five relative points, 
 Content check of the six pairs (5-frame luminance signature, 24x12, against all 52 PC clips): each assigned PC clip is the unique best match with a margin of 1.5x-3.0x over the runner-up (distances 14.4-25.1 versus 27.3-44.9; the closest are MOVIE011 at 1.5x and MOVIE102 at 1.6x). They are accepted as matched, recorded as alternate cuts (PC runs 0.6-3.7 s different). The pairing is by content, not by audio or subtitles.
 
 Pending: compare audio/subtitles/cuts of these six alternate cuts and design MPEG-1/MP2 decoding and runtime sync. Not integrated in test.4.
+
+## T53 decoder authorised (2026-11-19)
+
+The owner authorised adding **pl_mpeg** (MIT, single header, MPEG-1 video + MP2 audio + MPEG-PS demuxer, https://github.com/phoboslab/pl_mpeg). Downloaded to `local/deps/pl_mpeg/pl_mpeg.h` (141,424 bytes, SHA-256 `3a8cb30c83c2a1147719c30fe0c8b93da2987aa43140077c575b39aaa75fc2c9`), not committed yet; it will be added with its licence to `THIRD_PARTY_NOTICES.md` when the runtime uses it.
+
+Design for the next block (nothing implemented yet):
+1. Identify the FILM stream that the Saturn is streaming (the 51 streams of this document, by the stream start LBA or the hash of its first sector) and map it to its `MOVIEnnn` through the 44+6 pairing above.
+2. Decode the PC MPEG with pl_mpeg on a worker thread, upload YUV→RGB frames to a texture and draw it in the 16:9 presentation in place of the Saturn picture, keeping the guest running untouched (guest hashes must stay identical).
+3. Sync to the guest's FILM time (the Saturn clip is the clock), skip and end with the guest; the PC audio replaces the Saturn audio only if its duration matches (the six alternate cuts keep the Saturn video).
+4. Verify with a clip in a saved state; unpaired MOVIE118 and REDLOGO stay unused.
