@@ -63,7 +63,8 @@
       "patches/0058-sakura-stable-zoom-box-choice-hold-text-tracking.patch",
       "patches/0059-sakura-hd-scene-pictures-by-palette.patch",
       "patches/0060-sakura-scene-picture-review-filter.patch",
-      "patches/0061-sakura-scene-picture-async-decode.patch"
+      "patches/0061-sakura-scene-picture-async-decode.patch",
+      "patches/0062-sakura-vdp1-texture-trace.patch"
     ]
   }
 }

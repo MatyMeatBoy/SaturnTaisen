@@ -1,0 +1,32 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index c568656..6063532 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -18,6 +18,7 @@
+ #include "kabe.h"
+ #include "backdrop.h"
+ #include <future>
++#include <set>
+ #include "pc_backdrop.h"
+ #include "pc_spr.h"
+ #include "scene_bg_table.h"
+@@ -849,6 +850,19 @@ int RunWindowed(Port &port) {
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
+                 enhanced=true;presentationKind="anchored-menu";
+             }
++            if(std::getenv("SATRECOMP_BODY_TRACE")) {
++                // Large VDP1 textures (candidates for the NC bodies), once per distinct hash.
++                static std::set<uint64_t> seen;
++                for(const auto& sprite:planes.sprites) {
++                    if(sprite.pixels.size()<3000)continue;
++                    const uint64_t hash=AtlasFingerprint(sprite.pixels);
++                    if(!seen.insert(hash).second || seen.size()>64)continue;
++                    const auto& cmd=sprite.command.words;
++                    fprintf(stderr,"vdp1 texture: type=%u x=%d y=%d size=%ux%u color=%04X mode=%04X bytes=%zu hash=%016llX",
++                        cmd[0]&15,sprite.x,sprite.y,((cmd[5]>>8)&63)*8,cmd[5]&255,cmd[3],cmd[2],sprite.pixels.size(),static_cast<unsigned long long>(hash));
++                    fputc(10,stderr);
++                }
++            }
+             const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height,planes.underSource);
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
