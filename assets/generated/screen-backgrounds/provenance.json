@@ -453,6 +453,96 @@
       ],
       "palette_fnv": "36BDFD7BBC63CCE7",
       "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE01-es-lettering-v1.png",
+      "sha256": "b42ce55c7ee048debe55874a6827cf84a8c48c11b798b6e25a37357988b1f9d5",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE02-es-lettering-v1.png",
+      "sha256": "5711e6a93313db0cc66a15e013dbe6d251acfd64e4e8dab69124ff3c4924c86c",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE03-es-lettering-v1.png",
+      "sha256": "6d20245ce6676a2209fa6b21e235993b32e7f243e7f3e9611d54ca0217ff4b78",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE04-es-lettering-v1.png",
+      "sha256": "fb69fe4934857f23d7cb9e318bb88adc26f3bb606378e761e0967bced0336752",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE05-es-lettering-v1.png",
+      "sha256": "5aec5c2ea414ed7d9e203df5a30d1fe1f964339f58a267a39df5242b85224658",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE06-es-lettering-v1.png",
+      "sha256": "a1997165195d502a069c2dc33fd740544af111563bff29f33451afabd4ca164b",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE07-es-lettering-v1.png",
+      "sha256": "c8fc631c981017272c32a0ac3af7e32b216f26950061860b789ca833c7edfc79",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE08-es-lettering-v1.png",
+      "sha256": "453cc06aa6cabc7437cc93c559dd48a0328c9fd629f05b2d128675e2eab3a5b1",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE09-es-lettering-v1.png",
+      "sha256": "d5bf7b5fe94739185fdc85c2ef3c17a742a3f40669856322d654e62c1c611f88",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE10-es-lettering-v1.png",
+      "sha256": "d0998b52bbaa324db6a3ad4bea8077e232f30264dd849aa70885ec085f90799a",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
     }
   ],
   "source_pixels_included": false
