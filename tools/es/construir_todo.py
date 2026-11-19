@@ -6,7 +6,7 @@
 1. volcar_todo.py --disc N: every dialogue table (and every battle table that has batches)
 2. disc 1: menus_es.py builds the Spanish menu graphics (title, interlude, options, load/save, battle bars);
    disc 2: menus_disco2.py moves those patches onto disc 2's own SAKURA/LOGO.SH2 and redraws its WKL12-26 bars
-(optional) --portadas: the drafted Spanish episode cards replace TITLE1..10.BIN
+(optional) --portadas: the drafted Spanish episode cards and LOADING scroll replace TITLE1..10.BIN and LOAD.BIN
 3. iso.py copies local/prepared/discN to local/prepared/discN-es with the tables in fixed slots
 
 Inputs and outputs stay under SAKURA_OWNER_ROOT/local; nothing here is meant for Git data-wise.
@@ -31,7 +31,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--disc', type=int, choices=(1, 2), required=True)
     parser.add_argument('--portadas', action='store_true',
-                        help='disc 1 only: also use the drafted Spanish episode cards (tools/es/portadas_es.py)')
+                        help='disc 1 only: also use the drafted Spanish episode cards and LOADING scroll (portadas_es.py, carga_es.py)')
     args = parser.parse_args()
     source = OWNER / f'local/prepared/disc{args.disc}'
     target = OWNER / f'local/prepared/disc{args.disc}-es'
@@ -54,8 +54,9 @@ def main():
                 shutil.copy2(file, out)
         if args.portadas:
             run('portadas_es.py')
+            run('carga_es.py')
             cards = WORK / 'builds/es-portadas/SAKURA1'
-            for file in sorted(cards.glob('TITLE*.BIN')):
+            for file in sorted([*cards.glob('TITLE*.BIN'), cards / 'LOAD.BIN']):
                 out = merged / 'SAKURA1' / file.name
                 out.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(file, out)
