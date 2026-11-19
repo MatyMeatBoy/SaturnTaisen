@@ -23,7 +23,7 @@ The third-battle save reads EVT05 at 221912, MAP05 at 232479 and UNIT05 at 25227
 
 ## Body, portrait and film reads
 
-The 0301 trace loads 0301FCE at 128883 and NC99 at 165862. The extended archived route also reads NC30 at 162269, NC31 at 163522 and NC95 at 165781. These reads establish resource use. NC30 and NC95 retain their existing Chapter 1 rows. The two exact portrait base draws are documented below.
+The 0301 trace loads 0301FCE at 128883 and NC99 at 165862. The extended archived route also reads NC30 at 162269, NC31 at 163522 and NC95 at 165781. These reads establish resource use. NC30 and NC95 retain their existing Chapter 1 rows. The four exact portrait base draws are documented below.
 
 The two recognized cold film starts, FAD 405 and 166362, occur before the 0301 load. Their use as Chapter 3 story clips remains unobserved.
 
@@ -63,7 +63,7 @@ interpreted blocks.
 | `0116` | `7c4f183bb7c2f179b23c29370c33baada1af15b585da41e7571928ba491db879` | `917f94a58d14293831f2a2cf36271f0c9557cc7930cf9f5f86950d513e42ad9f` | `525dfeb8365f46537ec64b30c9460a09cd1d3d2af38705935a440f65a68b98b7` |
 | `0068` | `90fe5f103fc03d71a6dc33b45be7ecfd554c3cf665c34140507e42279714a897` | `ed03037d52359e8938e4eed19da06b2a54626e2a5ac257e6c398f24de4c23d93` | `889f1b17c7b0b135a735a180d1ce77592a14799ae4edd609dd8afd503b2e804b` |
 
-The registry marks these two Chapter 3 occurrences as observed and
+The registry marks these Chapter 3 occurrences as observed and
 verified. The existing Chapter 1 association for `0068` remains inferred.
 Animation strips and full chapter parity remain outside this sample.
 The source snapshots are in `local/work/codex-th3-attribution/strict-0301`.
@@ -71,3 +71,40 @@ Test inputs, images and logs are in `local/work/codex-tp3c/th3-portraits`.
 
 At block close the project measured 63,994,634,805 logical bytes, above
 the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+
+### Archived 0301 continuations
+
+Two unmodified narrative continuations preserve the same complete
+English `0301FCE.BIN` and `0301TBL` at the addresses above. The labels
+identify the archived investigations. No battle inputs were replayed.
+Each active VDP1 command uses an exact atlas base with no separate strip.
+
+| Archived checkpoint | 0301TBL record and cursor | FCE identity | Active base FNV-1a | PC KAO.SPR index |
+|---|---|---|---|---|
+| `chapter3-bbg004-relay/latest.state` | 10412, `0x0022C6C4` | `00fe` | `C6ED133A60FCCD06` | 253 |
+| `chapter3-bbg004-continued/latest.state` | 10459, `0x0022CF62` | `013d` | `7B92D69329B35A44` | 316 |
+
+The same muted patch 0141 procedure replayed 12 input-free strict
+frames in each of the four modes above. With the bundled KABE21
+and KABE20 backgrounds respectively, pass 2 shows both exact PC bases.
+Each 2560×1440 Enhanced sample matches all 69,120 expected prepared
+pixels at (404,1090)–(644,1378), with zero changes outside.
+Each set of four guest logs matches, all Original pixels match and
+no blocks were interpreted.
+
+| FCE identity | Unmodified snapshot SHA-256 | Matching guest log SHA-256 | Prepared 2× PNG SHA-256 |
+|---|---|---|---|
+| `00fe` | `cb14b9c4f3a7c05fa75bcd1c24521226bee2d52fee8691a0c77cc91b0ef6f103` | `3f9728473e60c0e1f1b95a3fc23362d09b7bc5c8af4dcfe13c574255fbd0e967` | `b03d958d5948ba8c94365ffe82d86cab96c852f855d355ae71b202c4a2814b14` |
+| `013d` | `dde0f980cdba8ea9f8eca37fb284462f354e114f17d916c2a2500524247689b9` | `4c96a3614768d57fc77a2ba46739d0009dd05a4deb05c1658ed29573b676d2ce` | `b4d60a48443cee782e2ab9231ba97a5ea743593722f9ad5eafd68ed17df94dfa` |
+
+The alternate `chapter3-bbg004-extended/latest.state` contains base
+`0001` at record 10661. It has the renderer's exact full-white weight 32
+and both paths show the same plate. The 96-frame input-free follow-up
+moved to the backdrop layout without a witnessed exposed PC portrait.
+This occurrence stays outside the verified rows. Private receipts and
+the 1440p pairs are under `local/work/codex-tp3c/th3-portraits-extra`.
+
+After this follow-up and cache cleanup, the project measured
+64,945,697,743 logical bytes. The delivered development ZIP remains
+6,315,009,692 bytes.

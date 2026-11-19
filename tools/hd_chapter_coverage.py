@@ -24,6 +24,7 @@ CHAPTER2_FACE_BANK = '1:/SAKURA2/FACE02.BIN:253500278286bc8a8d6e7c28bdee4d7ee199
 CHAPTER2_FACE_BASE_PAIRS = {0: 10, 30: 208, 31: 209}
 IRIS_COMMAND_ROOM_REPORT = PORTRAIT_REPORT + '#iris-00a1-command-room-portrait'
 CHAPTER3_PORTRAIT_REPORT = 'docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases'
+CHAPTER3_PORTRAIT_DRAWS = ('0068', '00fe', '0116', '013d')
 MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
 YONEDA_STORAGE_REPORT = PORTRAIT_REPORT + '#yoneda-00e9-storage-portrait'
 
@@ -83,7 +84,7 @@ NATIVE_ROUTE_FILES = {
     9: (CHAPTER9_ROUTE_FILES, CHAPTER9_ROUTE_REPORT),
 }
 NATIVE_ROUTE_PORTRAITS = {
-    3: ({name: '1:/SAKURA1/0301FCE.BIN' for name in ('0068', '0116')}, CHAPTER3_PORTRAIT_REPORT),
+    3: ({name: '1:/SAKURA1/0301FCE.BIN' for name in CHAPTER3_PORTRAIT_DRAWS}, CHAPTER3_PORTRAIT_REPORT),
     5: ({name: '1:/SAKURA1/0501FCE.BIN' for name in CHAPTER5_ROUTE_PORTRAITS}, CHAPTER5_ROUTE_REPORT),
     9: ({
         '0001': '2:/SAKURA1/0900FCE.BIN',
@@ -637,7 +638,7 @@ def build(root, index_dir, portrait_audit):
         for episode, (atlases, evidence) in NATIVE_ROUTE_PORTRAITS.items():
             if ident in atlases:
                 occurrence = dict(row, atlases=[atlases[ident]])
-                if episode == 3 and ident in ('0068', '0116'):
+                if episode == 3 and ident in CHAPTER3_PORTRAIT_DRAWS:
                     occurrence.update(verified_in_game=True, runtime_evidence=CHAPTER3_PORTRAIT_REPORT)
                 elif episode == 9 and ident == '00e9':
                     occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
