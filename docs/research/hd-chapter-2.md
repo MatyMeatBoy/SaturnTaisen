@@ -1,5 +1,25 @@
 # HD chapter 2: coverage report (shard TH2)
 
+## Continue route attribution
+
+A muted strict-native replay on English disc 1 followed the established Episode 2 File 1 route through the tactical introduction and Kohran's movement grid. It matched all 28,491 guest hashes from the earlier continuous replay, SHA-256 `12cae74f096b5a5bff308994efce70ec40cef1525e9de663686e256903d136cf`, with zero interpreted blocks. The separate 9,501-frame Continue prefix also reproduced its reference exactly.
+
+| Saturn file | CD play start FAD | Observation |
+| --- | --- | --- |
+| `SAKURA2/EVT02.BIN` | 221798 | Tactical module entry |
+| `SAKURA2/MAP02.BIN` | 231973 | Terrain visible through movement and the selected Kohran grid |
+| `SAKURA2/UNIT02.BIN` | 252153 | Only unit bank loaded in this route, followed by active unit selection and movement |
+| `SAKURA2/EVE202.BIN` | 221148 | Opaque dialogue illustration, covered by prior HD evidence |
+| `SAKURA2/EVE002.BIN` | 221023 | Airship illustration, covered by prior HD evidence |
+
+The PC and Saturn copies of `MAP02.BIN` are byte-identical (336,640 bytes, SHA-256 `f2bc29c87209a2bb1ab28b0664e3be1140b2245632005e03f35d84e1b8015611`). PC `MAP02.TAB` identifies the 2048 × 2048 `MAP02_A.SPR` as ground. The native render probe separated the matching terrain from the grid and units on source 4, page `0x40000`, at scroll `(584, 704)`. The first 8,192 pattern-name bytes have FNV-1a `25FF56EB6965E424`. The PC crop shows the same terrain features with different textures. The exact transform and guarded HD ground draw remain open. Unit attribution records the active tactical bank, with identity-specific art still open.
+
+`WKL02`, `FACE02` and `M02MES` were read during the same route. These reads alone do not establish the display of individual rows or portraits. The report and register do not extend the tactical sample to a full chapter exit test.
+
+## Earlier inventory snapshot
+
+The totals below are the baseline from before this attribution pass.
+
 Source: `config/hd-chapter-coverage.json` (chapter 2 entry, `unassigned`, `association`), cross-checked with `config/hd-scene-bg-map.json`, `hd-scene-bg-review.json`, `hd-body-map.json`, `hd-item-map.json`, `film-fad-map.json` and `docs/PENDIENTES.md`. Names, hashes and counts only. The counts below reflect the coverage inventory. The [EVE202 tactical inset](eve202-tactical-inset.md) now has a verified scene replay. The full chapter-2 HD replay remains open.
 
 ## 1. Scope

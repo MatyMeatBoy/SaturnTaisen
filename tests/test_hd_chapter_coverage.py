@@ -41,6 +41,12 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertIs(witnessed.get('verified_in_game'), True)
                 disc2 = catalog['unassigned']['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
                 self.assertFalse(disc2.get('verified_in_game'))
+        chapter2 = by_chapter[2]['resources']
+        ground2 = chapter2['tactical-maps']['1:/SAKURA2/MAP02.BIN']
+        self.assertEqual((ground2['association'], ground2['status']), ('observed', 'paired-not-wired'))
+        self.assertEqual(ground2['pc'], 'SAKURA2/MAP/MAP02/MAP02_A.SPR')
+        self.assertIsNone(ground2.get('verified_in_game'))
+        self.assertEqual(chapter2['tactical-units']['1:/SAKURA2/UNIT02.BIN']['association'], 'observed')
         episode2 = by_chapter[2]['resources']['scene-pictures']
         airship = episode2.get('1:/SAKURA2/EVE002.BIN', {})
         self.assertEqual(airship.get('association'), 'observed')
@@ -203,3 +209,20 @@ class ChapterCoverageTest(unittest.TestCase):
         for name in ('WKL06', 'WKL21'):
             row = chapter4['menus-hud'][f'1:/SAKURA2/{name}.BIN']
             self.assertEqual((row['association'], row['status']), ('resident', 'unknown'))
+
+    def test_chapter5_native_observations_preserve_other_occurrences(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter3 = catalog['chapters'][2]['resources']
+        chapter5 = catalog['chapters'][4]['resources']
+        background = '1:/SAKURA1/BG1198.BIN'
+        self.assertEqual(chapter3['scene-pictures'][background]['association'], 'observed')
+        self.assertEqual(chapter5['scene-pictures'][background]['association'], 'observed')
+        self.assertFalse(chapter5['scene-pictures'][background].get('verified_in_game'))
+        body = chapter5['bodies']['1:/SAKURA1/NC3058.BIN']
+        self.assertEqual((body['association'], body['status']), ('observed', 'hd'))
+        self.assertFalse(body['verified_in_game'])
+        emblem = chapter5['portraits']['0169']
+        self.assertEqual((emblem['association'], emblem['status']), ('observed', 'unpaired'))
+        self.assertEqual(catalog['chapters'][0]['resources']['portraits']['0169']['association'], 'inferred')
+        self.assertNotIn('016a', catalog['unassigned']['portraits'])

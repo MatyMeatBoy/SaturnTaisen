@@ -170,3 +170,17 @@ Therefore:
 1. **Attribution comes first, in chapter order.** TH2 ... TH10 (attribute the resources each chapter draws, by a traced replay from that chapter's save/jump, see `tools/chapter_jump.py` and `docs/research/hd-chapter-N.md`) are P0 and are taken in order 2, 3, 4 ... 10. Their output is rows moving from `unassigned` to the chapter in `config/hd-chapter-coverage.json` (the `CHAPTER_WITNESSES` table in `tools/hd_chapter_coverage.py`).
 2. **Completion follows the chapter.** Once a chapter has attributed resources, a worker finishing the type shards (TP1-TP7) takes the items of the lowest chapter first, then the next. Chapter 1 is done when its register shows no `unknown`/`paired-not-wired` row except the documented blocked ones (`00a1`, `0169`, the IC pictures).
 3. Until a chapter is attributed, the type shards (TP1-TP7) stay the way to make progress: they are chapter-independent (palette/cell matching).
+
+## Quick-win order (2026-11-19)
+
+Take in this order; each line is what gains the most per hour of work with what we have today:
+1. **Scroll scenes without a 2x table row (TP2a, 10 pictures)**: data rows plus an offline alignment, no game needed.
+2. **Remaining scene pairings (TP3b BBG unknown 14, TP3c 8, TP1 non-ambiguous leftovers)**: palette/cell matching, no game needed.
+3. **Unpaired scene pictures (TP4a/b/c, 56)**: look again for a counterpart; where none exists, record the reason so the row stops counting as open.
+4. **Large bodies without a decoded Saturn side (TP5, NC3125/3126/4138) and the 2 bad strides (NC3290/NC3517)**: decode work, no game needed.
+5. **Chapter attribution TH2-TH10**: needs chapter jumps/replays; slower, but it unlocks the chapter order.
+6. **Needs the owner's saves**: IC02-IC1006, the CD-2 emblem (SIS_ICON), window frames and tab panels, title/logo screens, karaoke/extra menu, 0169, 00a1.
+
+## Close the chapters in order (owner, 2026-11-19). Scene shards keep priority for the many bots arriving; chapter closing (TCH1) is one worker in parallel, not a reason to stop scene work
+
+A chapter whose register has only a few open rows is closed before anything else. Chapter 1 today (register, `config/hd-chapter-coverage.json`): portrait `00a1` (the two PC eye strips must be swapped), portrait `0169` (the PC emblem changes artwork and framing; default decision: keep native, counted as closed by design unless the owner says otherwise), scene `EVE0101` (paired, not wired), and 6 FCE atlas rows that wait only on `00a1`/`0169`. Shard **TCH1** = close those three items. Then the same rule for chapter 2, 3 ...: list the open rows of the lowest chapter, close them, move on; attribution (TH2-TH10) feeds the next chapter.
