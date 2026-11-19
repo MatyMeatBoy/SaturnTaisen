@@ -1,0 +1,273 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -4,6 +4,7 @@
+ 
+ #include "../runtime/state.h"
+ #include "../port/png_write.h"
++#include "../port/load_disc_icon.h"
+ 
+ #include <algorithm>
+ #include <cstdio>
+@@ -315,25 +316,35 @@
+ 
+ void Renderer::TrackItemCommand(const PresentationSprite& sprite) {
+     const auto& command=sprite.command.words;
+-    if((command[0]&0x3F)!=0 || command[2]!=0x00A0 || command[3]!=0xC600 || command[5]!=0x0E70 ||
+-       sprite.x<0 || sprite.x>320-kItemCardSize || sprite.y<0 || sprite.y>224-kItemCardSize)
++    const ::port::ItemCardEntry* entry=nullptr;
++    if((command[0]&0x8FFF)==1 && command[2]==0x00A0 && command[3]==0x0600 &&
++       command[5]==0x0528 && sprite.x==24 && sprite.y==64 &&
++       bit::sign_extend<13>(command[10])+m_ctx.localCoordX==63 &&
++       bit::sign_extend<13>(command[11])+m_ctx.localCoordY==103 &&
++       ItemFingerprint(sprite.pixels)==::port::kLoadDiscIcon.texture) {
++        entry=&::port::kLoadDiscIcon;
++    } else if((command[0]&0x3F)==0 && command[2]==0x00A0 && command[3]==0xC600 &&
++              command[5]==0x0E70 && sprite.x>=0 && sprite.x<=320-kItemCardSize &&
++              sprite.y>=0 && sprite.y<=224-kItemCardSize) {
++        const auto hash=ItemFingerprint(sprite.pixels);
++        for(const auto& card : ::port::kItemCards) {
++            if(card.texture!=hash)continue;
++            entry=&card;
++            break;
++        }
++    }
++    if(!entry)return;
++    auto& captured=m_drawnItemCard[m_captureDrawFB];
++    if(captured) {
++        // A single sprite may own pixels for the overlay in a draw pass.
++        captured.reset();m_itemCaptureActive=false;
+         return;
+-    const auto hash=ItemFingerprint(sprite.pixels);
+-    for(const auto& entry : ::port::kItemCards) {
+-        if(entry.texture!=hash)continue;
+-        auto& captured=m_drawnItemCard[m_captureDrawFB];
+-        if(captured) {
+-            // Only one card may own pixels for a draw pass.
+-            captured.reset();m_itemCaptureActive=false;
+-            return;
+-        }
+-        captured.emplace();
+-        captured->entry=&entry;
+-        captured->serial=++m_itemCardSerial;
+-        captured->x=sprite.x;captured->y=sprite.y;
+-        m_itemWriting=true;
+-        return;
+-    }
++    }
++    captured.emplace();
++    captured->entry=entry;
++    captured->serial=++m_itemCardSerial;
++    captured->x=sprite.x;captured->y=sprite.y;
++    m_itemWriting=true;
+ }
+ 
+ void Renderer::RasterWideCommand(const Command& cmd,std::span<const uint8> pixels,uint8* target) {
+@@ -750,16 +761,19 @@
+     if(!m_captureItemCards || !m_capturePresentation || m_itemFrameInvalid)return false;
+     const auto& drawn=m_drawnItemCard[m_displayFB];
+     auto& presented=m_presentation.itemCard;
+-    const bool current=drawn && line>=uint32(drawn->y) && line<uint32(drawn->y+kItemCardSize);
+-    if(!current && (!presented || line>=uint32(presented->y+kItemCardSize)))return false;
+-    // The observed Saturn card uses 11 colour bits, mode-1 CRAM and bank 0x600.
++    const auto spriteSize=[](const auto& capture) {
++        return capture->entry==&::port::kLoadDiscIcon ? ::port::kLoadDiscIconSize : kItemCardSize;
++    };
++    const bool current=drawn && line>=uint32(drawn->y) && line<uint32(drawn->y+spriteSize(drawn));
++    if(!current && (!presented || line>=uint32(presented->y+spriteSize(presented))))return false;
++    // Both witnessed sources use mode-1 CRAM and bank 0x600.
+     // Verify those settings at scanout, where palette writes and sprite composition take effect.
+     const auto& sprite=m_regs2.spriteParams;
+     if(!current || (presented && presented->serial!=drawn->serial) ||
+        (m_drawing && m_displayFB==m_captureDrawFB) ||
+        m_width!=320 || m_height!=224 || m_regs2.TVMD.IsInterlaced() || m_regs1.pixel8Bits ||
+        m_regs1.fbRotEnable || m_regs1.dblInterlaceEnable || m_regs1.hdtvEnable ||
+-       sprite.type!=1 || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
++       sprite.type!=(drawn->entry==&::port::kLoadDiscIcon ? 0 : 1) || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
+        m_regs2.vramControl.colorRAMMode!=1 ||
+        ItemFingerprint(ColorBytes(0xC00,512))!=drawn->entry->palette) {
+         m_itemFrameInvalid=true;presented.reset();
+@@ -1060,7 +1074,8 @@
+                 break;
+             }
+         }
+-        if(drawnItem && !m_itemFrameInvalid && x>=uint32(drawnItem->x) &&
++        const bool discIcon=drawnItem && drawnItem->entry==&::port::kLoadDiscIcon;
++        if(drawnItem && !discIcon && !m_itemFrameInvalid && x>=uint32(drawnItem->x) &&
+            x<uint32(drawnItem->x+kItemCardSize)) {
+             const size_t at=size_t(y-drawnItem->y)*kItemCardSize+(x-drawnItem->x);
+             const auto owner=drawnItem->pixels[at];
+@@ -1102,6 +1117,7 @@
+                     else if(priority>pb) {b=layer;pb=priority;}
+                 }
+                 under=a==kBack?back:Color888{.u32=layers[a].color[x]};
++                const uint32 rawUnder=under.u32&0xFFFFFF;
+                 m_presentation.underSource[at]=static_cast<uint8>(a);
+                 if(a!=kBack && regs2.bgParams[a-kRBG0].colorCalcEnable && !regs2.colorCalcExtended &&
+                    regs2.specialColorCalcMode[a-kRBG0]==0 && !regs2.bgParams[a-kRBG0].lineColorScreenEnable && !m_colorCalcWindow[x]) {
+@@ -1119,6 +1135,18 @@
+                     under.u32=mix(under.r,below.r)|(mix(under.g,below.g)<<8)|(mix(under.b,below.b)<<16);
+                 }
+                 under=applyOffset(under,a);
++                // The load-menu disc icon uses a ratio-zero VDP2 interpolation.
++                // Only expose owners whose lower input is reproduced by underSprites.
++                if(discIcon && x>=uint32(drawnItem->x) && x<uint32(drawnItem->x+::port::kLoadDiscIconSize) &&
++                   state2.layerEnabled[kSprites] && m_sprite.colorCalcEnable[x] && m_sprite.colorCalcRatio[x]==0 &&
++                   !regs2.spriteParams.lineColorScreenEnable && !regs2.colorCalcExtended && !regs2.colorCalcAdd &&
++                   !regs2.colorCalcUseSecondRatio && !m_colorCalcWindow[x] && capturesUnshadowedPanel &&
++                   !(regs2.colorOffsetEnable[kSprites] && regs2.colorOffset[regs2.colorOffsetSelect[kSprites]].nonZero) &&
++                   (under.u32&0xFFFFFF)==rawUnder) {
++                    const size_t texel=size_t(y-drawnItem->y)*kItemCardSize+(x-drawnItem->x);
++                    if(drawnItem->pixels[texel]==1)
++                        m_presentation.itemCard->pixels[texel]=1;
++                }
+             }
+             m_presentation.underSprites[at]=under.u32|0xFF000000;
+         }
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -28,6 +28,7 @@
+ #include "body_table.h"
+ #include "verified_body_faces.h"
+ #include "film_clip_table.h"
++#include "load_disc_icon.h"
+ #include "dev_states.h"
+ #define PL_MPEG_IMPLEMENTATION
+ #include "movie_decoder.h"
+@@ -758,6 +759,7 @@
+         std::vector<uint32_t> rgba;
+     };
+     std::array<ItemHdImage,std::size(kItemCards)> itemImages{};
++    ItemHdImage loadDiscImage;
+     SDL_Texture* itemOverlay=nullptr;
+     std::array<uint32_t,hdItemSize*hdItemSize> itemOverlayPixels{};
+     auto captureItems=[&]() {
+@@ -854,29 +856,37 @@
+                              float(bracketWidth*scale),float(bracketHeight*scale)};
+         SDL_RenderTexture(renderer,bracketOverlay,nullptr,&dest);
+     };
+-    auto drawItem=[&](const std::optional<ItemCapture>& capture,const SDL_FRect& crop,
++    auto drawItem=[&](const satrecomp::video::Renderer::Presentation& planes,const SDL_FRect& crop,
+                       const SDL_FRect& target,int scale) {
+-        if(!capture || capture->rows!=nativeItemSize || scale<2 || choosing || port.menu.IsOpen() ||
++        const auto& capture=planes.itemCard;
++        if(!capture || scale<2 || choosing || port.menu.IsOpen() ||
+            satrecomp::FeatureValue("pc_hd_backgrounds")!=0 || port.opt.pcAssetsPath.empty())
+             return;
+         const auto& card=*capture;
+-        if(card.x<crop.x || card.y<crop.y || card.x+nativeItemSize>crop.x+crop.w ||
+-           card.y+nativeItemSize>crop.y+crop.h)
++        const bool discIcon=card.entry==&kLoadDiscIcon;
++        const int size=discIcon ? kLoadDiscIconSize : nativeItemSize;
++        const int hdSize=2*size;
++        if(discIcon && (planes.width!=320 || planes.height!=224 || planes.underSprites.size()!=320*224))
++            return;
++        if(card.rows!=size || card.x<crop.x || card.y<crop.y || card.x+size>crop.x+crop.w ||
++           card.y+size>crop.y+crop.h)
+             return;
+         if(std::none_of(card.pixels.begin(),card.pixels.end(),[](uint8_t visible){return visible!=0;}))
+             return;
+-        auto& image=itemImages[card.entry-kItemCards];
++        auto& image=discIcon ? loadDiscImage : itemImages[card.entry-kItemCards];
+         if(!image.tried) {
+             image.tried=true;
+             std::vector<uint8_t> bytes;
+             const auto file=std::filesystem::u8path(port.opt.pcAssetsPath)/card.entry->file;
+-            if(ReadPcBackdropFile(file,bytes,2u<<20)) {
++            if(ReadPcBackdropFile(file,bytes,2u<<20) &&
++               (!discIcon || (bytes.size()==42586 && AtlasFingerprint(bytes)==0x04BC9B0026CDB421ull))) {
+                 std::vector<PcSprite> sprites;
+                 std::string error;
+                 if(DecodePcSprites(bytes,sprites,error))for(auto& sprite:sprites) {
+-                    if(sprite.index==card.entry->index && sprite.width==hdItemSize && sprite.height==hdItemSize &&
+-                       sprite.pixels.size()==hdItemSize*hdItemSize &&
+-                       std::all_of(sprite.pixels.begin(),sprite.pixels.end(),[](uint32_t color){return (color>>24)==255;})) {
++                    if(sprite.index==card.entry->index && sprite.width==hdSize && sprite.height==hdSize &&
++                       sprite.pixels.size()==size_t(hdSize*hdSize) &&
++                       (discIcon || std::all_of(sprite.pixels.begin(),sprite.pixels.end(),
++                                               [](uint32_t color){return (color>>24)==255;}))) {
+                         image.rgba=std::move(sprite.pixels);
+                         break;
+                     }
+@@ -886,11 +896,25 @@
+         if(image.rgba.empty())return;
+ 
+         // An unowned native texel always leaves its complete 2x2 destination transparent.
+-        for(int y=0;y<nativeItemSize;y++)for(int x=0;x<nativeItemSize;x++) {
++        for(int y=0;y<size;y++)for(int x=0;x<size;x++) {
+             const bool visible=card.pixels[y*nativeItemSize+x]!=0;
+-            const size_t at=size_t(2*y)*hdItemSize+2*x;
+-            for(const size_t sample:{at,at+1,at+hdItemSize,at+hdItemSize+1})
+-                itemOverlayPixels[sample]=visible?image.rgba[sample]:0;
++            const size_t at=size_t(2*y)*hdSize+2*x;
++            uint32_t under=0;
++            if(discIcon && visible)
++                under=planes.underSprites[(card.y+y)*320+card.x+x];
++            for(const size_t sample:{at,at+1,at+hdSize,at+hdSize+1}) {
++                uint32_t color=visible?image.rgba[sample]:0;
++                if(discIcon && visible) {
++                    uint32_t mixed=0xFF000000;
++                    for(unsigned shift:{0u,8u,16u}) {
++                        const auto high=(color>>shift)&255u;
++                        const auto low=(under>>shift)&255u;
++                        mixed|=((31*high+low)>>5)<<shift;
++                    }
++                    color=mixed;
++                }
++                itemOverlayPixels[sample]=color;
++            }
+         }
+         if(!itemOverlay) {
+             itemOverlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
+@@ -902,10 +926,12 @@
+                 return;
+             }
+         }
+-        if(!SDL_UpdateTexture(itemOverlay,nullptr,itemOverlayPixels.data(),hdItemSize*sizeof(uint32_t)))return;
++        const SDL_Rect update{0,0,hdSize,hdSize};
++        if(!SDL_UpdateTexture(itemOverlay,&update,itemOverlayPixels.data(),hdSize*sizeof(uint32_t)))return;
++        const SDL_FRect source{0.0f,0.0f,float(hdSize),float(hdSize)};
+         const SDL_FRect where{target.x+(card.x-crop.x)*scale,target.y+(card.y-crop.y)*scale,
+-                              float(nativeItemSize*scale),float(nativeItemSize*scale)};
+-        if(SDL_RenderTexture(renderer,itemOverlay,nullptr,&where) && std::getenv("SATRECOMP_ITEM_TRACE")) {
++                              float(size*scale),float(size*scale)};
++        if(SDL_RenderTexture(renderer,itemOverlay,&source,&where) && std::getenv("SATRECOMP_ITEM_TRACE")) {
+             static const ItemCardEntry* traced=nullptr;
+             if(traced!=card.entry) {
+                 traced=card.entry;
+@@ -2108,7 +2134,7 @@
+                                 SDL_RenderTexture(renderer,content,&source,&target);
+                             }
+                         }
+-                        drawItem(planes.itemCard,imageCrop,imageTarget,zoom.picture.scale);
++                        drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawBrackets(planes.brackets,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+@@ -2163,7 +2189,7 @@
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 if(!scene.movieOnly && !splitZoom) {
+-                    drawItem(planes.itemCard,crop,target,fit.scale);
++                    drawItem(planes,crop,target,fit.scale);
+                     drawBrackets(planes.brackets,crop,target,fit.scale);
+                 }
+                 portraitViewport=!scene.movieOnly;
+diff --git a/port/load_disc_icon.h b/port/load_disc_icon.h
+new file mode 100644
+--- /dev/null
++++ b/port/load_disc_icon.h
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "item_card_table.h"
++
++namespace port {
++// The load-menu disc icon shares VDP1 ownership tracking with the item cards.
++inline constexpr ItemCardEntry kLoadDiscIcon{
++    0xE2E4156ADAB1517Full,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",2
++};
++inline constexpr int kLoadDiscIconSize=40;
++}

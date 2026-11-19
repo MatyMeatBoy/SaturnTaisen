@@ -107,7 +107,8 @@
       "patches/0107-sakura-hd-ic01-intermission.patch",
       "patches/0108-sakura-eve0116-tactical-inset.patch",
       "patches/0109-sakura-eve0118-tactical-inset.patch",
-      "patches/0110-sakura-eve002-tactical-inset.patch"
+      "patches/0110-sakura-eve002-tactical-inset.patch",
+      "patches/0112-sakura-hd-load-disc-icon.patch"
     ]
   }
 }

@@ -156,3 +156,13 @@ altered-asset control. Every Original capture matched pixel for pixel. The
 Enhanced changes stayed inside the four verified glyph rectangles, including
 at hand overlap. Exit captures and the altered-asset control matched the
 asset-absent viewport pixel for pixel. No release package was made.
+
+## T110b CD-1 emblem in the load menu
+
+The English disc 1 **Data to load** screen uses a 40×40 VDP1 CD-1 emblem at native (24, 64). The matching donor is subimage 2 of `SAKURA1/SYSTEM/SIS_ICON.SPR` at 80×80. Its alpha mask exactly matches the doubled Saturn silhouette, and 627 native texels have different colors within the corresponding 2×2 PC blocks.
+
+Enhanced identifies the emblem by its VDP1 command geometry, indexed texture and CRAM palette, then checks its actual framebuffer writes and scanout ownership. The native draw uses a ratio-zero VDP2 interpolation, with 31/32 sprite RGB and 1/32 lower-layer RGB. The replacement applies the same per-channel calculation using the lower RGB verified at scanout. Other effects and missing or altered PC data retain native rendering.
+
+The 2560×1440 comparison replayed the same settings, PC data and guest inputs on the candidate and its prior runtime. An independent reconstruction using the captured VDP1 and VDP2 layers matched the entire output frame. Only pixels inside the CD-1 emblem changed. Original mode, a missing or altered donor, and disabled PC backgrounds retained their native pixels. All profiles matched all 25 guest frame hashes with zero interpreted blocks. The existing FONT_CSL inventory brackets were active and matched the prior runtime pixel for pixel at 2560×1440 with all 61 guest hashes equal.
+
+SIS_ICON subimage 1 also matches the System RAM icon's silhouette. Its 2×2 blocks are all uniform, and the candidate keeps that icon native. Private captures and receipts are in `local/work/codex-tw5-next`. Other menu layouts, palette variants and disc 2 remain open. No package change.
