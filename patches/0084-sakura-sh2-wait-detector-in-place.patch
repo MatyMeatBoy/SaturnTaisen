@@ -1,0 +1,53 @@
+diff --git a/runtime/access.h b/runtime/access.h
+index 72a6b8f..6874147 100644
+--- a/runtime/access.h
++++ b/runtime/access.h
+@@ -81,6 +81,12 @@ struct Access {
+     static Registers GetRegisters(SH2 &c) {
+         return {c.R, c.PC, c.PR, c.SR.u32, c.GBR, c.VBR, c.MAC.u64};
+     }
++    // GetRegisters(c) == r, without copying the registers out first (the wait detector asks this at every block entry);
++    // the scalars that change most go first, so a CPU that is not waiting stops at the first
++    static bool SameRegisters(SH2 &c, const Registers &r) {
++        return c.PC == r.PC && c.SR.u32 == r.SR && c.PR == r.PR && c.GBR == r.GBR && c.VBR == r.VBR && c.MAC.u64 == r.MAC &&
++               c.R == r.R;
++    }
+     // An interrupt is waiting to be serviced (now, or after one more instruction if it is being held off)
+     // Where a function stopped (block_native.h): 0, or the number of the block + 1
+     static uint32_t Resume(SH2 &c) {
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index 9f5ae58..8054904 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1110,8 +1110,8 @@ namespace {
+             if (!e && !(e = Discover(rt, *r, offset))) {
+                 break;
+             }
+-            e->runs++;
+-            if (e->runs == 1 && !rt.opt.recordPath.empty() && !e->lift && e->start == 0 && block == 0) [[unlikely]] {
++            // (`runs` only matters when recording: a store to every entry run would dirty its cache line)
++            if (!rt.opt.recordPath.empty() && ++e->runs == 1 && !e->lift && e->start == 0 && block == 0) [[unlikely]] {
+                 // Recording: follow where this code leads (see Explore)
+                 Explore(rt, *r, offset);
+                 if (e->function) {
+@@ -1146,17 +1146,16 @@ namespace {
+ #endif
+             if (freeRunning) {
+                 Runtime::Waiting &w = rt.waiting[cpu.IsMaster() ? 0 : 1];
+-                const Access::Registers now = Access::GetRegisters(cpu);
+                 if (w.activity != SATRECOMP_ACTIVITY) {
+                     w.activity = SATRECOMP_ACTIVITY;
+-                    w.at = now;
++                    w.at = Access::GetRegisters(cpu);
+                     w.age = 0;
+                     Access::SetWaiting(cpu, false);
+-                } else if (now == w.at) {
++                } else if (Access::SameRegisters(cpu, w.at)) {
+                     Access::SetWaiting(cpu, true);
+                 } else if (++w.age > 256) {
+                     // (the point taken may not be one the CPU comes back to in the same state: take another)
+-                    w.at = now;
++                    w.at = Access::GetRegisters(cpu);
+                     w.age = 0;
+                 }
+             }

@@ -237,6 +237,8 @@
     "BG3097": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour",
     "BG3119": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour",
     "BG3165": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour",
+    "BG1130": "same corridor as the PC BG1132/BG1134/BG1136 variants (grey correlation 0.935) but those variants differ in the door signs; no same-number PC picture, so it stays native rather than drawing a variant with another detail",
+    "BG1131": "same corridor as the PC BG1132/BG1134/BG1136 variants (grey correlation 0.935) but those variants differ in the door signs; no same-number PC picture, so it stays native rather than drawing a variant with another detail",
     "BG3051": "the PC picture has a library background baked in, the Saturn one is a character cut-out on a key colour",
     "BG3091": "the PC picture has a grey background baked in, the Saturn one is a character cut-out on a key colour",
     "BG4284": "the Saturn statue stands on a blue pedestal and holds an object, the PC figure has neither (different frame)",
