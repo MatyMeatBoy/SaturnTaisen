@@ -166,6 +166,7 @@ def build(root, index_dir, portrait_audit):
         for row in bg.values() if row.get('pc_file') and 'pc_image_index' in row
     }
     screens = pairs(config('hd-screen-map'))
+    endings = pairs(config('hd-ending-bank-map'))
     bodies = pairs(config('hd-body-map'))
     body_review = config('hd-body-review')
     # Bodies in the runtime table: content pairs or eye-confirmed candidates, not rejected (the filter of tools/gen_body_table.py).
@@ -261,6 +262,16 @@ def build(root, index_dir, portrait_audit):
             }
         elif disc == 1 and name in BBG_INSET_PAIRS and path == f'/SAKURA2/{name}.BIN':
             row = {'status': 'hd', 'pc': f'SAKURA2/BG/{name}.SPR', 'pairing_evidence': BBG_INSET_REPORT}
+        elif path in endings:
+            bank = endings[path]
+            row = {
+                'status': 'paired-not-wired',
+                'pc': bank['pc_file'],
+                'pc_image_indices': [record['pc_image_index'] for record in bank['records']],
+                'scope': 'ending-bank subimages',
+                'reason': 'Requires ending-layer composition and viewport evidence.',
+                'decision_evidence': 'docs/research/ending-bank-pairs.md',
+            }
         elif path in bg:
             pair = bg[path]
             accepted = name not in bg_review['rejected'] and (
