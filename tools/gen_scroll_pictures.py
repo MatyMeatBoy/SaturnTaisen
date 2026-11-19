@@ -26,6 +26,8 @@ MIN_CORRELATION = 0.90
 # rate in PC pixels per 1,000 Saturn pixels, start and length on the
 # scroll axis, start and length on the fixed axis. See scroll-table.md.
 FITTED_CROPS = {
+    'BG1283': (1992, 0, 569, 8, 312),
+    'BG1310': (1930, 32, 559, 8, 312),
     'BG2077': (2312, 0, 670, 0, 314),
     'BG2172': (2008, 5, 290, 26, 536),
     'BG2518': (1831, 10, 264, 27, 488),

@@ -1,0 +1,19 @@
+diff --git a/port/scroll_picture_rows.h b/port/scroll_picture_rows.h
+--- a/port/scroll_picture_rows.h
++++ b/port/scroll_picture_rows.h
+@@ -6,9 +6,15 @@
+ {"BG1282", ScrollAxis::Horizontal, 512, 144, 79952, 0xEEE384A9F7CDC3F6ull,
+  0x1D0FF907BAB974CBull, 0x945B20754058C1E9ull, "SAKURA1/BG/BG1282.SPR", 383580, 0x40B4D0460F220D3Bull, 1024, 320,
+  ScrollStyle::Plain},
++{"BG1283", ScrollAxis::Horizontal, 472, 144, 73384, 0xD87BE6D07511C001ull,
++ 0x26F18F4F1E59358Dull, 0xC08532D52E335092ull, "SAKURA1/BG/BG1283.SPR", 330403, 0xF55E389A4B3EFF08ull, 944, 320,
++ ScrollStyle::Plain, {1992, 0, 569, 8, 312}},
+ {"BG1285", ScrollAxis::Horizontal, 512, 144, 77648, 0x84BEAAAE2A751658ull,
+  0x8B6362BE73FB2551ull, 0xBE01460AC7277CC6ull, "SAKURA1/BG/BG1285.SPR", 228628, 0x6C426261DECC3F7Eull, 1024, 320,
+  ScrollStyle::Plain},
++{"BG1310", ScrollAxis::Horizontal, 512, 144, 79056, 0x9559E84A4BA8B420ull,
++ 0xAED8F5CB44782A19ull, 0x09888D7C5CF638EFull, "SAKURA1/BG/BG1310.SPR", 380137, 0x87F307C6DDD24F49ull, 1024, 320,
++ ScrollStyle::Plain, {1930, 32, 559, 8, 312}},
+ {"BG2077", ScrollAxis::Horizontal, 440, 144, 68296, 0xDF74A3948CC82F4Full,
+  0xC8472F16A1D8EDBFull, 0x9611D0429CB4967Cull, "SAKURA1/BG/BG2077.SPR", 217097, 0x66E7E23F89A0E79Full, 1024, 320,
+  ScrollStyle::Plain, {2312, 0, 670, 0, 314}},

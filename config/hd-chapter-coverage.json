@@ -13092,8 +13092,8 @@
       "1:/SAKURA1/BG1283.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1283.SPR",
-        "reason": "size [472, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1284.BIN": {
         "association": "unknown",
@@ -13208,8 +13208,8 @@
       "1:/SAKURA1/BG1310.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1310.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1311.BIN": {
         "association": "unknown",
@@ -16917,8 +16917,8 @@
       "2:/SAKURA1/BG1283.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1283.SPR",
-        "reason": "size [472, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1284.BIN": {
         "association": "unknown",
@@ -17028,8 +17028,8 @@
       "2:/SAKURA1/BG1310.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1310.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1311.BIN": {
         "association": "unknown",
