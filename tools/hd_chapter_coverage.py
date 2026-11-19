@@ -291,6 +291,19 @@ def build(root, index_dir, portrait_audit):
     films = {(r['disc'], r['fad']): r for r in config('film-fad-map')['streams']}
     bg = pairs(config('hd-scene-bg-map'))
     bg_review = config('hd-scene-bg-review')
+    native_bg_aliases = {}
+    for alias, canonical in bg_review.get('exact_native_aliases', {}).items():
+        alias_path, canonical_path = (f'/SAKURA1/{name}.BIN' for name in (alias, canonical))
+        source, target = bg[alias_path], bg[canonical_path]
+        exact_keys = ('palette_fnv', 'cells_fnv', 'cells_sha256')
+        if (
+            source['size'] != [288, 144] or target['size'] != source['size']
+            or any(not source.get(key) or source[key] != target.get(key) for key in exact_keys)
+            or any(name[2:3] in '34' or name in bg_review['rejected'] for name in (alias, canonical))
+            or target.get('tier') != 'content'
+        ):
+            raise ValueError(f'Invalid exact native background alias {alias} -> {canonical}')
+        native_bg_aliases[alias_path] = (canonical, target)
     scroll_rows = {row['name'] for row in config('hd-scroll-pictures')['rows']}
     bg_table, bg_cell_table = runtime_bg_entries(root)
     donor_hashes = {
@@ -448,7 +461,7 @@ def build(root, index_dir, portrait_audit):
                 'decision_evidence': 'docs/research/ending-bank-pairs.md',
             }
         elif path in bg:
-            pair = bg[path]
+            alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (
                 pair.get('tier') == 'content' or name in bg_review['eye_confirmed_number_tier']
             )
@@ -462,6 +475,8 @@ def build(root, index_dir, portrait_audit):
                     donor is not None and name in bg_review.get('shared_cell_choice', {}) and pair['size'] == [288, 144])
                 row = {'status': 'hd' if key in bg_table or same_image else 'paired-not-wired',
                        'pc': donor[0] if same_image else pair['pc_file']}
+                if alias:
+                    row['native_alias_of'] = alias
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'

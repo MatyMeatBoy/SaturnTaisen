@@ -376,6 +376,21 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
             self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')
 
+    def test_scene_corridor_aliases_use_existing_runtime_keys(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        scenes = dict(catalog['unassigned']['scene-pictures'])
+        for chapter in catalog['chapters']:
+            scenes.update(chapter['resources']['scene-pictures'])
+        for disc in (1, 2):
+            for alias, canonical in (('BG1130', 'BG1134'), ('BG1131', 'BG1135')):
+                row = scenes[f'{disc}:/SAKURA1/{alias}.BIN']
+                self.assertEqual(row['status'], 'hd')
+                self.assertEqual(row['native_alias_of'], canonical)
+                self.assertEqual(row['pc'], f'SAKURA1/BG/{canonical}.SPR')
+                self.assertFalse(row.get('verified_in_game'))
+        self.assertEqual(scenes['1:/SAKURA1/BG4049.BIN']['status'], 'unpaired')
+
     def test_chapter3_0301_portrait_draws_are_occurrence_specific(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
