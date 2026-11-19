@@ -1,5 +1,9 @@
 # HD chapter 6 coverage report (shard TH6)
 
+The [Chapter 6 native evidence](th6-native-attribution.md) adds observed scene pictures to the chapter register. It records display, residency, and disc reads separately. The complete replay and HD exit test are open.
+
+## Earlier catalog snapshot
+
 Source data only: `config/hd-chapter-coverage.json` (chapter 6 entry and `unassigned`), the HD map configs, `docs/research/chapter-sweep.md`, `docs/SHARDS.md` and `docs/PENDIENTES.md`. Names, hashes and counts only. No replay was run for this report; nothing here certifies the chapter.
 
 ## 1. Scope

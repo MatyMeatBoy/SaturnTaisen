@@ -136,6 +136,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [HD chapter 4 report](hd-chapter-4.md): what chapter 4 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 5 report](hd-chapter-5.md): what chapter 5 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 6 report](hd-chapter-6.md): what chapter 6 shows per resource class, its status, ranked next actions and what needs the owner's discs.
+- [th6-native-attribution.md](th6-native-attribution.md) — Exact disc-1 reads and native composite pixels.
 - [HD chapter 7 report](hd-chapter-7.md): what chapter 7 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 8 report](hd-chapter-8.md): what chapter 8 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 9 report](hd-chapter-9.md): what chapter 9 shows per resource class, its status, ranked next actions and what needs the owner's discs.
