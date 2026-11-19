@@ -113,6 +113,16 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T95 | P0 | local | solved 2026-11-19 | The 674,182-block AOT base was recovered from the shipped executable: its generated `BlockDesc` tables (pc, instruction count, code pointer) live in `.rdata`, and `tools/extract_blocks_from_exe.py` rebuilds `blocks.txt`. Exactly 674,182 blocks; the old 614,024-block list is a strict subset (60,158 added), kept as `local/work/sakura/blocks-614024.txt.bak`. `build_runtime.py recompile` now regenerates and links with every core (about 25 minutes of compile on 16 threads). Keep `blocks.txt` out of any cleanup. |
 | T97 | P0 | local | candidate built, not published | v0.2.4-alpha candidate in `local/releases/SaturnTaisen-v0.2.4-alpha-win64` (about 1.2 GB; runtime with patches 0001-0071, launcher/helpers from `local/build/v024-package-binaries`, Spanish layer with the cards). Checked: guest hashes identical to v0.2.2, `preparar-juego.exe prepare` from the Japanese discs gives the same Spanish disc 1. Notes in `docs/releases/v0.2.4-alpha.md`. Publishing (tag, GitHub release, ZIP) is the owner's call; the personal package is not built. |
 | T96 | P1 | local | IC decoded and paired - runtime open | Palette-first full-screen pictures: variant D (palette + u32 cell table + 8x8 cells) decodes IC, OMAKE, LOAD and KABE (`tools/decode_saturn_bg.py`); `tools/match_hd_screens.py` pairs them by content: `config/hd-screen-map.json` has the 16 IC eyecatches against `SAKURA1/ICATCH` (correlation >= 0.989, firm) and 8 candidates for an eye check (LOAD, OMAKE). Open: the runtime recogniser for the eyecatches (palette fingerprint, like T74; they are the episode cards, so settle the 16:9 framing of T87 first), `TITLE1..10.BIN` now decode (they are the English episode title cards, the source for T87), ENDING/CG pairing, and NC bodies (T19/T67). |
+| T98 | P1 | shard | open · see docs/SHARDS.md | S1 clip map: FAD to MOVIE table (`tools/gen_film_fad_map.py`), no assets needed. |
+| T99 | P1 | shard | open · see docs/SHARDS.md | S2 MPEG decode: pl_mpeg worker-thread wrapper with test, no assets needed. |
+| T100 | P1 | shard | open · see docs/SHARDS.md | S3 clip hook: play-command start FAD to PC clip drawn in 16:9, guest untouched. |
+| T101 | P1 | shard | open · see docs/SHARDS.md | S4 clip audio: PC MP2 audio for the 44 duration-matched pairs. |
+| T102 | P1 | shard | open · see docs/SHARDS.md | S5 HUD and menus recogniser from the T23/T54 inventory. |
+| T103 | P1 | shard | open · see docs/SHARDS.md | S6 VDP software drawing speed, pixel-identical (about 7 ms per frame). |
+| T104 | P1 | shard | open · see docs/SHARDS.md | S7 SH-2 block dispatch speed, identical guest hashes (about 6.5 ms per frame). |
+| T105 | P1 | shard | open · see docs/SHARDS.md | S8 scrolling and battle backgrounds (BBG/EVE, variant-B wide pictures). |
+| T106 | P1 | shard | open · see docs/SHARDS.md | S9 native-face patches for NC30/NC20 and fade-in of bodies. |
+| T107 | P1 | shard | open · see docs/SHARDS.md | S10 Spanish cards: widening for their fingerprints, painted art (owner reviews T87). |
 
 ## Split for collaborators
 
