@@ -170,6 +170,27 @@ within the set and do not occur in the current scene map. Placement, fingerprint
 the presented VDP2 layer and PC substitution in the two-disc runtime still require
 in-game evidence. Keep the approved Zoom framing and native fallback.
 
+### EVE presentation witness (T105e)
+
+Replayed two disc-1 states on runtime SHA-256
+cc7fa58737c37075efaea76a72cbe390454d21847ebadf1ca1b030e75ac046c2
+with Enhanced at 1920×1080 and layer tracing. Both produced 12 strict-native frame hashes
+with zero interpreted blocks. Each fingerprint matched both the source palette and the
+presented layer-5 palette.
+
+| EVE | State | Palette | Presentation |
+|---|---|---|---|
+| EVE0101 | battle-entry-ref-3000 | D3C319A0279AEDB3 | Tactical map behind the character group inset |
+| EVE202 | chapter-2 cold-native finish | 0D97B7C3CC0B3C31 | Tactical map behind the jewel portrait inset |
+
+Both visible insets occupy 288×144 at native (16,8) at the captured frame, with the
+dialogue panel and surrounding map visible. Layer 5 is enabled, with zero scroll and a
+256,256 increment. EVE replacement needs to preserve that inset and the compositing
+order. The PC image still needs a validated transform inside the inset. EVE002 tiles
+were also found in one save, but its full palette was absent from CRAM in that save,
+so presence in VRAM alone is insufficient evidence of visible presentation.
+Disc-2 runs, additional EVE identities and safe HD rendering remain open.
+
 ### Wide variant B visual review (T105a)
 
 The earlier offset 0x210 yields displaced tiles and coloured bands. In the 30 disc-1 BG files
