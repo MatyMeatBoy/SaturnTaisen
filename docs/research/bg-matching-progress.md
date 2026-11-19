@@ -28,3 +28,7 @@ Rejected: `SAKURA1/BG2173` for the episode title card (false positive, no matchi
 - Source: the 297,107-frame cold run (inputs of `local/work/rb-full/input.movie`), one screenshot every 250 frames (about 1,190 frames), strict native mode.
 - Status when written: running; 875 screenshots ranked (93 strong, 13 distinct candidates, 12 confirmed). After it ends: rank all screenshots, confirm candidates visually, and update this table and the scene-images counter in `config/hd-progress.json`.
 - Count so far: 12 of 1,267 scene images matched, 0 integrated.
+
+## Shard C review (T78, 2026-11-19)
+
+Shard C = `SAKURA1/BG20xx`..`BG23xx`: 254 decoded pictures (171 `content`, 83 `number`). 67 `number` pairs were already reviewed; the remaining 16 were compared by eye on contact sheets (Saturn left, PC right) and all confirmed as the same scene: BG2077, BG2093, BG2130, BG2172, BG2176, BG2207, BG2238, BG2247, BG2248, BG2252, BG2265-BG2269, BG2295. BG2207 and BG2265-BG2269 are one misty-forest background with different small objects (colour/lighting variants) and each Saturn variant matches its PC variant. Many Saturn decodes show strip artefacts (decoder layout), so these matches rest on composition and the visible variant details, not pixel correlation. Added to `eye_confirmed_number_tier`. `config/hd-scene-bg-pairs.json` is unchanged (it needs screenshot evidence frames).
