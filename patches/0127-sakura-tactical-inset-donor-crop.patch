@@ -1,0 +1,32 @@
+diff --git a/port/eve_inset.h b/port/eve_inset.h
+--- a/port/eve_inset.h
++++ b/port/eve_inset.h
+@@ -17,10 +17,14 @@
+ inline constexpr std::uint64_t kEve202Palette = 0x0D97B7C3CC0B3C31;
+ inline constexpr EveRect kEve202NativeRect{16, 8, 288, 144};
+ inline constexpr EveRect kEve202PcCrop{0, 20, 564, 282};
+-inline constexpr int kEve202PcWidth = 576;
+-inline constexpr int kEve202PcHeight = 320;
+ inline constexpr char kEve202PcFile[] = "SAKURA2/BG/BBG202.SPR";
+ inline constexpr unsigned kEve202PcImage = 0;
++
++constexpr bool EveCropFits(EveRect crop, unsigned width, unsigned height) {
++    return crop.x >= 0 && crop.y >= 0 && crop.width > 0 && crop.height > 0 &&
++           std::uint64_t{static_cast<unsigned>(crop.x)} + static_cast<unsigned>(crop.width) <= width &&
++           std::uint64_t{static_cast<unsigned>(crop.y)} + static_cast<unsigned>(crop.height) <= height;
++}
+ 
+ struct EveInsetFrame {
+     std::span<const std::uint8_t> source;
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -777,7 +777,7 @@
+                     if (!DecodePcSprites(bytes, images, error)) return result;
+                     for (auto& image : images) {
+                         if (image.index != port::kEve202PcImage ||
+-                            image.width != port::kEve202PcWidth || image.height != port::kEve202PcHeight) continue;
++                            !port::EveCropFits(crop, image.width, image.height)) continue;
+                         result.width = crop.width;
+                         result.height = crop.height;
+                         result.pixels.reserve(size_t(crop.width) * crop.height);

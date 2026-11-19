@@ -15,3 +15,5 @@ Seven disc 1 battle illustrations use the opaque 288 Ãƒâ€” 144 inset alre
 On disc 1, BBG002 and EVE002 occupy different disc extents with byte-identical files. They share the existing palette, frame and donor entry for EVE002. BBG205 and EVE205 are also byte-identical, and the existing scene path continues to use the same PC image. The catalog records the insets as connected. Individual appearances remain for TP9 spot checks.
 
 BBG203 stays on the pending list. Landmark alignment shows that its same-number PC picture omits about 41 Saturn columns on the right and five rows at the bottom. The four square item cards use a separate geometry. BBG204 is covered by its own episode 4 replay.
+
+BBG235 uses a 576 × 288 donor. Patch 0127 checks the declared crop against the decoded image after verifying the entire SPR file hash, so this shorter PC source can supply its valid 544 × 272 rectangle. A crop extending past the image remains native.
