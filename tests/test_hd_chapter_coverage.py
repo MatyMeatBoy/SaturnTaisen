@@ -48,6 +48,12 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertIs(airship.get('verified_in_game'), True)
         self.assertNotIn('1:/SAKURA2/EVE002.BIN', catalog['unassigned']['scene-pictures'])
         self.assertFalse(catalog['unassigned']['scene-pictures']['1:/SAKURA2/EVE102.BIN'].get('verified_in_game'))
+        for name in ('BG1001', 'BG1006', 'BG1209', 'BG2159', 'BG2250', 'BG2251'):
+            with self.subTest(campaign_scene=name):
+                scene = chapter1['scene-pictures'][f'1:/SAKURA1/{name}.BIN']
+                report = 'docs/research/coverage-campaign-v026.md'
+                self.assertEqual((scene['evidence'], scene['runtime_evidence']), (report, report))
+                self.assertIs(scene['verified_in_game'], True)
         self.assertEqual(chapter1['portraits']['0001']['association'], 'inferred')
         self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
