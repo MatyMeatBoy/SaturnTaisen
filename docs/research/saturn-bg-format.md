@@ -306,3 +306,45 @@ reconstruct as 18 eyes and 36 mouths. NC35 starts at 30,352 and has a single
 group of three eyes and six mouths. No file with three or more PC runs passes
 this exact Saturn repetition rule. The audit leaves other possible Saturn
 periods, PC subimage assignment, and runtime integration open.
+
+
+### NC30 offline face-to-SPR map (T106a)
+
+The largest PC picture is subimage 0. Original SPR indices 6-23 are six triples
+of eyes. Indices 30-65 are six sextuples of mouths. The 96x47 dimension run
+contains all 18 eyes and the first 24 mouths. The 80x63 run contains the last
+12 mouths. Both comparisons retain every image's proportions. The native
+eye state and mouth shapes agree with their PC group by visual inspection
+across all 54 pairs. In particular, each eye triple moves from open towards
+closed, and each mouth sextuple starts closed, opens, and shows visible
+teeth in the third frame. The mouth crops include different amounts of
+surrounding skin in PC art.
+
+`config/hd-nc30-face-map.json` binds this review to whole-asset SHA-256 hashes,
+native byte offsets, frame dimensions and texture SHA-256, and original PC
+subimage indices and dimensions. The six prepared ISO language/disc variants
+contain identical NC30 bytes. The two source images can be replayed offline
+by reading each native slice in row-major order, applying the palette at
+0x410 with index zero transparent, and decoding the specified SPR subimage
+with the existing green chroma key. Each complete native face texture occurs
+once in the post-body payload.
+
+The saved VDP1 command chains provide three distinct native frame witnesses.
+All four states below contain the exact 176x144 body texture. Body, eye and
+mouth are at (-88,-104), (-24,-72) and (-8,-48) in command coordinates, with
+colour register 0x2000. These are native anchors for a replay comparison.
+
+| Saved state | Eye data in VDP1 | BIN offset / PC subimage | Mouth data in VDP1 | BIN offset / PC subimage |
+|---|---|---|---|---|
+| `maria-face-discovery` | 0x43640 | 34,576 / 12 | 0x43C40 | 36,112 / 42 |
+| `chapter1-continuous-47999` | 0x43640 | 34,576 / 12 | 0x43C40 | 36,112 / 42 |
+| `post-18000` | 0x43640 | 34,576 / 12 | 0x43C40 | 36,112 / 42 |
+| `maria-exit` | 0x43840 | 35,088 / 13 | 0x43C40 | 36,112 / 42 |
+
+For T106a2, resolve the original SPR index before compacting renderer parts
+and qualify the match against exact texture bytes and dimensions. An asset
+or frame outside the pinned table, or ambiguous placement in the HD body,
+keeps the native face sprite. Compare native and HD captures from the listed
+states, including progression through blink and mouth frames, and verify
+guest hashes with strict AOT. Saved-state command bytes establish native
+frame identity. The new HD rendering and placement remain unverified.
