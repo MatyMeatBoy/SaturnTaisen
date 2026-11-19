@@ -72,7 +72,6 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 
 [![Retratos HD preparados](https://img.shields.io/badge/Retratos_HD_preparados-302%2F304%20%2899.3%25%29-9a4564?style=flat-square)](docs/HD_PROGRESS.md) [![Fondos KABE preparados](https://img.shields.io/badge/Fondos_KABE_preparados-19%2F19%20%28100%25%29-5d755d?style=flat-square)](docs/HD_PROGRESS.md) [![HD global verificado](https://img.shields.io/badge/HD_global-Verificaci%C3%B3n%20pendiente-646464?style=flat-square)](docs/HD_PROGRESS.md)
 
-**Objetivo global: 100% verificado. Estado: Verificación pendiente.**
 
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
@@ -85,20 +84,19 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | Sin dato | 9/147 (6,1%) |
 
-| Área | Integrado | Verificado en juego |
-| --- | --- | --- |
-| Retratos y animación | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | 516/1267 (40,7%) | Sin dato |
-| Escenas y transiciones | Sin dato | Sin dato |
-| Vídeos | 44/50 (88%) | Sin dato |
-| Modo táctico | Sin dato | Sin dato |
-| HUD y menús PC/Saturn | Sin dato | Sin dato |
-| Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 129/147 (87,7%) | 9/147 (6,1%) |
+| Sección | Integrado |
+| --- | --- |
+| Retratos y animación | 302/304 (99,3%) |
+| Imágenes de escena | 516/1267 (40,7%) |
+| Escenas y transiciones | Sin dato |
+| Vídeos | 44/50 (88%) |
+| Modo táctico | Sin dato |
+| HUD y menús PC/Saturn | Sin dato |
+| Fondos decorativos KABE | 19/19 (100%) |
+| Personajes grandes NC | 129/147 (87,7%) |
 
-- **Integración global indicativa (media de 5/8 categorías con total): 83,1%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 1010/1787 (56,5%).** Mezcla unidades distintas; solo orienta.
-- Categorías sin total confirmado: ninguna.
+**HD total: 1010/1787 (56,5%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+- Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico, HUD y menús PC/Saturn.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
 
