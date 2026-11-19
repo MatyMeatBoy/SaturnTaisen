@@ -4714,6 +4714,13 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2247.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2247-native-pan.md",
+            "pc": "SAKURA1/BG/BG2247.SPR",
+            "reason": "The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.",
+            "status": "unsupported-size"
+          },
           "2:/SAKURA1/BG4187.BIN": {
             "association": "observed",
             "evidence": "docs/research/th8-native-attribution.md",
@@ -18212,12 +18219,6 @@
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2246.SPR",
         "status": "hd"
-      },
-      "2:/SAKURA1/BG2247.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2247.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2248.BIN": {
         "association": "unknown",

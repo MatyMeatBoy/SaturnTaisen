@@ -200,6 +200,17 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertIn('1:/SAKURA1/BG2093.BIN', catalog['unassigned']['scene-pictures'])
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
 
+    def test_bg2247_native_pan_preserves_framing(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 8)
+        pan = chapter['scene-pictures']['2:/SAKURA1/BG2247.BIN']
+        self.assertEqual((pan['association'], pan['status']), ('observed', 'unsupported-size'))
+        self.assertEqual(pan['evidence'], 'docs/research/bg2247-native-pan.md')
+        self.assertFalse(pan.get('verified_in_game'))
+        self.assertIn('1:/SAKURA1/BG2247.BIN', catalog['unassigned']['scene-pictures'])
+        self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG2159.BIN']['verified_in_game'])
+
     def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))

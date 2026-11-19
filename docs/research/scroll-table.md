@@ -49,6 +49,6 @@ Offline fit of the PC crop as an axis-aligned affine map of the native offset `o
 | BG2290 | about 2.18, about -18, about 620, 0, 319 | per-window 0.98-0.99 for o>=24 | needs the box start clamped to [0, pcW-L]; native offsets below about 24 have no PC counterpart; unverified as a whole |
 | BG1257 | 2.570, 4, 735, 0, 304 | 0.878 / 0.867 | not aligned: best free per-window fit 0.866-0.895 |
 | BG1280 | 2.089, 83, 598, 32, 288 | 0.865 / 0.809 | not aligned: first ~110 native px correlate 0.81-0.82 |
-| BG2247 | best 1.856, 35, 262, 30, 524 | 0.561 / 0.392 | not aligned: PC is a different 3D camera/perspective render, not an affine map |
+| BG2247 | best 1.856, 35, 262, 30, 524 | 0.561 / 0.392 | the [live theatre pan](bg2247-native-pan.md) stays native because the PC camera changes the landmark positions. |
 
 To finish: add per-row fit fields (scale, origin, length, cross, cross length, clamped start) to `ScrollPicture`/`ScrollPcCrop` as a new patch (next free number), keep rule rows identical, relax the row-valid test for fitted rows, rerun the generator with these fits, build in a clean copy, replay the opening film.
