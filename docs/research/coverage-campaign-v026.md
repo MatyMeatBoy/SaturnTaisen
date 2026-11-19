@@ -31,3 +31,5 @@ with zero reported interpreted blocks. In the 2560×1440 captures at
 seal align with the Saturn picture, and the Spanish dialogue and
 surrounding presentation remain pixel-identical. The other five campaign
 scenes retain trace evidence.
+
+Second run (seeds 21-26, 30,000 frames from 4,000): adds body NC25 and scene picture BG1045 (trace evidence only).
