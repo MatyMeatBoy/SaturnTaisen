@@ -1,0 +1,71 @@
+# HD chapter 5 coverage (shard TH5)
+
+Source data: `config/hd-chapter-coverage.json` (chapter 5, disc 1), `config/hd-scene-bg-map.json`, `config/hd-scene-bg-review.json`, `config/hd-body-map.json`, `config/hd-item-map.json`, `config/film-fad-map.json`, `docs/research/chapter-sweep.md`, `docs/PENDIENTES.md` (row TH5). Names and counts only; no game pixels, script text or disc contents. Offline data read only; nothing was replayed for this report.
+
+## 1. Scope
+
+Chapter 5 is attributed in the coverage JSON with only 5 resources, all disc 1, all status `unknown`. The only observed evidence is one strict replay (`bank-5-battle-strict`, Episode 5 File 1 CD-1, 12,000 frames, zero interpreted blocks, opening dialogue after Continue). The BIN/TBL/FCE family `0501` matched in RAM.
+
+| Class | Attributed to ch.5 | Association |
+| --- | --- | --- |
+| Scene pictures (BG/EVE/CG) | 1 (the title card) | inferred |
+| NC bodies | 0 | no data |
+| Portraits (FCE atlases) | 4 | 1 resident, 3 inferred |
+| FILM clips | 0 | no data |
+| Tactical maps / units | 0 / 0 | no data |
+| Menus / HUD | 0 | no data |
+
+The empty classes mean chapter evidence is missing, not that chapter 5 shows none. The pool the chapter draws from is the `unassigned` section (disc inventory entries with no known chapter): scene pictures 1537, bodies 293, portraits 237, FILM 53, menus/HUD 195, tactical maps 27, tactical units 27.
+
+## 2. Status
+
+Chapter 5 (attributed items):
+
+| Class | hd | paired-not-wired | unpaired | unknown | Examples |
+| --- | --- | --- | --- | --- | --- |
+| Scene pictures | 0 | 0 | 0 | 1 | `1:/SAKURA1/TITLE5.BIN` |
+| Bodies | 0 | 0 | 0 | 0 | no data |
+| Portraits | 0 | 0 | 0 | 4 | `0501FCE.BIN` (resident), `0502FCE.BIN`, `0503FCE.BIN`, `0504FCE.BIN` (inferred) |
+| FILM | 0 | 0 | 0 | 0 | no data |
+| Tactical | 0 | 0 | 0 | 0 | no data |
+| Menus/HUD | 0 | 0 | 0 | 0 | no data |
+
+Unassigned pool (the candidates for chapter 5, not yet placed):
+
+| Class | hd | paired-not-wired | unpaired | unknown | Examples |
+| --- | --- | --- | --- | --- | --- |
+| Scene pictures (1537) | 917 | 474 | 104 | 42 | `AI_CG.BIN`, `BG0000.BIN`, `BG1001.BIN`, `BG1002.BIN` |
+| Bodies (293) | 11 | 246 | 30 | 6 | `NC11.BIN` (hd), `NC10.BIN`, `NC12.BIN`, `NC13.BIN` (paired) |
+| Portraits (237) | 181 | 0 | 0 | 56 | ids `000c`, `000e`, `0011`, `0012`, `001f` |
+| FILM (53) | 44 | 7 | 2 | 0 | `/SAKURA4+0`, `/SAKURA4+100188160`, `OPSAKURA.CPK+0` |
+| Menus/HUD (195) | 0 | 76 | 84 | 35 | `ITEM01.BIN` ... `ITEM06.BIN` |
+| Tactical maps (27) | 0 | 0 | 0 | 27 | `MAP01.BIN`, `MAP02.BIN`, `MAP03.BIN` |
+| Tactical units (27) | 0 | 0 | 0 | 27 | `UNIT01.BIN`, `UNIT02.BIN`, `UNIT03.BIN` |
+
+Notes from other files: `config/hd-scene-bg-map.json` summary is content 519, number 216, missing 5 (whole catalog; tier `number` needs an eye check). Neither `hd-scene-bg-map.json` nor `hd-scene-bg-review.json` mentions `TITLE5` or `0501FCE`, so the title card has no BG pairing record; `TITLE1..10` widening is T87/patch0071 (all ten cards, not chapter specific). Both discs list `0501FCE` and `TITLE5` as `unknown` in the unassigned section. NC bodies in use: six have documented draws (NC11, NC20, NC30, NC55, NC82, NC97); which of them chapter 5 uses has no data.
+
+## 3. Highest-value next actions (by items closed)
+
+1. Place scene pictures for episode 5 (up to the 1537-entry pool; at minimum the 42 `unknown` and the 474 `paired-not-wired`): run the episode 5 route with the scene tagging and record `1:/SAKURA1/...` witnesses. Touch `tools/hd_chapter_coverage.py` (`CHAPTER_WITNESSES`, which today holds only chapter 1 entries) and regenerate `config/hd-chapter-coverage.json`. Use `observed-scene-resources.json` from `docs/research/chapter-sweep.md`.
+2. Place NC bodies (pool 293; 246 paired-not-wired): trace with `SATRECOMP_BODY_TRACE=1` (patch0062) on the episode 5 replay, add witnesses as above; wiring beyond the six drawn bodies is T19/T106a2/T106b2 (`config/hd-body-map.json`, `config/hd-nc30-face-map.json`, `config/hd-nc20-face-map.json`).
+3. Confirm portraits (4 attributed, 237 pool, 56 unknown): run `tools/` portrait audit (`docs/research/portrait-animation-coverage.md`) filtered to the `0501`..`0504` FCE family and mark which identities appear; promote `0501FCE` from resident to observed. File: `portrait-coverage.csv` input to `hd_chapter_coverage.py --portrait-audit`.
+4. Map FILM clips for chapter 5 (pool 53: 7 paired-not-wired, 2 unpaired): find which FADs the chapter starts and add them to the chapter via `config/film-fad-map.json` (`streams`; 54 entries, alternate cuts keep Saturn picture/audio). Decision per alternate cut is required by SHARDS H1-H10 (c).
+5. List tactical maps/units and menus/HUD for chapter 5 for S11 (27 + 27 unknown; 195 menus/HUD, 84 unpaired): identify the stage/battle in the episode 5 route, add them to `tactical-maps`/`tactical-units` in the coverage tool; item pairs are in `config/hd-item-map.json`.
+
+## 4. Cannot be known without playing (needs the owner's discs)
+
+- Which scene pictures, bodies, portraits and clips episode 5 actually draws, and in which order.
+- Whether native-face fallbacks (NC11, NC20, NC30, NC55) occur in episode 5 and how they look.
+- The tactical map(s) and units fought in the chapter, and which menus/HUD screens appear.
+- Whether FILM alternate cuts are reached and where the episode 5 clips start.
+- Per-frame guest hash equality of a continuous strict-native replay of the whole chapter path with HD on versus off (the exit test). The existing 12,000-frame replay stops at the opening dialogue.
+- Screenshots the owner can open.
+
+## 5. Open questions
+
+- Is the chapter 5 disc always disc 1, and which tool outputs mark the end of chapter 5 (the sweep covers only the opening dialogue)?
+- `TITLE5.BIN` is `unknown` in the coverage JSON although the title cards are handled by T87/patch0071: should the title cards get their own status?
+- The unassigned pool lists the same files on both discs (`2:/SAKURA1/0501FCE.BIN`, `2:/SAKURA1/TITLE5.BIN`) as `unknown`; are these shared residents or disc 2 copies, and should they be merged?
+- The meaning of `unpaired` for the 84 menus/HUD entries (rejected versus absent counterpart) is not split in the data.
+- No tactical stage-to-chapter table exists in the inputs: no data for which `MAPnn` is chapter 5.
+- Row TH5 in `docs/PENDIENTES.md` is still `open` with no owner; this report does not change it.
