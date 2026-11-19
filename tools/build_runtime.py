@@ -73,7 +73,7 @@ def build(toolchain: Path, env):
         '-DGAME=sakura', f'-DGAME_DIR={ROOT.as_posix()}/games/sakura',
         f'-DWORK_DIR={WORK.as_posix()}', f'-DCMAKE_PREFIX_PATH={toolchain.as_posix()}',
         '-DSATRECOMP_REFERENCE=OFF', env=env)
-    run(toolchain / 'bin/cmake.exe', '--build', BUILD, '--parallel', '6', env=env)
+    run(toolchain / 'bin/cmake.exe', '--build', BUILD, '--parallel', str(max(2, os.cpu_count() or 6)), env=env)
     artwork=ROOT/'assets/generated/backgrounds'
     if not artwork.is_dir():artwork=ROOT/'art/backgrounds' # portable source package
     if artwork.is_dir():
