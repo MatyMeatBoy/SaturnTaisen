@@ -17,7 +17,8 @@
             "native_face_fallback": true,
             "pc": "SAKURA1/NC/NC20.SPR",
             "runtime_evidence": "docs/research/saturn-bg-format.md",
-            "status": "hd"
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC30.BIN": {
             "association": "observed",
@@ -25,7 +26,8 @@
             "native_face_fallback": true,
             "pc": "SAKURA1/NC/NC30.SPR",
             "runtime_evidence": "docs/research/saturn-bg-format.md",
-            "status": "hd"
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "film": {
@@ -2045,146 +2047,172 @@
   "schema": 1,
   "status": {
     "excluded": "Paired but never replaced by design (key-colour character cut-outs, the blank picture).",
-    "hd": "Runtime supports this substitution or a documented partial draw. Scene occurrence and full replay verification are separate.",
+    "hd": "Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.",
     "paired-not-wired": "Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette) or an alternate film cut, which stays native. Not a to-do list: check `reason` first.",
     "unknown": "Pairing or integration is not established by the input catalogs.",
     "unpaired": "The catalog records a rejected or absent counterpart.",
     "unsupported-size": "Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).",
-    "wired-unverified": "The runtime table holds this body and tries to draw it when it appears; no in-game observation is recorded yet (hd means a documented draw)."
+    "wired-unverified": "Reserved: in a table but not drawn by the runtime. Bodies in the runtime table are `hd` now; `verified_in_game` says whether a draw was observed."
   },
   "unassigned": {
     "bodies": {
       "1:/SAKURA1/NC10.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC10.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC11.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC11.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/NC12.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC12.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC13.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC13.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC14.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC14.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC15.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC15.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC16.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC16.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC21.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC21.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC22.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC22.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC23.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC23.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC24.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC24.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC25.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC25.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC26.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC26.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC27.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC27.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC28.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC28.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3001.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3002.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3003.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3004.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3005.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3006.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3007.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3007.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3008.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3008.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3009.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3009.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3010.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3010.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3011.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3013.BIN": {
         "association": "unknown",
@@ -2193,112 +2221,134 @@
       "1:/SAKURA1/NC3014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3014.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3015.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3016.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3017.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3017.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3018.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3021.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3021.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3022.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3022.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3023.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3023.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3024.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3024.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3025.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3025.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3027.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3027.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3028.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3028.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3029.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3029.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3030.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3030.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3031.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3031.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3032.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3032.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3037.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3038.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3040.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3042.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3042.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3043.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3043.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3045.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3045.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3047.BIN": {
         "association": "unknown",
@@ -2307,12 +2357,14 @@
       "1:/SAKURA1/NC3050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3050.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3056.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3056.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3057.BIN": {
         "association": "unknown",
@@ -2325,7 +2377,8 @@
       "1:/SAKURA1/NC3059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3059.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
@@ -2334,32 +2387,38 @@
       "1:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3071.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC31.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC31.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3101.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3102.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3106.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3107.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
@@ -2392,47 +2451,56 @@
       "1:/SAKURA1/NC32.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC32.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3210.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3210.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3222.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3222.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3250.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3250.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3254.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3254.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3255.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3255.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3256.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3256.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3261.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3261.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3264.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3264.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3285.BIN": {
         "association": "unknown",
@@ -2449,32 +2517,38 @@
       "1:/SAKURA1/NC33.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC33.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC34.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC34.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC35.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC35.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3502.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3503.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3503.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3516.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3516.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
@@ -2483,32 +2557,38 @@
       "1:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3518.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3519.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3519.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3525.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3525.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC36.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC36.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC40.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC40.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC41.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC41.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
@@ -2517,216 +2597,258 @@
       "1:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4182.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4199.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4199.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC42.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC42.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4281.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4281.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC43.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC43.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4329.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4329.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4332.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4332.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4335.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4335.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4336.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4336.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4338.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4338.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4339.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4339.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4341.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4341.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4342.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4342.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4344.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4344.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4355.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4355.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC4384.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4384.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC44.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC44.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC50.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC50.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC51.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC51.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC52.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC52.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC53.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC53.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC54.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC54.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC55.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC55.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/NC56.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC56.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC60.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC60.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC61.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC61.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC62.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC62.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC63.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC63.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC64.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC64.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC65.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC65.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC70.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC70.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC71.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC71.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC72.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC72.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC73.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC73.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC75.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC75.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC76.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC76.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC80.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC80.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC81.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC81.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC82.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC82.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/NC83.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC83.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC90.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC90.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC91.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC91.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC92.BIN": {
         "association": "unknown",
@@ -2735,185 +2857,220 @@
       "1:/SAKURA1/NC93.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC93.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC94.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC94.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC95.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC95.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC96.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC96.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC97.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC97.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/NC98.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC98.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC99.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC99.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC10.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC10.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC11.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC11.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC12.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC12.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC13.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC13.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC14.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC14.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC15.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC15.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC16.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC16.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC20.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC20.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC21.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC21.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC22.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC22.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC23.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC23.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC24.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC24.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC25.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC25.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC26.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC26.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC27.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC27.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC28.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC28.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC30.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC30.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC3001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3001.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3002.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3003.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3004.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3005.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3006.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3007.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3007.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3008.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3008.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3009.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3009.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3010.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3010.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3011.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3013.BIN": {
         "association": "unknown",
@@ -2922,112 +3079,134 @@
       "2:/SAKURA1/NC3014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3014.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3015.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3016.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3017.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3017.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3018.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3021.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3021.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3022.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3022.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3023.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3023.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3024.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3024.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3025.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3025.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3027.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3027.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3028.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3028.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3029.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3029.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3030.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3030.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3031.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3031.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3032.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3032.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3037.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3038.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3040.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3042.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3042.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3043.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3043.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3045.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3045.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3047.BIN": {
         "association": "unknown",
@@ -3036,12 +3215,14 @@
       "2:/SAKURA1/NC3050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3050.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3056.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3056.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3057.BIN": {
         "association": "unknown",
@@ -3054,7 +3235,8 @@
       "2:/SAKURA1/NC3059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3059.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
@@ -3063,32 +3245,38 @@
       "2:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3071.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC31.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC31.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3101.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3102.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3106.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3107.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
@@ -3121,47 +3309,56 @@
       "2:/SAKURA1/NC32.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC32.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3210.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3210.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3222.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3222.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3250.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3250.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3254.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3254.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3255.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3255.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3256.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3256.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3261.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3261.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3264.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3264.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3285.BIN": {
         "association": "unknown",
@@ -3178,32 +3375,38 @@
       "2:/SAKURA1/NC33.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC33.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC34.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC34.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC35.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC35.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3502.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3503.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3503.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3516.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3516.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
@@ -3212,32 +3415,38 @@
       "2:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3518.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3519.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3519.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3525.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3525.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC36.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC36.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC40.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC40.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC41.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC41.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
@@ -3246,216 +3455,258 @@
       "2:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4182.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4199.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4199.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC42.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC42.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4281.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4281.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC43.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC43.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4329.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4329.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4332.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4332.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4335.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4335.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4336.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4336.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4338.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4338.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4339.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4339.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4341.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4341.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4342.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4342.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4344.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4344.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4355.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4355.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC4384.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4384.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC44.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC44.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC50.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC50.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC51.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC51.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC52.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC52.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC53.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC53.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC54.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC54.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC55.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC55.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC56.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC56.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC60.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC60.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC61.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC61.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC62.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC62.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC63.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC63.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC64.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC64.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC65.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC65.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC70.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC70.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC71.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC71.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC72.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC72.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC73.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC73.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC75.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC75.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC76.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC76.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC80.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC80.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC81.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC81.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC82.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC82.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC83.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC83.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC90.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC90.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC91.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC91.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC92.BIN": {
         "association": "unknown",
@@ -3464,39 +3715,46 @@
       "2:/SAKURA1/NC93.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC93.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC94.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC94.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC95.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC95.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC96.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC96.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC97.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC97.SPR",
         "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/NC98.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC98.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC99.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC99.SPR",
-        "status": "wired-unverified"
+        "status": "hd",
+        "verified_in_game": false
       }
     },
     "film": {
@@ -5923,26 +6181,22 @@
       "1:/SAKURA1/BG1011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1011.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1012.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1012.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1014.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1015.BIN": {
         "association": "unknown",
@@ -6059,26 +6313,22 @@
       "1:/SAKURA1/BG1037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1039.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1040.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1041.BIN": {
         "association": "unknown",
@@ -6128,26 +6378,22 @@
       "1:/SAKURA1/BG1050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1050.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1051.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1051.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1052.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1053.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1053.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1054.BIN": {
         "association": "unknown",
@@ -6278,14 +6524,12 @@
       "1:/SAKURA1/BG1079.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1079.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1080.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1080.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1081.BIN": {
         "association": "unknown",
@@ -6301,14 +6545,12 @@
       "1:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1083.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1084.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1085.BIN": {
         "association": "unknown",
@@ -6335,14 +6577,12 @@
       "1:/SAKURA1/BG1089.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1089.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1090.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1090.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1091.BIN": {
         "association": "unknown",
@@ -6352,14 +6592,12 @@
       "1:/SAKURA1/BG1092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1092.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1093.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1094.BIN": {
         "association": "unknown",
@@ -6386,38 +6624,32 @@
       "1:/SAKURA1/BG1098.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1098.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1099.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1100.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1100.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1101.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1102.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1103.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1104.BIN": {
         "association": "unknown",
@@ -7095,14 +7327,12 @@
       "1:/SAKURA1/BG1295.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1295.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1296.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1296.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1297.BIN": {
         "association": "unknown",
@@ -7997,14 +8227,12 @@
       "1:/SAKURA1/BG2128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2129.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2130.BIN": {
         "association": "unknown",
@@ -8441,20 +8669,17 @@
       "1:/SAKURA1/BG2244.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2244.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2245.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2245.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2246.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2246.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2247.BIN": {
         "association": "unknown",
@@ -9860,26 +10085,22 @@
       "2:/SAKURA1/BG1011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1011.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1012.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1012.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1014.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1015.BIN": {
         "association": "unknown",
@@ -9995,26 +10216,22 @@
       "2:/SAKURA1/BG1037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1039.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1040.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1041.BIN": {
         "association": "unknown",
@@ -10064,26 +10281,22 @@
       "2:/SAKURA1/BG1050.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1050.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1051.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1051.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1052.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1053.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1053.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1054.BIN": {
         "association": "unknown",
@@ -10213,14 +10426,12 @@
       "2:/SAKURA1/BG1079.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1079.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1080.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1080.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1081.BIN": {
         "association": "unknown",
@@ -10236,14 +10447,12 @@
       "2:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1083.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1084.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1085.BIN": {
         "association": "unknown",
@@ -10270,14 +10479,12 @@
       "2:/SAKURA1/BG1089.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1089.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1090.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1090.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1091.BIN": {
         "association": "unknown",
@@ -10287,14 +10494,12 @@
       "2:/SAKURA1/BG1092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1092.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1093.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1094.BIN": {
         "association": "unknown",
@@ -10321,38 +10526,32 @@
       "2:/SAKURA1/BG1098.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1098.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1099.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1100.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1100.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1101.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1102.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1103.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1104.BIN": {
         "association": "unknown",
@@ -11032,14 +11231,12 @@
       "2:/SAKURA1/BG1295.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1295.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1296.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1296.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1297.BIN": {
         "association": "unknown",
@@ -11933,14 +12130,12 @@
       "2:/SAKURA1/BG2128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2129.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2130.BIN": {
         "association": "unknown",
@@ -12377,20 +12572,17 @@
       "2:/SAKURA1/BG2244.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2244.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2245.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2245.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2246.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2246.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2247.BIN": {
         "association": "unknown",
@@ -13673,50 +13865,42 @@
       "2:/SAKURA2/BBG107.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG107.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG108.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG108.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG208.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG208.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG209.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG209.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG210.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG210.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG211.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG211.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG213.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG213.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG214.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG214.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG218.BIN": {
         "association": "unknown",
@@ -13727,8 +13911,7 @@
       "2:/SAKURA2/BBG236.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG236.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG238.BIN": {
         "association": "unknown",
@@ -13769,38 +13952,32 @@
       "2:/SAKURA2/BBG244.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG244.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG245.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG245.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG246.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG246.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG247.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG247.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG248.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG248.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG249.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG249.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG300.BIN": {
         "association": "unknown",
