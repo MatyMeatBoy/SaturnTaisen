@@ -57,7 +57,8 @@
       "patches/0052-sakura-cursor-autohide.patch",
       "patches/0053-sakura-launcher-game-setup-and-language.patch",
       "patches/0054-sakura-launcher-app-folder-autoprepare.patch",
-      "patches/0055-sakura-runtime-texts-utf8-zoom-default.patch"
+      "patches/0055-sakura-runtime-texts-utf8-zoom-default.patch",
+      "patches/0056-sakura-frame-profile-fast-composite.patch"
     ]
   }
 }
