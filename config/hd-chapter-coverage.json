@@ -1686,7 +1686,9 @@
             ],
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 373,
-            "status": "hd"
+            "runtime_evidence": "docs/research/portrait-animation-coverage.md#maria-0176-natural-strip-verification",
+            "status": "hd",
+            "verified_in_game": true
           },
           "0177": {
             "association": "observed",

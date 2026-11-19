@@ -129,3 +129,45 @@ excluded. No release package was built.
 At block close the workspace measured 62,111,789,211 logical bytes
 with hard links counted once and reparse points excluded, above the
 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+
+## Maria 0176 natural strip verification
+
+English disc 1 Chapter 1, portrait `0176`, uses KAO.SPR index 373
+without shifts. The native 3,200-byte atlas SHA-256 is
+`08c2c9ce28ebb6724451b1cc21f57a3d23485f7b6d8f56fa0c5c35ade784f61d`.
+The prepared 80×160 RGBA SHA-256 is
+`0e04080f34ba658e2d977bd3fc2a5017686b93dbfc0644cafeb684bbd0c1bad8`.
+
+The original, unmodified `maria-face-discovery.state` and
+`maria-exit.state` each contain one active 40×16 VDP1 strip at
+relative row 16. Their payloads match the first and second
+strip, respectively. For each state the muted 2560×1440 replay
+used the same development executable, with one exact portrait
+record installed or absent. The two Original profiles provide
+the asset-present and asset-absent control. All four profiles
+agree in every guest hash over 12 frames and report zero
+interpreted blocks.
+
+| State | Runtime selection | Enhanced difference bounds (exclusive) | Guest log SHA-256 |
+| --- | --- | --- | --- |
+| `maria-face-discovery.state` | `0176`, density 2, patch 1, y=16 | (404,1011)–(644,1299) | `e215c715237682017299a6b5a673c60c824d5539a22661b939b71adee25e6184` |
+| `maria-exit.state` | `0176`, density 2, patch 2, y=16 | (428,996)–(668,1284) | `c7e263e461d5c9b14f0e31bba2a8b7dbff3c3fc51c5e33503c2d2b4f0de575c2` |
+
+All 69,120 RGB pixels inside each bound equal the expected
+prepared base and active strip, expanded by the integer scale.
+Enhanced differences are confined to that rectangle. Original
+RGB matches with the portrait asset present and absent in both
+capture frames. The two strips appeared in different scenes
+on these routes. The chapter register adds verification to
+this occurrence without expanding the claim to other portraits.
+
+The T45 Iris route remains separate. The English Chapter 1
+`0102.BIN` selects `00a1` at file offset `0x2DEE` and then
+requests table record 10312 in the underground Command Room.
+This is a static route lead. The exact natural Iris display
+still needs a checkpoint that reaches that branch.
+
+At block close the project measured 63,129,173,134 logical bytes
+with hard links counted once and reparse points excluded, above the
+20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
