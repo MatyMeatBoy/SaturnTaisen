@@ -2,7 +2,7 @@ import hashlib
 import unittest
 
 from tools.discover_battle_overlays import analyze_modules
-from tools.discover_registered_overlays import registered_module
+from tools.discover_registered_overlays import observed_candidates, registered_module
 
 
 class RegisteredOverlayTests(unittest.TestCase):
@@ -46,3 +46,11 @@ class RegisteredOverlayTests(unittest.TestCase):
         self.assertEqual(calls,[0x204000,0x6004000])
         self.assertEqual(blocks,{(0x204000,raw[:4]),(0x6004000,raw[:4])})
         self.assertEqual([row['base'] for row in rows],['00204000','06004000'])
+
+    def test_observed_candidates_read_only_registered_ranges(self):
+        module = dict(base=0x06080000, raw=bytes(range(16)))
+        self.assertEqual(observed_candidates(module, [[2, 4], [8, 2]]), {
+            (0x06080002, bytes(range(2, 6))), (0x06080008, bytes(range(8, 10)))})
+        for ranges in ([], [[-2, 4]], [[1, 4]], [[2, 3]], [[14, 4]], [[2, 4], [2, 4]], [[True, 4]]):
+            with self.subTest(ranges=ranges), self.assertRaises(ValueError):
+                observed_candidates(module, ranges)

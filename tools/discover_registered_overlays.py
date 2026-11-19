@@ -8,12 +8,16 @@ import subprocess
 
 if __package__:
     from .audit_sdk import files
-    from .discover_battle_overlays import ROOT,read_seed,merge_candidates,analyze_with_sdk
+    from .discover_battle_overlays import ROOT,MAX_BLOCK,read_seed,merge_candidates,analyze_with_sdk
 else:
     from audit_sdk import files
-    from discover_battle_overlays import ROOT,read_seed,merge_candidates,analyze_with_sdk
+    from discover_battle_overlays import ROOT,MAX_BLOCK,read_seed,merge_candidates,analyze_with_sdk
 
 REGISTRY={
+    'ENDING_DISC2_EN': dict(file='/SAKURA1/ENDING.BIN', base=0x06080000, bytes=178968,
+                            sha256='f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553',
+                            observed_ranges='ending-aot-ranges.json',
+                            evidence='English disc 2 Sakura ending entry and credits through Fin'),
     'SLG_RELOCATED':dict(file='/SAKURA2/0SLG.BIN',base=0x06002000,bytes=309844,
                  sha256='7ca7dda97d17f704e7e687b4fc04170fb39c731ed1a4372fafc3e50b3aed41b8',
                  slice_offset=0x47B14,slice_bytes=206,
@@ -122,6 +126,29 @@ def registered_module(name,raw,profile,registry=REGISTRY):
     return dict(spec,profile=profile,raw=raw)
 
 
+
+def observed_candidates(module, ranges):
+    """Read only witnessed instruction extents from a byte-verified module."""
+    base = module['base']
+    raw = module['raw']
+    if base % 2 or base < 0 or base + len(raw) > 0x100000000:
+        raise ValueError('Invalid observed module address')
+    if not isinstance(ranges, list) or not ranges:
+        raise ValueError('Missing observed variant ranges')
+    selected = set()
+    for extent in ranges:
+        if not isinstance(extent, list) or len(extent) != 2:
+            raise ValueError('Invalid observed variant extent')
+        offset, size = extent
+        if (type(offset) is not int or type(size) is not int or offset < 0 or offset % 2 or
+                not 0 < size <= MAX_BLOCK or size % 2 or offset + size > len(raw)):
+            raise ValueError('Invalid observed variant extent')
+        selected.add((base + offset, raw[offset:offset + size]))
+    if len(selected) != len(ranges):
+        raise ValueError('Duplicate observed variant extent')
+    return selected
+
+
 def build(image,names,seed,output,sdk):
     expected=json.loads((ROOT/'config/dependencies.json').read_text(encoding='utf-8'))['satrecomp']['commit']
     revision=subprocess.check_output(['git','-C',str(sdk),'rev-parse','HEAD'],text=True).strip()
@@ -140,12 +167,24 @@ def build(image,names,seed,output,sdk):
             module=registered_module(paths[path],bytes(data[lba*2048:lba*2048+size]),'owner-disc')
             module['lba']=lba;modules.append(module)
     if seen!=set(paths):raise ValueError('Registered overlay absent from image')
-    before=read_seed(seed);extra,rows=analyze_with_sdk(modules,sdk);merged=merge_candidates(before,extra)
+    before = read_seed(seed)
+    static = [module for module in modules if 'observed_ranges' not in module]
+    extra, rows = analyze_with_sdk(static, sdk) if static else (set(), [])
+    for module in modules:
+        if 'observed_ranges' not in module:
+            continue
+        index = Path(__file__).resolve().parents[1] / 'config' / module['observed_ranges']
+        candidates = observed_candidates(module, json.loads(index.read_text(encoding='utf-8')))
+        extra.update(candidates)
+        row = {key: value for key, value in module.items() if key != 'raw'}
+        row.update(base=f"{module['base']:08X}", candidate_blocks=len(candidates), strategy='observed extents')
+        rows.append(row)
+    merged = merge_candidates(before, extra)
     output.mkdir(parents=True,exist_ok=False);database=output/'blocks.txt'
     with database.open('x',encoding='ascii',newline='\n') as stream:
         stream.write('# Owner-derived AOT candidates; keep local.\n')
         for pc,code in sorted(merged):stream.write(f'{pc:08X} {code.hex().upper()}\n')
-    report=dict(schema=1,scope='static candidates from registered overlays, not executed campaign coverage',
+    report=dict(schema=1,scope='local candidates from registered overlays; see per-module evidence',
                 sdk_commit=revision,opcode_sha256=hashlib.sha256((sdk/'machine/sh2_ops.h').read_bytes()).hexdigest(),
                 iso_sha256=image_hash,seed_sha256=hashlib.sha256(seed.read_bytes()).hexdigest(),
                 profiles=rows,before=len(before),after=len(merged),added=len(merged)-len(before),
