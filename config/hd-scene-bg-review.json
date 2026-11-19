@@ -1056,5 +1056,32 @@
     "BG4380",
     "BG4381",
     "BG4383"
-  ]
+  ],
+  "shared_cell_choice_note": "2026-11-19 (TP1). Saturn pictures with the same palette AND the same cell data that map to different PC files. The decoded PC pictures were compared pairwise and with the Saturn picture (mean absolute difference, 288x144, best of two alignments). BG1132/BG1136, BG1143/BG1144 and BG2005..2010 decode to identical pixels (the SPR bytes differ), so the lowest name is kept. The rest are lighting/tint variants: the PC picture closest to the Saturn one is chosen, the content-tier pair wins a tie (BG2004 7.90 vs 7.76, BG2013/14 1.33 vs 1.19, BG2022/23 3.46 vs 3.25). Clear cases: BG2015 1.41 vs BG2016 2.51, BG2018 7.81 vs BG2017 9.47, BG2036 9.64 vs BG2037 10.54, BG2102 2.27 vs BG2103 6.33. Palettes shared by pictures with different cell data and different PC files (BG1016/1017, 1081/1082, 1085/1086, 1087/1088, 1094/1095, 1096/1097) are no longer in the first table; each picture is found by (palette, cells) and keeps its own number.",
+  "shared_cell_choice": {
+    "BG1132": "BG1132",
+    "BG1136": "BG1132",
+    "BG1143": "BG1143",
+    "BG1144": "BG1143",
+    "BG2004": "BG2004",
+    "BG2005": "BG2004",
+    "BG2006": "BG2004",
+    "BG2007": "BG2004",
+    "BG2008": "BG2004",
+    "BG2009": "BG2004",
+    "BG2010": "BG2004",
+    "BG2013": "BG2014",
+    "BG2014": "BG2014",
+    "BG2015": "BG2015",
+    "BG2016": "BG2015",
+    "BG2017": "BG2018",
+    "BG2018": "BG2018",
+    "BG2022": "BG2023",
+    "BG2023": "BG2023",
+    "BG2036": "BG2036",
+    "BG2037": "BG2036",
+    "BG2038": "BG2036",
+    "BG2102": "BG2102",
+    "BG2103": "BG2102"
+  }
 }

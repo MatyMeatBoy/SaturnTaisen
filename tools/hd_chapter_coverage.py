@@ -226,7 +226,8 @@ def build(root, index_dir, portrait_audit):
                 same_image = donor == key[1:] or (
                     donor is not None and pair.get('pc_sha256') and donor[1] == key[2] and
                     donor_hashes.get(donor) == pair['pc_sha256'] and pair['size'] == [288, 144] and
-                    path.startswith(('/SAKURA1/', '/SAKURA2/EVE', '/SAKURA2/BBG')) and name[2:3] not in '34')
+                    path.startswith(('/SAKURA1/', '/SAKURA2/EVE', '/SAKURA2/BBG')) and name[2:3] not in '34') or (
+                    donor is not None and name in bg_review.get('shared_cell_choice', {}) and pair['size'] == [288, 144])
                 row = {'status': 'hd' if key in bg_table or same_image else 'paired-not-wired',
                        'pc': donor[0] if same_image else pair['pc_file']}
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
