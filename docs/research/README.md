@@ -108,6 +108,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [pc-saturn-name-links.json](pc-saturn-name-links.json): Name links between PC and Saturn resource folders (identifiers only).
 - [hd-completion-handoff.md](hd-completion-handoff.md): Handoff to finish the HD mod from another PC: state per area, what travels through Git, order of work and rules.
 - [HD coverage by chapter](hd-chapter-coverage.md) reports resource evidence, replacement status, and regeneration steps.
+- [Coverage campaign on v0.2.6](coverage-campaign-v026.md) records the observed draws and the campaign's verification limits.
 - [EVE202 tactical inset](eve202-tactical-inset.md)
 - [EVE0116 tactical inset](eve0116-tactical-inset.md): disc-1 episode-1 tactical close-up in HD with 1440p verification.
 - [EVE0118 tactical inset](eve0118-tactical-inset.md): disc-1 farewell picture in HD with 1440p verification.
