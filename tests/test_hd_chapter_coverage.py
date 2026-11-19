@@ -41,6 +41,12 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertIs(witnessed.get('verified_in_game'), True)
                 disc2 = catalog['unassigned']['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
                 self.assertFalse(disc2.get('verified_in_game'))
+        chapter2 = by_chapter[2]['resources']
+        ground2 = chapter2['tactical-maps']['1:/SAKURA2/MAP02.BIN']
+        self.assertEqual((ground2['association'], ground2['status']), ('observed', 'paired-not-wired'))
+        self.assertEqual(ground2['pc'], 'SAKURA2/MAP/MAP02/MAP02_A.SPR')
+        self.assertIsNone(ground2.get('verified_in_game'))
+        self.assertEqual(chapter2['tactical-units']['1:/SAKURA2/UNIT02.BIN']['association'], 'observed')
         episode2 = by_chapter[2]['resources']['scene-pictures']
         airship = episode2.get('1:/SAKURA2/EVE002.BIN', {})
         self.assertEqual(airship.get('association'), 'observed')

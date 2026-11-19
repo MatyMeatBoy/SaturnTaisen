@@ -59,6 +59,9 @@ CHAPTER1_ROUTE_PORTRAITS = (
 ).split()
 CHAPTER1_ROUTE_FILMS = {23695360: 'MOVIE001', 45410304: 'MOVIE002', 56039424: 'MOVIE003'}
 STAGE01_MAP = (1, '/SAKURA2/MAP01.BIN')
+TH2_GROUND = (1, '/SAKURA2/MAP02.BIN')
+TH2_UNITS = (1, '/SAKURA2/UNIT02.BIN')
+TH2_REPORT = 'docs/research/hd-chapter-2.md'
 STAGE21_REPORT = 'docs/research/stage21-pc-ground.md'
 STAGE21_MAP = (1, '/SAKURA2/MAP21.BIN')
 CHAPTER4_TACTICAL_REPORT = 'docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram'
@@ -130,6 +133,8 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA2/EVE202.BIN'): (2, BODY_REPORT),
     (1, '/SAKURA2/EVE002.BIN'): (2, EVE002_REPORT),
     STAGE01_MAP: (1, STAGE01_REPORT),
+    TH2_GROUND: (2, TH2_REPORT),
+    TH2_UNITS: (2, TH2_REPORT),
     STAGE21_MAP: (4, STAGE21_REPORT),
     STAGE06_MAP: (4, CHAPTER4_TACTICAL_REPORT),
 }
@@ -310,6 +315,12 @@ def build(root, index_dir, portrait_audit):
                 'pc': 'SAKURA2/MAP/MAP01/MAP01_A.SPR',
                 'scope': 'source-4 ground only',
                 'extension': 'STAGE01-right-v1.png',
+            }
+        elif (disc, path) == TH2_GROUND:
+            row = {
+                'status': 'paired-not-wired',
+                'pc': 'SAKURA2/MAP/MAP02/MAP02_A.SPR',
+                'scope': 'source-4 ground only',
             }
         elif (disc, path) == STAGE21_MAP:
             row = {
