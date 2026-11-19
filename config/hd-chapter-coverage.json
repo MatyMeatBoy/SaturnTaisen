@@ -1690,6 +1690,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG2248.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2248-pan.md",
+            "pc": "SAKURA1/BG/BG2248.SPR",
+            "runtime_evidence": "docs/research/bg2248-pan.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG2250.BIN": {
             "association": "observed",
             "evidence": "docs/research/coverage-campaign-v026.md",
@@ -1897,6 +1905,14 @@
           "1:/SAKURA1/TITLE4.BIN": {
             "association": "inferred",
             "status": "unknown"
+          },
+          "1:/SAKURA2/BBG204.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bbg204-tactical-inset.md",
+            "pc": "SAKURA2/BG/BBG204.SPR",
+            "runtime_evidence": "docs/research/bbg204-tactical-inset.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-maps": {
@@ -8758,12 +8774,6 @@
         "reason": "size [288, 296], the runtime draws 288x144 pictures only",
         "status": "unsupported-size"
       },
-      "1:/SAKURA1/BG2248.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2248.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
-      },
       "1:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2249.SPR",
@@ -8980,7 +8990,9 @@
       },
       "1:/SAKURA1/BG2338.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/BG/BG2238.SPR",
+        "reason": "size [320, 160], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2381.BIN": {
         "association": "unknown",
@@ -10048,10 +10060,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/BBG203.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/BBG204.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
@@ -12617,8 +12625,7 @@
       "2:/SAKURA1/BG2248.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2248.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
@@ -12846,7 +12853,9 @@
       },
       "2:/SAKURA1/BG2338.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/BG/BG2238.SPR",
+        "reason": "size [320, 160], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2381.BIN": {
         "association": "unknown",

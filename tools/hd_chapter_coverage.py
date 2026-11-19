@@ -18,10 +18,13 @@ BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
+BG2248_REPORT = 'docs/research/bg2248-pan.md'
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
 STAGE01_MAP = (1, '/SAKURA2/MAP01.BIN')
 STAGE21_REPORT = 'docs/research/stage21-pc-ground.md'
 STAGE21_MAP = (1, '/SAKURA2/MAP21.BIN')
+BBG204_INSET = (1, '/SAKURA2/BBG204.BIN')
+BBG204_REPORT = 'docs/research/bbg204-tactical-inset.md'
 EVE002_REPORT = 'docs/research/eve002-tactical-inset.md'
 EVE0116_REPORT = 'docs/research/eve0116-tactical-inset.md'
 EVE0118_REPORT = 'docs/research/eve0118-tactical-inset.md'
@@ -34,6 +37,7 @@ EVE_PAIRS = {
 BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
 # Draw evidence applies to the exact disc, resource, and chapter observed.
 SCENE_DRAWS = {
+    BBG204_INSET: (4, BBG204_REPORT),
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, BODY_REPORT) for number in (1011, 1012, 1017)},
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, CAMPAIGN_REPORT) for number in (1001, 1006, 1045, 1209, 2159, 2250, 2251)},
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
@@ -45,6 +49,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/BG1119.BIN'): (1, BG_REPORT),
     (1, '/SAKURA1/NC20.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
+    (1, '/SAKURA1/BG2248.BIN'): (1, BG2248_REPORT),
     (1, '/SAKURA1/BG2533.BIN'): (5, 'docs/research/bg2533-pan.md'),
     (1, '/SAKURA2/EVE0101.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA2/EVE0116.BIN'): (1, EVE0116_REPORT),
@@ -215,6 +220,9 @@ def build(root, index_dir, portrait_audit):
                 'verified_in_game': True,
                 'runtime_evidence': STAGE21_REPORT,
             }
+        elif (disc, path) == BBG204_INSET:
+            row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
+                   'verified_in_game': True, 'runtime_evidence': BBG204_REPORT}
         elif path in bg:
             pair = bg[path]
             accepted = name not in bg_review['rejected'] and (
@@ -233,6 +241,10 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
+                elif path == '/SAKURA1/BG2248.BIN':
+                    row['status'] = 'hd'
+                    if disc == 1:
+                        row.update(verified_in_game=True, runtime_evidence=BG2248_REPORT)
                 elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
                     row['runtime_evidence'] = SCENE_DRAWS[(disc, path)][1]

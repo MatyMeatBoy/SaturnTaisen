@@ -54,6 +54,12 @@ class ChapterCoverageTest(unittest.TestCase):
                 report = 'docs/research/coverage-campaign-v026.md'
                 self.assertEqual((scene['evidence'], scene['runtime_evidence']), (report, report))
                 self.assertIs(scene['verified_in_game'], True)
+        chapter4 = by_chapter[4]['resources']['scene-pictures']
+        inset = chapter4['1:/SAKURA2/BBG204.BIN']
+        self.assertEqual((inset['association'], inset['status']), ('observed', 'hd'))
+        self.assertEqual(inset['pc'], 'SAKURA2/BG/BBG204.SPR')
+        self.assertIs(inset['verified_in_game'], True)
+        self.assertNotIn('1:/SAKURA2/BBG204.BIN', catalog['unassigned']['scene-pictures'])
         chapter8 = by_chapter[8]['resources']['scene-pictures']
         city = chapter8.get('2:/SAKURA1/BG2159.BIN', {})
         self.assertEqual(city.get('association'), 'observed')
@@ -66,3 +72,12 @@ class ChapterCoverageTest(unittest.TestCase):
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
         self.assertEqual(len({row['pc'] for row in alternate_cuts}), 6)
         self.assertTrue(all(row['status'] == 'paired-not-wired' for row in alternate_cuts))
+
+    def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        for disc in (1, 2):
+            row = catalog['unassigned']['scene-pictures'][f'{disc}:/SAKURA1/BG2338.BIN']
+            self.assertEqual(row['pc'], 'SAKURA1/BG/BG2238.SPR')
+            self.assertEqual(row['status'], 'unsupported-size')
+            self.assertFalse(row.get('verified_in_game'))

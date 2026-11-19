@@ -1,14 +1,13 @@
 {
  "schema": 2,
- "scope": "Saturn BG*.BIN/BBG*.BIN to PC .SPR by shared file number, checked against every PC picture (normalised correlation of 32x16 grey signatures); data only. cells_sha256 identifies the native picture; tier `number` needs an eye check before drawing.",
+ "scope": "Saturn BG*.BIN/BBG*.BIN to PC .SPR by shared file number, checked against every PC picture (normalised correlation of 32x16 grey signatures) with reviewed cross-number exceptions; data only. cells_sha256 identifies the native picture; tier `number` needs an eye check before drawing.",
  "summary": {
-  "content": 519,
+  "content": 520,
   "number": 216,
   "missing": 5
  },
  "duplicate_cell_hashes": 23,
  "undecoded": [
-  "SAKURA1/BG2338.BIN",
   "SAKURA1/BGHANA.BIN",
   "SAKURA1/BGKOIKOI.BIN",
   "SAKURA1/BGMAIGO.BIN",
@@ -12738,6 +12737,27 @@
    "best_other_correlation": 0.978,
    "tier": "content",
    "cells_fnv": "0A572F29290302FE"
+  },
+  {
+   "saturn_file": "SAKURA1/BG2338.BIN",
+   "decoded": true,
+   "size": [
+    320,
+    160
+   ],
+   "cells_sha256": "4b234ecd86d8861360014abaee090be1a2a76b0f5ef0bc1f83796109aea4ef80",
+   "palette_fnv": "5DEDEF54BF2F059D",
+   "pc_file": "SAKURA1/BG/BG2238.SPR",
+   "pc_image_index": 17,
+   "pc_sha256": "3aabcda82b48b1baef7052c67ab90c6d5cc5f687d92f522fd66a596d06f8c650",
+   "pc_size": [
+    576,
+    320
+   ],
+   "correlation": 0.931,
+   "tier": "content",
+   "pair_method": "visual-cross-number",
+   "cells_fnv": "9E591B2DBD322D38"
   },
   {
    "saturn_file": "SAKURA1/BG2381.BIN",
