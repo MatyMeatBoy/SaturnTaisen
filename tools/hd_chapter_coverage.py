@@ -18,6 +18,20 @@ CATEGORIES = (
 BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
+
+RESIDUAL_PORTRAIT_REPORT = PORTRAIT_REPORT + '#residual-portraits-00a1-and-0169'
+RESIDUAL_PORTRAIT_REVIEWS = {
+    '00a1': {
+        'status': 'paired-not-wired',
+        'pc_index': 160,
+        'reason': 'The same Iris expression needs the two PC strips reversed. Both strip commands still need in-game validation.',
+    },
+    '0169': {
+        'status': 'unpaired',
+        'candidate_pc_indices': [348, 360],
+        'reason': 'The PC emblem changes the artwork and framing, and its strips do not reproduce the repeated Saturn base region.',
+    },
+}
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
 BG1285_REPORT = 'docs/research/bg1285-pan.md'
 BG1207_REPORT = 'docs/research/bg1207-pan.md'
@@ -464,6 +478,8 @@ def build(root, index_dir, portrait_audit):
             if disc not in ('1', '2') or indexed_chapter(path) != 1:
                 raise ValueError(f'Invalid chapter 1 portrait source for {ident}')
         row = {'status': 'hd', 'pc_index': recipes[ident]} if ident in recipes else {'status': 'unpaired'}
+        if ident not in recipes and ident in RESIDUAL_PORTRAIT_REVIEWS:
+            row.update(RESIDUAL_PORTRAIT_REVIEWS[ident], pairing_evidence=RESIDUAL_PORTRAIT_REPORT)
         if sources:
             row['atlases'] = sources
         if ident in CHAPTER1_ROUTE_PORTRAITS:
