@@ -28,7 +28,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 142/147 (96,5%) |
 
-**HD total: 1107/1894 (58,4%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+**HD total: 1107/1894 (58,4%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 ## Qué cuenta en cada etapa
@@ -51,8 +51,8 @@ Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y b
 - Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.
 - Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.
 - 394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.
-- 0152 y 0153 conservan las tres regiones aprobadas. Se prepara a Iris 00a1 con las dos tiras invertidas. El emblema 0169 conserva el diseño de Saturn por decisión artística. Falta observar los dos comandos de tiras de 00a1 en juego.
-- **Siguiente paso**. Validar las tiras de Iris 00a1 en su escena y ampliar la comprobación de parpadeo, boca, efectos y fallback en juego.
+- 0152 y 0153 conservan las tres regiones aprobadas. En la sala de mando del capítulo 1 se comprobaron la base y las dos tiras de Iris 00a1 a 1440p, incluido el fundido blanco. El emblema 0169 conserva el diseño de Saturn por decisión artística.
+- **Siguiente paso**. Ampliar la verificación natural de parpadeos, boca, efectos y fallback por identidad y escena.
 
 - [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 del recibo local `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.
 - [first-sakura-hd-portraits.md](research/first-sakura-hd-portraits.md). SHA-256 del recibo local `8aef026bb744db43f813f3435455fec694a432bc6dbe87ad09a88619c6d9a3b1`.
@@ -65,7 +65,7 @@ Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y b
 Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
 
 - El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.
-- El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 530 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.
+- El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El total integrado de la tabla se calcula desde el registro por capítulo y cuenta una vez los archivos PC compartidos por ambos discos.
 - La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. El recuento de recursos preparados y la auditoría completa de apariciones en juego siguen pendientes.
 - **Siguiente paso**. Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.
 
@@ -103,11 +103,15 @@ Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje
 Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y combate Saturn, pegados al mundo y al scroll.
 
 - El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.
-- El suelo de Stage01 usa MAP01_A de PC y está verificado en juego con cámara fija y en movimiento. Falta un recuento por archivo SPR que cubra todas las sustituciones de mapa, unidad y objeto.
+- Se verificó el suelo de MAP01, MAP02, MAP04, MAP06 y MAP21 con la cámara de Saturn. La verificación cubre la capa de suelo. El inventario completo de sustituciones por archivo para mapas, unidades y objetos sigue pendiente.
 - **Siguiente paso**. Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
 - [stage01-pc-ground.md](research/stage01-pc-ground.md).
+- [map02-pc-ground.md](research/map02-pc-ground.md).
+- [map04-pc-ground.md](research/map04-pc-ground.md).
+- [map06-pc-ground.md](research/map06-pc-ground.md).
+- [stage21-pc-ground.md](research/stage21-pc-ground.md).
 
 ### HUD y menús PC/Saturn
 

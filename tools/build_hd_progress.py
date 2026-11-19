@@ -119,7 +119,7 @@ def global_summary(data):
     if known:
         done = sum(row['integrated'] for row in known)
         total = sum(row['total'] for row in known)
-        lines += ['', f"**HD total: {done}/{total} ({percent(done, total)}).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.",
+        lines += ['', f"**HD total: {done}/{total} ({percent(done, total)}).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.",
                   '- Sin medir todavía (no cuentan): ' + (', '.join(r['label'] for r in data['categories'] if r['integrated'] is None or r['total'] is None) or 'ninguna') + '.']
     return '\n'.join(lines)
 
