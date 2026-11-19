@@ -143,3 +143,5 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [clip-hook-design.md](clip-hook-design.md) — PC video hook design and the second clip and skip verification.
 
 - [Disc 1 battle insets](disc1-battle-insets.md)
+
+- [Film catalog decisions](film-catalog-decisions.md)
