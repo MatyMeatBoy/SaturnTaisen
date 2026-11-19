@@ -1,0 +1,663 @@
+{
+ "rule": "audio=pc when the paired durations differ by <= 0.5 s; alternate cuts keep the Saturn audio",
+ "clips": [
+  {
+   "movie": "MOVIE000",
+   "saturn_duration": 85.959688,
+   "pc_duration": 85.942856,
+   "duration_delta": -0.017,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 405
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE001",
+   "saturn_duration": 84.083313,
+   "pc_duration": 83.983667,
+   "duration_delta": -0.1,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 11975
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE002",
+   "saturn_duration": 39.706688,
+   "pc_duration": 39.732244,
+   "duration_delta": 0.026,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 22578
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE003",
+   "saturn_duration": 13.458313,
+   "pc_duration": 13.534344,
+   "duration_delta": 0.076,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 27768
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE004",
+   "saturn_duration": 59.489,
+   "pc_duration": 60.551833,
+   "duration_delta": 1.063,
+   "audio": "saturn",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 29549
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE005",
+   "saturn_duration": 8.131813,
+   "pc_duration": 8.202444,
+   "duration_delta": 0.071,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 37325
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE006",
+   "saturn_duration": 29.956688,
+   "pc_duration": 30.040811,
+   "duration_delta": 0.084,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 38425
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE007",
+   "saturn_duration": 16.623313,
+   "pc_duration": 16.718367,
+   "duration_delta": 0.095,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 42170
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE008",
+   "saturn_duration": 39.62,
+   "pc_duration": 39.602056,
+   "duration_delta": -0.018,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 44296
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE009",
+   "saturn_duration": 48.824313,
+   "pc_duration": 48.169789,
+   "duration_delta": -0.655,
+   "audio": "saturn",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 49325
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE010",
+   "saturn_duration": 31.373313,
+   "pc_duration": 31.427222,
+   "duration_delta": 0.054,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 55709
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE011",
+   "saturn_duration": 41.825625,
+   "pc_duration": 40.751011,
+   "duration_delta": -1.075,
+   "audio": "saturn",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 59553
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE012",
+   "saturn_duration": 9.333313,
+   "pc_duration": 9.405222,
+   "duration_delta": 0.072,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 65000
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE013",
+   "saturn_duration": 27.216688,
+   "pc_duration": 27.193467,
+   "duration_delta": -0.023,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 66155
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE014",
+   "saturn_duration": 18.413313,
+   "pc_duration": 18.416322,
+   "duration_delta": 0.003,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 69674
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE015",
+   "saturn_duration": 9.375,
+   "pc_duration": 9.426078,
+   "duration_delta": 0.051,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 72098
+    },
+    {
+     "disc": 2,
+     "fad": 101036
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE016",
+   "saturn_duration": 19.641688,
+   "pc_duration": 19.6702,
+   "duration_delta": 0.029,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 73296
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE017",
+   "saturn_duration": 24.98,
+   "pc_duration": 24.999178,
+   "duration_delta": 0.019,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 75759
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE018",
+   "saturn_duration": 13.933313,
+   "pc_duration": 14.027744,
+   "duration_delta": 0.094,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 79039
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE019",
+   "saturn_duration": 54.051688,
+   "pc_duration": 54.073467,
+   "duration_delta": 0.022,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 80874
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE020",
+   "saturn_duration": 34.526938,
+   "pc_duration": 30.798367,
+   "duration_delta": -3.729,
+   "audio": "saturn",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 87402
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE021",
+   "saturn_duration": 20.893313,
+   "pc_duration": 20.871833,
+   "duration_delta": -0.021,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 91696
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE023",
+   "saturn_duration": 24.998313,
+   "pc_duration": 25.0083,
+   "duration_delta": 0.01,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 98341
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE024",
+   "saturn_duration": 25.023313,
+   "pc_duration": 25.0083,
+   "duration_delta": -0.015,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 101639
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE025",
+   "saturn_duration": 24.965,
+   "pc_duration": 24.999178,
+   "duration_delta": 0.034,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 104974
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE026",
+   "saturn_duration": 25.031688,
+   "pc_duration": 25.077544,
+   "duration_delta": 0.046,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 108322
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE027",
+   "saturn_duration": 25.331688,
+   "pc_duration": 25.338767,
+   "duration_delta": 0.007,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 111641
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE028",
+   "saturn_duration": 25.033,
+   "pc_duration": 25.077544,
+   "duration_delta": 0.045,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 114885
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE029",
+   "saturn_duration": 25.031688,
+   "pc_duration": 25.077544,
+   "duration_delta": 0.046,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 118097
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE030",
+   "saturn_duration": 28.328125,
+   "pc_duration": 28.368978,
+   "duration_delta": 0.041,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 121427
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE100",
+   "saturn_duration": 85.958313,
+   "pc_duration": 85.942856,
+   "duration_delta": -0.015,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 405
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE101",
+   "saturn_duration": 11.675,
+   "pc_duration": 11.676733,
+   "duration_delta": 0.002,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 11956
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE102",
+   "saturn_duration": 24.0,
+   "pc_duration": 25.5088,
+   "duration_delta": 1.509,
+   "audio": "saturn",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 13499
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE103",
+   "saturn_duration": 20.75,
+   "pc_duration": 20.875011,
+   "duration_delta": 0.125,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 16633
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE104",
+   "saturn_duration": 70.776688,
+   "pc_duration": 70.765711,
+   "duration_delta": -0.011,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 19306
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE105",
+   "saturn_duration": 28.328125,
+   "pc_duration": 27.3502,
+   "duration_delta": -0.978,
+   "audio": "saturn",
+   "starts": [
+    {
+     "disc": 1,
+     "fad": 94337
+    },
+    {
+     "disc": 2,
+     "fad": 28135
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE106",
+   "saturn_duration": 104.061375,
+   "pc_duration": 104.045711,
+   "duration_delta": -0.016,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 32139
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE107",
+   "saturn_duration": 26.941688,
+   "pc_duration": 26.932244,
+   "duration_delta": -0.009,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 45622
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE108",
+   "saturn_duration": 11.0,
+   "pc_duration": 10.593911,
+   "duration_delta": -0.406,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 49123
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE109",
+   "saturn_duration": 66.398,
+   "pc_duration": 66.378811,
+   "duration_delta": -0.019,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 50278
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE110",
+   "saturn_duration": 95.469688,
+   "pc_duration": 95.451422,
+   "duration_delta": -0.018,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 59049
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE111",
+   "saturn_duration": 39.995,
+   "pc_duration": 39.993467,
+   "duration_delta": -0.002,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 71648
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE112",
+   "saturn_duration": 34.333313,
+   "pc_duration": 34.351011,
+   "duration_delta": 0.018,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 76588
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE113",
+   "saturn_duration": 33.865,
+   "pc_duration": 33.828567,
+   "duration_delta": -0.036,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 81075
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE114",
+   "saturn_duration": 39.703313,
+   "pc_duration": 39.732244,
+   "duration_delta": 0.029,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 85431
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE115",
+   "saturn_duration": 30.403313,
+   "pc_duration": 30.3804,
+   "duration_delta": -0.023,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 90580
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE116",
+   "saturn_duration": 24.998313,
+   "pc_duration": 25.0083,
+   "duration_delta": 0.01,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 94539
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE117",
+   "saturn_duration": 25.031688,
+   "pc_duration": 25.077544,
+   "duration_delta": 0.046,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 97803
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE119",
+   "saturn_duration": 21.229438,
+   "pc_duration": 21.237867,
+   "duration_delta": 0.008,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 208143
+    }
+   ]
+  },
+  {
+   "movie": "MOVIE120",
+   "saturn_duration": 34.299955,
+   "pc_duration": 34.651278,
+   "duration_delta": 0.351,
+   "audio": "pc",
+   "starts": [
+    {
+     "disc": 2,
+     "fad": 204550
+    }
+   ]
+  }
+ ]
+}
