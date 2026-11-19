@@ -1,0 +1,146 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -626,6 +626,58 @@
+     SceneHd eve202;
+     bool eve202Traced = false;
+     bool eve202Examined = false;
++    SceneHd eve0116;
++    bool eve0116Traced = false;
++    auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop) {
++        if (!inset.tried) {
++            inset.tried = true;
++            inset.pending = std::async(std::launch::async,
++                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop]() {
++                    SceneHdPixels result;
++                    std::vector<uint8_t> bytes;
++                    if (!ReadPcBackdropFile(path, bytes, size) || bytes.size() != size ||
++                        PcBackdropHash(bytes) != hash) return result;
++                    std::vector<PcSprite> images;
++                    std::string error;
++                    if (!DecodePcSprites(bytes, images, error)) return result;
++                    for (auto& image : images) {
++                        if (image.index != port::kEve202PcImage ||
++                            image.width != port::kEve202PcWidth || image.height != port::kEve202PcHeight) continue;
++                        result.width = crop.width;
++                        result.height = crop.height;
++                        result.pixels.reserve(size_t(crop.width) * crop.height);
++                        for (int y = 0; y < crop.height; ++y) {
++                            const auto first = image.pixels.begin() + (y + crop.y) * image.width + crop.x;
++                            result.pixels.insert(result.pixels.end(), first, first + crop.width);
++                        }
++                        break;
++                    }
++                    return result;
++                });
++        }
++        if (!inset.pending.valid() || inset.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
++            return;
++        auto pixels = inset.pending.get();
++        if (pixels.pixels.empty()) return;
++        auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++            SDL_TEXTUREACCESS_STATIC, pixels.width, pixels.height);
++        if (picture && SDL_UpdateTexture(picture, nullptr, pixels.pixels.data(), pixels.width * 4)) {
++            SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_NEAREST);
++            SDL_SetTextureBlendMode(picture, SDL_BLENDMODE_NONE);
++            inset.texture = picture;
++        } else if (picture) SDL_DestroyTexture(picture);
++    };
++    const auto insetRgb = [](std::span<const uint32_t> pixels) {
++        uint64_t hash = 14695981039346656037ull;
++        for (int y = 8; y < 152; ++y) {
++            for (int x = 16; x < 304; ++x) {
++                const uint32_t pixel = pixels[size_t(y) * 320 + x];
++                for (unsigned shift : {0u, 8u, 16u})
++                    hash = (hash ^ uint8_t(pixel >> shift)) * 1099511628211ull;
++            }
++        }
++        return hash;
++    };
+     // T113/S3: the PC clip (MOVIEnnn.MPG) that replaces a Saturn FILM in the picture. Armed by a CD play command whose start FAD is in
+     // the table; the clip starts when the film plane fills the picture and follows the guest's frame count; the guest is untouched.
+     port::MovieDecoder clipDecoder;
+@@ -1060,6 +1112,22 @@
+                     const auto fit=FitInteger(wide,high,398,224);
+                     const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
+                     SDL_RenderTexture(renderer,tacticalCanvas,nullptr,&target);enhanced=true;presentationKind="tactical";
++                    // EVE0116 occupies the intact Saturn centre of this wider tactical canvas.
++                    // Match the opaque plate itself so mixed or shifted frames keep their native composition.
++                    if (!choosing && !port.menu.IsOpen() && !port.opt.pcAssetsPath.empty() &&
++                        satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && softwareShown.size() == 320*224 &&
++                        port.videoRenderer->BackgroundPaletteFingerprint(5) == 0xBABF974513C7F5B4ull) {
++                        loadEveInset(eve0116, "SAKURA2/BG/BBG201.SPR", 134369, 0xF96716D3D917A8B5ull, {0,32,568,284});
++                        if (eve0116.texture && insetRgb(softwareShown) == 0xFA2D76A6FBC01DCDull) {
++                            const auto inset = port::Eve202Destination(fit.x + 39*fit.scale, fit.y, fit.scale);
++                            const SDL_FRect destination{float(inset.x), float(inset.y), float(inset.width), float(inset.height)};
++                            if (SDL_RenderTexture(renderer,eve0116.texture,nullptr,&destination) &&
++                                !eve0116Traced && std::getenv("SATRECOMP_EVE_TRACE")) {
++                                std::fprintf(stderr,"EVE0116 drew %d,%d %dx%d\n",inset.x,inset.y,inset.width,inset.height);
++                                eve0116Traced = true;
++                            }
++                        }
++                    }
+                 }
+             }
+         }
+@@ -2050,58 +2118,9 @@
+                 if (knownInset) {
+                     // The witnessed window crop is a nearest-neighbour copy of these native RGB pixels.
+                     // An exact RGB key also rejects scroll, blending, and colour adjustments in this first witness.
+-                    uint64_t nativeRgb = 14695981039346656037ull;
+-                    for (int y = 8; y < 152; ++y) {
+-                        for (int x = 16; x < 304; ++x) {
+-                            const uint32_t pixel = softwareShown[size_t(y) * 320 + x];
+-                            for (unsigned shift : {0u, 8u, 16u})
+-                                nativeRgb = (nativeRgb ^ uint8_t(pixel >> shift)) * 1099511628211ull;
+-                        }
+-                    }
++                    const uint64_t nativeRgb = insetRgb(softwareShown);
+                     if (nativeRgb == 0x9B31BCF15EF165E9ull) {
+-                        if (!eve202.tried) {
+-                            eve202.tried = true;
+-                            eve202.pending = std::async(std::launch::async,
+-                                [file = std::filesystem::u8path(port.opt.pcAssetsPath) / port::kEve202PcFile]() {
+-                                    SceneHdPixels result;
+-                                    std::vector<uint8_t> bytes;
+-                                    if (!ReadPcBackdropFile(file, bytes, 97616) || bytes.size() != 97616) return result;
+-                                    if (PcBackdropHash(bytes) != 0x622D0EBC1CEA8E03ull) return result;
+-                                    std::vector<PcSprite> images;
+-                                    std::string error;
+-                                    if (!DecodePcSprites(bytes, images, error)) return result;
+-                                    for (auto& image : images) {
+-                                        if (image.index == port::kEve202PcImage &&
+-                                            image.width == port::kEve202PcWidth && image.height == port::kEve202PcHeight) {
+-                                            const auto crop = port::kEve202PcCrop;
+-                                            result.width = crop.width;
+-                                            result.height = crop.height;
+-                                            result.pixels.reserve(size_t(crop.width) * crop.height);
+-                                            for (int y = 0; y < crop.height; ++y) {
+-                                                const auto first = image.pixels.begin() + (y + crop.y) * image.width + crop.x;
+-                                                result.pixels.insert(result.pixels.end(), first, first + crop.width);
+-                                            }
+-                                            break;
+-                                        }
+-                                    }
+-                                    return result;
+-                                });
+-                        }
+-                        if (eve202.pending.valid() &&
+-                            eve202.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+-                            auto pixels = eve202.pending.get();
+-                            if (std::getenv("SATRECOMP_EVE_TRACE"))
+-                                std::fprintf(stderr, "EVE202 asset usable=%d\n", int(!pixels.pixels.empty()));
+-                            if (!pixels.pixels.empty()) {
+-                                auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+-                                    SDL_TEXTUREACCESS_STATIC, pixels.width, pixels.height);
+-                                if (picture && SDL_UpdateTexture(picture, nullptr, pixels.pixels.data(), pixels.width * 4)) {
+-                                    SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_NEAREST);
+-                                    SDL_SetTextureBlendMode(picture, SDL_BLENDMODE_NONE);
+-                                    eve202.texture = picture;
+-                                } else if (picture) SDL_DestroyTexture(picture);
+-                            }
+-                        }
++                        loadEveInset(eve202, port::kEve202PcFile, 97616, 0x622D0EBC1CEA8E03ull, port::kEve202PcCrop);
+                         if (eve202.texture) {
+                             const auto fit = port::Eve202Destination(baseFit.x, baseFit.y, baseFit.scale);
+                             const SDL_FRect target{float(fit.x), float(fit.y), float(fit.width), float(fit.height)};

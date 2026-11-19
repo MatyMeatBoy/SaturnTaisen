@@ -19,6 +19,7 @@ PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
 STAGE01_MAP = (1, '/SAKURA2/MAP01.BIN')
+EVE0116_REPORT = 'docs/research/eve0116-tactical-inset.md'
 EVE_PAIRS = {
     'EVE002': 'BBG002', 'EVE0101': 'BBG001', 'EVE0116': 'BBG201',
     'EVE0118': 'BBG101', 'EVE102': 'BBG102', 'EVE105': 'BBG105',
@@ -37,6 +38,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/BG2533.BIN'): (5, 'docs/research/bg2533-pan.md'),
     (1, '/SAKURA2/EVE0101.BIN'): (1, BODY_REPORT),
+    (1, '/SAKURA2/EVE0116.BIN'): (1, EVE0116_REPORT),
     (1, '/SAKURA2/EVE202.BIN'): (2, BODY_REPORT),
     STAGE01_MAP: (1, STAGE01_REPORT),
 }
@@ -204,6 +206,8 @@ def build(root, index_dir, portrait_audit):
                 elif key in bg_table and (disc, path) in OFFICE_BG_DRAWS:
                     row['verified_in_game'] = True
                     row['runtime_evidence'] = BODY_REPORT
+                elif (disc, path) == (1, '/SAKURA2/EVE0116.BIN'):
+                    row.update(status='hd', verified_in_game=True, runtime_evidence=EVE0116_REPORT)
                 elif key not in bg_table:
                     if name[2:3] in '34' or name == 'BG0000':
                         # Character cut-outs on a key colour and the blank picture are never replaced (tools/gen_scene_bg_table.py).
@@ -219,6 +223,11 @@ def build(root, index_dir, portrait_audit):
                 row['status'] = 'unpaired'
         elif path in screens and screens[path]['tier'] == 'content':
             row = {'status': 'paired-not-wired', 'pc': screens[path]['pc_file']}
+            if path == '/SAKURA1/IC01.BIN':
+                row['status'] = 'hd'
+                row['verified_in_game'] = disc == 1
+                if disc == 1:
+                    row['runtime_evidence'] = 'docs/research/ic01-hd-intermission.md'
         elif name in EVE_PAIRS:
             row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/' + EVE_PAIRS[name] + '.SPR'}
         elif path in bodies:

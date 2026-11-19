@@ -1651,7 +1651,9 @@
             "association": "observed",
             "evidence": "docs/research/chapter1-wide-transitions.md",
             "pc": "SAKURA1/ICATCH/IC0100.SPR",
-            "status": "paired-not-wired"
+            "runtime_evidence": "docs/research/ic01-hd-intermission.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/TITLE1.BIN": {
             "association": "inferred",
@@ -1662,6 +1664,14 @@
             "evidence": "docs/research/saturn-bg-format.md",
             "pc": "SAKURA2/BG/BBG001.SPR",
             "status": "paired-not-wired"
+          },
+          "1:/SAKURA2/EVE0116.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/eve0116-tactical-inset.md",
+            "pc": "SAKURA2/BG/BBG201.SPR",
+            "runtime_evidence": "docs/research/eve0116-tactical-inset.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-maps": {
@@ -10003,11 +10013,6 @@
         "pc": "SAKURA2/BG/BBG002.SPR",
         "status": "hd"
       },
-      "1:/SAKURA2/EVE0116.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA2/BG/BBG201.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA2/EVE0118.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG101.SPR",
@@ -13746,7 +13751,8 @@
       "2:/SAKURA1/IC01.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0100.SPR",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/IC02.BIN": {
         "association": "unknown",
