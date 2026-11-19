@@ -110,6 +110,11 @@ REGISTRY={
 }
 
 
+REGISTRY['EVT04_MAP04'] = dict(
+    REGISTRY['EVT04'], observed_ranges='evt04-map04-aot-ranges.json',
+    evidence='Disc 1 Chapter 3 second battle, the 180-frame MAP04 camera witness')
+
+
 def registered_module(name,raw,profile,registry=REGISTRY):
     spec=registry.get(name)
     if spec is None:raise ValueError('Overlay has no verified registry entry: '+name)
@@ -155,17 +160,23 @@ def build(image,names,seed,output,sdk):
     if revision!=expected:raise ValueError('Use the pinned SDK revision')
     if not names or len(set(names))!=len(names) or any(name not in REGISTRY for name in names):
         raise ValueError('Select distinct registered overlays')
-    paths={REGISTRY[name]['file']:name for name in names};modules=[]
+    paths = {}
+    for name in names:
+        paths.setdefault(REGISTRY[name]['file'], []).append(name)
+    modules = []
     with image.open('rb') as source,mmap.mmap(source.fileno(),0,access=mmap.ACCESS_READ) as data:
         image_hash=hashlib.sha256(data).hexdigest();seen=set()
         for path,lba,size in files(data):
             if path not in paths:continue
             if path in seen or lba*2048+size>len(data):raise ValueError('Invalid registered overlay extent')
             seen.add(path)
-            spec=REGISTRY[paths[path]]
-            if size!=spec['bytes']:raise ValueError('Registered overlay extent size changed')
-            module=registered_module(paths[path],bytes(data[lba*2048:lba*2048+size]),'owner-disc')
-            module['lba']=lba;modules.append(module)
+            raw = bytes(data[lba*2048:lba*2048+size])
+            for name in paths[path]:
+                if size != REGISTRY[name]['bytes']:
+                    raise ValueError('Registered overlay extent size changed')
+                module = registered_module(name, raw, 'owner-disc')
+                module['lba'] = lba
+                modules.append(module)
     if seen!=set(paths):raise ValueError('Registered overlay absent from image')
     before = read_seed(seed)
     static = [module for module in modules if 'observed_ranges' not in module]
