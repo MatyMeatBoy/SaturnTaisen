@@ -136,7 +136,8 @@
       "patches/0138-sakura-map02-pc-ground.patch",
       "patches/0139-sakura-map06-pc-ground.patch",
       "patches/0140-sakura-map04-tiled-ground.patch",
-      "patches/0141-sakura-face02-tactical-portraits.patch"
+      "patches/0141-sakura-face02-tactical-portraits.patch",
+      "patches/0142-sakura-body-cutout-clip.patch"
     ]
   }
 }

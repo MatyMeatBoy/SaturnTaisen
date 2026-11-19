@@ -3458,9 +3458,11 @@
           "1:/SAKURA1/NC3058.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
+            "native_face_fallback": true,
             "pc": "SAKURA1/NC/NC3058.SPR",
+            "runtime_evidence": "docs/research/nc3058-cutout-1440p.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC60.BIN": {
             "association": "observed",

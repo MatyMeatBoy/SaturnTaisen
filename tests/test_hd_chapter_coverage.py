@@ -327,7 +327,10 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertFalse(chapter5['scene-pictures'][background].get('verified_in_game'))
         body = chapter5['bodies']['1:/SAKURA1/NC3058.BIN']
         self.assertEqual((body['association'], body['status']), ('observed', 'hd'))
-        self.assertFalse(body['verified_in_game'])
+        self.assertTrue(body['verified_in_game'])
+        self.assertTrue(body['native_face_fallback'])
+        self.assertEqual(body['runtime_evidence'], 'docs/research/nc3058-cutout-1440p.md')
+        self.assertFalse(catalog['unassigned']['bodies']['2:/SAKURA1/NC3058.BIN']['verified_in_game'])
         emblem = chapter5['portraits']['0169']
         self.assertEqual((emblem['association'], emblem['status']), ('observed', 'excluded'))
         self.assertEqual(catalog['chapters'][0]['resources']['portraits']['0169']['association'], 'inferred')
