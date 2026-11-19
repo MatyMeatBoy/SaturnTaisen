@@ -46,12 +46,14 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     if tactical and (data.get('generated_only') is not True or data.get('original_map_context_included') is not False or data.get('world_origin')!=[656,24] or data.get('logical_size')!=[39,224]):raise RuntimeError('Unverified generated tactical band')
     result={}
     episode_pairs = {}
+    episode_surrounds = {}
     for row in data['backgrounds']:
         name=row['file']
         if pc and screen:raise RuntimeError('Conflicting generated-art classes')
         pattern=r'STAGE01-right-v1\.png' if tactical else r'(?:OPENING|TITLE|STATUS|PAUSE01|LOADING)-v1\.png' if screen else r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
         episode_side = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-(left|right)-v1\.png', name)
-        if (not episode_side and not re.fullmatch(pattern, name)) or name in result:
+        episode_surround = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-surround-v2\.png', name)
+        if (not episode_side and not episode_surround and not re.fullmatch(pattern, name)) or name in result:
             raise RuntimeError('Invalid/duplicate generated background identity')
         file=folder/name
         if file.is_symlink() or not file.is_file() or digest(file)!=row['sha256']:
@@ -74,10 +76,34 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
         if episode_side:
             episode, side = episode_side.groups()
             episode_pairs.setdefault(episode, {})[side] = row['palette_fnv']
+        if episode_surround:
+            if (
+                data.get('source_pixels_included') is not False
+                or row.get('logical_grid') != [640, 360]
+                or row.get('native_center') != [160, 68, 320, 224]
+                or not re.fullmatch(r'[0-9A-F]{16}', row.get('palette_fnv', ''))
+                or len(header) != 26
+                or header[12:16] != b'IHDR'
+                or struct.unpack('>II', header[16:24]) != (640, 360)
+                or header[24:26] != bytes((8, 6))
+            ):
+                raise RuntimeError('Unexpected generated episode surround: ' + name)
+            from PIL import Image
+            with Image.open(file) as image:
+                if any(channel.getbbox() for channel in image.crop((160, 68, 480, 292)).split()):
+                    raise RuntimeError('Generated episode surround contains center pixels: ' + name)
+            episode_surrounds[episode_surround[1]] = row['palette_fnv']
         result[name]=file
     for episode, sides in episode_pairs.items():
         if set(sides) != {'left', 'right'} or sides['left'] != sides['right']:
             raise RuntimeError('Incomplete or mismatched generated episode side pair: ' + episode)
+    if episode_surrounds:
+        expected = {f'EPISODE{number:02}' for number in range(1, 11)}
+        if set(episode_surrounds) != expected or any(
+            episode_pairs.get(episode, {}).get('left') != fingerprint
+            for episode, fingerprint in episode_surrounds.items()
+        ):
+            raise RuntimeError('Incomplete or mismatched generated episode surrounds')
     if not result:
         raise RuntimeError('Empty generated background manifest')
     return result

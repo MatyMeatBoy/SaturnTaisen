@@ -514,3 +514,40 @@ art directory. The gameplay witness covers Episode 1, while the package gate
 covers all ten asset pairs. No new ZIP was built. At this checkpoint the
 project accounted for 39,407,546,051 unique logical file bytes, above the cap;
 the unchanged development ZIP is 6,315,009,692 bytes.
+
+### Full generated episode surrounds (T107f)
+
+Each Saturn card's palette fingerprint selects one 640×360 RGBA artwork
+surround. The 320×224 center is zeroed in the PNG and drawn from the guest
+frame at the largest integer scale that fits. Only the exterior is clipped
+or enlarged to reach the presentation limits. At 1920×1080 the center is
+4×, from (320,92) to (1600,988). At 2560×1440 it is 6×, from (320,48)
+to (2240,1392). Both use the same 16:9 artwork without stretching in
+these modes.
+
+The renderer uses the Saturn card's uniform NBG2 blend weight. During
+the blend it draws the selected scene backdrop at the same integer cover
+as the normal scene. Original mode never enters the replacement branch.
+The PNG manifest pins all ten assets and checks palette identity, format,
+and the empty center. The Saturn source cards and local review images
+stay under `local/`. This change adds no localized lettering.
+
+The episode layer uses the captured card RGB over the wide floral backdrop
+at the native ratio through the center too. When only some pixels have
+a verified two-screen recipe, other pixels keep their native composition.
+The fully visible center uses the guest frame directly.
+
+Isolated Windows runtime SHA-256 `5c2100ae3265fbcc637a9af931468ea875452f411dccf33f5fea9f13141b1588`.
+Two 6,670-frame English Episode 1 replays with the PC backdrop assets,
+at 1920×1080 and 2560×1440, had the same first 6,550 guest hashes as
+Original and zero interpreted blocks. The fully visible center is
+pixel-identical at both scales. At frames 6075, 6095, 6500 and 6545
+the measured mean RGB error relative to the same full-screen blend
+was below 0.65 per channel in the center and the sampled exterior.
+Frame 6570 returns to the same wide background before drawing the next
+dialogue. The measured exterior and upper center return exactly.
+All ten art files passed the runtime palette identity, opacity, and
+package checks. Episode 1 is the gameplay witness. No new package
+was built. Main workspace measured 41,263,274,196 logical bytes,
+excluding duplicate hard links and junctions; the development ZIP
+remains 6,315,009,692 bytes.
