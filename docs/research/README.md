@@ -95,6 +95,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [first-film-script-phase.md](first-film-script-phase.md): Research on the 0100.BIN cursor and limits of the image-less phases.
 
 - [RetroAchievements 16546 on Saturn](retroachievements-16546.md)
+- [RetroAchievements runtime and offline verification](retroachievements-runtime.md)
 - [dialogue-preload-runtime.md](dialogue-preload-runtime.md): Immutable catalog, bounded reading, and preloaded narrative with native reveal cells; global coverage pending.
 - [chapter1-victory-followup.md](chapter1-victory-followup.md): Satan's defeat, relocated routines, post-battle lock, and save/Resume validation.
 - [LIPS group identification via the cursor](lips-script-cursor.md) — two panels verified with the script, the table, and native tiles.
@@ -107,6 +108,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [pc-saturn-name-links.json](pc-saturn-name-links.json): Name links between PC and Saturn resource folders (identifiers only).
 - [hd-completion-handoff.md](hd-completion-handoff.md): Handoff to finish the HD mod from another PC: state per area, what travels through Git, order of work and rules.
 - [HD coverage by chapter](hd-chapter-coverage.md) reports resource evidence, replacement status, and regeneration steps.
+- [EVE202 tactical inset](eve202-tactical-inset.md): the verified EVE202 picture drawn in HD inside the tactical inset (patch 0099), evidence and limits.
+- [Jumping to a chapter or scene](scene-jump.md) (test tool only): Continue from a copied save, states along the way, random exploration; what is not done.
 - [HD chapter 1 report](hd-chapter-1.md): what chapter 1 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 2 report](hd-chapter-2.md): what chapter 2 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 3 report](hd-chapter-3.md): what chapter 3 shows per resource class, its status, ranked next actions and what needs the owner's discs.

@@ -195,6 +195,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         'recomp-common-NOTICES.md':common_notice(owner),
         'Inter-OFL.txt':owner/'local/build/launcher/_deps/inter-src/LICENSE.txt',
         'Dear-ImGui-MIT.txt':owner/'local/build/launcher/_deps/imgui-src/LICENSE.txt',
+        'rcheevos-MIT.txt':ROOT/'docs/licenses/rcheevos-MIT.txt',
+        'rcheevos-md5.txt':ROOT/'docs/licenses/rcheevos-md5.txt',
         'Python-PSF.txt':Path(sys.base_prefix)/'LICENSE.txt',
         'PyInstaller-COPYING.txt':owner/'local/venv-release/Lib/site-packages/pyinstaller-6.22.3.dist-info/licenses/COPYING.txt',
     }.items():
