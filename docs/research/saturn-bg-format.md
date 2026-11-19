@@ -348,3 +348,50 @@ keeps the native face sprite. Compare native and HD captures from the listed
 states, including progression through blink and mouth frames, and verify
 guest hashes with strict AOT. Saved-state command bytes establish native
 frame identity. The new HD rendering and placement remain unverified.
+
+
+### NC20 offline face-to-SPR map (T106b)
+
+NC20 has a 152x144 body ending at 23,440 and then 17,280 zero bytes. From
+40,720 to the end of the 93,712-byte file, eight consecutive groups each
+hold three eye frames followed by six 24x24 mouth frames. To recover the
+boundaries, the 24x24 mouth at 48,784 observed in the states provided a
+stable transparency footprint. Matching that footprint found the mouth
+runs, then the distances to the previous group end gave each eye height.
+Reading the native slices with the palette at 0x410 (index zero clear)
+produced coherent eyes and mouths in all groups.
+
+| Group | Eye start | Eye size | Mouth start | PC eye indices | PC mouth indices |
+|---:|---:|---|---:|---|---|
+| 1 | 40,720 | 48x16 | 43,024 | 8-10 | 39-44 |
+| 2 | 46,480 | 48x16 | 48,784 | 11-13 | 45-50 |
+| 3 | 52,240 | 48x16 | 54,544 | 14-16 | 51-56 |
+| 4 | 58,000 | 48x24 | 61,456 | 17-19 | 57-62 |
+| 5 | 64,912 | 48x32 | 69,520 | 20-22 | 63-68 |
+| 6 | 72,976 | 48x32 | 77,584 | 23-25 | 69-74 |
+| 7 | 81,040 | 48x24 | 84,496 | 26-28 | 75-80 |
+| 8 | 87,952 | 48x16 | 90,256 | 8-10 | 39-44 |
+
+Group 8 is byte-identical to group 1, frame by frame. The PC has seven
+matching visual groups across five size runs. The pinned PC asset contains
+body subimage 0 (296x320), 21 eyes and 42 mouths. The eye groups visibly
+range from the variants of calm and narrowed eyes to a wide-eyed reaction.
+The mouth in the sixth group opens much wider, and its visible teeth agree
+with the Saturn artwork in the corresponding frame. Compared all groups
+side by side, keeping the respective source proportions.
+
+`config/hd-nc20-face-map.json` records exact asset SHA-256 hashes, dimensions,
+and original SPR subimage indices for 63 unique face textures. Each of the
+nine repeated textures maps both offsets to the same original SPR index.
+Searched the whole face payload for every texture and the only repeated
+matches are those nine pairs. The 17,280 zero bytes have no PC candidate.
+Unknown identity, dimensions or placement retain the native face sprite.
+
+Two saved VDP1 command chains contain the exact body texture at 0x3D340
+(command coordinates -88,-104, colour 0x2000). Both show the same closed
+mouth at (-16,-56), 24x24, 0x47540 in VRAM, native offset 48,784 and
+PC index 45. At (-32,-72), the 48x16 eyes differ: `post-3000` has
+VRAM 0x46C40, offset 46,480 and PC index 11, while `morning-9000` has
+VRAM 0x46F40, offset 47,248 and PC index 12. T106b2 will compare the
+HD placement and expression progression using these states. The present
+witnesses establish native texture identity and command placement.
