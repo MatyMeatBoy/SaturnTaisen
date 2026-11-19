@@ -165,7 +165,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T115 | P2 | second clip and skip verified; resume open | Cold boot MOVIE000 resolves start FAD 0x197 inside stream 0. With and without PC assets, 1,800 guest hashes match and zero interpreted. After B skip, title RGB matches. Mid-film save restore presently falls back to Saturn; disc 2 and synchronized resume remain open. |
 
 | T111 | P1 | shard | open | S4a mix the PC MP2 float stereo of a `audio: pc` clip into the output (resample, mute only the Saturn FILM audio), after T108/T109; needs a runtime build. |
-| T112 | P2 | shard | open | S4b audio/video sync and loudness check of the 44 pairs, drift re-seek; owner listens to a sample. |
+| T112 | P2 | source audio audited; runtime sync and listening open | All 44 eligible source pairs decoded. 40/44 have correlation ≥0.80 in three timing windows. MOVIE005/018/030/119 need special review, especially MOVIE030. Levels, lags and limits in video-equivalence.md. Normal-speed runtime A/V, drift and listening remain open. |
 
 ## Split for collaborators
 
