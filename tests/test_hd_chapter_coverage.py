@@ -278,7 +278,7 @@ class ChapterCoverageTest(unittest.TestCase):
                     row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']
                     self.assertEqual((row['association'], row['status']), ('unknown', 'paired-not-wired'))
                     self.assertEqual(row['pc'], f'SAKURA1/ENDING/END_{name}.SPR')
-                    self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3] if name == 'GE' else [6, 7])
+                    self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3] if name == 'GE' else [6, 7, 8, 10])
                     self.assertFalse(row.get('verified_in_game'))
 
     def test_guarded_viewport_connections_have_no_in_game_witness(self):
