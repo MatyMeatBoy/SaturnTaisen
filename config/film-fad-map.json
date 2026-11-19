@@ -10,7 +10,8 @@
    "duration": 85.959688,
    "movie": "MOVIE000",
    "pc_duration": 85.942856,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 11541
   },
   {
    "disc": 1,
@@ -21,7 +22,8 @@
    "duration": 84.083313,
    "movie": "MOVIE001",
    "pc_duration": 83.983667,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 10603
   },
   {
    "disc": 1,
@@ -32,7 +34,8 @@
    "duration": 39.706688,
    "movie": "MOVIE002",
    "pc_duration": 39.732244,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 5186
   },
   {
    "disc": 1,
@@ -43,7 +46,8 @@
    "duration": 13.458313,
    "movie": "MOVIE003",
    "pc_duration": 13.534344,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1781
   },
   {
    "disc": 1,
@@ -54,7 +58,8 @@
    "duration": 59.489,
    "movie": "MOVIE004",
    "pc_duration": 60.551833,
-   "alternate_cut": true
+   "alternate_cut": true,
+   "sectors": 7776
   },
   {
    "disc": 1,
@@ -65,7 +70,8 @@
    "duration": 8.131813,
    "movie": "MOVIE005",
    "pc_duration": 8.202444,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1100
   },
   {
    "disc": 1,
@@ -76,7 +82,8 @@
    "duration": 29.956688,
    "movie": "MOVIE006",
    "pc_duration": 30.040811,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3503
   },
   {
    "disc": 1,
@@ -87,7 +94,8 @@
    "duration": 16.623313,
    "movie": "MOVIE007",
    "pc_duration": 16.718367,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 2066
   },
   {
    "disc": 1,
@@ -98,7 +106,8 @@
    "duration": 39.62,
    "movie": "MOVIE008",
    "pc_duration": 39.602056,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 4876
   },
   {
    "disc": 1,
@@ -109,7 +118,8 @@
    "duration": 48.824313,
    "movie": "MOVIE009",
    "pc_duration": 48.169789,
-   "alternate_cut": true
+   "alternate_cut": true,
+   "sectors": 6384
   },
   {
    "disc": 1,
@@ -120,7 +130,8 @@
    "duration": 31.373313,
    "movie": "MOVIE010",
    "pc_duration": 31.427222,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3769
   },
   {
    "disc": 1,
@@ -131,7 +142,8 @@
    "duration": 41.825625,
    "movie": "MOVIE011",
    "pc_duration": 40.751011,
-   "alternate_cut": true
+   "alternate_cut": true,
+   "sectors": 5447
   },
   {
    "disc": 1,
@@ -142,7 +154,8 @@
    "duration": 9.333313,
    "movie": "MOVIE012",
    "pc_duration": 9.405222,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1155
   },
   {
    "disc": 1,
@@ -153,7 +166,8 @@
    "duration": 27.216688,
    "movie": "MOVIE013",
    "pc_duration": 27.193467,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3484
   },
   {
    "disc": 1,
@@ -164,7 +178,8 @@
    "duration": 18.413313,
    "movie": "MOVIE014",
    "pc_duration": 18.416322,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 2400
   },
   {
    "disc": 1,
@@ -175,7 +190,8 @@
    "duration": 9.375,
    "movie": "MOVIE015",
    "pc_duration": 9.426078,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1198
   },
   {
    "disc": 1,
@@ -186,7 +202,8 @@
    "duration": 19.641688,
    "movie": "MOVIE016",
    "pc_duration": 19.6702,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 2444
   },
   {
    "disc": 1,
@@ -197,7 +214,8 @@
    "duration": 24.98,
    "movie": "MOVIE017",
    "pc_duration": 24.999178,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3157
   },
   {
    "disc": 1,
@@ -208,7 +226,8 @@
    "duration": 13.933313,
    "movie": "MOVIE018",
    "pc_duration": 14.027744,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1835
   },
   {
    "disc": 1,
@@ -219,7 +238,8 @@
    "duration": 54.051688,
    "movie": "MOVIE019",
    "pc_duration": 54.073467,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 6371
   },
   {
    "disc": 1,
@@ -230,7 +250,8 @@
    "duration": 34.526938,
    "movie": "MOVIE020",
    "pc_duration": 30.798367,
-   "alternate_cut": true
+   "alternate_cut": true,
+   "sectors": 4294
   },
   {
    "disc": 1,
@@ -241,7 +262,8 @@
    "duration": 20.893313,
    "movie": "MOVIE021",
    "pc_duration": 20.871833,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 2557
   },
   {
    "disc": 1,
@@ -252,7 +274,8 @@
    "duration": 28.328125,
    "movie": "MOVIE105",
    "pc_duration": 27.3502,
-   "alternate_cut": true
+   "alternate_cut": true,
+   "sectors": 4004
   },
   {
    "disc": 1,
@@ -263,7 +286,8 @@
    "duration": 24.998313,
    "movie": "MOVIE023",
    "pc_duration": 25.0083,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3176
   },
   {
    "disc": 1,
@@ -274,7 +298,8 @@
    "duration": 25.023313,
    "movie": "MOVIE024",
    "pc_duration": 25.0083,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3189
   },
   {
    "disc": 1,
@@ -285,7 +310,8 @@
    "duration": 24.965,
    "movie": "MOVIE025",
    "pc_duration": 24.999178,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3228
   },
   {
    "disc": 1,
@@ -296,7 +322,8 @@
    "duration": 25.031688,
    "movie": "MOVIE026",
    "pc_duration": 25.077544,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3194
   },
   {
    "disc": 1,
@@ -307,7 +334,8 @@
    "duration": 25.331688,
    "movie": "MOVIE027",
    "pc_duration": 25.338767,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3169
   },
   {
    "disc": 1,
@@ -318,7 +346,8 @@
    "duration": 25.033,
    "movie": "MOVIE028",
    "pc_duration": 25.077544,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3167
   },
   {
    "disc": 1,
@@ -329,7 +358,8 @@
    "duration": 25.031688,
    "movie": "MOVIE029",
    "pc_duration": 25.077544,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3204
   },
   {
    "disc": 1,
@@ -340,7 +370,8 @@
    "duration": 28.328125,
    "movie": "MOVIE030",
    "pc_duration": 28.368978,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3976
   },
   {
    "disc": 1,
@@ -348,7 +379,8 @@
    "index": 0,
    "fad": 166362,
    "fad_hex": "0x289DA",
-   "duration": 0.146667
+   "duration": 0.146667,
+   "sectors": 74
   },
   {
    "disc": 2,
@@ -359,7 +391,8 @@
    "duration": 85.958313,
    "movie": "MOVIE100",
    "pc_duration": 85.942856,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 11500
   },
   {
    "disc": 2,
@@ -370,7 +403,8 @@
    "duration": 11.675,
    "movie": "MOVIE101",
    "pc_duration": 11.676733,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1504
   },
   {
    "disc": 2,
@@ -381,7 +415,8 @@
    "duration": 24.0,
    "movie": "MOVIE102",
    "pc_duration": 25.5088,
-   "alternate_cut": true
+   "alternate_cut": true,
+   "sectors": 3134
   },
   {
    "disc": 2,
@@ -392,7 +427,8 @@
    "duration": 20.75,
    "movie": "MOVIE103",
    "pc_duration": 20.875011,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 2673
   },
   {
    "disc": 2,
@@ -403,7 +439,8 @@
    "duration": 70.776688,
    "movie": "MOVIE104",
    "pc_duration": 70.765711,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 8485
   },
   {
    "disc": 2,
@@ -415,7 +452,8 @@
    "duration": 28.328125,
    "movie": "MOVIE105",
    "pc_duration": 27.3502,
-   "alternate_cut": true
+   "alternate_cut": true,
+   "sectors": 4004
   },
   {
    "disc": 2,
@@ -426,7 +464,8 @@
    "duration": 104.061375,
    "movie": "MOVIE106",
    "pc_duration": 104.045711,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 13215
   },
   {
    "disc": 2,
@@ -437,7 +476,8 @@
    "duration": 26.941688,
    "movie": "MOVIE107",
    "pc_duration": 26.932244,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3423
   },
   {
    "disc": 2,
@@ -448,7 +488,8 @@
    "duration": 11.0,
    "movie": "MOVIE108",
    "pc_duration": 10.593911,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1155
   },
   {
    "disc": 2,
@@ -459,7 +500,8 @@
    "duration": 66.398,
    "movie": "MOVIE109",
    "pc_duration": 66.378811,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 8719
   },
   {
    "disc": 2,
@@ -470,7 +512,8 @@
    "duration": 95.469688,
    "movie": "MOVIE110",
    "pc_duration": 95.451422,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 12386
   },
   {
    "disc": 2,
@@ -481,7 +524,8 @@
    "duration": 39.995,
    "movie": "MOVIE111",
    "pc_duration": 39.993467,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 4806
   },
   {
    "disc": 2,
@@ -492,7 +536,8 @@
    "duration": 34.333313,
    "movie": "MOVIE112",
    "pc_duration": 34.351011,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 4487
   },
   {
    "disc": 2,
@@ -503,7 +548,8 @@
    "duration": 33.865,
    "movie": "MOVIE113",
    "pc_duration": 33.828567,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 4202
   },
   {
    "disc": 2,
@@ -514,7 +560,8 @@
    "duration": 39.703313,
    "movie": "MOVIE114",
    "pc_duration": 39.732244,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 5016
   },
   {
    "disc": 2,
@@ -525,7 +572,8 @@
    "duration": 30.403313,
    "movie": "MOVIE115",
    "pc_duration": 30.3804,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3855
   },
   {
    "disc": 2,
@@ -536,7 +584,8 @@
    "duration": 24.998313,
    "movie": "MOVIE116",
    "pc_duration": 25.0083,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3167
   },
   {
    "disc": 2,
@@ -547,7 +596,8 @@
    "duration": 25.031688,
    "movie": "MOVIE117",
    "pc_duration": 25.077544,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3172
   },
   {
    "disc": 2,
@@ -559,7 +609,8 @@
    "duration": 9.375,
    "movie": "MOVIE015",
    "pc_duration": 9.426078,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 1198
   },
   {
    "disc": 2,
@@ -568,7 +619,8 @@
    "fad": 143193,
    "fad_hex": "0x22F59",
    "same_as_fad": 166362,
-   "duration": 0.146667
+   "duration": 0.146667,
+   "sectors": 74
   },
   {
    "disc": 2,
@@ -579,7 +631,8 @@
    "duration": 34.299955,
    "movie": "MOVIE120",
    "pc_duration": 34.651278,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 3361
   },
   {
    "disc": 2,
@@ -590,7 +643,8 @@
    "duration": 21.229438,
    "movie": "MOVIE119",
    "pc_duration": 21.237867,
-   "alternate_cut": false
+   "alternate_cut": false,
+   "sectors": 2595
   }
  ],
  "unpaired_pc": [

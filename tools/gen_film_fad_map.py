@@ -72,13 +72,13 @@ def main():
                 if key in seen:
                     # The same film stored again (another disc or archive): own FAD, same clip as the first copy.
                     streams.append({'disc': r['disc'], 'file': r['iso_path'], 'index': index, 'fad': fad,
-                                    'fad_hex': '0x%X' % fad, 'same_as_fad': seen[key]})
+                                    'fad_hex': '0x%X' % fad, 'sectors': -(-v['byte_length'] // 2048), 'same_as_fad': seen[key]})
                     continue
                 seen[key] = fad
                 iso = isos[r['disc']]; iso.seek(r['lba'] * 2048 + v.get('offset', 0))
                 p = pathlib.Path(tmp) / 'clip.cpk'; p.write_bytes(iso.read(v['byte_length']))
                 streams.append({'disc': r['disc'], 'file': r['iso_path'], 'index': index, 'fad': fad,
-                                'fad_hex': '0x%X' % fad, 'duration': duration(a.ffprobe, p)})
+                                'fad_hex': '0x%X' % fad, 'sectors': -(-v['byte_length'] // 2048), 'duration': duration(a.ffprobe, p)})
     pc = []
     for f in sorted(pathlib.Path(a.pc_movies).glob('*.MPG')):
         pc.append({'name': f.stem, 'duration': duration(a.ffprobe, f)})
