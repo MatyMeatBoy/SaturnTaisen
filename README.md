@@ -95,7 +95,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 142/147 (96,5%) |
 
-**HD total: 1107/1894 (58,4%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+**HD total: 1107/1894 (58,4%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
