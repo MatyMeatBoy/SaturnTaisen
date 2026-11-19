@@ -513,6 +513,9 @@ def build(root, index_dir, portrait_audit):
                 row['verified_in_game'] = disc == 1
                 if disc == 1:
                     row['runtime_evidence'] = 'docs/research/ic01-hd-intermission.md'
+            elif (disc, path) == (1, '/SAKURA1/IC0501.BIN'):
+                row.update(status='hd', verified_in_game=True,
+                           runtime_evidence='docs/research/ic0501-intermission-witness.md#enhanced-presentation')
             else:
                 row['reason'] = ('no saved state or route reaches this intermission, so its palette key, '
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')

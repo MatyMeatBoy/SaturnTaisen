@@ -1,0 +1,299 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -725,6 +725,10 @@
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
+     SceneHd ic01;
++    bool ic0501Tried = false, ic0501Opaque = false;
++    std::array<int16_t, 3> ic0501CachedOffset{};
++    std::vector<uint32_t> ic0501Donor, ic0501Pixels;
++    SDL_Texture* ic0501Texture = nullptr;
+     bool ic01Traced=false,ic01Examined=false;
+     SceneHd eve202;
+     bool eve202Traced = false;
+@@ -1457,6 +1461,106 @@
+                 }
+             }
+         }
++        const auto inIc0501Menu = [](int x, int y) {
++            return x >= 184 && x < 296 && y >= 16 && y < 144;
++        };
++        // This card uses the full 320x224 native plate. The stock menu and
++        // emblem share a protected rectangle, including during both fades.
++        std::array<int16_t, 3> icOffset{};
++        bool icMixing = false;
++        const auto icReady = [&]() {
++            if (choosing || port.menu.IsOpen() || shownDisc != 1 || !port.videoRenderer ||
++                port.opt.pcAssetsPath.empty() || satrecomp::FeatureValue("presentation_mode") != 1 ||
++                satrecomp::FeatureValue("pc_hd_backgrounds") != 0 || texW != 320 || texH != 224 ||
++                softwareShown.size() != 320 * 224 || baseFit.scale < 2 ||
++                port.videoRenderer->BackgroundPaletteFingerprint(4) != 0xE9107F892185CCC8ull) return false;
++            const auto& planes = port.videoRenderer->PresentationFrame();
++            if (planes.topSource.size() != 320 * 224 || planes.floralCoverMix.size() != 320 * 224 ||
++                planes.floralCoverRgb.size() != 320 * 224) return false;
++            icOffset = port.videoRenderer->BackgroundColorOffset(4);
++            constexpr std::array<int16_t, 3> unshifted{}, darkened{-16, -16, -16};
++            if (icOffset != unshifted && icOffset != darkened) return false;
++            const PanelMix opaque{0, 32, icOffset};
++            uint64_t hash = 14695981039346656037ull;
++            for (int y = 0; y < 224; ++y) {
++                for (int x = 0; x < 320; ++x) {
++                    if (inIc0501Menu(x, y)) continue;
++                    const size_t at = size_t(y) * 320 + x;
++                    uint32_t stock = softwareShown[at];
++                    if (planes.topSource[at] != 4) {
++                        const auto& cover = planes.floralCoverMix[at];
++                        if (planes.topSource[at] != 5 || planes.source[at] != 4 || cover.lowerWeight >= 32 ||
++                            cover.postMixOffset != icOffset || !planes.floralCoverRgb[at]) return false;
++                        const PanelMix mix{planes.floralCoverRgb[at], uint8_t(32 - cover.lowerWeight), icOffset};
++                        if ((CompositePanelPixel(mix, cover.topRgb, stock | 0xFF000000u) & 0xFFFFFF) !=
++                            (stock & 0xFFFFFF)) return false;
++                        stock = CompositePanelPixel(opaque, cover.topRgb, 0xFF000000u);
++                        icMixing |= cover.lowerWeight != 0;
++                    }
++                    for (unsigned shift : {0u, 8u, 16u})
++                        hash = (hash ^ uint8_t(stock >> shift)) * 1099511628211ull;
++                }
++            }
++            if (hash != (icOffset == unshifted ? 0xA5E3498BEDDC1305ull : 0x1F7A14C347473045ull)) return false;
++            if (!ic0501Tried) {
++                ic0501Tried = true;
++                const auto file = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/ICATCH/IC0501.SPR";
++                std::vector<uint8_t> bytes;
++                std::vector<PcSprite> images;
++                std::string error;
++                if (ReadPcBackdropFile(file, bytes, 218568) && bytes.size() == 218568 &&
++                    PcBackdropHash(bytes) == 0x4A23AE5B5939DE76ull && DecodePcSprites(bytes, images, error)) {
++                    for (auto& image : images) {
++                        if (image.index != 0 || image.width != 640 || image.height != 480) continue;
++                        ic0501Donor.resize(640 * 448);
++                        for (int y = 0; y < 448; ++y)
++                            std::copy_n(image.pixels.data() + size_t((2 * y + 1) * 480 / 896) * 640,
++                                        640, ic0501Donor.data() + size_t(y) * 640);
++                        break;
++                    }
++                }
++            }
++            return !ic0501Donor.empty();
++        }();
++        const auto drawNativeIc0501 = [&](const SDL_FRect& target) {
++            if (!icReady || target.x != baseFit.x || target.y != baseFit.y ||
++                target.w != baseFit.w || target.h != baseFit.h) return;
++            if (!ic0501Texture) {
++                ic0501Texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                                  SDL_TEXTUREACCESS_STREAMING, 640, 448);
++                if (!ic0501Texture) return;
++                if (!SDL_SetTextureBlendMode(ic0501Texture, SDL_BLENDMODE_BLEND) ||
++                    !SDL_SetTextureScaleMode(ic0501Texture, SDL_SCALEMODE_NEAREST)) {
++                    SDL_DestroyTexture(ic0501Texture);
++                    ic0501Texture = nullptr;
++                    return;
++                }
++                ic0501Pixels.resize(640 * 448);
++            }
++            const auto& planes = port.videoRenderer->PresentationFrame();
++            const bool mixing = icMixing;
++            if (mixing || !ic0501Opaque || ic0501CachedOffset != icOffset) {
++                const PanelMix opaque{0, 32, icOffset};
++                for (int y = 0; y < 224; ++y) for (int x = 0; x < 320; ++x) {
++                    if (inIc0501Menu(x, y)) continue;
++                    const size_t at = size_t(y) * 320 + x;
++                    const auto recipe = planes.topSource[at] == 4 ? opaque : PanelMix{
++                        planes.floralCoverRgb[at], uint8_t(32 - planes.floralCoverMix[at].lowerWeight), icOffset};
++                    for (int dy = 0; dy < 2; ++dy) for (int dx = 0; dx < 2; ++dx) {
++                        const size_t output = size_t(y * 2 + dy) * 640 + x * 2 + dx;
++                        ic0501Pixels[output] = CompositePanelPixel(recipe, ic0501Donor[output], 0xFF000000u);
++                    }
++                }
++                if (!SDL_UpdateTexture(ic0501Texture, nullptr, ic0501Pixels.data(), 640 * sizeof(uint32_t))) {
++                    ic0501Opaque = false;
++                    return;
++                }
++                ic0501Opaque = !mixing;
++                ic0501CachedOffset = icOffset;
++            }
++            SDL_RenderTexture(renderer, ic0501Texture, nullptr, &target);
++        };
++
+         if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(anchoredBackdrop && planes.width==320 && planes.height==224) {
+@@ -1464,6 +1568,7 @@
+                 const SDL_FRect bgTarget{float(bg.x),float(bg.y),float(bg.w),float(bg.h)},nativeTarget{float(native.x),float(native.y),float(native.w),float(native.h)};
+                 SDL_RenderTexture(renderer,floral,nullptr,&bgTarget);
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
++                drawNativeIc0501(nativeTarget);
+                 if (screenBackdrop == "LOADING" && spanishLoadingInk && native.scale > 0 &&
+                     !choosing && !port.menu.IsOpen() && planes.topSource.size() == 320 * 224 &&
+                     softwareShown.size() == 320 * 224) {
+@@ -1692,7 +1797,8 @@
+                 else {
+                 const auto uploadLayer=[&](SDL_Texture*& cachedTexture,int& cachedWidth,int& cachedHeight,
+                         std::vector<uint32_t>& pixels,const IntegerViewport& fit,const SDL_FRect& crop,
+-                        const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr) -> bool {
++                        const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr,
++                        bool replaceIc0501=false) -> bool {
+                     const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
+                 if(selectedBackdrop && planes.panelMix.size()==320*224 &&
+                    planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+@@ -1708,7 +1814,7 @@
+                         };
+                         const int scale=fit.scale,left=int(crop.x),top=int(crop.y);
+                         const int columns=(fit.w+scale-1)/scale,lines=(fit.h+scale-1)/scale;
+-                        bool mayMix=false;
++                        bool mayMix=replaceIc0501;
+                         for(int ly=0;ly<lines && !mayMix;ly++) {
+                             const int sy=top+ly;if(sy<0 || sy>=224)continue;
+                             for(int lx=0;lx<columns;lx++) {
+@@ -1739,7 +1845,8 @@
+                             const int sy=top+py/scale;
+                             uint32_t* row=pixels.data()+size_t(py)*fit.w;
+                             const int64_t by=backRow(fit.y+py);
+-                            if(py>firstRow && sy==previousNative && by==previousBack) {std::copy_n(row-fit.w,fit.w,row);continue;}
++                            if(py>firstRow && sy==previousNative && by==previousBack &&
++                                (!replaceIc0501 || (2*py+1)/scale==(2*py-1)/scale)) {std::copy_n(row-fit.w,fit.w,row);continue;}
+                             previousNative=sy;previousBack=by;
+                             if(sy<0 || sy>=224) {std::fill_n(row,fit.w,0u);continue;}
+                             for(int px=0;px<fit.w;) {
+@@ -1748,6 +1855,30 @@
+                                 const size_t at=size_t(sy)*320+sx;
+                                 const auto& recipe=recipeAt(at);
+                                 const uint32_t source=solidRecipe?0xFF000000:sourcePixels[at];
++                                if (replaceIc0501 && !inIc0501Menu(sx, sy) && by>=0) {
++                                    const auto& cover=planes.floralCoverMix[at];
++                                    const unsigned weight=planes.topSource[at]==4?0:cover.lowerWeight;
++                                    const size_t donorRow=size_t((2*py+1)/scale)*640;
++                                    while (px<end) {
++                                        const int64_t dx=int64_t(fit.x+px)-backX;
++                                        if (weight && (dx<0 || dx>=int64_t(backW)*backScale)) {
++                                            const int stop=dx<0?int(std::min<int64_t>(end,px-dx)):end;
++                                            std::fill(row+px,row+stop,source);
++                                            px=stop;
++                                            continue;
++                                        }
++                                        const int donorColumn=(2*px+1)/scale;
++                                        int stop=std::min(end,(donorColumn+1)*scale/2);
++                                        if (weight) stop=int(std::min<int64_t>(stop,px+(backScale-dx%backScale)));
++                                        const uint32_t donor=ic0501Donor[donorRow+donorColumn];
++                                        const PanelMix pc{donor,uint8_t(weight?weight:32),icOffset};
++                                        const auto below=weight?back[size_t(by)*backW+size_t(dx/backScale)]:donor;
++                                        std::fill(row+px,row+stop,CompositePanelPixel(pc,below,0xFF000000u));
++                                        px=stop;
++                                    }
++                                    bandMix=true;
++                                    continue;
++                                }
+                                 if(!(source>>24) || !recipe.lowerWeight || by<0) {std::fill(row+px,row+end,source);px=end;continue;}
+                                 while(px<end) {
+                                     const int64_t dx=int64_t(fit.x+px)-backX;
+@@ -2604,7 +2735,9 @@
+                     SDL_UpdateTexture(foreground,nullptr,clipForeground.data(),320*sizeof(uint32_t));
+                     SDL_RenderTexture(renderer,foreground,&crop,&target);
+                 } else
+-                if(scene.movieOnly || !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,fit,crop,mixedSource))
++                if(scene.movieOnly || !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,fit,crop,mixedSource,
++                    nullptr, icReady && !splitZoom && crop.x == 0 && crop.y == 0 && crop.w == 320 && crop.h == 224 &&
++                    fit.x == baseFit.x && fit.y == baseFit.y && fit.w == baseFit.w && fit.h == baseFit.h))
+                     SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+@@ -2737,6 +2870,7 @@
+                     SDL_RenderTexture(renderer, clipTexture, nullptr, &target);
+                 }
+             }
++            drawNativeIc0501(where);
+             // The ending photo is a separate, opaque 2:1 picture. Keep the native credit text around it.
+             if (!choosing && !port.menu.IsOpen() && shownDisc == 2 && port.videoRenderer &&
+                 !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("presentation_mode") == 1 &&
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -45,6 +45,7 @@
+     m_presentation.panelMix.clear();
+     m_presentation.underPanelMix.clear();
+     m_presentation.floralCoverMix.clear();
++    m_presentation.floralCoverRgb.clear();
+     m_presentation.mapFadeEdges.clear();
+     m_presentation.underSource.clear();
+     m_presentation.topSource.clear();
+@@ -103,6 +104,7 @@
+         m_presentation.panelMix.clear();
+         m_presentation.underPanelMix.clear();
+         m_presentation.floralCoverMix.clear();
++        m_presentation.floralCoverRgb.clear();
+         m_presentation.mapFadeEdges.clear();
+         m_presentation.underSource.clear();
+         m_presentation.topSource.clear();
+@@ -535,6 +537,8 @@
+         m_presentation.glyphPlate.assign(m_captureGlyphPlate?m_presentation.spriteWhiteWeight.size():0,{});
+         m_presentation.underPanelMix.assign(m_presentation.panelMix.size(), {});
+         m_presentation.floralCoverMix.assign(m_presentation.panelMix.size(), {});
++        m_presentation.floralCoverRgb.assign(m_width==320 && m_height==224 &&
++            m_regs2.bgParams[3].pageBaseAddresses[0]==0x44000 ? m_presentation.panelMix.size():0,0);
+         m_presentation.episodeBlendSamples = 0;
+         m_presentation.episodeWeight = 0;
+         m_presentation.mapFadeEdges.assign(m_width==320 && m_height==224?32*224:0, {});
+@@ -962,6 +966,7 @@
+         uint8 whiteWeight;
+         ::port::PanelMix panel;
+         ::port::PanelMix floralCover;
++        uint32 floralRgb;
+         uint8 mapWeight;
+         uint8 episodeWeight;
+         bool unshadowedPanel;
+@@ -995,6 +1000,7 @@
+         uint32 presentationSource=top;
+         ::port::PanelMix panel;
+         ::port::PanelMix floralCover;
++        uint32 floralRgb=0;
+         uint8 mapWeight=0;
+         uint8 episodeWeight = 0;
+         uint8 whiteWeight=top==kSprites?0:255;
+@@ -1014,7 +1020,10 @@
+             if (capturePanel && top == 5 && second < 5) {
+                 floralCover = mixRecipe(below, 31 - ratio, top);
+                 if(second == 2)mapWeight=static_cast<uint8>(ratio + 1);
+-                if(second == 4 && !regs2.colorCalcAdd) episodeWeight = static_cast<uint8>(ratio + 1);
++                if (second == 4) {
++                    episodeWeight = static_cast<uint8>(ratio + 1);
++                    floralRgb = color.u32 | 0xFF000000;
++                }
+             }
+             whiteWeight=255;
+             if(captureWhiteWeight && !regs2.colorCalcAdd) {
+@@ -1045,14 +1054,14 @@
+                 whiteWeight=255;
+             }
+         }
+-        return {color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,episodeWeight,capturesUnshadowedPanel};
++        return {color,top,presentationSource,whiteWeight,panel,floralCover,floralRgb,mapWeight,episodeWeight,capturesUnshadowedPanel};
+     };
+     const bool glyphLine=supported && PrepareGlyphLine(line);
+     const bool itemLine=supported && y==line && BeginItemCardLine(y);
+     const bool bracketLine=supported && y==line && BeginBracketLine(y);
+     const auto* drawnItem=itemLine?&*m_drawnItemCard[m_displayFB]:nullptr;
+     for (uint32 x = 0; x < width; x++) {
+-        const auto [color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,episodeWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
++        const auto [color,top,presentationSource,whiteWeight,panel,floralCover,floralRgb,mapWeight,episodeWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
+         if(glyphLine && presentationSource==kSprites && m_glyphLineOwners[x]) {
+             const auto restored=composite(x,m_glyphSprite);
+             const auto rgba=restored.color.u32|0xFF000000;
+@@ -1102,6 +1111,8 @@
+             if (capturesUnshadowedPanel) {
+                 m_presentation.panelMix[at] = panel;
+                 m_presentation.floralCoverMix[at] = floralCover;
++                if (at < m_presentation.floralCoverRgb.size())
++                    m_presentation.floralCoverRgb[at] = floralRgb;
+                 if (episodeWeight) {
+                     auto& weight = m_presentation.episodeWeight;
+                     auto& count = m_presentation.episodeBlendSamples;
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -90,6 +90,8 @@
+         std::vector<uint32> foreground,underSprites;
+         std::vector<::port::PanelMix> panelMix,underPanelMix;
+         std::vector<::port::PanelMix> floralCoverMix;
++        // Raw top NBG3 RGB for an unshadowed NBG3-over-NBG2 ratio blend.
++        std::vector<uint32> floralCoverRgb;
+         uint32 episodeBlendSamples = 0;
+         uint8 episodeWeight = 0;
+         // Raw NBG0 edge pixels proven under the floral plane, in native row order.

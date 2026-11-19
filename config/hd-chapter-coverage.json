@@ -3818,8 +3818,9 @@
             "association": "observed",
             "evidence": "docs/research/ic0501-intermission-witness.md",
             "pc": "SAKURA1/ICATCH/IC0501.SPR",
-            "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-            "status": "paired-not-wired"
+            "runtime_evidence": "docs/research/ic0501-intermission-witness.md#enhanced-presentation",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/TITLE5.BIN": {
             "association": "inferred",
