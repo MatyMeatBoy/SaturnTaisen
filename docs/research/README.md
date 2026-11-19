@@ -34,6 +34,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [pixelgen-v1.md](pixelgen-v1.md) — PixelGen v1, decorative extensions.
 - [stage01-pc-ground.md](stage01-pc-ground.md) — Stage01 ground from the PC edition and Saturn camera and sprite comparisons.
 - [Stage21 ground](stage21-pc-ground.md) records the independently verified source-4 substitution in episode 4.
+- [bg2250-bg1002-visual.md](bg2250-bg1002-visual.md) — Disc 1 salute gradient and theatre lobby at 1440p.
 - [bg2533-pan.md](bg2533-pan.md) — Verified BG2533 pan from the PC edition.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 
