@@ -98,3 +98,5 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [pc-asset-census.md](pc-asset-census.md): Header-level census of the PC edition cabinet that sizes the HD categories.
 - [pc-saturn-name-links.json](pc-saturn-name-links.json): Name links between PC and Saturn resource folders (identifiers only).
 - [hd-completion-handoff.md](hd-completion-handoff.md): Handoff to finish the HD mod from another PC: state per area, what travels through Git, order of work and rules.
+
+- [clip-hook-design.md](clip-hook-design.md) — PC video hook design and the second clip and skip verification.
