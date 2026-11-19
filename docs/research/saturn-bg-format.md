@@ -191,9 +191,13 @@ were also found in one save, but its full palette was absent from CRAM in that s
 so presence in VRAM alone is insufficient evidence of visible presentation.
 Disc-2 runs, additional EVE identities and safe HD rendering remain open.
 
-### EVE105 crop search against BBG105 (TW2, 2026-11-19)
+### EVE105 registration against BBG105 (TW2)
 
-Offline, disc 1 EVE105 (288x144, luminance, normalised correlation) against BBG105 subimage 0 (576x320). (a) Uniform scale with the PC crop covering the whole Saturn frame, 2:1 box, every width 180-576 at 4-pixel steps: best 0.735 at crop (26, 33, 550, 275); the best distinct runner-up is 0.35. (b) Uniform scale, partial overlap of at least 35 % (PC pixels per Saturn pixel 1.10-3.15, 2-pixel offsets): best 0.728 at scale 1.95, offset (-12, -16) Saturn pixels, runner-up 0.46. Control with the same code: EVE0101/BBG001 reaches 0.852 at scale 2.25, offset (8, 2). (c) Non-uniform scale (diagnostic only, coarse): 0.83 at (1.9, 2.1). None reaches the 0.90 floor, and side by side the PC picture is a repainted composition (different sky and foliage, figures slightly displaced), not a crop of the Saturn one. EVE105 therefore gets no inset patch; it stays native with the Zoom framing. No state was searched or run, no patch number taken. Reopen only with a witnessed EVE105 frame and a feature-level (per-character) mapping.
+Offline, disc 1 EVE105 (288x144, luminance, normalised correlation) against BBG105 subimage 0 (576x320). (a) Uniform scale with the PC crop covering the whole Saturn frame, 2:1 box, every width 180-576 at 4-pixel steps: best 0.735 at crop (26, 33, 550, 275); the best distinct runner-up is 0.35. (b) Uniform scale, partial overlap of at least 35 % (PC pixels per Saturn pixel 1.10-3.15, 2-pixel offsets): best 0.728 at scale 1.95, offset (-12, -16) Saturn pixels, runner-up 0.46. Control with the same code: EVE0101/BBG001 reaches 0.852 at scale 2.25, offset (8, 2). (c) Non-uniform scale (diagnostic only, coarse): 0.83 at (1.9, 2.1).
+
+The luminance search measures both geometry and repainting. An independent feature fit matched 462 of 529 SIFT correspondences to a single axis-aligned transform at a 2.5 PC-pixel threshold. On the doubled 576×288 Saturn coordinates, its scales are (0.96013, 1.03756) and its PC origin is (25.30, 18.90). Median and 95th-percentile residuals are 0.48 and 1.43 PC pixels. The projected half-open end is (578.34, 317.71), slightly outside the PC right edge. A registered overlap can preserve the native right edge. Sky and foliage differ in the painted PC image.
+
+EVE105.BIN is present on English disc 1 at FAD 221126 and EVT07 references its filename at file offset `0xE80`. A scan of 542 archived states recovered no exact tile or palette witness. The geometry is a candidate. The runtime needs an actual EVE105 display frame, source owner, destination viewport and transition checks before enabling any substitution. Local fit scripts and comparisons are in `local/work/codex-tw2-fullscreen-bbg/eve105-research/`.
 
 ### Wide variant B visual review (T105a)
 
