@@ -68,7 +68,7 @@ index ad74b42..b5aae70 100644
  struct Disc {
      struct Track {
 diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
-index 8dd79e5..c95cb9e 100644
+index 8dd79e5..88a1394 100644
 --- a/port/frontend_sdl.cpp
 +++ b/port/frontend_sdl.cpp
 @@ -34,12 +34,46 @@
@@ -148,7 +148,32 @@ index 8dd79e5..c95cb9e 100644
          SDL_Texture* floral=nullptr;const Backdrop* selectedBackdrop=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false,mixedFloralAvailable=false;
          std::vector<uint32_t> mapFadeRows;std::optional<MapCrossfade> mapFade;
          if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
-@@ -839,19 +878,47 @@ int RunWindowed(Port &port) {
+@@ -807,11 +846,19 @@ int RunWindowed(Port &port) {
+                     const auto native=FitInteger(wide,high,320,224);
+                     if(ResizePanelBuffer(fadeBackdropPixels,size_t(canvasWidth)*high)) {
+                         std::fill(fadeBackdropPixels.begin(),fadeBackdropPixels.end(),0);
+-                        for(int py=0;py<high;py++)for(int px=0;px<canvasWidth;px++) {
+-                            const int screenX=canvasLeft+px;
+-                            if(const auto floralPixel=SamplePanelBackdrop(selectedBackdrop->pixels,int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,screenX,py))
+-                                if(const auto mixed=SampleMapCrossfade(*mapFade,mapFadeRows,native,screenX,py,*floralPixel))
+-                                    fadeBackdropPixels[size_t(py)*canvasWidth+px]=*mixed;
++                        // Only outside the native picture: inside it SampleMapCrossfade gives nothing and the pixel
++                        // stays clear, so those columns are skipped (the same pixels, without the per-pixel work
++                        // over most of a large window).
++                        const int skipFrom=std::clamp(native.x-canvasLeft,0,canvasWidth),skipTo=std::clamp(native.x+native.w-canvasLeft,0,canvasWidth);
++                        for(int py=0;py<high;py++) {
++                            const bool insideRows=py>=native.y && py<native.y+native.h;
++                            for(int px=0;px<canvasWidth;px++) {
++                                if(insideRows && px>=skipFrom && px<skipTo) {px=skipTo-1;continue;}
++                                const int screenX=canvasLeft+px;
++                                if(const auto floralPixel=SamplePanelBackdrop(selectedBackdrop->pixels,int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,screenX,py))
++                                    if(const auto mixed=SampleMapCrossfade(*mapFade,mapFadeRows,native,screenX,py,*floralPixel))
++                                        fadeBackdropPixels[size_t(py)*canvasWidth+px]=*mixed;
++                            }
+                         }
+                         if(fadeBackdropWidth!=canvasWidth || fadeBackdropHeight!=high) {
+                             if(fadeBackdropTexture)SDL_DestroyTexture(fadeBackdropTexture);
+@@ -839,19 +886,47 @@ int RunWindowed(Port &port) {
                     planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
                     size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
                      if(sourcePixels.size()==320*224 && ResizePanelBuffer(pixels,size_t(fit.w)*fit.h)) {
@@ -207,7 +232,7 @@ index 8dd79e5..c95cb9e 100644
                          }
                          if(hasMix) {
                              if(cachedWidth!=fit.w || cachedHeight!=fit.h) {
-@@ -1059,6 +1126,7 @@ int RunWindowed(Port &port) {
+@@ -1059,6 +1134,7 @@ int RunWindowed(Port &port) {
              const SDL_FRect left{0,0,float(canvasLeft),float(high)},right{float(canvasLeft+canvasWidth),0,float(wide-canvasLeft-canvasWidth),float(high)};
              SDL_RenderFillRect(renderer,&left);SDL_RenderFillRect(renderer,&right);
          }
@@ -215,7 +240,7 @@ index 8dd79e5..c95cb9e 100644
          if(!choosing && !port.menu.IsOpen() && !hdLines.empty())
              sakuraUi.GameText(hdLines,textFit.x,textFit.y,textFit.scale,textCropX,textCropY);
          if(!choosing && !port.menu.IsOpen() && choiceViewport && !hdChoiceLines.empty())
-@@ -1075,7 +1143,10 @@ int RunWindowed(Port &port) {
+@@ -1075,7 +1151,10 @@ int RunWindowed(Port &port) {
              }
              windowShot.clear();
          }
@@ -227,7 +252,7 @@ index 8dd79e5..c95cb9e 100644
              announcedReady = recomp::PublishLaunchReady(port.opt.readyFile);
          }
      };
-@@ -1477,7 +1548,19 @@ int RunWindowed(Port &port) {
+@@ -1477,7 +1556,19 @@ int RunWindowed(Port &port) {
          stepFrame = false;
          if (runs) {
              port.stepping = paused; // (a frame at a time: no run-ahead)
@@ -248,7 +273,7 @@ index 8dd79e5..c95cb9e 100644
          } else {
              audio.pending.clear();
          }
-@@ -1573,6 +1656,7 @@ int RunWindowed(Port &port) {
+@@ -1573,6 +1664,7 @@ int RunWindowed(Port &port) {
          }
      }
  

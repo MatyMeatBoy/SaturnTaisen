@@ -102,11 +102,11 @@ def run(command, **kwargs):
 
 
 def discs_folder(program: Path) -> Path:
-    """The player's «discos» folder: beside the program, or at the release root when the program is in app/."""
-    for folder in (program / 'discos', program.parent / 'discos'):
+    """The player's folder: roms/ at the release root (the program is in data/), or the earlier discos/."""
+    for folder in (program.parent / 'roms', program / 'roms', program.parent / 'discos', program / 'discos'):
         if folder.is_dir():
             return folder
-    return program / 'discos'
+    return program.parent / 'roms'
 
 
 def launch_manifest(program: Path) -> Path:
@@ -1092,7 +1092,7 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
             missing = [n for n in (1, 2) if n not in discs]
             raise SetupError('Faltan tus discos de Sakura Taisen para Saturn: '
                              + ' y '.join(f'disco {n}' for n in missing)
-                             + '. Elígelos o cópialos en la carpeta «discos».')
+                             + '. Elígelos o cópialos en la carpeta «roms».')
         wants_hd = pc is not None and (force or not hd_ready(paths))
         share = 35 if wants_hd else 48
         prepare_disc(paths, manifest, discs.get(1, []), 1, 2, share, force)

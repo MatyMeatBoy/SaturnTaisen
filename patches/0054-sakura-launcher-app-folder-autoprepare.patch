@@ -262,7 +262,7 @@ index ce83aeb..a2b7e67 100644
      if (!s.message.empty()) {
          ui::gap(10);
 diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
-index a3c5278..6e60307 100644
+index a3c5278..8ef50f9 100644
 --- a/launcher/src/sakura_setup.cpp
 +++ b/launcher/src/sakura_setup.cpp
 @@ -4,6 +4,7 @@
@@ -279,7 +279,7 @@ index a3c5278..6e60307 100644
      Uint64 lastRead=0;
 -    int language=0; // 0 Español, 1 English
 +    int language=0; // 0 Español, 1 English, 2 Japonés
-+    bool autoTried=false; // (preparation started on its own once, when the discos folder already has the files)
++    bool autoTried=false; // (preparation started on its own once, when the roms folder already has the files)
  };
  std::shared_ptr<SetupState> state;
  
@@ -291,13 +291,13 @@ index a3c5278..6e60307 100644
 -    return program/"game"/(language==0?"disc1-es":"disc1")/"game.cue";
 -}
  bool Exists(const std::filesystem::path& file) {std::error_code error;return std::filesystem::is_regular_file(file,error);}
-+// The player's "discos" folder: beside the program, or one level up when the program lives in the release's
-+// app/ folder (the release root only shows SaturnTaisen.exe, discos/ and app/). Empty when there is none.
++// The player's folder for their files: roms/ at the release root (beside the launcher, one level above data/
++// where the program folder is), or the earlier name discos/. Empty when there is none.
 +std::filesystem::path DiscsFolder(const std::filesystem::path& program) {
 +    std::error_code error;
 +    auto here=program;
 +    if(here.filename().empty())here=here.parent_path(); // (the program folder comes with a separator at its end)
-+    for(const auto& folder:{here/"discos",here.parent_path()/"discos"})
++    for(const auto& folder:{here.parent_path()/"roms",here/"roms",here.parent_path()/"discos",here/"discos"})
 +        if(std::filesystem::is_directory(folder,error))return folder;
 +    return {};
 +}
@@ -411,7 +411,7 @@ index a3c5278..6e60307 100644
 -bool SakuraSetupBusy() {return state && state->worker && state->worker->running();}
 -void DrawSakuraSetup(launcher::PageContext& page) {
 +// Runs the helper over the player's files: what they chose (any disc, image or folder: the rest is looked for
-+// beside it) and the «discos» folder. Discs and the PC edition (HD mod) come out of the same step.
++// beside it) and the «roms» folder. Discs and the PC edition (HD mod) come out of the same step.
 +void StartPrepare(launcher::PageContext& page,SetupState& s) {
 +    page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
 +    std::vector<std::string> args={"prepare","--language",kLanguageCode[s.language],"--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
@@ -496,7 +496,7 @@ index a3c5278..6e60307 100644
 +bool SakuraSetupBusy() {return state && state->worker && state->worker->running();}
  
 -    // ---- the four switches of the home page ----
-+// ---- Inicio: three switches, and the preparation on its own when the player's files are in «discos» ----
++// ---- Inicio: three switches, and the preparation on its own when the player's files are in «roms» ----
 +void DrawSakuraHome(launcher::PageContext& page) {
 +    auto& s=Follow(page);
 +    const bool running=s.worker && s.worker->running();
@@ -595,7 +595,7 @@ index a3c5278..6e60307 100644
 +        const auto discs=DiscsFolder(page.program_folder);
 +        std::string where="Tus dos discos de Saturn y, para el mod HD, tu edición de PC. Elige cualquiera: el resto se busca al lado";
 +        if(s.source[0])where=std::string("Elegido: ")+s.source.data();
-+        else if(!discs.empty())where+=" y en la carpeta «discos».";
++        else if(!discs.empty())where+=" y en la carpeta «roms».";
 +        else where+=".";
 +        layout::row(page.width,running?"Preparando…":done?"Juego preparado":"Preparar el juego",where.c_str(),210,36,[&] {
 +            if(ui::button("Elegir…",ui::Kind::Secondary,100,!locked)) {
@@ -650,11 +650,59 @@ index e2cbeae..1209fd6 100644
 +void DrawSakuraFiles(launcher::PageContext& page);  // Opciones: the player's files, saves and logs
  void ShutdownSakuraSetup();
  bool SakuraSetupBusy();
+diff --git a/recomp-common/launcher/launcher.cmake b/recomp-common/launcher/launcher.cmake
+index 78f5866..b883a7c 100644
+--- a/recomp-common/launcher/launcher.cmake
++++ b/recomp-common/launcher/launcher.cmake
+@@ -63,7 +63,14 @@ add_library(launcher_imgui STATIC
+     ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
+ target_include_directories(launcher_imgui PUBLIC ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends)
+ target_compile_definitions(launcher_imgui PUBLIC IMGUI_DEFINE_MATH_OPERATORS IMGUI_DISABLE_OBSOLETE_FUNCTIONS IMGUI_DISABLE_DEMO_WINDOWS IMGUI_DISABLE_DEBUG_TOOLS)
+-target_link_libraries(launcher_imgui PUBLIC SDL3::SDL3)
++# LAUNCHER_STATIC: one self-contained program (SDL3 and the C++ runtime inside it), to stand alone at the top
++# of a release whose other programs and DLLs are in a subfolder.
++option(LAUNCHER_STATIC "Link SDL3 and the C++ runtime statically" OFF)
++if(LAUNCHER_STATIC AND TARGET SDL3::SDL3-static)
++    target_link_libraries(launcher_imgui PUBLIC SDL3::SDL3-static)
++else()
++    target_link_libraries(launcher_imgui PUBLIC SDL3::SDL3)
++endif()
+ 
+ # The fonts, compiled in (blob("font_regular") / blob("font_semibold") for ui.cpp).
+ set(LAUNCHER_FONTS "${CMAKE_CURRENT_BINARY_DIR}/fonts.cpp")
+@@ -101,6 +108,9 @@ if(ANDROID)
+ endif()
+ if(WIN32)
+     target_link_libraries(launcher PRIVATE iphlpapi ws2_32) # (online.cpp: this machine's addresses)
++    if(LAUNCHER_STATIC)
++        target_link_options(launcher PRIVATE -static)
++    endif()
+ endif()
+ if(LAUNCHER_VERSION)
+     target_compile_definitions(launcher PRIVATE LAUNCHER_VERSION="${LAUNCHER_VERSION}")
 diff --git a/recomp-common/launcher/src/app.cpp b/recomp-common/launcher/src/app.cpp
-index 66a1c30..0fc7c1a 100644
+index 66a1c30..8ae9549 100644
 --- a/recomp-common/launcher/src/app.cpp
 +++ b/recomp-common/launcher/src/app.cpp
-@@ -527,6 +527,7 @@ int play_directly(const std::string& id, const std::vector<std::string>& extra)
+@@ -199,7 +199,16 @@ std::filesystem::path base_path() {
+     }
+ #endif
+     const char* base = SDL_GetBasePath();
+-    return base ? std::filesystem::path(base) : std::filesystem::current_path();
++    const std::filesystem::path folder = base ? std::filesystem::path(base) : std::filesystem::current_path();
++    // A release laid out as <launcher> + data/ (+ roms/): the game, its helpers and the player's folder are in
++    // data/, the launcher alone at the top. Everything the launcher calls "beside it" is then in data/.
++    std::error_code error;
++    const std::filesystem::path data = folder / "data";
++    if (std::filesystem::is_regular_file(data / (std::string(LAUNCHER_GAME_EXE) + ".exe"), error) ||
++        std::filesystem::is_regular_file(data / LAUNCHER_GAME_EXE, error)) {
++        return data / "";
++    }
++    return folder;
+ }
+ 
+ void wake() {
+@@ -527,6 +536,7 @@ int play_directly(const std::string& id, const std::vector<std::string>& extra)
      try { arguments=arguments_for(prefs, *target); }
      catch (const std::exception& error) { say(SDL_MESSAGEBOX_ERROR,target->name,error.what()); return 1; }
      arguments.insert(arguments.end(), extra.begin(), extra.end());
@@ -662,7 +710,7 @@ index 66a1c30..0fc7c1a 100644
      if (!game.start(program_path(target->exe), arguments, target->folder, message, target->folder / "logs" / "game.log")) {
          say(SDL_MESSAGEBOX_ERROR, target->name, message);
          return 1;
-@@ -1229,6 +1230,7 @@ void App::play(size_t which, const std::vector<std::string>& extra) {
+@@ -1229,6 +1239,7 @@ void App::play(size_t which, const std::vector<std::string>& extra) {
          one.ready_file = one.folder / "logs" / ("launch-" + std::to_string(SDL_GetPerformanceCounter()) + ".ready");
          arguments.insert(arguments.end(), {"--ready-file", one.ready_file.string()});
      }
@@ -670,7 +718,7 @@ index 66a1c30..0fc7c1a 100644
      if (!one.game.start(one.program(), arguments, one.folder, one.play_error, one.folder / "logs" / "game.log"))
          one.ready_file.clear();
  }
-@@ -2996,6 +2998,7 @@ void App::game_page(float width) {
+@@ -2996,6 +3007,7 @@ void App::game_page(float width) {
      bool ready = play_button(0, width);
      ui::gap(16);
      if (about_.extra_home) { auto page=context(width); about_.extra_home(page); }
@@ -678,7 +726,7 @@ index 66a1c30..0fc7c1a 100644
      ui::gap(26);
      int presentation=slots_[0]->settings.get("features","presentation_mode")=="1"?1:0;
      ui::text("ELIGE TU PRESENTACIÓN",Font::Semibold,13,ui::palette().primary);
-@@ -3855,6 +3858,7 @@ void App::features_page(float width) {
+@@ -3855,6 +3867,7 @@ void App::features_page(float width) {
              ui::text(one.features_error.c_str(), Font::Regular, ui::size::kBody, p.danger, width);
              return;
          }
@@ -686,7 +734,7 @@ index 66a1c30..0fc7c1a 100644
          std::vector<int> values = recomp::FeatureValues(one.settings, one.features);
          std::vector<FeatureRow> rows;
          for (size_t i = 0; i < one.features.size(); i++) {
-@@ -3864,6 +3868,10 @@ void App::features_page(float width) {
+@@ -3864,6 +3877,10 @@ void App::features_page(float width) {
              width, rows, "No optional features yet.", [&](const FeatureRow& feature, int value) { set_feature(one, feature.index, value); },
              [&](const FeatureRow& feature) { return recomp::MenuChoices(one.settings, one.features[feature.index]); },
              [&](const FeatureRow& feature, const std::vector<bool>& offered) { set_menu_choices(one, feature.index, offered); });

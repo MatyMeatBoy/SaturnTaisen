@@ -82,6 +82,9 @@ class FrontendTests(unittest.TestCase):
     def test_panel_blending_keeps_hardware_truncation_and_screen_space_flowers(self):
         self.fixture('panel_compositing')
 
+    def test_window_composite_work_per_native_pixel_gives_the_same_pixels(self):
+        self.fixture('window_composite_equivalence')
+
     def test_presentation_keeps_subtitles_overhang_and_integer_cover(self):
         self.fixture('presentation_layout')
 
