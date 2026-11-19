@@ -19,6 +19,7 @@ BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 CHAPTER2_FACE_REPORT = 'docs/research/hd-chapter-2.md#stage-02-tactical-portraits'
+CHAPTER2_FACE_RUNTIME_REPORT = 'docs/research/hd-chapter-2.md#face02-pc-runtime'
 CHAPTER2_FACE_BANK = '1:/SAKURA2/FACE02.BIN:253500278286bc8a8d6e7c28bdee4d7ee199cc3b48f5b61c18ebab517ada49bb'
 CHAPTER2_FACE_BASE_PAIRS = {0: 10, 30: 208, 31: 209}
 MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
@@ -536,8 +537,10 @@ def build(root, index_dir, portrait_audit):
                 2, 'resident', CHAPTER2_FACE_REPORT)
             for slot, pc_index in CHAPTER2_FACE_BASE_PAIRS.items():
                 add('portraits', f'{key}#{slot}', {
-                    'status': 'paired-not-wired',
+                    'status': 'hd',
                     'scope': 'tactical portrait base only',
+                    'verified_in_game': True,
+                    'runtime_evidence': CHAPTER2_FACE_RUNTIME_REPORT,
                     'pc': 'SAKURA2/SYSTEM/KAOSLG.SPR',
                     'pc_index': pc_index,
                 }, 2, 'observed', CHAPTER2_FACE_REPORT)
