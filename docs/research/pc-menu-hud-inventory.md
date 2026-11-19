@@ -25,3 +25,66 @@ python tools/audit_pc_menus.py --pc-root <PC extraction> --disc local/prepared/d
 ## Next step
 
 For each candidate with `found=true`: decode both images (PC via the native exporter `sakura.exe --export-pc-spr`, Saturn via the tools already existing in `tools/es/`), compare geometry, and check whether the PC separates text from the background in a way Saturn does not. No name match here demonstrates compatible composition, palette, or geometry — this is a list of candidates to verify, not an integration.
+
+### Item detail sprite witness (T109)
+
+In the chapter 1 item menu, replayed the saved options-nav state with the
+English disc and the v0.2.4 reference executable
+(SHA-256 1a94790eefc8492ca80499bbbd3e7517cb4db565908bcee86ae5b12f44c94b9e).
+Hold Up from frame 1, release at 59 and confirm with A from 76 to 79.
+The frame-180 capture shows the letter card and dialogue. All 180 frames
+ran strict-native with zero interpreted blocks.
+
+State frame 179 contains a 112×112 VDP1 command at 0xCE0, with PMOD 0x00A0,
+COLR 0xC600, SRCA 0xB850, SIZE 0x0E70 and origin (-56,-88) relative to the
+local coordinate. VDP1 VRAM at SRCA × 8 = 0x5C280 is byte-identical to the
+12,544 picture bytes of ITEM07.BIN. CRAM byte offset 0xC00 contains the
+exact 512 palette bytes, matching table fingerprint 994AF50BC61B12E6.
+T108 has a 224×224 PC counterpart for this card.
+
+An earlier item-menu state can contain the same texture and palette with
+no active 112×112 command. Bind any replacement to the presented sprite
+command and preserve the card rectangle, dialogue and borders.
+This is one positive runtime witness. A second approved card, replacement
+drawing, fallback and guest parity with the replacement remain open.
+
+
+## T110 offline geometry and palette review
+
+Decoded all nine previously unmatched files and checked their SHA-256 hashes
+against the inventory. They contain 430 images. The PC images use SPRED
+format 0x15 (compressed RGB555), with cyan-keyed transparency where relevant.
+For candidate discovery, compared grouped dimensions and downsampled,
+chroma-keyed PC images with RGB reconstructions of saved VDP1 commands. Read
+the saved `RAMCTL`, `SPCTL` and `CRAOFB` to resolve the native CRAM banks.
+Appearance scores served as search hints. Each proposed correspondence
+received a visual check against the actual native and PC textures.
+
+| PC file | Decoded contents | Native evidence and decision |
+|---|---|---|
+| `BURO_W` | Two 208x384 tabbed bromide panels | No native equivalent established in the saved-state sample. |
+| `FONT_CSL` | Two 16x32 arrow cursors | Left and right 8x16 sprites in the same menu state at (64,108) and (104,108). Command mode 0x0080, colour 0xA2D0, with 16 CRAM words at byte 0x5A0. The active grey entries are 6 and 9. Only new direct candidate at 2x on both axes. |
+| `JYOUKI` | 19 cyan-keyed steam frames, up to 80x64 | No native steam sequence identified. The closest colour candidate was an unrelated small battle sprite. |
+| `KAO` | 394 portrait atlases at 80x160 | The existing portrait recipe already pairs these with Saturn FCE sprites. The native portrait base is 40x48, with 40x16 eye or mouth strips on the witness route. Reuse that pipeline. |
+| `OP_WIN` | One 416x304 program frame and background | Program menu in `continue-probe`: 208x152 at (56,40), bank 0x0500 and 256 CRAM words at 0xA00. Despite exact 2x dimensions, the PC plate bakes Japanese labels into the art. Keep the localized native frame. |
+| `R_HARI` | Seven 32x44 variants of the clock hand with clock-face pixels | The LIPS witness in `prebattle-3000` uses an 8x16 indexed sprite at (160,32), mode 0x00A0, colour 0xC500. Its exact bytes occur at `VDP1.BIN` offset 74,624. The stored CRAM colours include 0x8000, 0xBE34 and 0x952B. The PC tile includes the surrounding white clock face and uses a different aspect ratio. Keep the native hand and timing. |
+| `SHADE_WA` | One 576x320 right-and-bottom shadow edge | Serves as a reference for the scene-picture shadow. No same native texture established. |
+| `SHADE_WB` | One 608x128 dialogue shadow | The 304x64 native witness at (8,152), from `VDP1.BIN` offset 32,640, is the gold frame and its CRAM values are coloured. The PC candidate is black and its mask differs. Keep the native effect. |
+| `TUIKA_W` | Three blank bands, 576x48, 576x80 and 384x80 | First band resembles a native 256x24 additional menu band at (32,184), colour 0x02C0 and 16 CRAM words at 0x580. Ratios are 2.25x and 2x. An unmodified draw would change width or height. The second and third entries had no visually verified native match. |
+
+The [offline review table](../../config/hd-system-hud-review.json) lists
+all candidates, their PC source identities, and the command and CRAM
+fingerprints used to distinguish the six observed textures. A saved
+command establishes the native payload and coordinates. Runtime acceptance
+still needs the presented-frame association and palette variation checked
+across state changes. In particular, the arrow keys above qualify only the
+recorded appearance. Before enabling them, T110a will verify the selected
+and disabled states and test placement in gameplay.
+
+Separately, `WALL1.BIN` at 320x224 matches the floral composition of
+`SAKURA1/WALL/KABE0100.SPR` subimage 0 at 640x480. The whole-image grey
+signature correlation was 0.99594 and the flower positions agree by eye.
+The file hashes and native palette fingerprint 0x48291F6F1C8A4707 agree
+with the existing KABE00 and KABE0100 provenance. Width scales at 2x and
+height at 15/7, so keep the existing backdrop path and avoid a raw stretch.
+There is no new direct replacement for this backdrop in T110.
