@@ -1,6 +1,6 @@
 # HD chapter 1 coverage report (TH1)
 
-Source: `config/hd-chapter-coverage.json` (chapter 1, disc 1), cross-checked with `config/hd-scene-bg-map.json`, `hd-scene-bg-review.json`, `hd-body-map.json`, `hd-item-map.json`, `film-fad-map.json`, `docs/PENDIENTES.md`. Offline data only. Nothing here is a replay result; per `docs/SHARDS.md` the exit test (strict-native replay with identical guest hashes) is not done.
+Source: `config/hd-chapter-coverage.json` (chapter 1, disc 1), cross-checked with `config/hd-scene-bg-map.json`, `hd-scene-bg-review.json`, `hd-body-map.json`, `hd-item-map.json`, `film-fad-map.json`, `docs/PENDIENTES.md`. The stage ground has [its own replay evidence](stage01-pc-ground.md). The chapter-wide exit test from `docs/SHARDS.md` remains open.
 
 Key fact: the generator attributes very little to chapter 1 directly. Only 7 non-portrait entries are chapter-attributed; almost all disc resources sit in the `unassigned` section (chapter unknown). Counts below are attributed entries only, with unassigned totals for context.
 
@@ -12,7 +12,7 @@ Key fact: the generator attributes very little to chapter 1 directly. Only 7 non
 | NC bodies | 1 | observed | 293 |
 | Portraits | 129 | all inferred (atlas membership: 0100/0101/0102/0103/0108/0109FCE, both discs) | 237 |
 | FILM clips | 1 (`1:/SAKURA4+23695360`, MOVIE001, FAD 11975) | observed | 53 |
-| Tactical maps | 1 (`1:STAGE01`) | observed | 27 |
+| Tactical maps | 1 (`1:/SAKURA2/MAP01.BIN`) | observed | 26 |
 | Tactical units | 0 | no data | 27 |
 | Menus/HUD | 0 | no data | 195 |
 
@@ -26,7 +26,7 @@ Portrait row has 129 entries: 123 portrait ids plus 6 atlas files that are liste
 | NC bodies (1) | 1: `NC20` (native face fallback true) | 0 | 0 | 0 |
 | Portraits (129) | 121: `0001`-`000f`, `017a`-`017c` | 0 | 2: `00a1`, `0169` | 6: the atlas files `0100FCE`, `0101FCE`, `0102FCE`, `0103FCE`, `0108FCE`, `0109FCE` |
 | FILM (1) | 1: MOVIE001 (no alternate cut) | 0 | 0 | 0 |
-| Tactical maps (1) | 0 | 0 | 0 | 1: `STAGE01` (a right-side extension, `STAGE01-right-v1.png`, exists; it does not replace the whole map) |
+| Tactical maps (1) | 1: `MAP01` ground only, with the approved right-side extension | 0 | 0 | 0 |
 | Tactical units | no data | no data | no data | no data |
 | Menus/HUD | no data | no data | no data | no data |
 
@@ -35,7 +35,7 @@ Unassigned pool by status (chapter unknown, may include chapter 1 items):
 - Bodies: 11 hd, 246 paired-not-wired, 30 unpaired, 6 unknown.
 - FILM: 44 hd, 7 paired-not-wired, 2 unpaired.
 - Menus/HUD: 76 paired-not-wired, 84 unpaired, 35 unknown.
-- Portraits: 181 hd, 56 unknown. Tactical maps/units: 27 + 27 unknown.
+- Portraits: 181 hd, 56 unknown. Tactical maps/units: 26 + 27 unknown.
 
 Map totals (all chapters): scene BG map 519 content + 216 number + 5 missing; body map 104 content + 40 candidate; item map 12 content + 68 candidate. Scene review: 114 reviewed, 47 rejected, 118 cutouts.
 

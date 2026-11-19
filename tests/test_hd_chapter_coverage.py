@@ -28,6 +28,10 @@ class ChapterCoverageTest(unittest.TestCase):
         by_chapter = {row['chapter']: row for row in catalog['chapters']}
         self.assertEqual([by_chapter[n]['disc'] for n in range(1, 11)], [1]*7 + [2]*3)
         chapter1 = by_chapter[1]['resources']
+        ground = chapter1['tactical-maps']['1:/SAKURA2/MAP01.BIN']
+        self.assertEqual((ground['association'], ground['scope']), ('observed', 'source-4 ground only'))
+        self.assertEqual(ground['status'], 'hd')
+        self.assertNotIn('1:/SAKURA2/MAP01.BIN', catalog['unassigned']['tactical-maps'])
         self.assertEqual(chapter1['scene-pictures']['1:/SAKURA1/BG1119.BIN']['association'], 'observed')
         self.assertEqual(chapter1['portraits']['0001']['association'], 'inferred')
         self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')

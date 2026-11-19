@@ -99,7 +99,8 @@
       "patches/0096-sakura-clip-resume-from-state.patch",
       "patches/0097-sakura-dev-states-off-in-packages.patch",
       "patches/0098-sakura-bg2533-verified-pan.patch",
-      "patches/0099-sakura-hd-eve202-tactical-inset.patch"
+      "patches/0099-sakura-hd-eve202-tactical-inset.patch",
+      "patches/0102-sakura-stage01-pc-ground.patch"
     ]
   }
 }

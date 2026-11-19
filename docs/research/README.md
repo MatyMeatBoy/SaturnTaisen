@@ -20,6 +20,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [sh2-dispatch-speed.md](sh2-dispatch-speed.md) — T104: where the SH-2 dispatch time goes and the second chain table (patch 0074).
 
 - [vdp-software-speed.md](vdp-software-speed.md) — T103: where the VDP software drawing time goes, the one pixel-identical change shipped (patch 0073) and what is left.
+- [vdp2-line-reuse-design.md](vdp2-line-reuse-design.md) — VDP2 line reuse measurements and design.
+- [t118-fastpath-notes.md](t118-fastpath-notes.md) — VDP1 textured line fast path and measurement limits.
 
 ## Presentation and HD
 
@@ -30,6 +32,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [pc-spred-resources.md](pc-spred-resources.md) — first verified decoding of PC assets ([pc-background-inventory.json](pc-background-inventory.json)).
 - [hd-font-proportions.md](hd-font-proportions.md) — HD font proportions.
 - [pixelgen-v1.md](pixelgen-v1.md) — PixelGen v1, decorative extensions.
+- [stage01-pc-ground.md](stage01-pc-ground.md) — Stage01 ground from the PC edition and Saturn camera and sprite comparisons.
+- [bg2533-pan.md](bg2533-pan.md) — Verified BG2533 pan from the PC edition.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 
 ## Controllers
