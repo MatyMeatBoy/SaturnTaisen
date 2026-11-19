@@ -3346,9 +3346,10 @@
             "evidence": "docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram",
             "pairing_evidence": "docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram",
             "pc": "SAKURA2/MAP/MAP06/MAP06_A.SPR",
-            "reason": "The PC ground aligns across three cameras. A layer guard and runtime sampling remain to be verified.",
-            "scope": "ground only",
-            "status": "paired-not-wired"
+            "runtime_evidence": "docs/research/map06-pc-ground.md",
+            "scope": "source-4 ground only",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA2/MAP21.BIN": {
             "association": "observed",

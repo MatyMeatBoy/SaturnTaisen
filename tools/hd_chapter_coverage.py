@@ -379,10 +379,11 @@ def build(root, index_dir, portrait_audit):
             }
         elif (disc, path) == STAGE06_MAP:
             row = {
-                'status': 'paired-not-wired',
+                'status': 'hd',
+                'verified_in_game': True,
+                'runtime_evidence': 'docs/research/map06-pc-ground.md',
                 'pc': 'SAKURA2/MAP/MAP06/MAP06_A.SPR',
-                'scope': 'ground only',
-                'reason': 'The PC ground aligns across three cameras. A layer guard and runtime sampling remain to be verified.',
+                'scope': 'source-4 ground only',
                 'pairing_evidence': CHAPTER4_TACTICAL_REPORT,
             }
         elif (disc, path) == BBG204_INSET:

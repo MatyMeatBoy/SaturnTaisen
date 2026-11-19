@@ -102,9 +102,8 @@ bytes, SHA-256
 `70b44bd3d9e0a5fa3bf850cd55d51ce32db0be5d861fe9f3df91a3e8130b258a`.
 The PC `MAP06.TAB` designates the 2048×2048 subimage 0 in MAP06_A.SPR
 as ground. The register attributes this ground pair to chapter 4
-with status `paired-not-wired`. The priority layer, camera origin,
-color offsets, cyan returns and gameplay overlays need their own
-compositor checks.
+with a [verified source-4 ground replacement](map06-pc-ground.md). The priority
+layer and gameplay overlays still come from the native renderer.
 
 The frame-14000 state has NBG2 scroll (0, 340), consistent with the
 fitted PC origin (0, 680). Its first 8192 bytes at VDP2 page

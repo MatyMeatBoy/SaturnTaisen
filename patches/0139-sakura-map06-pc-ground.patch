@@ -1,0 +1,71 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1300,6 +1300,7 @@
+             }
+         }
+         SDL_Texture* nativeGroundComposite = nullptr;
++        const auto* nativeGround = tactical_ground::Find(groundReady);
+         auto uploadTactical = [&](std::span<const uint32_t> pixels) {
+             if (!tacticalCanvas) {
+                 tacticalCanvas = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,398,224);
+@@ -1308,7 +1309,7 @@
+             return tacticalCanvas && SDL_UpdateTexture(tacticalCanvas,nullptr,pixels.data(),398*sizeof(uint32_t));
+         };
+         if (texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1 &&
+-            tactical_ground::Find(groundReady) && groundReady != tactical_ground::kStage01.mapSignature &&
++            nativeGround && nativeGround->centreLayout &&
+             !choosing && !port.menu.IsOpen() &&
+             satrecomp::FeatureValue("pc_hd_backgrounds") == 0) {
+             const auto& shown = port.videoRenderer->PresentationFrame();
+@@ -2557,8 +2558,7 @@
+             }
+             const SDL_FRect nativeCentre{39,0,320,224};
+             if (nativeGroundComposite && SDL_RenderTexture(renderer,nativeGroundComposite,&nativeCentre,&where))
+-                presentationKind = groundReady == tactical_ground::kStage02.mapSignature ?
+-                    "stage02-hd-ground" : "stage21-hd-ground";
++                presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
+             // Disc 2's opening film is presented in the native theatre without a
+diff --git a/port/tactical_ground.h b/port/tactical_ground.h
+--- a/port/tactical_ground.h
++++ b/port/tactical_ground.h
+@@ -13,27 +13,34 @@
+     uint64_t mapSignature;
+     uint32_t groundPage;
+     unsigned worldWidth, worldHeight, mapEndX;
++    const char* centreLayout;
+ };
+ 
+ // MAP01_A, ordinal zero, uses two source pixels per world unit.
+ inline constexpr Entry kStage01{
+     "SAKURA2/MAP/MAP01/MAP01_A.SPR", 1786365, 0xF7205A4FCC95F748ull,
+-    0x1CAF3218B4B0F9F0ull, 0x40000, 704, 480, 656,
++    0x1CAF3218B4B0F9F0ull, 0x40000, 704, 480, 656, nullptr,
+ };
+ 
+ inline constexpr Entry kStage02{
+     "SAKURA2/MAP/MAP02/MAP02_A.SPR", 5829484, 0x437AE98D69D62C17ull,
+-    0x25FF56EB6965E424ull, 0x40000, 1024, 1024, 1024,
++    0x25FF56EB6965E424ull, 0x40000, 1024, 1024, 1024, "stage02-hd-ground",
++};
++
++inline constexpr Entry kStage06{
++    "SAKURA2/MAP/MAP06/MAP06_A.SPR", 6152194, 0x08A5D85E913F97BABull,
++    0xB533F608A5E864D1ull, 0x40000, 1024, 1024, 1024, "stage06-hd-ground",
+ };
+ 
+ inline constexpr Entry kStage21{
+     "SAKURA2/MAP/MAP21/MAP21_A.SPR", 1105672, 0x0006FEAF367A7203ull,
+-    0x446FB372F79EDD04ull, 0x40000, 559, 455, 559,
++    0x446FB372F79EDD04ull, 0x40000, 559, 455, 559, "stage21-hd-ground",
+ };
+ 
+ inline const Entry* Find(uint64_t signature) {
+     if (signature == kStage01.mapSignature) return &kStage01;
+     if (signature == kStage02.mapSignature) return &kStage02;
++    if (signature == kStage06.mapSignature) return &kStage06;
+     if (signature == kStage21.mapSignature) return &kStage21;
+     return nullptr;
+ }
