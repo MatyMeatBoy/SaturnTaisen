@@ -7,6 +7,7 @@ SaturnTaisenFirst distributes its integration code under GPL-3.0-only. The resea
 - **Dear ImGui**, Omar Cornut and contributors, MIT. Version and hash pinned by the launcher's CMake.
 - **SDL3**, SDL authors, zlib. Its license is distributed alongside the library.
 - **Inter**, Rasmus Andersson and contributors, SIL Open Font License 1.1. The font is embedded in the launcher; include its license.
+- **pl_mpeg**, Dominic Szablewski, MIT. Single header `port/decoders/pl_mpeg.h` (patch0072), decodes the PC edition's MPEG-1 video and MP2 audio; its licence text is in the header itself.
 - **zlib**, Jean-loup Gailly and Mark Adler, zlib.
 - **GNU libiconv**, GNU authors, LGPL; dynamic library and `COPYING`/`COPYING.LIB` texts included when required by SDL.
 - **Python**, Python Software Foundation License; **PyInstaller**, GPL with exception for packaged binaries. The packaged importer carries its notices in the distribution's licenses folder.
