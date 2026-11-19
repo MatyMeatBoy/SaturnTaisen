@@ -17,6 +17,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [sakura-sdk-and-loading.md](sakura-sdk-and-loading.md) — Sakura SDK and loading ([sakura-sdk-inventory.json](sakura-sdk-inventory.json)).
 - [chapter1-battle-progress.md](chapter1-battle-progress.md) — chapter 1 battle validation ([chapter1-battle-progress.json](chapter1-battle-progress.json)).
 - [save-import.md](save-import.md) — save import ([public-save-fixtures.json](public-save-fixtures.json)).
+- [sh2-dispatch-speed.md](sh2-dispatch-speed.md) — T104: where the SH-2 dispatch time goes and the second chain table (patch 0074).
 
 ## Presentation and HD
 
