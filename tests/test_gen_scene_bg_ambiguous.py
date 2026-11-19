@@ -8,12 +8,12 @@ def pair(name, palette, pc, cells, tier='content'):
             'pc_file': 'SAKURA1/BG/%s.SPR' % pc, 'pc_image_index': 0, 'tier': tier, 'cells_fnv': cells}
 
 
-def generate(pairs, confirmed=()):
+def generate(pairs, confirmed=(), choice=None):
     with tempfile.TemporaryDirectory() as folder:
         folder = pathlib.Path(folder)
         (folder / 'm.json').write_text(json.dumps({'pairs': pairs}), encoding='utf-8')
         (folder / 'hd-scene-bg-review.json').write_text(json.dumps(
-            {'eye_confirmed_number_tier': list(confirmed), 'rejected': []}), encoding='utf-8')
+            {'eye_confirmed_number_tier': list(confirmed), 'rejected': [], 'shared_cell_choice': choice or {}}), encoding='utf-8')
         out = folder / 'o.h'
         subprocess.run([sys.executable, str(ROOT / 'tools/gen_scene_bg_table.py'), str(folder / 'm.json'), str(out)],
                        check=True, capture_output=True)
@@ -50,6 +50,19 @@ class AmbiguousPaletteTable(unittest.TestCase):
         changed_bytes = dict(right, pc_sha256='b' * 64)
         self.assertEqual(generate([left, changed_image]), ([], []))
         self.assertEqual(generate([left, changed_bytes]), ([], []))
+
+    def test_content_pair_does_not_hide_a_neighbour_with_other_cells(self):
+        # BG1016 (number, confirmed) shares its palette with BG1017 (content) but has its own cells and PC file.
+        first, second = generate([pair('BG1016', 'AA', 'BG1016', '01', 'number'), pair('BG1017', 'AA', 'BG1017', '02')], ['BG1016'])
+        self.assertEqual(first, [])
+        self.assertEqual({(c, f) for _, c, f, _ in second}, {('01', 'SAKURA1/BG/BG1016.SPR'), ('02', 'SAKURA1/BG/BG1017.SPR')})
+
+    def test_recorded_choice_resolves_shared_cells_with_different_pc_pictures(self):
+        rows = [pair('BG2015', 'AA', 'BG2015', '01', 'number'), pair('BG2016', 'AA', 'BG2016', '01')]
+        self.assertEqual(generate(rows, ['BG2015']), ([], []))
+        self.assertEqual(generate(rows, ['BG2015'], {'BG2015': 'BG2015', 'BG2016': 'BG2015'}),
+                         ([], [('AA', '01', 'SAKURA1/BG/BG2015.SPR', '0')]))
+        self.assertEqual(generate(rows, ['BG2015'], {'BG2015': 'BG2015', 'BG2016': 'BG2016'}), ([], []))
 
     def test_rejected_and_cut_out_pictures_never_enter(self):
         first, second = generate([pair('BG3011', 'AA', 'BG3011', '01'), pair('BG1012', 'AA', 'BG1012', '02')])

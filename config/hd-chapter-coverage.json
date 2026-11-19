@@ -6328,8 +6328,7 @@
       "1:/SAKURA1/BG1016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1016.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1018.BIN": {
         "association": "unknown",
@@ -6651,8 +6650,7 @@
       "1:/SAKURA1/BG1082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1082.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
@@ -6672,14 +6670,12 @@
       "1:/SAKURA1/BG1086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1086.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1087.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1087.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1088.BIN": {
         "association": "unknown",
@@ -6719,14 +6715,12 @@
       "1:/SAKURA1/BG1095.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1095.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1096.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1097.BIN": {
         "association": "unknown",
@@ -6886,8 +6880,7 @@
       "1:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1132.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1134.BIN": {
         "association": "unknown",
@@ -6901,21 +6894,18 @@
       },
       "1:/SAKURA1/BG1136.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1136.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG1132.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1143.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1144.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1144.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG1143.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1148.BIN": {
         "association": "unknown",
@@ -7753,39 +7743,33 @@
       },
       "1:/SAKURA1/BG2005.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2005.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2006.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2006.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2007.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2007.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2008.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2008.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2009.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2009.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2010.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2010.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2011.BIN": {
         "association": "unknown",
@@ -7799,9 +7783,8 @@
       },
       "1:/SAKURA1/BG2013.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2013.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2014.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2014.BIN": {
         "association": "unknown",
@@ -7811,24 +7794,22 @@
       "1:/SAKURA1/BG2015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2015.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2016.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2016.SPR",
+        "pc": "SAKURA1/BG/BG2015.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2017.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2017.SPR",
+        "pc": "SAKURA1/BG/BG2018.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2018.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2019.BIN": {
         "association": "unknown",
@@ -7847,9 +7828,8 @@
       },
       "1:/SAKURA1/BG2022.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2022.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2023.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2023.BIN": {
         "association": "unknown",
@@ -7918,20 +7898,17 @@
       "1:/SAKURA1/BG2036.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2037.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2037.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2036.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2038.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2038.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2036.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2039.BIN": {
         "association": "unknown",
@@ -8244,9 +8221,8 @@
       },
       "1:/SAKURA1/BG2103.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2103.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2102.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2104.BIN": {
         "association": "unknown",
@@ -10193,8 +10169,7 @@
       "2:/SAKURA1/BG1016.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1016.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1017.BIN": {
         "association": "unknown",
@@ -10524,8 +10499,7 @@
       "2:/SAKURA1/BG1082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1082.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
@@ -10545,14 +10519,12 @@
       "2:/SAKURA1/BG1086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1086.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1087.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1087.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1088.BIN": {
         "association": "unknown",
@@ -10592,14 +10564,12 @@
       "2:/SAKURA1/BG1095.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1095.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1096.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1097.BIN": {
         "association": "unknown",
@@ -10762,8 +10732,7 @@
       "2:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1132.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1134.BIN": {
         "association": "unknown",
@@ -10777,21 +10746,18 @@
       },
       "2:/SAKURA1/BG1136.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1136.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG1132.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1143.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1144.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1144.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG1143.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1148.BIN": {
         "association": "unknown",
@@ -11634,39 +11600,33 @@
       },
       "2:/SAKURA1/BG2005.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2005.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2006.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2006.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2007.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2007.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2008.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2008.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2009.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2009.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2010.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2010.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2004.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2011.BIN": {
         "association": "unknown",
@@ -11680,9 +11640,8 @@
       },
       "2:/SAKURA1/BG2013.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2013.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2014.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2014.BIN": {
         "association": "unknown",
@@ -11692,24 +11651,22 @@
       "2:/SAKURA1/BG2015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2015.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2016.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2016.SPR",
+        "pc": "SAKURA1/BG/BG2015.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2017.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2017.SPR",
+        "pc": "SAKURA1/BG/BG2018.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2018.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2019.BIN": {
         "association": "unknown",
@@ -11728,9 +11685,8 @@
       },
       "2:/SAKURA1/BG2022.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2022.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2023.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2023.BIN": {
         "association": "unknown",
@@ -11799,20 +11755,17 @@
       "2:/SAKURA1/BG2036.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2037.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2037.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2036.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2038.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2038.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2036.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2039.BIN": {
         "association": "unknown",
@@ -12124,9 +12077,8 @@
       },
       "2:/SAKURA1/BG2103.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2103.SPR",
-        "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
-        "status": "paired-not-wired"
+        "pc": "SAKURA1/BG/BG2102.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2104.BIN": {
         "association": "unknown",
@@ -13992,8 +13944,7 @@
       "2:/SAKURA2/BBG218.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG218.SPR",
-        "reason": "size [288, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA2/BBG236.BIN": {
         "association": "unknown",
