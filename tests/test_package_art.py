@@ -125,6 +125,26 @@ class PackageArtTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, 'contains center pixels'):
                 generated_backgrounds(folder, screen=True)
 
+    def test_spanish_episode_lettering_requires_all_ten_generated_layers(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            report = folder / 'provenance.json'
+            manifest = {'source_pixels_included': False, 'backgrounds': []}
+            for number in range(1, 11):
+                path = folder / f'EPISODE{number:02}-es-lettering-v1.png'
+                Image.new('RGBA', (320, 224)).save(path)
+                manifest['backgrounds'].append({
+                    'file': path.name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                    'logical_grid': [320, 224], 'kind': 'generated Spanish lettering only',
+                })
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            self.assertEqual(len(generated_backgrounds(folder, screen=True)), 10)
+            manifest['backgrounds'].pop()
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError, 'Incomplete Spanish episode lettering'):
+                generated_backgrounds(folder, screen=True)
+
     def test_only_manifest_pinned_files_are_selected(self):
         with tempfile.TemporaryDirectory() as directory:
             folder=Path(directory);data=b'\x89PNG\r\n\x1a\nfixture'

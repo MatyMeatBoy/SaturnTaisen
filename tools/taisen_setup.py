@@ -1113,6 +1113,20 @@ def load_manifest(paths: Paths) -> dict:
     return manifest
 
 
+def prepare_spanish_episode_art(paths):
+    english = paths.game / 'disc1' / 'Track 01.iso'
+    spanish = paths.game / 'disc1-es' / 'Track 01.iso'
+    art = paths.program / 'art/screen-backgrounds'
+    if not art.is_dir():
+        art = paths.program / 'assets/generated/screen-backgrounds'
+    if not (english.is_file() and spanish.is_file() and
+            (art / 'EPISODE01-es-lettering-v1.png').is_file()):
+        return
+    from episode_lettering import prepare_episode_centers
+
+    prepare_episode_centers(english, spanish, art, paths.home / 'art/episode-centers')
+
+
 def prepare(paths: Paths, given: list[Path], language: str, force: bool = False) -> dict:
     """Everything the player's files allow; what is already prepared and current is left alone."""
     manifest = load_manifest(paths)
@@ -1140,6 +1154,10 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
         language = 'es' if language == 'en' else 'en'
     disc = set_language(paths, language)
     write_default_settings(paths)
+    try:
+        prepare_spanish_episode_art(paths)
+    except (OSError, ValueError) as error:
+        say(97, f'No se pudo preparar la rotulación mejorada de episodios: {error}')
     try:
         if make_previews(paths, disc):
             say(99, 'Vistas previas de la presentación listas.')

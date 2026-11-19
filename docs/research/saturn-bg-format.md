@@ -551,3 +551,36 @@ package checks. Episode 1 is the gameplay witness. No new package
 was built. Main workspace measured 41,263,274,196 logical bytes,
 excluding duplicate hard links and junctions; the development ZIP
 remains 6,315,009,692 bytes.
+
+### Spanish Enhanced episode lettering (T107b/T107c)
+
+The shipped 320×224 transparent layers contain only the generated Spanish
+lettering. Each borrows the English card's fill and outline treatment.
+Episode 2 uses black with a white stroke, Episode 4 gold with a white
+stroke, and Episode 7 white with a blue glow.
+
+Preparation uses both locally prepared disc 1 images. It masks the English
+lettering on the Saturn card, paints the corresponding Spanish overlay and
+stores the flattened center under the active profile. The lookup requires
+the fingerprint of the entire active Spanish TITLE file. The enhanced
+renderer loads the center at the same integer fit as the English version and
+uses the same fade weight. The file prepared by the user is never bundled.
+Existing Spanish profiles can generate the replacement by running setup
+again with their prepared games in place. Disc images are read only.
+
+The frozen Windows setup helper generated all ten centers over an existing
+two-disc setup. Each native center matched the corresponding local preview.
+The isolated runtime (SHA-256
+`436519c96826eb1fbdcd005f2e2060fc5a5c3e3abb0a74a67e4df0177db1288e`)
+ran four 6,670-frame Episode 1 replays. The first 6,550 guest hashes in every run
+matched the corresponding Original reference. The full center matched the
+localized image exactly at 1080p (4×) and 1440p (6×) in Spanish Enhanced.
+Mean channel error for full-screen fade samples stayed below 0.59 at both
+resolutions. The upper half returned to the same wide floral image after the
+card. Four sampled frames in Spanish Original and in English Enhanced were
+pixel-identical to their controls, with the Spanish files installed in both
+profiles. The other nine titles were prepared and inspected offline.
+
+The workspace measured 44,432,477,351 logical bytes before archiving the
+English reference runtime. The development ZIP remains 6,315,009,692 bytes.
+No new release ZIP was built.
