@@ -187,7 +187,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T111 | P1 | shard | open | S4a mix the PC MP2 float stereo of a `audio: pc` clip into the output (resample, mute only the Saturn FILM audio), after T108/T109; needs a runtime build. |
 | T112 | P2 | source audio audited; runtime sync and listening open | All 44 eligible source pairs decoded. 40/44 have correlation ≥0.80 in three timing windows. MOVIE005/018/030/119 need special review, especially MOVIE030. Levels, lags and limits in video-equivalence.md. Normal-speed runtime A/V, drift and listening remain open. |
 | T112a | P1 | decoder corrected; standalone tests pass | Separate bounded MP2 and video queues in patch0078 eliminate video-rate audio starvation. Verified at 24 and 30 fps in synthetic and owner clips. Runtime A/B pending in T112b. |
-| T112b | P1 | reproduced; runtime fix open | Normal-speed MOVIE000 skip returns to the title but the PC-audio run mutes the title. Gate PC replacement by presented film and restore Saturn sound immediately after skip, then compare normal-speed audio and guest hashes. See video-equivalence.md. |
+| T112b | P1 | skip audio restored in runtime | Patch0080 gates replacement on the presented PC film and clears the previous source queue at a switch. MOVIE000 B skip returns to audible Saturn title with full-window RGB parity, 1,800 identical strict-native hashes and zero interpreted. General A/V drift and owner listening remain T112. No package change. |
 
 ## Split for collaborators
 

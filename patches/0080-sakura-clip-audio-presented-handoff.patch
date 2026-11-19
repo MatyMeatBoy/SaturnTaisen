@@ -1,0 +1,85 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -611,6 +611,8 @@
+     // the table; the clip starts when the film plane fills the picture and follows the guest's frame count; the guest is untouched.
+     port::MovieDecoder clipDecoder;
+     SDL_Texture* clipTexture=nullptr;int clipTextureW=0,clipTextureH=0;
++    bool clipTextureReady = false;
++    int presentedClip = -1, audioClip = -1;
+     uint32_t clipSerialSeen=0;int clipMovie=-1;bool clipRunning=false;uint64_t clipStartFrame=0;unsigned clipMissing=0;
+     std::vector<uint32_t> clipForeground;
+     // True when a PC clip is armed, the film plane (layer 1) fills the picture and clipTexture holds the frame for this guest frame.
+@@ -633,6 +635,7 @@
+         }
+         if(!clipRunning) {
+             char name[48];std::snprintf(name,sizeof name,"MOVIE/MOVIE%03d.MPG",clipMovie);
++            clipTextureReady = false;
+             clipRunning=clipDecoder.Open((std::filesystem::u8path(port.opt.pcAssetsPath)/name).string(),24,true);
+             clipStartFrame=port.frame;clipMissing=0;
+             if(std::getenv("SATRECOMP_CLIP_TRACE"))std::fprintf(stderr,"clip: open %s -> %d\n",name,int(clipRunning));
+@@ -647,9 +650,9 @@
+                 clipTextureW=frame.width;clipTextureH=frame.height;
+                 if(clipTexture)SDL_SetTextureScaleMode(clipTexture,SDL_SCALEMODE_LINEAR);
+             }
+-            if(clipTexture)SDL_UpdateTexture(clipTexture,nullptr,frame.rgba.data(),frame.width*4);
+-        }
+-        return clipTexture!=nullptr;
++            clipTextureReady = clipTexture && SDL_UpdateTexture(clipTexture, nullptr, frame.rgba.data(), frame.width * 4);
++        }
++        return clipTextureReady;
+     };
+     // T87: the episode title cards (TITLE1..10.BIN, 320x224 on VDP2 layer 4) fill the 16:9 window: the area around the
+     // native picture takes the colour of the picture's own edge rows and columns (no asset, so no game pixels leave the
+@@ -679,6 +682,7 @@
+     struct BodyFace {int x=0,y=0,w=0,h=0;unsigned ordinal=0;};
+     struct BodyDraw {bool valid=false;int slot=-1,x=0,y=0,w=0,h=0;std::vector<BodyFace> faces;std::vector<std::array<int,4>> keep;};
+     auto showSoftware = [&]() {
++        bool drewPcClip = false;
+         ProfileScope presentScope(frameProfile.present);
+         if (!renderer) {
+             return;
+@@ -1503,7 +1507,7 @@
+                                 clipForeground=zoomForeground;
+                                 for(int y=8;y<152;y++)for(int x=16;x<304;x++)
+                                     if(planes.source[size_t(y)*320+x]==1)clipForeground[size_t(y)*320+x]=0;
+-                                SDL_RenderTexture(renderer,clipTexture,nullptr,&imageTarget);
++                                drewPcClip = SDL_RenderTexture(renderer, clipTexture, nullptr, &imageTarget);
+                                 SDL_UpdateTexture(content,nullptr,clipForeground.data(),320*sizeof(uint32_t));
+                                 SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
+                                 SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+@@ -1659,7 +1663,7 @@
+                     clipForeground=mixedSource;
+                     for(int y=0;y<224;y++)for(int x=0;x<320;x++)
+                         if(planes.source[size_t(y)*320+x]==1)clipForeground[size_t(y)*320+x]=0;
+-                    SDL_RenderTexture(renderer,clipTexture,nullptr,&target);
++                    drewPcClip = SDL_RenderTexture(renderer, clipTexture, nullptr, &target);
+                     // (`content` is the opaque native frame here; the layer texture keeps its transparency.)
+                     SDL_UpdateTexture(foreground,nullptr,clipForeground.data(),320*sizeof(uint32_t));
+                     SDL_RenderTexture(renderer,foreground,&crop,&target);
+@@ -1898,6 +1902,7 @@
+         frameProfile.kind=presentationKind;
+         bool presented=false;
+         {ProfileScope flipScope(frameProfile.flip);presented=SDL_RenderPresent(renderer);}
++        if (presented) presentedClip = drewPcClip ? clipMovie : -1;
+         if (presented && !announcedReady) {
+             announcedReady = recomp::PublishLaunchReady(port.opt.readyFile);
+         }
+@@ -2320,7 +2325,16 @@
+             audio.pending.clear(); // (no sound in slow motion)
+         }
+ 
+-        if (clipRunning && audio.stream) {
++        const int nextAudioClip = clipRunning && port.menu.Speed() == 100 ? presentedClip : -1;
++        if (audio.stream && nextAudioClip != audioClip) {
++            // Queued samples from the previous source do not follow a film skip or start.
++            SDL_ClearAudioStream(audio.stream);
++            audioClip = nextAudioClip;
++            if (std::getenv("SATRECOMP_CLIP_TRACE"))
++                std::fprintf(stderr, "clip audio source: %d at guest frame %llu\n", audioClip,
++                    static_cast<unsigned long long>(port.frame));
++        }
++        if (audio.stream && audioClip >= 0) {
+             // T101/S4: while a PC clip plays, its own MP2 audio (44.1 kHz stereo) replaces the Saturn film's sound. The guest's audio is not
+             // sent; the clip's audio tops the device queue up to about a tenth of a second, so it runs on wall-clock time like the device does
+             // (the decoder works far faster than real time). The guest and the clip's picture clock are untouched.
