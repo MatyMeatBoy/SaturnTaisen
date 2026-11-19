@@ -63,11 +63,16 @@ def apply_reviews(project, workspace, reviewed):
         image = matching.load_image(pc_file)
         if image.size != (80, 160) or sha(image.tobytes()) != match['pc_rgba_sha256']:
             raise ValueError(f'{identity}: píxeles del candidato PC distintos de la revisión')
+        swap_strips = match.get('swap_strips', False)
         for density in (1, 2):
-            pixels = matching.prepare_variant(image, native, density, match['dx'], match['dy'])
+            pixels = matching.prepare_variant(image, native, density, match['dx'], match['dy'], swap_strips=swap_strips)
             if sha(pixels.tobytes()) != match['variants_rgba_sha256'][str(density)]:
                 raise ValueError(f'{identity}: la variante {density}× difiere de la revisión')
         row.update(status='accepted', selected=pc_index, dx=match['dx'], dy=match['dy'])
+        if swap_strips:
+            row['swap_strips'] = True
+        else:
+            row.pop('swap_strips', None)
     return result
 
 

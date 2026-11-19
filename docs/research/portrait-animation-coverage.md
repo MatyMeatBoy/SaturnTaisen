@@ -49,7 +49,7 @@ The report includes 42 capture/state pairs. In 36 pairs, the base matches the ca
 
 ## FCE atlas attribution (TP6)
 
-`audit_portrait_coverage.py` now writes `fce_atlases` (per `disc:file`, the identities each FCE holds) and `hd_chapter_coverage.py` uses it for the atlas-file rows of `portraits`. Of 112 atlas files, 16 hold only identities in `config/hd-portrait-recipe.json` (`hd`), 4 are empty 160-byte atlases (`excluded`), and 92 also hold `0169` (four also `00a1`), the only two identities outside the runtime recipe, so they stay `unknown` with the `uncovered` list. The 302 identities are `hd`; `00a1` (strips swapped, T45) and `0169` (different PC card design) remain T52.
+`audit_portrait_coverage.py` now writes `fce_atlases` (per `disc:file`, the identities each FCE holds) and `hd_chapter_coverage.py` uses it for the atlas-file rows of `portraits`. In the initial 112-atlas snapshot, 16 held only identities in `config/hd-portrait-recipe.json` (`hd`), 4 are empty 160-byte atlases (`excluded`), and 92 also hold `0169` (four also `00a1`), the only two identities outside the runtime recipe, so they stay `unknown` with the `uncovered` list. The 302 identities are `hd`; `00a1` (strips swapped, T45) and `0169` (different PC card design) remain T52.
 
 
 ## Residual portraits 00a1 and 0169
@@ -80,9 +80,52 @@ same emblem motif with different proportions and framing. Their PC
 strip data differs from the static native region. The register records
 the examined PC candidates and retains Saturn artwork.
 
-The two portraits stay outside the runtime recipe. The approved
-302 replacements and the FCE attribution are unchanged.
+At this stage both portraits were outside the runtime recipe. The
+[chapter 1 closure](#chapter-1-portrait-closure) applies the later decisions.
 
 The measured workspace was 60,240,718,418 logical bytes with hard
 links counted once and reparse points excluded, above the 20 GB cap.
 The delivered development ZIP remains 6,315,009,692 bytes.
+
+
+## Chapter 1 portrait closure
+
+The reviewed recipe now prepares Iris `00a1` from KAO.SPR index 160.
+It exchanges the two 32-row PC strips before applying the Saturn
+alpha mask. The PC base and the native coordinates stay fixed.
+At both integer densities the review pins the expected RGBA after
+the reorder. The preparer also checks the original Saturn bytes and
+the source KAO archive. An identity that fails its content check
+retains the native portrait.
+
+The production preparer produced 303 identities. All 604 PNG
+variants for the previous 302 were byte-identical to the baseline.
+The existing pack auditor checked the final 606 variants against
+both discs and the 394 PC sheets, with zero validation errors.
+The runtime matcher selects the 00a1 base and its two independent
+row-16 strips uniquely across all 304 native atlas payloads.
+
+Three test fixtures take the exact 00a1 index bytes and place them
+in existing saved portrait-command slots. An unchanged development
+runtime draws the base and, in the other two fixtures, each strip
+at row 16. All 69,120 pixels in each 240×288 portrait rectangle
+match the expected prepared composition at 2560×1440. Guest
+hashes match with the pack enabled and disabled throughout the
+40-frame base and two 12-frame strip replays. Early Enhanced
+captures show each strip active, with every changed pixel confined
+to the verified portrait rectangle. The strip controls in Original
+match in RGB with the pack present and absent, and
+each run reports zero interpreted blocks. These fixtures verify
+the three draw paths. The natural 00a1 chapter scene remains
+to be observed.
+
+The owner decision keeps the Saturn emblem `0169` by design.
+There are 303 HD identities and one native choice. Coverage now
+closes the six chapter-1 FCE atlas entries. Across both discs,
+108 nonempty atlas entries contain prepared identities and any
+explicit native choices. The four empty atlas entries remain
+excluded. No release package was built.
+
+At block close the workspace measured 62,111,789,211 logical bytes
+with hard links counted once and reparse points excluded, above the
+20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

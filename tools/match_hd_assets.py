@@ -41,7 +41,8 @@ def serve(workspace,project,port=8767,open_browser=False):
                 elif side=='prepared' and row:
                     candidate=next(c for c in project['candidates'] if c['index']==row['selected'])
                     image=matching.prepare_variant(matching.load_image(matching.workspace_file(root,candidate['path'])),
-                        matching.workspace_file(root,row['raw']).read_bytes(),2,row['dx'],row['dy'])
+                        matching.workspace_file(root,row['raw']).read_bytes(),2,row['dx'],row['dy'],
+                        swap_strips=row.get('swap_strips',False))
                 else:raise ValueError('Imagen no encontrada')
                 buffer=io.BytesIO();image.save(buffer,format='PNG');self.respond(buffer.getvalue(),kind='image/png')
             except (ValueError,OSError,StopIteration) as error:self.respond(dict(error=str(error)),400)
@@ -60,6 +61,7 @@ def serve(workspace,project,port=8767,open_browser=False):
                 for key in ('dx','dy'):
                     if type(request.get(key)) is not int or abs(request[key])>4:raise ValueError('Los ajustes deben ser enteros entre -4 y 4')
                 before=row.copy();row.update({k:request[k] for k in ('selected','status','dx','dy')})
+                if row['selected']!=before['selected']:row.pop('swap_strips',None)
                 try:matching.atomic_json(root/'project.json',project)
                 except OSError:row.clear();row.update(before);raise
                 self.respond(dict(saved=True))

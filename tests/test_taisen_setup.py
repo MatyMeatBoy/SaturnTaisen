@@ -335,7 +335,7 @@ class TrackedData(unittest.TestCase):
         self.assertEqual(len({row['id'] for row in rows}), len(rows))
         self.assertEqual(recipe['palette_hash'], setup.PALETTE_HASH)
         for row in rows:
-            self.assertLessEqual(set(row), {'id', 'pc_index', 'dx', 'dy', 'native_raw_sha256', 'variants_rgba_sha256'})
+            self.assertLessEqual(set(row), {'id', 'pc_index', 'dx', 'dy', 'native_raw_sha256', 'variants_rgba_sha256', 'swap_strips'})
             self.assertTrue(abs(row['dx']) <= 4 and abs(row['dy']) <= 4)
 
     def test_every_reviewed_portrait_reaches_the_release_recipe(self):
@@ -349,6 +349,7 @@ class TrackedData(unittest.TestCase):
                                       'run tools/build_hd_recipe.py')
             for key in ('pc_index', 'dx', 'dy', 'native_raw_sha256', 'variants_rgba_sha256'):
                 self.assertEqual(row[key], match[key], match['id'])
+            self.assertEqual(row.get('swap_strips', False), match.get('swap_strips', False), match['id'])
         progress = (ROOT / 'docs/HD_PROGRESS.md').read_text(encoding='utf-8')
         self.assertIn(f'{len(recipe)}/304', progress, 'HD_PROGRESS.md and the release recipe disagree')
 

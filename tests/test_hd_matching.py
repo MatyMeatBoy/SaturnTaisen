@@ -23,6 +23,23 @@ class HdMatchingTests(unittest.TestCase):
             for x in range(7,31):im.putpixel((x,y),(200,50+y,70+x,255))
         return im
 
+    def test_strip_swap_keeps_base_and_applies_native_mask_at_both_densities(self):
+        m = self.module()
+        pc = Image.new('RGBA', (80, 160), (16, 32, 48, 255))
+        pc.paste((80, 96, 112, 255), (0, 96, 80, 128))
+        pc.paste((144, 160, 176, 255), (0, 128, 80, 160))
+        native = bytearray([1] * 3200)
+        native[48 * 40] = 0
+        for density in (1, 2):
+            with self.subTest(density=density):
+                image = m.prepare_variant(pc, native, density, swap_strips=True)
+                self.assertEqual(image.getpixel((0, 47 * density)), (16, 32, 48, 255))
+                self.assertEqual(image.getpixel((density, 48 * density)), (144, 160, 176, 255))
+                self.assertEqual(image.getpixel((0, 48 * density)), (144, 160, 176, 0))
+                self.assertEqual(image.getpixel((0, 64 * density)), (80, 96, 112, 255))
+        with self.assertRaises(ValueError):
+            m.prepare_variant(pc, native, 1, swap_strips=1)
+
     def test_exact_scaled_art_wins_and_duplicate_candidates_require_review(self):
         m=self.module();native=self.picture()
         correct=native.resize((80,160),Image.Resampling.NEAREST)

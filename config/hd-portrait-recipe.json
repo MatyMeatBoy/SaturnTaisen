@@ -1142,6 +1142,18 @@
    }
   },
   {
+   "id": "00a1",
+   "pc_index": 160,
+   "dx": 0,
+   "dy": 0,
+   "native_raw_sha256": "f7c59d1a0d3d10686ec26dacaab6c12873d12d95e301d8b6a866ddac6387654b",
+   "variants_rgba_sha256": {
+    "1": "21c9fd3a0642eb2279a174315e4d32fcbfb30acba35c7ec1a47297d286a91ea8",
+    "2": "a397692561ad579757d11cc03f534e35db7d023b6184100218b53e2a894d929e"
+   },
+   "swap_strips": true
+  },
+  {
    "id": "00a2",
    "pc_index": 161,
    "dx": 0,
