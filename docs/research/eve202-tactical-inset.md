@@ -14,3 +14,11 @@ Patch 0097 uses the Enhanced HD backgrounds setting on this presentation path. I
 With patches 0095 and 0097 applied together, an exit smoke test matched 134 guest hashes and reproduced the five sampled captures, with zero interpreted blocks. The HD inset was active at capture 105 and the enabled and disabled captures matched from 106.
 
 The private replay scripts, receipts, state fingerprints and screenshots are in `local/work/codex-tw2`. This validates EVE202 on the observed disc-1 path. EVE0101 has different framing. IC01 recognition was confirmed under the Save/Status/Resume menu and still needs its own HD placement. Additional EVE, IC, disc-2 behavior and release packaging remain open.
+
+## 1440p verification
+
+The merged runtime with patches 0136 and 0137 and the observed ending AOT variants replayed the same disc-1 exit at 2560 × 1440 in Zoom. Enhanced with the isolated BBG202 donor, Enhanced with HD backgrounds disabled, Enhanced with the donor missing, and both Original controls produced the same 132 guest hashes. All five runs reported zero interpreted blocks. The guest hash log SHA-256 is `db81952e43de30d01d6d16ab8b043b4afc875cad86ebb44229dd19935ab0dc67`.
+
+The active inset at (416, 96) has size 1728 × 864. At capture 105, each of its 1,492,992 RGB pixels matches the independently decoded PC crop at (0, 20) with size 564 × 282 after nearest-neighbour scaling. Differences from the Zoom control stay within that inset at captures 80 and 100–105. At capture 106 and later sampled frames, the gameplay output is pixel-identical to the control. The missing-donor pair and the Original pair are pixel-identical in all 12 samples.
+
+The coverage register records this runtime witness for disc 1. The pictures, receipts, and replay commands are retained under `local/work/codex-tch2-scenes/`.
