@@ -2733,6 +2733,28 @@
         "film": {},
         "menus-hud": {},
         "portraits": {
+          "0068": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 103,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "0116": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 277,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/0301FCE.BIN": {
             "association": "resident",
             "decision_evidence": "docs/research/portrait-animation-coverage.md#residual-portraits-00a1-and-0169",
@@ -9081,11 +9103,6 @@
       "0115": {
         "association": "unknown",
         "pc_index": 276,
-        "status": "hd"
-      },
-      "0116": {
-        "association": "unknown",
-        "pc_index": 277,
         "status": "hd"
       },
       "0117": {
