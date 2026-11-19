@@ -11,7 +11,9 @@ Solved 2026-11-19 by looking at the data instead of tracing the loader: the earl
 | `0xA250` | palette: 256 big-endian RGB555 words (Saturn layout, bits 0-4 R, 5-9 G, 10-14 B) |
 | `0xA450` | trailing data, not needed to draw; 45,120-byte files are zero padded to the end |
 
-687 of the 726 `BG*` files on disc 1 are exactly 45,120 bytes and decode this way (`tools/decode_saturn_bg.py`); 39 have other sizes (92,192 / 79,952 / 71,384 bytes) and are not decoded yet. `SAKURA1/BG1001.BIN` renders as the theatre lobby, matching the PC picture. `tests/test_saturn_bg_decode.py` covers the layout synthetically.
+687 of the 726 `BG*` files on disc 1 are exactly 45,120 bytes and decode this way (`tools/decode_saturn_bg.py`).
+
+**Variant B** (header `00 01 00 02`, 26 files such as BG1207 and BG2207, sizes 92,192 / 79,952 / ...): cells wide and cells high are the two big-endian u16 at 0x04 and 0x06 (BG1207 is 64x18 cells = 512x144, a wide scrolling scene), the palette comes first (256 words at 0x10) and the picture starts at 0x210. The decoder handles both, 713 of 726 files in total; the 13 left are the mini-game backgrounds (`BGHANA`, `BGSLOT`, ... start with a palette) and `BG2338`. `SAKURA1/BG1001.BIN` renders as the theatre lobby, matching the PC picture. `tests/test_saturn_bg_decode.py` covers the layout synthetically.
 
 ## Pairing with the PC pictures
 
@@ -22,5 +24,5 @@ Solved 2026-11-19 by looking at the data instead of tracing the loader: the earl
 ## What this does not claim
 
 - Visually confirmed pairs are still the 12 of `hd-scene-bg-pairs.json`; the rest is number + content evidence, not an eye check, and nothing is integrated: T74 (the runtime consumer) is open and needs a runtime build (see T95).
-- Disc 2 (`SAKURA2`) and the 39 other-sized BG files are not mapped.
+- Disc 2 (`SAKURA2`), the variant-B pictures (wider or taller than the PC 576x320 crop, so the content comparison does not apply) and the 13 undecoded files are not in the pair map.
 - `NC*.BIN` (T67's other half) is not decoded; this method (look at the data per hypothesis) is the next thing to try there.

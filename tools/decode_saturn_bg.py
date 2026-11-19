@@ -8,7 +8,15 @@ Format (verified on SAKURA1/BG1001.BIN, the theatre lobby):
   0xA250  palette, 256 big-endian RGB555 words (Saturn layout: bits 0-4 R, 5-9 G, 10-14 B)
   0xA450  trailing data (not needed to draw the picture; 45,120-byte files are zero padded)
 
-Files of other sizes (92,192 / 79,952 / 71,384 bytes) are not decoded here.
+Variant B (header `00 01 00 02`, 31 files such as BG1207 and BG2207: wide or tall scenes) stores its size in
+the header and puts the palette first:
+
+  0x0000  00 01 00 02, cells wide (u16 BE), cells high (u16 BE), 8 more bytes
+  0x0010  palette, 256 big-endian RGB555 words
+  0x0210  picture, 8 bpp, (cells wide) x (cells high) cells of 8x8, row-major (e.g. 64x18 = 512x144)
+  after   trailing data (not needed to draw)
+
+The mini-game files (BGHANA, BGSLOT, ...) start with a palette and are not decoded here.
 
 Usage:
   python tools/decode_saturn_bg.py DISC_TRACK01.iso OUTDIR [--prefix SAKURA1/BG]
@@ -28,16 +36,25 @@ SIZE = 45120
 
 
 def decode(data):
-    """Return a 288x144 RGB Pillow image, or None when `data` is not this format."""
+    """Return an RGB Pillow image (288x144 for the common variant), or None when `data` is not a known layout."""
+    if data[:4] == b'\x00\x01\x00\x02' and len(data) >= 0x210:
+        cells_w, cells_h = struct.unpack_from('>HH', data, 4)
+        if not cells_w or not cells_h or 0x210 + cells_w * cells_h * 64 > len(data):
+            return None
+        return _cells(data, 0x10, 0x210, cells_w, cells_h)
     if len(data) != SIZE or data[:4] != b'\x00\x01\x00\x01':
         return None
-    words = struct.unpack_from('>256H', data, PALETTE_AT)
+    return _cells(data, PALETTE_AT, HEADER, CELLS_W, CELLS_H)
+
+
+def _cells(data, palette_at, picture_at, cells_w, cells_h):
+    words = struct.unpack_from('>256H', data, palette_at)
     palette = [((w & 31) * 255 // 31, ((w >> 5) & 31) * 255 // 31, ((w >> 10) & 31) * 255 // 31) for w in words]
-    image = Image.new('RGB', (CELLS_W * 8, CELLS_H * 8))
+    image = Image.new('RGB', (cells_w * 8, cells_h * 8))
     pixels = image.load()
-    for cell in range(CELLS_W * CELLS_H):
-        base = HEADER + cell * 64
-        left, top = (cell % CELLS_W) * 8, (cell // CELLS_W) * 8
+    for cell in range(cells_w * cells_h):
+        base = picture_at + cell * 64
+        left, top = (cell % cells_w) * 8, (cell // cells_w) * 8
         for y in range(8):
             row = data[base + y * 8: base + y * 8 + 8]
             for x in range(8):
