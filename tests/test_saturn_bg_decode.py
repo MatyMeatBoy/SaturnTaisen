@@ -57,13 +57,13 @@ class SaturnBgTests(unittest.TestCase):
         self.assertEqual(image.getpixel((5, 2)), (255, 0, 0))
 
     def test_nc_body_is_a_flat_bitmap_after_its_palette(self):
-        width, height = 40, 144
+        width, height = 64, 144
         data = bytearray(0x610 + width * height + 6000)
         data[:2] = bytes([0, 2])
         struct.pack_into('>H', data, 0x410 + 4 * 2, 31)  # palette 4 = R31
-        # a smooth ramp so the stride detector sees rows of 40 pixels
+        # a smooth ramp that changes slowly from row to row, so the stride detector finds rows of 40 pixels
         for i in range(width * height + 6000):
-            data[0x610 + i] = (i % width) // 2 + 1
+            data[0x610 + i] = (i % width) // 3 + 1 + (i // width) // 8  # rows differ a little, so only the true stride is closest
         data[0x610 + 3 * width + 7] = 4
         image = bg.decode_nc(bytes(data))
         self.assertEqual(image.size[1], 144)
