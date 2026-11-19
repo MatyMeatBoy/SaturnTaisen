@@ -80,8 +80,8 @@
       "patches/0075-sakura-vdp-scroll-dot-colour.patch",
       "patches/0076-sakura-card-wide-mirror.patch",
       "patches/0077-sakura-sh2-dispatch-fast-chain.patch",
-      "patches/0078-sakura-card-seam-blend.patch",
-      "patches/0078-sakura-movie-decoder-independent-tracks.patch"
+      "patches/0078-sakura-movie-decoder-independent-tracks.patch",
+      "patches/0079-sakura-card-seam-blend.patch"
     ]
   }
 }
