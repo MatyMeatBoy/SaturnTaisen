@@ -214,7 +214,7 @@ Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Tai
 
 **Idiomas.** «Inglés v0.1 Taisen» y «Español v0.1 Taisen» se aplican sobre una copia de tus discos; cada paso se comprueba con SHA-256 y tus archivos solo se leen. El idioma se cambia en el launcher al instante. Créditos de la traducción inglesa y detalle de las capas: `parches/CREDITOS.md`. En español siguen en inglés los rótulos de episodio, la pantalla LOADING, el menú de extras y los subtítulos de vídeo.
 
-**Mod HD.** Con la imagen de PC se preparan 19 fondos y los retratos HD emparejados; no se conserva ningún archivo original de PC, solo el pack preparado en `hd-resources`. Los cuerpos HD completos, vídeos e imágenes de escena de PC siguen en desarrollo.
+**Mod HD.** Con tu edición de PC se prepara una sola vez todo el material HD (imágenes de fondos, escenas, eventos, CG, mapas, unidades, personajes, menús y las películas) en `app/hd-resources`, solo en tu PC y nunca compartido. Hoy ya se ven 19 fondos y los retratos HD; el resto se irá activando en próximas versiones sin volver a preparar nada.
 
 **Presentación.** Escala entera sin suavizado. Original conserva la composición de Saturn; Mejorada recompone las escenas reconocidas hasta 16:9 y vuelve a la original cuando no reconoce la escena. Los fondos generados son preliminares.
 

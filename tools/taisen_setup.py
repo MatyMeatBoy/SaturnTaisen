@@ -316,6 +316,14 @@ class Image:
     def root(self) -> dict:
         volume = self.read(16, 2048)
         lba, size = struct.unpack_from('<I', volume, 158)[0], struct.unpack_from('<I', volume, 166)[0]
+        return self.directory(lba, size)
+
+    def folder(self, name: str) -> dict:
+        """The entries of a folder at the root of the disc (e.g. MOVIE), or {} when there is none."""
+        entry = self.root().get(name.upper())
+        return self.directory(*entry) if entry else {}
+
+    def directory(self, lba: int, size: int) -> dict:
         if size > 1024 * 1024:
             raise SetupError('Directorio de la imagen de PC no admitido.')
         directory, at, found = self.read(lba, size), 0, {}
@@ -325,8 +333,9 @@ class Image:
                 at = (at // 2048 + 1) * 2048
                 continue
             name = directory[at + 33:at + 33 + directory[at + 32]].decode('ascii', 'replace').split(';')[0]
-            found[name.upper()] = (struct.unpack_from('<I', directory, at + 2)[0],
-                                   struct.unpack_from('<I', directory, at + 10)[0])
+            if name not in ('\x00', '\x01'):  # (the folder itself and its parent)
+                found[name.upper()] = (struct.unpack_from('<I', directory, at + 2)[0],
+                                       struct.unpack_from('<I', directory, at + 10)[0])
             at += length
         return found
 
@@ -734,11 +743,13 @@ def locate_game(folder: Path) -> Path | None:
     return None
 
 
-def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
-    """The folder that holds SAKURA1 with the files the HD mod needs, from any form of the PC edition."""
+def open_pc(paths: Paths, source: Path, work: Path, names: list[str] | None = None) -> Path:
+    """The folder that holds SAKURA1 (and MOVIE, when the edition has its videos) from any form of the PC
+    edition. `names` limits the cabinet extraction to those files; None takes everything."""
     kind = describe_pc(source)
     if kind == 'game':
         return source
+    movies = None
     if kind == 'image':
         image = Image(source)
         try:
@@ -747,6 +758,12 @@ def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
             cabinets.mkdir()
             for name in CABINETS:
                 image.copy(*root[name], cabinets / name.lower())
+            if names is None:  # the videos are on the disc itself, outside the cabinets
+                movies = work / 'movie'
+                movies.mkdir()
+                for name, (lba, size) in image.folder('MOVIE').items():
+                    if name.endswith('.MPG'):
+                        image.copy(lba, size, movies / name)
         finally:
             image.close()
         first = cabinets / 'data1.cab'
@@ -757,7 +774,7 @@ def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
                          'carpeta del juego instalado).')
     out = work / 'pc'
     out.mkdir()
-    result = run([paths.unshield, '-d', out, 'x', first, *names])
+    result = run([paths.unshield, '-d', out, 'x', first, *(names or [])])
     if cabinets:
         shutil.rmtree(cabinets)
     if result.returncode:
@@ -766,6 +783,10 @@ def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
     root = locate_game(out)
     if not root:
         raise SetupError('La edición de PC no contiene SAKURA1/SYSTEM/KAO.SPR.')
+    if movies is None and kind == 'cabinets':  # a copy of the disc: MOVIE sits beside the cabinets
+        movies = child(source, 'MOVIE')
+    if movies is not None and not child(root, 'MOVIE'):
+        shutil.move(str(movies), str(root / 'MOVIE'))
     return root
 
 
@@ -851,9 +872,64 @@ def build_portraits(paths: Paths, pc_root: Path, discs: list[Path], work: Path, 
     return len(entries), manifest
 
 
+# Everything the HD mod uses or will use, taken once from the player's PC edition so that a category integrated
+# later needs no new preparation: every image (.SPR: backgrounds, scenes, events, CG, endings, titles, eye
+# catches, maps, units, large characters, system/menus, items, walls…), the videos and the small tables that
+# go with them. Audio (voices, music, effects) is not part of the HD mod.
+PC_PACK_VERSION = 'pc-full-1'
+PC_PACK_EXTENSIONS = {'.SPR', '.MPG', '.BIN', '.DAT', '.TAB', '.PRI', '.OD', '.BMP', '.PAL'}
+PC_PACK_SKIP_FOLDERS = {'VOICE', 'BGM', 'SE'}
+
+
+def pc_pack_files(root: Path) -> list[tuple[Path, str]]:
+    """(file, path in the pack) for the PC edition's HD material under SAKURA1-3 and MOVIE."""
+    picked = []
+    for top in sorted(root.iterdir(), key=lambda entry: entry.name.upper()):
+        name = top.name.upper()
+        if not top.is_dir() or not (name.startswith('SAKURA') or name == 'MOVIE'):
+            continue
+        for file in sorted(top.rglob('*')):
+            if not file.is_file():
+                continue
+            relative = file.relative_to(root)
+            if any(part.upper() in PC_PACK_SKIP_FOLDERS for part in relative.parts[1:-1]):
+                continue
+            if file.suffix.upper() in PC_PACK_EXTENSIONS:
+                picked.append((file, '/'.join(part.upper() for part in relative.parts)))
+    return picked
+
+
+def build_pc_pack(found: Path, target: Path, base: int, span: int) -> dict:
+    """Copies the PC edition's HD material into the pack with a manifest (path, size, SHA-256)."""
+    files = pc_pack_files(found)
+    if not files:
+        raise SetupError('Tu edición de PC no tiene las imágenes del juego (SAKURA1/SAKURA2/SAKURA3).')
+    total = sum(file.stat().st_size for file, _ in files)
+    done, rows, categories = 0, [], {}
+    for index, (file, name) in enumerate(files):
+        destination = target / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        digest = hashlib.sha256()
+        with file.open('rb') as source, destination.open('wb') as out:
+            for block in iter(lambda: source.read(1 << 20), b''):
+                digest.update(block)
+                out.write(block)
+        size = destination.stat().st_size
+        rows.append(dict(path=name, bytes=size, sha256=digest.hexdigest()))
+        category = '/'.join(name.split('/')[:2]) if name.count('/') > 1 else name.split('/')[0]
+        categories[category] = categories.get(category, 0) + 1
+        done += size
+        if index % 50 == 0:
+            say(base + int(span * done / max(total, 1)), f'Mod HD: guardando archivos de tu edición de PC ({index + 1} de {len(files)})…')
+    manifest = dict(schema=1, version=PC_PACK_VERSION, files=len(rows), bytes=total, categories=categories,
+                    videos=sum(1 for row in rows if row['path'].endswith('.MPG')), entries=rows)
+    (target / 'pc-manifest.json').write_text(json.dumps(manifest, indent=1) + '\n', encoding='utf-8')
+    return manifest
+
+
 def hd_stamp(paths: Paths) -> str:
     """What the HD pack is built from in this release; a pack with another stamp is rebuilt."""
-    h = hashlib.sha256()
+    h = hashlib.sha256(PC_PACK_VERSION.encode('ascii'))
     for file in (paths.recipe, paths.provenance):
         h.update(file.read_bytes())
     return h.hexdigest()
@@ -862,7 +938,8 @@ def hd_stamp(paths: Paths) -> str:
 def hd_ready(paths: Paths) -> bool:
     try:
         saved = json.loads((paths.hd / 'prepared-manifest.json').read_text(encoding='utf-8'))
-        return (paths.hd / 'hd-pack.stfp').is_file() and saved.get('stamp') == hd_stamp(paths)
+        return ((paths.hd / 'hd-pack.stfp').is_file() and (paths.hd / 'pc' / 'pc-manifest.json').is_file()
+                and saved.get('stamp') == hd_stamp(paths))
     except (OSError, ValueError):
         return False
 
@@ -873,7 +950,7 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
     with tempfile.TemporaryDirectory(prefix='.preparar-hd-', dir=paths.hd.parent) as scratch:
         work = Path(scratch)
         say(base, 'Mod HD: leyendo tu edición de PC…')
-        found = open_pc(paths, source, work, ['KAO.SPR'] + [row['id'] + '.SPR' for row in rows])
+        found = open_pc(paths, source, work)  # the whole edition: the pack keeps everything the HD mod will need
         pc_root = work / 'root'  # a private copy with the exact layout the runtime expects
         wall = pc_root / 'SAKURA1/WALL'
         wall.mkdir(parents=True)
@@ -910,13 +987,16 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
         receipt = struct.pack('<8sIIQQQII', b'STFHD01\0', 1, len(entries), len(archive), fnv64(archive),
                               fnv64(manifest.read_bytes()), count, 0) + b''.join(entries)
         (staged / 'hd-pack.stfp').write_bytes(receipt)
-        report = dict(schema=1, original_pc_files_included=False, backgrounds=len(entries), portraits=count,
+        pc = build_pc_pack(found, staged / 'pc', base + span * 7 // 10, span * 25 // 100)
+        report = dict(schema=2, original_pc_files_included=True, backgrounds=len(entries), portraits=count,
+                      pc_files=pc['files'], pc_bytes=pc['bytes'], pc_videos=pc['videos'], pc_categories=pc['categories'],
                       stamp=hd_stamp(paths))
         (staged / 'prepared-manifest.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
         if paths.hd.exists():
             shutil.rmtree(paths.hd)
         os.rename(staged, paths.hd)
-    say(base + span, f'Mod HD: {len(rows)} fondos y {count} retratos listos.')
+    say(base + span, f'Mod HD: {report["pc_files"]} archivos de tu edición de PC guardados '
+                     f'({report["pc_videos"]} vídeos); {len(rows)} fondos y {count} retratos ya activos.')
     return report
 
 
