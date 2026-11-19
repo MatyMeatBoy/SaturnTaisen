@@ -66,14 +66,14 @@
       "next": "Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.",
       "details": [
         "El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.",
-        "El cruce TH0 registra 712 archivos PC con una correspondencia aceptada en los catálogos de BG, EVE y pantallas IC. La tabla de huellas de paleta contiene 459 entradas y 459 archivos SPR distintos con integración en el código fuente.",
-        "El preparador copia el material HD desde la edición PC del propietario. Falta un recuento de archivos preparados y verificados individualmente. Las imágenes de variante ancha, escenas EVE y eyecatches mantienen su ruta nativa."
+        "El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 516 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.",
+        "La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. El recuento de recursos preparados y la auditoría completa de apariciones en juego siguen pendientes."
       ],
       "total": 1267,
       "inventory": 1267,
       "matched": 712,
       "prepared": null,
-      "integrated": 459,
+      "integrated": 516,
       "verified": null
     },
     {
@@ -143,18 +143,22 @@
       "sources": [
         {
           "path": "docs/research/pc-asset-census.md"
+        },
+        {
+          "path": "docs/research/stage01-pc-ground.md"
         }
       ],
       "next": "Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.",
       "details": [
-        "542 archivos SPR: 291 UNIT, 194 MAP y 57 ITEM, más 141 MAP DAT y datos de mapa. Ninguno emparejado ni integrado todavía."
+        "El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.",
+        "El suelo de Stage01 usa MAP01_A de PC y está verificado en juego con cámara fija y en movimiento. Falta un recuento por archivo SPR que cubra todas las sustituciones de mapa, unidad y objeto."
       ],
       "total": 542,
       "inventory": 542,
-      "matched": 0,
-      "prepared": 0,
-      "integrated": 0,
-      "verified": 0
+      "matched": null,
+      "prepared": null,
+      "integrated": null,
+      "verified": null
     },
     {
       "id": "hud-menus",
@@ -167,19 +171,23 @@
         },
         {
           "path": "docs/releases/v0.2.0-test.1.md"
+        },
+        {
+          "path": "docs/PENDIENTES.md"
         }
       ],
-      "next": "Emparejar cada entrada con su pantalla o pieza Saturn, empaquetarla y conectarla al renderizador; separar sustitución HD y ajuste del layout Saturn.",
+      "next": "Completar el cruce por imagen del censo, registrar las sustituciones HD y verificar cada menú en juego.",
       "details": [
-        "Se observaron menús tácticos en Saturn y se ajustó su presentación. Falta vincular las piezas HD compartidas y contar las pantallas cubiertas.",
-        "Inventario de cabeceras PC: 29 archivos y 572 entradas de imagen sin errores de cabecera (pc-menu-hud-inventory.json). Ninguna está emparejada todavía con una pieza Saturn."
+        "Las pruebas de presentación de Saturn cubrieron menús tácticos. Las sustituciones de recursos se verifican por pieza y por pantalla.",
+        "El censo PC reúne 29 archivos y 572 entradas de imagen con cabeceras validadas.",
+        "El inventario tiene tarjetas completas y marcos de SYSTEM verificados en juego. El recuento sigue pendiente para las 572 imágenes candidatas del censo."
       ],
       "total": 572,
       "inventory": 572,
-      "matched": 0,
-      "prepared": 0,
-      "integrated": 0,
-      "verified": 0
+      "matched": null,
+      "prepared": null,
+      "integrated": null,
+      "verified": null
     },
     {
       "id": "backgrounds",
@@ -228,14 +236,14 @@
       "next": "Comprobar los cuerpos restantes y las expresiones con fallback nativo.",
       "details": [
         "Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. Hay 129 pares de cuerpo utilizables según el mapa y la revisión. Los recuentos usan cuerpos, una unidad por archivo Saturn.",
-        "Se observaron seis cuerpos dibujados en HD en estados de juego. Según el cuadro, los ojos o la boca pueden seguir nativos. Sigue pendiente el recuento de poses, expresiones, fundidos y apariciones verificadas."
+        "El catálogo del runtime integra 129 paquetes. Hay apariciones documentadas para 6 cuerpos. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos."
       ],
       "total": 147,
       "inventory": 147,
       "matched": 129,
       "prepared": null,
-      "integrated": 6,
-      "verified": null
+      "integrated": 129,
+      "verified": 6
     }
   ]
 }
