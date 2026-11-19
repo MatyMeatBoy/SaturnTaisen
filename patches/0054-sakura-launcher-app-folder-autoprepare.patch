@@ -1,5 +1,268 @@
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+index e5f0c4a..58b443d 100644
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -268,7 +268,11 @@ const launcher::Description& launcher::describe() {
+             return std::string();
+         };
+         d.arguments = arguments;
+-        d.extra_home = [](launcher::PageContext& page) {DrawSakuraSetup(page);DrawSakuraHd(page);DrawSakuraSaves(page);};
++        // Inicio: title, Jugar and three switches. Everything else (the player's files, saves, screen) is in Opciones.
++        d.simple_home = true;
++        d.mute_argument = nullptr; // (nobody wants to start in silence; the game menu has the volume)
++        d.extra_home = [](launcher::PageContext& page) {DrawSakuraHome(page);};
++        d.extra_options = [](launcher::PageContext& page) {DrawSakuraFiles(page);DrawSakuraSaves(page);};
+         d.extra_home_busy = [] {return SakuraSetupBusy() || SakuraHdBusy();};
+         d.shutdown = [] {ShutdownSakuraSetup();ShutdownSakuraHd();ShutdownSakuraSaves();};
+         d.saves_folder = true;
+diff --git a/launcher/src/sakura_hd.cpp b/launcher/src/sakura_hd.cpp
+index fe1d4b0..59d64cc 100644
+--- a/launcher/src/sakura_hd.cpp
++++ b/launcher/src/sakura_hd.cpp
+@@ -11,19 +11,27 @@
+ namespace {
+ struct HdState {
+     std::mutex mutex;
+-    bool dialog=false,closed=false,finished=false,error=false;
++    bool dialog=false,closed=false,finished=false,error=false,picked=false;
+     std::string pending,submitted,message;
+     std::array<char,4096> source{};
+     std::unique_ptr<GameProcess> worker;
+     std::filesystem::path log;
+ };
+ std::shared_ptr<HdState> state;
++// How many prepared HD files a folder holds (portraits, backgrounds, scenes, videos… whatever the pack has).
++size_t CountFiles(const std::filesystem::path& folder) {
++    size_t count=0;std::error_code error;
++    for(std::filesystem::recursive_directory_iterator it(folder,error),end;!error && it!=end;it.increment(error))
++        if(it->is_regular_file(error))count++;
++    return count;
++}
+ void PickedHd(void* userdata,const char* const* files,int) {
+     std::unique_ptr<std::shared_ptr<HdState>> owner(static_cast<std::shared_ptr<HdState>*>(userdata));
+     const auto one=*owner;std::lock_guard<std::mutex> lock(one->mutex);
+     if(!one->closed && files && files[0])one->pending=files[0];
+     one->dialog=false;
+ }
++std::string Utf8(const std::filesystem::path& path) {const auto text=path.u8string();return std::string(text.begin(),text.end());}
+ std::string ResourceRoot(const char* value) {
+     auto root=std::filesystem::u8path(value).lexically_normal();std::error_code error;
+     if(!root.has_filename() && root!=root.root_path())root=root.parent_path();
+@@ -50,7 +58,7 @@ void DrawSakuraHd(launcher::PageContext& page) {
+     {
+         std::lock_guard<std::mutex> lock(s.mutex);dialog=s.dialog;
+         if(!s.pending.empty()) {
+-            if(s.pending.size()<s.source.size())SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());
++            if(s.pending.size()<s.source.size()) {SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());s.picked=true;}
+             else {s.message="La ruta seleccionada es demasiado larga.";s.error=true;}
+             s.pending.clear();
+         }
+@@ -59,72 +67,66 @@ void DrawSakuraHd(launcher::PageContext& page) {
+     if(s.worker && !running && !s.finished) {
+         s.finished=true;s.error=s.worker->exit_code()!=0;
+         if(!s.error) {
++            page.prefs.load(); // (the helper recorded where the prepared pack is)
+             const auto previous=page.prefs.get("sakura","pc_assets");
+-            page.prefs.set("sakura","pc_assets",s.submitted);
++            if(previous.empty())page.prefs.set("sakura","pc_assets",Utf8(page.program_folder/"hd-resources"));
+             if(!page.prefs.save()) {
+                 page.prefs.set("sakura","pc_assets",previous);s.error=true;
+-                s.message="Los fondos están preparados, pero no se pudo guardar la selección.";
+-            } else s.message="19 fondos verificados y preparados para Saturn. Puedes jugar en modo mejorado.";
++                s.message="El mod HD está preparado, pero no se pudo guardar la selección.";
++            } else {
++                // Prepared means switched on: the MODO HD bubble on the home page turns it off again if wanted.
++                for(const auto& [key,value]:{std::pair<const char*,const char*>{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},
++                                             {"hd_preload","1"},{"presentation_mode","1"}})
++                    page.settings.set("features",key,value);
++                if(page.settings.get("features","preset")!="custom")page.settings.set("features","preset","custom");
++                page.settings.save();
++                s.message="Mod HD preparado y activado: "+std::to_string(CountFiles(page.program_folder/"hd-resources")+CountFiles(page.folder/"cache"/"backgrounds"))+" archivos HD de tu edición de PC (retratos, fondos y lo demás que el pack trae). Se desactiva con la burbuja MODO HD de arriba.";
++            }
+         } else {
+-            s.message="No se pudieron preparar los 19 fondos. Usa la carpeta extraída que contiene SAKURA1/WALL.";
++            s.message="No se pudo preparar el mod HD. Elige la carpeta de tu edición de PC (la que contiene SAKURA1) o un pack HD ya preparado.";
+             std::ifstream input(s.log,std::ios::binary);std::array<char,2048> details{};
+             input.read(details.data(),details.size()-1);
+             if(input.gcount()>0)s.message+='\n'+std::string(details.data(),static_cast<size_t>(input.gcount()));
+         }
+     }
++    // The setup helper builds the whole HD pack (portraits, backgrounds and whatever else the release's
++    // recipe names) from the PC edition in any form: disc image (.mdf/.iso), cabinets folder or installed game.
++    auto prepare=[&] {
++        s.submitted=s.source.data();s.finished=false;s.error=false;s.message.clear();
++        std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
++        s.log=page.folder/"logs"/"preparar-hd.log";s.worker=std::make_unique<GameProcess>();
++        const auto language=page.prefs.get("sakura","language");
++        if(!s.worker->start(page.program_folder/"preparar-juego.exe",{"prepare","--rom",s.submitted,"--language",language.empty()?"es":language,
++                               "--home",Utf8(page.folder),"--program",Utf8(page.program_folder)},page.program_folder,s.message,s.log)) {
++            s.worker.reset();s.finished=true;s.error=true;
++        }
++    };
++    // A folder just chosen is prepared at once: choosing it is the request.
++    if(s.picked && !running && !dialog && !page.playing && s.source[0]) {s.picked=false;prepare();}
+     const auto& p=ui::palette();
+     ui::gap(24);ui::text("MOD HD · SATURN",ui::Font::Semibold,ui::size::kDetail,p.secondary);ui::gap(10);
+     {
+         layout::Card card(page.width);
+-        layout::row(page.width,"Recursos HD de Saturn","Usa tus recursos PC o un pack HD ya preparado. Los recursos preparados no requieren la instalación PC.",150,36,[&] {
+-            if(ui::button("Elegir carpeta…",ui::Kind::Secondary,150,!running && !dialog && !page.playing)) {
++        const std::string where=s.source[0]?std::string("Ahora: ")+s.source.data():"Tu edición de PC: la imagen del disco (.mdf/.iso), su carpeta o el juego instalado. Se prepara al elegirla.";
++        layout::row(page.width,"Recursos HD",where.c_str(),190,36,[&] {
++            const bool free=!running && !dialog && !page.playing;
++            if(ui::button("Carpeta…",ui::Kind::Secondary,92,free)) {
+                 {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
+                 SDL_ShowOpenFolderDialog(PickedHd,new std::shared_ptr<HdState>(state),page.window,nullptr,false);
+             }
+-        });
+-        layout::inset_separator(page.width);
+-        layout::row(page.width,"Carpeta de recursos","Selecciona la carpeta de recursos o del pack preparado.",270,36,[&] {
+-            ImGui::BeginDisabled(running || dialog || page.playing);
+-            ui::text_field("##sakura-hd-source",s.source.data(),s.source.size(),"Carpeta extraída de PC",270);
+-            ImGui::EndDisabled();
+-        });
+-        layout::row(page.width,running?"Preparando fondos…":"Verificar y preparar","Comprueba los fondos disponibles y prepara su caché. Los discos y tus partidas permanecen intactos.",150,36,[&] {
+-            if(ui::button("Preparar mod HD",ui::Kind::Primary,150,s.source[0] && !running && !dialog && !page.playing)) {
+-                s.submitted=ResourceRoot(s.source.data());s.finished=false;s.error=false;s.message.clear();
+-                std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
+-                s.log=page.folder/"logs"/"hd-backgrounds.log";s.worker=std::make_unique<GameProcess>();
+-                if(!s.worker->start(page.program_folder/"sakura.exe",{"--prepare-pc-backgrounds",s.submitted,
+-                                       (page.folder/"cache"/"backgrounds").u8string()},page.folder,s.message,s.log)) {
+-                    s.worker.reset();s.finished=true;s.error=true;
+-                }
++            ImGui::SameLine(0,ui::px(6));
++            if(ui::button("Imagen…",ui::Kind::Secondary,92,free)) {
++                static const SDL_DialogFileFilter filters[]={{"Imagen de la edición de PC","mdf;iso;img;bin;zip"}};
++                {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
++                SDL_ShowOpenFileDialog(PickedHd,new std::shared_ptr<HdState>(state),page.window,filters,1,nullptr,false);
+             }
+         });
+-        if(!page.prefs.get("sakura","pc_assets").empty()) {
+-            layout::inset_separator(page.width);
+-            layout::row(page.width,"Usar fondos PC HD","Solo afecta al modo mejorado. Puedes volver a los fondos Saturn en cualquier momento.",150,36,[&] {
+-                int selected=page.settings.get("features","pc_hd_backgrounds")=="1"?1:0;
+-                ImGui::BeginDisabled(page.playing);
+-                if(ui::dropdown("##sakura-hd-enable",{"Activados","Desactivados"},selected,150)) {
+-                    const auto previous=page.settings.get("features","pc_hd_backgrounds");
+-                    page.settings.set("features","pc_hd_backgrounds",std::to_string(selected));
+-                    if(!page.settings.save()) {page.settings.set("features","pc_hd_backgrounds",previous);s.error=true;s.message="No se pudo guardar la opción de fondos HD.";}
+-                }
+-                ImGui::EndDisabled();
+-            });
+-        }
+         layout::inset_separator(page.width);
+-        layout::row(page.width,"Precargar mod HD al iniciar","Carga los fondos y retratos HD habilitados antes de jugar. Usa más memoria y reduce las cargas entre escenas.",150,36,[&] {
+-            int selected=page.settings.get("features","hd_preload")=="1"?1:0;
+-            ImGui::BeginDisabled(page.playing || running);
+-            if(ui::dropdown("##sakura-hd-preload",{"Desactivado","Activado"},selected,150)) {
+-                const auto previous=page.settings.get("features","hd_preload");
+-                page.settings.set("features","hd_preload",std::to_string(selected));
+-                if(!page.settings.save()) {page.settings.set("features","hd_preload",previous);s.error=true;s.message="No se pudo guardar la precarga HD.";}
+-            }
+-            ImGui::EndDisabled();
++        layout::row(page.width,running?"Preparando mod HD…":"Verificar y preparar","Comprueba tus recursos y prepara los fondos y retratos HD. Los discos y tus partidas no se tocan.",150,36,[&] {
++            if(ui::button("Preparar mod HD",ui::Kind::Primary,150,s.source[0] && !running && !dialog && !page.playing))prepare();
+         });
+         card.end();
+     }
+-    if(running) {ui::gap(10);ui::text("Verificando recursos y preparando fondos en paralelo…",ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);}
++    if(running) {ui::gap(10);ui::text("Verificando recursos y preparando el mod HD…",ui::Font::Semibold,ui::size::kDetail,p.primary,page.width);}
+     if(!s.message.empty()) {ui::gap(10);ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.error?p.danger:p.success,page.width);}
+ }
+diff --git a/launcher/src/sakura_saves.cpp b/launcher/src/sakura_saves.cpp
+index ce83aeb..a2b7e67 100644
+--- a/launcher/src/sakura_saves.cpp
++++ b/launcher/src/sakura_saves.cpp
+@@ -5,6 +5,7 @@
+ #include "layout.h"
+ #include "ui.h"
+ #include <array>
++#include <cctype>
+ #include <fstream>
+ #include <memory>
+ #include <mutex>
+@@ -45,12 +46,13 @@ void ShutdownSakuraSaves() {
+ void DrawSakuraSaves(launcher::PageContext& page) {
+     if (!state) state=std::make_shared<ImportState>();
+     auto& s=*state;
+-    bool dialog=false;
++    bool dialog=false,chosen=false;
+     {
+         std::lock_guard<std::mutex> lock(s.mutex);
+         if (!s.pending.empty()) {
+             SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());
+             s.pending.clear();
++            chosen=true;
+         }
+         dialog=s.dialog;
+     }
+@@ -71,9 +73,29 @@ void DrawSakuraSaves(launcher::PageContext& page) {
+     ui::gap(24);
+     ui::text("TUS PARTIDAS",ui::Font::Semibold,ui::size::kDetail,p.secondary);
+     ui::gap(10);
++    // One button: choosing the file is the request; the format is recognised (SSF single files by their name).
++    auto import=[&] {
++        std::error_code error;
++        const auto folder=page.folder/"imports";
++        std::filesystem::create_directories(folder,error);
++        s.output=folder/("partida-"+std::to_string(SDL_GetTicksNS())+".bin");
++        s.log=s.output;s.log.replace_extension("log");
++        s.finished=false;s.success=false;s.message_error=false;s.message.clear();
++        s.worker=std::make_unique<GameProcess>();
++        std::vector<std::string> arguments={s.source.data(),"--output",s.output.string()};
++        std::string name=std::filesystem::u8path(s.source.data()).filename().string();
++        for (auto& c:name) c=static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
++        if (name.rfind("SAKURA___",0)==0) {arguments.push_back("--format");arguments.push_back("ssf-single");}
++        if (error || !s.worker->start(page.program_folder/"import-saves.exe",arguments,page.folder,s.message,s.log)) {
++            s.finished=true;
++            s.message_error=true;
++            if (error) s.message="No se puede crear la carpeta de importación: "+error.message();
++        }
++    };
++    if (chosen && !running && !page.playing) import();
+     layout::Card card(page.width);
+-    layout::row(page.width,"Importar desde un emulador","BUP, SAROO, memoria de Mednafen/Beetle, SSF y Yabause/Kronos. Se crea una copia; tu archivo original no cambia.",140,36,[&] {
+-        if (ui::button("Elegir archivo…",ui::Kind::Secondary,140,!running && !dialog && !page.playing)) {
++    layout::row(page.width,running?"Importando…":"Importar partida","De otro emulador: BUP, SAROO, Mednafen/Beetle, SSF o Yabause/Kronos. Se crea una copia; tu archivo no cambia.",120,36,[&] {
++        if (ui::button("Elegir…",ui::Kind::Secondary,120,!running && !dialog && !page.playing)) {
+             {
+                 std::lock_guard<std::mutex> lock(s.mutex);
+                 s.dialog=true;
+@@ -82,32 +104,6 @@ void DrawSakuraSaves(launcher::PageContext& page) {
+             SDL_ShowOpenFileDialog(picked,new std::shared_ptr<ImportState>(state),page.window,filters,2,nullptr,false);
+         }
+     });
+-    layout::inset_separator(page.width);
+-    layout::row(page.width,"Archivo de origen","También puedes pegar la ruta completa.",260,36,[&] {
+-        ui::text_field("##save-source",s.source.data(),s.source.size(),"Ruta de la partida",260);
+-    });
+-    layout::row(page.width,"Formato","SSF individual: usa su nombre original, por ejemplo SAKURA___01.bin.",220,36,[&] {
+-        ui::dropdown("##save-format",{"Detectar automáticamente","SSF · archivo individual"},s.format,220);
+-    });
+-    layout::row(page.width,running?"Importando…":"Crear una copia","La partida habitual queda guardada por separado.",140,36,[&] {
+-        const auto helper=page.program_folder/"import-saves.exe";
+-        if (ui::button("Importar",ui::Kind::Primary,140,s.source[0] && !running && !dialog && !page.playing)) {
+-            std::error_code error;
+-            const auto folder=page.folder/"imports";
+-            std::filesystem::create_directories(folder,error);
+-            s.output=folder/("partida-"+std::to_string(SDL_GetTicksNS())+".bin");
+-            s.log=s.output;s.log.replace_extension("log");
+-            s.finished=false;s.success=false;s.message_error=false;s.message.clear();
+-            s.worker=std::make_unique<GameProcess>();
+-            std::vector<std::string> arguments={s.source.data(),"--output",s.output.string()};
+-            if (s.format) {arguments.push_back("--format");arguments.push_back("ssf-single");}
+-            if (error || !s.worker->start(helper,arguments,page.folder,s.message,s.log)) {
+-                s.finished=true;
+-                s.message_error=true;
+-                if (error) s.message="No se puede crear la carpeta de importación: "+error.message();
+-            }
+-        }
+-    });
+     card.end();
+     if (!s.message.empty()) {
+         ui::gap(10);
 diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
-index a3c5278..e0938dd 100644
+index a3c5278..6e60307 100644
 --- a/launcher/src/sakura_setup.cpp
 +++ b/launcher/src/sakura_setup.cpp
 @@ -4,6 +4,7 @@
@@ -10,17 +273,23 @@ index a3c5278..e0938dd 100644
  #include <fstream>
  #include <memory>
  #include <mutex>
-@@ -18,6 +19,7 @@ struct SetupState {
+@@ -17,7 +18,8 @@ struct SetupState {
+     std::filesystem::path log;
      std::string message,progress;
      Uint64 lastRead=0;
-     int language=0; // 0 Español, 1 English
+-    int language=0; // 0 Español, 1 English
++    int language=0; // 0 Español, 1 English, 2 Japonés
 +    bool autoTried=false; // (preparation started on its own once, when the discos folder already has the files)
  };
  std::shared_ptr<SetupState> state;
  
-@@ -31,6 +33,29 @@ std::filesystem::path LanguageDisc(const std::filesystem::path& program,int lang
-     return program/"game"/(language==0?"disc1-es":"disc1")/"game.cue";
+@@ -27,10 +29,30 @@ void Picked(void* userdata,const char* const* files,int) {
+     if(!one->closed && files && files[0])one->pending=files[0];
+     one->dialog=false;
  }
+-std::filesystem::path LanguageDisc(const std::filesystem::path& program,int language) {
+-    return program/"game"/(language==0?"disc1-es":"disc1")/"game.cue";
+-}
  bool Exists(const std::filesystem::path& file) {std::error_code error;return std::filesystem::is_regular_file(file,error);}
 +// The player's "discos" folder: beside the program, or one level up when the program lives in the release's
 +// app/ folder (the release root only shows SaturnTaisen.exe, discos/ and app/). Empty when there is none.
@@ -48,7 +317,7 @@ index a3c5278..e0938dd 100644
  std::string Utf8(const std::filesystem::path& path) {const auto text=path.u8string();return std::string(text.begin(),text.end());}
  // The helper's last "PROGRESO n text" or "ERROR text" line.
  void ReadProgress(SetupState& s) {
-@@ -44,6 +69,30 @@ void ReadProgress(SetupState& s) {
+@@ -44,9 +66,57 @@ void ReadProgress(SetupState& s) {
      const auto space=last.find(' ');
      if(space!=std::string::npos)s.progress=last.substr(0,space)+" % · "+last.substr(space+1);
  }
@@ -76,51 +345,410 @@ index a3c5278..e0938dd 100644
 +    ImGui::Dummy(ImVec2(width,height));
 +    ui::request_frames(2); // (keep drawing while it works, not only on input)
 +}
++// A small flag in place of a bubble's dot: 0 Spain, 1 United Kingdom, 2 Japan.
++void Flag(ImDrawList* draw,ImVec2 centre,int which,float alpha) {
++    const float w=ui::px(22),h=ui::px(15);
++    const ImVec2 a=centre-ImVec2(w*.5f,h*.5f),b=a+ImVec2(w,h);
++    auto c=[&](int r,int g,int bl) {return IM_COL32(r,g,bl,static_cast<int>(255*alpha));};
++    if(which==0) {
++        draw->AddRectFilled(a,b,c(198,11,30));
++        draw->AddRectFilled(a+ImVec2(0,h*.25f),a+ImVec2(w,h*.75f),c(255,196,0));
++    } else if(which==1) {
++        draw->AddRectFilled(a,b,c(1,33,105));
++        draw->PushClipRect(a,b,true);
++        draw->AddLine(a,b,c(255,255,255),ui::px(3.2f));draw->AddLine(ImVec2(a.x,b.y),ImVec2(b.x,a.y),c(255,255,255),ui::px(3.2f));
++        draw->AddLine(a,b,c(200,16,46),ui::px(1.2f));draw->AddLine(ImVec2(a.x,b.y),ImVec2(b.x,a.y),c(200,16,46),ui::px(1.2f));
++        draw->AddRectFilled(ImVec2(centre.x-ui::px(2.6f),a.y),ImVec2(centre.x+ui::px(2.6f),b.y),c(255,255,255));
++        draw->AddRectFilled(ImVec2(a.x,centre.y-ui::px(2.6f)),ImVec2(b.x,centre.y+ui::px(2.6f)),c(255,255,255));
++        draw->AddRectFilled(ImVec2(centre.x-ui::px(1.5f),a.y),ImVec2(centre.x+ui::px(1.5f),b.y),c(200,16,46));
++        draw->AddRectFilled(ImVec2(a.x,centre.y-ui::px(1.5f)),ImVec2(b.x,centre.y+ui::px(1.5f)),c(200,16,46));
++        draw->PopClipRect();
++    } else {
++        draw->AddRectFilled(a,b,c(255,255,255));
++        draw->AddCircleFilled(centre,h*.3f,c(188,0,45));
++    }
++    draw->AddRect(a,b,IM_COL32(86,38,52,static_cast<int>(90*alpha)),0.0f,ui::px(1.0f));
++}
  // A round "bubble" switch: small capitals over its value, tinted while on. Its words always fit: the value
- // takes a smaller size before it would be cut.
- bool Bubble(const char* id,const char* title,const char* value,bool on,float width,bool enabled) {
-@@ -121,7 +170,9 @@ void DrawSakuraSetup(launcher::PageContext& page) {
-     const bool english=Exists(LanguageDisc(page.program_folder,1)),spanish=Exists(LanguageDisc(page.program_folder,0));
-     const bool pack=Exists(page.program_folder/"hd-resources"/"hd-pack.stfp") || !page.prefs.get("sakura","pc_assets").empty();
-     std::error_code ignored;
--    const bool folder=std::filesystem::is_directory(page.program_folder/"discos",ignored);
-+    (void)ignored;
+-// takes a smaller size before it would be cut.
+-bool Bubble(const char* id,const char* title,const char* value,bool on,float width,bool enabled) {
++// takes a smaller size before it would be cut. `flag` (0..2) draws that flag instead of the dot.
++bool Bubble(const char* id,const char* title,const char* value,bool on,float width,bool enabled,int flag=-1) {
+     const auto& p=ui::palette();const float height=ui::px(62);
+     const ImVec2 at=ImGui::GetCursorScreenPos();
+     ImGui::PushID(id);
+@@ -63,8 +133,10 @@ bool Bubble(const char* id,const char* title,const char* value,bool on,float wid
+     draw->AddRectFilled(at+ImVec2(round*.7f,ui::px(5)),at+ImVec2(width-round*.7f,ui::px(12)),IM_COL32(255,255,255,on?120:150),ui::px(4));
+     draw->AddCircleFilled(at+ImVec2(width-round*.75f,round*.62f),ui::px(4),IM_COL32(255,255,255,on?150:110));
+     draw->AddRect(at,at+ImVec2(width,height),ui::fade(on?p.primary:p.separator,(hovered||focused)?1.0f:.75f),round,ui::px(on?2.0f:1.2f));
+-    draw->AddCircleFilled(at+ImVec2(round*.78f,height*.5f),ui::px(6),ui::fade(on?p.primary:p.tertiary,alpha));
+-    const float left=round*.78f+ui::px(14),room=width-left-ui::px(14);
++    float left;
++    if(flag>=0) {Flag(draw,at+ImVec2(round*.62f+ui::px(11),height*.5f),flag,alpha);left=round*.62f+ui::px(30);}
++    else {draw->AddCircleFilled(at+ImVec2(round*.78f,height*.5f),ui::px(6),ui::fade(on?p.primary:p.tertiary,alpha));left=round*.78f+ui::px(14);}
++    const float room=width-left-ui::px(14);
+     ImGui::SetCursorScreenPos(at+ImVec2(left,ui::px(12)));
+     ui::text(title,ui::Font::Semibold,10.5f,ui::fade(p.secondary,alpha));
+     float size=14.5f;
+@@ -83,24 +155,44 @@ void Save(launcher::PageContext& page,std::initializer_list<std::pair<const char
+     if(page.settings.get("features","preset")!="custom")page.settings.set("features","preset","custom");
+     page.settings.save();
+ }
++// ---- languages: 0 Español, 1 English, 2 Japonés (the player's original disc, untouched) ----
++const char* kLanguageCode[]={"es","en","ja"};
++const char* kLanguageName[]={"Español","English","Japonés"};
++int LanguageIndex(const std::string& code) {return code=="en"?1:code=="ja"?2:0;}
++std::filesystem::path LanguageDisc(const std::filesystem::path& program,int language) {
++    return program/"game"/(language==0?"disc1-es":language==2?"disc1-ja":"disc1")/"game.cue";
+ }
+-void ShutdownSakuraSetup() {
+-    if(!state)return;
+-    {std::lock_guard<std::mutex> lock(state->mutex);state->closed=true;}
+-    state->worker.reset();state.reset();
++bool HdPack(launcher::PageContext& page) {
++    return Exists(page.program_folder/"hd-resources"/"hd-pack.stfp") || !page.prefs.get("sakura","pc_assets").empty();
+ }
+-bool SakuraSetupBusy() {return state && state->worker && state->worker->running();}
+-void DrawSakuraSetup(launcher::PageContext& page) {
++// Runs the helper over the player's files: what they chose (any disc, image or folder: the rest is looked for
++// beside it) and the «discos» folder. Discs and the PC edition (HD mod) come out of the same step.
++void StartPrepare(launcher::PageContext& page,SetupState& s) {
++    page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
++    std::vector<std::string> args={"prepare","--language",kLanguageCode[s.language],"--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
++    if(s.source[0]) {args.push_back("--rom");args.push_back(s.source.data());}
 +    const auto discs=DiscsFolder(page.program_folder);
-+    const bool folder=!discs.empty();
-     const bool locked=running || dialog || page.playing;
++    if(!discs.empty() && HasGameFiles(discs)) {args.push_back("--folder");args.push_back(Utf8(discs));}
++    s.finished=false;s.error=false;s.message.clear();s.progress="0 % · Iniciando…";
++    std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
++    s.log=page.folder/"logs"/"preparar-juego.log";s.worker=std::make_unique<GameProcess>();
++    if(!s.worker->start(page.program_folder/"preparar-juego.exe",args,page.program_folder,s.message,s.log)) {
++        s.worker.reset();s.finished=true;s.error=true;
++        if(s.message.empty())s.message="No se pudo iniciar el ayudante de preparación.";
++    }
++}
++// Shared by both pages: picks up a chosen file, follows the helper and settles when it ends.
++SetupState& Follow(launcher::PageContext& page) {
+     if(!state) {
+         state=std::make_shared<SetupState>();
+-        state->language=page.prefs.get("sakura","language")=="en"?1:0;
++        state->language=LanguageIndex(page.prefs.get("sakura","language"));
+         SDL_strlcpy(state->source.data(),page.prefs.get("sakura","setup_source").c_str(),state->source.size());
+     }
+-    auto& s=*state;bool dialog=false;
++    auto& s=*state;bool picked=false;
+     {
+-        std::lock_guard<std::mutex> lock(s.mutex);dialog=s.dialog;
++        std::lock_guard<std::mutex> lock(s.mutex);
+         if(!s.pending.empty()) {
+-            if(s.pending.size()<s.source.size())SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());
++            if(s.pending.size()<s.source.size()) {SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());picked=true;}
+             s.pending.clear();
+         }
+     }
+@@ -108,110 +200,126 @@ void DrawSakuraSetup(launcher::PageContext& page) {
+     if(running && SDL_GetTicks()-s.lastRead>400) {s.lastRead=SDL_GetTicks();ReadProgress(s);}
+     if(s.worker && !running && !s.finished) {
+         s.finished=true;s.error=s.worker->exit_code()!=0;ReadProgress(s);
+-        if(s.error)s.message=s.progress.empty()?"No se pudo preparar el juego. Revisa logs/preparar-juego.log.":s.progress;
++        if(s.error)s.message=s.progress.empty()?"No se pudo preparar el juego. Abre la carpeta de registros en Opciones.":s.progress;
+         else {
+-            s.message="Juego preparado. Ya puedes jugar.";
+             page.prefs.load();page.settings.load(); // the helper wrote the disc, the language and first-run defaults
+-            s.language=page.prefs.get("sakura","language")=="en"?1:0;
++            s.language=LanguageIndex(page.prefs.get("sakura","language"));
++            if(HdPack(page)) // a prepared HD pack is switched on; the MODO HD bubble turns it off
++                Save(page,{{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},{"hd_preload","1"},{"presentation_mode","1"}});
++            s.message=HdPack(page)?"Juego y mod HD preparados. Ya puedes jugar.":"Juego preparado. Ya puedes jugar. Para el mod HD, añade tu edición de PC en Opciones.";
+             const auto disc=LanguageDisc(page.program_folder,s.language);
+             if(Exists(disc) && page.use_file)page.use_file(Utf8(disc));
+         }
+         s.progress.clear();
+     }
+-    const bool english=Exists(LanguageDisc(page.program_folder,1)),spanish=Exists(LanguageDisc(page.program_folder,0));
+-    const bool pack=Exists(page.program_folder/"hd-resources"/"hd-pack.stfp") || !page.prefs.get("sakura","pc_assets").empty();
+-    std::error_code ignored;
+-    const bool folder=std::filesystem::is_directory(page.program_folder/"discos",ignored);
+-    const bool locked=running || dialog || page.playing;
++    // A file just chosen is the request to prepare with it.
++    if(picked && !running && !page.playing)StartPrepare(page,s);
++    return s;
++}
++// The bar and the line under it while the helper works, or its last word.
++void Status(launcher::PageContext& page,SetupState& s,bool idle_line) {
      const auto& p=ui::palette();
++    if(s.worker && s.worker->running()) {
++        WorkingBar(page.width,static_cast<float>(SDL_atoi(s.progress.c_str()))/100.0f);
++        ui::gap(6);
++        ui::text(s.progress.c_str(),ui::Font::Semibold,ui::size::kDetail,p.primary,page.width);
++    } else if(!s.message.empty())ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.error?p.danger:p.success,page.width);
++    else if(idle_line) {
++        const bool en=Exists(LanguageDisc(page.program_folder,1)),es=Exists(LanguageDisc(page.program_folder,0)),ja=Exists(LanguageDisc(page.program_folder,2));
++        const std::string line=std::string("Español ")+(es?"✓":"—")+" · English "+(en?"✓":"—")+" · Japonés "+(ja?"✓":"—")+" · Mod HD "+(HdPack(page)?"✓":"—");
++        ui::text(line.c_str(),ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);
++    }
++}
++}
++void ShutdownSakuraSetup() {
++    if(!state)return;
++    {std::lock_guard<std::mutex> lock(state->mutex);state->closed=true;}
++    state->worker.reset();state.reset();
++}
++bool SakuraSetupBusy() {return state && state->worker && state->worker->running();}
  
-@@ -191,11 +242,14 @@ void DrawSakuraSetup(launcher::PageContext& page) {
+-    // ---- the four switches of the home page ----
++// ---- Inicio: three switches, and the preparation on its own when the player's files are in «discos» ----
++void DrawSakuraHome(launcher::PageContext& page) {
++    auto& s=Follow(page);
++    const bool running=s.worker && s.worker->running();
++    const bool ready[3]={Exists(LanguageDisc(page.program_folder,0)),Exists(LanguageDisc(page.program_folder,1)),Exists(LanguageDisc(page.program_folder,2))};
++    if(!s.autoTried && !running && !page.playing && !ready[0] && !ready[1] && HasGameFiles(DiscsFolder(page.program_folder))) {
++        s.autoTried=true;StartPrepare(page,s);
++    }
++    const bool locked=running || page.playing;
++    const bool pack=HdPack(page);
+     const bool enhanced=page.settings.get("features","presentation_mode")=="1";
+     const bool sharp=enhanced && page.settings.get("features","text_style")!="1";
+     const bool hd=enhanced && pack && page.settings.get("features","pc_hd_backgrounds")!="1" && page.settings.get("features","pc_hd_portraits")!="1";
+-    const bool stacked=page.width<ui::px(520);
+-    const float gap=ui::px(10),each=stacked?(page.width-gap)*.5f:(page.width-gap*3)*.25f;
++    const bool stacked=page.width<ui::px(480);
++    const float gap=ui::px(10),each=stacked?page.width:(page.width-gap*2)/3.0f;
+     const ImVec2 row=ImGui::GetCursorScreenPos();
+-    auto place=[&](int index) {
+-        ImGui::SetCursorScreenPos(row+(stacked?ImVec2((index%2)*(each+gap),(index/2)*ui::px(72)):ImVec2(index*(each+gap),0)));
+-    };
++    auto place=[&](int index) {ImGui::SetCursorScreenPos(row+(stacked?ImVec2(0,index*ui::px(72)):ImVec2(index*(each+gap),0)));};
+     place(0);
+-    if(Bubble("language","IDIOMA",s.language==0?"Español":"English",true,each,!locked && (english || spanish))) {
+-        const int wanted=1-s.language;
+-        if(Exists(LanguageDisc(page.program_folder,wanted))) {
++    if(Bubble("language","IDIOMA",kLanguageName[s.language],true,each,!locked && (ready[0]||ready[1]||ready[2]),s.language)) {
++        for(int step=1;step<=3;step++) { // the next prepared language
++            const int wanted=(s.language+step)%3;
++            if(!ready[wanted])continue;
+             s.language=wanted;
+-            page.prefs.set("sakura","language",wanted==0?"es":"en");page.prefs.save();
++            page.prefs.set("sakura","language",kLanguageCode[wanted]);page.prefs.save();
+             if(page.use_file)page.use_file(Utf8(LanguageDisc(page.program_folder,wanted)));
+             s.message.clear();
+-        } else {s.error=true;s.message="Ese idioma aún no está preparado: pulsa Preparar.";}
++            break;
++        }
+     }
+     place(1);
+-    if(Bubble("presentation","PRESENTACIÓN",enhanced?"Mejorada":"Original",enhanced,each,!page.playing))
+-        Save(page,{{"presentation_mode",enhanced?"0":"1"}});
+-    place(2);
+     if(Bubble("text","TEXTO HD",sharp?"Activado":"Desactivado",sharp,each,!page.playing)) {
+         if(sharp)Save(page,{{"text_style","1"}});
+         else Save(page,{{"text_style","0"},{"presentation_mode","1"}}); // (HD text belongs to the enhanced presentation)
+     }
+-    place(3);
++    place(2);
+     if(Bubble("hd","MODO HD",!pack?"Sin preparar":hd?"Activado":"Desactivado",hd,each,!page.playing)) {
+-        if(!pack) {s.error=true;s.message="El modo HD necesita tu edición de PC: añádela abajo y pulsa Preparar.";}
++        if(!pack) {s.error=true;s.message="El modo HD necesita tu edición de PC: añádela en Opciones › Tus archivos.";}
+         else if(hd)Save(page,{{"pc_hd_backgrounds","1"},{"pc_hd_portraits","1"}});
+         else Save(page,{{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},{"hd_preload","1"},{"presentation_mode","1"}});
+     }
+-    ImGui::SetCursorScreenPos(row+ImVec2(0,ui::px(stacked?144:72)));
++    ImGui::SetCursorScreenPos(row+ImVec2(0,ui::px(stacked?216:72)));
+     ImGui::Dummy(ImVec2(page.width,0));
+-    ui::text("Modo HD reúne fondos y retratos de tu edición de PC; con Texto HD solo actúa en la presentación Mejorada.",
+-             ui::Font::Regular,ui::size::kSmall,p.secondary,page.width);
++    ui::gap(4);
++    Status(page,s,false);
++}
+ 
+-    // ---- preparing the game from the player's own files ----
+-    ui::gap(18);ui::text("PREPARAR JUEGO",ui::Font::Semibold,ui::size::kDetail,p.secondary);ui::gap(8);
++// ---- Opciones › Tus archivos: one place for the discs and the PC edition, and the folder with saves and logs ----
++void DrawSakuraFiles(launcher::PageContext& page) {
++    auto& s=Follow(page);
++    const bool running=s.worker && s.worker->running();
++    bool dialog=false;
++    {std::lock_guard<std::mutex> lock(s.mutex);dialog=s.dialog;}
++    const bool locked=running || dialog || page.playing;
++    const auto& p=ui::palette();
++    const bool done=Exists(LanguageDisc(page.program_folder,0)) && Exists(LanguageDisc(page.program_folder,1));
++    ui::text("TUS ARCHIVOS",ui::Font::Semibold,ui::size::kDetail,p.secondary);ui::gap(8);
+     {
+         layout::Card card(page.width);
+-        layout::row(page.width,"Tus archivos",
+-                    "Tus dos discos de Saturn (originales o ya con la traducción inglesa v2.1) y, para el modo HD, tu edición de PC. "
+-                    "Elige la carpeta donde están o cualquiera de ellos: el resto se busca al lado.",300,36,[&] {
+-            ImGui::BeginDisabled(locked);
+-            ui::text_field("##sakura-setup-source",s.source.data(),s.source.size(),folder?"Carpeta «discos»":"Sin elegir",300);
+-            ImGui::EndDisabled();
+-        });
+-        layout::inset_separator(page.width);
+-        const bool done=english && spanish;
+-        layout::row(page.width,running?"Preparando…":done?"Todo preparado":"Preparar",
+-                    done?"Lo ya preparado se reconoce y se conserva; solo se rehace lo que cambió.":
+-                         "Se trabaja sobre una copia; tus archivos solo se leen. Tarda unos minutos la primera vez.",300,36,[&] {
+-            if(ui::button("Carpeta…",ui::Kind::Secondary,92,!locked)) {
+-                {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
+-                SDL_ShowOpenFolderDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,nullptr,false);
+-            }
+-            ImGui::SameLine(0,ui::px(6));
+-            if(ui::button("Archivo…",ui::Kind::Secondary,92,!locked)) {
++        const auto discs=DiscsFolder(page.program_folder);
++        std::string where="Tus dos discos de Saturn y, para el mod HD, tu edición de PC. Elige cualquiera: el resto se busca al lado";
++        if(s.source[0])where=std::string("Elegido: ")+s.source.data();
++        else if(!discs.empty())where+=" y en la carpeta «discos».";
++        else where+=".";
++        layout::row(page.width,running?"Preparando…":done?"Juego preparado":"Preparar el juego",where.c_str(),210,36,[&] {
++            if(ui::button("Elegir…",ui::Kind::Secondary,100,!locked)) {
+                 static const SDL_DialogFileFilter filters[]={{"Discos e imágenes","cue;iso;bin;img;mdf;zip"}};
+                 {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
                  SDL_ShowOpenFileDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,filters,1,nullptr,false);
              }
              ImGui::SameLine(0,ui::px(6));
 -            if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,(s.source[0] || folder || done) && !locked)) {
-+            // Nothing prepared yet and the player's files are already in "discos": start on its own, once.
-+            bool start=false;
-+            if(!s.autoTried && !done && !english && !spanish && !locked && !s.source[0] && HasGameFiles(discs)) {s.autoTried=true;start=true;}
-+            if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,(s.source[0] || folder || done) && !locked) || start) {
-                 page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
-                 std::vector<std::string> args={"prepare","--language",s.language==0?"es":"en","--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
-                 if(s.source[0]) {args.push_back("--rom");args.push_back(s.source.data());}
+-                page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
+-                std::vector<std::string> args={"prepare","--language",s.language==0?"es":"en","--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
+-                if(s.source[0]) {args.push_back("--rom");args.push_back(s.source.data());}
 -                else if(folder) {args.push_back("--folder");args.push_back(Utf8(page.program_folder/"discos"));}
-+                else if(folder) {args.push_back("--folder");args.push_back(Utf8(discs));}
-                 s.finished=false;s.error=false;s.message.clear();s.progress="0 % · Iniciando…";
-                 std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
-                 s.log=page.folder/"logs"/"preparar-juego.log";s.worker=std::make_unique<GameProcess>();
-@@ -208,7 +262,12 @@ void DrawSakuraSetup(launcher::PageContext& page) {
+-                s.finished=false;s.error=false;s.message.clear();s.progress="0 % · Iniciando…";
+-                std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
+-                s.log=page.folder/"logs"/"preparar-juego.log";s.worker=std::make_unique<GameProcess>();
+-                if(!s.worker->start(page.program_folder/"preparar-juego.exe",args,page.program_folder,s.message,s.log)) {
+-                    s.worker.reset();s.finished=true;s.error=true;
+-                    if(s.message.empty())s.message="No se pudo iniciar preparar-juego.exe.";
+-                }
++            if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,!locked))StartPrepare(page,s);
++        });
++        layout::inset_separator(page.width);
++        layout::row(page.width,"Partidas y registros","Tus partidas, ajustes y los registros por si algo falla.",100,36,[&] {
++            if(ui::button("Abrir",ui::Kind::Secondary,100,true)) {
++                const std::string url="file:///"+Utf8(page.folder);
++                SDL_OpenURL(url.c_str());
+             }
+         });
          card.end();
      }
      ui::gap(8);
 -    if(running)ui::text(s.progress.c_str(),ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);
-+    if(running) {
-+        const float percent=static_cast<float>(SDL_atoi(s.progress.c_str()));
-+        WorkingBar(page.width,percent/100.0f);
-+        ui::gap(6);
-+        ui::text(s.progress.c_str(),ui::Font::Semibold,ui::size::kDetail,p.primary,page.width);
-+    }
-     else if(!s.message.empty())ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.error?p.danger:p.success,page.width);
-     else {
-         const std::string status=std::string("Inglés: ")+(english?"listo":"falta")+" · Español: "+(spanish?"listo":"falta")+" · Modo HD: "+(pack?"listo":"falta tu edición de PC");
+-    else if(!s.message.empty())ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.error?p.danger:p.success,page.width);
+-    else {
+-        const std::string status=std::string("Inglés: ")+(english?"listo":"falta")+" · Español: "+(spanish?"listo":"falta")+" · Modo HD: "+(pack?"listo":"falta tu edición de PC");
+-        ui::text(status.c_str(),ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);
+-    }
++    Status(page,s,true);
++    ui::gap(18);
+ }
+diff --git a/launcher/src/sakura_setup.h b/launcher/src/sakura_setup.h
+index e2cbeae..1209fd6 100644
+--- a/launcher/src/sakura_setup.h
++++ b/launcher/src/sakura_setup.h
+@@ -4,6 +4,7 @@
+ // "Preparar juego": the player's two original discs and, optionally, their PC edition image go in; the
+ // bundled preparar-juego helper applies the release's patches and builds the HD pack. Nothing is read
+ // from the network and the player's files are only read.
+-void DrawSakuraSetup(launcher::PageContext& page);
++void DrawSakuraHome(launcher::PageContext& page);   // Inicio: language, HD text and HD mode, and the preparation
++void DrawSakuraFiles(launcher::PageContext& page);  // Opciones: the player's files, saves and logs
+ void ShutdownSakuraSetup();
+ bool SakuraSetupBusy();
+diff --git a/recomp-common/launcher/src/app.cpp b/recomp-common/launcher/src/app.cpp
+index 66a1c30..0fc7c1a 100644
+--- a/recomp-common/launcher/src/app.cpp
++++ b/recomp-common/launcher/src/app.cpp
+@@ -527,6 +527,7 @@ int play_directly(const std::string& id, const std::vector<std::string>& extra)
+     try { arguments=arguments_for(prefs, *target); }
+     catch (const std::exception& error) { say(SDL_MESSAGEBOX_ERROR,target->name,error.what()); return 1; }
+     arguments.insert(arguments.end(), extra.begin(), extra.end());
++    game.set_above_normal(true);
+     if (!game.start(program_path(target->exe), arguments, target->folder, message, target->folder / "logs" / "game.log")) {
+         say(SDL_MESSAGEBOX_ERROR, target->name, message);
+         return 1;
+@@ -1229,6 +1230,7 @@ void App::play(size_t which, const std::vector<std::string>& extra) {
+         one.ready_file = one.folder / "logs" / ("launch-" + std::to_string(SDL_GetPerformanceCounter()) + ".ready");
+         arguments.insert(arguments.end(), {"--ready-file", one.ready_file.string()});
+     }
++    one.game.set_above_normal(true);
+     if (!one.game.start(one.program(), arguments, one.folder, one.play_error, one.folder / "logs" / "game.log"))
+         one.ready_file.clear();
+ }
+@@ -2996,6 +2998,7 @@ void App::game_page(float width) {
+     bool ready = play_button(0, width);
+     ui::gap(16);
+     if (about_.extra_home) { auto page=context(width); about_.extra_home(page); }
++    if (about_.simple_home) return;
+     ui::gap(26);
+     int presentation=slots_[0]->settings.get("features","presentation_mode")=="1"?1:0;
+     ui::text("ELIGE TU PRESENTACIÓN",Font::Semibold,13,ui::palette().primary);
+@@ -3855,6 +3858,7 @@ void App::features_page(float width) {
+             ui::text(one.features_error.c_str(), Font::Regular, ui::size::kBody, p.danger, width);
+             return;
+         }
++        if (about_.extra_options) { auto page=context(width); about_.extra_options(page); }
+         std::vector<int> values = recomp::FeatureValues(one.settings, one.features);
+         std::vector<FeatureRow> rows;
+         for (size_t i = 0; i < one.features.size(); i++) {
+@@ -3864,6 +3868,10 @@ void App::features_page(float width) {
+             width, rows, "No optional features yet.", [&](const FeatureRow& feature, int value) { set_feature(one, feature.index, value); },
+             [&](const FeatureRow& feature) { return recomp::MenuChoices(one.settings, one.features[feature.index]); },
+             [&](const FeatureRow& feature, const std::vector<bool>& offered) { set_menu_choices(one, feature.index, offered); });
++        if (about_.simple_home) {
++            display_cards(0, width);
++            play_cards(0, width, true);
++        }
+         return;
+     }
+     // A collection's: each as the first game that has it has it (a note where the games differ, or not every
+diff --git a/recomp-common/launcher/src/game_process.cpp b/recomp-common/launcher/src/game_process.cpp
+index be38985..beddc7e 100644
+--- a/recomp-common/launcher/src/game_process.cpp
++++ b/recomp-common/launcher/src/game_process.cpp
+@@ -285,7 +285,8 @@ bool GameProcess::start(const std::filesystem::path& program, const std::vector<
+         }
+     }
+     PROCESS_INFORMATION process{};
+-    BOOL started = CreateProcessW(program.wstring().c_str(), line.data(), nullptr, nullptr, output != INVALID_HANDLE_VALUE, CREATE_NO_WINDOW, nullptr, directory.c_str(),
++    BOOL started = CreateProcessW(program.wstring().c_str(), line.data(), nullptr, nullptr, output != INVALID_HANDLE_VALUE,
++                                  CREATE_NO_WINDOW | (above_normal_ ? ABOVE_NORMAL_PRIORITY_CLASS : 0), nullptr, directory.c_str(),
+                                   &startup, &process);
+     if (output != INVALID_HANDLE_VALUE) {
+         CloseHandle(output);
+diff --git a/recomp-common/launcher/src/game_process.h b/recomp-common/launcher/src/game_process.h
+index 2e50f74..bcb0c6f 100644
+--- a/recomp-common/launcher/src/game_process.h
++++ b/recomp-common/launcher/src/game_process.h
+@@ -19,12 +19,16 @@ public:
+     bool start(const std::filesystem::path& program, const std::vector<std::string>& args, const std::filesystem::path& folder, std::string& error,
+                const std::filesystem::path& log = {});
+     bool running() const { return state_->running; }
++    // The game itself asks the system for CPU before ordinary background work (builds, downloads, other
++    // programs), so it keeps its frame rate on a busy PC. Helpers keep the normal priority.
++    void set_above_normal(bool on) { above_normal_ = on; }
+     int exit_code() const { return state_->exit_code; }
+     // Runs `program args...` and returns its standard output (for --list-features).
+     static std::string output_of(const std::filesystem::path& program, const std::vector<std::string>& args);
+ 
+ private:
+     std::thread waiter_;
++    bool above_normal_ = false;
+     struct State {
+         std::atomic<bool> running{false};
+         std::atomic<int> exit_code{0};
+diff --git a/recomp-common/launcher/src/launcher.h b/recomp-common/launcher/src/launcher.h
+index b7b21bd..51782c4 100644
+--- a/recomp-common/launcher/src/launcher.h
++++ b/recomp-common/launcher/src/launcher.h
+@@ -127,6 +127,12 @@ struct Description {
+     // The port's own pages (none: the launcher's three)
+     std::vector<CustomPage> pages;
+     void (*extra_home)(PageContext&) = nullptr;
++    // Optional: the game's own cards at the top of the Options page (its files, saves…)
++    void (*extra_options)(PageContext&) = nullptr;
++    // The home page shows only the title, Play and extra_home; the disc card, Display, Play extras and the
++    // folder card move to the Options page (the disc card and the folder card are left out: the game's own
++    // extra_options covers them).
++    bool simple_home = false;
+     bool (*extra_home_busy)() = nullptr;
+     void (*shutdown)() = nullptr;
+     // false: no Game page (and no game file, check or Display card): the port's pages have Play
 diff --git a/recomp-common/launcher/src/main.cpp b/recomp-common/launcher/src/main.cpp
 index ded4d1f..57d3e30 100644
 --- a/recomp-common/launcher/src/main.cpp

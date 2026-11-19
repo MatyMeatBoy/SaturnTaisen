@@ -55,6 +55,10 @@ from audit_sdk import files as iso_files  # noqa: E402
 CUE = ('FILE "Track 01.iso" BINARY\n  TRACK 01 MODE1/2048\n      INDEX 01 00:00:00\n      POSTGAP 00:02:00\n'
        'FILE "Track 02.wav" WAVE\n  TRACK 02 AUDIO\n    PREGAP 00:02:00\n    INDEX 01 00:00:00\n')
 LANGUAGES = {'en': '', 'es': '-es'}
+# Japanese is the player's original disc as it is (no layer). It can only be kept when the original was given
+# (not an already-translated disc), so it is optional: preparation never fails for want of it.
+OPTIONAL_LANGUAGES = {'ja': '-ja'}
+ALL_LANGUAGES = {**LANGUAGES, **OPTIONAL_LANGUAGES}
 LAYERS = {'en': 'english', 'es': 'spanish'}
 PALETTE_HASH = 12829369761668915482  # CRAM bank the reviewed portrait identities were matched under
 SYNC = bytes.fromhex('00ffffffffffffffffffff00')
@@ -583,9 +587,44 @@ def identify(record: dict, digest: str) -> str | None:
     return None
 
 
+def prepare_japanese(paths: Paths, record: dict, candidates: list[Path], number: int, base: int,
+                     force: bool = False) -> None:
+    """Keep a copy of the player's untouched original disc as the Japanese option, when they gave one."""
+    target = paths.game / f'disc{number}-ja'
+    try:
+        saved = json.loads((target / 'taisen.json').read_text(encoding='utf-8'))
+        if not force and saved.get('output_sha256') == record['original_sha256'] and (target / 'game.cue').is_file():
+            return
+    except (OSError, ValueError):
+        pass
+    paths.game.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.preparar-', dir=paths.game) as scratch:
+        work = Path(scratch)
+        image, wav = work / 'ja.iso', work / 'Track 02.wav'
+        for candidate in candidates:
+            try:
+                disc = Disc(candidate)
+                sectors = disc.extract(image)
+            except (SetupError, OSError):
+                continue
+            if sha256(image) != record['original_sha256']:
+                continue
+            say(base, f'Disco {number}: guardando el original japonés…')
+            silent = False
+            audio_bytes = record.get('audio_wav_bytes', 5005100)
+            if not disc.write_audio(wav, sectors, audio_bytes):
+                write_silence(wav, audio_bytes)
+                silent = True
+            publish(work, target, image, wav, dict(schema=2, disc=number, language='ja', patches=None,
+                                                   output_sha256=record['original_sha256'], subtitled_videos=False,
+                                                   silent_audio=silent), True)
+            return
+
+
 def prepare_disc(paths: Paths, manifest: dict, candidates: list[Path], number: int, base: int, span: int,
                  force: bool = False) -> None:
     record = manifest['discs'][str(number)]
+    prepare_japanese(paths, record, candidates, number, base, force)
     targets = {language: paths.game / f'disc{number}{suffix}' for language, suffix in LANGUAGES.items()}
     videos = paths.patches / record['videos']['patch']
     state = {language: None if force else finished(targets[language], record[LAYERS[language]]) for language in targets}
@@ -904,7 +943,7 @@ def set_values(file: Path, values: dict[tuple[str, str], str]) -> None:
 
 
 def set_language(paths: Paths, language: str) -> Path:
-    disc = paths.game / f'disc1{LANGUAGES[language]}' / 'game.cue'
+    disc = paths.game / f'disc1{ALL_LANGUAGES[language]}' / 'game.cue'
     if not disc.is_file():
         raise SetupError('Ese idioma aún no está preparado. Prepara el juego primero.')
     set_values(paths.home / 'launcher.ini', {('game', 'disc'): str(disc), ('sakura', 'language'): language})
@@ -918,14 +957,36 @@ def saved_language(paths: Paths) -> str:
     except configparser.Error:
         return 'es'
     language = saved.get('sakura', 'language', fallback='es')
-    return language if language in LANGUAGES else 'es'
+    return language if language in ALL_LANGUAGES else 'es'
 
 
 def write_default_settings(paths: Paths) -> None:
+    """First-run defaults (Mejorada, Zoom, HD preload…). The launcher may already have written settings.ini
+    (its preset choice) before the helper runs, so missing keys are filled in; choices already there stay."""
     file = paths.home / 'settings.ini'
     if not file.exists():
         file.parent.mkdir(parents=True, exist_ok=True)
         file.write_text(DEFAULT_SETTINGS, encoding='ascii', newline='\n')
+        return
+    defaults = configparser.ConfigParser(interpolation=None)
+    defaults.optionxform = str
+    defaults.read_string(DEFAULT_SETTINGS)
+    current = configparser.ConfigParser(interpolation=None)
+    current.optionxform = str
+    try:
+        current.read(file, encoding='utf-8')
+    except configparser.Error:
+        return
+    missing = [(section, key, value) for section in defaults.sections() for key, value in defaults.items(section)
+               if not current.has_option(section, key)]
+    if not missing:
+        return
+    for section, key, value in missing:
+        if not current.has_section(section):
+            current.add_section(section)
+        current.set(section, key, value)
+    with file.open('w', encoding='utf-8', newline='\n') as output:
+        current.write(output, space_around_delimiters=False)
 
 
 def load_manifest(paths: Paths) -> dict:
@@ -1015,7 +1076,7 @@ def info(paths: Paths) -> dict:
         manifest = json.loads(launch_manifest(paths.program).read_text(encoding='utf-8'))
     except (OSError, ValueError):
         pass
-    prepared = [language for language, suffix in LANGUAGES.items()
+    prepared = [language for language, suffix in ALL_LANGUAGES.items()
                 if (paths.game / f'disc1{suffix}' / 'game.cue').is_file()]
     manifest['state'] = dict(prepared_languages=prepared, language=saved_language(paths),
                              hd_prepared=(paths.hd / 'hd-pack.stfp').is_file(), home=str(paths.home))
@@ -1027,7 +1088,7 @@ def main() -> int:
     parser.add_argument('command', choices=('scan', 'prepare', 'language', 'info', 'frontend', 'help'))
     parser.add_argument('--folder', type=Path)
     parser.add_argument('--rom', '--disc', '--pc', dest='rom', type=Path, action='append', default=[])
-    parser.add_argument('--language', choices=tuple(LANGUAGES))
+    parser.add_argument('--language', choices=tuple(ALL_LANGUAGES))
     parser.add_argument('--fullscreen', action='store_true')
     parser.add_argument('--widescreen', choices=('off', '16:9', 'fit'))
     parser.add_argument('--force', action='store_true', help='rebuild even what is already prepared')
