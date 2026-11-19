@@ -59,7 +59,8 @@
       "patches/0054-sakura-launcher-app-folder-autoprepare.patch",
       "patches/0055-sakura-runtime-texts-utf8-zoom-default.patch",
       "patches/0056-sakura-frame-profile-fast-composite.patch",
-      "patches/0057-sakura-portrait-full-white-fade.patch"
+      "patches/0057-sakura-portrait-full-white-fade.patch",
+      "patches/0058-sakura-stable-zoom-box-choice-hold-text-tracking.patch"
     ]
   }
 }

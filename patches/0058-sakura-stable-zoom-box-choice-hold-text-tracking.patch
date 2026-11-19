@@ -1,0 +1,101 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 5b7ad50..dd7682a 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -547,6 +547,10 @@ int RunWindowed(Port &port) {
+     });
+     std::vector<uint32_t> hdNative,hdForeground;
+     std::vector<UiTextLine> hdLines,hdChoiceLines;
++    // The frame on which a choice highlight moves can fail the strict match for a moment. Keep the last
++    // verified HD choice frame (same record only, at most two frames) instead of flashing the native text.
++    struct HeldChoice {std::vector<UiTextLine> lines;std::vector<uint32_t> native,foreground;std::vector<size_t> ink;
++                       uint32_t key=0;int missed=0;bool valid=false;} heldChoice;
+     std::string windowShot;
+     bool announcedReady = false;
+     bool choiceInputBlocked=false;
+@@ -1035,6 +1039,9 @@ int RunWindowed(Port &port) {
+                                         hdChoiceLines.size(),int(choices->catalog));}
+                                 }
+                                 for(auto at:choices->ink)hdErased[at]=2;
++                                heldChoice.lines=hdChoiceLines;heldChoice.native=hdNative;heldChoice.foreground=hdForeground;
++                                heldChoice.ink=choices->ink;heldChoice.key=(uint32_t(shownChoice.table)<<16)^uint32_t(shownChoice.record);
++                                heldChoice.missed=0;heldChoice.valid=true;
+                                 if(std::getenv("SATRECOMP_HD_TEXT_TRACE")) {
+                                     static std::array<bool,4> traced{};
+                                     const auto count=hdChoiceLines.size();
+@@ -1044,12 +1051,21 @@ int RunWindowed(Port &port) {
+                                 SDL_UpdateTexture(content,nullptr,previousForeground.data(),320*sizeof(uint32_t));
+                                 SDL_UpdateTexture(texture,nullptr,previousNative.data(),320*sizeof(uint32_t));
+                             }
+-                        }
++                        } else if(heldChoice.valid && heldChoice.missed<2 &&
++                                  heldChoice.key==((uint32_t(shownChoice.table)<<16)^uint32_t(shownChoice.record)) &&
++                                  heldChoice.native.size()==320*224 && heldChoice.foreground.size()==320*224 &&
++                                  SDL_UpdateTexture(content,nullptr,heldChoice.foreground.data(),320*sizeof(uint32_t)) &&
++                                  SDL_UpdateTexture(texture,nullptr,heldChoice.native.data(),320*sizeof(uint32_t))) {
++                            heldChoice.missed++;
++                            hdNative=heldChoice.native;hdForeground=heldChoice.foreground;hdChoiceLines=heldChoice.lines;
++                            for(auto at:heldChoice.ink)hdErased[at]=2;
++                        } else heldChoice.valid=false;
+                     }
+                 }
+                 auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
+                 // Only split the known narrative layout; overhanging artwork retains the original group.
+                 bool splitZoom=false;
++                int zoomX=scene.x,zoomW=scene.w,zoomLines=scene.y+scene.h-153,zoomGroup=scene.h;
+                 bool zoomSafe=!scene.movieOnly && satrecomp::FeatureValue("scene_view")==1 && scene.y==8 && scene.y+scene.h>153;
+                 if(zoomSafe)for(int y=0;y<153 && zoomSafe;y++)for(int x=0;x<320;x++) {
+                     if(planes.source[y*320+x]<3 && (x<16 || x>=304 || y<8 || y>=152)) {zoomSafe=false;break;}
+@@ -1065,7 +1081,17 @@ int RunWindowed(Port &port) {
+                         if(!shadowOnly)break;
+                         shadowRows++;
+                     }
+-                    const auto zoom=FitSceneZoom(wide,high,scene.w,scene.y+scene.h-153,scene.h,shadowRows);
++                    // Hysteresis: the box geometry comes from a per-frame bounding box, so one odd frame
++                    // (a fade, a sprite edge, a load) would move the whole box. A different geometry must
++                    // persist for several frames before it replaces the one already on screen.
++                    {
++                        static int pendingFrames=0;
++                        const bool differs=heldZoom.valid && (heldZoom.x!=zoomX || heldZoom.width!=zoomW || heldZoom.lines!=zoomLines || heldZoom.group!=zoomGroup);
++                        if(differs && ++pendingFrames<6) {
++                            zoomX=heldZoom.x;zoomW=heldZoom.width;zoomLines=heldZoom.lines;zoomGroup=heldZoom.group;
++                        } else pendingFrames=0;
++                    }
++                    const auto zoom=FitSceneZoom(wide,high,zoomW,zoomLines,zoomGroup,shadowRows);
+                     if(zoom.valid) {
+                         splitZoom=true;
+                         choiceTextFit=zoom.picture;choiceCropX=16;choiceCropY=8;
+@@ -1089,7 +1115,7 @@ int RunWindowed(Port &port) {
+                         }
+                         if(!uploadLayer(pictureMixTexture,pictureMixWidth,pictureMixHeight,pictureMixPixels,zoom.picture,imageCrop,zoomForeground))
+                             SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
+-                        crop.y=153;crop.h=float(scene.y+scene.h-153);fit=zoom.dialogue;
++                        crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                             static bool logged=false;if(!logged) {logged=true;fprintf(stderr,"scene zoom: image=%dx%d scale=%d dialogue=%dx%d scale=%d y=%d shadow=%d\n",zoom.picture.w,zoom.picture.h,zoom.picture.scale,fit.w,fit.h,fit.scale,fit.y,zoom.shadow);}
+                         }
+@@ -1099,7 +1125,7 @@ int RunWindowed(Port &port) {
+                 // plane (a load between two scenes), the box keeps the Zoom place instead of jumping back to
+                 // the original one. Any other screen ends the hold.
+                 if(splitZoom) {
+-                    heldZoom={true,scene.x,scene.w,scene.y+scene.h-153,scene.h,0};
++                    heldZoom={true,zoomX,zoomW,zoomLines,zoomGroup,0};
+                 } else if(heldZoom.valid && satrecomp::FeatureValue("scene_view")==1 && !scene.movieOnly &&
+                           DialogueOnly(planes.source,planes.width,planes.height)) {
+                     const auto zoom=FitSceneZoom(wide,high,heldZoom.width,heldZoom.lines,heldZoom.group,heldZoom.shadowRows);
+diff --git a/port/narrative_text.h b/port/narrative_text.h
+index 165d1a2..49202e9 100644
+--- a/port/narrative_text.h
++++ b/port/narrative_text.h
+@@ -9,7 +9,10 @@ struct NaturalTextTransform {float scale=0,offsetX=0,offsetY=0;};
+ inline NaturalTextTransform NaturalTextPlacement(float advance,float capX,float capY,float capHeight,
+                                                 int nativeLeft,int nativeTop,int nativeCapHeight,int displayScale) {
+     if(advance<=0 || capHeight<=0 || nativeCapHeight<=0 || displayScale<1)return {};
+-    const float uniform=std::min(8.0f*displayScale/advance,float(nativeCapHeight*displayScale)/capHeight);
++    // A little under the full 8-pixel cell so neighbouring letters never touch (Spanish words are longer and
++    // read cramped otherwise). Uniform for the whole font; left edge and cap top stay on the native ones.
++    constexpr float kTracking=0.94f;
++    const float uniform=kTracking*std::min(8.0f*displayScale/advance,float(nativeCapHeight*displayScale)/capHeight);
+     return {uniform,nativeLeft*displayScale-capX*uniform,nativeTop*displayScale-capY*uniform};
+ }
+ // Native dialogue interior, excluding the speaker portrait and ornate frame.
