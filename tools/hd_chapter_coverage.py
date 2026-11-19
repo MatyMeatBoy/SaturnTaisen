@@ -290,6 +290,8 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
+                elif path == '/SAKURA1/BG2295.BIN' or name in bg_review.get('guarded_viewport', []):
+                    row['status'] = 'hd'
                 elif path == '/SAKURA1/BG1285.BIN':
                     row['status'] = 'hd'
                     if disc == 2:

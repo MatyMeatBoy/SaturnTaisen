@@ -1,0 +1,142 @@
+diff --git a/port/bg2248_verified_pan.h b/port/bg2248_verified_pan.h
+--- a/port/bg2248_verified_pan.h
++++ b/port/bg2248_verified_pan.h
+@@ -4,30 +4,21 @@
+ #include "bg2533_verified_pan.h"
+ 
+ namespace port {
+-inline constexpr unsigned kBG2248Width = 288;
+-inline constexpr unsigned kBG2248Height = 296;
+-inline constexpr unsigned kBG2248InsetHeight = 144;
+-inline constexpr size_t kBG2248Bytes = 91936;
+-inline constexpr uint64_t kBG2248Palette = 0xF0AFCDD75EBA9DA2ull;
+-// The first uniquely named cell is one tile past the atlas start.
+-inline constexpr uint64_t kBG2248Cells = 0xD434BC45B629CEC4ull;
+-
+-inline std::optional<unsigned> FindBG2248Offset(std::span<const uint32_t> picture,
+-                                               std::span<const uint32_t> frame,
+-                                               std::span<const uint8_t> topSource) {
+-    if (picture.size() != kBG2248Width * kBG2248Height ||
++inline std::optional<unsigned> FindVerticalPanOffset(std::span<const uint32_t> picture,
++    std::span<const uint32_t> frame, std::span<const uint8_t> topSource, unsigned pictureHeight) {
++    if (pictureHeight < kPanPictureHeight || picture.size() != size_t(kPanInsetWidth) * pictureHeight ||
+         frame.size() != kPanFrameWidth * kPanFrameHeight || topSource.size() != frame.size()) return {};
+     const auto agrees = [&](unsigned start, unsigned x, unsigned y) {
+         const auto at = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;
+         return topSource[at] == 4 &&
+-               (frame[at] & 0xFFFFFF) == picture[(start + y) * kBG2248Width + x];
++               (frame[at] & 0xFFFFFF) == picture[(start + y) * kPanInsetWidth + x];
+     };
+     std::optional<unsigned> result;
+-    for (unsigned offset = 0; offset <= kBG2248Height - kBG2248InsetHeight; ++offset) {
++    for (unsigned offset = 0; offset <= pictureHeight - kPanPictureHeight; ++offset) {
+         if (!agrees(offset, 17, 13) || !agrees(offset, 139, 77) || !agrees(offset, 247, 114)) continue;
+         bool verified = true;
+-        for (unsigned y = 0; y < kBG2248InsetHeight && verified; ++y) {
+-            for (unsigned x = 0; x < kBG2248Width; ++x) {
++        for (unsigned y = 0; y < kPanPictureHeight && verified; ++y) {
++            for (unsigned x = 0; x < kPanInsetWidth; ++x) {
+                 if (!agrees(offset, x, y)) {
+                     verified = false;
+                     break;
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -676,8 +676,26 @@
+     std::vector<uint32_t> bg1285Native;
+     SceneHd bg1207;
+     std::vector<uint32_t> bg1207Native;
+-    SceneHd bg2248;
+-    std::vector<uint32_t> bg2248Native;
++    struct VerticalPan {
++        const char* name;
++        const char* nativeFile;
++        unsigned height;
++        size_t nativeBytes;
++        uint64_t nativeFingerprint;
++        uint64_t palette;
++        uint64_t cells;
++        const char* pcFile;
++        size_t pcBytes;
++        uint64_t pcFingerprint;
++        SceneHd hd;
++        std::vector<uint32_t> pixels;
++    };
++    VerticalPan verticalPans[] = {
++        {"BG2248", "BG2248.BIN", 296, 91936, 0x484258326571AF9Cull, 0xF0AFCDD75EBA9DA2ull,
++         0xD434BC45B629CEC4ull, "SAKURA1/BG/BG2248.SPR", 370887, 0x47D2A7B028841B72ull, {}, {}},
++        {"BG2295", "BG2295.BIN", 208, 64688, 0x40CD716674C17E1Dull, 0x5B088DCCBE6E471Bull,
++         0x019973A4BC85F784ull, "SAKURA1/BG/BG2295.SPR", 217667, 0x466721FE4E14023Cull, {}, {}},
++    };
+     SceneHd bg2533;
+     std::vector<uint32_t> bg2533Native;
+     auto queuePinnedPan = [&](SceneHd& pan, const char* relativePath, size_t fileSize,
+@@ -2108,31 +2126,40 @@
+                                 SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+                                 drewClip=true;
+                             }
+-                            const bool bg2248Layer = port.videoRenderer &&
+-                                port.videoRenderer->BackgroundPaletteFingerprint(4) == kBG2248Palette &&
+-                                port.videoRenderer->BackgroundCellFingerprint(4, 41472) == kBG2248Cells;
+-                            if (!drewClip && bg2248Layer && !port.opt.pcAssetsPath.empty() &&
++                            VerticalPan* vertical = nullptr;
++                            if (port.videoRenderer) {
++                                const auto palette = port.videoRenderer->BackgroundPaletteFingerprint(4);
++                                for (auto& pan : verticalPans) {
++                                    if (pan.palette == palette &&
++                                        port.videoRenderer->BackgroundCellFingerprint(4, 41472) == pan.cells) {
++                                        vertical = &pan;
++                                        break;
++                                    }
++                                }
++                            }
++                            if (!drewClip && vertical && !port.opt.pcAssetsPath.empty() &&
+                                 satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !choosing && !port.menu.IsOpen()) {
+-                                if (!bg2248.tried) {
+-                                    bg2248.tried = true;
++                                auto& pan = *vertical;
++                                if (!pan.hd.tried) {
++                                    pan.hd.tried = true;
+                                     std::vector<uint8_t> native;
+-                                    if (port.discFiles.ReadBounded("BG2248.BIN", native, kBG2248Bytes)) {
+-                                        bg2248Native = DecodePinnedPan(native, kBG2248Width, kBG2248Height,
+-                                                                        kBG2248Bytes, 0x484258326571AF9Cull);
++                                    if (port.discFiles.ReadBounded(pan.nativeFile, native, pan.nativeBytes)) {
++                                        pan.pixels = DecodePinnedPan(native, kPanInsetWidth, pan.height,
++                                                                     pan.nativeBytes, pan.nativeFingerprint);
+                                     }
+-                                    if (!bg2248Native.empty())
+-                                        queuePinnedPan(bg2248, "SAKURA1/BG/BG2248.SPR", 370887,
+-                                                       0x47D2A7B028841B72ull, 2 * kBG2248Width, 2 * kBG2248Height);
++                                    if (!pan.pixels.empty())
++                                        queuePinnedPan(pan.hd, pan.pcFile, pan.pcBytes, pan.pcFingerprint,
++                                                       2 * kPanInsetWidth, 2 * pan.height);
+                                 }
+-                                finishPinnedPan(bg2248);
+-                                if (bg2248.texture) {
+-                                    const auto offset = FindBG2248Offset(bg2248Native, softwareShown, planes.topSource);
++                                finishPinnedPan(pan.hd);
++                                if (pan.hd.texture) {
++                                    const auto offset = FindVerticalPanOffset(pan.pixels, softwareShown, planes.topSource, pan.height);
+                                     if (offset) {
+-                                        const SDL_FRect pcCrop{0.0f, float(*offset * 2), float(2 * kBG2248Width),
+-                                                               float(2 * kBG2248InsetHeight)};
+-                                        drewHd = SDL_RenderTexture(renderer, bg2248.texture, &pcCrop, &imageTarget);
++                                        const SDL_FRect pcCrop{0.0f, float(*offset * 2), float(2 * kPanInsetWidth),
++                                                               float(2 * kPanPictureHeight)};
++                                        drewHd = SDL_RenderTexture(renderer, pan.hd.texture, &pcCrop, &imageTarget);
+                                         if (drewHd && std::getenv("SATRECOMP_PAN_TRACE"))
+-                                            std::fprintf(stderr, "verified pan: BG2248 y=%u\n", *offset);
++                                            std::fprintf(stderr, "verified pan: %s y=%u\n", pan.name, *offset);
+                                     }
+                                 }
+                             }
+@@ -2209,7 +2236,7 @@
+                                planes.source.size()==320*224) {
+                                 for(const uint32_t layer:{2u,4u}) {
+                                     if(drewHd)break;
+-                                    if(layer==4 && (bg2248Layer || bg1207Layer || bg1285Layer))continue;
++                                    if(layer==4 && (vertical || bg1207Layer || bg1285Layer))continue;
+                                     const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
+                                     constexpr unsigned kNoSlot=kSceneBgCount+kSceneBgAmbiguousCount;
+                                     unsigned slot=kNoSlot;

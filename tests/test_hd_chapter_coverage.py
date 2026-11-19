@@ -138,3 +138,12 @@ class ChapterCoverageTest(unittest.TestCase):
                     self.assertEqual(row['pc'], f'SAKURA1/ENDING/END_{name}.SPR')
                     self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3] if name == 'GE' else [6, 7])
                     self.assertFalse(row.get('verified_in_game'))
+
+    def test_bg1306_guarded_connection_has_no_in_game_witness(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        for disc in (1, 2):
+            row = catalog['unassigned']['scene-pictures'][f'{disc}:/SAKURA1/BG1306.BIN']
+            self.assertEqual(row['pc'], 'SAKURA1/BG/BG1306.SPR')
+            self.assertEqual(row['status'], 'hd')
+            self.assertFalse(row.get('verified_in_game'))
