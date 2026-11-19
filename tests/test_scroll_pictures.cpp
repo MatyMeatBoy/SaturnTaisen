@@ -9,8 +9,6 @@
 
 int main() {
     using namespace port;
-    static_assert(kScrollPictureCount >= 15);
-
     // The common rule holds for every row; keys never collide.
     std::set<std::pair<uint64_t, uint64_t>> keys;
     std::set<std::string> names;
@@ -31,7 +29,16 @@ int main() {
         }
     }
 
-    // The three hand-written pictures keep the crops they had before the table.
+    for (const char* name : {"BG1207", "BG1285", "BG2207", "BG2248", "BG2265", "BG2266",
+                             "BG2267", "BG2268", "BG2269", "BG2295", "BG2533"})
+        assert(names.contains(name));
+    for (const char* name : {"BG1282", "BG2130", "BG2176", "BG2515"})
+        assert(names.contains(name));
+    // These use the existing still-viewport paths.
+    for (const char* name : {"BG1306", "BG2238", "BG2260"})
+        assert(!names.contains(name));
+
+    // The hand-written pictures keep the crops they had before the table.
     const auto byName = [](const char* name) -> const ScrollPicture& {
         for (const auto& row : kScrollPictures)
             if (!std::strcmp(row.name, name)) return row;
