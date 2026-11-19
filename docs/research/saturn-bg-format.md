@@ -482,3 +482,35 @@ the native frame. Verify wrap, non-unit increments, line effects, colour
 offsets, blends and occlusion before extending eligibility. Keep native
 in those cases until supported, and preserve the current inset and Zoom
 framing. General SDK support and replacement remain open.
+
+### Integer episode center and generated sides during the fade (T107e)
+
+Patch0081 draws the 320×224 episode card at the same integer viewport as the
+native center. Generated 39×224 sides use the same scale and are clipped to
+the 16:9 presentation. The edge texels fill the extra window pixels outside
+the integer fit. An eight-pixel reflected underlay beside the center keeps
+the transparent seam from reflecting the lettering farther into the side.
+When parts are missing or the captured blend weight is ambiguous, the normal
+native-edge fallback applies.
+
+The renderer carries a uniform weight from the presented NBG3-over-NBG2
+composition branch; it uses the ratio selected by the emulated VDP2 at the
+time of composition and handles a 32/32 card. No guest state changes. The
+proof reconstruction from the two captured planes reproduced all 71,680
+native RGB pixels at four title points with weights 4, 32, 32 and 27 of 32.
+The generated sides are modulated by the same card weight over the already
+composited exterior edge. Edge padding is extrapolated to fit the window.
+
+Built an isolated Windows runtime from the existing objects after recompiling
+the affected sources, SHA-256
+765ea6b96afb383a68311b2e7e3c1027f40050e4ef6bf79a579ef88d20177679.
+At 1920×1080, two full 6,550-frame title replays (English and Spanish disc 1)
+match the corresponding prior Original run exactly in guest hashes
+and report zero interpreted blocks. Passes 6075, 6200 and 6500 each preserve
+all 1,146,880 RGB pixels of the 4× center (320,92)–(1600,988). The sides
+differ from the mirror controls and change between fade-in, full and fade-out.
+The isolated app loaded the 20 package-gated files from its own app-relative
+art directory. The gameplay witness covers Episode 1, while the package gate
+covers all ten asset pairs. No new ZIP was built. At this checkpoint the
+project accounted for 39,407,546,051 unique logical file bytes, above the cap;
+the unchanged development ZIP is 6,315,009,692 bytes.

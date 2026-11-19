@@ -82,7 +82,8 @@
       "patches/0077-sakura-sh2-dispatch-fast-chain.patch",
       "patches/0078-sakura-movie-decoder-independent-tracks.patch",
       "patches/0079-sakura-card-seam-blend.patch",
-      "patches/0080-sakura-clip-audio-presented-handoff.patch"
+      "patches/0080-sakura-clip-audio-presented-handoff.patch",
+      "patches/0081-sakura-episode-native-scale-fade.patch"
     ]
   }
 }
