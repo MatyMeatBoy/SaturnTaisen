@@ -97,3 +97,16 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertEqual(row['pc'], 'SAKURA1/BG/BG2238.SPR')
             self.assertEqual(row['status'], 'unsupported-size')
             self.assertFalse(row.get('verified_in_game'))
+
+    def test_pc_title_donors_remain_excluded_in_both_disc_inventories(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
+        scenes = {key: row for group in groups for key, row in group['scene-pictures'].items()}
+        for disc in (1, 2):
+            for episode in range(1, 10):
+                row = scenes[f'{disc}:/SAKURA1/TITLE{episode}.BIN']
+                self.assertEqual(row['status'], 'excluded')
+                self.assertEqual(row['pc'], f'SAKURA1/TITLE/TITLE{episode}.SPR')
+                self.assertFalse(row.get('verified_in_game'))
+            self.assertEqual(scenes[f'{disc}:/SAKURA1/TITLE10.BIN']['status'], 'unknown')
