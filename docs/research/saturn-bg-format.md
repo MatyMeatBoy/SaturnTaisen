@@ -771,3 +771,20 @@ for the five target files. It also reported zero interpreted blocks.
 At block close the main workspace measured 53,882,618,828 logical bytes
 with hard links counted once and reparse points excluded, above the
 20 GB cap. The existing development ZIP is 6,315,009,692 bytes.
+
+### TP5: the 18 large bodies that were unpaired or unknown (2026-11-19)
+
+Each Saturn body was decoded again (`decode_nc`) and set beside the PC `NC<n>.SPR` of the same number, which exists for all 18; the transparency of both sides was measured after keying out the chroma colour (the Saturn share is the index 0 pixels, including the blank face hole). Rule: a PC picture can replace the Saturn body only if the Saturn body is itself a (nearly) opaque full frame; if the Saturn body is cut out on a transparent background and the PC picture has the scene painted in (0 percent transparent), drawing it would cover the scene behind (the NC3250 underlay of patch0116 solves that only for one body).
+
+| Body | Saturn (stride, transparent) | PC (size, transparent) | Result |
+|---|---|---|---|
+| NC3013 | 288, 0 % | 576x320, 0 % | **Connected** (patch0126): both are the same opaque full frame (correlation 0.983); the earlier rejection was wrong |
+| NC3047 | 288, 7.8 % | 576x320, 1.6 % | **Connected** (patch0126): both full frames, only the face hole is transparent (0.785) |
+| NC3057, NC3058, NC3285, NC3286 | 288, 20-36 % | 576x320, 0 % | Counterpart exists and is the same pose (0.78-0.82), but the PC picture has the scene painted in; the Saturn body is a cut-out: not drawn |
+| NC3173, NC92 | 176/224, 35-36 % | 361x320 / 448x320, 0 % | Same: counterpart (0.926 / 0.88) with a painted background; not drawn |
+| NC3060, NC3109, NC3124, NC3128, NC3129 | 176-272, 43-69 % | 417-576x320, 0 % | Same, and the signature correlation is low (-0.04 to 0.52) because the painted background dominates; same character and pose by eye; not drawn |
+| NC3290 | 80 (wrong stride), 42 % | 167x210, 0 % | Saturn stride still wrong; PC picture is a face close-up with its background; not drawn |
+| NC3517 | 200 (wrong stride), 20 % | 473x184, 2.8 % | Saturn stride still wrong; PC picture nearly a full frame; not drawn |
+| NC3125, NC3126, NC4138 | no decode (file shorter than stride x 144: 25,360 / 25,744 / 17,168 bytes, so fewer rows) | 398x205 / 385x209 / 230x254, 0 % | The Saturn height is unknown, so no content comparison; PC pictures are full frames with background; unknown |
+
+For the cut-out ones, a later route is a native-underlay draw like NC3250 (patch0116) or keying the painted background out of the PC picture; neither was attempted. Not compiled in a runtime build and not seen in game (speed rule); the patch applies to the stack (`tools/check_patch_stack.py`) and adds two rows to `port/body_table.h`, the table `tools/gen_body_table.py` writes from the reviewed map (131 bodies).
