@@ -21,7 +21,7 @@ def main():
     by_palette, by_palette_content, by_palette_cells = {}, {}, {}
     for pair in data['pairs']:
         name = pair['saturn_file'].split('/')[-1][:-4]
-        if pair.get('size') != [288, 144] or not pair['saturn_file'].startswith(('SAKURA1/', 'SAKURA2/EVE')):
+        if pair.get('size') != [288, 144] or not pair['saturn_file'].startswith(('SAKURA1/', 'SAKURA2/EVE', 'SAKURA2/BBG')):
             continue
         if name[2:3] in '34' or name in rejected or name == 'BG0000':
             continue

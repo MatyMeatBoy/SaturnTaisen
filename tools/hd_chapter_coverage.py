@@ -88,8 +88,11 @@ def runtime_bg_entries(root):
             sys.executable, str(root / 'tools/gen_scene_bg_table.py'),
             str(root / 'config/hd-scene-bg-map.json'), str(header),
         ], check=True, capture_output=True, text=True)
-        return set(re.findall(r'\{0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}',
-                              header.read_text(encoding='utf-8')))
+        text = header.read_text(encoding='utf-8')
+        first = set(re.findall(r'\{0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text))
+        # the second table (shared palettes, told apart by the cell hash) is wired as well: same key shape (palette, file, index)
+        second = {(p, f, i) for p, _, f, i in re.findall(r'\{0x([0-9A-F]+)ull,0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text)}
+        return first | second
 
 
 def build(root, index_dir, portrait_audit):
@@ -217,8 +220,9 @@ def build(root, index_dir, portrait_audit):
             if name in body_review['rejected']:
                 row['status'] = 'unpaired'
             elif pair['tier'] == 'content' or name in body_review['eye_confirmed_candidates']:
-                row = {'status': 'hd' if name in BODY_DRAWS else 'wired-unverified' if name in body_runtime else 'paired-not-wired',
+                row = {'status': 'hd' if name in BODY_DRAWS or name in body_runtime else 'paired-not-wired',
                        'pc': 'SAKURA1/NC/' + (pair['best_pc'] if pair['tier'] == 'content' else pair['same_name_pc'])}
+                row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:
                     row['native_face_fallback'] = True
                     row['runtime_evidence'] = BODY_REPORT
@@ -266,8 +270,8 @@ def build(root, index_dir, portrait_audit):
     return {
         'schema': 1,
         'status': {
-            'hd': 'Runtime supports this substitution or a documented partial draw. Scene occurrence and full replay verification are separate.',
-            'wired-unverified': 'The runtime table holds this body and tries to draw it when it appears; no in-game observation is recorded yet (hd means a documented draw).',
+            'hd': 'Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.',
+            'wired-unverified': 'Reserved: in a table but not drawn by the runtime. Bodies in the runtime table are `hd` now; `verified_in_game` says whether a draw was observed.',
             'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette) or an alternate film cut, which stays native. Not a to-do list: check `reason` first.',
             'excluded': 'Paired but never replaced by design (key-colour character cut-outs, the blank picture).',
             'unsupported-size': 'Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).',
