@@ -2162,9 +2162,11 @@
           "1:/SAKURA1/BG1021.BIN": {
             "association": "observed",
             "cold_run_frame": 59750,
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#bg1021-on-disc-1",
             "pc": "SAKURA1/BG/BG1021.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1021-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1030.BIN": {
             "association": "observed",

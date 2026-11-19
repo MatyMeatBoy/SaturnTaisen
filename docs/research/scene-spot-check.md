@@ -58,3 +58,18 @@ Owner request (2026-11-19): shards connect pictures without checking each one, s
 | 52 | SAKURA2/BG/BBG107.SPR | 2:/SAKURA2/BBG107.BIN | no |
 | 53 | SAKURA2/BG/BBG211.SPR | 2:/SAKURA2/BBG211.BIN | no |
 | 54 | SAKURA2/BG/BBG249.SPR | 2:/SAKURA2/BBG249.BIN | no |
+
+## BG1021 on disc 1
+
+Sample 3 passed. The picture is the lobby staircase from English disc 1, `/SAKURA1/BG1021.BIN`. The PC donor is image 0 of `SAKURA1/BG/BG1021.SPR`, 576×320, with SHA-256 `6b9a590ae32013fa2531ab401f634797117f270fba44d87740dcb1fd361460ad`. The native palette fingerprint is `4CABAADB62E5EFAB`. The [Chapter 1 cold route](hd-chapter-1.md#observations-from-the-full-cold-route) identifies the scene around frame 59,800, and the [Chapter 6 native replay](th6-native-attribution.md#displayed-resources) independently identifies the same picture at CD FAD 139502.
+
+Five muted 2560×1440 replays per scene used Enhanced with donor present, Enhanced with backgrounds disabled, Enhanced with an empty PC root, and Original with donor present or absent. Each profile used the same native KABE art with independent settings and backup copies. The only PC asset provided in the donor case was BG1021. The immutable MAP06 renderer build had SHA-256 `a501baae23cbd80e2259965e11427a970bb57c1100aec0768d56a11790de0db`. All runs used strict native execution and had zero interpreted blocks.
+
+| Appearance | Resume source and capture | Identical guest hashes | Changed pixels |
+|---|---|---|---:|
+| Chapter 1, Iris at the staircase | Cold-route state saved at 60,150, capture at local frame 45 | 60 frames, SHA-256 `b5fc4dce40c06085fc90610257beabb669c5948f5a62e8e477b9069fbf351dfe` | 1,193,543 |
+| Chapter 6, staircase after the transition | Archived Continue state saved at 11,999, capture at local frame 350 | 365 frames, SHA-256 `23ee1c728d7cb8fa9ccc0578ce61216fadfde6bd7c670b0cd817d3cc5b6d3795` | 1,955,736 |
+
+Both changes were confined to the inset at `(272,29)`, 2016×1008 pixels. All 2,032,128 pixels in the Chapter 6 inset matched the bilinearly resized PC image within two RGB levels per channel, with mean RGB errors of 0.116, 0.114 and 0.108. A 310×290 interior sample of Iris and her teddy bear in Chapter 1 matched the disabled capture pixel for pixel. The disabled and missing-donor Enhanced captures were identical, and each Original pair was identical. SRAM matched across all five replays in each scene. The Chapter 1 cold replay also matched the earlier earned route for all 60,500 guest frames.
+
+Private states, profiles, captures and hash logs are under `local/work/codex-th1/tp9-bg1021/`. This result covers the two English disc 1 appearances. The disc 2 listing still has no render witness. Package inclusion was outside this check.
