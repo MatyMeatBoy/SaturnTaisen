@@ -5158,6 +5158,13 @@
             "pc": "SAKURA1/BG/BG1176.SPR",
             "status": "hd"
           },
+          "2:/SAKURA1/BG2093.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2093-dream-transition.md",
+            "pc": "SAKURA1/BG/BG2093.SPR",
+            "reason": "The witnessed dream uses a per-line viewport origin on NBG0 under a variable NBG2 blend; a single opaque crop cannot reproduce the composite.",
+            "status": "unsupported-size"
+          },
           "2:/SAKURA1/BG2098.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
@@ -17642,12 +17649,6 @@
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2092.SPR",
         "status": "hd"
-      },
-      "2:/SAKURA1/BG2093.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2093.SPR",
-        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2094.BIN": {
         "association": "unknown",

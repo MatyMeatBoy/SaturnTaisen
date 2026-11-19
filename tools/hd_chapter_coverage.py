@@ -143,6 +143,7 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (2, '/SAKURA1/BG2093.BIN'): (9, 'docs/research/bg2093-dream-transition.md'),
     (2, '/SAKURA1/BG1213.BIN'): (10, 'docs/research/th10-native-attribution.md'),
     (2, '/SAKURA1/BG1160.BIN'): (10, 'docs/research/th10-native-attribution.md'),
     (2, '/SAKURA1/BG4055.BIN'): (10, 'docs/research/th10-native-attribution.md'),
@@ -485,6 +486,8 @@ def build(root, index_dir, portrait_audit):
                         # The runtime draws a 288x144 picture only; wide and tall ones need scroll support (T105c).
                         row['status'] = 'unsupported-size'
                         row['reason'] = 'size %s, the runtime draws 288x144 pictures only' % (pair.get('size'),)
+                        if (disc, path) == (2, '/SAKURA1/BG2093.BIN'):
+                            row['reason'] = 'The witnessed dream uses a per-line viewport origin on NBG0 under a variable NBG2 blend; a single opaque crop cannot reproduce the composite.'
                     else:
                         row['reason'] = 'palette shared with a picture that maps to another PC file (ambiguous)'
             elif name in bg_review['rejected'] or pair.get('tier') == 'missing':

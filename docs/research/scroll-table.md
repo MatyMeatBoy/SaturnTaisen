@@ -43,7 +43,7 @@ Offline fit of the PC crop as an axis-aligned affine map of the native offset `o
 | BG2518 | 1.831, 9.8, 264, 27, 487.5 | 1.000 / 1.000 | alignable (anisotropic scale) |
 | BG2172 | 2.008, 4.5, 289.5, 25.5, 536.4 | 0.999 / 0.999 | alignable |
 | BG2077 | 2.312, 0, 669.5, 0.2, 314 | 0.998 / 0.997 | alignable (whole picture stretched to PC size) |
-| BG2093 | 1.828, 22.5, 514.2, 0, 320 | 0.969 / 0.967 | alignable |
+| BG2093 | 1.828, 22.5, 514.2, 0, 320 | 0.969 / 0.967 | isolated image alignment. The [live dream](bg2093-dream-transition.md) uses line offsets and two-source color calculation, so it stays native. |
 | BG1310 | 1.905, 36.2, 560.8, 8, 312 | 0.953 / 0.948 | alignable |
 | BG1283 | 1.991, 0, 570, 0, 320 | 0.947 / 0.929 | alignable (2x, full 320 height) |
 | BG2290 | about 2.18, about -18, about 620, 0, 319 | per-window 0.98-0.99 for o>=24 | needs the box start clamped to [0, pcW-L]; native offsets below about 24 have no PC counterpart; unverified as a whole |
