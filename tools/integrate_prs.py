@@ -99,7 +99,7 @@ def resolve(path):
     return True
 
 
-def integrate(number, dry):
+def integrate(number, dry, allow_reanchored=False):
     info = json.loads(run('gh', 'pr', 'view', str(number), '--json', 'headRefName,title').stdout)
     branch = info['headRefName']
     run('git', 'fetch', '-q', 'origin')
@@ -112,6 +112,7 @@ def integrate(number, dry):
                 return 'manual: ' + path
         run('git', 'commit', '-q', '-m', 'Merge main; shared files unioned by tools/integrate_prs.py')
     stack = run(sys.executable, 'tools/check_patch_stack.py', check=False)
+    reanchored = []
     for _ in range(3):
         failing = re.search(r'(patches/\d+-[^ ]+\.patch) does not apply', stack.stdout) if stack.returncode else None
         if not failing:
@@ -119,6 +120,7 @@ def integrate(number, dry):
         # The context of the patch moved because other patches landed first: re-anchor it (reduced context) and say so.
         if run(sys.executable, 'tools/rebase_patch.py', failing.group(1), '--author-ref=origin/' + branch, check=False).returncode:
             break
+        reanchored.append(failing.group(1))
         run('git', 'add', failing.group(1))
         run('git', 'commit', '-q', '-m', 'Re-anchor %s with reduced context (tools/rebase_patch.py): compile and replay before trusting it' % failing.group(1))
         stack = run(sys.executable, 'tools/check_patch_stack.py', check=False)
@@ -126,6 +128,10 @@ def integrate(number, dry):
         return 'patch stack: ' + stack.stdout.strip()[:200]
     if dry:
         return 'ready (dry run; local branch integrate-%d keeps the result)' % number
+    if reanchored and not allow_reanchored:
+        # A re-anchored patch can sit in the wrong place (seen on #225 and #234): never merge it unseen.
+        run('git', 'push', '-q', 'origin', 'HEAD:' + branch)
+        return 'NOT merged: %s was re-anchored; compile, replay, then merge by hand (or --allow-reanchored)' % ', '.join(reanchored)
     run('git', 'push', '-q', 'origin', 'HEAD:' + branch)
     for attempt in range(4):
         merged = run('gh', 'pr', 'merge', str(number), '--merge', check=False)
@@ -142,6 +148,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--only', default='')
+    ap.add_argument('--allow-reanchored', action='store_true', help='merge even when a patch had to be re-anchored (compile first!)')
     ap.add_argument('--no-merge', action='store_true', help='push nothing and merge nothing; the local branch integrate-N is kept to build and verify')
     a = ap.parse_args()
     numbers = [p['number'] for p in json.loads(run('gh', 'pr', 'list', '--state', 'open', '--json', 'number').stdout)]
@@ -149,7 +156,7 @@ def main():
         numbers = [n for n in numbers if str(n) in a.only.split(',')]
     for number in sorted(numbers):
         try:
-            print('#%d: %s' % (number, integrate(number, a.dry_run)), flush=True)
+            print('#%d: %s' % (number, integrate(number, a.dry_run, a.allow_reanchored)), flush=True)
         except RuntimeError as error:
             print('#%d: error %s' % (number, error), flush=True)
             run('git', 'merge', '--abort', check=False)

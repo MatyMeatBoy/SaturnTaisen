@@ -1,11 +1,11 @@
 diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
-index fb58eb2..a806d0a 100644
+index fb58eb2..8fecf54 100644
 --- a/port/frontend_sdl.cpp
 +++ b/port/frontend_sdl.cpp
-@@ -1876,6 +1876,35 @@ int RunWindowed(Port &port) {
-                                 const float cx=imageTarget.x+(face.x+face.w*0.5f-16)*scale,cy=imageTarget.y+(face.y+face.h*0.5f-8)*scale;
-                                 SDL_FRect partTarget{cx-pw*0.5f,cy-ph*0.5f,pw,ph};
-                                 auto& mutableState=bodyHd[size_t(bodyDraw.slot)];
+@@ -1988,6 +1988,35 @@ int RunWindowed(Port &port) {
+                 SDL_RenderFillRect(renderer,&edge);
+             }
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
 +            // Disc 2's opening film is presented in the native theatre without a
 +            // recognized replacement backdrop. Keep that framing and only touch its film plate.
 +            if (shownDisc == 2 && satrecomp::FeatureValue("presentation_mode") == 1 &&
@@ -35,6 +35,6 @@ index fb58eb2..a806d0a 100644
 +                    SDL_RenderTexture(renderer, clipTexture, nullptr, &target);
 +                }
 +            }
-                                 const float predictedX=(partTarget.x-bodyTarget.x)/kx,predictedY=(partTarget.y-bodyTarget.y)/ky;
-                                 auto refined=mutableState.refinedPos.find(face.ordinal);
-                                 if(refined==mutableState.refinedPos.end() && face.ordinal<mutableState.partPixels.size()) {
+             // Replace a previously witnessed opaque tactical inset after its native frame has been drawn.
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && !port.opt.pcAssetsPath.empty() &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
