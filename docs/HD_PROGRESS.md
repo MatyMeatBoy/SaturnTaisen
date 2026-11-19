@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 302/304 (99,3%) | 302/304 (99,3%) | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 712/1267 (56,1%) | Sin dato | 516/1267 (40,7%) | Sin dato |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 712/1267 (56,1%) | Sin dato | 530/1267 (41,8%) | Sin dato |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
@@ -20,7 +20,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 302/304 (99,3%) |
-| Imágenes de escena | 516/1267 (40,7%) |
+| Imágenes de escena | 530/1267 (41,8%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 44/50 (88%) |
 | Modo táctico | Sin dato |
@@ -28,7 +28,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 129/147 (87,7%) |
 
-**HD total: 1010/1787 (56,5%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+**HD total: 1024/1787 (57,3%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico, HUD y menús PC/Saturn.
 
 ## Qué cuenta en cada etapa
@@ -69,7 +69,7 @@ Rangos de ID Saturn pendientes en hexadecimal
 Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
 
 - El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.
-- El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 516 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.
+- El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 530 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.
 - La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. El recuento de recursos preparados y la auditoría completa de apariciones en juego siguen pendientes.
 - **Siguiente paso**. Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.
 
