@@ -112,10 +112,20 @@ def integrate(number, dry):
                 return 'manual: ' + path
         run('git', 'commit', '-q', '-m', 'Merge main; shared files unioned by tools/integrate_prs.py')
     stack = run(sys.executable, 'tools/check_patch_stack.py', check=False)
+    for _ in range(3):
+        failing = re.search(r'(patches/\d+-[^ ]+\.patch) does not apply', stack.stdout) if stack.returncode else None
+        if not failing:
+            break
+        # The context of the patch moved because other patches landed first: re-anchor it (reduced context) and say so.
+        if run(sys.executable, 'tools/rebase_patch.py', failing.group(1), '--author-ref=origin/' + branch, check=False).returncode:
+            break
+        run('git', 'add', failing.group(1))
+        run('git', 'commit', '-q', '-m', 'Re-anchor %s with reduced context (tools/rebase_patch.py): compile and replay before trusting it' % failing.group(1))
+        stack = run(sys.executable, 'tools/check_patch_stack.py', check=False)
     if stack.returncode:
         return 'patch stack: ' + stack.stdout.strip()[:200]
     if dry:
-        return 'ready (dry run)'
+        return 'ready (dry run; local branch integrate-%d keeps the result)' % number
     run('git', 'push', '-q', 'origin', 'HEAD:' + branch)
     for attempt in range(4):
         merged = run('gh', 'pr', 'merge', str(number), '--merge', check=False)
@@ -132,6 +142,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--only', default='')
+    ap.add_argument('--no-merge', action='store_true', help='push nothing and merge nothing; the local branch integrate-N is kept to build and verify')
     a = ap.parse_args()
     numbers = [p['number'] for p in json.loads(run('gh', 'pr', 'list', '--state', 'open', '--json', 'number').stdout)]
     if a.only:
