@@ -3044,16 +3044,47 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1008.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1008.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1022.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1022.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1198.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1198.SPR",
+            "status": "hd"
+          },
           "1:/SAKURA1/TITLE3.BIN": {
-            "association": "inferred",
+            "association": "observed",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+            "evidence": "docs/research/th3-native-attribution.md",
             "pc": "SAKURA1/TITLE/TITLE3.SPR",
             "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
             "status": "excluded"
           }
         },
-        "tactical-maps": {},
-        "tactical-units": {}
+        "tactical-maps": {
+          "1:/SAKURA2/MAP04.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md",
+            "status": "unknown"
+          }
+        },
+        "tactical-units": {
+          "1:/SAKURA2/UNIT04.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md",
+            "status": "unknown"
+          }
+        }
       }
     },
     {
@@ -11703,11 +11734,6 @@
         "pc": "SAKURA1/BG/BG1005.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1008.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1008.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1009.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1009.SPR",
@@ -11751,11 +11777,6 @@
       "1:/SAKURA1/BG1020.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1020.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1022.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1022.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1023.BIN": {
@@ -12441,11 +12462,6 @@
       "1:/SAKURA1/BG1196.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1196.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1198.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1198.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1199.BIN": {
@@ -19514,10 +19530,6 @@
         "association": "unknown",
         "status": "unknown"
       },
-      "1:/SAKURA2/MAP04.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
       "1:/SAKURA2/MAP05.BIN": {
         "association": "unknown",
         "status": "unknown"
@@ -19617,10 +19629,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/UNIT03.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/UNIT04.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
