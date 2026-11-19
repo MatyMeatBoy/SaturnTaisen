@@ -265,3 +265,17 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual((emblem['association'], emblem['status']), ('observed', 'excluded'))
         self.assertEqual(catalog['chapters'][0]['resources']['portraits']['0169']['association'], 'inferred')
         self.assertNotIn('016a', catalog['unassigned']['portraits'])
+
+    def test_chapter9_native_observations_and_residency_are_distinct(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter9 = catalog['chapters'][8]['resources']
+        for name in ('BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100'):
+            row = chapter9['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
+            self.assertEqual(row['association'], 'observed')
+            self.assertFalse(row.get('verified_in_game'))
+        self.assertTrue(chapter9['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
+        self.assertEqual(chapter9['portraits']['2:/SAKURA1/0901FCE.BIN']['association'], 'resident')
+        for identity in ('0001', '00e9'):
+            self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
+            self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')

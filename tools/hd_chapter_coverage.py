@@ -67,7 +67,25 @@ CHAPTER5_ROUTE_FILES = {
     'NC60', 'NC90', 'NC3058',
 }
 CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
+CHAPTER9_ROUTE_REPORT = 'docs/research/hd-chapter-9.md#native-route-observations'
+CHAPTER9_ROUTE_FILES = {'BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100', 'NC81', 'NC3018'}
+NATIVE_ROUTE_FILES = {
+    5: (CHAPTER5_ROUTE_FILES, CHAPTER5_ROUTE_REPORT),
+    9: (CHAPTER9_ROUTE_FILES, CHAPTER9_ROUTE_REPORT),
+}
+NATIVE_ROUTE_PORTRAITS = {
+    5: ({name: '1:/SAKURA1/0501FCE.BIN' for name in CHAPTER5_ROUTE_PORTRAITS}, CHAPTER5_ROUTE_REPORT),
+    9: ({
+        '0001': '2:/SAKURA1/0900FCE.BIN',
+        '00e9': '2:/SAKURA1/0901FCE.BIN',
+        '00fa': '2:/SAKURA1/0900FCE.BIN',
+        '00fb': '2:/SAKURA1/0900FCE.BIN',
+        '0104': '2:/SAKURA1/0900FCE.BIN',
+    }, CHAPTER9_ROUTE_REPORT),
+}
 CHAPTER_FILE_RESIDENCIES = {
+    '2:/SAKURA1/0901FCE.BIN:bad07425e09a84a31c5b578fda68f9b685d2380328f3a0e5991faa33647bb522':
+        (9, CHAPTER9_ROUTE_REPORT),
     '1:/SAKURA2/UNIT10.BIN:0f44592f6e4323a8b977622fcb69f9d42da29e5f81e285d09f817a1bc4438496': (7, 'docs/research/th7-native-attribution.md'),
     '1:/SAKURA2/WKL10.BIN:7b4dae276347d0e295392eeb42e181276638be1e626825d99a63394e2f2ed453': (7, 'docs/research/th7-native-attribution.md'),
     '1:/SAKURA2/WKL06.BIN:f9306a073a1c603658e7b6c132b6ef36e889086e990f2c8856e056db1c14af4b':
@@ -490,14 +508,18 @@ def build(root, index_dir, portrait_audit):
             row['cold_run_frame'] = cold_bg[path]
         if kind:
             key = f'{disc}:{path}'
-            in_chapter5 = disc == 1 and path == f'/SAKURA1/{name}.BIN' and name in CHAPTER5_ROUTE_FILES
-            if chapter is not None or not in_chapter5:
+            witnesses = [
+                (episode, evidence) for episode, (files, evidence) in NATIVE_ROUTE_FILES.items()
+                if disc == disc_for(episode) and path == f'/SAKURA1/{name}.BIN' and name in files
+            ]
+            if chapter is not None or not witnesses:
                 add(kind, key, row, chapter, association, report)
-            if in_chapter5 and chapter != 5:
-                occurrence = {k: v for k, v in row.items() if k != 'runtime_evidence'}
-                if 'verified_in_game' in occurrence:
-                    occurrence['verified_in_game'] = False
-                add(kind, key, occurrence, 5, 'observed', CHAPTER5_ROUTE_REPORT)
+            for episode, evidence in witnesses:
+                if chapter != episode:
+                    occurrence = {k: v for k, v in row.items() if k != 'runtime_evidence'}
+                    if 'verified_in_game' in occurrence:
+                        occurrence['verified_in_game'] = False
+                    add(kind, key, occurrence, episode, 'observed', evidence)
 
         for stream in resource['video_streams']:
             offset = stream['offset']
@@ -554,12 +576,12 @@ def build(root, index_dir, portrait_audit):
             row['atlases'] = sources
         if ident in CHAPTER1_ROUTE_PORTRAITS:
             add('portraits', ident, row, 1, 'observed', CHAPTER1_ROUTE_REPORT)
-        elif sources or ident not in CHAPTER5_ROUTE_PORTRAITS:
+        elif sources or not any(ident in atlases for atlases, _ in NATIVE_ROUTE_PORTRAITS.values()):
             add('portraits', ident, row, 1 if sources else None,
                 'inferred' if sources else 'unknown', PORTRAIT_REPORT if sources else None)
-        if ident in CHAPTER5_ROUTE_PORTRAITS:
-            add('portraits', ident, dict(row, atlases=['1:/SAKURA1/0501FCE.BIN']),
-                5, 'observed', CHAPTER5_ROUTE_REPORT)
+        for episode, (atlases, evidence) in NATIVE_ROUTE_PORTRAITS.items():
+            if ident in atlases:
+                add('portraits', ident, dict(row, atlases=[atlases[ident]]), episode, 'observed', evidence)
 
     return {
         'schema': 1,
