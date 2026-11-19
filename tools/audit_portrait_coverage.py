@@ -242,6 +242,7 @@ def screenshot_comparison(path, portrait, palette):
 def read_native_discs(discs):
     complete = {}
     chapter = defaultdict(list)
+    atlases = {}
     for disc, path in enumerate(discs, 1):
         with path.open("rb") as source, mmap.mmap(source.fileno(), 0, access=mmap.ACCESS_READ) as iso:
             for name, lba, size in files(iso):
@@ -250,12 +251,14 @@ def read_native_discs(discs):
                 start = lba * 2048
                 if size > 1024 * 1024 or start + size > len(iso):
                     raise ValueError(f"invalid FCE extent: {name}")
-                for identity, raw in read_fce_images(iso[start:start + size]).items():
+                images = read_fce_images(iso[start:start + size])
+                atlases[f"{disc}:{name}"] = [f"{identity:04x}" for identity in sorted(images)]
+                for identity, raw in images.items():
                     if complete.setdefault(identity, raw) != raw:
                         raise ValueError(f"conflicting FCE identity: {identity:04x}")
                     if CHAPTER_ONE.search(name):
                         chapter[identity].append(f"{disc}:{name}")
-    return complete, chapter
+    return complete, chapter, atlases
 
 
 def verified_blob(path, expected_hash, exact_size=None):
@@ -336,7 +339,7 @@ def audit_catalog(project_file, pack_folder, discs):
             raise ValueError("invalid or duplicate PC candidate index")
         path = workspace_file(root, entry["path"])
         pc[index] = candidate_image(path, entry["sha256"])
-    native, chapter = read_native_discs(discs)
+    native, chapter, atlases = read_native_discs(discs)
     pack = read_pack(pack_folder, project)
     base_ids = defaultdict(list)
     rows = []
@@ -413,7 +416,7 @@ def audit_catalog(project_file, pack_folder, discs):
                                 for part, present in portion_flags(image.getchannel("A").tobytes(), 160).items()
                                 if present)),
     }
-    return rows, native, pack, project["palette_hash"], candidate_summary, errors
+    return rows, native, pack, project["palette_hash"], candidate_summary, errors, atlases
 
 
 def candidate_image(path, expected_sha256):
@@ -508,7 +511,7 @@ def main():
     if args.states is not None and not args.states.is_dir():
         parser.error("--states must be an existing directory")
     try:
-        rows, native, pack, palette, candidates, errors = audit_catalog(args.project, args.pack, args.disc or defaults)
+        rows, native, pack, palette, candidates, errors, atlases = audit_catalog(args.project, args.pack, args.disc or defaults)
         chapter = [row for row in rows if row["chapter1_sources"]]
         observations = snapshot_observations(sorted(args.states.glob("*.state")), native, pack, palette) if args.states else []
         data = {
@@ -517,6 +520,7 @@ def main():
             "catalog": coverage_summary(rows),
             "chapter1": coverage_summary(chapter),
             "errors": errors,
+            "fce_atlases": atlases,
             "rows": rows,
             "snapshots": observations,
         }
