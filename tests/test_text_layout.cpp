@@ -68,7 +68,7 @@ int main(int argc,char** argv) {
     for(int scale:{1,3,6,8}) {
         const float bottom=14.5f*scale;
         const float row=port::NarrativeRowTop(196,scale);
-        assert(row+bottom<=207*scale+0.001f);
+        assert(row+bottom<=208*scale+0.001f);   // one native pixel lower since 2026-11-19 (owner): still above the inner bottom frame
         assert(port::NarrativeRowTop(172,scale)-port::NarrativeRowTop(160,scale)==11*scale);
     }
     for(const auto [w,h]:std::array<std::pair<int,int>,5>{{{640,480},{1280,720},{1920,1080},{3840,2160},{3440,1440}}}) {
