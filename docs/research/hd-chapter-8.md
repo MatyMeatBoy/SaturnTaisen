@@ -2,6 +2,8 @@
 
 The [Chapter 8 native evidence](th8-native-attribution.md) adds observed scene pictures to the chapter register. It records display, residency, and disc reads separately. The complete replay and HD exit test are open.
 
+The [BG2247 pan](bg2247-native-pan.md) records the distinct `0805` branch, with exact native scroll offsets and a PC camera mismatch.
+
 ## Earlier catalog snapshot
 
 Source: `config/hd-chapter-coverage.json` (chapters[7], `unassigned`, `association`), `docs/research/chapter-sweep.md`, `docs/SHARDS.md`, `docs/PENDIENTES.md` row TH8 (open). Names, hashes and counts only. This is a data report: no replay was run, nothing here certifies the chapter complete.

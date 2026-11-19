@@ -48,6 +48,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [forest-vertical-pans.md](forest-vertical-pans.md) — Exact pairing of six Chapter 10 forest variants.
 - [scroll-table.md](scroll-table.md) — Shared scroll geometry and four additional registered panoramas.
 - [BG2093 dream transition](bg2093-dream-transition.md) records its live line offsets and two-source blend.
+- [BG2247 native pan](bg2247-native-pan.md) compares the witnessed Chapter 8 theatre viewport and the PC redraw.
 - [bg2159-disc2-visual.md](bg2159-disc2-visual.md) — Disc 2 Chapter 8 city view at 1440p.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 
