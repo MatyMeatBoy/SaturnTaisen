@@ -15,7 +15,7 @@ python tools/build_hd_progress.py --check
 python -m unittest discover -s tests -p "test_hd*.py"
 ```
 
-The progress panel counts accepted matches, source-level integration and in-game validation separately. Its updated scene-image count uses distinct PC filenames, while the chapter index lists Saturn files by disc and FILM streams by disc and offset. The NC panel uses Saturn body packages as its unit and counts six integrated bodies with documented draws. A measured preparation count or a complete in-game verification count is still pending in these updated categories.
+The progress panel counts accepted matches, source-level integration and in-game validation separately. Its updated scene-image count uses distinct PC filenames, while the chapter index lists Saturn files by disc and FILM streams by disc and offset. The NC panel counts each Saturn body package once across both discs. It reports runtime-table membership as integration and separately counts packages with a documented draw. A preparation count and a complete audit of scene appearances remain open.
 
 ## Status vocabulary (corrected 2026-11-19)
 

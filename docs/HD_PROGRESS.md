@@ -7,29 +7,29 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 302/304 (99,3%) | 302/304 (99,3%) | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 712/1267 (56,1%) | Sin dato | 459/1267 (36,2%) | Sin dato |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 712/1267 (56,1%) | Sin dato | 516/1267 (40,7%) | Sin dato |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
-| Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) |
-| HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) |
+| Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
+| HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 129/147 (87,7%) | Sin dato | 6/147 (4%) | Sin dato |
+| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 129/147 (87,7%) | Sin dato | 129/147 (87,7%) | 6/147 (4%) |
 
 ## Resumen global de integración
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | 459/1267 (36,2%) | Sin dato |
+| Imágenes de escena | 516/1267 (40,7%) | Sin dato |
 | Escenas y transiciones | Sin dato | Sin dato |
 | Vídeos | 44/50 (88%) | Sin dato |
-| Modo táctico | 0/542 (0%) | 0/542 (0%) |
-| HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
+| Modo táctico | Sin dato | Sin dato |
+| HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 6/147 (4%) | Sin dato |
+| Personajes grandes NC | 129/147 (87,7%) | 6/147 (4%) |
 
-- **Integración global indicativa (media de 7/8 categorías con total): 46,7%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 830/2901 (28,6%).** Mezcla unidades distintas; solo orienta.
+- **Integración global indicativa (media de 5/8 categorías con total): 83,1%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 1010/1787 (56,5%).** Mezcla unidades distintas; solo orienta.
 - Categorías sin total confirmado: ninguna.
 
 ## Qué cuenta en cada etapa
@@ -70,8 +70,8 @@ Rangos de ID Saturn pendientes en hexadecimal
 Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
 
 - El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.
-- El cruce TH0 registra 712 archivos PC con una correspondencia aceptada en los catálogos de BG, EVE y pantallas IC. La tabla de huellas de paleta contiene 459 entradas y 459 archivos SPR distintos con integración en el código fuente.
-- El preparador copia el material HD desde la edición PC del propietario. Falta un recuento de archivos preparados y verificados individualmente. Las imágenes de variante ancha, escenas EVE y eyecatches mantienen su ruta nativa.
+- El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 516 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.
+- La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. El recuento de recursos preparados y la auditoría completa de apariciones en juego siguen pendientes.
 - **Siguiente paso**. Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
@@ -107,21 +107,25 @@ Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje
 
 Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y combate Saturn, pegados al mundo y al scroll.
 
-- 542 archivos SPR: 291 UNIT, 194 MAP y 57 ITEM, más 141 MAP DAT y datos de mapa. Ninguno emparejado ni integrado todavía.
+- El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.
+- El suelo de Stage01 usa MAP01_A de PC y está verificado en juego con cámara fija y en movimiento. Falta un recuento por archivo SPR que cubra todas las sustituciones de mapa, unidad y objeto.
 - **Siguiente paso**. Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
+- [stage01-pc-ground.md](research/stage01-pc-ground.md).
 
 ### HUD y menús PC/Saturn
 
 Inventario conjunto por pantalla o pieza equivalente, incluidos elementos de mapa, batalla, estados y guardado.
 
-- Se observaron menús tácticos en Saturn y se ajustó su presentación. Falta vincular las piezas HD compartidas y contar las pantallas cubiertas.
-- Inventario de cabeceras PC: 29 archivos y 572 entradas de imagen sin errores de cabecera (pc-menu-hud-inventory.json). Ninguna está emparejada todavía con una pieza Saturn.
-- **Siguiente paso**. Emparejar cada entrada con su pantalla o pieza Saturn, empaquetarla y conectarla al renderizador; separar sustitución HD y ajuste del layout Saturn.
+- Las pruebas de presentación de Saturn cubrieron menús tácticos. Las sustituciones de recursos se verifican por pieza y por pantalla.
+- El censo PC reúne 29 archivos y 572 entradas de imagen con cabeceras validadas.
+- El inventario tiene tarjetas completas y marcos de SYSTEM verificados en juego. El recuento sigue pendiente para las 572 imágenes candidatas del censo.
+- **Siguiente paso**. Completar el cruce por imagen del censo, registrar las sustituciones HD y verificar cada menú en juego.
 
 - [tactical-menu-independent-reference.md](research/tactical-menu-independent-reference.md).
 - [v0.2.0-test.1.md](releases/v0.2.0-test.1.md).
+- [PENDIENTES.md](PENDIENTES.md).
 
 ### Fondos decorativos KABE
 
@@ -139,7 +143,7 @@ Los 19 temas decorativos únicos del catálogo KABE con alternativas HD, incluid
 Cuerpos Saturn fuera del retrato de diálogo. La cara y sus cuadros se auditan aparte.
 
 - Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. Hay 129 pares de cuerpo utilizables según el mapa y la revisión. Los recuentos usan cuerpos, una unidad por archivo Saturn.
-- Se observaron seis cuerpos dibujados en HD en estados de juego. Según el cuadro, los ojos o la boca pueden seguir nativos. Sigue pendiente el recuento de poses, expresiones, fundidos y apariciones verificadas.
+- El catálogo del runtime integra 129 paquetes. Hay apariciones documentadas para 6 cuerpos. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos.
 - **Siguiente paso**. Comprobar los cuerpos restantes y las expresiones con fallback nativo.
 
 - [saturn-hd-characters.md](research/saturn-hd-characters.md).

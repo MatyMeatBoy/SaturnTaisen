@@ -80,24 +80,24 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Imágenes de escena | Sin dato | Sin dato |
 | Escenas y transiciones | Sin dato | Sin dato |
 | Vídeos | Sin dato | Sin dato |
-| Modo táctico | 0/542 (0%) | 0/542 (0%) |
-| HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
+| Modo táctico | Sin dato | Sin dato |
+| HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | Sin dato | Sin dato |
+| Personajes grandes NC | Sin dato | 6/147 (4%) |
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | 459/1267 (36,2%) | Sin dato |
+| Imágenes de escena | 516/1267 (40,7%) | Sin dato |
 | Escenas y transiciones | Sin dato | Sin dato |
 | Vídeos | 44/50 (88%) | Sin dato |
-| Modo táctico | 0/542 (0%) | 0/542 (0%) |
-| HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
+| Modo táctico | Sin dato | Sin dato |
+| HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 6/147 (4%) | Sin dato |
+| Personajes grandes NC | 129/147 (87,7%) | 6/147 (4%) |
 
-- **Integración global indicativa (media de 7/8 categorías con total): 46,7%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 830/2901 (28,6%).** Mezcla unidades distintas; solo orienta.
+- **Integración global indicativa (media de 5/8 categorías con total): 83,1%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 1010/1787 (56,5%).** Mezcla unidades distintas; solo orienta.
 - Categorías sin total confirmado: ninguna.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
