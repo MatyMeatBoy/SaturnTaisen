@@ -45,7 +45,7 @@ def correlation(a, b):
     return sum(x * y for x, y in zip(a, b))
 
 
-def pc_signature(path):
+def pc_signature(path, image_index=None):
     raw = Path(path).read_bytes()
     try:
         pictures = decode_spred.decode(raw)
@@ -53,9 +53,39 @@ def pc_signature(path):
         return None
     if not pictures:
         return None
-    index, picture = max(pictures, key=lambda p: p[1].width * p[1].height)
+    if image_index is None:
+        index, picture = max(pictures, key=lambda p: p[1].width * p[1].height)
+    else:
+        selected = next((item for item in pictures if item[0] == image_index), None)
+        if selected is None:
+            return None
+        index, picture = selected
     return {'name': Path(path).name, 'rel': None, 'index': index, 'size': list(picture.size),
             'sha256': hashlib.sha256(raw).hexdigest(), 'sig': signature(picture.convert('RGB'))}
+
+
+# The standard PC search uses the same file number. BG2338's artwork is
+# a subimage of BG2238.SPR, as reviewed in docs/research/saturn-bg-format.md.
+REVIEWED_ALTERNATE_STILLS = {'SAKURA1/BG2338.BIN': ('SAKURA1/BG/BG2238.SPR', 17)}
+
+
+def reviewed_alternate(sat, pc_root):
+    candidate = REVIEWED_ALTERNATE_STILLS.get(sat['saturn_file'])
+    if candidate is None:
+        return None
+    relative, image_index = candidate
+    path = pc_root / relative
+    if not path.is_file():
+        return None
+    image = pc_signature(path, image_index)
+    if image is None:
+        return None
+    score = correlation(sat['sig'], image['sig'])
+    if score < 0.92:
+        return None
+    return {'pc_file': relative, 'pc_image_index': image_index, 'pc_sha256': image['sha256'],
+            'pc_size': image['size'], 'correlation': round(score, 3), 'tier': 'content',
+            'pair_method': 'visual-cross-number'}
 
 
 def saturn_signature(task):
@@ -108,6 +138,11 @@ def main():
         name = sat['saturn_file'].split('/')[-1][:-4] + '.SPR'
         own = index.get((sat['folder'], name))
         entry = {k: sat[k] for k in ('saturn_file', 'decoded', 'size', 'cells_sha256', 'palette_fnv')}
+        alternate = reviewed_alternate(sat, args.pc)
+        if alternate is not None:
+            entry.update(alternate)
+            pairs.append(entry)
+            continue
         if own is None:
             entry['tier'] = 'missing'
             pairs.append(entry)
@@ -126,7 +161,7 @@ def main():
     keys = [p['cells_sha256'] for p in decoded]
     out = {'schema': 2,
            'scope': 'Saturn BG*.BIN/BBG*.BIN to PC .SPR by shared file number, checked against every PC picture '
-                    '(normalised correlation of 32x16 grey signatures); data only. cells_sha256 identifies the native '
+                    '(normalised correlation of 32x16 grey signatures) with reviewed cross-number exceptions; data only. cells_sha256 identifies the native '
                     'picture; tier `number` needs an eye check before drawing.',
            'summary': summary, 'duplicate_cell_hashes': len(keys) - len(set(keys)),
            'undecoded': [p['saturn_file'] for p in pairs if not p['decoded']],

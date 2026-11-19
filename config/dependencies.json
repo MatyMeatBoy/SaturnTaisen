@@ -114,6 +114,7 @@
       "patches/0116-sakura-nc3250-native-underlay.patch",
       "patches/0117-sakura-spanish-loading-lettering.patch",
       "patches/0118-sakura-scene-table-shared-cells-choice.patch",
+      "patches/0119-sakura-bg2248-verified-vertical-pan.patch",
       "patches/0120-sakura-bbg204-tactical-inset.patch"
     ]
   }

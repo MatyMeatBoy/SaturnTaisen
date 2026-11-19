@@ -736,3 +736,38 @@ development ZIP remains 6,315,009,692 bytes.
 | BBG007 | BBG007.SPR | Blue pendant | `EF9307D85B802E5B` |
 
 All four PC resources have one 224 × 224 image. Direct visual comparison confirms the items, with changes to the frame colors and a smaller flower in the PC card. `EVT04.BIN` references BBG004 at offset `0x1588`. A runtime capture still needs to establish the footprint, frame treatment and exact point of substitution. These four results verify decoding and pairing only.
+
+### BG2338 fixed-cell picture and PC counterpart (TP3c)
+
+`SAKURA1/BG2338.BIN` uses the same fixed-cell header as the usual narrative
+backgrounds, with 800 row-major 8×8 cells from 0x50 to 0xC850. The 40×20
+grid gives 320×160 pixels. The 512-byte RGB555 palette follows at 0xC850
+and all bytes from 0xCA50 through the end of the 54,848-byte file are
+padding. The file is byte-identical on both discs in the Japanese, English
+and Spanish prepared images. Its SHA-256 is
+`67b96baf2103f76ddb829ff86713c4a4d7e500a84a00ac1647a8e77913c1aee7`.
+The PC file is `SAKURA1/BG/BG2238.SPR`, subimage 17 at 576×320. A direct
+comparison shows matching hair, wings, pose and blurred background.
+The 32×16 luminance correlation is 0.930906 using the full images.
+The same PC file contains neighboring animation frames.
+
+BG2338 shares palette fingerprint `5DEDEF54BF2F059D` with BG2238 and has
+a distinct cell fingerprint `9E591B2DBD322D38`. The size plan records the
+1.8× and 2× axis ratios, and the coverage catalog records an accepted pair
+with unsupported native size for both discs. The runtime table is unchanged.
+The full image sizes alone establish neither a native viewport nor the
+timing or crop needed to replace an animated presentation.
+
+A 7,200-frame strict-native continuation from the archived English disc 2
+finale File 3 checkpoint did not read BG2338 (FAD 128990), BG2337, BG2237,
+BG2238 or ENDING. It reached a different antagonist dialogue and reported
+zero interpreted blocks. A search across 1,062 native screenshots from the
+later-chapter and selected route archives did not locate this picture. A
+live draw still needs its exact native viewport and animation behavior.
+
+A separate 7,200-frame continuation from the Chapter 10 File 1 checkpoint
+reached the strategy-table scene and made 31 CD play requests. None were
+for the five target files. It also reported zero interpreted blocks.
+At block close the main workspace measured 53,882,618,828 logical bytes
+with hard links counted once and reparse points excluded, above the
+20 GB cap. The existing development ZIP is 6,315,009,692 bytes.
