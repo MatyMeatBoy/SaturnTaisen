@@ -151,6 +151,7 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA1/IC0501.BIN'): (5, 'docs/research/ic0501-intermission-witness.md'),
     (1, '/SAKURA1/NC3058.BIN'): (5, CHAPTER5_ROUTE_REPORT),
     (2, '/SAKURA1/BG2247.BIN'): (8, 'docs/research/bg2247-native-pan.md'),
     (2, '/SAKURA1/BG2093.BIN'): (9, 'docs/research/bg2093-dream-transition.md'),
