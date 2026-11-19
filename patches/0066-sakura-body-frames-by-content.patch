@@ -1,0 +1,188 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 009b01c..3312ad4 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -51,6 +51,28 @@
+ #include <string>
+ 
+ namespace port {
++// A 24x24 normalised grey signature of an RGBA picture (transparent pixels count as mid-grey), used to tell which
++// PC part a Saturn face frame is: the two are compared by correlation.
++inline std::vector<float> BodySignature(const std::vector<uint32_t>& pixels,unsigned width,unsigned height) {
++    constexpr unsigned N=24;
++    std::vector<float> out(N*N,0.0f);
++    if(!width || !height || pixels.size()!=size_t(width)*height)return out;
++    for(unsigned gy=0;gy<N;gy++)for(unsigned gx=0;gx<N;gx++) {
++        const unsigned x0=gx*width/N,x1=std::max(x0+1,(gx+1)*width/N),y0=gy*height/N,y1=std::max(y0+1,(gy+1)*height/N);
++        double sum=0;unsigned count=0;
++        for(unsigned y=y0;y<y1 && y<height;y++)for(unsigned x=x0;x<x1 && x<width;x++) {
++            const uint32_t p=pixels[size_t(y)*width+x];
++            const double alpha=(p>>24)/255.0,lum=0.299*(p&255)+0.587*((p>>8)&255)+0.114*((p>>16)&255);
++            sum+=lum*alpha+128.0*(1.0-alpha);count++;
++        }
++        out[gy*N+gx]=float(count?sum/count:128.0);
++    }
++    double mean=0;for(float v:out)mean+=v;mean/=out.size();
++    double norm=0;for(float& v:out){v=float(v-mean);norm+=double(v)*v;}
++    norm=std::sqrt(norm);if(norm<1e-6)norm=1.0;
++    for(float& v:out)v=float(v/norm);
++    return out;
++}
+ 
+ // SATRECOMP_FRAME_PROFILE=1: where a frame's time goes (emulation, presentation, HD text, present), printed at
+ // exit as average and 95th percentile in milliseconds. Off, it costs one branch per section.
+@@ -584,13 +606,13 @@ int RunWindowed(Port &port) {
+     // T19: large character bodies. A body on screen is one VDP1 texture whose bytes are the bitmap of its NC file;
+     // the face is small sprites whose bytes are frames that follow the bitmap, in the same order as the parts of
+     // the PC picture. Both are redrawn from the PC picture; anything else inside the body rectangle means native.
+-    struct BodyPixels {unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;};
++    struct BodyPixels {unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;};
+     struct BodyHd {
+         bool tried=false;SDL_Texture* body=nullptr;unsigned bodyW=0,bodyH=0;
+         std::future<BodyPixels> pending;std::vector<SDL_Texture*> parts;std::vector<unsigned> partW,partH,runCount;
+         std::vector<uint8_t> nc;std::unordered_map<uint64_t,long> offsets;
+         std::vector<uint32_t> bodyPixels;std::vector<std::vector<uint32_t>> partPixels;
+-        float refined[2][2]={{-1e9f,-1e9f},{-1e9f,-1e9f}};bool refinedDone[2]={false,false};
++        std::vector<std::vector<float>> partSig;std::unordered_map<uint64_t,int> matches;std::unordered_map<unsigned,std::array<float,2>> refinedPos;
+     };
+     std::vector<BodyHd> bodyHd(kBodyCount);
+     using PresentationSprite=satrecomp::video::Renderer::PresentationSprite;
+@@ -1192,6 +1214,7 @@ int RunWindowed(Port &port) {
+                                                 if(i==big || (images[i].width==16 && images[i].height==16))continue;
+                                                 result.partW.push_back(images[i].width);result.partH.push_back(images[i].height);
+                                                 result.parts.push_back(key(images[i].pixels,images[i].width,images[i].height));
++                                                result.partSig.push_back(BodySignature(result.parts.back(),images[i].width,images[i].height));
+                                             }
+                                             return result;
+                                         });
+@@ -1208,7 +1231,7 @@ int RunWindowed(Port &port) {
+                                         return texture;
+                                     };
+                                     st.body=make(decoded.body,decoded.bodyW,decoded.bodyH);st.bodyW=decoded.bodyW;st.bodyH=decoded.bodyH;
+-                                    st.bodyPixels=decoded.body;st.partPixels=decoded.parts;
++                                    st.bodyPixels=decoded.body;st.partPixels=decoded.parts;st.partSig=std::move(decoded.partSig);
+                                     for(size_t i=0;i<decoded.parts.size();i++) {
+                                         st.parts.push_back(make(decoded.parts[i],decoded.partW[i],decoded.partH[i]));
+                                         st.partW.push_back(decoded.partW[i]);st.partH.push_back(decoded.partH[i]);
+@@ -1219,10 +1242,10 @@ int RunWindowed(Port &port) {
+                                 }
+                                 const int bx=bodySprite->x,by=bodySprite->y,bw=spriteWidth(*bodySprite),bh=spriteHeight(*bodySprite);
+                                 const size_t bodyEnd=0x610+size_t(entry.stride)*144;
+-                                bool ok=st.body && !st.nc.empty() && st.nc.size()>bodyEnd && bw>0 && bh>0 && (st.runCount.size()==1 || st.runCount.size()==2);
++                                bool ok=st.body && !st.nc.empty() && st.nc.size()>bodyEnd && bw>0 && bh>0 && !st.parts.empty();
+                                 std::vector<std::pair<long,const PresentationSprite*>> found;
+                                 const char* why=nullptr;
+-                                if(!ok)why=st.body?"unsupported number of runs":"PC picture not ready";
++                                if(!ok)why=st.body?"no PC parts":"PC picture not ready";
+                                 if(ok)for(const auto& sp:planes.sprites) {
+                                     if(&sp==bodySprite || (sp.command.words[0]&15)>7 || sp.pixels.empty())continue;
+                                     const int sw=spriteWidth(sp),sh=spriteHeight(sp);
+@@ -1240,26 +1263,61 @@ int RunWindowed(Port &port) {
+                                     found.emplace_back(offset,&sp);
+                                 }
+                                 if(ok && !found.empty()) {
++                                    // Which PC part is each face frame? The one that looks most like it (correlation of a 24x24
++                                    // grey signature, cached per frame), so the arrangement of the frames in the NC file does not matter.
++                                    std::array<uint32_t,256> palette{};
++                                    for(unsigned i=0;i<256 && 0x410+i*2+1<st.nc.size();i++) {
++                                        const uint16_t word=uint16_t(st.nc[0x410+i*2])<<8|st.nc[0x410+i*2+1];
++                                        palette[i]=0xFF000000u|((word&31)*255/31)|((((word>>5)&31)*255/31)<<8)|((((word>>10)&31)*255/31)<<16);
++                                    }
++                                    // First try the arrangement of the file: frames of equal size in runs that follow the body,
++                                    // in the order of the PC parts (exact when it fits, as for NC97 and NC82).
+                                     std::sort(found.begin(),found.end(),[](const auto& a,const auto& b){return a.first<b.first;});
+-                                    const long first=long(bodyEnd);
+-                                    long secondStart=-1;
+-                                    if(st.runCount.size()==2) {
+-                                        const long firstSize=long(found.front().second->pixels.size());
+-                                        secondStart=first+long(st.runCount[0])*firstSize;
++                                    std::vector<int> layoutPart(found.size(),-1);
++                                    bool layoutOk=st.runCount.size()==1 || st.runCount.size()==2;
++                                    if(layoutOk) {
++                                        const long first=long(bodyEnd);
++                                        long secondStart=-1;
++                                        if(st.runCount.size()==2)secondStart=first+long(st.runCount[0])*long(found.front().second->pixels.size());
++                                        for(size_t n=0;n<found.size() && layoutOk;n++) {
++                                            const long offset=found[n].first,size=long(found[n].second->pixels.size());
++                                            long ordinal=0;
++                                            if(secondStart<0 || offset<secondStart) {
++                                                const long firstSize=secondStart<0?size:long(found.front().second->pixels.size());
++                                                if(size!=firstSize || (offset-first)%size) {layoutOk=false;break;}
++                                                ordinal=(offset-first)/size;
++                                                if(ordinal>=long(st.runCount[0])) {layoutOk=false;break;}
++                                            } else {
++                                                if((offset-secondStart)%size) {layoutOk=false;break;}
++                                                ordinal=long(st.runCount[0])+(offset-secondStart)/size;
++                                            }
++                                            if(ordinal>=long(st.parts.size()) || !st.parts[size_t(ordinal)]) {layoutOk=false;break;}
++                                            layoutPart[n]=int(ordinal);
++                                        }
+                                     }
++                                    size_t frameIndex=0;
+                                     for(const auto& [offset,sp]:found) {
+-                                        const long size=long(sp->pixels.size());
+-                                        unsigned ordinal=0;
+-                                        if(secondStart<0 || offset<secondStart) {
+-                                            const long firstSize=secondStart<0?size:long(found.front().second->pixels.size());
+-                                            if(size!=firstSize || (offset-first)%size) {ok=false;why="first-run frame size or offset";break;}
+-                                            ordinal=unsigned((offset-first)/size);
+-                                            if(ordinal>=st.runCount[0]) {ok=false;why="ordinal beyond the first run";break;}
+-                                        } else {
+-                                            if((offset-secondStart)%size) {ok=false;why="second-run offset";break;}
+-                                            ordinal=st.runCount[0]+unsigned((offset-secondStart)/size);
++                                        const uint64_t hash=AtlasFingerprint(sp->pixels);
++                                        int part=-1;
++                                        auto known=st.matches.find(hash);
++                                        if(layoutOk)part=layoutPart[frameIndex];
++                                        else if(known!=st.matches.end())part=known->second;
++                                        else {
++                                            const unsigned fw=unsigned(spriteWidth(*sp)),fh=unsigned(spriteHeight(*sp));
++                                            std::vector<uint32_t> rgba(sp->pixels.size());
++                                            for(size_t i=0;i<rgba.size();i++)rgba[i]=sp->pixels[i]?palette[sp->pixels[i]]:0u;
++                                            const auto signature=BodySignature(rgba,fw,fh);
++                                            double best=0.30;
++                                            for(size_t k=0;k<st.partSig.size();k++) {
++                                                double dot=0;for(size_t i=0;i<signature.size();i++)dot+=double(signature[i])*st.partSig[k][i];
++                                                if(dot>best) {best=dot;part=int(k);}
++                                            }
++                                            st.matches[hash]=part;
++                                            if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body frame %ux%u -> PC part %d (correlation %.2f)",fw,fh,part,part>=0?best:0.0);fputc(10,stderr);}
+                                         }
+-                                        if(ordinal>=st.parts.size() || !st.parts[ordinal]) {ok=false;why="no PC part for the frame";break;}
++                                        frameIndex++;
++                                        if(part<0 || !st.parts[size_t(part)]) {ok=false;why="no PC part resembles a frame";break;}
++                                        const unsigned ordinal=unsigned(part);
+                                         bodyDraw.faces.push_back({sp->x,sp->y,spriteWidth(*sp),spriteHeight(*sp),ordinal});
+                                     }
+                                 }
+@@ -1379,11 +1437,10 @@ int RunWindowed(Port &port) {
+                                 // the part over the PC body within 12 pixels and keeping the best agreement of the pixels both have.
+                                 const float cx=imageTarget.x+(face.x+face.w*0.5f-16)*scale,cy=imageTarget.y+(face.y+face.h*0.5f-8)*scale;
+                                 SDL_FRect partTarget{cx-pw*0.5f,cy-ph*0.5f,pw,ph};
+-                                const int runIndex=int(run);
+                                 auto& mutableState=bodyHd[size_t(bodyDraw.slot)];
+                                 const float predictedX=(partTarget.x-bodyTarget.x)/kx,predictedY=(partTarget.y-bodyTarget.y)/ky;
+-                                if(!mutableState.refinedDone[runIndex] && face.ordinal<mutableState.partPixels.size()) {
+-                                    mutableState.refinedDone[runIndex]=true;
++                                auto refined=mutableState.refinedPos.find(face.ordinal);
++                                if(refined==mutableState.refinedPos.end() && face.ordinal<mutableState.partPixels.size()) {
+                                     const auto& part=mutableState.partPixels[face.ordinal];
+                                     const int pw0=int(st.partW[face.ordinal]),ph0=int(st.partH[face.ordinal]),bw0=int(st.bodyW),bh0=int(st.bodyH);
+                                     double bestScore=1e30;int bestX=0,bestY=0;
+@@ -1402,11 +1459,12 @@ int RunWindowed(Port &port) {
+                                         }
+                                         if(count>=30 && total/count<bestScore) {bestScore=total/count;bestX=ox;bestY=oy;}
+                                     }
+-                                    if(bestScore<1e29) {mutableState.refined[runIndex][0]=float(bestX);mutableState.refined[runIndex][1]=float(bestY);}
+-                                    if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body face run %d: predicted %.1f,%.1f refined %.1f,%.1f score %.1f",runIndex,predictedX,predictedY,mutableState.refined[runIndex][0],mutableState.refined[runIndex][1],bestScore);fputc(10,stderr);}
++                                    const float rx=bestScore<1e29?float(bestX):predictedX,ry=bestScore<1e29?float(bestY):predictedY;
++                                    refined=mutableState.refinedPos.emplace(face.ordinal,std::array<float,2>{rx,ry}).first;
++                                    if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body part %u: predicted %.1f,%.1f refined %.1f,%.1f score %.1f",face.ordinal,predictedX,predictedY,rx,ry,bestScore<1e29?bestScore:-1.0);fputc(10,stderr);}
+                                 }
+-                                if(mutableState.refined[runIndex][0]>-1e8f) {
+-                                    partTarget.x=bodyTarget.x+mutableState.refined[runIndex][0]*kx;partTarget.y=bodyTarget.y+mutableState.refined[runIndex][1]*ky;
++                                if(refined!=mutableState.refinedPos.end()) {
++                                    partTarget.x=bodyTarget.x+refined->second[0]*kx;partTarget.y=bodyTarget.y+refined->second[1]*ky;
+                                 }
+                                 SDL_RenderTexture(renderer,st.parts[face.ordinal],nullptr,&partTarget);
+                             }
