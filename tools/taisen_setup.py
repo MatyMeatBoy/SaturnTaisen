@@ -1108,6 +1108,8 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
         language = 'es' if language == 'en' else 'en'
     disc = set_language(paths, language)
     write_default_settings(paths)
+    if hd_ready(paths):  # the profile always points at this install's own pack (a moved or copied profile too)
+        set_values(paths.home / 'launcher.ini', {('sakura', 'pc_assets'): str(paths.hd)})
     return dict(disc=str(disc), language=language, hd=hd, hd_ready=hd_ready(paths))
 
 
@@ -1195,7 +1197,7 @@ def main() -> int:
         else:
             given = list(args.rom) + ([args.folder] if args.folder else [])
             if not given and discs_folder(paths.program).is_dir():
-                given = [str(discs_folder(paths.program))]
+                given = [discs_folder(paths.program)]
             result = prepare(paths, given, args.language or saved_language(paths), args.force)
             say(100, 'Todo listo. Ya puedes jugar.')
             print('OK', json.dumps(result, ensure_ascii=False), flush=True)

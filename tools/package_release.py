@@ -114,7 +114,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
                 raise RuntimeError(f'Unresolved non-system DLL: {name}')
     licenses=app/'licenses'
     licenses.mkdir()
-    for name in ['LICENSE','THIRD_PARTY_NOTICES.md','README.md','VERSION']:
+    for name in ['LICENSE','THIRD_PARTY_NOTICES.md','VERSION']:
         shutil.copy2(ROOT/name,app/name)
     for name in ['SDL3','zlib','libc++','libunwind','libiconv','compiler-rt','llvm-libs']:
         source=toolchain/'share/licenses'/name
@@ -153,19 +153,23 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
             shutil.copy2(source,patch_target/entry['patch']);allowed_patches['parches/'+entry['patch']]=entry['patch_sha256']
     shutil.copy2(ROOT/'recomp-launcher.json',destination/'recomp-launcher.json')
     inputs=destination/'roms';inputs.mkdir()
-    # Only original project sources and reproducible patches, no generated code.
-    for folder,patterns in {'tools':['*.py','controller_mapper.cpp','controller_capture.h'],'patches':['*.patch'],'config':['*.json'],
-                            'tests':['*.py','*.cpp','*.movie'],'tests/native':['*.cpp','CMakeLists.txt'],
-                            'games/sakura':['game.cfg'],'docs/superpowers/specs':['*.md'],
-                            'docs/superpowers/plans':['*.md'],
-                            'docs':['PENDIENTES.md','HANDOFF.md','ESTADO_ACTUAL.md'],
-                            'docs/research':['*.md','*.json'],'docs/releases':['*.md','*-validation.json']}.items():
+    # What the programs read at run time (the HD recipe, the game's configuration). The sources, patches, tests and
+    # notes are not copied: CODIGO-FUENTE.txt names the repository and the exact commit this package was built from
+    # (GPL-3.0 section 6(d): the Corresponding Source offered from a network server).
+    for folder,patterns in {'config':['*.json'],'games/sakura':['game.cfg']}.items():
         target=app/folder
         target.mkdir(parents=True,exist_ok=True)
         for pattern in patterns:
             for source in (ROOT/folder).glob(pattern):
                 if source.relative_to(ROOT).as_posix() not in tracked:continue
                 shutil.copy2(source,target/source.name)
+    commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    (app/'CODIGO-FUENTE.txt').write_text(
+        'SaturnTaisen es software libre (GPL-3.0). Su codigo fuente completo, con los parches del SDK, las\n'
+        'herramientas y los tests, esta en:\n\n  https://github.com/MatyMeatBoy/SaturnTaisen\n\n'
+        f'Este paquete se construyo desde el commit {commit}:\n'
+        f'  https://github.com/MatyMeatBoy/SaturnTaisen/tree/{commit}\n\n'
+        'Las licencias de terceros estan en la carpeta licenses.\n',encoding='ascii',newline='\r\n')
     art_source=ROOT/'assets/generated/backgrounds'
     if not art_source.is_dir():art_source=ROOT/'art/backgrounds'
     generated=generated_backgrounds(art_source)

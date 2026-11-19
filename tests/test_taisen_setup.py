@@ -338,6 +338,31 @@ class TrackedData(unittest.TestCase):
             self.assertIn(flag, setup.HELP, flag)
 
 
+class DefaultRomsFolder(unittest.TestCase):
+    """`prepare` with no file given uses roms/ beside data/ (T92); it must report missing discs, not crash."""
+
+    def test_prepare_without_arguments_reads_the_roms_folder(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            program = root / 'data'
+            (program / 'parches').mkdir(parents=True)
+            (root / 'roms').mkdir()
+            self.assertEqual(setup.discs_folder(program), root / 'roms')
+            self.assertIsInstance(setup.discs_folder(program), Path)
+            old = sys.argv
+            sys.argv = ['preparar-juego', 'prepare', '--program', str(program), '--home', str(root / 'home')]
+            try:
+                import io, contextlib
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    code = setup.main()
+            finally:
+                sys.argv = old
+            self.assertEqual(code, 1)
+            self.assertIn('ERROR', out.getvalue())
+            self.assertNotIn('inesperado', out.getvalue())
+
+
 class FullPcPack(unittest.TestCase):
     """T89: the HD pack takes every image, video and table the HD mod will need, and no audio."""
 
