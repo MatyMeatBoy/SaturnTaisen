@@ -313,3 +313,16 @@ class ChapterCoverageTest(unittest.TestCase):
         for identity in ('0001', '00e9'):
             self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
             self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')
+
+    def test_chapter2_tactical_portraits_do_not_attribute_narrative_fce(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        portraits = catalog['chapters'][1]['resources']['portraits']
+        bank = '1:/SAKURA2/FACE02.BIN'
+        self.assertEqual((portraits[bank]['association'], portraits[bank]['status']), ('resident', 'unknown'))
+        for slot, donor in ((0, 10), (30, 208), (31, 209)):
+            row = portraits[f'{bank}#{slot}']
+            self.assertEqual((row['association'], row['status'], row['pc_index']), ('observed', 'paired-not-wired', donor))
+            self.assertFalse(row.get('verified_in_game'))
+        for atlas in range(1, 7):
+            self.assertEqual(portraits[f'1:/SAKURA1/020{atlas}FCE.BIN']['association'], 'inferred')

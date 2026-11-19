@@ -87,3 +87,52 @@ BG20xx heuristic subset (194 entries, 97 per disc): 74 hd, 18 paired-not-wired, 
 - `EVE202` draws `BBG202` on the verified disc-1 tactical path. The [runtime evidence](eve202-tactical-inset.md) covers two window sizes and the entry/exit cuts.
 - Chapter-2 evidence: PENDIENTES T29 and T25 show episode 2 was played/booted (EVT02 at `00204000`; disc 1 dialogue and battle), but no row ties that to HD coverage; TH2 is still `open` (row TH2, T25 Spanish notes).
 - Does the 0-count `bodies`/`film` for chapter 2 mean the coverage generator needs a chapter-2 observed-resources input like chapters 3-10 in `chapter-sweep.md`?
+
+
+## Stage 02 tactical portraits
+
+The English disc-1 strict Episode 2 route reads `FACE02.BIN` at
+FAD 222327. The complete 76,148-byte file is resident at
+`0x002B3800` in the intro, rocket dialogue and nearby snapshots.
+Its SHA-256 is
+`253500278286bc8a8d6e7c28bdee4d7ee199cc3b48f5b61c18ebab517ada49bb`.
+
+The outer bank has 53 offset/length entries. The populated images
+used here have an inner 16-byte offset/length header. Using
+`tools/es/red_lz.py`, 41 entries decode to 3,264 bytes, a 64-byte
+command header, a 40×48 indexed base, and two 40×16 strips.
+The three exact active normal-sprite commands used 8-bit
+indexed mode `0x00A0` and color field `0x0580`.
+The base index bytes match their decoded bank slots exactly.
+
+| Archived route | FACE02 slot | Command position | Base FNV-1a | PC KAOSLG.SPR subimage |
+| --- | ---: | --- | --- | ---: |
+| Intro, frame 3600 | 0 | (120,32) | `8D4FA9DE3B4F29EA` | 10 (Ogami) |
+| Nearby, frame 600 | 30 | (16,160) | `2555200A223EBE85` | 208 (Kohran) |
+| Rocket dialogue, frame 660 | 31 | (16,160) | `6F3107BD0DBE3782` | 209 (Kohran) |
+
+Each archived RGB sample matches all 1,920 pixels of the decoded
+base after applying the observed −4 color offset with clipping.
+An independent muted 12-frame strict-native replay from the
+unmodified rocket-dialogue snapshot matched all 69,120 pixels
+inside the 240×288 portrait rectangle in two 2560×1440 native
+captures, with zero interpreted blocks. The guest log SHA-256 is
+`1a2f9c142b59500b9f2657963df5803f8b8fb706f6b436ea65d268c97c1fdf1d`.
+
+The three corresponding PC faces rank first among the 164 decoded
+KAOSLG.SPR bases and match the eye and mouth poses in a side-by-side
+comparison. The PC archive SHA-256 is
+`cf9a193477a8fa209cb9f5e9bbfd2ff7ed9bd2893e3e279c423147049097db20`.
+The SPR indices are content matches. The bytes at the corresponding
+offsets in FACE02.DAT alone do not give those SPR indices.
+
+The register now records the native bank residency and the three
+observed PC base pairs. The tactical command layout and palette
+are outside the existing narrative FCE compositor. Its six
+chapter-2 FCE atlas associations remain inferred, and no observed
+FCE identity or HD draw is claimed here. The individual tactical
+strips, later phases and full chapter parity remain open.
+
+At block close the project measured 65,712,717,705 logical bytes,
+with hard links counted once and reparse points excluded, above the
+20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

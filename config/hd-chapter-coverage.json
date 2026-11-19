@@ -2640,6 +2640,36 @@
               "0143"
             ],
             "status": "hd"
+          },
+          "1:/SAKURA2/FACE02.BIN": {
+            "association": "resident",
+            "evidence": "docs/research/hd-chapter-2.md#stage-02-tactical-portraits",
+            "scope": "tactical portrait bank",
+            "status": "unknown"
+          },
+          "1:/SAKURA2/FACE02.BIN#0": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-2.md#stage-02-tactical-portraits",
+            "pc": "SAKURA2/SYSTEM/KAOSLG.SPR",
+            "pc_index": 10,
+            "scope": "tactical portrait base only",
+            "status": "paired-not-wired"
+          },
+          "1:/SAKURA2/FACE02.BIN#30": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-2.md#stage-02-tactical-portraits",
+            "pc": "SAKURA2/SYSTEM/KAOSLG.SPR",
+            "pc_index": 208,
+            "scope": "tactical portrait base only",
+            "status": "paired-not-wired"
+          },
+          "1:/SAKURA2/FACE02.BIN#31": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-2.md#stage-02-tactical-portraits",
+            "pc": "SAKURA2/SYSTEM/KAOSLG.SPR",
+            "pc_index": 209,
+            "scope": "tactical portrait base only",
+            "status": "paired-not-wired"
           }
         },
         "scene-pictures": {

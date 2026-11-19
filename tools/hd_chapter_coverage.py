@@ -18,6 +18,9 @@ CATEGORIES = (
 BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
+CHAPTER2_FACE_REPORT = 'docs/research/hd-chapter-2.md#stage-02-tactical-portraits'
+CHAPTER2_FACE_BANK = '1:/SAKURA2/FACE02.BIN:253500278286bc8a8d6e7c28bdee4d7ee199cc3b48f5b61c18ebab517ada49bb'
+CHAPTER2_FACE_BASE_PAIRS = {0: 10, 30: 208, 31: 209}
 MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
 YONEDA_STORAGE_REPORT = PORTRAIT_REPORT + '#yoneda-00e9-storage-portrait'
 
@@ -518,6 +521,17 @@ def build(root, index_dir, portrait_audit):
             row.update(fce_atlas_row(fce_atlases[f'{disc}:{path}'], recipes))
         if path in cold_bg and disc == 1:
             row['cold_run_frame'] = cold_bg[path]
+        if ident == CHAPTER2_FACE_BANK:
+            key = f'{disc}:{path}'
+            add('portraits', key, {'status': 'unknown', 'scope': 'tactical portrait bank'},
+                2, 'resident', CHAPTER2_FACE_REPORT)
+            for slot, pc_index in CHAPTER2_FACE_BASE_PAIRS.items():
+                add('portraits', f'{key}#{slot}', {
+                    'status': 'paired-not-wired',
+                    'scope': 'tactical portrait base only',
+                    'pc': 'SAKURA2/SYSTEM/KAOSLG.SPR',
+                    'pc_index': pc_index,
+                }, 2, 'observed', CHAPTER2_FACE_REPORT)
         if kind:
             key = f'{disc}:{path}'
             witnesses = [
