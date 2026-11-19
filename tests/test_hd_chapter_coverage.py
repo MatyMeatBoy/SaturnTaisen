@@ -22,6 +22,16 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(film_key({'disc': 2, 'lba': 300}, 4096), (2, 452))
 
 
+    def test_chapter5_intermission_has_native_witness_on_disc1(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter5 = catalog['chapters'][4]['resources']['scene-pictures']
+        row = chapter5['1:/SAKURA1/IC0501.BIN']
+        self.assertEqual((row['association'], row['status']), ('observed', 'paired-not-wired'))
+        self.assertEqual(row['pc'], 'SAKURA1/ICATCH/IC0501.SPR')
+        self.assertFalse(row.get('verified_in_game'))
+        self.assertIn('2:/SAKURA1/IC0501.BIN', catalog['unassigned']['scene-pictures'])
+
     def test_published_catalog_keeps_replacement_and_occurrence_separate(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf8'))

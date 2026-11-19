@@ -3812,6 +3812,13 @@
             "reason": "cut-out on a key colour or blank picture, not replaced by design",
             "status": "excluded"
           },
+          "1:/SAKURA1/IC0501.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/ic0501-intermission-witness.md",
+            "pc": "SAKURA1/ICATCH/IC0501.SPR",
+            "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
+            "status": "paired-not-wired"
+          },
           "1:/SAKURA1/TITLE5.BIN": {
             "association": "inferred",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
@@ -15535,12 +15542,6 @@
       "1:/SAKURA1/IC04.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0400.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
-      },
-      "1:/SAKURA1/IC0501.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/ICATCH/IC0501.SPR",
         "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
