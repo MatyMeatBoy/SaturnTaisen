@@ -25,3 +25,9 @@ Design for the next block (nothing implemented yet):
 2. Decode the PC MPEG with pl_mpeg on a worker thread, upload YUV→RGB frames to a texture and draw it in the 16:9 presentation in place of the Saturn picture, keeping the guest running untouched (guest hashes must stay identical).
 3. Sync to the guest's FILM time (the Saturn clip is the clock), skip and end with the guest; the PC audio replaces the Saturn audio only if its duration matches (the six alternate cuts keep the Saturn video).
 4. Verify with a clip in a saved state; unpaired MOVIE118 and REDLOGO stay unused.
+
+### First CD trace of the opening film (2026-11-19)
+
+Replay: `title-final.state` + `tests/chapter1-title-new-game.movie`, `sakura.exe` with `SATRECOMP_CD_TRACE=1`, strict native, 6,201 frames, script `local/work/t53/cdtrace.py` (log under `local/work/t53/run1`, local only). 237,015 CD commands; the dominant ones are polling (`0000` status 147k, `5100` 70k, `0600`, `5200`, `5300`, `6100`/`6200` get/delete sector data).
+
+The play commands (`10xx`) read the files as FAD ranges (for example `1082 7465 0080 0026` = FAD 0x027465, 0x26 sectors; the late ones `1080 2EC7..2EC9` with a 0x1BB12-sector range, which is "play to the end of the track", so the stream is fed by sector-data transfers and not by one bounded play). Conclusion: the clip cannot be identified from one play command; it has to be identified from the sector-data requests (`61xx`/`62xx`) or from the first FILM sector header after the `play`. Next step: log the FAD of each `61xx` transfer in the frame range 824-5968 and match the first one to the 51 streams' start sectors.
