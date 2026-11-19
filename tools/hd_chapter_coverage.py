@@ -13,13 +13,32 @@ CATEGORIES = (
     'scene-pictures', 'bodies', 'portraits', 'film',
     'tactical-maps', 'tactical-units', 'menus-hud',
 )
-BG_REPORT = 'docs/research/bg-matching-progress.md'
 BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
 BG2248_REPORT = 'docs/research/bg2248-pan.md'
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
+CHAPTER1_ROUTE_REPORT = 'docs/research/hd-chapter-1.md#observations-from-the-full-cold-route'
+# The replay identifies active donors. BG2004 shares native cells and palette
+# with other variants, so this trace cannot attribute its BIN.
+CHAPTER1_ROUTE_SCENES = (
+    'BG1001 BG1002 BG1006 BG1007 BG1011 BG1012 BG1017 BG1021 BG1030 BG1045 BG1046 '
+    'BG1058 BG1070 BG1116 BG1119 BG1193 BG1209 BG1216 BG2034 BG2039 BG2159 BG2173 '
+    'BG2250 BG2251 BG2535'
+).split()
+CHAPTER1_ROUTE_BODIES = (
+    'NC10 NC11 NC12 NC20 NC21 NC25 NC30 NC3004 NC32 NC3250 NC50 NC51 NC55 NC56 '
+    'NC81 NC82 NC95 NC96 NC97'
+).split()
+CHAPTER1_ROUTE_PORTRAITS = (
+    '0001 0002 0003 0004 0005 0006 0007 0009 000a 000b 000f 0013 0014 0015 0016 '
+    '0017 0018 001a 001c 001d 0023 0040 0041 0043 0045 0047 004a 0064 0065 006e '
+    '0091 0092 0093 0094 0095 0096 009b 009c 00e2 00e3 00e4 00e5 00e9 0134 0136 '
+    '013a 013c 0142 0148 0149 015e 015f 0161 0163 0166 0168 0176 0177 0179 017a '
+    '017b 017c'
+).split()
+CHAPTER1_ROUTE_FILMS = {23695360: 'MOVIE001', 45410304: 'MOVIE002', 56039424: 'MOVIE003'}
 STAGE01_MAP = (1, '/SAKURA2/MAP01.BIN')
 STAGE21_REPORT = 'docs/research/stage21-pc-ground.md'
 STAGE21_MAP = (1, '/SAKURA2/MAP21.BIN')
@@ -40,13 +59,16 @@ SCENE_DRAWS = {
     BBG204_INSET: (4, BBG204_REPORT),
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, BODY_REPORT) for number in (1011, 1012, 1017)},
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, CAMPAIGN_REPORT) for number in (1001, 1006, 1045, 1209, 2159, 2250, 2251)},
+    (1, '/SAKURA1/BG1119.BIN'): (1, CHAPTER1_ROUTE_REPORT),
+    (1, '/SAKURA1/BG1216.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    **{(1, f'/SAKURA1/{name}.BIN'): (1, CHAPTER1_ROUTE_REPORT)
+       for name in CHAPTER1_ROUTE_SCENES + CHAPTER1_ROUTE_BODIES},
     **SCENE_DRAWS,
-    (1, '/SAKURA1/BG1119.BIN'): (1, BG_REPORT),
     (1, '/SAKURA1/NC20.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/BG2248.BIN'): (1, BG2248_REPORT),
@@ -312,8 +334,9 @@ def build(root, index_dir, portrait_audit):
                     row.update(status='paired-not-wired' if film['alternate_cut'] else 'hd',
                                pc=movie, alternate_cut=film['alternate_cut'])
             chapter, report = observed.get((ident, offset), (None, None))
-            if disc == 1 and row.get('pc') == 'MOVIE001' and path == '/SAKURA4':
-                chapter, report = 1, 'docs/PENDIENTES.md#list'
+            if (disc == 1 and path == '/SAKURA4' and offset in CHAPTER1_ROUTE_FILMS
+                    and row.get('pc') == CHAPTER1_ROUTE_FILMS[offset]):
+                chapter, report = 1, CHAPTER1_ROUTE_REPORT
             add('film', f'{disc}:{path}+{offset}', row, chapter,
                 'observed' if chapter else 'unknown', report)
     for portrait in portraits:
@@ -328,8 +351,11 @@ def build(root, index_dir, portrait_audit):
         row = {'status': 'hd', 'pc_index': recipes[ident]} if ident in recipes else {'status': 'unpaired'}
         if sources:
             row['atlases'] = sources
-        add('portraits', ident, row, 1 if sources else None,
-            'inferred' if sources else 'unknown', PORTRAIT_REPORT if sources else None)
+        if ident in CHAPTER1_ROUTE_PORTRAITS:
+            add('portraits', ident, row, 1, 'observed', CHAPTER1_ROUTE_REPORT)
+        else:
+            add('portraits', ident, row, 1 if sources else None,
+                'inferred' if sources else 'unknown', PORTRAIT_REPORT if sources else None)
 
     return {
         'schema': 1,

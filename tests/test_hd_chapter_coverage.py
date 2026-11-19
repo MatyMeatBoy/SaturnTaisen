@@ -67,7 +67,23 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertIs(city.get('verified_in_game'), True)
         self.assertEqual(city.get('runtime_evidence'), 'docs/research/bg2159-disc2-visual.md')
         self.assertNotIn('2:/SAKURA1/BG2159.BIN', catalog['unassigned']['scene-pictures'])
-        self.assertEqual(chapter1['portraits']['0001']['association'], 'inferred')
+        corridor = chapter1['scene-pictures']['1:/SAKURA1/BG1119.BIN']
+        self.assertIs(corridor.get('verified_in_game'), True)
+        hanami = chapter1['scene-pictures']['1:/SAKURA1/BG1216.BIN']
+        self.assertIs(hanami.get('verified_in_game'), True)
+        scene = chapter1['scene-pictures']['1:/SAKURA1/BG1116.BIN']
+        self.assertEqual(scene['association'], 'observed')
+        self.assertFalse(scene.get('verified_in_game'))
+        self.assertIn('1:/SAKURA1/BG2004.BIN', catalog['unassigned']['scene-pictures'])
+        self.assertIn('2:/SAKURA1/BG1116.BIN', catalog['unassigned']['scene-pictures'])
+        body = chapter1['bodies']['1:/SAKURA1/NC51.BIN']
+        self.assertEqual(body['association'], 'observed')
+        self.assertFalse(body.get('verified_in_game'))
+        self.assertEqual(chapter1['portraits']['0001']['association'], 'observed')
+        for offset, movie in ((45410304, 'MOVIE002'), (56039424, 'MOVIE003')):
+            clip = chapter1['film'][f'1:/SAKURA4+{offset}']
+            self.assertEqual((clip['association'], clip['pc']), ('observed', movie))
+        self.assertIn('1:/SAKURA4+0', catalog['unassigned']['film'])
         self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
         self.assertEqual(len({row['pc'] for row in alternate_cuts}), 6)
