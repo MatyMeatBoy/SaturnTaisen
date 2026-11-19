@@ -192,3 +192,9 @@ Measured afterwards: **31,127,631,026 bytes, 69,573 files** (hard links counted 
 
 The current runtime is kept once, unpacked, in `local/releases/SaturnTaisen-v0.2.2-alpha-win64/sakura.exe` (SHA-256 `df68e9db…`); use it for `package_release.py --runtime`. The previous reference stays archived (`SaturnTaisenFirst-reference-SDK48-674182.7z`).
 
+### Delivered packages moved out of the project — 2026-11-18
+
+At the owner's request the delivered ZIPs were moved (not copied, not modified) out of the project folder: the 17 package ZIPs with their checksums to `D:Claude\SaturnTaisen-entregas\`, and the development ZIP with its reports to `D:Claude\SaturnTaisenFirst-DEV-transfer-20261118\`, the location the earlier note already named. Every ZIP was hashed again after the move and matches its recorded SHA-256. They remain immutable. `local/releases/ENTREGAS-MOVIDAS.txt` points to them.
+
+Measured afterwards: **15,457,405,993 bytes** (hard links counted once), below the 20,000,000,000-byte limit. `local/releases` keeps the current release unpacked (`SaturnTaisen-v0.2.2-alpha-win64`, with the current runtime), the archived SDK48 reference and the validation receipts.
+
