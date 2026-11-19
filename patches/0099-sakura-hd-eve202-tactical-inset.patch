@@ -1,0 +1,192 @@
+diff --git a/port/eve_inset.h b/port/eve_inset.h
+new file mode 100644
+index 0000000..f3d007a
+--- /dev/null
++++ b/port/eve_inset.h
+@@ -0,0 +1,66 @@
++#pragma once
++
++#include <cstddef>
++#include <cstdint>
++#include <span>
++
++namespace port {
++
++struct EveRect {
++    int x;
++    int y;
++    int width;
++    int height;
++    constexpr bool operator==(const EveRect&) const = default;
++};
++
++inline constexpr std::uint64_t kEve202Palette = 0x0D97B7C3CC0B3C31;
++inline constexpr EveRect kEve202NativeRect{16, 8, 288, 144};
++inline constexpr EveRect kEve202PcCrop{0, 20, 564, 282};
++inline constexpr int kEve202PcWidth = 576;
++inline constexpr int kEve202PcHeight = 320;
++inline constexpr char kEve202PcFile[] = "SAKURA2/BG/BBG202.SPR";
++inline constexpr unsigned kEve202PcImage = 0;
++
++struct EveInsetFrame {
++    std::span<const std::uint8_t> source;
++    std::uint64_t layer5Palette;
++    int width;
++    int height;
++    bool layer5OpaqueAtUnitScroll;
++};
++
++inline bool IsEve202Inset(const EveInsetFrame& frame) {
++    constexpr int nativeWidth = 320;
++    constexpr int nativeHeight = 224;
++    constexpr std::uint8_t insetLayer = 5;
++    if (frame.layer5Palette != kEve202Palette || !frame.layer5OpaqueAtUnitScroll ||
++        frame.width != nativeWidth || frame.height != nativeHeight ||
++        frame.source.size() != nativeWidth * nativeHeight) {
++        return false;
++    }
++
++    for (int y = 0; y < nativeHeight; ++y) {
++        for (int x = 0; x < nativeWidth; ++x) {
++            const bool insideInset = x >= kEve202NativeRect.x &&
++                                     x < kEve202NativeRect.x + kEve202NativeRect.width &&
++                                     y >= kEve202NativeRect.y &&
++                                     y < kEve202NativeRect.y + kEve202NativeRect.height;
++            if (insideInset != (frame.source[std::size_t(y) * nativeWidth + x] == insetLayer)) {
++                return false;
++            }
++        }
++    }
++    return true;
++}
++
++constexpr EveRect Eve202Destination(int canvasX, int canvasY, int integerScale) {
++    return {
++        canvasX + kEve202NativeRect.x * integerScale,
++        canvasY + kEve202NativeRect.y * integerScale,
++        kEve202NativeRect.width * integerScale,
++        kEve202NativeRect.height * integerScale,
++    };
++}
++
++}  // namespace port
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 5457fa3..2e05441 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -23,6 +23,7 @@
+ #include "pc_spr.h"
+ #include "bg2533_verified_pan.h"
+ #include "scene_bg_table.h"
++#include "eve_inset.h"
+ #include "body_table.h"
+ #include "verified_body_faces.h"
+ #include "film_clip_table.h"
+@@ -612,6 +613,9 @@ int RunWindowed(Port &port) {
+     std::vector<uint32_t> bg2533Native;
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
++    SceneHd eve202;
++    bool eve202Traced = false;
++    bool eve202Examined = false;
+     // T113/S3: the PC clip (MOVIEnnn.MPG) that replaces a Saturn FILM in the picture. Armed by a CD play command whose start FAD is in
+     // the table; the clip starts when the film plane fills the picture and follows the guest's frame count; the guest is untouched.
+     port::MovieDecoder clipDecoder;
+@@ -1963,6 +1967,97 @@ int RunWindowed(Port &port) {
+                 SDL_RenderFillRect(renderer,&edge);
+             }
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
++            // Replace a previously witnessed opaque tactical inset after its native frame has been drawn.
++            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && !port.opt.pcAssetsPath.empty() &&
++                satrecomp::FeatureValue("presentation_mode") == 1 && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++                baseFit.scale > 0 &&
++                where.x == baseFit.x && where.y == baseFit.y && where.w == baseFit.w && where.h == baseFit.h &&
++                texW == 320 && texH == 224 && softwareShown.size() == 320 * 224) {
++                const auto& planes = port.videoRenderer->PresentationFrame();
++                // The palette is copied into Presentation at frame capture. Do not consult live CRAM.
++                uint64_t palette = 0;
++                for (size_t bank = 0; bank + 512 <= planes.palette.size(); bank += 512) {
++                    uint64_t hash = 14695981039346656037ull;
++                    for (size_t byte = bank; byte < bank + 512; ++byte)
++                        hash = (hash ^ planes.palette[byte]) * 1099511628211ull;
++                    if (hash == port::kEve202Palette) { palette = hash; break; }
++                }
++                const bool knownInset = port::IsEve202Inset({planes.topSource, palette, int(planes.width), int(planes.height), true});
++                if (!eve202Examined && std::getenv("SATRECOMP_EVE_TRACE")) {
++                    std::fprintf(stderr, "EVE202 examined palette=%016llX extent=%ux%u top=%zu match=%d\n",
++                        static_cast<unsigned long long>(palette), planes.width, planes.height, planes.topSource.size(), int(knownInset));
++                    eve202Examined = true;
++                }
++                if (knownInset) {
++                    // The witnessed window crop is a nearest-neighbour copy of these native RGB pixels.
++                    // An exact RGB key also rejects scroll, blending, and colour adjustments in this first witness.
++                    uint64_t nativeRgb = 14695981039346656037ull;
++                    for (int y = 8; y < 152; ++y) {
++                        for (int x = 16; x < 304; ++x) {
++                            const uint32_t pixel = softwareShown[size_t(y) * 320 + x];
++                            for (unsigned shift : {0u, 8u, 16u})
++                                nativeRgb = (nativeRgb ^ uint8_t(pixel >> shift)) * 1099511628211ull;
++                        }
++                    }
++                    if (nativeRgb == 0x9B31BCF15EF165E9ull) {
++                        if (!eve202.tried) {
++                            eve202.tried = true;
++                            eve202.pending = std::async(std::launch::async,
++                                [file = std::filesystem::u8path(port.opt.pcAssetsPath) / port::kEve202PcFile]() {
++                                    SceneHdPixels result;
++                                    std::vector<uint8_t> bytes;
++                                    if (!ReadPcBackdropFile(file, bytes, 97616) || bytes.size() != 97616) return result;
++                                    if (PcBackdropHash(bytes) != 0x622D0EBC1CEA8E03ull) return result;
++                                    std::vector<PcSprite> images;
++                                    std::string error;
++                                    if (!DecodePcSprites(bytes, images, error)) return result;
++                                    for (auto& image : images) {
++                                        if (image.index == port::kEve202PcImage &&
++                                            image.width == port::kEve202PcWidth && image.height == port::kEve202PcHeight) {
++                                            const auto crop = port::kEve202PcCrop;
++                                            result.width = crop.width;
++                                            result.height = crop.height;
++                                            result.pixels.reserve(size_t(crop.width) * crop.height);
++                                            for (int y = 0; y < crop.height; ++y) {
++                                                const auto first = image.pixels.begin() + (y + crop.y) * image.width + crop.x;
++                                                result.pixels.insert(result.pixels.end(), first, first + crop.width);
++                                            }
++                                            break;
++                                        }
++                                    }
++                                    return result;
++                                });
++                        }
++                        if (eve202.pending.valid() &&
++                            eve202.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                            auto pixels = eve202.pending.get();
++                            if (std::getenv("SATRECOMP_EVE_TRACE"))
++                                std::fprintf(stderr, "EVE202 asset usable=%d\n", int(!pixels.pixels.empty()));
++                            if (!pixels.pixels.empty()) {
++                                auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                    SDL_TEXTUREACCESS_STATIC, pixels.width, pixels.height);
++                                if (picture && SDL_UpdateTexture(picture, nullptr, pixels.pixels.data(), pixels.width * 4)) {
++                                    SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_NEAREST);
++                                    SDL_SetTextureBlendMode(picture, SDL_BLENDMODE_NONE);
++                                    eve202.texture = picture;
++                                } else if (picture) SDL_DestroyTexture(picture);
++                            }
++                        }
++                        if (eve202.texture) {
++                            const auto fit = port::Eve202Destination(baseFit.x, baseFit.y, baseFit.scale);
++                            const SDL_FRect target{float(fit.x), float(fit.y), float(fit.width), float(fit.height)};
++                            if (SDL_RenderTexture(renderer, eve202.texture, nullptr, &target) &&
++                                !eve202Traced && std::getenv("SATRECOMP_EVE_TRACE")) {
++                                std::fprintf(stderr, "EVE202 drew %d,%d %dx%d\n", fit.x, fit.y, fit.width, fit.height);
++                                eve202Traced = true;
++                            }
++                        }
++                    } else if (!eve202Traced && std::getenv("SATRECOMP_EVE_TRACE")) {
++                        std::fprintf(stderr, "EVE202 unmatched RGB %016llX\n", static_cast<unsigned long long>(nativeRgb));
++                        eve202Traced = true;
++                    }
++                }
++            }
+             if(port.videoRenderer && texW==320 && texH==224) {
+                 const int scale=static_cast<int>(where.h/224);
+                 if(where.w==320*scale && where.h==224*scale)
