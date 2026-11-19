@@ -1,8 +1,12 @@
 import hashlib
+import json
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 
 from tools.discover_battle_overlays import analyze_modules
-from tools.discover_registered_overlays import observed_candidates, registered_module
+from tools.discover_registered_overlays import ROOT, build, observed_candidates, registered_module
 
 
 class RegisteredOverlayTests(unittest.TestCase):
@@ -54,3 +58,32 @@ class RegisteredOverlayTests(unittest.TestCase):
         for ranges in ([], [[-2, 4]], [[1, 4]], [[2, 3]], [[14, 4]], [[2, 4], [2, 4]], [[True, 4]]):
             with self.subTest(ranges=ranges), self.assertRaises(ValueError):
                 observed_candidates(module, ranges)
+
+    def test_shared_iso_file_can_select_static_and_observed_profiles(self):
+        raw, specs = self.fixture()
+        specs['OBSERVED'] = dict(specs['EVT02'], observed_ranges='test.json')
+        revision = json.loads((ROOT / 'config/dependencies.json').read_text())['satrecomp']['commit']
+        def static(modules, sdk):
+            self.assertEqual(len(modules), 1)
+            self.assertNotIn('observed_ranges', modules[0])
+            return {(0x204000, raw[:4])}, [dict(candidate_blocks=1)]
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            image = folder / 'file.iso'
+            image.write_bytes(raw)
+            seed = folder / 'seed.txt'
+            seed.write_text('00200000 0009\n', encoding='ascii')
+            (folder / 'config').mkdir()
+            (folder / 'config/test.json').write_text('[[8, 4]]', encoding='ascii')
+            (folder / 'machine').mkdir()
+            (folder / 'machine/sh2_ops.h').touch()
+            with (
+                patch.dict('tools.discover_registered_overlays.REGISTRY', specs, clear=True),
+                patch('tools.discover_registered_overlays.files', return_value=[('/SAKURA2/EVT02.BIN', 0, len(raw))]),
+                patch('tools.discover_registered_overlays.analyze_with_sdk', side_effect=static),
+                patch('tools.discover_registered_overlays.subprocess.check_output', return_value=revision),
+                patch('tools.discover_registered_overlays.__file__', str(folder / 'tools/overlay.py')),
+            ):
+                report = build(image, ['EVT02', 'OBSERVED'], seed, folder / 'result', folder)
+            self.assertEqual(report['added'], 2)
+            self.assertEqual(len(report['profiles']), 2)

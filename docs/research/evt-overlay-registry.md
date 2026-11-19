@@ -26,3 +26,15 @@ The 27 EVTs were compiled into the AOT base (1,357,536 blocks, rebuilt increment
 - Cold start: New Game to tutorial, 297,107 frames continuous, hashes identical to the earlier segments, 0 interpreted.
 
 Not yet done: observing the 19 inferred EVTs in play, and the remaining campaign paths (T32/T56). The sweep tooling and results stay under `local/`; they are not versioned.
+
+## Bounded MAP04 replay on disc 1
+
+The English disc 1 Chapter 3 second-battle checkpoint stopped in strict mode at `00206E72`. The interpreter recorded 94 previously absent variants during a 180-frame replay under ordinary camera input. All 94 complete opcode spans match the pinned 77,224-byte `/SAKURA2/EVT04.BIN` at file offsets relative to `00204000`. The registered SHA-256 is `93fb524dc7b64b1af5b576bd56fdf67d9624eea0cdf5006537ec339acb37ceaa`.
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc1/Track 01.iso" --module EVT04_MAP04 --seed-blocks local/work/ending-aot/blocks.txt --output local/work/map04-aot
+```
+
+The example uses the 674,535-variant seed from the [ending AOT recipe](ending-bank-pairs.md#rebuild-the-observed-aot-coverage). The narrow profile checks the complete module before extracting the offset and byte-count pairs in `config/evt04-map04-aot-ranges.json`. The regular `EVT04` selection still performs eager analysis. Both selections can share a single ISO file read and output database.
+
+The 94-variant sorted delta has SHA-256 `dde8a84b96b654777b5752187a3e9550e609d21326367d0f65c6ad501230f39e` in LF `ADDRESS UPPERCASE_HEX` form. Feeding that delta to the SDK generator emitted byte-identical sources to the private strict relink. All 180 guest hashes and SRAM matched the interpreter on the resulting 674,629-variant build, with zero interpreted blocks. This is camera-witness coverage for the retained checkpoint. Full battle coverage and package inclusion remain open. Opcode bytes, checkpoints, movies, and binaries stay local.
