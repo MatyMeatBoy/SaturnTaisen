@@ -1,0 +1,35 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -630,6 +630,8 @@
+     bool eve202Examined = false;
+     SceneHd eve0116;
+     bool eve0116Traced = false;
++    SceneHd eve0118;
++    bool eve0118Traced = false;
+     auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop) {
+         if (!inset.tried) {
+             inset.tried = true;
+@@ -1127,6 +1129,22 @@
+                                 !eve0116Traced && std::getenv("SATRECOMP_EVE_TRACE")) {
+                                 std::fprintf(stderr,"EVE0116 drew %d,%d %dx%d\n",inset.x,inset.y,inset.width,inset.height);
+                                 eve0116Traced = true;
++                            }
++                        }
++                    }
++                    // EVE0118 has the same tactical inset geometry and a separately witnessed plate.
++                    if (!choosing && !port.menu.IsOpen() && !port.opt.pcAssetsPath.empty() &&
++                        satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && softwareShown.size() == 320*224 &&
++                        port.videoRenderer->BackgroundPaletteFingerprint(5) == 0xD53405084F3310B9ull &&
++                        insetRgb(softwareShown) == 0xC36AFC31CF935785ull) {
++                        loadEveInset(eve0118, "SAKURA2/BG/BBG101.SPR", 183078, 0x2E1CA80FE188F7B5ull, {0,24,564,282});
++                        if (eve0118.texture) {
++                            const auto inset = port::Eve202Destination(fit.x + 39*fit.scale, fit.y, fit.scale);
++                            const SDL_FRect destination{float(inset.x), float(inset.y), float(inset.width), float(inset.height)};
++                            if (SDL_RenderTexture(renderer,eve0118.texture,nullptr,&destination) &&
++                                !eve0118Traced && std::getenv("SATRECOMP_EVE_TRACE")) {
++                                std::fprintf(stderr,"EVE0118 drew %d,%d %dx%d\n",inset.x,inset.y,inset.width,inset.height);
++                                eve0118Traced = true;
+                             }
+                         }
+                     }
