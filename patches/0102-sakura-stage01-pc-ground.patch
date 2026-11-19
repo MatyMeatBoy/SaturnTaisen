@@ -1,0 +1,193 @@
+--- /dev/null
++++ b/port/tactical_ground.h
+@@ -0,0 +1,59 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "pc_spr.h"
++#include "prepared_hd.h"
++
++namespace port::tactical_ground {
++
++struct Entry {
++    const char* path;
++    size_t bytes;
++    uint64_t assetHash;
++    uint64_t mapSignature;
++    uint32_t groundPage;
++    unsigned worldWidth, worldHeight, mapEndX;
++};
++
++// MAP01_A, ordinal zero, uses two source pixels per world unit.
++inline constexpr Entry kStage01{
++    "SAKURA2/MAP/MAP01/MAP01_A.SPR", 1786365, 0xF7205A4FCC95F748ull,
++    0x1CAF3218B4B0F9F0ull, 0x40000, 704, 480, 656,
++};
++
++inline std::vector<uint32_t> Load(const std::filesystem::path& root, const Entry& entry) {
++    std::ifstream input(root / entry.path, std::ios::binary | std::ios::ate);
++    if (!input || input.tellg() != std::streampos(entry.bytes)) return {};
++    std::vector<uint8_t> bytes(entry.bytes);
++    input.seekg(0);
++    if (!input.read(reinterpret_cast<char*>(bytes.data()), bytes.size()) ||
++        input.peek() != std::char_traits<char>::eof() || input.bad() ||
++        PreparedHash(bytes) != entry.assetHash)
++        return {};
++    std::vector<PcSprite> images;
++    std::string error;
++    if (!DecodePcSprites(bytes, images, error) || images.size() != 1 ||
++        images.front().index != 0 || images.front().width != entry.worldWidth * 2 ||
++        images.front().height != entry.worldHeight * 2)
++        return {};
++    const auto& image = images.front();
++    std::vector<uint32_t> ground;
++    ground.reserve(size_t(entry.worldWidth) * entry.worldHeight);
++    for (unsigned y = 0; y < image.height; y += 2) {
++        for (unsigned x = 0; x < image.width; x += 2) {
++            const auto pixel = image.pixels[size_t(y) * image.width + x];
++            constexpr uint32_t kCyan = 0x00FFFF00;
++            ground.push_back((pixel & 0x00FFFFFF) == kCyan || !(pixel >> 24) ? 0 : pixel);
++        }
++    }
++    return ground;
++}
++
++inline uint32_t Sample(std::span<const uint32_t> ground, const Entry& entry, int x, int y) {
++    if (unsigned(x) >= entry.mapEndX || unsigned(y) >= entry.worldHeight ||
++        ground.size() != size_t(entry.worldWidth) * entry.worldHeight)
++        return 0;
++    return ground[size_t(y) * entry.worldWidth + x];
++}
++
++} // namespace port::tactical_ground
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -185,6 +185,8 @@
+     void CaptureGlyphPlate(bool enabled) {m_captureGlyphPlate=enabled;}
+     void CaptureSystemBrackets(bool enabled) {m_captureBrackets=enabled;}
+     void CaptureItemCards(bool enabled) {m_captureItemCards=enabled;}
++    void SetTacticalGround(std::vector<uint32> pixels) { m_tacticalGround = std::move(pixels); }
++    void CaptureTacticalGround(bool enabled) { m_captureTacticalGround = enabled; }
+     void Vdp1FramebufferWritten() {InvalidateGlyphPlate(m_displayFB^1u);}
+     void CaptureScrollExtension(uint32 extra,uint64 signature=0) {
+         m_captureScrollExtra=extra>64?64:extra;m_captureScrollSignature=signature;
+@@ -519,6 +521,10 @@
+     // Comparison with the reference
+     uint64_t m_frames = 0, m_framesDifferent = 0, m_pixelsDifferent = 0;
+     uint64_t m_lines = 0, m_linesLeftToReference = 0;
++    bool m_captureTacticalGround = false;
++    std::vector<uint32> m_tacticalGround;
++    bool TacticalGroundMatches() const;
++    uint32 TacticalGroundSample(sint32 screenX) const;
+ };
+ 
+ } // namespace satrecomp::video
+--- a/video/layers.cpp
++++ b/video/layers.cpp
+@@ -11,6 +11,7 @@
+ #include <algorithm>
+ #include <cstdio>
+ #include "../port/png_write.h"
++#include "../port/tactical_ground.h"
+ 
+ namespace satrecomp::video {
+ 
+@@ -450,6 +451,24 @@
+ // Additional host presentation pixels. The guest framebuffer, VDP1 clip and
+ // hardware layer fetchers stay untouched; map coordinates use the same line's
+ // scroll state as the native composition.
++bool Renderer::TacticalGroundMatches() const {
++    const auto& map = ::port::tactical_ground::kStage01;
++    const auto& bg = m_regs2.bgParams[3];
++    return m_captureTacticalGround && !m_tacticalGround.empty() &&
++        m_presentation.mapSignature == map.mapSignature && bg.pageBaseAddresses[0] == map.groundPage &&
++        !bg.bitmap && !bg.mosaicEnable && !bg.vcellScrollEnable && m_scroll[2].incH == 256 &&
++        bg.scrollIncV == 256 && !bg.colorCalcEnable &&
++        (!m_regs2.colorOffsetEnable[4] || !m_regs2.colorOffset[m_regs2.colorOffsetSelect[4]].nonZero);
++}
++
++uint32 Renderer::TacticalGroundSample(sint32 screenX) const {
++    const auto& bg = m_regs2.bgParams[3];
++    const auto& scroll = m_scroll[2];
++    const auto worldX = (sint32(scroll.fracX + bg.scrollAmountH) >> 8) + screenX;
++    const auto worldY = sint32(scroll.fracY + bg.scrollAmountV) >> 8;
++    return ::port::tactical_ground::Sample(m_tacticalGround, ::port::tactical_ground::kStage01, worldX, worldY);
++}
++
+ uint32 Renderer::SampleNormalPresentation(sint32 x,bool sprites,uint8* spriteMask,bool nativeLayers) {
+     uint32 colors[7]={},priorities[7]={};
+     colors[6]=m_backColor;
+@@ -483,6 +502,10 @@
+         else if(priorities[layer]>priorities[second])second=layer;
+     }
+     uint32 color=colors[top];
++    if (top == 4 && spriteMask && !nativeLayers && TacticalGroundMatches() &&
++        (!sprites || (m_sprite.special[spriteX] != uint8(SpriteSpecial::Shadow) && !m_sprite.shadowOrWindow[spriteX]))) {
++        if (const auto pixel = TacticalGroundSample(x)) color = pixel;
++    }
+     if(spriteMask)*spriteMask=uint8(top==0 || (sprites && m_sprite.priority[spriteX] && m_sprite.special[spriteX]==uint8(SpriteSpecial::Shadow)));
+     const bool calcTop=top==0?m_sprite.colorCalcEnable[spriteX] && !m_regs2.spriteParams.lineColorScreenEnable:
+         top<6 && m_regs2.bgParams[top-1].colorCalcEnable && m_regs2.specialColorCalcMode[top-1]==0 && !m_regs2.bgParams[top-1].lineColorScreenEnable;
+@@ -542,6 +565,18 @@
+     }
+     const auto& bg=m_regs2.bgParams[3];const auto& scroll=m_scroll[2];
+     m_presentation.scrollWorld[y]={(scroll.fracX+bg.scrollAmountH-extra*scroll.incH)>>8,(scroll.fracY+bg.scrollAmountV)>>8};
++    // Amend the host canvas after native layer selection. Menu repair, sprites,
++    // shadow and unsupported blend lines keep their native composition.
++    if (!TacticalGroundMatches()) return;
++    const auto worldRow = size_t(y) * m_presentation.scrollWidth;
++    for (uint32 x = 0; x < m_width; ++x) {
++        const auto at = size_t(y) * m_width + x;
++        if (m_presentation.topSource[at] != 4 || mask[extra+x]) continue;
++        if (sprites && dirty.size() == m_presentation.scrollPixels.size() && dirty[worldRow + extra + x]) continue;
++        const auto spriteX = x + (sprites ? extra : 0);
++        if (m_sprite.special[spriteX] == uint8(SpriteSpecial::Shadow) || m_sprite.shadowOrWindow[spriteX]) continue;
++        if (const auto pixel = TacticalGroundSample(sint32(x))) out[extra+x] = pixel;
++    }
+ }
+ 
+ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -12,6 +12,7 @@
+ #include "map_crossfade.h"
+ #include "screen_backdrop.h"
+ #include "tactical_extension.h"
++#include "tactical_ground.h"
+ #include "tactical_menu.h"
+ #include "glyph_text.h"
+ #include "narrative_text.h"
+@@ -699,6 +700,25 @@
+     };
+     captureItems();
+     captureBrackets();
++    std::future<std::vector<uint32_t>> pendingGround;
++    bool groundRequested = false;
++    auto captureGround = [&] {
++        if (!port.videoRenderer) return;
++        const bool enabled = satrecomp::FeatureValue("presentation_mode") == 1 &&
++            satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++            !port.opt.pcAssetsPath.empty() && tacticalPatch.size() == 39 * 224;
++        port.videoRenderer->CaptureTacticalGround(enabled);
++        if (!enabled) return;
++        const auto& map = tactical_ground::kStage01;
++        if (!groundRequested && port.videoRenderer->PresentationFrame().mapSignature == map.mapSignature) {
++            groundRequested = true;
++            pendingGround = std::async(std::launch::async, [root = std::filesystem::u8path(port.opt.pcAssetsPath)] {
++                return tactical_ground::Load(root, tactical_ground::kStage01);
++            });
++        }
++        if (pendingGround.valid() && pendingGround.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++            port.videoRenderer->SetTacticalGround(pendingGround.get());
++    };
+     using BracketCapture=satrecomp::video::Renderer::BracketCapture;
+     constexpr int bracketStart=system_hud::kAnchors.front();
+     constexpr int bracketWidth=system_hud::kAnchors.back()+system_hud::kWidth-bracketStart;
+@@ -833,6 +853,7 @@
+         }
+         captureItems();
+         captureBrackets();
++        captureGround();
+         frameProfile.mark=frameProfile.on?SDL_GetTicksNS():0;
+         int wide = 0, high = 0;
+         SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);

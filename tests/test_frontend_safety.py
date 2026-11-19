@@ -43,6 +43,9 @@ class FrontendTests(unittest.TestCase):
         self.fixture('vdp2_color',[DEP/'video'/name for name in ('renderer.cpp','layers.cpp','raster.cpp','regs.cpp','vdp1.cpp')])
     def test_tactical_extension_follows_camera_and_preserves_foreground(self):
         self.fixture('tactical_extension')
+
+    def test_tactical_ground_load_checks_shape_hash_key_and_world_bounds(self):
+        self.fixture('tactical_ground')
     def test_english_dialogue_tables_preserve_ids_offsets_and_reject_truncation(self):
         self.fixture('dialogue_catalog')
     def fixture(self,name,extra=()):
