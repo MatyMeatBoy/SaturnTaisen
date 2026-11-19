@@ -184,6 +184,17 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertIs(row['verified_in_game'], True)
         self.assertEqual(row['runtime_evidence'], 'docs/research/map04-pc-ground.md')
 
+    def test_bg2093_dream_uses_native_compositing(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 9)
+        dream = chapter['scene-pictures']['2:/SAKURA1/BG2093.BIN']
+        self.assertEqual((dream['association'], dream['status']), ('observed', 'unsupported-size'))
+        self.assertEqual(dream['evidence'], 'docs/research/bg2093-dream-transition.md')
+        self.assertFalse(dream.get('verified_in_game'))
+        self.assertIn('1:/SAKURA1/BG2093.BIN', catalog['unassigned']['scene-pictures'])
+        self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
+
     def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
