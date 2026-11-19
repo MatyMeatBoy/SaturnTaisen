@@ -7611,7 +7611,8 @@
       },
       "1:/SAKURA1/BG1306.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/BG/BG1306.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1307.BIN": {
         "association": "unknown",
@@ -11510,7 +11511,8 @@
       },
       "2:/SAKURA1/BG1306.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/BG/BG1306.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1307.BIN": {
         "association": "unknown",

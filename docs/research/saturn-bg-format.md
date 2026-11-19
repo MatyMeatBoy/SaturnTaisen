@@ -788,3 +788,32 @@ Each Saturn body was decoded again (`decode_nc`) and set beside the PC `NC<n>.SP
 | NC3125, NC3126, NC4138 | no decode (file shorter than stride x 144: 25,360 / 25,744 / 17,168 bytes, so fewer rows) | 398x205 / 385x209 / 230x254, 0 % | The Saturn height is unknown, so no content comparison; PC pictures are full frames with background; unknown |
 
 For the cut-out ones, a later route is a native-underlay draw like NC3250 (patch0116) or keying the painted background out of the PC picture; neither was attempted. Not compiled in a runtime build and not seen in game (speed rule); the patch applies to the stack (`tools/check_patch_stack.py`) and adds two rows to `port/body_table.h`, the table `tools/gen_body_table.py` writes from the reviewed map (131 bodies).
+### BG1306 aligned PC still (TP4a)
+
+BG1306 is a 288×144 variant-B picture. Its 45,488-byte BIN is byte
+identical on the prepared Japanese, English and Spanish editions of both
+discs. The PC picture is subimage 0 of BG1306.SPR. A fit to 265 visual
+landmarks maps native X and Y to PC with scales 1.998 and 2.162. Cropping
+the PC picture at (2,7), 574×310, matches the actor, mountains and ruins
+in the native composition at a 32×16 luminance correlation of 0.999477.
+The compositor draws this region into the existing 288×144 Zoom picture
+rectangle.
+
+The native source is pinned before decoding its pattern names and flips.
+The draw requires palette `1848CC9D30088D80` on layer 2 or 4, ownership of
+every pixel in the viewport by that same layer, and exact native RGB
+throughout. That check keeps fades, overlays and other cell arrangements
+on the native path. The standard palette table excludes this entry.
+The isolated checks exercised the real packed variant-B file, a mutated
+payload, a changed pixel and a foreground layer. The runtime coverage
+register records the guarded connection. The archive census of 482
+checkpoints found no live BG1306 state. In both discs, the Chapter 10 script 1003.BIN requests BG1306 with opcode 0x0033 at file offset 0x195E. The in-game witness remains open.
+
+
+The compiled 121-patch candidate has SHA-256
+`06c88c873f0a8a8bcbd0023a4d06889a96b1b193fa945ea1d0bf7669297ab6d4`.
+The 900-frame opening-skip replay matched all guest hashes and three
+2560×1440 captures with zero interpreted blocks. The main workspace
+measured 54,336,384,331 logical bytes with hard links counted once and
+reparse points excluded, above the 20 GB cap. The delivered development
+ZIP remains 6,315,009,692 bytes.
