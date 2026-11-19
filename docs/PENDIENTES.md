@@ -230,7 +230,7 @@ The user asked to publish the next checkpoint and stop work. Transfer guide and 
 | ID | P | Type | Status | Pending |
 | --- | --- | --- | --- | --- |
 | T02a | P0 | local | defeat observed · partial chain verified | Satan defeated via normal inputs; farewell and battle resolution observed. Chain of 55,038 frames repeated to farewell, matching hashes/RGB and 0 interpreted. See `chapter1-victory-followup.md`. |
-| T03 | P0 | local | up to the tutorial by stretches · full path pending | 29,597 hashes from the corridor to the night save and 147,730 from that save to the tutorial, with final RGB and SRAM verified. Continue after the battle reaches hanami in 9,500 frames. Still missing: the joins from New Game and between the new tutorial and the verified turns, plus two full repeats with save, restart, and Continue. |
+| T03 | P0 | local | verified · cold New Game, save, restart and Continue in native and Enhanced | One English disc 1 path reaches battle victory, Save Complete and hanami in two uninterrupted 511,978-frame replays with identical guest hashes and SRAM. Both cold Continue replays match all 9,500 hashes with zero interpreted. See [full cold Chapter 1 replay](research/chapter1-victory-followup.md#full-cold-chapter-1-replay). Asset attribution remains under TH1 and packaging under T26. |
 | T06 | P1 | agent | after T01 | Polish the phase seam between LOADING mosaics and the protected center. |
 | T16 | P3 | physical | free | Test the portable ZIP on physical RX 6900 XT and M30 controllers. |
 | T17 | P1 | local | free | Real disc 1→2 switch and unified final importer. |
