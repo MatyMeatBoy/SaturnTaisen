@@ -6,7 +6,7 @@ import tempfile
 import unittest
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
-from package_release import generated_backgrounds
+from package_release import generated_backgrounds, release_file_manifest
 
 
 class PackageArtTests(unittest.TestCase):
@@ -47,14 +47,17 @@ class PackageArtTests(unittest.TestCase):
 
             def register(size):
                 Image.new('RGBA', size, (12, 30, 50, 255)).save(file)
-                manifest['backgrounds'] = [{
-                    'file': file.name, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest(),
-                    'logical_grid': [39, 224], 'palette_fnv': 'F84F4FA528984E99',
-                }]
+                right = folder / 'EPISODE01-right-v1.png'
+                Image.new('RGBA', (39, 224), (12, 30, 50, 255)).save(right)
+                manifest['backgrounds'] = [
+                    {'file': side.name, 'sha256': hashlib.sha256(side.read_bytes()).hexdigest(),
+                     'logical_grid': [39, 224], 'palette_fnv': 'F84F4FA528984E99'}
+                    for side in (file, right)
+                ]
                 report.write_text(json.dumps(manifest), encoding='utf8')
 
             register((39, 224))
-            self.assertEqual(list(generated_backgrounds(folder, screen=True)), [file.name])
+            self.assertIn(file.name, generated_backgrounds(folder, screen=True))
             register((398, 224))
             with self.assertRaises(RuntimeError):
                 generated_backgrounds(folder, screen=True)
@@ -62,6 +65,30 @@ class PackageArtTests(unittest.TestCase):
             manifest['source_pixels_included'] = True
             report.write_text(json.dumps(manifest), encoding='utf8')
             with self.assertRaises(RuntimeError):
+                generated_backgrounds(folder, screen=True)
+
+    def test_episode_sides_require_both_strips_for_the_same_palette(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            report = folder / 'provenance.json'
+            manifest = {'source_pixels_included': False, 'backgrounds': []}
+            for side in ('left', 'right'):
+                file = folder / f'EPISODE01-{side}-v1.png'
+                Image.new('RGBA', (39, 224)).save(file)
+                manifest['backgrounds'].append({
+                    'file': file.name, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest(),
+                    'logical_grid': [39, 224], 'palette_fnv': 'F84F4FA528984E99',
+                })
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            self.assertEqual(len(generated_backgrounds(folder, screen=True)), 2)
+            manifest['backgrounds'][1]['palette_fnv'] = 'FA7EA6C32652FF94'
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError, 'episode side pair'):
+                generated_backgrounds(folder, screen=True)
+            manifest['backgrounds'].pop()
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError, 'episode side pair'):
                 generated_backgrounds(folder, screen=True)
 
     def test_only_manifest_pinned_files_are_selected(self):
@@ -93,6 +120,29 @@ class PackageArtTests(unittest.TestCase):
             for name in ('../KABE00.png','C:/KABE00.png','original.png'):
                 (folder/'provenance.json').write_text(json.dumps({'backgrounds':[{'file':name,'sha256':'0'*64}]}),encoding='utf-8')
                 with self.assertRaises(RuntimeError):generated_backgrounds(folder)
+
+    def test_public_tree_rejects_original_movies_assets_and_misplaced_art(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            relative = 'art/screen-backgrounds/EPISODE01-left-v1.png'
+            data = b'generated fixture'
+            art = root / 'data' / relative
+            art.parent.mkdir(parents=True)
+            art.write_bytes(data)
+            allowed = {relative: hashlib.sha256(data).hexdigest()}
+            self.assertEqual([row['path'] for row in release_file_manifest(root, allowed, {})],
+                             ['data/' + relative])
+            for unexpected in ('MOVIE000.MPG', 'data/BG1001.SPR', relative, 'data/hd-resources/receipt.json'):
+                file = root / unexpected
+                file.parent.mkdir(parents=True, exist_ok=True)
+                file.write_bytes(data)
+                with self.subTest(unexpected=unexpected), self.assertRaisesRegex(RuntimeError, 'Unexpected'):
+                    release_file_manifest(root, allowed, {})
+                file.unlink()
+            art.unlink()
+            (root / 'data/hd-resources').rmdir()
+            with self.assertRaisesRegex(RuntimeError, 'Missing approved'):
+                release_file_manifest(root, allowed, {})
 
 
 if __name__=='__main__':unittest.main()

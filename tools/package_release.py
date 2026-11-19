@@ -45,11 +45,12 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     if sum((pc,screen,tactical))>1:raise RuntimeError('Conflicting generated-art classes')
     if tactical and (data.get('generated_only') is not True or data.get('original_map_context_included') is not False or data.get('world_origin')!=[656,24] or data.get('logical_size')!=[39,224]):raise RuntimeError('Unverified generated tactical band')
     result={}
+    episode_pairs = {}
     for row in data['backgrounds']:
         name=row['file']
         if pc and screen:raise RuntimeError('Conflicting generated-art classes')
         pattern=r'STAGE01-right-v1\.png' if tactical else r'(?:OPENING|TITLE|STATUS|PAUSE01|LOADING)-v1\.png' if screen else r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
-        episode_side = screen and re.fullmatch(r'EPISODE(?:0[1-9]|10)-(?:left|right)-v1\.png', name)
+        episode_side = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-(left|right)-v1\.png', name)
         if (not episode_side and not re.fullmatch(pattern, name)) or name in result:
             raise RuntimeError('Invalid/duplicate generated background identity')
         file=folder/name
@@ -70,10 +71,48 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
             or header[24:26] != bytes((8, 6))
         ):
             raise RuntimeError('Unexpected generated episode side: ' + name)
+        if episode_side:
+            episode, side = episode_side.groups()
+            episode_pairs.setdefault(episode, {})[side] = row['palette_fnv']
         result[name]=file
+    for episode, sides in episode_pairs.items():
+        if set(sides) != {'left', 'right'} or sides['left'] != sides['right']:
+            raise RuntimeError('Incomplete or mismatched generated episode side pair: ' + episode)
     if not result:
         raise RuntimeError('Empty generated background manifest')
     return result
+
+
+def release_file_manifest(destination, allowed_art, allowed_patches):
+    """Validate the staged public tree and record the exact bytes that will ship."""
+    protected_suffixes = {
+        '.iso', '.cue', '.bin', '.img', '.mdf', '.mds', '.chd', '.cdd', '.ccd', '.bup',
+        '.sro', '.xdelta', '.state', '.png', '.jpg', '.jpeg', '.bmp', '.wav', '.flac', '.mp3',
+        '.mpg', '.mpeg', '.spr', '.stfb', '.stfp', '.zip', '.7z', '.rar',
+    }
+    private_folders = {'data/game', 'data/hd-resources', 'data/user'}
+    allowed = {f'data/{path}': checksum for path, checksum in (allowed_art | allowed_patches).items()}
+    files = []
+    for file in sorted(destination.rglob('*')):
+        relative = file.relative_to(destination).as_posix()
+        normalized = relative.casefold()
+        if file.is_symlink() or any(normalized == folder or normalized.startswith(folder + '/')
+                                    for folder in private_folders):
+            raise RuntimeError(f'Unexpected game/resource file in package: {relative}')
+        if not file.is_file():
+            continue
+        checksum = digest(file)
+        if relative in allowed:
+            if allowed[relative] != checksum:
+                raise RuntimeError(f'Approved package file checksum mismatch: {relative}')
+        elif (file.suffix.casefold() in protected_suffixes or normalized.startswith('roms/')
+              and relative != 'roms/LEEME.txt'):
+            raise RuntimeError(f'Unexpected game/resource file in package: {relative}')
+        files.append({'path': relative, 'bytes': file.stat().st_size, 'sha256': checksum})
+    missing = allowed.keys() - {row['path'] for row in files}
+    if missing:
+        raise RuntimeError(f'Missing approved package files: {", ".join(sorted(missing))}')
+    return files
 
 
 def package(destination,toolchain,archive=True,runtime=None,owner_root=None,build_dir=None,controller_mapper=None,video_patches=None):
@@ -193,24 +232,24 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     for name in ('provenance.json','PROMPTS.md'):
         source=art_source/name
         if source.is_file():shutil.copy2(source,art/name)
-    pc_art_source=ROOT/'assets/generated/pc-backgrounds'
-    if pc_art_source.is_dir():
-        pc_art=app/'art/pc-backgrounds';pc_art.mkdir(parents=True)
-        for name,source in generated_backgrounds(pc_art_source,pc=True).items():
-            shutil.copy2(source,pc_art/name);allowed_art['art/pc-backgrounds/'+name]=digest(source)
-        shutil.copy2(pc_art_source/'provenance.json',pc_art/'provenance.json')
-    screen_source=ROOT/'assets/generated/screen-backgrounds'
-    if screen_source.is_dir():
-        screen_art=app/'art/screen-backgrounds';screen_art.mkdir(parents=True)
-        for name,source in generated_backgrounds(screen_source,screen=True).items():
-            shutil.copy2(source,screen_art/name);allowed_art['art/screen-backgrounds/'+name]=digest(source)
-        shutil.copy2(screen_source/'provenance.json',screen_art/'provenance.json')
-    tactical_source=ROOT/'assets/generated/tactical-extensions'
-    if tactical_source.is_dir():
-        tactical_art=app/'art/tactics';tactical_art.mkdir(parents=True)
-        for name,source in generated_backgrounds(tactical_source,tactical=True).items():
-            shutil.copy2(source,tactical_art/name);allowed_art['art/tactics/'+name]=digest(source)
-        shutil.copy2(tactical_source/'provenance.json',tactical_art/'provenance.json')
+    for source_name, target_name, art_class in (
+        ('pc-backgrounds', 'pc-backgrounds', 'pc'),
+        ('screen-backgrounds', 'screen-backgrounds', 'screen'),
+        ('tactical-extensions', 'tactics', 'tactical'),
+    ):
+        source_folder = ROOT / 'assets/generated' / source_name
+        images = generated_backgrounds(source_folder, **{art_class: True})
+        if art_class == 'screen':
+            episode_sides = {f'EPISODE{episode:02d}-{side}-v1.png'
+                             for episode in range(1, 11) for side in ('left', 'right')}
+            if missing := episode_sides - images.keys():
+                raise RuntimeError(f'Missing generated episode sides: {", ".join(sorted(missing))}')
+        art_folder = app / 'art' / target_name
+        art_folder.mkdir()
+        for name, source in images.items():
+            shutil.copy2(source, art_folder / name)
+            allowed_art[f'art/{target_name}/{name}'] = digest(source)
+        shutil.copy2(source_folder / 'provenance.json', art_folder / 'provenance.json')
     # One profile however the game is started: the launcher's own portable folder (user/SaturnTaisen). A profile an
     # earlier release kept directly in user/ is still used, so its saves and settings are not left behind.
     (app/'portable.txt').write_text('',encoding='ascii')
@@ -238,17 +277,7 @@ Esta versión no certifica toda la campaña ni todos los mandos; el cambio autom
 
 En la carpeta solo verás `SaturnTaisen.exe`, `roms` y `data`. Dentro de `data`, `user/` contiene tus partidas, ajustes y `logs/`, y `game/` y `hd-resources/` lo ya preparado. No las borres al actualizar: puedes descomprimir una versión nueva encima y no se rehace nada que siga vigente.
 ''',encoding='utf-8',newline='\n')
-    forbidden={'.iso','.cue','.bin','.bup','.sro','.xdelta','.state','.png','.jpg','.wav'}
-    files=[]
-    for file in sorted(destination.rglob('*')):
-        if not file.is_file():
-            continue
-        relative=file.relative_to(destination).as_posix().removeprefix('data/')  # (allow-lists name paths inside data/)
-        generated_match=relative in allowed_art and digest(file)==allowed_art[relative]
-        if allowed_patches.get(relative)==digest(file):generated_match=True
-        if file.suffix.casefold() in forbidden and not generated_match:
-            raise RuntimeError(f'Unexpected game/resource file in package: {file}')
-        files.append({'path':file.relative_to(destination).as_posix(),'bytes':file.stat().st_size,'sha256':digest(file)})
+    files=release_file_manifest(destination,allowed_art,allowed_patches)
     manifest={'version':(ROOT/'VERSION').read_text().strip(),
               'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
               'source_dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),
