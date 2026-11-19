@@ -116,7 +116,7 @@ Same run of `tools/match_bg_files.py` as TP4a (718 disc 1 backgrounds against ev
 No pair added. The "characters baked in" files are pictures where the PC image contains actors the Saturn draws as sprites, so substituting them would duplicate or hide the native actors; they stay native by design.
 ## TP4c decision on the unpaired BG3xxx/BG4xxx pictures (2026-11-19)
 
-The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era battle pictures. `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by rule (character cut-outs on a key colour), and 22 of the files below carry a rejection reason in `config/hd-scene-bg-review.json`; BG3092, BG3100 and BG4049 have none recorded yet (they need an eye review). **Decision: none is wired; all stay native.** Reasons as recorded:
+The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era battle pictures. `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by rule (character cut-outs on a key colour), and all 25 files below now carry a rejection reason in `config/hd-scene-bg-review.json`. All 25 retain their native draw.
 
 | Saturn | Recorded reason |
 |---|---|
@@ -126,12 +126,12 @@ The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era 
 | BG3060 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
 | BG3069 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
 | BG3091 | the PC picture has a grey background baked in, the Saturn one is a character cut-out on a key colour |
-| BG3092 | (no reason recorded in the review file) |
+| BG3092 | BG2092.SPR depicts the reclining figure and bedding with the dark room and floor baked in; Saturn supplies a cyan-key cut-out |
 | BG3097 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
-| BG3100 | (no reason recorded in the review file) |
+| BG3100 | BG2100.SPR depicts the seated figure and bedding with the dark room and floor baked in; Saturn supplies a cyan-key cut-out |
 | BG3119 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
 | BG3165 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
-| BG4049 | (no reason recorded in the review file) |
+| BG4049 | BG4094.SPR is the closest rear-facing variant, with a shifted and larger figure than the Saturn cut-out at 2x scale |
 | BG4053 | same figures but another grouping/animation frame than the PC picture of that number |
 | BG4054 | same figures but another grouping/animation frame than the PC picture of that number |
 | BG4055 | same figures but another grouping/animation frame than the PC picture of that number |
@@ -147,6 +147,16 @@ The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era 
 | BG4375 | the PC picture has an extra teddy bear baked into the dressing room, the Saturn picture does not |
 
 Where a reason says the PC picture has the background baked in, drawing it would replace the native cut-out together with the key colour, so the native picture is kept. Files with a decode problem or a different frame would need a new decode or a new pairing; none is proposed here.
+### Evidence for the final three decisions
+
+The English Saturn disc 1 and disc 2 copies are byte-identical for each of the three records. The comparison ranked 725 PC subimages of 576 × 320 using the existing luminance signatures, then re-ranked the same images with extra weight on the Saturn foreground. All 29 PC BG files outside the signature cache were decoded and checked at their original sizes.
+
+The foreground-weighted ranking surfaced BG2092 and BG2100. The reclining and seated poses use the same bedding shapes as the Saturn cut-outs. The PC images also carry room-floor pixels throughout the areas where the Saturn key color exposes a separate layer.
+
+BG4094 ranked first in the whole-image comparison for BG4049. The native opaque bounds are `(131,75)–(154,137)` on the 288 × 144 canvas. The PC figure occupies `(126,82)–(151,153)` at half scale on the 288 × 160 canvas. Both bounds exclude the right and bottom edges. Over all 17 vertical 288 × 144 crops the greatest foreground-mask intersection over union is 0.605. The visible figure is related but its size and position do not match the native overlay.
+
+The regenerated coverage catalog and runtime scene table are byte-identical to their previous versions.
+
 ## TP4a re-search of the 13 unpaired BG1xxx files (2026-11-19)
 
 `tools/match_bg_files.py` was run again over all 718 disc 1 Saturn backgrounds against every PC `BG*.SPR` (luminance signature, lower score is better). Result: 222 firm, 496 ambiguous overall, and **none of the 13 unpaired files obtains a firm counterpart**. Names and scores only.
