@@ -1,0 +1,15 @@
+diff --git a/port/portrait_match.h b/port/portrait_match.h
+index 1a5b2a9..2c8fa6e 100644
+--- a/port/portrait_match.h
++++ b/port/portrait_match.h
+@@ -60,7 +60,9 @@ inline std::optional<PortraitPatch> MatchPortraitFrame(std::span<const uint8_t>
+ }
+ inline int PortraitDensity(int viewportScale) {return viewportScale>=2 && viewportScale%2==0?2:1;}
+ inline constexpr bool PortraitWhiteWeight(uint8_t weight) {
+-    return weight==5 || weight==15 || weight==25;
++    // Saturn fades a portrait in/out through every colour-calculation ratio, so any
++    // weight 1..32 is a candidate; the exact per-pixel RGB comparison is what proves it.
++    return weight>=1 && weight<=32;
+ }
+ inline constexpr uint32_t ApplyPortraitWhiteMix(uint32_t rgba,uint8_t weight) {
+     if(!PortraitWhiteWeight(weight) || !(rgba>>24))return rgba;
