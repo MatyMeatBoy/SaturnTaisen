@@ -4650,6 +4650,17 @@
           }
         },
         "scene-pictures": {
+          "2:/SAKURA1/BG1050.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1050.SPR",
+            "status": "hd"
+          },
+          "2:/SAKURA1/BG1212.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md",
+            "status": "unpaired"
+          },
           "2:/SAKURA1/BG2159.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2159-disc2-visual.md",
@@ -4658,9 +4669,17 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG4187.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md",
+            "pc": "SAKURA1/BG/BG4187.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
+          },
           "2:/SAKURA1/TITLE8.BIN": {
-            "association": "inferred",
+            "association": "observed",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+            "evidence": "docs/research/th8-native-attribution.md",
             "pc": "SAKURA1/TITLE/TITLE8.SPR",
             "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
             "status": "excluded"
@@ -15853,11 +15872,6 @@
         "pc": "SAKURA1/BG/BG1049.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1050.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1050.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1051.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1051.SPR",
@@ -16492,10 +16506,6 @@
         "status": "hd"
       },
       "2:/SAKURA1/BG1211.BIN": {
-        "association": "unknown",
-        "status": "unpaired"
-      },
-      "2:/SAKURA1/BG1212.BIN": {
         "association": "unknown",
         "status": "unpaired"
       },
@@ -19114,12 +19124,6 @@
       "2:/SAKURA1/BG4177.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4177.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "2:/SAKURA1/BG4187.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4187.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
