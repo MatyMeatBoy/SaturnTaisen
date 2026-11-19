@@ -632,3 +632,38 @@ No release ZIP was replaced.
 The Saturn Original control at 1080p also matches all 6,670 guest
 hashes and seven capture frames with those same legacy files present.
 All three replays report zero interpreted blocks.
+
+
+### Shared-palette HD scene witness (TW1)
+
+Patch0091 (PR #215) uses the palette FNV-1a fingerprint and the FNV-1a
+fingerprint of 41,472 VDP2 cell bytes. Regenerating the scene table after
+PR #238 yields 481 single-key entries and 33 entries with a second key. The coverage register associates those
+entries with 33 resources on each disc.
+When one palette and cell fingerprint identifies more than one PC asset,
+the generator omits that key.
+
+Replayed prepared English disc 1 from `office-return-3000.state` with
+`advance.movie` for 1,200 frames in Enhanced Zoom at 2560×1440. Both
+profiles used the same isolated TW1 runtime (SHA-256
+`79505a498934e12a0fd3a98fa369d8b0bebd4c09f67f2ad3c30f1117f3a9a622`),
+strict native, and separate copies of the same SRAM seed. The HD profile
+could see only BG1011.SPR and BG1012.SPR; the control pointed to an empty
+PC asset directory. Both runs reported zero interpreted blocks and their
+1,200 guest state hashes matched byte for byte (log SHA-256
+`3fe5291b2e36155a8adad33b4d4bb192c3ec897c809bdd04b396ae4f72a5b03b`).
+
+The trace resolved palette `D19F5F691C6A83C9` with cells
+`CB480626235B8826` to BG1011 and with cells `67CE640DB112E5A8` to BG1012.
+BG1011 reported a usable texture with the asset installed and a native
+fallback with the empty directory. The office doorway is visible in the
+1440p HD capture. All RGB differences at frames 60, 240, 480, 720, 960 and
+1180 fit the same rectangle (272,29)–(2288,1037), right and bottom
+exclusive. BG1012 is a lookup witness. The other table entries have
+offline coverage only in this check.
+
+The four ambiguous-table tests and the eleven background-decoder tests
+passed. The main workspace measured 47,495,580,757 logical bytes with
+hard links counted once and junctions excluded, above the 20 GB cap.
+The delivered development ZIP remains 6,315,009,692 bytes. No new
+package was built.
