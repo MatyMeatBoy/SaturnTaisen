@@ -33,6 +33,14 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(ground['status'], 'hd')
         self.assertNotIn('1:/SAKURA2/MAP01.BIN', catalog['unassigned']['tactical-maps'])
         self.assertEqual(chapter1['scene-pictures']['1:/SAKURA1/BG1119.BIN']['association'], 'observed')
+        for name in ('BG1011', 'BG1012', 'BG1017'):
+            with self.subTest(scene=name):
+                witnessed = chapter1['scene-pictures'].get(f'1:/SAKURA1/{name}.BIN', {})
+                self.assertEqual(witnessed.get('association'), 'observed')
+                self.assertEqual(witnessed.get('status'), 'hd')
+                self.assertIs(witnessed.get('verified_in_game'), True)
+                disc2 = catalog['unassigned']['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
+                self.assertFalse(disc2.get('verified_in_game'))
         self.assertEqual(chapter1['portraits']['0001']['association'], 'inferred')
         self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
