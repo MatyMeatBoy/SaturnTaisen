@@ -146,3 +146,11 @@ Scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, T
 ## Speed rule: no scene-by-scene verification (owner, 2026-11-19)
 
 Shard workers do **not** verify every picture one by one in game. For a scene picture, body, portrait or clip it is enough to: match it to its PC counterpart with the method already used and proven on the pictures that were tried in game, connect it, make sure it compiles (`tools/check_patch_stack.py`, build) and that the opening-film replay hashes are unchanged. Assume the matching is right unless a witnessed case says otherwise. Do not spend time on per-picture screenshots, 1440p A/B captures or campaign runs; the integration desk and the later cleanup phase (TP8) look at what is visible. If you do see something wrong, say so in the PR. Send the PR as soon as it is connected.
+
+## Fast path for a picture shard
+
+1. Take the row, claim the shard (`tools/shard_claims.py`).
+2. Find the pair: palette fingerprint and cell hash from the Saturn picture against the PC set (see the lessons above); a group sharing a palette is resolved by comparing candidates.
+3. Add it to `config/hd-scene-bg-map.json` / the review file, regenerate `port/scene_bg_table.h` with `tools/gen_scene_bg_table.py`, record the patch.
+4. `tools/check_patch_stack.py`, compile, replay the opening film, hashes unchanged.
+5. Update the register (`tools/hd_chapter_coverage.py`) and the row in the same PR; send. Do not verify in game: one picture in ten is spot-checked later (TP9).
