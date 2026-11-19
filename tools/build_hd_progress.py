@@ -136,6 +136,26 @@ def table(data, detailed=False):
     return '\n'.join(lines)
 
 
+REGISTER_COUNTS = {'scene-images': 'scene-pictures', 'large-characters': 'bodies', 'movies': 'film'}
+
+
+def apply_register(data, register_path):
+    """The integrated count of scene pictures, large bodies and clips is the number of distinct PC files the coverage register marks `hd`, so it never lags behind what is connected."""
+    if not register_path.is_file():
+        return
+    register = json.loads(register_path.read_text(encoding='utf-8'))
+    files = {kind: set() for kind in REGISTER_COUNTS.values()}
+    groups = [register.get('unassigned', {})] + [chapter.get('resources', {}) for chapter in register.get('chapters', [])]
+    for group in groups:
+        for kind, rows in group.items():
+            if kind in files and isinstance(rows, dict):
+                files[kind].update(row['pc'] for row in rows.values() if row.get('status') == 'hd' and row.get('pc'))
+    for row in data['categories']:
+        kind = REGISTER_COUNTS.get(row['id'])
+        if kind and row['integrated'] is not None and len(files[kind]) >= row['integrated']:
+            row['integrated'] = len(files[kind])
+
+
 def render_report(data):
     lines = [
         '# Progreso HD', '',
@@ -221,6 +241,7 @@ def main():
     try:
         source = ROOT / 'config/hd-progress.json'
         data = json.loads(source.read_text(encoding='utf-8'))
+        apply_register(data, ROOT / 'config/hd-chapter-coverage.json')
         validate(data)
         readme = ROOT / 'README.md'
         outputs = {

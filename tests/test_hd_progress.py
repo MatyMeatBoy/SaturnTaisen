@@ -63,6 +63,7 @@ class HdProgressTests(unittest.TestCase):
 
     def test_committed_report_and_readme_are_current(self):
         config = json.loads((ROOT / 'config/hd-progress.json').read_text(encoding='utf-8'))
+        report.apply_register(config, ROOT / 'config/hd-chapter-coverage.json')
         report.validate(config)
         self.assertEqual((ROOT / 'docs/HD_PROGRESS.md').read_text(encoding='utf-8'), report.render_report(config))
         readme = (ROOT / 'README.md').read_text(encoding='utf-8')
