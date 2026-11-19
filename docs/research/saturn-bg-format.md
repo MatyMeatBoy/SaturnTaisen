@@ -659,11 +659,44 @@ BG1011 reported a usable texture with the asset installed and a native
 fallback with the empty directory. The office doorway is visible in the
 1440p HD capture. All RGB differences at frames 60, 240, 480, 720, 960 and
 1180 fit the same rectangle (272,29)–(2288,1037), right and bottom
-exclusive. BG1012 is a lookup witness. The other table entries have
-offline coverage only in this check.
+exclusive. The initial replay confirms the BG1012 lookup. Other entries have offline coverage only in this check.
 
 The four ambiguous-table tests and the eleven background-decoder tests
 passed. The main workspace measured 47,495,580,757 logical bytes with
 hard links counted once and junctions excluded, above the 20 GB cap.
 The delivered development ZIP remains 6,315,009,692 bytes. No new
 package was built.
+
+
+### Chapter 1 office return follow-up
+
+The campaign trace found draws for the closed doorway (BG1011), the open
+doorway (BG1012) and Yoneda's office interior (BG1017). The two follow-up
+A/B pairs used the same strict-native runtime listed above on prepared
+English disc 1. Each profile had a separate copy of
+`office-return-backup.bin`. The HD profile saw only the scene's PC SPR
+and the control pointed to an empty PC directory.
+
+For BG1012, load `office-return-3000.state` and rebase
+`office-return.movie` at frame 3000, carrying over the last input held
+before the cut. Replay 3,000 frames. Both profiles resize to 2560×1440 at
+replay frame 2020. BG1012 reports a usable texture only in the HD run.
+The open doorway is visible at frames 2800 and 2820. RGB differences
+fit (272,29)–(2288,1037), right and bottom exclusive. The other 12
+samples, including the closed doorway, transition and office interior,
+are pixel-identical. All 3,000 guest hashes match (log SHA-256
+`ed67f63762d5359b5f24366dd01d94c8155ed6027059d43a3b24c5121d5b826b`).
+
+For BG1017, load `office-return-6000.state` and run 200 frames with no
+inputs, in Enhanced Zoom at 2560×1440. The PC interior appears behind
+Yoneda. The asset-present run reports a usable texture. All six
+capture differences stay inside the same picture rectangle (frames
+30, 60, 90, 120, 160 and 180). All 200 guest hashes match (log SHA-256
+`3796398faa52ea72ca4a8d0e05306cf2e8dc7ba819fd23d9da8540e7a081d03b`).
+
+Both pairs reported zero interpreted blocks. The generated coverage
+register records the three documented disc 1 scenes as observed in
+chapter 1 with verified HD draws. No package was built. The main
+workspace measured 47,202,628,804 logical bytes, counting hard links once
+and excluding reparse points, above the 20 GB cap. The existing
+development ZIP remains 6,315,009,692 bytes.

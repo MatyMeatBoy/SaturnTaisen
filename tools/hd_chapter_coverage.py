@@ -28,9 +28,12 @@ EVE_PAIRS = {
 }
 # The documented draws include partial native faces and conditional fallbacks.
 BODY_DRAWS = {'NC11', 'NC20', 'NC30', 'NC55', 'NC82', 'NC97'}
+# Only the disc and scenes shown in the 1440p office-return replays.
+OFFICE_BG_DRAWS = {(1, f'/SAKURA1/BG{number}.BIN') for number in (1011, 1012, 1017)}
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    **{key: (1, BODY_REPORT) for key in OFFICE_BG_DRAWS},
     (1, '/SAKURA1/BG1119.BIN'): (1, BG_REPORT),
     (1, '/SAKURA1/NC20.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
@@ -202,6 +205,9 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
+                elif key in bg_table and (disc, path) in OFFICE_BG_DRAWS:
+                    row['verified_in_game'] = True
+                    row['runtime_evidence'] = BODY_REPORT
                 elif (disc, path) == (1, '/SAKURA2/EVE0116.BIN'):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE0116_REPORT)
                 elif (disc, path) == (1, '/SAKURA2/EVE0118.BIN'):

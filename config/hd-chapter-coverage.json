@@ -1616,6 +1616,30 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1011.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1011.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1012.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1012.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1017.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1017.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1119.BIN": {
             "association": "observed",
             "cold_run_frame": 118250,
@@ -6196,16 +6220,6 @@
         "pc": "SAKURA1/BG/BG1010.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1011.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1011.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1012.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1012.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
@@ -6226,11 +6240,6 @@
         "pc": "SAKURA1/BG/BG1016.SPR",
         "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
-      },
-      "1:/SAKURA1/BG1017.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1017.SPR",
-        "status": "hd"
       },
       "1:/SAKURA1/BG1018.BIN": {
         "association": "unknown",
