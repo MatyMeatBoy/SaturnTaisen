@@ -11,6 +11,8 @@ The Saturn shows a 288×144 window (at 16,8 of the 320×224 frame) of a larger N
 
 So a row is (picture, axis, native size, PC size) plus pins: Saturn file size and FNV, the PC file size and FNV, the VDP2 palette key and the first-uniquely-named-cell key of layer 4. The offset is never read from registers: the runtime still finds it by comparing the presented NBG2 pixels with the pinned native picture (exact RGB, unique offset), so the PC crop is only drawn when the native crop is proven. `ScrollPcCrop` and `ScrollRowValid` encode the rule and `tests/test_scroll_pictures.cpp` checks it for every row.
 
+The generator selects candidates from the wide and tall picture inventory, so changing coverage status does not change which candidates it examines. It leaves design exclusions and the separate BG1306, BG2238 and BG2260 still-viewport paths outside this table.
+
 The generator derives each row offline from the Saturn BIN (name table header gives the size; palette and cell keys reproduce the live fingerprints) and the PC SPR (subimage 0 size). It refuses a picture unless PC art is 2× on the scroll axis with an even centred margin on the other, and unless an 8-pixel-stride sweep of every native window correlates with the matching PC crop at 0.90 or better (grey signature, tools/match_hd_all.py). The keys it derives for BG1207, BG1285, BG2248, BG2295 and BG2533 equal the constants that were recorded from live runs.
 
 ## Rows
@@ -23,10 +25,11 @@ Not added (the generator prints the reason, kept under `skipped` in the JSON):
 
 - BG1257, BG1280, BG2077, BG2093, BG2172: PC width/height is not 2× the native picture (needs a per-picture crop).
 - BG1283, BG1310, BG2247, BG2290, BG2518: sizes fit but the PC art does not follow the native picture (correlation 0.20..0.88), so the crop would need a measured offset.
-- BG2338 (BG2238 still, drawn by patch 0123) has no variant-B table. The seven BBG pictures are 320×224 battle frames, not a 288×144 window (TP2b).
+- BG2338 has no variant-B table. The separate BG2238 still uses its own path from patch 0123. The seven BBG pictures are 320×224 battle frames, not a 288×144 window (TP2b).
 
 ## Evidence and limits
 
+- The rebased implementation matched 1,500 opening hashes, 205 BG2248 and 60 BG2251 hashes, and 60 hashes each for BG1207, BG1285 and BG2533. The five scene controls matched all 18 sampled 2560×1440 captures. The BG2533 missing-donor control verified its active edge ramp.
 - Opening film replay (SATRECOMP_SKIP_CHOOSER, strict native, 6201 guest frames) with the new runtime matches the previous `frames.hash` byte for byte, with zero interpreted blocks.
 - C++ tests: `tests/test_bg2533_pan.cpp`, `test_bg2248_pan.cpp`, `test_bg1207_pan.cpp` (unchanged) and `test_scroll_pictures.cpp` (rule, unique keys, existing crops, lookup, 456- and 512-wide matcher). Compile each with `clang++ -std=gnu++20 -I<satrecomp>/port`.
 - The new rows are not seen in a replay. They draw only when the live layer keys and the exact native window match, and otherwise leave the native composition. Appearance and package inclusion stay open.
