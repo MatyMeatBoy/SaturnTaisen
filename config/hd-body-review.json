@@ -37,8 +37,6 @@
   "NC99"
  ],
  "rejected": {
-  "NC3013": "the PC picture is a full frame with its background painted in (it would cover the scene)",
-  "NC3047": "the PC picture is a full frame with its background painted in (it would cover the scene)",
   "NC3057": "the PC picture is a full frame with its background painted in (it would cover the scene)",
   "NC3058": "the PC picture is a full frame with its background painted in (it would cover the scene)",
   "NC3060": "the PC picture is a full frame with its background painted in (it would cover the scene)",
@@ -53,5 +51,9 @@
   "NC3290": "the Saturn body decodes wrongly (stride) and the PC picture is a full frame",
   "NC3517": "the Saturn body decodes wrongly (stride) and the PC picture is nearly a full frame"
  },
- "note": "Tier-content pairs were checked side by side only for a random 16 of the first 64; the transparency flag removed full-frame PC pictures from both tiers. The Saturn side has blank faces in both; eyes and mouths are separate strips that are not paired yet."
+ "note": "Tier-content pairs were checked side by side only for a random 16 of the first 64; the transparency flag removed full-frame PC pictures from both tiers. The Saturn side has blank faces in both; eyes and mouths are separate strips that are not paired yet.",
+ "paired_full_frame": {
+  "NC3013": "Reviewed again (TP5): the Saturn body is itself an opaque full frame (0% transparent before the face hole), so the PC full frame replaces it without covering a scene; connected.",
+  "NC3047": "Reviewed again (TP5): the Saturn body is itself an opaque full frame (7.8% transparent before the face hole), so the PC full frame replaces it without covering a scene; connected."
+ }
 }
