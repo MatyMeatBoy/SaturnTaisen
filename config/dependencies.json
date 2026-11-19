@@ -103,7 +103,8 @@
       "patches/0102-sakura-stage01-pc-ground.patch",
       "patches/0103-sakura-disc2-opening-film.patch",
       "patches/0104-sakura-scene-table-battle-backgrounds.patch",
-      "patches/0106-sakura-retroachievements.patch"
+      "patches/0106-sakura-retroachievements.patch",
+      "patches/0107-sakura-hd-ic01-intermission.patch"
     ]
   }
 }

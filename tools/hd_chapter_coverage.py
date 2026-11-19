@@ -213,6 +213,11 @@ def build(root, index_dir, portrait_audit):
                 row['status'] = 'unpaired'
         elif path in screens and screens[path]['tier'] == 'content':
             row = {'status': 'paired-not-wired', 'pc': screens[path]['pc_file']}
+            if path == '/SAKURA1/IC01.BIN':
+                row['status'] = 'hd'
+                row['verified_in_game'] = disc == 1
+                if disc == 1:
+                    row['runtime_evidence'] = 'docs/research/ic01-hd-intermission.md'
         elif name in EVE_PAIRS:
             row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/' + EVE_PAIRS[name] + '.SPR'}
         elif path in bodies:

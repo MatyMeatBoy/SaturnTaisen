@@ -1627,7 +1627,9 @@
             "association": "observed",
             "evidence": "docs/research/chapter1-wide-transitions.md",
             "pc": "SAKURA1/ICATCH/IC0100.SPR",
-            "status": "paired-not-wired"
+            "runtime_evidence": "docs/research/ic01-hd-intermission.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/TITLE1.BIN": {
             "association": "inferred",
@@ -13737,7 +13739,8 @@
       "2:/SAKURA1/IC01.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0100.SPR",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/IC02.BIN": {
         "association": "unknown",
