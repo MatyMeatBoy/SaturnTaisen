@@ -1,0 +1,80 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -791,11 +791,26 @@
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+     bool eve0118Traced = false;
+-    auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop, unsigned feather = 0) {
++    constexpr port::EveRect endingPhotoRect{0, 16, 320, 160};
++    struct EndingPhoto {
++        unsigned index;
++        uint8_t layer;
++        size_t paletteOffset;
++        uint64_t palette;
++        uint64_t rgb;
++    };
++    constexpr EndingPhoto endingPhotos[]{
++        {6, 2, 0x200, 0xA19A0B84409A3AB8ull, 0xCB89538124A3A96Dull},
++        {7, 3, 0x400, 0xBD98B23C7D99D3DDull, 0x99C3DF9439E0981Dull},
++    };
++    std::array<SceneHd, std::size(endingPhotos)> endingPhotoImages;
++    std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
++    auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop,
++                           unsigned feather = 0, unsigned index = port::kEve202PcImage) {
+         if (!inset.tried) {
+             inset.tried = true;
+             inset.pending = std::async(std::launch::async,
+-                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop, feather]() {
++                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop, feather, index]() {
+                     SceneHdPixels result;
+                     std::vector<uint8_t> bytes;
+                     if (!ReadPcBackdropFile(path, bytes, size) || bytes.size() != size ||
+@@ -804,7 +819,7 @@
+                     std::string error;
+                     if (!DecodePcSprites(bytes, images, error)) return result;
+                     for (auto& image : images) {
+-                        if (image.index != port::kEve202PcImage ||
++                        if (image.index != index ||
+                             !port::EveCropFits(crop, image.width, image.height)) continue;
+                         result.width = crop.width;
+                         result.height = crop.height;
+@@ -2573,6 +2588,38 @@
+                     SDL_RenderTexture(renderer, clipTexture, nullptr, &target);
+                 }
+             }
++            // The ending photo is a separate, opaque 2:1 picture. Keep the native credit text around it.
++            if (!choosing && !port.menu.IsOpen() && shownDisc == 2 && port.videoRenderer &&
++                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && baseFit.scale > 0 &&
++                where.x == baseFit.x && where.y == baseFit.y && where.w == baseFit.w && where.h == baseFit.h &&
++                texW == 320 && texH == 224 && softwareShown.size() == 320 * 224) {
++                const auto& planes = port.videoRenderer->PresentationFrame();
++                if (planes.width == 320 && planes.height == 224 && planes.topSource.size() == 320 * 224) {
++                    for (size_t slot = 0; slot < std::size(endingPhotos); ++slot) {
++                        const auto& photo = endingPhotos[slot];
++                        if (planes.palette.size() < photo.paletteOffset + 512 ||
++                            PcBackdropHash(std::span{planes.palette}.subspan(photo.paletteOffset, 512)) != photo.palette ||
++                            insetRgb(softwareShown, endingPhotoRect) != photo.rgb) continue;
++                        const auto visible = std::span{planes.topSource}.subspan(16 * 320, 160 * 320);
++                        if (!std::ranges::all_of(visible, [&](uint8_t layer) { return layer == photo.layer; })) continue;
++                        auto& image = endingPhotoImages[slot];
++                        loadEveInset(image, "SAKURA1/ENDING/END_SA.SPR", 2988213, 0x44DC7D66456C8105ull,
++                                     {0, 0, 640, 320}, 0, photo.index);
++                        if (image.texture) {
++                            const auto rect = port::EveInsetDestination(endingPhotoRect, baseFit.x, baseFit.y, baseFit.scale);
++                            const SDL_FRect target{float(rect.x), float(rect.y), float(rect.width), float(rect.height)};
++                            if (SDL_RenderTexture(renderer, image.texture, nullptr, &target) &&
++                                !endingPhotoTraces[slot] && std::getenv("SATRECOMP_ENDING_PHOTO_TRACE")) {
++                                std::fprintf(stderr, "ending photo %u drew %.0f,%.0f %.0fx%.0f\n",
++                                             photo.index, target.x, target.y, target.w, target.h);
++                                endingPhotoTraces[slot] = true;
++                            }
++                        }
++                        break;
++                    }
++                }
++            }
+             // Replace a previously witnessed opaque tactical inset after its native frame has been drawn.
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && !port.opt.pcAssetsPath.empty() &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
