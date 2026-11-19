@@ -57,7 +57,7 @@ REGISTRY={
                  evidence='EVT family inference: observed overlays EVT01,02,04,05,06,19 load at 00204000 with exact byte equality; base inferred for this file, never executed. Strict AOT compares block code with memory before running, so a wrong inference cannot execute wrong code'),
     'EVT21':dict(file='/SAKURA2/EVT21.BIN',base=0x00204000,bytes=75364,
                  sha256='ee4180e542c543a6af6d68cea487f788695c757e72ee060a8c973017df104afc',
-                 evidence='EVT family inference: observed overlays EVT01,02,04,05,06,19 load at 00204000 with exact byte equality; base inferred for this file, never executed. Strict AOT compares block code with memory before running, so a wrong inference cannot execute wrong code'),
+                 evidence='Episode 4 disc-1 continuation: all 75364 bytes match low WRAM at 00204000 in the interpreter boundary state after cold frame 15859. The strict baseline stops on master SH-2 PC 00204000 after that frame'),
     'EVT22':dict(file='/SAKURA2/EVT22.BIN',base=0x00204000,bytes=76840,
                  sha256='4f6a32f410c1f7da6ffbedc878a3929e1c5092e92dd85caad6e0fd4fcb8529b3',
                  evidence='EVT family inference: observed overlays EVT01,02,04,05,06,19 load at 00204000 with exact byte equality; base inferred for this file, never executed. Strict AOT compares block code with memory before running, so a wrong inference cannot execute wrong code'),
