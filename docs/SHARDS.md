@@ -53,7 +53,7 @@ Rows TH0-TH10, TS11 and TS12 in `docs/PENDIENTES.md` mirror this list; update th
 6. **Never commit** discs, BIOS, saves, original PC assets, game pixels, `local/`, or untranslated Japanese script text. Generated art goes under `assets/generated/` with `provenance.json`.
 7. **A PR says**: which row it closes or advances, the commands run with their output, and what is still not verified. Mark "implemented", "tested" and "in a package" separately. A saved state or a screenshot does not complete a chapter.
 8. **Runtime changes** must keep the guest per-frame hashes identical to the previous build (strict native replay, `interpreted 0`); say which replay.
-9. **One dev runtime at a time** builds in `local/build/sakura`: workers without a compiler or the discs do the code, tests and data halves and say so; do not run `build_runtime.py` while another worker has unrecorded dependency edits.
+9. **Run from your own copy of the executable.** Several workers share this machine and a running `sakura.exe` locks the file, so the linker fails with `Permission denied` for everybody (seen 2026-11-19). Copy the build to `local/build/sakura-<your-name>/sakura.exe` and run your replays from there; never kill another worker's process; build when no process holds the shared path. **One dev runtime at a time** builds in `local/build/sakura`: workers without a compiler or the discs do the code, tests and data halves and say so; do not run `build_runtime.py` while another worker has unrecorded dependency edits.
 
 ## How to read the coverage numbers (read before picking work from them)
 
