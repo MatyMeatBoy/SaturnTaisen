@@ -6449,7 +6449,15 @@
     "scene-pictures": {
       "1:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_AI.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/BG0000.BIN": {
         "association": "unknown",
@@ -9983,7 +9991,17 @@
       },
       "1:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_GE.SPR",
+        "pc_image_indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC02.BIN": {
         "association": "unknown",
@@ -10077,23 +10095,63 @@
       },
       "1:/SAKURA1/KA_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_KA.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/KO_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_KO.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/MA_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_MA.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/SA_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_SA.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/SU_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_SU.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/TITLE10.BIN": {
         "association": "unknown",
@@ -10203,7 +10261,15 @@
       },
       "2:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_AI.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/BG0000.BIN": {
         "association": "unknown",
@@ -13861,7 +13927,17 @@
       },
       "2:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_GE.SPR",
+        "pc_image_indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC01.BIN": {
         "association": "unknown",
@@ -13961,23 +14037,63 @@
       },
       "2:/SAKURA1/KA_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_KA.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/KO_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_KO.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/MA_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_MA.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/SA_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_SA.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/SU_CG.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "pc": "SAKURA1/ENDING/END_SU.SPR",
+        "pc_image_indices": [
+          6,
+          7
+        ],
+        "reason": "Requires ending-layer composition and viewport evidence.",
+        "scope": "ending-bank subimages",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/TITLE1.BIN": {
         "association": "unknown",
