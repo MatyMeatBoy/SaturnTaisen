@@ -104,6 +104,29 @@ def _mapped(data, picture_at, picture_size, map_at, map_size, palette_at):
     return image
 
 
+def palette_bytes(data):
+    """The 256 palette words (512 bytes) the game loads into colour RAM for this picture, or None."""
+    if data[:4] == bytes([0, 1, 0, 2]) and len(data) >= 0x210:
+        return data[0x10:0x210]
+    table = _table(data)
+    if table:
+        return data[table[4]:table[4] + 512]
+    if len(data) == SIZE and data[:4] == bytes([0, 1, 0, 1]):
+        return data[PALETTE_AT:PALETTE_AT + 512]
+    return None
+
+
+def palette_fingerprint(data):
+    """FNV-1a 64 over the palette bytes: what `Renderer::BackgroundPaletteFingerprint` computes from colour RAM."""
+    palette = palette_bytes(data)
+    if palette is None:
+        return None
+    value = 14695981039346656037
+    for byte in palette:
+        value = ((value ^ byte) * 1099511628211) & 0xFFFFFFFFFFFFFFFF
+    return value
+
+
 def _table(data):
     """Variant C (disc 2 battle backgrounds `BBG*.BIN`): big-endian (offset, size) pairs from 0x00, ended by a
     zero pair: the unique tiles, the map (1296 or 2240 bytes) and the 512-byte palette.
