@@ -85,6 +85,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Third batch of chapter 1 HD portraits](chapter1-third-hd-portraits.md)
 - [Fourth batch of HD portraits](chapter1-fourth-hd-portraits.md)
 - [Saturn and PC video equivalence](video-equivalence.md)
+- [Disc 2 opening film](disc2-opening-film.md)
 - [HD portrait pack selection](portrait-pack-profile-fallback.md)
 
 - [chapter1-choice-hd.md](chapter1-choice-hd.md): HD LIPS text for two/three options, glyph ownership, and ten real profiles.

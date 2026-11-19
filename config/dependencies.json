@@ -100,7 +100,8 @@
       "patches/0097-sakura-dev-states-off-in-packages.patch",
       "patches/0098-sakura-bg2533-verified-pan.patch",
       "patches/0099-sakura-hd-eve202-tactical-inset.patch",
-      "patches/0102-sakura-stage01-pc-ground.patch"
+      "patches/0102-sakura-stage01-pc-ground.patch",
+      "patches/0103-sakura-disc2-opening-film.patch"
     ]
   }
 }
