@@ -60,3 +60,34 @@ Method: contact sheets (Saturn decode from `tools/decode_saturn_bg.py` left, PC 
 Notes: the Saturn BG1081-BG1097 door pictures have a more saturated yellow-green wall gradient than the PC ones (same layout); BG1334 is bluer on Saturn, BG2275 darker on Saturn (lighting variants of the same scene). BG2515 and BG4302 are listed above as garbage decodes in the number-tier reviews; with the current decoder both match the PC picture (correlation 0.998 and 1.0), so those older notes are stale (neither is in `rejected`). Seven files of shard C (BG2002, BG2003, BG2014, BG2016, BG2023, BG2038, BG2337) were read from the disc image because they are missing from the local raw extraction.
 
 Compiled table: `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by name, so the four new rejects do not change it; BG2518 would add one entry if the table is regenerated. The table tool has no tests and the generated header is not in the repository, so it was not regenerated here. `config/hd-scene-bg-pairs.json` is unchanged (screenshot evidence from the cold run only). Not verified in the runtime.
+
+### BG2251 cherry-blossom avenue at 1440p
+
+The Chapter 1 route on prepared Spanish disc 1 replays from
+`pruebas/largo/carta-9900.state` with its matching backup seed and
+`run.movie` rebased at frame 9900. After 8,560 strict-native frames, the
+presented inset matches the decoded Saturn BG2251 picture with luminance
+correlation 0.99996. The retained relay state at frame 8559 contains the
+BG2251 tiles at VDP2 VRAM 0x34840 and its palette at CRAM 0x200.
+Its SHA-256 is
+`81464c7832d71365180485007548550537f16da85d7266fb1d2086eb02d6e9d7`.
+
+From that exact state, two independent 60-frame Enhanced Zoom profiles
+at 2560×1440 ran without inputs on the v0.2.6 campaign runtime.
+Only one profile could see BG2251.SPR and reported a usable texture.
+All 60 guest hashes matched (log SHA-256
+`8ad542d2a569e885d0e170f02dc9c120de7e27f22266843376a0adb2d28dfcca`).
+Both runs reported zero interpreted blocks. The runtime SHA-256 is
+`6fcd9aba866a1f3c14c706b8c1a9edc4b40ad4f5a555daa2454c9a59a9269482`.
+
+At frames 20, 40 and 58, every RGB difference stays inside
+(272,29)–(2288,1037), right and bottom exclusive. The avenue, tree trunks
+and lantern strings match the composition by eye. The surrounding
+presentation and the archived fixture's test-only dialogue markers are
+pixel-identical in the controls. The prepared English and Spanish disc 1
+BG2251 picture files are byte-identical. Visual checks here cover the
+BG2251 scene itself. No package was built.
+
+The main workspace measured 51,405,524,876 logical bytes with hard links counted
+once and reparse points excluded. The delivered development ZIP remains
+6,315,009,692 bytes.
