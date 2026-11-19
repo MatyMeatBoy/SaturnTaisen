@@ -22,6 +22,7 @@ CHAPTER2_FACE_REPORT = 'docs/research/hd-chapter-2.md#stage-02-tactical-portrait
 CHAPTER2_FACE_RUNTIME_REPORT = 'docs/research/hd-chapter-2.md#face02-pc-runtime'
 CHAPTER2_FACE_BANK = '1:/SAKURA2/FACE02.BIN:253500278286bc8a8d6e7c28bdee4d7ee199cc3b48f5b61c18ebab517ada49bb'
 CHAPTER2_FACE_BASE_PAIRS = {0: 10, 30: 208, 31: 209}
+IRIS_COMMAND_ROOM_REPORT = PORTRAIT_REPORT + '#iris-00a1-command-room-portrait'
 MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
 YONEDA_STORAGE_REPORT = PORTRAIT_REPORT + '#yoneda-00e9-storage-portrait'
 
@@ -91,6 +92,8 @@ NATIVE_ROUTE_PORTRAITS = {
     }, CHAPTER9_ROUTE_REPORT),
 }
 CHAPTER_FILE_RESIDENCIES = {
+    '1:/SAKURA1/0102FCE.BIN:a92e1f3e10355f51c2d54061df38a5688502133d5d0fc3ba9522e1edcfed6992':
+        (1, IRIS_COMMAND_ROOM_REPORT),
     '2:/SAKURA1/1001FCE.BIN:fa55a01f09bc3a43956bf9507fae1b0ec08c002b9d36bdd16aac3486ca76ae49': (10, 'docs/research/th10-native-attribution.md'),
     '2:/SAKURA1/0901FCE.BIN:bad07425e09a84a31c5b578fda68f9b685d2380328f3a0e5991faa33647bb522':
         (9, CHAPTER9_ROUTE_REPORT),
@@ -615,7 +618,10 @@ def build(root, index_dir, portrait_audit):
             row.update(NATIVE_PORTRAIT_DECISIONS[ident], pairing_evidence=RESIDUAL_PORTRAIT_REPORT)
         if sources:
             row['atlases'] = sources
-        if ident in CHAPTER1_ROUTE_PORTRAITS:
+        if ident == '00a1':
+            occurrence = dict(row, verified_in_game=True, runtime_evidence=IRIS_COMMAND_ROOM_REPORT)
+            add('portraits', ident, occurrence, 1, 'observed', IRIS_COMMAND_ROOM_REPORT)
+        elif ident in CHAPTER1_ROUTE_PORTRAITS:
             chapter1_portrait = row
             if ident == '0176':
                 chapter1_portrait = dict(row, verified_in_game=True, runtime_evidence=MARIA_STRIP_REPORT)

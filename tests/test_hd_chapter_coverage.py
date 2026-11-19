@@ -107,11 +107,16 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertIn('1:/SAKURA4+0', catalog['unassigned']['film'])
         iris = chapter1['portraits']['00a1']
         emblem = chapter1['portraits']['0169']
-        self.assertEqual((iris['status'], iris['pc_index']), ('hd', 160))
+        self.assertEqual((iris['association'], iris['status'], iris['pc_index']), ('observed', 'hd', 160))
+        self.assertTrue(iris['verified_in_game'])
+        self.assertTrue(iris['runtime_evidence'].endswith('#iris-00a1-command-room-portrait'))
+        self.assertNotIn('00a1', catalog['chapters'][6]['resources']['portraits'])
         self.assertEqual((emblem['status'], emblem['candidate_pc_indices']), ('excluded', [348, 360]))
         atlas = chapter1['portraits']['1:/SAKURA1/0102FCE.BIN']
         self.assertEqual(atlas['status'], 'hd')
         self.assertIn('00a1', atlas['identities'])
+        self.assertEqual(atlas['association'], 'resident')
+        self.assertFalse(atlas.get('verified_in_game'))
         self.assertEqual(atlas['native_by_design'], ['0169'])
         self.assertNotIn('uncovered', atlas)
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
