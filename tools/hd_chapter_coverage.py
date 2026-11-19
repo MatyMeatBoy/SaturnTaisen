@@ -61,6 +61,14 @@ CHAPTER1_ROUTE_FILMS = {23695360: 'MOVIE001', 45410304: 'MOVIE002', 56039424: 'M
 STAGE01_MAP = (1, '/SAKURA2/MAP01.BIN')
 STAGE21_REPORT = 'docs/research/stage21-pc-ground.md'
 STAGE21_MAP = (1, '/SAKURA2/MAP21.BIN')
+CHAPTER4_TACTICAL_REPORT = 'docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram'
+STAGE06_MAP = (1, '/SAKURA2/MAP06.BIN')
+CHAPTER_FILE_RESIDENCIES = {
+    '1:/SAKURA2/WKL06.BIN:f9306a073a1c603658e7b6c132b6ef36e889086e990f2c8856e056db1c14af4b':
+        (4, CHAPTER4_TACTICAL_REPORT),
+    '1:/SAKURA2/WKL21.BIN:60fed250c11dab1d28df048763315fc62b159a0cee502a73b473a63cef2734f3':
+        (4, CHAPTER4_TACTICAL_REPORT),
+}
 BBG204_INSET = (1, '/SAKURA2/BBG204.BIN')
 BBG204_REPORT = 'docs/research/bbg204-tactical-inset.md'
 BBG_INSET_REPORT = 'docs/research/disc1-battle-insets.md'
@@ -117,6 +125,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA2/EVE002.BIN'): (2, EVE002_REPORT),
     STAGE01_MAP: (1, STAGE01_REPORT),
     STAGE21_MAP: (4, STAGE21_REPORT),
+    STAGE06_MAP: (4, CHAPTER4_TACTICAL_REPORT),
 }
 
 
@@ -276,9 +285,11 @@ def build(root, index_dir, portrait_audit):
         name = Path(path).stem
         chapter, report = observed.get((ident, None), (None, None))
         association = 'observed' if chapter else 'unknown'
-        if ident in resident and chapter is None:
-            chapter, report = resident[ident]
-            association = 'resident'
+        if chapter is None:
+            residency = resident.get(ident) or CHAPTER_FILE_RESIDENCIES.get(ident)
+            if residency:
+                chapter, report = residency
+                association = 'resident'
         if chapter is None:
             candidate = indexed_chapter(path)
             if candidate and disc == disc_for(candidate):
@@ -301,6 +312,14 @@ def build(root, index_dir, portrait_audit):
                 'scope': 'source-4 ground only',
                 'verified_in_game': True,
                 'runtime_evidence': STAGE21_REPORT,
+            }
+        elif (disc, path) == STAGE06_MAP:
+            row = {
+                'status': 'paired-not-wired',
+                'pc': 'SAKURA2/MAP/MAP06/MAP06_A.SPR',
+                'scope': 'ground only',
+                'reason': 'The PC ground aligns across three cameras. A layer guard and runtime sampling remain to be verified.',
+                'pairing_evidence': CHAPTER4_TACTICAL_REPORT,
             }
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',

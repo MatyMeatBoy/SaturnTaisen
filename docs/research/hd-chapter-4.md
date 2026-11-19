@@ -2,9 +2,9 @@
 
 Source: `config/hd-chapter-coverage.json` (`chapters[3]`, `unassigned`, `association`), cross-checked with `config/hd-scene-bg-map.json`, `hd-scene-bg-review.json`, `hd-body-map.json`, `hd-item-map.json`, `film-fad-map.json`, `docs/research/chapter-sweep.md` and `docs/PENDIENTES.md` (rows T31, T32, T87, TH4). Names, hashes and counts only. Nothing here certifies the chapter; the exit test (strict-native replay with per-frame guest hashes identical to a build without HD) has not been run.
 
-## 1. Scope: what the data attributes to chapter 4 (disc 1)
+## 1. Initial catalog snapshot for chapter 4 (disc 1)
 
-The generator attributes almost nothing to chapter 4. Every attributed entry has association `inferred` (episode file numbering), none `observed` or `resident`.
+This snapshot predates the BBG204 and MAP21 draws and the [first tactical map and work RAM evidence](#first-tactical-map-and-work-ram) below. Its entries were inferred from episode numbering.
 
 | Class | Attributed to ch. 4 | Items |
 |---|---|---|
@@ -78,3 +78,58 @@ Notes: bodies and FILM rows contain both discs' duplicates (e.g. `NC11` is count
 - Are the 11 `hd` body rows (5 distinct) reachable in chapter 4 at all? Evidence: no data.
 - Counts in the catalog summaries are not split by chapter; per-chapter totals for the pool classes: no data.
 - Which PC `TITLE4`/episode card source (if any) can pair with the Saturn card, given the PC cards are Japanese text (T87)?
+
+
+## First tactical map and work RAM
+
+English disc 1 starts the first tactical sequence with `EVT06.BIN`
+and reads `MAP06.BIN` at FAD 232643. The archived Episode 4 File 1
+route uses the seed from the chapter sweep and
+`tests/chapter4-load.movie`. Stock captures at frames 10000, 12000
+and 14000 independently align with PC MAP06_A.SPR. There are 66,
+32 and 43 RANSAC inliers, respectively. All three fits give an
+approximately 2× native-to-PC scale. Their PC offsets are
+(880,304), (0,768) and (0,680). The capture at frame 8000 repeats
+the previously witnessed BBG204 image. Its muted strict-native
+replay completed 8000 frames with zero interpreted blocks, and
+the 320×224 RGB picture matches the archived reference. Every guest
+hash matches the first 8000 lines of the earlier EVT21-boundary
+route. The new hash log SHA-256 is
+`a68f2e612a81df64231877c283a9cfb438c1615946b29567b28a5b155365d413`.
+
+The Saturn and PC copies of `MAP06.BIN` are byte-identical at 328,128
+bytes, SHA-256
+`70b44bd3d9e0a5fa3bf850cd55d51ce32db0be5d861fe9f3df91a3e8130b258a`.
+The PC `MAP06.TAB` designates the 2048×2048 subimage 0 in MAP06_A.SPR
+as ground. The register attributes this ground pair to chapter 4
+with status `paired-not-wired`. The priority layer, camera origin,
+color offsets, cyan returns and gameplay overlays need their own
+compositor checks.
+
+The frame-14000 state has NBG2 scroll (0, 340), consistent with the
+fitted PC origin (0, 680). Its first 8192 bytes at VDP2 page
+`0x40000` have FNV-1a `B533F608A5E864D1`. The same extraction
+reproduces the documented MAP21 signature on its saved state.
+
+
+The initial battle reference state at frame 6678 and the saved
+Stage21 entry match the complete work RAM payloads below. Their
+starting offset is `0x1F800` in the low WRAM vector.
+
+| File | Start FAD | Resident bytes | SHA-256 |
+| --- | ---: | ---: | --- |
+| WKL06.BIN | 254038 | 551,532 | `f9306a073a1c603658e7b6c132b6ef36e889086e990f2c8856e056db1c14af4b` |
+| WKL21.BIN | 255679 | 537,572 | `60fed250c11dab1d28df048763315fc62b159a0cee502a73b473a63cef2734f3` |
+
+These WKL records establish residency only. The CD trace requests
+UNIT06 and UNIT21 at distinct start FADs 252313 and 252553. The files
+share identical bytes, so a RAM match alone cannot distinguish
+the unit loads or tell which sprites drew. Both unit rows remain
+unassigned. MAP21 and BBG204 keep their earlier verified draw evidence.
+
+Full chapter parity, new HD rendering and packaging remain open.
+
+
+At block close the main workspace measured 61,180,516,152 logical bytes
+with hard links counted once and reparse points excluded, above the
+20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

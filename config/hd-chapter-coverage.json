@@ -3062,7 +3062,18 @@
       "resources": {
         "bodies": {},
         "film": {},
-        "menus-hud": {},
+        "menus-hud": {
+          "1:/SAKURA2/WKL06.BIN": {
+            "association": "resident",
+            "evidence": "docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram",
+            "status": "unknown"
+          },
+          "1:/SAKURA2/WKL21.BIN": {
+            "association": "resident",
+            "evidence": "docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram",
+            "status": "unknown"
+          }
+        },
         "portraits": {
           "1:/SAKURA1/0400FCE.BIN": {
             "association": "inferred",
@@ -3280,6 +3291,15 @@
           }
         },
         "tactical-maps": {
+          "1:/SAKURA2/MAP06.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram",
+            "pairing_evidence": "docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram",
+            "pc": "SAKURA2/MAP/MAP06/MAP06_A.SPR",
+            "reason": "The PC ground aligns across three cameras. A layer guard and runtime sampling remain to be verified.",
+            "scope": "ground only",
+            "status": "paired-not-wired"
+          },
           "1:/SAKURA2/MAP21.BIN": {
             "association": "observed",
             "evidence": "docs/research/stage21-pc-ground.md",
@@ -7494,10 +7514,6 @@
         "association": "unknown",
         "status": "unknown"
       },
-      "1:/SAKURA2/WKL06.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
       "1:/SAKURA2/WKL07.BIN": {
         "association": "unknown",
         "status": "unknown"
@@ -7515,10 +7531,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/WKL11.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/WKL21.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
@@ -19519,10 +19531,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/MAP05.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/MAP06.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
