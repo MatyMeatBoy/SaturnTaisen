@@ -30,7 +30,7 @@ Six old worktrees were removed via Git, preserving their commits. What remains i
 
 The measurement after cleanup was **19,857,953,183 bytes (18.494 GiB), 67,822 files** in the main project. Verified duplicates and regenerable intermediates were removed; dumps, BIOS, scripts, prepared assets, selected checkpoints, and issued packages were kept. The SDK48 reference is kept compressed, with CRC and SHA of the restored executable verified. Detailed private reports are alongside the delivery, outside the project.
 
-The already-delivered development ZIP remains immutable: `D:\01Claude\SaturnTaisenFirst-DEV-transfer-20261118\SaturnTaisenFirst-Development-Completo.zip`, 6,315,009,692 bytes, SHA256 `806b9e8803574e9fdea58ffce9b8ca1247a691f1e49295499f399ee5425e2059`. After restoring it on the other PC, update from Git to get these rules added after its creation. The cleanup does not certify new campaign progress nor change the test version.
+The already-delivered development ZIP remains immutable: `local/entregas/desarrollo-20261118/SaturnTaisenFirst-Development-Completo.zip`, 6,315,009,692 bytes, SHA256 `806b9e8803574e9fdea58ffce9b8ca1247a691f1e49295499f399ee5425e2059`. After restoring it on the other PC, update from Git to get these rules added after its creation. The cleanup does not certify new campaign progress nor change the test version.
 
 | Path relative to `D:\01Claude\Sakurawars` | Use |
 | --- | --- |
@@ -192,11 +192,11 @@ Measured afterwards: **31,127,631,026 bytes, 69,573 files** (hard links counted 
 
 The current runtime is kept once, unpacked, in `local/releases/SaturnTaisen-v0.2.2-alpha-win64/sakura.exe` (SHA-256 `df68e9db…`); use it for `package_release.py --runtime`. The previous reference stays archived (`SaturnTaisenFirst-reference-SDK48-674182.7z`).
 
-### Delivered packages moved out of the project — 2026-11-18
+### Delivered packages: one folder — 2026-11-18
 
-At the owner's request the delivered ZIPs were moved (not copied, not modified) out of the project folder: the 17 package ZIPs with their checksums to `D:Claude\SaturnTaisen-entregas\`, and the development ZIP with its reports to `D:Claude\SaturnTaisenFirst-DEV-transfer-20261118\`, the location the earlier note already named. Every ZIP was hashed again after the move and matches its recorded SHA-256. They remain immutable. `local/releases/ENTREGAS-MOVIDAS.txt` points to them. The personal v0.2.2 package was moved back into `local/releases/` afterwards so the owner can reach it from the project; 16 package ZIPs stay outside.
+The delivered ZIPs were first moved out of the project folder to get under the size limit, and the same day the owner asked for a single Sakura Wars folder on the drive, so they were brought back together: **`local/entregas/`** holds the 16 package ZIPs with their checksums and, in `desarrollo-20261118/`, the development ZIP with its reports. The personal v0.2.2 package for the other PC is in `local/releases/`. Every ZIP was hashed again after each move and matches its recorded SHA-256 (17 of 17). They remain immutable.
 
-Measured afterwards: **15,457,405,993 bytes** (hard links counted once), below the 20,000,000,000-byte limit. `local/releases` keeps the current release unpacked (`SaturnTaisen-v0.2.2-alpha-win64`, with the current runtime), the archived SDK48 reference and the validation receipts.
+Measured afterwards: **31,127,727,842 bytes** (hard links counted once), above the 20,000,000,000-byte limit; `local/entregas` alone is about 12.2 GB. Getting under the limit now means deleting old deliveries, which is the owner's decision: the public ZIPs can be downloaded again from the GitHub releases, the personal ones and the development ZIP cannot.
 
 ## Finishing the HD mod from another PC
 

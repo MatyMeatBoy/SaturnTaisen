@@ -42,7 +42,7 @@ A new HD category needs the same three things: tracked data that names the pairs
 | Any runtime change (T74, T53, T54, T83) | The SDK tree `local/deps/satrecomp`, the AOT discovery base under `local/work/sakura`, and a toolchain | The SDK is cloned and patched by `python tools/build_runtime.py`; the development ZIP carries `local/work/sakura` and a portable toolkit (`toolkit/`). Its inventory has **no `blocks.txt`** entry: check that the AOT base it carries is enough before planning a runtime build, and if not, copy `local/work/sakura` from the owner's main PC. |
 | Long cold-run input for screenshots | `local/work/rb-full/input.movie` | Not present on the main PC any more and not in the development ZIP. Use states and `--auto` random input instead (see below), or record a new movie. |
 
-The delivered ZIPs were moved out of the project folder: 16 package ZIPs in `D:\01Claude\SaturnTaisen-entregas\`, the development ZIP in `D:\01Claude\SaturnTaisenFirst-DEV-transfer-20261118\`. The personal v0.2.2 package stays in `local/releases/` on the main PC. None of them is published.
+The delivered ZIPs are in `local/entregas/` on the main PC (16 package ZIPs, and the development ZIP in `desarrollo-20261118/`); the personal v0.2.2 package is in `local/releases/`. None of them is published.
 
 On a copy made with `core.autocrlf=true` the SDK validation breaks on line endings; use `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.autocrlf GIT_CONFIG_VALUE_0=false` (row T51).
 
