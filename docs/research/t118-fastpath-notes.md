@@ -1,6 +1,6 @@
 # T118 VDP1 textured line fast path (candidate, not measured, not enabled)
 
-`t118-fastpath-candidate.diff` (against `video/raster.cpp` of the stack through patch 0089) adds a fast loop to
+`t118-fastpath-candidate.diff.txt` (against `video/raster.cpp` of the stack through patch 0089) adds a fast loop to
 `Renderer::RasterTexturedLine` for lines that are: not Gouraud, no mesh/user clip/MSB-on, replace mode (`mode & 3 == 0`),
 16-bit framebuffer, no interlace, no glyph stamp active, both end points at least 2 pixels inside the system clip,
 less than 1024 pixels long. Texture walk, end codes, flip, high speed shrink and write order (pixel, then beside) are as before;
