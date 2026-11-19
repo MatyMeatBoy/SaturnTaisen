@@ -1,0 +1,117 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -623,6 +623,8 @@
+     std::vector<uint32_t> bg2533Native;
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
++    SceneHd ic01;
++    bool ic01Traced=false,ic01Examined=false;
+     SceneHd eve202;
+     bool eve202Traced = false;
+     bool eve202Examined = false;
+@@ -1134,6 +1136,104 @@
+                 const SDL_FRect bgTarget{float(bg.x),float(bg.y),float(bg.w),float(bg.h)},nativeTarget{float(native.x),float(native.y),float(native.w),float(native.h)};
+                 SDL_RenderTexture(renderer,floral,nullptr,&bgTarget);
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
++                if(screenBackdrop=="PAUSE01" && native.scale>0 && !choosing && !port.menu.IsOpen() &&
++                   !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 &&
++                   planes.topSource.size()==320*224 && softwareShown.size()==320*224) {
++                    constexpr int menuX=184, menuY=16, menuRight=296, menuBottom=143;
++                    bool exactLayers=true, paletteMatches=false;
++                    for(size_t bank=0;bank<planes.palette.size();bank+=512)
++                        if(PcBackdropHash(std::span{planes.palette}.subspan(bank,512))==0x530FF280499422C3ull)
++                            paletteMatches=true;
++                    uint64_t rgb=14695981039346656037ull;
++                    if(paletteMatches) {
++                        for(int y=0;y<224 && exactLayers;++y)for(int x=0;x<320;++x) {
++                            const size_t at=size_t(y)*320+x;
++                            const bool inMenu=x>=menuX && x<menuRight && y>=menuY && y<menuBottom;
++                            if(planes.topSource[at]!=(inMenu?0:4)) { exactLayers=false;break; }
++                            if(!inMenu) {
++                                const auto pixel=softwareShown[at];
++                                for(unsigned shift:{0u,8u,16u})
++                                    rgb=(rgb^uint8_t(pixel>>shift))*1099511628211ull;
++                            }
++                        }
++                    }
++                    if(!ic01Examined && std::getenv("SATRECOMP_IC01_TRACE")) {
++                        std::fprintf(stderr,"IC01 examined palette=%d layers=%d rgb=%016llX\n",int(paletteMatches),
++                            int(exactLayers),static_cast<unsigned long long>(rgb));
++                        ic01Examined=true;
++                    }
++                    if(paletteMatches && exactLayers && rgb==0xB98D70AA066A62B5ull) {
++                        if(!ic01.tried) {
++                            ic01.tried=true;
++                            ic01.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/
++                                    "SAKURA1/ICATCH/IC0100.SPR"]() {
++                                SceneHdPixels result;
++                                std::vector<uint8_t> bytes;
++                                if(!ReadPcBackdropFile(file,bytes,188258) || bytes.size()!=188258 ||
++                                   PcBackdropHash(bytes)!=0xFD31EDDC7F36FDB2ull) return result;
++                                std::vector<PcSprite> images;
++                                std::string error;
++                                if(!DecodePcSprites(bytes,images,error))return result;
++                                for(auto& image:images)if(image.index==0 && image.width==640 && image.height==480) {
++                                    result.width=image.width;
++                                    result.height=image.height;
++                                    result.pixels=std::move(image.pixels);
++                                    // Match the witnessed darkening and retain the native perimeter where the
++                                    // proportional PC composition meets the existing wide extension.
++                                    for(unsigned y=0;y<480;++y)for(unsigned x=0;x<640;++x) {
++                                        auto& pixel=result.pixels[size_t(y)*640+x];
++                                        const unsigned edge=std::min({x,639-x,y,479-y,17u});
++                                        uint32_t corrected=(edge*255/17)<<24;
++                                        for(unsigned channel=0;channel<3;++channel) {
++                                            const unsigned shift=channel*8;
++                                            const int delta=channel==2?16:17;
++                                            corrected|=uint32_t(std::max(int((pixel>>shift)&255u)-delta,0))<<shift;
++                                        }
++                                        pixel=corrected;
++                                    }
++                                    break;
++                                }
++                                return result;
++                            });
++                        }
++                        if(ic01.pending.valid() && ic01.pending.wait_for(std::chrono::seconds(0))==std::future_status::ready) {
++                            auto decoded=ic01.pending.get();
++                            if(decoded.width && decoded.height) {
++                                auto* picture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,
++                                    int(decoded.width),int(decoded.height));
++                                if(picture && SDL_UpdateTexture(picture,nullptr,decoded.pixels.data(),int(decoded.width*4))) {
++                                    SDL_SetTextureBlendMode(picture,SDL_BLENDMODE_BLEND);
++                                    SDL_SetTextureScaleMode(picture,SDL_SCALEMODE_LINEAR);
++                                    ic01.texture=picture;
++                                } else if(picture) SDL_DestroyTexture(picture);
++                            }
++                        }
++                        if(ic01.texture && !SDL_RenderClipEnabled(renderer)) {
++                            // Five native pixels anchor the common Sakura silhouette; height sets a uniform scale.
++                            const SDL_FRect donor{float(native.x+5*native.scale),float(native.y),float(native.h)*4/3,float(native.h)};
++                            const SDL_Rect keep{native.x+menuX*native.scale,native.y+menuY*native.scale,
++                                (menuRight-menuX)*native.scale,(menuBottom-menuY)*native.scale};
++                            const int right=native.x+native.w,bottom=native.y+native.h;
++                            const std::array<SDL_Rect,4> strips{{
++                                {native.x,native.y,native.w,keep.y-native.y},
++                                {native.x,keep.y,keep.x-native.x,keep.h},
++                                {keep.x+keep.w,keep.y,right-keep.x-keep.w,keep.h},
++                                {native.x,keep.y+keep.h,native.w,bottom-keep.y-keep.h}
++                            }};
++                            bool drew=true;
++                            for(const auto& strip:strips) {
++                                if(!SDL_SetRenderClipRect(renderer,&strip)) {drew=false;break;}
++                                drew=SDL_RenderTexture(renderer,ic01.texture,nullptr,&donor)&&drew;
++                            }
++                            SDL_SetRenderClipRect(renderer,nullptr);
++                            if(drew && !ic01Traced && std::getenv("SATRECOMP_IC01_TRACE")) {
++                                std::fprintf(stderr,"IC01 drew %.2f,%.2f %.2fx%.2f keep=%d,%d %dx%d\n",
++                                    donor.x,donor.y,donor.w,donor.h,keep.x,keep.y,keep.w,keep.h);
++                                ic01Traced=true;
++                            }
++                        }
++                    }
++                }
+                 enhanced=true;presentationKind="anchored-menu";
+             }
+             if(std::getenv("SATRECOMP_BODY_TRACE")) {
