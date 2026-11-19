@@ -41,6 +41,13 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertIs(witnessed.get('verified_in_game'), True)
                 disc2 = catalog['unassigned']['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
                 self.assertFalse(disc2.get('verified_in_game'))
+        episode2 = by_chapter[2]['resources']['scene-pictures']
+        airship = episode2.get('1:/SAKURA2/EVE002.BIN', {})
+        self.assertEqual(airship.get('association'), 'observed')
+        self.assertEqual(airship.get('status'), 'hd')
+        self.assertIs(airship.get('verified_in_game'), True)
+        self.assertNotIn('1:/SAKURA2/EVE002.BIN', catalog['unassigned']['scene-pictures'])
+        self.assertFalse(catalog['unassigned']['scene-pictures']['1:/SAKURA2/EVE102.BIN'].get('verified_in_game'))
         self.assertEqual(chapter1['portraits']['0001']['association'], 'inferred')
         self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]

@@ -1733,6 +1733,14 @@
             "association": "inferred",
             "status": "unknown"
           },
+          "1:/SAKURA2/EVE002.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/eve002-tactical-inset.md",
+            "pc": "SAKURA2/BG/BBG002.SPR",
+            "runtime_evidence": "docs/research/eve002-tactical-inset.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA2/EVE202.BIN": {
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
@@ -10015,11 +10023,6 @@
       "1:/SAKURA2/BBG235.BIN": {
         "association": "unknown",
         "status": "unknown"
-      },
-      "1:/SAKURA2/EVE002.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA2/BG/BBG002.SPR",
-        "status": "hd"
       },
       "1:/SAKURA2/EVE102.BIN": {
         "association": "unknown",

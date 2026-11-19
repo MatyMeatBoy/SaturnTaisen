@@ -1,0 +1,135 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -628,6 +628,25 @@
+     SceneHd eve202;
+     bool eve202Traced = false;
+     bool eve202Examined = false;
++    SceneHd eve002;
++    bool eve002Traced = false;
++    struct NativeEveInset {
++        const char* name;
++        uint64_t palette;
++        uint64_t rgb;
++        const char* file;
++        size_t size;
++        uint64_t fileHash;
++        port::EveRect crop;
++        SceneHd& image;
++        bool& traced;
++    };
++    const NativeEveInset nativeEveInsets[]{
++        {"EVE202", port::kEve202Palette, 0x9B31BCF15EF165E9ull, port::kEve202PcFile, 97616,
++         0x622D0EBC1CEA8E03ull, port::kEve202PcCrop, eve202, eve202Traced},
++        {"EVE002", 0x5D66F0207B8DD266ull, 0xCE6250F015B307EDull, "SAKURA2/BG/BBG002.SPR", 175825,
++         0x7FF1A8354F5328C7ull, {0, 24, 576, 288}, eve002, eve002Traced},
++    };
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+@@ -2220,37 +2239,54 @@
+                 texW == 320 && texH == 224 && softwareShown.size() == 320 * 224) {
+                 const auto& planes = port.videoRenderer->PresentationFrame();
+                 // The palette is copied into Presentation at frame capture. Do not consult live CRAM.
+-                uint64_t palette = 0;
+-                for (size_t bank = 0; bank + 512 <= planes.palette.size(); bank += 512) {
+-                    uint64_t hash = 14695981039346656037ull;
+-                    for (size_t byte = bank; byte < bank + 512; ++byte)
+-                        hash = (hash ^ planes.palette[byte]) * 1099511628211ull;
+-                    if (hash == port::kEve202Palette) { palette = hash; break; }
+-                }
+-                const bool knownInset = port::IsEve202Inset({planes.topSource, palette, int(planes.width), int(planes.height), true});
++                const NativeEveInset* inset = nullptr;
++                bool knownInset = false;
++                uint64_t nativeRgb = 0;
++                for (const auto& entry : nativeEveInsets) {
++                    bool matchesPalette = false;
++                    for (size_t bank = 0; bank + 512 <= planes.palette.size(); bank += 512) {
++                        if (PcBackdropHash(std::span{planes.palette}.subspan(bank, 512)) == entry.palette) {
++                            matchesPalette = true;
++                            break;
++                        }
++                    }
++                    if (!matchesPalette) continue;
++                    if (!inset) {
++                        inset = &entry;
++                        knownInset = port::IsEveInset(
++                            {planes.topSource, entry.palette, int(planes.width), int(planes.height), true}, entry.palette);
++                        if (!knownInset) break;
++                        // Exact RGB rejects fades, blending, scrolling and colour adjustments.
++                        nativeRgb = insetRgb(softwareShown);
++                    }
++                    if (nativeRgb == entry.rgb) {
++                        inset = &entry;
++                        break;
++                    }
++                }
++                const uint64_t palette = inset ? inset->palette : 0;
+                 if (!eve202Examined && std::getenv("SATRECOMP_EVE_TRACE")) {
+-                    std::fprintf(stderr, "EVE202 examined palette=%016llX extent=%ux%u top=%zu match=%d\n",
+-                        static_cast<unsigned long long>(palette), planes.width, planes.height, planes.topSource.size(), int(knownInset));
++                    std::fprintf(stderr, "%s examined palette=%016llX extent=%ux%u top=%zu match=%d\n",
++                        inset ? inset->name : "EVE202", static_cast<unsigned long long>(palette),
++                        planes.width, planes.height, planes.topSource.size(), int(knownInset));
+                     eve202Examined = true;
+                 }
+                 if (knownInset) {
+-                    // The witnessed window crop is a nearest-neighbour copy of these native RGB pixels.
+-                    // An exact RGB key also rejects scroll, blending, and colour adjustments in this first witness.
+-                    const uint64_t nativeRgb = insetRgb(softwareShown);
+-                    if (nativeRgb == 0x9B31BCF15EF165E9ull) {
+-                        loadEveInset(eve202, port::kEve202PcFile, 97616, 0x622D0EBC1CEA8E03ull, port::kEve202PcCrop);
+-                        if (eve202.texture) {
++                    if (nativeRgb == inset->rgb) {
++                        loadEveInset(inset->image, inset->file, inset->size, inset->fileHash, inset->crop);
++                        if (inset->image.texture) {
+                             const auto fit = port::Eve202Destination(baseFit.x, baseFit.y, baseFit.scale);
+                             const SDL_FRect target{float(fit.x), float(fit.y), float(fit.width), float(fit.height)};
+-                            if (SDL_RenderTexture(renderer, eve202.texture, nullptr, &target) &&
+-                                !eve202Traced && std::getenv("SATRECOMP_EVE_TRACE")) {
+-                                std::fprintf(stderr, "EVE202 drew %d,%d %dx%d\n", fit.x, fit.y, fit.width, fit.height);
+-                                eve202Traced = true;
++                            if (SDL_RenderTexture(renderer, inset->image.texture, nullptr, &target) &&
++                                !inset->traced && std::getenv("SATRECOMP_EVE_TRACE")) {
++                                std::fprintf(stderr, "%s drew %d,%d %dx%d\n", inset->name, fit.x, fit.y, fit.width, fit.height);
++                                inset->traced = true;
+                             }
+                         }
+-                    } else if (!eve202Traced && std::getenv("SATRECOMP_EVE_TRACE")) {
+-                        std::fprintf(stderr, "EVE202 unmatched RGB %016llX\n", static_cast<unsigned long long>(nativeRgb));
+-                        eve202Traced = true;
++                    } else if (!inset->traced && std::getenv("SATRECOMP_EVE_TRACE")) {
++                        std::fprintf(stderr, "%s unmatched RGB %016llX\n", inset->name,
++                            static_cast<unsigned long long>(nativeRgb));
++                        inset->traced = true;
+                     }
+                 }
+             }
+diff --git a/port/eve_inset.h b/port/eve_inset.h
+--- a/port/eve_inset.h
++++ b/port/eve_inset.h
+@@ -30,11 +30,11 @@
+     bool layer5OpaqueAtUnitScroll;
+ };
+ 
+-inline bool IsEve202Inset(const EveInsetFrame& frame) {
++inline bool IsEveInset(const EveInsetFrame& frame, std::uint64_t expectedPalette) {
+     constexpr int nativeWidth = 320;
+     constexpr int nativeHeight = 224;
+     constexpr std::uint8_t insetLayer = 5;
+-    if (frame.layer5Palette != kEve202Palette || !frame.layer5OpaqueAtUnitScroll ||
++    if (frame.layer5Palette != expectedPalette || !frame.layer5OpaqueAtUnitScroll ||
+         frame.width != nativeWidth || frame.height != nativeHeight ||
+         frame.source.size() != nativeWidth * nativeHeight) {
+         return false;
+@@ -54,6 +54,10 @@
+     return true;
+ }
+ 
++inline bool IsEve202Inset(const EveInsetFrame& frame) {
++    return IsEveInset(frame, kEve202Palette);
++}
++
+ constexpr EveRect Eve202Destination(int canvasX, int canvasY, int integerScale) {
+     return {
+         canvasX + kEve202NativeRect.x * integerScale,
