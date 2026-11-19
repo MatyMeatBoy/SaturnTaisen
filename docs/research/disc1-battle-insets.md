@@ -17,3 +17,9 @@ On disc 1, BBG002 and EVE002 occupy different disc extents with byte-identical f
 BBG203 stays on the pending list. Landmark alignment shows that its same-number PC picture omits about 41 Saturn columns on the right and five rows at the bottom. The four square item cards use a separate geometry. BBG204 is covered by its own episode 4 replay.
 
 BBG235 uses a 576 × 288 donor. Patch 0127 checks the declared crop against the decoded image after verifying the entire SPR file hash, so this shorter PC source can supply its valid 544 × 272 rectangle. A crop extending past the image remains native.
+
+## Square item cards
+
+BBG004 is referenced by EVT04 at offset 0x1588. On event stage 6, after loading the tile and palette data, the map helper at 0020E470 receives tile column 13, row 5 and 14 × 14 dimensions. The row stride is 128 bytes for the 64-column map, with a 2-byte cell name. This gives the fixed rectangle (104, 40, 112, 112) on the native 320 × 224 canvas. BBG004–BBG007 use identical 14 × 14 cell-map layouts and their matching PC file has one 224 × 224 image.
+
+The shared inset renderer requires the exact palette, rectangle of top-layer ownership and every native RGB pixel before drawing. The target keeps the original integer scale. A card at a different position, a blend or an interrupted transition will use the Saturn frame. No individual square-card appearance has been verified in a replay. The BBG002 regression retains its 1440p 1728 × 864 inset, with 60 identical guest hashes across the main, missing-donor and Original cases.

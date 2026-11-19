@@ -1,0 +1,123 @@
+diff --git a/port/eve_inset.h b/port/eve_inset.h
+--- a/port/eve_inset.h
++++ b/port/eve_inset.h
+@@ -34,22 +34,21 @@
+     bool layer5OpaqueAtUnitScroll;
+ };
+ 
+-inline bool IsEveInset(const EveInsetFrame& frame, std::uint64_t expectedPalette) {
++inline bool IsEveInset(const EveInsetFrame& frame, std::uint64_t expectedPalette,
++                       EveRect rect = kEve202NativeRect) {
+     constexpr int nativeWidth = 320;
+     constexpr int nativeHeight = 224;
+     constexpr std::uint8_t insetLayer = 5;
+     if (frame.layer5Palette != expectedPalette || !frame.layer5OpaqueAtUnitScroll ||
+         frame.width != nativeWidth || frame.height != nativeHeight ||
+-        frame.source.size() != nativeWidth * nativeHeight) {
++        frame.source.size() != nativeWidth * nativeHeight || !EveCropFits(rect, nativeWidth, nativeHeight)) {
+         return false;
+     }
+ 
+     for (int y = 0; y < nativeHeight; ++y) {
+         for (int x = 0; x < nativeWidth; ++x) {
+-            const bool insideInset = x >= kEve202NativeRect.x &&
+-                                     x < kEve202NativeRect.x + kEve202NativeRect.width &&
+-                                     y >= kEve202NativeRect.y &&
+-                                     y < kEve202NativeRect.y + kEve202NativeRect.height;
++            const bool insideInset = x >= rect.x && x < rect.x + rect.width &&
++                                     y >= rect.y && y < rect.y + rect.height;
+             if (insideInset != (frame.source[std::size_t(y) * nativeWidth + x] == insetLayer)) {
+                 return false;
+             }
+@@ -62,13 +61,13 @@
+     return IsEveInset(frame, kEve202Palette);
+ }
+ 
++constexpr EveRect EveInsetDestination(EveRect rect, int canvasX, int canvasY, int integerScale) {
++    return {canvasX + rect.x * integerScale, canvasY + rect.y * integerScale,
++            rect.width * integerScale, rect.height * integerScale};
++}
++
+ constexpr EveRect Eve202Destination(int canvasX, int canvasY, int integerScale) {
+-    return {
+-        canvasX + kEve202NativeRect.x * integerScale,
+-        canvasY + kEve202NativeRect.y * integerScale,
+-        kEve202NativeRect.width * integerScale,
+-        kEve202NativeRect.height * integerScale,
+-    };
++    return EveInsetDestination(kEve202NativeRect, canvasX, canvasY, integerScale);
+ }
+ 
+ }  // namespace port
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -760,6 +760,9 @@
+     bool bbg204Traced = false;
+     std::array<SceneHd, 7> bbgInsetImages;
+     std::array<bool, 7> bbgInsetTraces{};
++    std::array<SceneHd, 4> bbgItemImages;
++    std::array<bool, 4> bbgItemTraces{};
++    constexpr port::EveRect itemNative{104, 40, 112, 112};
+     struct NativeEveInset {
+         const char* name;
+         uint64_t palette;
+@@ -770,6 +773,7 @@
+         port::EveRect crop;
+         SceneHd& image;
+         bool& traced;
++        port::EveRect rect = port::kEve202NativeRect;
+     };
+     const NativeEveInset nativeEveInsets[]{
+         {"EVE202", port::kEve202Palette, 0x9B31BCF15EF165E9ull, port::kEve202PcFile, 97616,
+@@ -792,6 +796,14 @@
+          0x81B509F994100235ull, {0, 32, 576, 288}, bbgInsetImages[5], bbgInsetTraces[5]},
+         {"BBG235", 0x2BC159FCB08D0238ull, 0xA5E79E35A266849Dull, "SAKURA2/BG/BBG235.SPR", 210415,
+          0x2BCBC9714A83BC2Eull, {16, 8, 544, 272}, bbgInsetImages[6], bbgInsetTraces[6]},
++        {"BBG004", 0x319E682E63DC3A4Eull, 0x914BE81AC42AFE65ull, "SAKURA2/BG/BBG004.SPR", 28184,
++         0x72BEA1C2D4460A7Dull, {0, 0, 224, 224}, bbgItemImages[0], bbgItemTraces[0], itemNative},
++        {"BBG005", 0x15ED0C1910A55981ull, 0xAC97820398015961ull, "SAKURA2/BG/BBG005.SPR", 27437,
++         0x60C96EE2ADC06E10ull, {0, 0, 224, 224}, bbgItemImages[1], bbgItemTraces[1], itemNative},
++        {"BBG006", 0x45CE415D5026BA41ull, 0xAEFAFE06860893B5ull, "SAKURA2/BG/BBG006.SPR", 25648,
++         0x701D49A9BAB9C368ull, {0, 0, 224, 224}, bbgItemImages[2], bbgItemTraces[2], itemNative},
++        {"BBG007", 0xEF9307D85B802E5Bull, 0xE7C5EE547670B065ull, "SAKURA2/BG/BBG007.SPR", 30742,
++         0x2320C6D66870B316ull, {0, 0, 224, 224}, bbgItemImages[3], bbgItemTraces[3], itemNative},
+     };
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+@@ -836,10 +848,10 @@
+             inset.texture = picture;
+         } else if (picture) SDL_DestroyTexture(picture);
+     };
+-    const auto insetRgb = [](std::span<const uint32_t> pixels) {
++    const auto insetRgb = [](std::span<const uint32_t> pixels, port::EveRect rect = port::kEve202NativeRect) {
+         uint64_t hash = 14695981039346656037ull;
+-        for (int y = 8; y < 152; ++y) {
+-            for (int x = 16; x < 304; ++x) {
++        for (int y = rect.y; y < rect.y + rect.height; ++y) {
++            for (int x = rect.x; x < rect.x + rect.width; ++x) {
+                 const uint32_t pixel = pixels[size_t(y) * 320 + x];
+                 for (unsigned shift : {0u, 8u, 16u})
+                     hash = (hash ^ uint8_t(pixel >> shift)) * 1099511628211ull;
+@@ -2687,10 +2699,10 @@
+                     if (!inset) {
+                         inset = &entry;
+                         knownInset = port::IsEveInset(
+-                            {planes.topSource, entry.palette, int(planes.width), int(planes.height), true}, entry.palette);
++                            {planes.topSource, entry.palette, int(planes.width), int(planes.height), true}, entry.palette, entry.rect);
+                         if (!knownInset) break;
+                         // Exact RGB rejects fades, blending, scrolling and colour adjustments.
+-                        nativeRgb = insetRgb(softwareShown);
++                        nativeRgb = insetRgb(softwareShown, entry.rect);
+                     }
+                     if (nativeRgb == entry.rgb) {
+                         inset = &entry;
+@@ -2708,7 +2720,7 @@
+                     if (nativeRgb == inset->rgb) {
+                         loadEveInset(inset->image, inset->file, inset->size, inset->fileHash, inset->crop);
+                         if (inset->image.texture) {
+-                            const auto fit = port::Eve202Destination(baseFit.x, baseFit.y, baseFit.scale);
++                            const auto fit = port::EveInsetDestination(inset->rect, baseFit.x, baseFit.y, baseFit.scale);
+                             const SDL_FRect target{float(fit.x), float(fit.y), float(fit.width), float(fit.height)};
+                             if (SDL_RenderTexture(renderer, inset->image.texture, nullptr, &target) &&
+                                 !inset->traced && std::getenv("SATRECOMP_EVE_TRACE")) {
