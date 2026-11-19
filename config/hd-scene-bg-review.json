@@ -210,6 +210,9 @@
     "EVE0101"
   ],
   "rejected": {
+    "BG3092": "BG2092.SPR depicts the reclining figure and bedding with the dark room and floor baked in; Saturn supplies a cyan-key cut-out",
+    "BG3100": "BG2100.SPR depicts the seated figure and bedding with the dark room and floor baked in; Saturn supplies a cyan-key cut-out",
+    "BG4049": "BG4094.SPR is the closest rear-facing variant, with a shifted and larger figure than the Saturn cut-out at 2x scale",
     "BG0000": "blank placeholder picture",
     "BG1341": "blank placeholder picture",
     "BG1211": "the Saturn picture has the English text baked in, the PC one has Japanese text",
