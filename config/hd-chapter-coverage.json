@@ -2319,9 +2319,11 @@
           },
           "1:/SAKURA2/EVE0101.BIN": {
             "association": "observed",
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/eve0101-registered-inset.md",
             "pc": "SAKURA2/BG/BBG001.SPR",
-            "status": "paired-not-wired"
+            "runtime_evidence": "docs/research/eve0101-registered-inset.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA2/EVE0116.BIN": {
             "association": "observed",
@@ -19582,7 +19584,7 @@
       "2:/SAKURA2/EVE0101.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG001.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA2/EVE0116.BIN": {
         "association": "unknown",

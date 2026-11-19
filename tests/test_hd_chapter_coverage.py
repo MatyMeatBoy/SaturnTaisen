@@ -28,6 +28,12 @@ class ChapterCoverageTest(unittest.TestCase):
         by_chapter = {row['chapter']: row for row in catalog['chapters']}
         self.assertEqual([by_chapter[n]['disc'] for n in range(1, 11)], [1]*7 + [2]*3)
         chapter1 = by_chapter[1]['resources']
+        eve = chapter1['scene-pictures']['1:/SAKURA2/EVE0101.BIN']
+        self.assertEqual((eve['status'], eve['pc']), ('hd', 'SAKURA2/BG/BBG001.SPR'))
+        self.assertIs(eve['verified_in_game'], True)
+        eve_disc2 = catalog['unassigned']['scene-pictures']['2:/SAKURA2/EVE0101.BIN']
+        self.assertEqual(eve_disc2['status'], 'hd')
+        self.assertNotIn('verified_in_game', eve_disc2)
         ground = chapter1['tactical-maps']['1:/SAKURA2/MAP01.BIN']
         self.assertEqual((ground['association'], ground['scope']), ('observed', 'source-4 ground only'))
         self.assertEqual(ground['status'], 'hd')
