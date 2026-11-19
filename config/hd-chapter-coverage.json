@@ -4062,9 +4062,36 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1025.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1025.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1199.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1199.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG4059.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG4059.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
+          },
+          "1:/SAKURA1/BG4119.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG4119.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
+          },
           "1:/SAKURA1/TITLE6.BIN": {
-            "association": "inferred",
+            "association": "observed",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+            "evidence": "docs/research/th6-native-attribution.md",
             "pc": "SAKURA1/TITLE/TITLE6.SPR",
             "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
             "status": "excluded"
@@ -11895,11 +11922,6 @@
         "pc": "SAKURA1/BG/BG1024.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1025.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1025.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1026.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1026.SPR",
@@ -12563,11 +12585,6 @@
       "1:/SAKURA1/BG1196.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1196.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1199.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1199.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1203.BIN": {
@@ -14954,12 +14971,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/BG4059.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4059.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "1:/SAKURA1/BG4060.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4060.SPR",
@@ -15073,12 +15084,6 @@
       "1:/SAKURA1/BG4116.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4116.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "1:/SAKURA1/BG4119.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4119.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },

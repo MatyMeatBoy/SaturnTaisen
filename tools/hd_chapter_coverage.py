@@ -118,6 +118,11 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA1/TITLE6.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG1199.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG4119.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG1025.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG4059.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG1198.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/TITLE3.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1022.BIN'): (3, 'docs/research/th3-native-attribution.md'),
