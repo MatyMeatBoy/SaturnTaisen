@@ -56,6 +56,29 @@ class SaturnBgTests(unittest.TestCase):
         self.assertEqual(image.size, (320, 224))
         self.assertEqual(image.getpixel((5, 2)), (255, 0, 0))
 
+    def test_nc_body_is_a_flat_bitmap_after_its_palette(self):
+        width, height = 40, 144
+        data = bytearray(0x610 + width * height + 6000)
+        data[:2] = bytes([0, 2])
+        struct.pack_into('>H', data, 0x410 + 4 * 2, 31)  # palette 4 = R31
+        # a smooth ramp so the stride detector sees rows of 40 pixels
+        for i in range(width * height + 6000):
+            data[0x610 + i] = (i % width) // 2 + 1
+        data[0x610 + 3 * width + 7] = 4
+        image = bg.decode_nc(bytes(data))
+        self.assertEqual(image.size[1], 144)
+        self.assertEqual(image.size[0], width)
+        self.assertEqual(image.getpixel((7, 3)), (255, 0, 0, 255))
+
+    def test_body_map_has_firm_pairs(self):
+        import json
+        data = json.loads((ROOT / 'config/hd-body-map.json').read_text(encoding='utf-8'))
+        firm = [p for p in data['pairs'] if p['tier'] == 'content']
+        self.assertGreaterEqual(len(firm), 60)
+        for pair in firm:
+            self.assertEqual(pair['same_name_pc'], pair['best_pc'])
+            self.assertGreaterEqual(pair['same_name_correlation'], 0.75)
+
     def test_screen_map_has_firm_eyecatches(self):
         import json
         data = json.loads((ROOT / 'config/hd-screen-map.json').read_text(encoding='utf-8'))
