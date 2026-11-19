@@ -91,3 +91,56 @@ BG2251 scene itself. No package was built.
 The main workspace measured 51,405,524,876 logical bytes with hard links counted
 once and reparse points excluded. The delivered development ZIP remains
 6,315,009,692 bytes.
+
+## TP4c decision on the unpaired BG3xxx/BG4xxx pictures (2026-11-19)
+
+The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era battle pictures. `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by rule (character cut-outs on a key colour), and 22 of the files below carry a rejection reason in `config/hd-scene-bg-review.json`; BG3092, BG3100 and BG4049 have none recorded yet (they need an eye review). **Decision: none is wired; all stay native.** Reasons as recorded:
+
+| Saturn | Recorded reason |
+|---|---|
+| BG3044 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3051 | the PC picture has a library background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3054 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3060 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3069 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3091 | the PC picture has a grey background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3092 | (no reason recorded in the review file) |
+| BG3097 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3100 | (no reason recorded in the review file) |
+| BG3119 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3165 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4049 | (no reason recorded in the review file) |
+| BG4053 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4054 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4055 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4056 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4057 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4058 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4067 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4071 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4162 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4204 | the Saturn picture decodes only as a partial fragment of the scene |
+| BG4284 | the Saturn statue stands on a blue pedestal and holds an object, the PC figure has neither (different frame) |
+| BG4372 | the Saturn picture is a character cut-out; the PC picture has the whole hanami scene baked in |
+| BG4375 | the PC picture has an extra teddy bear baked into the dressing room, the Saturn picture does not |
+
+Where a reason says the PC picture has the background baked in, drawing it would replace the native cut-out together with the key colour, so the native picture is kept. Files with a decode problem or a different frame would need a new decode or a new pairing; none is proposed here.
+## TP4a re-search of the 13 unpaired BG1xxx files (2026-11-19)
+
+`tools/match_bg_files.py` was run again over all 718 disc 1 Saturn backgrounds against every PC `BG*.SPR` (luminance signature, lower score is better). Result: 222 firm, 496 ambiguous overall, and **none of the 13 unpaired files obtains a firm counterpart**. Names and scores only.
+
+| Saturn | Best PC | Score | Runner-up | Margin | Decision |
+|---|---|---|---|---|---|
+| BG1130 | BG1132 | 0.1756 | BG1134 | 0.000 | stays unpaired: tie between door-sign variants |
+| BG1131 | BG1132 | 0.1754 | BG1134 | 0.000 | stays unpaired: tie between door-sign variants |
+| BG1211 | BG1211 | 0.0472 | BG4110 | 0.154 | same-number picture, English text vs Japanese text baked in; rejected |
+| BG1212 | BG1212 | 0.1561 | BG2212 | 0.036 | rejected as in the review (baked text) |
+| BG1213 | BG2282 | 0.0818 | BG2525 | 0.092 | no same-number match; candidate not confirmed |
+| BG1331 | BG1244 | 0.0966 | BG1328 | 0.001 | tie; lighting differs from BG1331 |
+| BG1338 | BG1338 | 0.1661 | BG2082 | 0.034 | lighting differs; rejected |
+| BG1339 | BG1332 | 0.1340 | BG1334 | 0.001 | tie |
+| BG1340 | BG2133 | 0.1293 | BG1332 | 0.098 | not confirmed |
+| BG1358, BG1360 | BG1080 | 0.1442, 0.1496 | BG1093 | 0.000 | tie; room variant differs |
+| BG1359, BG1361 | BG1082 | 0.1412, 0.1455 | BG1095 | 0.000 | tie; room variant differs |
+
+No pair was added: every best score is `ambiguous` and the earlier eye review reasons (baked text, lighting, room variant) still stand. BG0000 and BG1341 are blank placeholders. A counterpart would need a side-by-side review of the tied candidates, which the eye review of 2026-11-19 already did for the same-number files.
