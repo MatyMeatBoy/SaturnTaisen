@@ -1,0 +1,16 @@
+# Chapter 8 native opening picture evidence
+
+A cold replay on prepared English Saturn disc 2 selects the Episode 8 Continue slot, then reads `0801.BIN` at FAD 108406. The muted strict-native run completes 12,000 frames with zero interpreted blocks. Its final guest hash `f4272e26bdde2c41` matches the archived cold route. This proof associates four native pictures with the chapter. It preserves their existing donor decisions and the separately verified BG2159 HD draw.
+
+| Disc 2 file | FAD | Native display evidence |
+| --- | --- | --- |
+| `/SAKURA1/TITLE8.BIN` | 149253 | English cold frame 7000 and archived Spanish disc 2 frame 7000 each match the decoded source across all 71,680 pixels. |
+| `/SAKURA1/BG1212.BIN` | 119984 | The archived Spanish cold frame 9000 and long replay frames 7750 through 9500 match all 41,472 pixels of the scene viewport. The English cold run independently reads the file. |
+| `/SAKURA1/BG1050.BIN` | 117000 | The English cold trace reads this room plate. At frame 12000, 19,983 visible pixels match the plate at their exact positions and differ from BG4187. All 4,675 pixels in the unobstructed upper-left 85×55 region match. |
+| `/SAKURA1/BG4187.BIN` | 132254 | The same scene displays 6,179 non-key pixels matching the seated group at their exact positions and differing from BG1050. |
+
+For the two-layer room view, frame 11999 contains the exact BG1050 cells at VDP2 VRAM `0x34840` and palette at CRAM `0x200`. Its BG4187 cells and palette are at VRAM `0x4a040` and CRAM `0xe00`. The frame 12000 image contains Sakura's foreground sprite above both layers. The pixel counts cover the visible areas attributable to each source. The established cut-out rule still excludes BG4187 from HD substitution. The approved localized card still excludes the PC TITLE8 donor with baked-in lettering.
+
+The scene evidence distinguishes disc reads, VRAM and CRAM residency, and display. The cold boot's black viewport shares the BG1341 image fingerprint before the chapter is selected and is outside the chapter scope. The existing `0801FCE.BIN` entry remains resident. Later chapter routes, tactical display and the complete HD exit test remain open.
+
+The archived English checkpoint is under `local/work/later-chapter-audit/chapter-sweep/bank-8-battle-1-strict/`. Spanish evidence is under `local/work/guion-es/pruebas/es-all/d2-ep8-continue` and `d2-ep8-largo`. The muted English replay and the comparisons are retained under `local/work/codex-th8-attribution/`.
