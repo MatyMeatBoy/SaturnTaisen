@@ -327,7 +327,11 @@ class TrackedData(unittest.TestCase):
         self.assertTrue(manifest['single_entry_point'])
         self.assertIn(f"'{manifest['primary_executable']}'", packager)
         for internal in manifest['internal_executables']:
-            self.assertIn(f"'{internal['file']}'", packager)
+            # Internal programs live in app/; only the primary executable sits at the release root.
+            self.assertTrue(internal['file'].startswith('app/'), internal['file'])
+            self.assertIn(f"'{internal['file'].removeprefix('app/')}'", packager)
+        self.assertIn("app=destination/'app'", packager)
+        self.assertNotIn('.bat', packager, 'the release ships no .bat files')
         for flag in ('--rom', '--no-launcher', '--setup', '--fullscreen', '--widescreen', '--integration-info', '--help'):
             self.assertIn(flag, manifest['cli'], flag)
             self.assertIn(flag, setup.HELP, flag)

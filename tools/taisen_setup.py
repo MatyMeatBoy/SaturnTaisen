@@ -97,6 +97,22 @@ def run(command, **kwargs):
                           **kwargs)
 
 
+def discs_folder(program: Path) -> Path:
+    """The player's «discos» folder: beside the program, or at the release root when the program is in app/."""
+    for folder in (program / 'discos', program.parent / 'discos'):
+        if folder.is_dir():
+            return folder
+    return program / 'discos'
+
+
+def launch_manifest(program: Path) -> Path:
+    """recomp-launcher.json sits at the release root, beside the only visible executable."""
+    for folder in (program, program.parent):
+        if (folder / 'recomp-launcher.json').is_file():
+            return folder / 'recomp-launcher.json'
+    return program / 'recomp-launcher.json'
+
+
 def default_home(program: Path) -> Path:
     """The player's folder as the launcher resolves it in portable mode (the launcher passes --home itself).
 
@@ -996,7 +1012,7 @@ def info(paths: Paths) -> dict:
     """The launch surface for frontends (RecompLauncher-style integration info) plus the setup state."""
     manifest = {}
     try:
-        manifest = json.loads((paths.program / 'recomp-launcher.json').read_text(encoding='utf-8'))
+        manifest = json.loads(launch_manifest(paths.program).read_text(encoding='utf-8'))
     except (OSError, ValueError):
         pass
     prepared = [language for language, suffix in LANGUAGES.items()
@@ -1029,7 +1045,7 @@ def main() -> int:
         elif args.command == 'help':
             print(HELP)
         elif args.command == 'scan':
-            print(json.dumps(scan((args.folder or paths.program / 'discos').resolve()), ensure_ascii=False))
+            print(json.dumps(scan((args.folder or discs_folder(paths.program)).resolve()), ensure_ascii=False))
         elif args.command == 'language':
             print('OK', set_language(paths, args.language or 'es'))
         elif args.command == 'frontend':
@@ -1037,6 +1053,8 @@ def main() -> int:
             print('OK', flush=True)
         else:
             given = list(args.rom) + ([args.folder] if args.folder else [])
+            if not given and discs_folder(paths.program).is_dir():
+                given = [str(discs_folder(paths.program))]
             result = prepare(paths, given, args.language or saved_language(paths), args.force)
             say(100, 'Todo listo. Ya puedes jugar.')
             print('OK', json.dumps(result, ensure_ascii=False), flush=True)

@@ -1,0 +1,172 @@
+diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
+index a3c5278..e0938dd 100644
+--- a/launcher/src/sakura_setup.cpp
++++ b/launcher/src/sakura_setup.cpp
+@@ -4,6 +4,7 @@
+ #include "layout.h"
+ #include "ui.h"
+ #include <array>
++#include <cctype>
+ #include <fstream>
+ #include <memory>
+ #include <mutex>
+@@ -18,6 +19,7 @@ struct SetupState {
+     std::string message,progress;
+     Uint64 lastRead=0;
+     int language=0; // 0 Español, 1 English
++    bool autoTried=false; // (preparation started on its own once, when the discos folder already has the files)
+ };
+ std::shared_ptr<SetupState> state;
+ 
+@@ -31,6 +33,29 @@ std::filesystem::path LanguageDisc(const std::filesystem::path& program,int lang
+     return program/"game"/(language==0?"disc1-es":"disc1")/"game.cue";
+ }
+ bool Exists(const std::filesystem::path& file) {std::error_code error;return std::filesystem::is_regular_file(file,error);}
++// The player's "discos" folder: beside the program, or one level up when the program lives in the release's
++// app/ folder (the release root only shows SaturnTaisen.exe, discos/ and app/). Empty when there is none.
++std::filesystem::path DiscsFolder(const std::filesystem::path& program) {
++    std::error_code error;
++    auto here=program;
++    if(here.filename().empty())here=here.parent_path(); // (the program folder comes with a separator at its end)
++    for(const auto& folder:{here/"discos",here.parent_path()/"discos"})
++        if(std::filesystem::is_directory(folder,error))return folder;
++    return {};
++}
++// Whether the folder holds anything that looks like the player's discs or PC edition (two levels deep).
++bool HasGameFiles(const std::filesystem::path& folder) {
++    if(folder.empty())return false;
++    std::error_code error;
++    for(std::filesystem::recursive_directory_iterator it(folder,error),end;!error && it!=end;it.increment(error)) {
++        if(it.depth()>2) {it.disable_recursion_pending();continue;}
++        if(!it->is_regular_file(error))continue;
++        auto ext=it->path().extension().u8string();
++        for(auto& c:ext)c=static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
++        if(ext==u8".cue"||ext==u8".bin"||ext==u8".iso"||ext==u8".img"||ext==u8".mdf"||ext==u8".zip"||ext==u8".cab")return true;
++    }
++    return false;
++}
+ std::string Utf8(const std::filesystem::path& path) {const auto text=path.u8string();return std::string(text.begin(),text.end());}
+ // The helper's last "PROGRESO n text" or "ERROR text" line.
+ void ReadProgress(SetupState& s) {
+@@ -44,6 +69,30 @@ void ReadProgress(SetupState& s) {
+     const auto space=last.find(' ');
+     if(space!=std::string::npos)s.progress=last.substr(0,space)+" % · "+last.substr(space+1);
+ }
++// A thick progress bar in the launcher's strong colour while the helper works: the filled part follows the
++// helper's percentage and a light band sweeps across it all the time, so it is obvious that something is running.
++void WorkingBar(float width,float fraction) {
++    const auto& p=ui::palette();const float height=ui::px(14),round=height*.5f;
++    const ImVec2 at=ImGui::GetCursorScreenPos();
++    auto* draw=ImGui::GetWindowDrawList();
++    if(fraction<0)fraction=0;
++    if(fraction>1)fraction=1;
++    draw->AddRectFilled(at,at+ImVec2(width,height),ui::fade(p.primary,.18f),round);
++    const float filled=fraction<.03f?width*.03f:width*fraction;
++    draw->AddRectFilled(at,at+ImVec2(filled,height),p.primary,round);
++    // (the sweeping light, over the whole track)
++    const float cycle=static_cast<float>(SDL_GetTicks()%1400)/1400.0f,band=width*.18f;
++    const float x=-band+(width+band)*cycle;
++    draw->PushClipRect(at,at+ImVec2(width,height),true);
++    draw->AddRectFilledMultiColor(at+ImVec2(x,0),at+ImVec2(x+band*.5f,height),IM_COL32(255,255,255,0),IM_COL32(255,255,255,110),
++                                  IM_COL32(255,255,255,110),IM_COL32(255,255,255,0));
++    draw->AddRectFilledMultiColor(at+ImVec2(x+band*.5f,0),at+ImVec2(x+band,height),IM_COL32(255,255,255,110),IM_COL32(255,255,255,0),
++                                  IM_COL32(255,255,255,0),IM_COL32(255,255,255,110));
++    draw->PopClipRect();
++    draw->AddRect(at,at+ImVec2(width,height),p.primary,round,ui::px(1.2f));
++    ImGui::Dummy(ImVec2(width,height));
++    ui::request_frames(2); // (keep drawing while it works, not only on input)
++}
+ // A round "bubble" switch: small capitals over its value, tinted while on. Its words always fit: the value
+ // takes a smaller size before it would be cut.
+ bool Bubble(const char* id,const char* title,const char* value,bool on,float width,bool enabled) {
+@@ -121,7 +170,9 @@ void DrawSakuraSetup(launcher::PageContext& page) {
+     const bool english=Exists(LanguageDisc(page.program_folder,1)),spanish=Exists(LanguageDisc(page.program_folder,0));
+     const bool pack=Exists(page.program_folder/"hd-resources"/"hd-pack.stfp") || !page.prefs.get("sakura","pc_assets").empty();
+     std::error_code ignored;
+-    const bool folder=std::filesystem::is_directory(page.program_folder/"discos",ignored);
++    (void)ignored;
++    const auto discs=DiscsFolder(page.program_folder);
++    const bool folder=!discs.empty();
+     const bool locked=running || dialog || page.playing;
+     const auto& p=ui::palette();
+ 
+@@ -191,11 +242,14 @@ void DrawSakuraSetup(launcher::PageContext& page) {
+                 SDL_ShowOpenFileDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,filters,1,nullptr,false);
+             }
+             ImGui::SameLine(0,ui::px(6));
+-            if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,(s.source[0] || folder || done) && !locked)) {
++            // Nothing prepared yet and the player's files are already in "discos": start on its own, once.
++            bool start=false;
++            if(!s.autoTried && !done && !english && !spanish && !locked && !s.source[0] && HasGameFiles(discs)) {s.autoTried=true;start=true;}
++            if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,(s.source[0] || folder || done) && !locked) || start) {
+                 page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
+                 std::vector<std::string> args={"prepare","--language",s.language==0?"es":"en","--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
+                 if(s.source[0]) {args.push_back("--rom");args.push_back(s.source.data());}
+-                else if(folder) {args.push_back("--folder");args.push_back(Utf8(page.program_folder/"discos"));}
++                else if(folder) {args.push_back("--folder");args.push_back(Utf8(discs));}
+                 s.finished=false;s.error=false;s.message.clear();s.progress="0 % · Iniciando…";
+                 std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
+                 s.log=page.folder/"logs"/"preparar-juego.log";s.worker=std::make_unique<GameProcess>();
+@@ -208,7 +262,12 @@ void DrawSakuraSetup(launcher::PageContext& page) {
+         card.end();
+     }
+     ui::gap(8);
+-    if(running)ui::text(s.progress.c_str(),ui::Font::Regular,ui::size::kDetail,p.secondary,page.width);
++    if(running) {
++        const float percent=static_cast<float>(SDL_atoi(s.progress.c_str()));
++        WorkingBar(page.width,percent/100.0f);
++        ui::gap(6);
++        ui::text(s.progress.c_str(),ui::Font::Semibold,ui::size::kDetail,p.primary,page.width);
++    }
+     else if(!s.message.empty())ui::text(s.message.c_str(),ui::Font::Regular,ui::size::kDetail,s.error?p.danger:p.success,page.width);
+     else {
+         const std::string status=std::string("Inglés: ")+(english?"listo":"falta")+" · Español: "+(spanish?"listo":"falta")+" · Modo HD: "+(pack?"listo":"falta tu edición de PC");
+diff --git a/recomp-common/launcher/src/main.cpp b/recomp-common/launcher/src/main.cpp
+index ded4d1f..57d3e30 100644
+--- a/recomp-common/launcher/src/main.cpp
++++ b/recomp-common/launcher/src/main.cpp
+@@ -249,6 +249,36 @@ struct TouchScroll {
+ 
+ }  // namespace
+ 
++#ifdef _WIN32
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#include <windows.h>
++// The window's title bar in the launcher's own colours instead of the system grey/white (Windows 11; older
++// systems ignore the request and keep their usual bar). dwmapi is loaded on demand: nothing new to link.
++void match_title_bar(SDL_Window* window) {
++    HWND hwnd = static_cast<HWND>(SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr));
++    HMODULE dwm = hwnd ? LoadLibraryW(L"dwmapi.dll") : nullptr;
++    if (!dwm) {
++        return;
++    }
++    using SetAttribute = HRESULT(WINAPI*)(HWND, DWORD, LPCVOID, DWORD);
++    auto set = reinterpret_cast<SetAttribute>(reinterpret_cast<void*>(GetProcAddress(dwm, "DwmSetWindowAttribute")));
++    if (set) {
++        const ui::Palette& p = ui::palette();
++        auto colour = [](ImU32 c) -> DWORD { return c & 0x00FFFFFFu; };  // (ImGui's ABGR is Windows' 0x00BBGGRR)
++        const DWORD caption = colour(p.background), text = colour(p.text), border = colour(p.primary);
++        const DWORD corners = 2;  // (DWMWCP_ROUND)
++        set(hwnd, 35 /* DWMWA_CAPTION_COLOR */, &caption, sizeof caption);
++        set(hwnd, 36 /* DWMWA_TEXT_COLOR */, &text, sizeof text);
++        set(hwnd, 34 /* DWMWA_BORDER_COLOR */, &border, sizeof border);
++        set(hwnd, 33 /* DWMWA_WINDOW_CORNER_PREFERENCE */, &corners, sizeof corners);
++    }
++}
++#else
++void match_title_bar(SDL_Window*) {}
++#endif
++
+ int main(int argc, char** argv) {
+     std::string screenshot_prefix;
+     std::string press;
+@@ -383,6 +413,7 @@ int main(int argc, char** argv) {
+         app.set_page(page_id);
+     }
+     if (screenshot_prefix.empty()) {  // (pictures are taken with nothing put on the screen)
++        match_title_bar(window);
+         SDL_ShowWindow(window);
+         app.set_interactive();
+     }
