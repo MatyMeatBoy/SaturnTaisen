@@ -11,11 +11,52 @@
       "disc": 1,
       "resources": {
         "bodies": {
+          "1:/SAKURA1/NC10.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC10.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/NC11.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC11.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/NC12.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC12.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
           "1:/SAKURA1/NC20.BIN": {
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
             "native_face_fallback": true,
             "pc": "SAKURA1/NC/NC20.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/NC21.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC21.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC25.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC25.SPR",
             "runtime_evidence": "docs/research/saturn-bg-format.md",
             "status": "hd",
             "verified_in_game": true
@@ -28,22 +69,132 @@
             "runtime_evidence": "docs/research/saturn-bg-format.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/NC3004.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC3004.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC32.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC32.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC3250.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC3250.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/NC50.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC50.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/NC51.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC51.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC55.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC55.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/NC56.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC56.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC81.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC81.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC82.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC82.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/NC95.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC95.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC96.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/NC/NC96.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC97.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC97.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "film": {
           "1:/SAKURA4+23695360": {
             "alternate_cut": false,
             "association": "observed",
-            "evidence": "docs/PENDIENTES.md#list",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "fad": 11975,
             "pc": "MOVIE001",
+            "status": "hd"
+          },
+          "1:/SAKURA4+45410304": {
+            "alternate_cut": false,
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "fad": 22578,
+            "pc": "MOVIE002",
+            "status": "hd"
+          },
+          "1:/SAKURA4+56039424": {
+            "alternate_cut": false,
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "fad": 27768,
+            "pc": "MOVIE003",
             "status": "hd"
           }
         },
         "menus-hud": {},
         "portraits": {
           "0001": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -58,12 +209,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 0,
             "status": "hd"
           },
           "0002": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -78,12 +229,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 1,
             "status": "hd"
           },
           "0003": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -98,12 +249,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 2,
             "status": "hd"
           },
           "0004": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -116,12 +267,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 3,
             "status": "hd"
           },
           "0005": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -134,12 +285,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 4,
             "status": "hd"
           },
           "0006": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -152,12 +303,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 5,
             "status": "hd"
           },
           "0007": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -172,7 +323,7 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 6,
             "status": "hd"
           },
@@ -189,34 +340,34 @@
             "status": "hd"
           },
           "0009": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 8,
             "status": "hd"
           },
           "000a": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 9,
             "status": "hd"
           },
           "000b": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 10,
             "status": "hd"
           },
@@ -231,14 +382,14 @@
             "status": "hd"
           },
           "000f": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 14,
             "status": "hd"
           },
@@ -255,7 +406,7 @@
             "status": "hd"
           },
           "0013": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -268,12 +419,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 18,
             "status": "hd"
           },
           "0014": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -284,12 +435,12 @@
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 19,
             "status": "hd"
           },
           "0015": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -304,12 +455,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 20,
             "status": "hd"
           },
           "0016": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -320,12 +471,12 @@
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 21,
             "status": "hd"
           },
           "0017": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -338,12 +489,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 22,
             "status": "hd"
           },
           "0018": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -352,7 +503,7 @@
               "2:/SAKURA1/0101FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 23,
             "status": "hd"
           },
@@ -371,7 +522,7 @@
             "status": "hd"
           },
           "001a": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -384,27 +535,27 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 25,
             "status": "hd"
           },
           "001c": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 27,
             "status": "hd"
           },
           "001d": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 28,
             "status": "hd"
           },
@@ -431,17 +582,17 @@
             "status": "hd"
           },
           "0023": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 34,
             "status": "hd"
           },
           "0040": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -454,12 +605,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 63,
             "status": "hd"
           },
           "0041": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -470,7 +621,7 @@
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 64,
             "status": "hd"
           },
@@ -493,7 +644,7 @@
             "status": "hd"
           },
           "0043": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -504,7 +655,7 @@
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 66,
             "status": "hd"
           },
@@ -519,7 +670,7 @@
             "status": "hd"
           },
           "0045": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -530,12 +681,12 @@
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 68,
             "status": "hd"
           },
           "0047": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -546,7 +697,7 @@
               "2:/SAKURA1/0103FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 70,
             "status": "hd"
           },
@@ -561,14 +712,14 @@
             "status": "hd"
           },
           "004a": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 73,
             "status": "hd"
           },
@@ -623,7 +774,7 @@
             "status": "hd"
           },
           "0064": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -636,12 +787,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 99,
             "status": "hd"
           },
           "0065": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -656,7 +807,7 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 100,
             "status": "hd"
           },
@@ -737,14 +888,14 @@
             "status": "hd"
           },
           "006e": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 109,
             "status": "hd"
           },
@@ -845,7 +996,7 @@
             "status": "hd"
           },
           "0091": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -858,24 +1009,24 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 144,
             "status": "hd"
           },
           "0092": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0101FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 145,
             "status": "hd"
           },
           "0093": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -890,12 +1041,12 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 146,
             "status": "hd"
           },
           "0094": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -906,12 +1057,12 @@
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 147,
             "status": "hd"
           },
           "0095": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -920,17 +1071,17 @@
               "2:/SAKURA1/0101FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 148,
             "status": "hd"
           },
           "0096": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 149,
             "status": "hd"
           },
@@ -951,24 +1102,24 @@
             "status": "hd"
           },
           "009b": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 154,
             "status": "hd"
           },
           "009c": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 155,
             "status": "hd"
           },
@@ -1110,7 +1261,7 @@
             "status": "hd"
           },
           "00e2": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -1123,24 +1274,24 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 225,
             "status": "hd"
           },
           "00e3": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0101FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 226,
             "status": "hd"
           },
           "00e4": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -1153,17 +1304,17 @@
               "2:/SAKURA1/0103FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 227,
             "status": "hd"
           },
           "00e5": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 228,
             "status": "hd"
           },
@@ -1188,14 +1339,14 @@
             "status": "hd"
           },
           "00e9": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0108FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 232,
             "status": "hd"
           },
@@ -1268,7 +1419,7 @@
             "status": "hd"
           },
           "0134": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -1279,7 +1430,7 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 307,
             "status": "hd"
           },
@@ -1294,7 +1445,7 @@
             "status": "hd"
           },
           "0136": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "1:/SAKURA1/0101FCE.BIN",
@@ -1303,7 +1454,7 @@
               "2:/SAKURA1/0101FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 309,
             "status": "hd"
           },
@@ -1330,7 +1481,7 @@
             "status": "hd"
           },
           "013a": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0101FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
@@ -1339,7 +1490,7 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 313,
             "status": "hd"
           },
@@ -1356,12 +1507,12 @@
             "status": "hd"
           },
           "013c": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0101FCE.BIN",
               "2:/SAKURA1/0101FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 315,
             "status": "hd"
           },
@@ -1388,7 +1539,7 @@
             "status": "hd"
           },
           "0142": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0101FCE.BIN",
               "1:/SAKURA1/0108FCE.BIN",
@@ -1397,7 +1548,7 @@
               "2:/SAKURA1/0108FCE.BIN",
               "2:/SAKURA1/0109FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 321,
             "status": "hd"
           },
@@ -1412,72 +1563,72 @@
             "status": "hd"
           },
           "0148": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 327,
             "status": "hd"
           },
           "0149": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 328,
             "status": "hd"
           },
           "015e": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 349,
             "status": "hd"
           },
           "015f": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 350,
             "status": "hd"
           },
           "0161": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 352,
             "status": "hd"
           },
           "0163": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 354,
             "status": "hd"
           },
           "0166": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 357,
             "status": "hd"
           },
@@ -1492,12 +1643,12 @@
             "status": "hd"
           },
           "0168": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 359,
             "status": "hd"
           },
@@ -1521,22 +1672,22 @@
             "status": "unpaired"
           },
           "0176": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 373,
             "status": "hd"
           },
           "0177": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 374,
             "status": "hd"
           },
@@ -1551,42 +1702,42 @@
             "status": "hd"
           },
           "0179": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 376,
             "status": "hd"
           },
           "017a": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 377,
             "status": "hd"
           },
           "017b": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 378,
             "status": "hd"
           },
           "017c": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0100FCE.BIN",
               "2:/SAKURA1/0100FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc_index": 379,
             "status": "hd"
           },
@@ -1625,6 +1776,13 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1002.BIN": {
+            "association": "observed",
+            "cold_run_frame": 74500,
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1002.SPR",
+            "status": "hd"
+          },
           "1:/SAKURA1/BG1006.BIN": {
             "association": "observed",
             "cold_run_frame": 29500,
@@ -1633,6 +1791,13 @@
             "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1007.BIN": {
+            "association": "observed",
+            "cold_run_frame": 77500,
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1007.SPR",
+            "status": "hd"
           },
           "1:/SAKURA1/BG1011.BIN": {
             "association": "observed",
@@ -1658,6 +1823,19 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1021.BIN": {
+            "association": "observed",
+            "cold_run_frame": 59750,
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1021.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1030.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1030.SPR",
+            "status": "hd"
+          },
           "1:/SAKURA1/BG1045.BIN": {
             "association": "observed",
             "evidence": "docs/research/coverage-campaign-v026.md",
@@ -1666,11 +1844,44 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1046.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1046.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1058.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1058.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1070.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1070.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1116.BIN": {
+            "association": "observed",
+            "cold_run_frame": 135500,
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1116.SPR",
+            "status": "hd"
+          },
           "1:/SAKURA1/BG1119.BIN": {
             "association": "observed",
             "cold_run_frame": 118250,
-            "evidence": "docs/research/bg-matching-progress.md",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/BG/BG1119.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1193.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1193.SPR",
             "status": "hd"
           },
           "1:/SAKURA1/BG1209.BIN": {
@@ -1682,6 +1893,27 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1216.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG1216.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2034.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG2034.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG2039.BIN": {
+            "association": "observed",
+            "cold_run_frame": 143250,
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG2039.SPR",
+            "status": "hd"
+          },
           "1:/SAKURA1/BG2159.BIN": {
             "association": "observed",
             "evidence": "docs/research/coverage-campaign-v026.md",
@@ -1689,6 +1921,12 @@
             "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2173.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG2173.SPR",
+            "status": "hd"
           },
           "1:/SAKURA1/BG2248.BIN": {
             "association": "observed",
@@ -1714,6 +1952,12 @@
             "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2535.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "pc": "SAKURA1/BG/BG2535.SPR",
+            "status": "hd"
           },
           "1:/SAKURA1/IC01.BIN": {
             "association": "observed",
@@ -2200,28 +2444,6 @@
   },
   "unassigned": {
     "bodies": {
-      "1:/SAKURA1/NC10.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC10.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
-      },
-      "1:/SAKURA1/NC11.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC11.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
-      },
-      "1:/SAKURA1/NC12.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC12.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "1:/SAKURA1/NC13.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC13.SPR",
@@ -2246,12 +2468,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "1:/SAKURA1/NC21.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC21.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "1:/SAKURA1/NC22.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC22.SPR",
@@ -2269,14 +2485,6 @@
         "pc": "SAKURA1/NC/NC24.SPR",
         "status": "hd",
         "verified_in_game": false
-      },
-      "1:/SAKURA1/NC25.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC25.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
       },
       "1:/SAKURA1/NC26.BIN": {
         "association": "unknown",
@@ -2311,12 +2519,6 @@
       "1:/SAKURA1/NC3003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3003.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC3004.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC3004.SPR",
         "status": "hd",
         "verified_in_game": false
       },
@@ -2596,12 +2798,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/NC32.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC32.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "1:/SAKURA1/NC3210.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3210.SPR",
@@ -2613,14 +2809,6 @@
         "pc": "SAKURA1/NC/NC3222.SPR",
         "status": "hd",
         "verified_in_game": false
-      },
-      "1:/SAKURA1/NC3250.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC3250.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
       },
       "1:/SAKURA1/NC3254.BIN": {
         "association": "unknown",
@@ -2846,20 +3034,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "1:/SAKURA1/NC50.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC50.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
-      },
-      "1:/SAKURA1/NC51.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC51.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "1:/SAKURA1/NC52.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC52.SPR",
@@ -2875,20 +3049,6 @@
       "1:/SAKURA1/NC54.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC54.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC55.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC55.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
-      },
-      "1:/SAKURA1/NC56.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC56.SPR",
         "status": "hd",
         "verified_in_game": false
       },
@@ -2970,20 +3130,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "1:/SAKURA1/NC81.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC81.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC82.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC82.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
-      },
       "1:/SAKURA1/NC83.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC83.SPR",
@@ -3017,26 +3163,6 @@
         "pc": "SAKURA1/NC/NC94.SPR",
         "status": "hd",
         "verified_in_game": false
-      },
-      "1:/SAKURA1/NC95.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC95.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC96.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC96.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC97.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC97.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd",
-        "verified_in_game": true
       },
       "1:/SAKURA1/NC98.BIN": {
         "association": "unknown",
@@ -4082,20 +4208,6 @@
         "association": "unknown",
         "fad": 121427,
         "pc": "MOVIE030",
-        "status": "hd"
-      },
-      "1:/SAKURA4+45410304": {
-        "alternate_cut": false,
-        "association": "unknown",
-        "fad": 22578,
-        "pc": "MOVIE002",
-        "status": "hd"
-      },
-      "1:/SAKURA4+56039424": {
-        "alternate_cut": false,
-        "association": "unknown",
-        "fad": 27768,
-        "pc": "MOVIE003",
         "status": "hd"
       },
       "1:/SAKURA4+59686912": {
@@ -6284,12 +6396,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/BG1002.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 74500,
-        "pc": "SAKURA1/BG/BG1002.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1003.SPR",
@@ -6303,12 +6409,6 @@
       "1:/SAKURA1/BG1005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1005.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1007.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 77500,
-        "pc": "SAKURA1/BG/BG1007.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1008.BIN": {
@@ -6361,12 +6461,6 @@
         "pc": "SAKURA1/BG/BG1020.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1021.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 59750,
-        "pc": "SAKURA1/BG/BG1021.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1022.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1022.SPR",
@@ -6405,11 +6499,6 @@
       "1:/SAKURA1/BG1029.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1029.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1030.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1030.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1031.BIN": {
@@ -6482,11 +6571,6 @@
         "pc": "SAKURA1/BG/BG1044.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1046.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1046.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1047.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1047.SPR",
@@ -6542,11 +6626,6 @@
         "pc": "SAKURA1/BG/BG1057.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1058.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1058.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1059.SPR",
@@ -6600,11 +6679,6 @@
       "1:/SAKURA1/BG1069.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1069.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1070.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1070.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1071.BIN": {
@@ -6831,12 +6905,6 @@
       "1:/SAKURA1/BG1115.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1115.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1116.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 135500,
-        "pc": "SAKURA1/BG/BG1116.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1117.BIN": {
@@ -7068,11 +7136,6 @@
         "pc": "SAKURA1/BG/BG1185.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1193.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1193.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1194.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1194.SPR",
@@ -7145,11 +7208,6 @@
       "1:/SAKURA1/BG1213.BIN": {
         "association": "unknown",
         "status": "unpaired"
-      },
-      "1:/SAKURA1/BG1216.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1216.SPR",
-        "status": "hd"
       },
       "1:/SAKURA1/BG1217.BIN": {
         "association": "unknown",
@@ -7902,11 +7960,6 @@
         "pc": "SAKURA1/BG/BG2033.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG2034.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2034.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG2035.BIN": {
         "association": "unknown",
         "status": "unpaired"
@@ -7924,12 +7977,6 @@
       "1:/SAKURA1/BG2038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2039.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 143250,
-        "pc": "SAKURA1/BG/BG2039.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2040.BIN": {
@@ -8512,11 +8559,6 @@
         "pc": "SAKURA1/BG/BG2172.SPR",
         "reason": "size [288, 280], the runtime draws 288x144 pictures only",
         "status": "unsupported-size"
-      },
-      "1:/SAKURA1/BG2173.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2173.SPR",
-        "status": "hd"
       },
       "1:/SAKURA1/BG2174.BIN": {
         "association": "unknown",
@@ -9114,11 +9156,6 @@
       "1:/SAKURA1/BG2534.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2534.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2535.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2535.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG3012.BIN": {
