@@ -42,12 +42,48 @@ local coordinate. VDP1 VRAM at SRCA × 8 = 0x5C280 is byte-identical to the
 exact 512 palette bytes, matching table fingerprint 994AF50BC61B12E6.
 T108 has a 224×224 PC counterpart for this card.
 
-An earlier item-menu state can contain the same texture and palette with
-no active 112×112 command. Bind any replacement to the presented sprite
-command and preserve the card rectangle, dialogue and borders.
-This is one positive runtime witness. A second approved card, replacement
-drawing, fallback and guest parity with the replacement remain open.
+The menu before selection can retain the texture and palette with no active
+112×112 command. Patch 0090 requires the approved command and matching whole
+texture and palette fingerprints. It tracks actual VDP1 writes on each
+framebuffer and checks the card against VDP2 scanout. Zero-indexed texels,
+pixels covered by later commands, and pixels won by other layers stay native.
+Unsupported blends, clipped draw targets, missing art, and Original mode use
+the native presentation. The 38 approved Saturn texture and palette pairs
+were identical on both prepared discs. All 38 paired PC subimages decoded to
+opaque 224×224 pictures with the SHA-256 recorded by T108. The runtime table
+can be regenerated with this command.
 
+```text
+python tools/gen_item_table.py config/hd-item-map.json item_card_table.h --textures config/hd-item-texture-fingerprints.json
+```
+
+#### Runtime evidence
+
+The letter was replayed from `options-nav.state` using the inputs above.
+At 1920×1080 the approved viewport placed it at (680,104), scaled from 112×112
+to 560×560. All 287,325 destination pixels belonging to visible card texels
+matched the PC source. The 26,275 other pixels inside the rectangle and the
+entire surrounding frame matched the same runtime with the PC file absent.
+Preselection captures also matched.
+
+A second letter replay and the Jean-Paul replay both start from the legitimate
+`leave-dressing.state` (SHA-256 `4784c3eb1643676b39abb0b0bcc01092a782e5fefedf5d728a8041d70a4b4d62`),
+the point after collecting the bear and leaving the dressing room. Both re-enter
+by holding Down on frames 20–25, pressing A on 45–52, and opening inventory with
+Start on 700–707. The remaining inputs and observed results are:
+
+| Case | Input after opening inventory | Frame 1000 |
+| --- | --- | --- |
+| ITEM07 with cursor | Up+Left 810–827, Left 828–841, A 890–897, Right 930–954 | HD color replaces 280,575 destination pixels. All 171 cursor-covered native texels and 1,051 transparent texels retain their original RGB blocks. No RGB difference extends past the card rectangle. |
+| ITEM12, excluded bear | Up+Left 810–827, A 890–897 | Fully native. Active command 0x5C0 uses the same geometry and mode as ITEM07. Texture FNV `2E3976D6862A7486`, palette FNV `235B09AEB829FB4C`. The PC asset is an icon-only match. |
+
+Strict-native windowed runs compared all 190 guest hashes of the first letter
+route and all 1,010 guest hashes of each dressing-room route. Across the relevant
+runs, the Original viewport and ITEM12 Enhanced viewport matched the previous
+runtime pixel for pixel, and the ITEM07 asset-absent Enhanced viewport matched
+it as well. Every run reported zero interpreted blocks. The other 37 approved
+cards have offline evidence and still need direct in-game witnesses. There was
+no release package change.
 
 ## T110 offline geometry and palette review
 

@@ -33,6 +33,27 @@ class ItemTable(unittest.TestCase):
                 changed = dict(reviewed, **{changed_field: value})
                 self.assertEqual(g.build_rows({'pairs': [changed]}, review), [])
 
+    def test_runtime_table_matches_the_patch(self):
+        data = json.loads((ROOT / 'config/hd-item-map.json').read_text(encoding='utf-8'))
+        review = json.loads((ROOT / 'config/hd-item-review.json').read_text(encoding='utf-8'))['pairs']
+        textures = json.loads((ROOT / 'config/hd-item-texture-fingerprints.json').read_text(encoding='utf-8'))
+        rows = g.build_rows(data, review)
+        self.assertEqual(len(rows), 38)
+        self.assertNotIn('235B09AEB829FB4C', textures)  # ITEM12 is an icon-only match
+        runtime_header = g.render_runtime(rows, textures)
+        patch, = (ROOT / 'patches').glob('*-sakura-hd-inventory-cards.patch')
+        section = patch.read_text(encoding='utf-8').split('diff --git a/port/item_card_table.h ', 1)[1]
+        section = section.split('diff --git ', 1)[0]
+        added = [line[1:] for line in section.splitlines() if line.startswith('+') and not line.startswith('+++')]
+        self.assertEqual(added, runtime_header.splitlines())
+
+    def test_runtime_table_rejects_mismatched_and_duplicate_fingerprints(self):
+        rows = [('AA', ('A.SPR', 0)), ('BB', ('B.SPR', 0))]
+        with self.assertRaises(ValueError):
+            g.render_runtime(rows, {'AA': '0000000000000001'})
+        with self.assertRaises(ValueError):
+            g.render_runtime(rows, {'AA': '0000000000000001', 'BB': '0000000000000001'})
+
     def test_render_cli_and_real_map(self):
         with tempfile.TemporaryDirectory() as d:
             out = Path(d) / 'item.h'

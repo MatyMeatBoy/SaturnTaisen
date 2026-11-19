@@ -39,6 +39,13 @@ class IntegratePrsTests(unittest.TestCase):
         merged, _ = ip.merge_patch_lists(['patches/0001-a.patch', 'patches/0002-m.patch'], branch)
         self.assertEqual(len({ip.patch_number(p) for p in merged}), len(merged))
 
+    def test_lower_number_than_main_is_renumbered_after_it(self):
+        main = ['patches/0001-a.patch', 'patches/0005-m.patch']
+        branch = ['patches/0001-a.patch', 'patches/0003-mine.patch']
+        merged, renames = ip.merge_patch_lists(main, branch)
+        self.assertEqual(merged[-1], 'patches/0006-mine.patch')
+        self.assertEqual(renames, {'patches/0003-mine.patch': 'patches/0006-mine.patch'})
+
 
 if __name__ == '__main__':
     unittest.main()
