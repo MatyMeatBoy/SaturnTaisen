@@ -42,7 +42,9 @@ int main() {
     frame[0]=0;
     pixels.fill(0xFF0000F8);
     assert(MatchPortraitVisibility(frame,palette,pixels,320,224,16,160,whiteWeights)==0);
-    for(uint8_t weight:{5,15,25}) {
+    assert(!port::PortraitWhiteWeight(33) && !port::PortraitWhiteWeight(255));
+    for(int fade=1;fade<=32;++fade) { // every step of the Saturn fade, not only 5/15/25
+        const uint8_t weight=uint8_t(fade);
         const auto channel=uint32_t((248*weight)>>5);
         const uint32_t mixed=0xFF0000F8|(channel<<8)|(channel<<16);
         for(int row=0;row<48;++row)for(int column=0;column<40;++column) {

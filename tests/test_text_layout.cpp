@@ -59,6 +59,8 @@ int main(int argc,char** argv) {
     assert(std::abs(1*natural.scale+natural.offsetX)<0.0001f);
     assert(std::abs(3*natural.scale+natural.offsetY-6)<0.0001f);
     assert(9*natural.scale<=11*3);
+    // Letters keep a visible gap inside the 8-pixel cell instead of filling it.
+    assert(7.5f*natural.scale<8*3*0.95f);
     // Reserve three native pixels above the inner bottom frame, even for
     // descenders on the fourth line. Offset is fixed before any text reveals.
     for(int scale:{1,3,6,8}) {
