@@ -144,6 +144,7 @@ SCENE_DRAWS = {
     BBG204_INSET: (4, BBG204_REPORT),
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, BODY_REPORT) for number in (1011, 1012, 1017)},
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, CAMPAIGN_REPORT) for number in (1001, 1006, 1045, 1209, 2159, 2250, 2251)},
+    (1, '/SAKURA1/BG1021.BIN'): (1, 'docs/research/scene-spot-check.md#bg1021-on-disc-1'),
     (1, '/SAKURA1/BG1119.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (1, '/SAKURA1/BG1216.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
@@ -525,6 +526,9 @@ def build(root, index_dir, portrait_audit):
                 row['verified_in_game'] = disc == 1
                 if disc == 1:
                     row['runtime_evidence'] = 'docs/research/ic01-hd-intermission.md'
+            elif (disc, path) == (1, '/SAKURA1/IC0501.BIN'):
+                row.update(status='hd', verified_in_game=True,
+                           runtime_evidence='docs/research/ic0501-intermission-witness.md#enhanced-presentation')
             else:
                 row['reason'] = ('no saved state or route reaches this intermission, so its palette key, '
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')

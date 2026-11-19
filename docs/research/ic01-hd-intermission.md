@@ -14,7 +14,7 @@ The IC catalog was rechecked against both discs and the extracted PC directory. 
 
 ## Other IC identities (TP1, 2026-11-19): not wired, and why
 
-The later [IC0501 witness](ic0501-intermission-witness.md) reaches the Chapter 5 intermission naturally on disc 1. Its native plate, menu and fade are now documented.
+The later [IC0501 witness](ic0501-intermission-witness.md) reaches the Chapter 5 intermission naturally on disc 1. Its [HD draw and fades](ic0501-intermission-witness.md#enhanced-presentation) are verified separately.
 
 The pairs for IC02, IC03, IC04, IC0501, IC0502, IC06-IC09 and IC1001-IC1006 are unchanged in `config/hd-screen-map.json` (palette fingerprints and PC counterparts are listed there). They were not wired in this pass because nothing could be witnessed:
 

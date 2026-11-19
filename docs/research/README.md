@@ -133,7 +133,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [EVE0116 tactical inset](eve0116-tactical-inset.md): disc-1 episode-1 tactical close-up in HD with 1440p verification.
 - [EVE0118 tactical inset](eve0118-tactical-inset.md): disc-1 farewell picture in HD with 1440p verification.
 - [IC01 HD intermission](ic01-hd-intermission.md) — Verified Chapter 1 intermission backdrop.
-- [IC0501 intermission witness](ic0501-intermission-witness.md) — Native Chapter 5 menu, emblem and floral fade.
+- [IC0501 intermission witness](ic0501-intermission-witness.md) — Chapter 5 menu, emblem and both floral fades at 1440p, with verified Enhanced substitution.
 - [Jumping to a chapter or scene](scene-jump.md) (test tool only): Continue from a copied save, states along the way, random exploration; what is not done.
 - [HD chapter 1 report](hd-chapter-1.md): what chapter 1 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 2 report](hd-chapter-2.md): what chapter 2 shows per resource class, its status, ranked next actions and what needs the owner's discs.
