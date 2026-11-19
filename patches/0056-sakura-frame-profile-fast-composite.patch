@@ -1,0 +1,258 @@
+diff --git a/machine/machine.cpp b/machine/machine.cpp
+index 1673689..65e0445 100644
+--- a/machine/machine.cpp
++++ b/machine/machine.cpp
+@@ -8,6 +8,7 @@
+ #include <cstdlib>
+ #include <cstring>
+ #include <ctime>
++#include <chrono>
+ 
+ namespace satrecomp::machine {
+ 
+@@ -107,6 +108,15 @@ void Machine::SetClock(bool dots352) {
+     m_clock = dots352 ? 28636364 : 26846591; // (39.375 MHz x 8/11, or x 120/176)
+ }
+ 
++PartTimes g_partTimes{std::getenv("SATRECOMP_FRAME_PROFILE") != nullptr};
++namespace {
++struct PartTimer {
++    uint64_t* total;std::chrono::steady_clock::time_point start;
++    explicit PartTimer(uint64_t& into):total(g_partTimes.on?&into:nullptr) {if(total)start=std::chrono::steady_clock::now();}
++    ~PartTimer() {if(total)*total+=uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count());}
++};
++}
++
+ void Machine::RunFrame() {
+     m_frameDone = false;
+     while (!m_frameDone) {
+@@ -128,6 +138,7 @@ void Machine::Run() {
+     uint64 executed = m_masterSpillover;
+     m_masterSpillover = 0;
+     if (cycles > 0) {
++        PartTimer cpuTimer(g_partTimes.cpu);
+         if (slaveEnabled) {
+             uint64 slaveCycles = m_slaveSpillover;
+             do {
+@@ -154,9 +165,11 @@ void Machine::Run() {
+     m_now += executed;
+ 
+     while (m_vdp.phaseDue <= m_now) {
++        PartTimer vdpTimer(g_partTimes.vdp);
+         VdpPhase();
+     }
+     while (m_sampleDue <= m_now) {
++        PartTimer soundTimer(g_partTimes.sound);
+         SoundSample();
+     }
+     if (m_smpc.commandDue && m_smpc.commandDue <= m_now) {
+diff --git a/machine/machine.h b/machine/machine.h
+index ad74b42..b5aae70 100644
+--- a/machine/machine.h
++++ b/machine/machine.h
+@@ -19,10 +19,16 @@
+ #include <array>
+ #include <functional>
+ #include <memory>
++#include <cstdint>
+ #include <vector>
+ 
+ namespace satrecomp::machine {
+ 
++// SATRECOMP_FRAME_PROFILE: nanoseconds spent per part of the machine, added up until the frontend reads and
++// clears them once a frame (port/frontend_sdl.cpp). Off, each part costs one branch.
++struct PartTimes {bool on=false;uint64_t cpu=0,sound=0,vdp=0;};
++extern PartTimes g_partTimes;
++
+ // The game disc, as far as the CD drive's registers need it
+ struct Disc {
+     struct Track {
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 8dd79e5..c95cb9e 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -34,12 +34,46 @@
+ #include <SDL3/SDL.h>
+ 
+ #include <algorithm>
++#ifdef SATRECOMP_OWN_MACHINE
++#include "../machine/machine.h"
++#endif
+ #include <cmath>
+ #include <functional>
+ #include <string>
+ 
+ namespace port {
+ 
++// SATRECOMP_FRAME_PROFILE=1: where a frame's time goes (emulation, presentation, HD text, present), printed at
++// exit as average and 95th percentile in milliseconds. Off, it costs one branch per section.
++namespace {
++struct FrameProfile {
++    struct Section {const char* name;std::vector<float> ms;};
++    bool on=std::getenv("SATRECOMP_FRAME_PROFILE")!=nullptr;
++    Section run{"emulation"},cpu{"  sh-2 cpus"},sound{"  sound (scsp+68k)"},vdp{"  video (vdp phases)"},
++            present{"presentation"},decor{"  frame decoration"},hdText{"  hd text scan"},early{"  text + tactical"},
++            backdrop{"  backdrop + composite"},ui{"  hd text drawing"},flip{"  render present"};
++    uint64_t mark=0;
++    // (the time since the last mark goes to `section`)
++    void Mark(Section& section) {if(!on)return;const uint64_t now=SDL_GetTicksNS();if(mark)section.ms.push_back(float(now-mark)/1e6f);mark=now;}
++    void Report() {
++        if(!on)return;
++        for(Section* one:{&run,&cpu,&sound,&vdp,&present,&decor,&hdText,&early,&backdrop,&ui,&flip}) {
++            if(one->ms.empty())continue;
++            std::vector<float> v=one->ms;std::sort(v.begin(),v.end());
++            double sum=0;for(float x:v)sum+=x;
++            fprintf(stderr,"frame profile: %-20s n=%zu avg=%.3f ms p95=%.3f ms max=%.3f ms\n",one->name,v.size(),sum/v.size(),
++                    v[std::min(v.size()-1,v.size()*95/100)],v.back());
++        }
++    }
++};
++FrameProfile frameProfile;
++struct ProfileScope {
++    FrameProfile::Section* section;uint64_t start;
++    explicit ProfileScope(FrameProfile::Section& one):section(frameProfile.on?&one:nullptr),start(section?SDL_GetTicksNS():0) {}
++    ~ProfileScope() {if(section)section->ms.push_back(float(SDL_GetTicksNS()-start)/1e6f);}
++};
++}
++
+ namespace {
+ 
+     void DrawSakuraFrame(SDL_Renderer* renderer, int width, int height) {
+@@ -516,17 +550,21 @@ int RunWindowed(Port &port) {
+     };
+     // The software picture through the SDL renderer, fitted as the Display page says
+     auto showSoftware = [&]() {
++        ProfileScope presentScope(frameProfile.present);
+         if (!renderer) {
+             return;
+         }
++        frameProfile.mark=frameProfile.on?SDL_GetTicksNS():0;
+         int wide = 0, high = 0;
+         SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);
+         DrawSakuraFrame(renderer, wide, high);
++        frameProfile.Mark(frameProfile.decor);
+         const auto baseFit=FitInteger(wide,high,texW,texH);
+         auto textFit=baseFit;int textCropX=0,textCropY=0;
+         auto choiceTextFit=baseFit;int choiceCropX=0,choiceCropY=0;bool choiceViewport=false;
+         hdLines.clear();hdChoiceLines.clear();hdNative.clear();hdForeground.clear();hdErased.assign(320*224,0);
+         if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
++            ProfileScope hdTextScope(frameProfile.hdText);
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
+                 const auto* catalogRecord=port.dialogueCatalog?port.dialogueCatalog->Get(shownDialogue):nullptr;
+@@ -709,6 +747,7 @@ int RunWindowed(Port &port) {
+                 }
+             }
+         }
++        frameProfile.Mark(frameProfile.early);
+         SDL_Texture* floral=nullptr;const Backdrop* selectedBackdrop=nullptr;std::string screenBackdrop;bool anchoredBackdrop=false,mixedFloralAvailable=false;
+         std::vector<uint32_t> mapFadeRows;std::optional<MapCrossfade> mapFade;
+         if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+@@ -839,19 +878,47 @@ int RunWindowed(Port &port) {
+                    planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+                    size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
+                     if(sourcePixels.size()==320*224 && ResizePanelBuffer(pixels,size_t(fit.w)*fit.h)) {
+-                        bool hasMix=false;
+-                        for(int py=0;py<fit.h;py++)for(int px=0;px<fit.w;px++) {
+-                            const int sx=int(crop.x)+px/fit.scale,sy=int(crop.y)+py/fit.scale;
+-                            if(sx<0 || sx>=320 || sy<0 || sy>=224) {pixels[size_t(py)*fit.w+px]=0;continue;}
+-                            const size_t at=size_t(sy)*320+sx;
++                        // The same pixels as composing every window pixel, with the work done once per native pixel:
++                        // a native pixel either mixes with the backdrop (sampled per window pixel, as before) or is
++                        // copied as it is to its whole block. When no native pixel in view can mix, nothing is
++                        // drawn, as before (the layer is only drawn when something mixed).
++                        const auto recipeAt=[&](size_t at) -> const PanelMix& {
+                             const auto& baseRecipe=hdErased[at]==2?planes.glyphPlate[at].panelMix:(hdErased[at]?planes.underPanelMix[at]:planes.panelMix[at]);
+-                            const auto& recipe=solidRecipe?*solidRecipe:(hdErased[at] || baseRecipe.lowerWeight || planes.floralCoverMix.size()!=320*224?baseRecipe:planes.floralCoverMix[at]);
+-                            uint32_t pixel=solidRecipe?0xFF000000:sourcePixels[at];
+-                            if((pixel>>24) && recipe.lowerWeight)if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
+-                                    int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
+-                                pixel=CompositePanelPixel(recipe,*below,pixel);hasMix=true;
++                            return solidRecipe?*solidRecipe:(hdErased[at] || baseRecipe.lowerWeight || planes.floralCoverMix.size()!=320*224?baseRecipe:planes.floralCoverMix[at]);
++                        };
++                        const int scale=fit.scale,left=int(crop.x),top=int(crop.y);
++                        const int columns=(fit.w+scale-1)/scale,lines=(fit.h+scale-1)/scale;
++                        bool mayMix=false;
++                        for(int ly=0;ly<lines && !mayMix;ly++) {
++                            const int sy=top+ly;if(sy<0 || sy>=224)continue;
++                            for(int lx=0;lx<columns;lx++) {
++                                const int sx=left+lx;if(sx<0 || sx>=320)continue;
++                                const size_t at=size_t(sy)*320+sx;
++                                const uint32_t pixel=solidRecipe?0xFF000000:sourcePixels[at];
++                                if((pixel>>24) && recipeAt(at).lowerWeight) {mayMix=true;break;}
++                            }
++                        }
++                        bool hasMix=false;
++                        if(mayMix)for(int py=0;py<fit.h;py++) {
++                            const int sy=top+py/scale;
++                            uint32_t* row=pixels.data()+size_t(py)*fit.w;
++                            if(sy<0 || sy>=224) {std::fill_n(row,fit.w,0u);continue;}
++                            for(int px=0;px<fit.w;) {
++                                const int end=std::min(fit.w,(px/scale+1)*scale),sx=left+px/scale;
++                                if(sx<0 || sx>=320) {std::fill(row+px,row+end,0u);px=end;continue;}
++                                const size_t at=size_t(sy)*320+sx;
++                                const auto& recipe=recipeAt(at);
++                                const uint32_t source=solidRecipe?0xFF000000:sourcePixels[at];
++                                if(!(source>>24) || !recipe.lowerWeight) {std::fill(row+px,row+end,source);px=end;continue;}
++                                for(;px<end;px++) {
++                                    uint32_t pixel=source;
++                                    if(const auto below=SamplePanelBackdrop(selectedBackdrop->pixels,
++                                            int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,fit.x+px,fit.y+py)) {
++                                        pixel=CompositePanelPixel(recipe,*below,pixel);hasMix=true;
++                                    }
++                                    row[px]=pixel;
++                                }
+                             }
+-                            pixels[size_t(py)*fit.w+px]=pixel;
+                         }
+                         if(hasMix) {
+                             if(cachedWidth!=fit.w || cachedHeight!=fit.h) {
+@@ -1059,6 +1126,7 @@ int RunWindowed(Port &port) {
+             const SDL_FRect left{0,0,float(canvasLeft),float(high)},right{float(canvasLeft+canvasWidth),0,float(wide-canvasLeft-canvasWidth),float(high)};
+             SDL_RenderFillRect(renderer,&left);SDL_RenderFillRect(renderer,&right);
+         }
++        frameProfile.Mark(frameProfile.backdrop);
+         if(!choosing && !port.menu.IsOpen() && !hdLines.empty())
+             sakuraUi.GameText(hdLines,textFit.x,textFit.y,textFit.scale,textCropX,textCropY);
+         if(!choosing && !port.menu.IsOpen() && choiceViewport && !hdChoiceLines.empty())
+@@ -1075,7 +1143,10 @@ int RunWindowed(Port &port) {
+             }
+             windowShot.clear();
+         }
+-        if (SDL_RenderPresent(renderer) && !announcedReady) {
++        frameProfile.Mark(frameProfile.ui);
++        bool presented=false;
++        {ProfileScope flipScope(frameProfile.flip);presented=SDL_RenderPresent(renderer);}
++        if (presented && !announcedReady) {
+             announcedReady = recomp::PublishLaunchReady(port.opt.readyFile);
+         }
+     };
+@@ -1477,7 +1548,19 @@ int RunWindowed(Port &port) {
+         stepFrame = false;
+         if (runs) {
+             port.stepping = paused; // (a frame at a time: no run-ahead)
+-            port.RunFrame();
++            {
++                ProfileScope runScope(frameProfile.run);
++                port.RunFrame();
++            }
++#ifdef SATRECOMP_OWN_MACHINE
++            if (frameProfile.on) {
++                auto& parts = satrecomp::machine::g_partTimes;
++                frameProfile.cpu.ms.push_back(float(parts.cpu) / 1e6f);
++                frameProfile.sound.ms.push_back(float(parts.sound) / 1e6f);
++                frameProfile.vdp.ms.push_back(float(parts.vdp) / 1e6f);
++                parts.cpu = parts.sound = parts.vdp = 0;
++            }
++#endif
+         } else {
+             audio.pending.clear();
+         }
+@@ -1573,6 +1656,7 @@ int RunWindowed(Port &port) {
+         }
+     }
+ 
++    frameProfile.Report();
+     port.audioSink = nullptr;
+     if (audio.stream) {
+         SDL_DestroyAudioStream(audio.stream);

@@ -70,17 +70,25 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     tracked=set(subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0'))
     destination=destination.resolve()
     destination.mkdir(parents=True,exist_ok=False)
+    # The release root shows only what the player touches: SaturnTaisen.exe (a tiny static starter), discos/ for
+    # their files, LEEME.txt and recomp-launcher.json for frontends. Everything else lives in app/.
+    app=destination/'app';app.mkdir()
     build=Path(build_dir).resolve() if build_dir else owner/'local/build/sakura'
     executables={'sakura-launcher.exe':'SaturnTaisen.exe','sakura.exe':'sakura.exe',
                  'import-saves.exe':'import-saves.exe','preparar-juego.exe':'preparar-juego.exe'}
     for source,name in executables.items():
         selected=Path(runtime) if runtime is not None and source=='sakura.exe' else build/source
-        shutil.copy2(selected,destination/name)
+        shutil.copy2(selected,app/name)
     if controller_mapper is not None:
-        shutil.copy2(Path(controller_mapper),destination/'Mapear M30.exe')
+        shutil.copy2(Path(controller_mapper),app/'Mapear M30.exe')
     # Resolve the actual PE imports, including dependencies of toolchain DLLs.
     available={p.name.casefold():p for p in (toolchain/'bin').glob('*.dll')}
-    pending=list(destination.glob('*.exe'))
+    pending=list(app.glob('*.exe'))
+    # The root starter: no DLL beside it, so it is linked statically and must import system libraries only.
+    starter=destination/'SaturnTaisen.exe'
+    subprocess.run([str(toolchain/'bin/clang.exe'),'-O2','-static','-mwindows','-o',str(starter),str(ROOT/'tools/launcher_stub.c'),'-luser32'],
+                   env=dict(os.environ,PATH=str(toolchain/'bin')+os.pathsep+os.environ.get('PATH','')),check=True)
+    pending.append(starter)
     seen=set()
     copied=[]
     env=os.environ.copy()
@@ -97,16 +105,16 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
             seen.add(key)
             if key in available:
                 source=available[key]
-                target=destination/source.name
+                target=app/source.name
                 shutil.copy2(source,target)
                 pending.append(target)
                 copied.append(source.name)
             elif not (system/name).is_file() and not key.startswith(('api-ms-','ext-ms-')):
                 raise RuntimeError(f'Unresolved non-system DLL: {name}')
-    licenses=destination/'licenses'
+    licenses=app/'licenses'
     licenses.mkdir()
     for name in ['LICENSE','THIRD_PARTY_NOTICES.md','README.md','VERSION']:
-        shutil.copy2(ROOT/name,destination/name)
+        shutil.copy2(ROOT/name,app/name)
     for name in ['SDL3','zlib','libc++','libunwind','libiconv','compiler-rt','llvm-libs']:
         source=toolchain/'share/licenses'/name
         if source.is_dir():
@@ -123,7 +131,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
             raise RuntimeError(f'Missing required license: {source}')
         shutil.copy2(source,licenses/name)
     # Setup tools the helper runs on the player's PC, with their licenses.
-    helpers=destination/'herramientas';helpers.mkdir()
+    helpers=app/'herramientas';helpers.mkdir()
     for name,source,notice,licence in (
         ('xdelta3.exe',owner/'local/tools/xdelta3-3.2.2/xdelta3-3.2.2-windows-x86_64/xdelta3.exe','xdelta3-Apache-2.0.txt',owner/'local/licenses/xdelta3-LICENSE.txt'),
         ('unshield.exe',owner/'local/build/unshield/src/unshield.exe','unshield-MIT.txt',owner/'.research/upstream/twogood--unshield/LICENSE')):
@@ -132,7 +140,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         shutil.copy2(source,helpers/name);shutil.copy2(licence,licenses/notice)
     # Language patches: differences only, each pinned by parches.json. The video layer is a release asset.
     patch_manifest=json.loads((ROOT/'parches/parches.json').read_text(encoding='utf-8'))
-    patch_target=destination/'parches';patch_target.mkdir()
+    patch_target=app/'parches';patch_target.mkdir()
     allowed_patches={}
     for name in ('parches.json','CREDITOS.md'):shutil.copy2(ROOT/'parches'/name,patch_target/name)
     for record in patch_manifest['discs'].values():
@@ -144,7 +152,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
             shutil.copy2(source,patch_target/entry['patch']);allowed_patches['parches/'+entry['patch']]=entry['patch_sha256']
     shutil.copy2(ROOT/'recomp-launcher.json',destination/'recomp-launcher.json')
     inputs=destination/'discos';inputs.mkdir()
-    (inputs/'LEEME.txt').write_text('Copia aqui tus tres archivos y pulsa "Preparar" en el launcher:\n\n'
+    (inputs/'LEEME.txt').write_text('Copia aqui tus tres archivos y abre SaturnTaisen.exe: los reconoce y prepara el juego solo:\n\n'
         '  - Disco 1 de Sakura Taisen para Saturn (.cue con sus pistas)\n  - Disco 2 de Sakura Taisen para Saturn (.cue con sus pistas)\n'
         '  - Opcional, para el mod HD: la imagen del disco de la edicion de PC (.mdf o .iso)\n\n'
         'Tambien puedes elegirlos desde el launcher sin copiarlos. Tus archivos solo se leen.\n',encoding='ascii',newline='\r\n')
@@ -155,7 +163,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
                             'docs/superpowers/plans':['*.md'],
                             'docs':['PENDIENTES.md','HANDOFF.md','ESTADO_ACTUAL.md'],
                             'docs/research':['*.md','*.json'],'docs/releases':['*.md','*-validation.json']}.items():
-        target=destination/folder
+        target=app/folder
         target.mkdir(parents=True,exist_ok=True)
         for pattern in patterns:
             for source in (ROOT/folder).glob(pattern):
@@ -164,7 +172,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     art_source=ROOT/'assets/generated/backgrounds'
     if not art_source.is_dir():art_source=ROOT/'art/backgrounds'
     generated=generated_backgrounds(art_source)
-    art=destination/'art/backgrounds'
+    art=app/'art/backgrounds'
     art.mkdir(parents=True)
     allowed_art={}
     for name,source in generated.items():
@@ -175,57 +183,55 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         if source.is_file():shutil.copy2(source,art/name)
     pc_art_source=ROOT/'assets/generated/pc-backgrounds'
     if pc_art_source.is_dir():
-        pc_art=destination/'art/pc-backgrounds';pc_art.mkdir(parents=True)
+        pc_art=app/'art/pc-backgrounds';pc_art.mkdir(parents=True)
         for name,source in generated_backgrounds(pc_art_source,pc=True).items():
             shutil.copy2(source,pc_art/name);allowed_art['art/pc-backgrounds/'+name]=digest(source)
         shutil.copy2(pc_art_source/'provenance.json',pc_art/'provenance.json')
     screen_source=ROOT/'assets/generated/screen-backgrounds'
     if screen_source.is_dir():
-        screen_art=destination/'art/screen-backgrounds';screen_art.mkdir(parents=True)
+        screen_art=app/'art/screen-backgrounds';screen_art.mkdir(parents=True)
         for name,source in generated_backgrounds(screen_source,screen=True).items():
             shutil.copy2(source,screen_art/name);allowed_art['art/screen-backgrounds/'+name]=digest(source)
         shutil.copy2(screen_source/'provenance.json',screen_art/'provenance.json')
     tactical_source=ROOT/'assets/generated/tactical-extensions'
     if tactical_source.is_dir():
-        tactical_art=destination/'art/tactics';tactical_art.mkdir(parents=True)
+        tactical_art=app/'art/tactics';tactical_art.mkdir(parents=True)
         for name,source in generated_backgrounds(tactical_source,tactical=True).items():
             shutil.copy2(source,tactical_art/name);allowed_art['art/tactics/'+name]=digest(source)
         shutil.copy2(tactical_source/'provenance.json',tactical_art/'provenance.json')
     # One profile however the game is started: the launcher's own portable folder (user/SaturnTaisen). A profile an
     # earlier release kept directly in user/ is still used, so its saves and settings are not left behind.
-    (destination/'Jugar.bat').write_text('@echo off\nsetlocal\nif exist "%~dp0user\\launcher.ini" set "SATURN_TAISEN_FIRST_HOME=%~dp0user"\nstart "" /d "%~dp0" "%~dp0SaturnTaisen.exe"\n',encoding='ascii')
-    (destination/'Ver logs.bat').write_text('@echo off\nsetlocal\nset "LOGS=%~dp0user\\SaturnTaisen\\logs"\nif exist "%~dp0user\\launcher.ini" set "LOGS=%~dp0user\\logs"\nif not exist "%LOGS%" mkdir "%LOGS%"\nstart "" "%LOGS%"\n',encoding='ascii')
-    (destination/'portable.txt').write_text('',encoding='ascii')
+    (app/'portable.txt').write_text('',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
-    (destination/'LEEME.md').write_text(f'''# SaturnTaisen {version}
+    (destination/'LEEME.txt').write_text(f'''SaturnTaisen {version}
 
 Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Taisen para Saturn (Japón, `.cue` con sus pistas) y, si quieres el mod HD, la imagen del disco de la edición de PC (`.mdf` o `.iso`). Todo lo demás viene aquí: no hace falta instalar ni descargar nada.
 
 1. Descomprime la carpeta en un lugar donde puedas guardar archivos (unos 3 GB libres).
 2. Abre **SaturnTaisen.exe**.
-3. En **Preparar juego** elige tus tres archivos (o cópialos antes en la carpeta `discos`), elige idioma y pulsa **Preparar**. Tarda unos minutos y solo hay que hacerlo una vez.
+3. Copia antes tus tres archivos en la carpeta `discos`: el launcher los reconoce y prepara el juego solo (unos minutos, una sola vez). También puedes elegirlos en **Preparar juego**.
 4. Pulsa **Jugar**. F11 cambia pantalla completa; Esc/F1 o Start+Select abre los ajustes.
 
 **Idiomas.** «Inglés v0.1 Taisen» y «Español v0.1 Taisen» se aplican sobre una copia de tus discos; cada paso se comprueba con SHA-256 y tus archivos solo se leen. El idioma se cambia en el launcher al instante. Créditos de la traducción inglesa y detalle de las capas: `parches/CREDITOS.md`. En español siguen en inglés los rótulos de episodio, la pantalla LOADING, el menú de extras y los subtítulos de vídeo.
 
-**Mod HD.** Con la imagen de PC se preparan 19 fondos y los retratos HD emparejados; no se conserva ningún archivo original de PC, solo el pack preparado en `hd-resources`. Los cuerpos HD completos, vídeos e imágenes de escena de PC siguen en desarrollo.
+**Mod HD.** Con tu edición de PC se prepara una sola vez todo el material HD (imágenes de fondos, escenas, eventos, CG, mapas, unidades, personajes, menús y las películas) en `app/hd-resources`, solo en tu PC y nunca compartido. Hoy ya se ven 19 fondos y los retratos HD; el resto se irá activando en próximas versiones sin volver a preparar nada.
 
 **Presentación.** Escala entera sin suavizado. Original conserva la composición de Saturn; Mejorada recompone las escenas reconocidas hasta 16:9 y vuelve a la original cuando no reconoce la escena. Los fondos generados son preliminares.
 
 **Partidas.** Importa desde la sección Tus partidas: se crea una copia separada y los originales no se modifican.
 
-**Otros frontends.** `recomp-launcher.json` describe la entrada única (`SaturnTaisen.exe`) y la preparación por línea de comandos (`preparar-juego.exe`).
+**Otros frontends.** `recomp-launcher.json` describe la entrada única (`SaturnTaisen.exe`, el único programa de la carpeta) y la preparación por línea de comandos (`app/preparar-juego.exe`).
 
 Esta versión no certifica toda la campaña ni todos los mandos; el cambio automático de disco y RetroAchievements siguen pendientes. Consulta las notas de versión.
 
-`user/` contiene tus partidas y ajustes, y `game/` y `hd-resources/` lo ya preparado. No las borres al actualizar: puedes descomprimir una versión nueva encima y no se rehace nada que siga vigente.
+En la carpeta solo verás `SaturnTaisen.exe`, `discos` y `app`. Dentro de `app`, `user/` contiene tus partidas, ajustes y `logs/`, y `game/` y `hd-resources/` lo ya preparado. No las borres al actualizar: puedes descomprimir una versión nueva encima y no se rehace nada que siga vigente.
 ''',encoding='utf-8',newline='\n')
     forbidden={'.iso','.cue','.bin','.bup','.sro','.xdelta','.state','.png','.jpg','.wav'}
     files=[]
     for file in sorted(destination.rglob('*')):
         if not file.is_file():
             continue
-        relative=file.relative_to(destination).as_posix()
+        relative=file.relative_to(destination).as_posix().removeprefix('app/')  # (allow-lists name paths inside app/)
         generated_match=relative in allowed_art and digest(file)==allowed_art[relative]
         if allowed_patches.get(relative)==digest(file):generated_match=True
         if file.suffix.casefold() in forbidden and not generated_match:
@@ -236,7 +242,7 @@ Esta versión no certifica toda la campaña ni todos los mandos; el cambio autom
               'source_dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),
               'dlls':sorted(copied),'files':files,'game_assets_included':False,
               'generated_backgrounds':allowed_art}
-    (destination/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (app/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8',newline='\n')
     if archive:
         target=destination.parent/(destination.name+'.zip')
         with zipfile.ZipFile(target,'x',zipfile.ZIP_DEFLATED,compresslevel=7) as output:

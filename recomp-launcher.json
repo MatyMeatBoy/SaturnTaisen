@@ -3,23 +3,25 @@
   "convention": "https://www.reddit.com/r/decomps/ (recomp/decomp frontend standards open letter)",
   "application": "SaturnTaisen - Sakura Wars / Sakura Taisen (Sega Saturn)",
   "repo": "MatyMeatBoy/SaturnTaisen",
-  "platform": ["windows-x64"],
+  "platform": [
+    "windows-x64"
+  ],
   "portable": true,
   "single_entry_point": true,
   "primary_executable": "SaturnTaisen.exe",
   "internal_executables": [
     {
-      "file": "sakura.exe",
+      "file": "app/sakura.exe",
       "reason": "The recompiled game. Child process started by the primary executable with the player's disc, saves and settings; not a separate app, do not list or launch it directly from a frontend's game grid.",
       "launch_via": "SaturnTaisen.exe --no-launcher"
     },
     {
-      "file": "preparar-juego.exe",
+      "file": "app/preparar-juego.exe",
       "reason": "Setup helper started by the primary executable (its Preparar juego section and the --rom flag). Applies the bundled language layers to a copy of the player's discs and builds the HD pack.",
       "launch_via": "SaturnTaisen.exe --rom \"{rom}\""
     },
     {
-      "file": "import-saves.exe",
+      "file": "app/import-saves.exe",
       "reason": "Save importer started by the primary executable."
     }
   ],
@@ -32,11 +34,18 @@
   },
   "cli": {
     "--rom": "path (repeatable; user-supplied, never bundled): a Sakura Taisen Saturn disc as .cue with its tracks, .bin, .img, .iso or .zip (original Japanese GS-9037 V1.005, or already patched with the English translation v2.1), the PC edition (disc image .mdf/.iso, folder with its cabinets, or installed game folder), or a folder with any of them",
-    "--language": ["es", "en"],
+    "--language": [
+      "es",
+      "en"
+    ],
     "--no-launcher": "skip the launcher UI and start the game with the saved setup (alias: --play)",
     "--setup": "open the launcher's setup screen even when the game is ready",
     "--fullscreen": "start in fullscreen",
-    "--widescreen": ["off", "16:9", "fit"],
+    "--widescreen": [
+      "off",
+      "16:9",
+      "fit"
+    ],
     "--integration-info": "print this same launch surface plus the current setup state as machine-readable JSON",
     "--help": "human-readable help"
   },
@@ -52,8 +61,11 @@
     "Sakura Taisen disc 2 for Sega Saturn (Japan, GS-9037 V1.005), original or patched with the English translation v2.1",
     "Optional, for the HD mod: the PC edition (disc image, cabinets folder or installed game folder)"
   ],
-  "languages": ["es", "en"],
+  "languages": [
+    "es",
+    "en"
+  ],
   "writes_outside_own_folder": false,
   "no_network_required": true,
-  "notes": "No separate builder step and no extra downloads: every executable ships prebuilt in the release zip. The player's files are only read; prepared discs go to game/, the HD pack to hd-resources/ and settings and saves to user/ (portable.txt), all inside the extracted folder, so deleting that folder removes the whole install. Extracting a newer release over the folder keeps game/, hd-resources/ and user/, and nothing is rebuilt unless a language layer or the HD recipe changed. Setting SATURN_TAISEN_FIRST_HOME moves user/ elsewhere. Discs, BIOS and original game files are never bundled."
+  "notes": "No separate builder step and no extra downloads: every executable ships prebuilt in the release zip. The player's files are only read; the release root holds only SaturnTaisen.exe (a static window-subsystem starter that opens no console), discos/ and app/; prepared discs go to app/game/, the HD pack to app/hd-resources/ and settings and saves to app/user/ (portable.txt), all inside the extracted folder, so deleting that folder removes the whole install. Extracting a newer release over the folder keeps app/game/, app/hd-resources/ and app/user/, and nothing is rebuilt unless a language layer or the HD recipe changed. Setting SATURN_TAISEN_FIRST_HOME moves user/ elsewhere. Discs, BIOS and original game files are never bundled."
 }

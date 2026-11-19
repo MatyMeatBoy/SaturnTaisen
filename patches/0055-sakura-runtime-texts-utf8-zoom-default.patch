@@ -1,0 +1,70 @@
+diff --git a/port/main.cpp b/port/main.cpp
+index 1ba45a7..de6cd21 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -110,10 +110,10 @@ bool Movie::Save(const std::string &path) const {
+ static void RegisterPortFeatures() {
+     satrecomp::Game &game = satrecomp::TheGame();
+     game.features.push_back({"pad_profile", "Mandos", "Perfil de mando",
+-                             "AutomÃƒÆ’Ã‚Â¡tico reconoce M30 Bluetooth y 2.4G por nombre o identidad USB. Si XInput oculta el modelo, elige M30 manualmente. Tus asignaciones personalizadas tienen prioridad.",
+-                             0, {"AutomÃƒÆ’Ã‚Â¡tico", "EstÃƒÆ’Ã‚Â¡ndar SDL", "M30 / Saturn 6 botones"}});
++                             "Automático reconoce M30 Bluetooth y 2.4G por nombre o identidad USB. Si XInput oculta el modelo, elige M30 manualmente. Tus asignaciones personalizadas tienen prioridad.",
++                             0, {"Automático", "Estándar SDL", "M30 / Saturn 6 botones"}});
+     game.features.push_back({"run_ahead", "Juego", "Run-ahead",
+-                             "Anticipa uno o dos fotogramas para reducir la latencia de entrada. Aumenta el trabajo de CPU; desactÃƒÆ’Ã‚Â­valo si aparecen tirones.",
++                             "Anticipa uno o dos fotogramas para reducir la latencia de entrada. Aumenta el trabajo de CPU; desactívalo si aparecen tirones.",
+                              0, {"Desactivado", "1 fotograma", "2 fotogramas"}});
+     game.features.push_back({"widescreen", "Display", "Widescreen",
+                              "16:9: fights show more at the sides. The launcher's switch changes with it. Needs high resolution.",
+@@ -122,27 +122,27 @@ static void RegisterPortFeatures() {
+     // is how the port always drew it)
+     game.features.push_back({"display_scaling", "Pantalla", "Escala del juego",
+                              "Solo multiplicadores enteros, centrado y sin suavizado. El marco se adapta al espacio restante.",
+-                             0, {"Entera Ãƒâ€šÃ‚Â· automÃƒÆ’Ã‚Â¡tica"}});
+-    game.features.push_back({"display_shape", "Pantalla", "PÃƒÆ’Ã‚Â­xeles originales",
+-                             "Se conserva el tamaÃƒÆ’Ã‚Â±o relativo de los pÃƒÆ’Ã‚Â­xeles. Sin estiramiento fraccional.",
++                             0, {"Entera · automática"}});
++    game.features.push_back({"display_shape", "Pantalla", "Píxeles originales",
++                             "Se conserva el tamaño relativo de los píxeles. Sin estiramiento fraccional.",
+                              0, {"Original"}});
+-    game.features.push_back({"presentation_mode", "Pantalla", "PresentaciÃƒÆ’Ã‚Â³n",
+-                             "Original conserva la composiciÃƒÆ’Ã‚Â³n Saturn. Mejorado amplÃƒÆ’Ã‚Â­a escenas reconocidas sin deformar pÃƒÆ’Ã‚Â­xeles ni recortar texto.",
++    game.features.push_back({"presentation_mode", "Pantalla", "Presentación",
++                             "Original conserva la composición Saturn. Mejorado amplía escenas reconocidas sin deformar píxeles ni recortar texto.",
+                              0, {"Original (4:3)", "Mejorado (widescreen)"}});
+-    game.features.push_back({"scene_view", "Pantalla", "VisualizaciÃƒÆ’Ã‚Â³n de escena",
+-                             "Original mantiene imagen y diÃƒÆ’Ã‚Â¡logo juntos. Zoom amplÃƒÆ’Ã‚Â­a la imagen arriba y ajusta el diÃƒÆ’Ã‚Â¡logo con escalas enteras independientes en escenas mejoradas compatibles.",
+-                             0, {"Original", "Zoom"}});
+-    game.features.push_back({"text_style", "Pantalla", "Texto de diÃƒÆ’Ã‚Â¡logos",
+-                             "NÃƒÆ’Ã‚Â­tido redibuja los glifos ingleses reconocidos a resoluciÃƒÆ’Ã‚Â³n de ventana. Las fuentes desconocidas y otros textos conservan el original.",
+-                             0, {"NÃƒÆ’Ã‚Â­tido", "Original"}});
++    game.features.push_back({"scene_view", "Pantalla", "Visualización de escena",
++                             "Original mantiene imagen y diálogo juntos. Zoom amplía la imagen arriba y ajusta el diálogo con escalas enteras independientes en escenas mejoradas compatibles.",
++                             1, {"Original", "Zoom"}}); // (Zoom by default: T90)
++    game.features.push_back({"text_style", "Pantalla", "Texto de diálogos",
++                             "Nítido redibuja los glifos ingleses reconocidos a resolución de ventana. Las fuentes desconocidas y otros textos conservan el original.",
++                             0, {"Nítido", "Original"}});
+     game.features.push_back({"hd_preload", "Pantalla", "Precargar mod HD al iniciar",
+-                             "Prepara fondos y retratos HD habilitados antes de jugar. Reduce cargas durante las escenas a cambio de mÃƒÆ’Ã‚Â¡s memoria e inicio mÃƒÆ’Ã‚Â¡s largo.",
++                             "Prepara fondos y retratos HD habilitados antes de jugar. Reduce cargas durante las escenas a cambio de más memoria e inicio más largo.",
+                              0, {"Desactivado", "Activado"}});
+     game.features.push_back({"pc_hd_backgrounds", "Pantalla", "Fondos PC HD",
+                              "Usa el pack local de fondos PC en modo mejorado. Requiere recursos PC compatibles; si faltan, conserva Saturn. No cambia la fuente de texto.",
+                              0, {"Activados", "Desactivados"}});
+     game.features.push_back({"pc_hd_portraits", "Pantalla", "Retratos PC HD",
+-                             "Usa los retratos del pack emparejado en modo mejorado. Requiere tus recursos PC y un pack local vÃƒÆ’Ã‚Â¡lido; si falta una coincidencia segura, conserva Saturn.",
++                             "Usa los retratos del pack emparejado en modo mejorado. Requiere tus recursos PC y un pack local válido; si falta una coincidencia segura, conserva Saturn.",
+                              0, {"Activados", "Desactivados"}});
+     // (custom_soundtrack: soundtrack.h; for a game whose sources name its music)
+     if (!game.songs.empty()) {
+@@ -152,8 +152,8 @@ static void RegisterPortFeatures() {
+                                  "disc named in its soundtrack.ini. The game's volume and fades apply to it.",
+                                  satrecomp::kFeatureEnhanced});
+     }
+-    game.features.push_back({"window_size", "Pantalla", "TamaÃƒÆ’Ã‚Â±o de ventana",
+-                             "TamaÃƒÆ’Ã‚Â±o inicial de la ventana. Puedes redimensionarla o usar F11 para pantalla completa; el juego conserva la escala entera.",
++    game.features.push_back({"window_size", "Pantalla", "Tamaño de ventana",
++                             "Tamaño inicial de la ventana. Puedes redimensionarla o usar F11 para pantalla completa; el juego conserva la escala entera.",
+                              0, {"3x", "2x", "4x", "5x", "6x"}});
+ }
+ 

@@ -55,6 +55,10 @@ from audit_sdk import files as iso_files  # noqa: E402
 CUE = ('FILE "Track 01.iso" BINARY\n  TRACK 01 MODE1/2048\n      INDEX 01 00:00:00\n      POSTGAP 00:02:00\n'
        'FILE "Track 02.wav" WAVE\n  TRACK 02 AUDIO\n    PREGAP 00:02:00\n    INDEX 01 00:00:00\n')
 LANGUAGES = {'en': '', 'es': '-es'}
+# Japanese is the player's original disc as it is (no layer). It can only be kept when the original was given
+# (not an already-translated disc), so it is optional: preparation never fails for want of it.
+OPTIONAL_LANGUAGES = {'ja': '-ja'}
+ALL_LANGUAGES = {**LANGUAGES, **OPTIONAL_LANGUAGES}
 LAYERS = {'en': 'english', 'es': 'spanish'}
 PALETTE_HASH = 12829369761668915482  # CRAM bank the reviewed portrait identities were matched under
 SYNC = bytes.fromhex('00ffffffffffffffffffff00')
@@ -95,6 +99,22 @@ def run(command, **kwargs):
         env['PATH'] = bundled + os.pathsep + env.get('PATH', '')
     return subprocess.run([str(part) for part in command], capture_output=True, creationflags=NO_WINDOW, env=env,
                           **kwargs)
+
+
+def discs_folder(program: Path) -> Path:
+    """The player's «discos» folder: beside the program, or at the release root when the program is in app/."""
+    for folder in (program / 'discos', program.parent / 'discos'):
+        if folder.is_dir():
+            return folder
+    return program / 'discos'
+
+
+def launch_manifest(program: Path) -> Path:
+    """recomp-launcher.json sits at the release root, beside the only visible executable."""
+    for folder in (program, program.parent):
+        if (folder / 'recomp-launcher.json').is_file():
+            return folder / 'recomp-launcher.json'
+    return program / 'recomp-launcher.json'
 
 
 def default_home(program: Path) -> Path:
@@ -296,6 +316,14 @@ class Image:
     def root(self) -> dict:
         volume = self.read(16, 2048)
         lba, size = struct.unpack_from('<I', volume, 158)[0], struct.unpack_from('<I', volume, 166)[0]
+        return self.directory(lba, size)
+
+    def folder(self, name: str) -> dict:
+        """The entries of a folder at the root of the disc (e.g. MOVIE), or {} when there is none."""
+        entry = self.root().get(name.upper())
+        return self.directory(*entry) if entry else {}
+
+    def directory(self, lba: int, size: int) -> dict:
         if size > 1024 * 1024:
             raise SetupError('Directorio de la imagen de PC no admitido.')
         directory, at, found = self.read(lba, size), 0, {}
@@ -305,8 +333,9 @@ class Image:
                 at = (at // 2048 + 1) * 2048
                 continue
             name = directory[at + 33:at + 33 + directory[at + 32]].decode('ascii', 'replace').split(';')[0]
-            found[name.upper()] = (struct.unpack_from('<I', directory, at + 2)[0],
-                                   struct.unpack_from('<I', directory, at + 10)[0])
+            if name not in ('\x00', '\x01'):  # (the folder itself and its parent)
+                found[name.upper()] = (struct.unpack_from('<I', directory, at + 2)[0],
+                                       struct.unpack_from('<I', directory, at + 10)[0])
             at += length
         return found
 
@@ -567,9 +596,44 @@ def identify(record: dict, digest: str) -> str | None:
     return None
 
 
+def prepare_japanese(paths: Paths, record: dict, candidates: list[Path], number: int, base: int,
+                     force: bool = False) -> None:
+    """Keep a copy of the player's untouched original disc as the Japanese option, when they gave one."""
+    target = paths.game / f'disc{number}-ja'
+    try:
+        saved = json.loads((target / 'taisen.json').read_text(encoding='utf-8'))
+        if not force and saved.get('output_sha256') == record['original_sha256'] and (target / 'game.cue').is_file():
+            return
+    except (OSError, ValueError):
+        pass
+    paths.game.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.preparar-', dir=paths.game) as scratch:
+        work = Path(scratch)
+        image, wav = work / 'ja.iso', work / 'Track 02.wav'
+        for candidate in candidates:
+            try:
+                disc = Disc(candidate)
+                sectors = disc.extract(image)
+            except (SetupError, OSError):
+                continue
+            if sha256(image) != record['original_sha256']:
+                continue
+            say(base, f'Disco {number}: guardando el original japonés…')
+            silent = False
+            audio_bytes = record.get('audio_wav_bytes', 5005100)
+            if not disc.write_audio(wav, sectors, audio_bytes):
+                write_silence(wav, audio_bytes)
+                silent = True
+            publish(work, target, image, wav, dict(schema=2, disc=number, language='ja', patches=None,
+                                                   output_sha256=record['original_sha256'], subtitled_videos=False,
+                                                   silent_audio=silent), True)
+            return
+
+
 def prepare_disc(paths: Paths, manifest: dict, candidates: list[Path], number: int, base: int, span: int,
                  force: bool = False) -> None:
     record = manifest['discs'][str(number)]
+    prepare_japanese(paths, record, candidates, number, base, force)
     targets = {language: paths.game / f'disc{number}{suffix}' for language, suffix in LANGUAGES.items()}
     videos = paths.patches / record['videos']['patch']
     state = {language: None if force else finished(targets[language], record[LAYERS[language]]) for language in targets}
@@ -679,11 +743,13 @@ def locate_game(folder: Path) -> Path | None:
     return None
 
 
-def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
-    """The folder that holds SAKURA1 with the files the HD mod needs, from any form of the PC edition."""
+def open_pc(paths: Paths, source: Path, work: Path, names: list[str] | None = None) -> Path:
+    """The folder that holds SAKURA1 (and MOVIE, when the edition has its videos) from any form of the PC
+    edition. `names` limits the cabinet extraction to those files; None takes everything."""
     kind = describe_pc(source)
     if kind == 'game':
         return source
+    movies = None
     if kind == 'image':
         image = Image(source)
         try:
@@ -692,6 +758,12 @@ def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
             cabinets.mkdir()
             for name in CABINETS:
                 image.copy(*root[name], cabinets / name.lower())
+            if names is None:  # the videos are on the disc itself, outside the cabinets
+                movies = work / 'movie'
+                movies.mkdir()
+                for name, (lba, size) in image.folder('MOVIE').items():
+                    if name.endswith('.MPG'):
+                        image.copy(lba, size, movies / name)
         finally:
             image.close()
         first = cabinets / 'data1.cab'
@@ -702,7 +774,7 @@ def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
                          'carpeta del juego instalado).')
     out = work / 'pc'
     out.mkdir()
-    result = run([paths.unshield, '-d', out, 'x', first, *names])
+    result = run([paths.unshield, '-d', out, 'x', first, *(names or [])])
     if cabinets:
         shutil.rmtree(cabinets)
     if result.returncode:
@@ -711,6 +783,10 @@ def open_pc(paths: Paths, source: Path, work: Path, names: list[str]) -> Path:
     root = locate_game(out)
     if not root:
         raise SetupError('La edición de PC no contiene SAKURA1/SYSTEM/KAO.SPR.')
+    if movies is None and kind == 'cabinets':  # a copy of the disc: MOVIE sits beside the cabinets
+        movies = child(source, 'MOVIE')
+    if movies is not None and not child(root, 'MOVIE'):
+        shutil.move(str(movies), str(root / 'MOVIE'))
     return root
 
 
@@ -796,9 +872,64 @@ def build_portraits(paths: Paths, pc_root: Path, discs: list[Path], work: Path, 
     return len(entries), manifest
 
 
+# Everything the HD mod uses or will use, taken once from the player's PC edition so that a category integrated
+# later needs no new preparation: every image (.SPR: backgrounds, scenes, events, CG, endings, titles, eye
+# catches, maps, units, large characters, system/menus, items, walls…), the videos and the small tables that
+# go with them. Audio (voices, music, effects) is not part of the HD mod.
+PC_PACK_VERSION = 'pc-full-1'
+PC_PACK_EXTENSIONS = {'.SPR', '.MPG', '.BIN', '.DAT', '.TAB', '.PRI', '.OD', '.BMP', '.PAL'}
+PC_PACK_SKIP_FOLDERS = {'VOICE', 'BGM', 'SE'}
+
+
+def pc_pack_files(root: Path) -> list[tuple[Path, str]]:
+    """(file, path in the pack) for the PC edition's HD material under SAKURA1-3 and MOVIE."""
+    picked = []
+    for top in sorted(root.iterdir(), key=lambda entry: entry.name.upper()):
+        name = top.name.upper()
+        if not top.is_dir() or not (name.startswith('SAKURA') or name == 'MOVIE'):
+            continue
+        for file in sorted(top.rglob('*')):
+            if not file.is_file():
+                continue
+            relative = file.relative_to(root)
+            if any(part.upper() in PC_PACK_SKIP_FOLDERS for part in relative.parts[1:-1]):
+                continue
+            if file.suffix.upper() in PC_PACK_EXTENSIONS:
+                picked.append((file, '/'.join(part.upper() for part in relative.parts)))
+    return picked
+
+
+def build_pc_pack(found: Path, target: Path, base: int, span: int) -> dict:
+    """Copies the PC edition's HD material into the pack with a manifest (path, size, SHA-256)."""
+    files = pc_pack_files(found)
+    if not files:
+        raise SetupError('Tu edición de PC no tiene las imágenes del juego (SAKURA1/SAKURA2/SAKURA3).')
+    total = sum(file.stat().st_size for file, _ in files)
+    done, rows, categories = 0, [], {}
+    for index, (file, name) in enumerate(files):
+        destination = target / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        digest = hashlib.sha256()
+        with file.open('rb') as source, destination.open('wb') as out:
+            for block in iter(lambda: source.read(1 << 20), b''):
+                digest.update(block)
+                out.write(block)
+        size = destination.stat().st_size
+        rows.append(dict(path=name, bytes=size, sha256=digest.hexdigest()))
+        category = '/'.join(name.split('/')[:2]) if name.count('/') > 1 else name.split('/')[0]
+        categories[category] = categories.get(category, 0) + 1
+        done += size
+        if index % 50 == 0:
+            say(base + int(span * done / max(total, 1)), f'Mod HD: guardando archivos de tu edición de PC ({index + 1} de {len(files)})…')
+    manifest = dict(schema=1, version=PC_PACK_VERSION, files=len(rows), bytes=total, categories=categories,
+                    videos=sum(1 for row in rows if row['path'].endswith('.MPG')), entries=rows)
+    (target / 'pc-manifest.json').write_text(json.dumps(manifest, indent=1) + '\n', encoding='utf-8')
+    return manifest
+
+
 def hd_stamp(paths: Paths) -> str:
     """What the HD pack is built from in this release; a pack with another stamp is rebuilt."""
-    h = hashlib.sha256()
+    h = hashlib.sha256(PC_PACK_VERSION.encode('ascii'))
     for file in (paths.recipe, paths.provenance):
         h.update(file.read_bytes())
     return h.hexdigest()
@@ -807,7 +938,8 @@ def hd_stamp(paths: Paths) -> str:
 def hd_ready(paths: Paths) -> bool:
     try:
         saved = json.loads((paths.hd / 'prepared-manifest.json').read_text(encoding='utf-8'))
-        return (paths.hd / 'hd-pack.stfp').is_file() and saved.get('stamp') == hd_stamp(paths)
+        return ((paths.hd / 'hd-pack.stfp').is_file() and (paths.hd / 'pc' / 'pc-manifest.json').is_file()
+                and saved.get('stamp') == hd_stamp(paths))
     except (OSError, ValueError):
         return False
 
@@ -818,7 +950,7 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
     with tempfile.TemporaryDirectory(prefix='.preparar-hd-', dir=paths.hd.parent) as scratch:
         work = Path(scratch)
         say(base, 'Mod HD: leyendo tu edición de PC…')
-        found = open_pc(paths, source, work, ['KAO.SPR'] + [row['id'] + '.SPR' for row in rows])
+        found = open_pc(paths, source, work)  # the whole edition: the pack keeps everything the HD mod will need
         pc_root = work / 'root'  # a private copy with the exact layout the runtime expects
         wall = pc_root / 'SAKURA1/WALL'
         wall.mkdir(parents=True)
@@ -855,13 +987,16 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
         receipt = struct.pack('<8sIIQQQII', b'STFHD01\0', 1, len(entries), len(archive), fnv64(archive),
                               fnv64(manifest.read_bytes()), count, 0) + b''.join(entries)
         (staged / 'hd-pack.stfp').write_bytes(receipt)
-        report = dict(schema=1, original_pc_files_included=False, backgrounds=len(entries), portraits=count,
+        pc = build_pc_pack(found, staged / 'pc', base + span * 7 // 10, span * 25 // 100)
+        report = dict(schema=2, original_pc_files_included=True, backgrounds=len(entries), portraits=count,
+                      pc_files=pc['files'], pc_bytes=pc['bytes'], pc_videos=pc['videos'], pc_categories=pc['categories'],
                       stamp=hd_stamp(paths))
         (staged / 'prepared-manifest.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
         if paths.hd.exists():
             shutil.rmtree(paths.hd)
         os.rename(staged, paths.hd)
-    say(base + span, f'Mod HD: {len(rows)} fondos y {count} retratos listos.')
+    say(base + span, f'Mod HD: {report["pc_files"]} archivos de tu edición de PC guardados '
+                     f'({report["pc_videos"]} vídeos); {len(rows)} fondos y {count} retratos ya activos.')
     return report
 
 
@@ -888,7 +1023,7 @@ def set_values(file: Path, values: dict[tuple[str, str], str]) -> None:
 
 
 def set_language(paths: Paths, language: str) -> Path:
-    disc = paths.game / f'disc1{LANGUAGES[language]}' / 'game.cue'
+    disc = paths.game / f'disc1{ALL_LANGUAGES[language]}' / 'game.cue'
     if not disc.is_file():
         raise SetupError('Ese idioma aún no está preparado. Prepara el juego primero.')
     set_values(paths.home / 'launcher.ini', {('game', 'disc'): str(disc), ('sakura', 'language'): language})
@@ -902,14 +1037,36 @@ def saved_language(paths: Paths) -> str:
     except configparser.Error:
         return 'es'
     language = saved.get('sakura', 'language', fallback='es')
-    return language if language in LANGUAGES else 'es'
+    return language if language in ALL_LANGUAGES else 'es'
 
 
 def write_default_settings(paths: Paths) -> None:
+    """First-run defaults (Mejorada, Zoom, HD preload…). The launcher may already have written settings.ini
+    (its preset choice) before the helper runs, so missing keys are filled in; choices already there stay."""
     file = paths.home / 'settings.ini'
     if not file.exists():
         file.parent.mkdir(parents=True, exist_ok=True)
         file.write_text(DEFAULT_SETTINGS, encoding='ascii', newline='\n')
+        return
+    defaults = configparser.ConfigParser(interpolation=None)
+    defaults.optionxform = str
+    defaults.read_string(DEFAULT_SETTINGS)
+    current = configparser.ConfigParser(interpolation=None)
+    current.optionxform = str
+    try:
+        current.read(file, encoding='utf-8')
+    except configparser.Error:
+        return
+    missing = [(section, key, value) for section in defaults.sections() for key, value in defaults.items(section)
+               if not current.has_option(section, key)]
+    if not missing:
+        return
+    for section, key, value in missing:
+        if not current.has_section(section):
+            current.add_section(section)
+        current.set(section, key, value)
+    with file.open('w', encoding='utf-8', newline='\n') as output:
+        current.write(output, space_around_delimiters=False)
 
 
 def load_manifest(paths: Paths) -> dict:
@@ -996,10 +1153,10 @@ def info(paths: Paths) -> dict:
     """The launch surface for frontends (RecompLauncher-style integration info) plus the setup state."""
     manifest = {}
     try:
-        manifest = json.loads((paths.program / 'recomp-launcher.json').read_text(encoding='utf-8'))
+        manifest = json.loads(launch_manifest(paths.program).read_text(encoding='utf-8'))
     except (OSError, ValueError):
         pass
-    prepared = [language for language, suffix in LANGUAGES.items()
+    prepared = [language for language, suffix in ALL_LANGUAGES.items()
                 if (paths.game / f'disc1{suffix}' / 'game.cue').is_file()]
     manifest['state'] = dict(prepared_languages=prepared, language=saved_language(paths),
                              hd_prepared=(paths.hd / 'hd-pack.stfp').is_file(), home=str(paths.home))
@@ -1011,7 +1168,7 @@ def main() -> int:
     parser.add_argument('command', choices=('scan', 'prepare', 'language', 'info', 'frontend', 'help'))
     parser.add_argument('--folder', type=Path)
     parser.add_argument('--rom', '--disc', '--pc', dest='rom', type=Path, action='append', default=[])
-    parser.add_argument('--language', choices=tuple(LANGUAGES))
+    parser.add_argument('--language', choices=tuple(ALL_LANGUAGES))
     parser.add_argument('--fullscreen', action='store_true')
     parser.add_argument('--widescreen', choices=('off', '16:9', 'fit'))
     parser.add_argument('--force', action='store_true', help='rebuild even what is already prepared')
@@ -1029,7 +1186,7 @@ def main() -> int:
         elif args.command == 'help':
             print(HELP)
         elif args.command == 'scan':
-            print(json.dumps(scan((args.folder or paths.program / 'discos').resolve()), ensure_ascii=False))
+            print(json.dumps(scan((args.folder or discs_folder(paths.program)).resolve()), ensure_ascii=False))
         elif args.command == 'language':
             print('OK', set_language(paths, args.language or 'es'))
         elif args.command == 'frontend':
@@ -1037,6 +1194,8 @@ def main() -> int:
             print('OK', flush=True)
         else:
             given = list(args.rom) + ([args.folder] if args.folder else [])
+            if not given and discs_folder(paths.program).is_dir():
+                given = [str(discs_folder(paths.program))]
             result = prepare(paths, given, args.language or saved_language(paths), args.force)
             say(100, 'Todo listo. Ya puedes jugar.')
             print('OK', json.dumps(result, ensure_ascii=False), flush=True)

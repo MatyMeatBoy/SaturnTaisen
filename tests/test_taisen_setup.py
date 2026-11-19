@@ -327,10 +327,40 @@ class TrackedData(unittest.TestCase):
         self.assertTrue(manifest['single_entry_point'])
         self.assertIn(f"'{manifest['primary_executable']}'", packager)
         for internal in manifest['internal_executables']:
-            self.assertIn(f"'{internal['file']}'", packager)
+            # Internal programs live in app/; only the primary executable sits at the release root.
+            self.assertTrue(internal['file'].startswith('app/'), internal['file'])
+            self.assertIn(f"'{internal['file'].removeprefix('app/')}'", packager)
+        self.assertIn("app=destination/'app'", packager)
+        self.assertNotIn('.bat', packager, 'the release ships no .bat files')
         for flag in ('--rom', '--no-launcher', '--setup', '--fullscreen', '--widescreen', '--integration-info', '--help'):
             self.assertIn(flag, manifest['cli'], flag)
             self.assertIn(flag, setup.HELP, flag)
+
+
+class FullPcPack(unittest.TestCase):
+    """T89: the HD pack takes every image, video and table the HD mod will need, and no audio."""
+
+    def test_pack_takes_images_videos_and_tables_but_not_audio(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for name in ('SAKURA1/BG/BG1001.SPR', 'SAKURA2/EVENT/E01.SPR', 'SAKURA3/CG/CG01.SPR', 'MOVIE/MOVIE000.MPG',
+                         'SAKURA1/SYSTEM/KAO.SPR', 'SAKURA3/OD/A.OD', 'SAKURA1/VOICE/V.WAV', 'SAKURA1/VOICE/X.SPR',
+                         'SAKURA1/BGM/B.WAV', 'SAKURA2/SE/S.WAV', 'OTHER/X.SPR', 'SAKURA1/SYSTEM/README.TXT'):
+                file = root / name
+                file.parent.mkdir(parents=True, exist_ok=True)
+                file.write_bytes(b'x')
+            picked = sorted(name for _, name in setup.pc_pack_files(root))
+            self.assertEqual(picked, ['MOVIE/MOVIE000.MPG', 'SAKURA1/BG/BG1001.SPR', 'SAKURA1/SYSTEM/KAO.SPR',
+                                      'SAKURA2/EVENT/E01.SPR', 'SAKURA3/CG/CG01.SPR', 'SAKURA3/OD/A.OD'])
+            target = root / 'pack'
+            manifest = setup.build_pc_pack(root, target, 0, 1)
+            self.assertEqual(manifest['files'], 6)
+            self.assertEqual(manifest['videos'], 1)
+            self.assertTrue((target / 'pc-manifest.json').is_file())
+            self.assertTrue((target / 'SAKURA3/CG/CG01.SPR').is_file())
+
+    def test_a_pack_without_the_full_pc_material_is_rebuilt(self):
+        self.assertIn('pc-manifest.json', Path(setup.__file__).read_text(encoding='utf-8'))
 
 
 if __name__ == '__main__':
