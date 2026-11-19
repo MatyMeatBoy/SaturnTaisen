@@ -92,6 +92,39 @@ The main workspace measured 51,405,524,876 logical bytes with hard links counted
 once and reparse points excluded. The delivered development ZIP remains
 6,315,009,692 bytes.
 
+## TP4c decision on the unpaired BG3xxx/BG4xxx pictures (2026-11-19)
+
+The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era battle pictures. `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by rule (character cut-outs on a key colour), and 22 of the files below carry a rejection reason in `config/hd-scene-bg-review.json`; BG3092, BG3100 and BG4049 have none recorded yet (they need an eye review). **Decision: none is wired; all stay native.** Reasons as recorded:
+
+| Saturn | Recorded reason |
+|---|---|
+| BG3044 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3051 | the PC picture has a library background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3054 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3060 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3069 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3091 | the PC picture has a grey background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3092 | (no reason recorded in the review file) |
+| BG3097 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3100 | (no reason recorded in the review file) |
+| BG3119 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG3165 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4049 | (no reason recorded in the review file) |
+| BG4053 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4054 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4055 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4056 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4057 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4058 | same figures but another grouping/animation frame than the PC picture of that number |
+| BG4067 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4071 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4162 | the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour |
+| BG4204 | the Saturn picture decodes only as a partial fragment of the scene |
+| BG4284 | the Saturn statue stands on a blue pedestal and holds an object, the PC figure has neither (different frame) |
+| BG4372 | the Saturn picture is a character cut-out; the PC picture has the whole hanami scene baked in |
+| BG4375 | the PC picture has an extra teddy bear baked into the dressing room, the Saturn picture does not |
+
+Where a reason says the PC picture has the background baked in, drawing it would replace the native cut-out together with the key colour, so the native picture is kept. Files with a decode problem or a different frame would need a new decode or a new pairing; none is proposed here.
 ## TP4a re-search of the 13 unpaired BG1xxx files (2026-11-19)
 
 `tools/match_bg_files.py` was run again over all 718 disc 1 Saturn backgrounds against every PC `BG*.SPR` (luminance signature, lower score is better). Result: 222 firm, 496 ambiguous overall, and **none of the 13 unpaired files obtains a firm counterpart**. Names and scores only.
