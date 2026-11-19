@@ -637,7 +637,7 @@ def build(root, index_dir, portrait_audit):
         for episode, (atlases, evidence) in NATIVE_ROUTE_PORTRAITS.items():
             if ident in atlases:
                 occurrence = dict(row, atlases=[atlases[ident]])
-                if episode == 3:
+                if episode == 3 and ident in ('0068', '0116'):
                     occurrence.update(verified_in_game=True, runtime_evidence=CHAPTER3_PORTRAIT_REPORT)
                 elif episode == 9 and ident == '00e9':
                     occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
