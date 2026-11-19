@@ -94,7 +94,7 @@ once and reparse points excluded. The delivered development ZIP remains
 
 ## TP4c decision on the unpaired BG3xxx/BG4xxx pictures (2026-11-19)
 
-The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era battle pictures. `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by rule (character cut-outs on a key colour), and 22 of the files below carry a rejection reason in `config/hd-scene-bg-review.json`; BG3092, BG3100 and BG4049 have none recorded yet (they need an eye review). **Decision: none is wired; all stay native.** Reasons as recorded:
+The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era battle pictures. `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by rule (character cut-outs on a key colour), and 22 of the files below carry a rejection reason in `config/hd-scene-bg-review.json`; BG3092, BG3100 and BG4049 have no review entry because the map marks them `missing`: the PC edition has no picture with their number (checked in the extracted PC set), so there is nothing to pair. **Decision: none is wired; all stay native.** Reasons as recorded:
 
 | Saturn | Recorded reason |
 |---|---|
