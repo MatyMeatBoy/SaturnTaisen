@@ -1,0 +1,42 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 8f576d1..f6e724d 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -613,6 +613,7 @@ int RunWindowed(Port &port) {
+     SDL_Texture* clipTexture=nullptr;int clipTextureW=0,clipTextureH=0;
+     bool clipTextureReady = false;
+     int presentedClip = -1, audioClip = -1;
++    uint64_t clipAudioFed = 0, clipAudioFrame0 = 0; // floats given to the device since this clip's audio began; the guest frame it began on
+     uint32_t clipSerialSeen=0;int clipMovie=-1;bool clipRunning=false;uint64_t clipStartFrame=0;unsigned clipMissing=0;
+     std::vector<uint32_t> clipForeground;
+     // True when a PC clip is armed, the film plane (layer 1) fills the picture and clipTexture holds the frame for this guest frame.
+@@ -2354,7 +2355,7 @@ int RunWindowed(Port &port) {
+         if (audio.stream && nextAudioClip != audioClip) {
+             // Queued samples from the previous source do not follow a film skip or start.
+             SDL_ClearAudioStream(audio.stream);
+-            audioClip = nextAudioClip;
++            audioClip = nextAudioClip;clipAudioFed = 0;clipAudioFrame0 = port.frame;
+             if (std::getenv("SATRECOMP_CLIP_TRACE"))
+                 std::fprintf(stderr, "clip audio source: %d at guest frame %llu\n", audioClip,
+                     static_cast<unsigned long long>(port.frame));
+@@ -2365,6 +2366,12 @@ int RunWindowed(Port &port) {
+             // (the decoder works far faster than real time). The guest and the clip's picture clock are untouched.
+             audio.pending.clear();
+             const int queuedFloats=SDL_GetAudioStreamQueued(audio.stream)/int(sizeof(int16_t));
++            if(std::getenv("SATRECOMP_CLIP_TRACE") && (port.frame-clipAudioFrame0)%1200==0 && port.frame>clipAudioFrame0) {
++                // A/V offset: the audio the device has played (given minus still queued) against the guest-frame clock that drives the picture.
++                const double heard=double(clipAudioFed-uint64_t(queuedFloats))/2.0/44100.0,seen=double(port.frame-clipAudioFrame0)/59.82;
++                std::fprintf(stderr,"clip av: movie %d guest frame +%llu picture %.3f s sound %.3f s offset %+.0f ms\n",audioClip,
++                    static_cast<unsigned long long>(port.frame-clipAudioFrame0),seen,heard,(heard-seen)*1000.0);
++            }
+             const int wantFloats=4410*2-queuedFloats;
+             if(wantFloats>0) {
+                 std::vector<float> pc;pc.resize(size_t(wantFloats));
+@@ -2372,6 +2379,7 @@ int RunWindowed(Port &port) {
+                 std::vector<int16_t> out(got);
+                 for(size_t i=0;i<got;i++)out[i]=int16_t(std::lround(std::clamp(pc[i],-1.0f,1.0f)*32767.0f));
+                 if(got)SDL_PutAudioStreamData(audio.stream,out.data(),int(got*sizeof(int16_t)));
++                clipAudioFed += got;
+                 if(std::getenv("SATRECOMP_CLIP_TRACE")) {static uint64_t calls=0,short_=0;calls++;short_+=got<size_t(wantFloats);if(calls%600==0)std::fprintf(stderr,"clip audio: %llu top-ups, %llu short\n",(unsigned long long)calls,(unsigned long long)short_);}
+             }
+         }
