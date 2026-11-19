@@ -514,3 +514,16 @@ art directory. The gameplay witness covers Episode 1, while the package gate
 covers all ten asset pairs. No new ZIP was built. At this checkpoint the
 project accounted for 39,407,546,051 unique logical file bytes, above the cap;
 the unchanged development ZIP is 6,315,009,692 bytes.
+
+## T107f: wider episode sides and bands (specification)
+
+Why: the 39x224 strips of T107d cover 156 px per side at the 4x integer scale of a 1080p window, but the window leaves 320 px per side (80 logical px). The rest shows the stretched edge column, and for windows taller than the card the top and bottom show a stretched row.
+
+Geometry at 1920x1080 (scale 4): card 1280x896; sides (1920-1280)/2 = 320 px = 80 logical px each; bands (1080-896)/2 = 92 px = 23 logical px top and bottom. At 1440p (scale 6) and 2160p (scale 9) the sides are about 53 logical px, so 80 covers every common size; 96 would also cover 3x at 1080p.
+
+To produce (generated art only, not committed from owner art):
+- `EPISODEnn-left-v2.png` / `-right-v2.png`: 80x224 RGBA (or 96x224), transparent seam at the edge touching the native card, same style as v1.
+- `EPISODEnn-top-v1.png` / `-bottom-v1.png`: 398x24 (or the full composite width) RGBA, same transparent seam towards the card.
+- Add them to `assets/generated/screen-backgrounds` with entries in `provenance.json` (file, sha256, method, logical_grid, palette_fnv of the card) and update the README.
+
+Code to change when the art exists: the episode-side rule in `tools/package_release.py` (name pattern `-v1`, logical_grid `[39, 224]`, PNG size) and its test in `tests/test_package_art.py`; the runtime composition of patch0083 (guest-side, needs a compile) to place 80 px sides and bands, falling back to the edge column where an asset is missing. Composite logical width would become 480 (16:9 at 1080p) instead of 398.

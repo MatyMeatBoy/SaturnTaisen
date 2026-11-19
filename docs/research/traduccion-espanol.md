@@ -128,3 +128,15 @@ visible in both modes, and Enhanced fills the surrounding window from the card
 edges. The draft still shows banding on the right edge and retains its draft
 lettering. The other nine cards were verified on disc only. This run used an
 existing executable and disc, and did not create a package.
+
+### T107c: shipped layer rebuilt and checked offline
+
+Without the Spanish disc and without `ARLRDBD.TTF` (Arial Rounded Bold, so `portadas_es.py` cannot run on this machine), the shipped disc-1 layer was replayed: copy the English `Track 01.iso`, zero the video range (offset 522240, 255,995,904 bytes, as `blank_range` in `build_taisen_patches.py`), apply `parches/espanol-v0.1-disc1.xdelta` with xdelta3. The result's SHA-256 is the manifest's `blank_sha256` (844902b1...). Then:
+
+    SAKURA_OWNER_ROOT=<workspace> python -X utf8 tools/es/verificar_portadas.py --iso <rebuilt es.iso>
+
+All ten TITLE files print OK with the ten fingerprints of T87 (the new `--iso` option reads the cards from a disc image; `SAKURA_OWNER_ROOT` locates the English disc). Against the English disc, each Spanish card differs in 10,172 to 23,097 bytes, all after byte 4991, and LOAD.BIN in 3,294 bytes, also after the table. Not verified: re-running `portadas_es.py` (font missing), runtime. After repainting, repeat this check and rebuild with `construir_todo.py --disc 1 --portadas` plus `build_taisen_patches.py`.
+
+### T107b: delivery format for painted Spanish cards (owner)
+
+Deliver ten files `TITLE1.png` .. `TITLE10.png`, exactly 320x224, one per episode, with the Spanish title painted where the English lettering is and every other pixel as in the English card (the sky behind the lettering is yours to paint). Any colour is fine: a converter requantises each picture to that card's original 256-colour palette and cell table, so the file keeps its size and fingerprint and the 16:9 widening still recognises it. Check the converted set with `verificar_portadas.py DIR`. The converter is not written yet; it will use `decode_saturn_bg` and the nearest-colour step of `portadas_es.py`. Keep source art out of Git (it derives from game art); only the built layer ships.

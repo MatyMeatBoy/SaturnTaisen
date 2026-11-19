@@ -5,9 +5,13 @@ card (portadas_es.py or the owner's painted art) is recognised, and widened, onl
 table are those of the English card. Usage:
 
   python -X utf8 tools/es/verificar_portadas.py DIR   # DIR/SAKURA1/TITLEn.BIN (or DIR/TITLEn.BIN)
+  python -X utf8 tools/es/verificar_portadas.py --iso "Spanish disc 1 Track 01.iso"   # read the cards from a disc image
 
-Reads the English cards from local/prepared/disc1/Track 01.iso. Exit status 1 on any difference.
+Reads the English cards from $SAKURA_OWNER_ROOT/local/prepared/disc1/Track 01.iso (default: this checkout).
+Exit status 1 on any difference. A Spanish disc image can be rebuilt without Arial Rounded Bold by applying the
+shipped layer (see docs/research/traduccion-espanol.md, T107c).
 """
+import os
 import sys
 from pathlib import Path
 
@@ -19,17 +23,26 @@ CELLS_AT = 512 + 4480  # picture cells start; everything before is palette + u32
 
 
 def main():
-    if len(sys.argv) != 2:
+    args = sys.argv[1:]
+    spanish_iso = None
+    if len(args) == 2 and args[0] == '--iso':
+        spanish_iso, args = s.Iso(args[1]), []
+        spanish_files = dict(spanish_iso.files('SAKURA1'))
+    if len(args) > 1 or (not args and spanish_iso is None):
         sys.exit(__doc__)
-    base = Path(sys.argv[1])
-    iso = s.Iso(str(ROOT / 'local/prepared/disc1/Track 01.iso'))
+    base = Path(args[0]) if args else None
+    owner = Path(os.environ.get('SAKURA_OWNER_ROOT', ROOT))
+    iso = s.Iso(str(owner / 'local/prepared/disc1/Track 01.iso'))
     files = dict(iso.files('SAKURA1'))
     bad = 0
     for n in range(1, 11):
         english = iso.content(files['TITLE%d.BIN' % n])
-        path = base / 'SAKURA1' / ('TITLE%d.BIN' % n)
-        path = path if path.exists() else base / ('TITLE%d.BIN' % n)
-        spanish = path.read_bytes()
+        if spanish_iso is not None:
+            spanish = spanish_iso.content(spanish_files['TITLE%d.BIN' % n])
+        else:
+            path = base / 'SAKURA1' / ('TITLE%d.BIN' % n)
+            path = path if path.exists() else base / ('TITLE%d.BIN' % n)
+            spanish = path.read_bytes()
         problems = []
         if len(spanish) != len(english):
             problems.append('size %d != %d' % (len(spanish), len(english)))
