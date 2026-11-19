@@ -1,7 +1,7 @@
 <h1 align="center">🌸 SaturnTaisen</h1>
 <p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Static SH-2 recompilation · Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.3-alpha"><img alt="v0.2.3-alpha" src="https://img.shields.io/badge/release-v0.2.3--alpha-9a4564?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.3.1-alpha"><img alt="v0.2.3.1-alpha" src="https://img.shields.io/badge/release-v0.2.3.1--alpha-9a4564?style=flat-square"></a>
   <img alt="Windows x64 portable" src="https://img.shields.io/badge/Windows-x64_portable-77445b?style=flat-square">
   <a href="docs/research/chapter1-battle-progress.md"><img alt="Static SH-2 AOT" src="https://img.shields.io/badge/SH--2-static_AOT-bf914d?style=flat-square"></a>
   <a href="docs/releases/v0.2.0-test.3.md"><img alt="Local validation documented" src="https://img.shields.io/badge/testing-local_report-5d755d?style=flat-square"></a>
@@ -11,7 +11,7 @@
 
 A return to the Imperial Theater with recompiled SH-2 code, integer-scaled pixels, and optional presentation upgrades. Public project by **MatyMeatBoy**.
 
-**v0.2.3-alpha is a public alpha, not the certified complete game.** You bring only your own files — the two Sakura Taisen Saturn discs and, optionally, the PC edition — and the launcher prepares everything else on your PC: English or Spanish, and the HD mod. Chapter 1 end-to-end and the full campaign are not yet verified. [Scope of this release](docs/releases/v0.2.3-alpha.md). Earlier packages are kept intact.
+**v0.2.3.1-alpha is a public alpha, not the certified complete game.** You bring only your own files — the two Sakura Taisen Saturn discs and, optionally, the PC edition — and the launcher prepares everything else on your PC: English or Spanish, and the HD mod. Chapter 1 end-to-end and the full campaign are not yet verified. [Scope of this release](docs/releases/v0.2.3.1-alpha.md). Earlier packages are kept intact.
 
 ## Play
 
