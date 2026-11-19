@@ -1,0 +1,209 @@
+"""Inventory and pairing of the tactical-mode resources of the PC edition (TS11): MAP, UNIT and ITEM.
+
+Data only: names, sizes, hashes and statuses. No pixel is read, stored or written (the PC art is the owner's).
+Sub-commands (each block is its own verifiable slice):
+
+  python tools/tactical_pairing.py maps --pc ROOT --iso1 "local/prepared/disc1/Track 01.iso" \
+      --iso2 "local/prepared/disc2/Track 01.iso" --out config/hd-tactical-map-pairs.json
+
+ROOT is a folder holding the extracted PC `SAKURA1/...` and `SAKURA2/...` trees (SPR headers are parsed, never decoded).
+
+maps: each Saturn `/SAKURA2/MAPnn.BIN` (13 on disc 1, 14 on disc 2) is paired with the PC `MAP/MAPnn/MAPnn.BIN` by
+SHA-256 identity (the two editions ship the same terrain file), and the PC `MAPnn.TAB` text names the ground,
+priority and animated SPR files of the map. Statuses: `paired` (identical BIN and a ground SPR present),
+`paired-no-ground` (identical BIN, the TAB names no SPR that exists), `no-counterpart` (no PC BIN or different bytes).
+"""
+import argparse
+import hashlib
+import json
+import re
+import struct
+import sys
+from pathlib import Path
+
+SCHEMA = 1
+BITS = (4, 4, 8, 8, 8, 16, 24, 32)
+
+
+def sha256(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def fnv1a64(data):
+    value = 14695981039346656037
+    for byte in data:
+        value = ((value ^ byte) * 1099511628211) & 0xFFFFFFFFFFFFFFFF
+    return '%016X' % value
+
+
+def spr_images(data):
+    """List (width, height, format) of every image of a SPRED file from its table. Never decodes pixels."""
+    if len(data) < 32 or data[:10] != b'SEGA SPRED':
+        raise ValueError('unknown SPRED signature')
+    long_ = lambda at: struct.unpack_from('>I', data, at)[0]
+    word = lambda at: struct.unpack_from('>H', data, at)[0]
+    bitmaps = None
+    at = 16
+    while at + 16 <= len(data):
+        offset, size, index = long_(at), long_(at + 4), long_(at + 8)
+        if not offset or not size:
+            break
+        if offset > len(data) or size > len(data) - offset or index >= 14:
+            raise ValueError('invalid chunk extent')
+        if index == 2:
+            bitmaps = (offset, size)
+        at += 16
+        if at >= offset:
+            break
+    if not bitmaps or bitmaps[1] < 16:
+        raise ValueError('missing image table')
+    count = word(bitmaps[0])
+    if bitmaps[0] + 16 + count * 16 > len(data):
+        raise ValueError('image table exceeds file')
+    images = []
+    for n in range(count):
+        p = bitmaps[0] + 16 + n * 16
+        w, h, fmt = word(p), word(p + 2), word(p + 4)
+        if w and h and long_(p + 12):
+            images.append((w, h, fmt))
+    return images
+
+
+def parse_tab(text):
+    """Parse a MAPnn.TAB: lines 'Role:<tab>Kind:<tab>file'. Commented lines ('#') are ignored.
+
+    Returns a list of (role, kind, file) with the file in lowercase, forward slashes and no leading '..\\'."""
+    rows = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        match = re.match(r'^(\w+):\s*(\w+):\s*(\S+)\s*$', line)
+        if match:
+            rows.append((match[1], match[2], match[3].replace('\\', '/').lower()))
+    return rows
+
+
+def tab_ground(rows):
+    """The ground file: role Ground, else the first UnderGround File that is a `_a` picture (MAP12 style)."""
+    for role in ('Ground', 'UnderGround'):
+        for r, kind, name in rows:
+            if r == role and kind == 'File' and name.endswith('.spr'):
+                return name, role
+    return None, None
+
+
+def find_ci(folder, relative):
+    """Resolve `relative` (lowercase, may contain ../) against `folder` ignoring case; None when absent."""
+    path = folder
+    for part in relative.split('/'):
+        if part == '..':
+            path = path.parent
+            continue
+        if part == '.':
+            continue
+        match = next((c for c in path.iterdir() if c.name.lower() == part), None) if path.is_dir() else None
+        if match is None:
+            return None
+        path = match
+    return path
+
+
+def pair_map(saturn_key, saturn_data, pc_root):
+    """One row for a Saturn MAP BIN: `saturn_key` like '1:/SAKURA2/MAP01.BIN' and its bytes."""
+    name = saturn_key.split('/')[-1]
+    stem = name[:-4]
+    row = {'saturn': saturn_key, 'size': len(saturn_data), 'sha256': sha256(saturn_data)}
+    folder = Path(pc_root) / 'SAKURA2' / 'MAP' / stem
+    pc_bin = find_ci(folder, stem.lower() + '.bin') if folder.is_dir() else None
+    if pc_bin is None:
+        row.update(status='no-counterpart', reason='no PC MAP folder or BIN of this name')
+        return row
+    raw = pc_bin.read_bytes()
+    row['pc_bin'] = f'SAKURA2/MAP/{stem}/{pc_bin.name}'
+    row['pc_bin_sha256'] = sha256(raw)
+    row['identical'] = raw == saturn_data
+    if not row['identical']:
+        row.update(status='no-counterpart', reason='PC BIN bytes differ from the Saturn BIN')
+        return row
+    tab = find_ci(folder, stem.lower() + '.tab')
+    rows = parse_tab(tab.read_text(encoding='latin1')) if tab else []
+    ground, role = tab_ground(rows)
+    row['tab_roles'] = sorted({f'{r}:{k}' for r, k, _ in rows})
+    path = find_ci(folder, ground) if ground else None
+    if path is None:
+        row.update(status='paired-no-ground', reason='the TAB names no ground SPR that exists in the PC folder')
+        return row
+    raw = path.read_bytes()
+    images = spr_images(raw)
+    row.update(status='paired', ground_role=role, ground_layout='single' if len(images) == 1 else 'tiles',
+               pc_ground=path.resolve().relative_to(Path(pc_root).resolve()).as_posix(),
+               ground_size=len(raw), ground_sha256=sha256(raw), ground_fnv=fnv1a64(raw),
+               ground_image_count=len(images), ground_image0_size=list(images[0][:2]) if images else None,
+               ground_image_sizes=sorted({'%dx%d' % i[:2] for i in images}))
+    other = path.parent.resolve() != folder.resolve()
+    if other:
+        row['ground_shared_with'] = path.parent.name
+    return row
+
+
+def runtime_status(coverage):
+    """Map '1:/SAKURA2/MAPnn.BIN' -> coverage status for the maps the register already lists."""
+    result = {}
+    for chapter in coverage.get('chapters', []):
+        for key, entry in chapter['resources'].get('tactical-maps', {}).items():
+            result[key] = entry['status']
+    for key, entry in coverage.get('unassigned', {}).get('tactical-maps', {}).items():
+        result.setdefault(key, entry['status'])
+    return result
+
+
+def build_maps(saturn_maps, pc_root, coverage=None):
+    rows = [pair_map(key, data, pc_root) for key, data in sorted(saturn_maps.items())]
+    if coverage is not None:
+        status = runtime_status(coverage)
+        for row in rows:
+            row['register'] = status.get(row['saturn'], 'unknown')
+    counts = {}
+    for row in rows:
+        counts[row['status']] = counts.get(row['status'], 0) + 1
+    paired = {row['pc_bin'] for row in rows if row['status'] == 'paired'}
+    stems = sorted(p.name for p in (Path(pc_root) / 'SAKURA2' / 'MAP').iterdir() if p.is_dir()) \
+        if (Path(pc_root) / 'SAKURA2' / 'MAP').is_dir() else []
+    pc_only = [s for s in stems if f'SAKURA2/MAP/{s}/{s}.BIN' not in paired and
+               not any(r['saturn'].endswith(f'/{s}.BIN') for r in rows)]
+    return {'schema': SCHEMA, 'scope': 'Saturn /SAKURA2/MAPnn.BIN to the PC MAP folders by byte identity; data only.',
+            'summary': counts, 'pc_maps_without_saturn_file': pc_only, 'maps': rows}
+
+
+def read_saturn_maps(isos):
+    import decode_saturn_bg as saturn
+    out = {}
+    for disc, path in isos:
+        iso = saturn.Iso(path)
+        for name, extent in iso.files('SAKURA2'):
+            if re.fullmatch(r'MAP\d+\.BIN', name):
+                out[f'{disc}:/SAKURA2/{name}'] = iso.content(extent)
+    return out
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = parser.add_subparsers(dest='command', required=True)
+    maps = sub.add_parser('maps')
+    maps.add_argument('--pc', type=Path, required=True)
+    maps.add_argument('--iso1', required=True)
+    maps.add_argument('--iso2', required=True)
+    maps.add_argument('--coverage', type=Path, default=Path(__file__).resolve().parent.parent / 'config/hd-chapter-coverage.json')
+    maps.add_argument('--out', type=Path, required=True)
+    args = parser.parse_args(argv)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    if args.command == 'maps':
+        coverage = json.loads(args.coverage.read_text(encoding='utf-8')) if args.coverage.exists() else None
+        result = build_maps(read_saturn_maps([(1, args.iso1), (2, args.iso2)]), args.pc, coverage)
+        args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + '\n', encoding='utf-8', newline='\n')
+        print(result['summary'], 'pc-only', result['pc_maps_without_saturn_file'])
+
+
+if __name__ == '__main__':
+    main()

@@ -110,6 +110,7 @@ CHAPTER_FILE_RESIDENCIES = {
         (4, CHAPTER4_TACTICAL_REPORT),
 }
 BBG204_INSET = (1, '/SAKURA2/BBG204.BIN')
+TACTICAL_PAIRING_REPORT = 'docs/research/tactical-pairing.md'
 BBG204_REPORT = 'docs/research/bbg204-tactical-inset.md'
 BBG_INSET_REPORT = 'docs/research/disc1-battle-insets.md'
 BBG_INSET_PAIRS = {'BBG002', 'BBG003', 'BBG004', 'BBG005', 'BBG006', 'BBG007', 'BBG008', 'BBG103', 'BBG104', 'BBG106', 'BBG205', 'BBG235'}
@@ -295,6 +296,7 @@ def build(root, index_dir, portrait_audit):
         (row['pc_file'], str(row['pc_image_index'])): row.get('pc_sha256')
         for row in bg.values() if row.get('pc_file') and 'pc_image_index' in row
     }
+    tactical_maps = {r['saturn']: r for r in config('hd-tactical-map-pairs')['maps']}
     screens = pairs(config('hd-screen-map'))
     endings = pairs(config('hd-ending-bank-map'))
     bodies = pairs(config('hd-body-map'))
@@ -410,6 +412,17 @@ def build(root, index_dir, portrait_audit):
                 'pc': 'SAKURA2/MAP/MAP06/MAP06_A.SPR',
                 'scope': 'source-4 ground only',
                 'pairing_evidence': CHAPTER4_TACTICAL_REPORT,
+            }
+        elif kind == 'tactical-maps' and tactical_maps.get(f'{disc}:{path}', {}).get('status') == 'paired':
+            pair = tactical_maps[f'{disc}:{path}']
+            row = {
+                'status': 'paired-not-wired',
+                'pc': pair['pc_ground'],
+                'pairing_evidence': TACTICAL_PAIRING_REPORT,
+                'reason': ('PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the '
+                           'runtime has no pattern-name fingerprint or ground sampler for this map'
+                           + ('; the ground holds %d images (tiles or frames) and needs an assembler' % pair['ground_image_count']
+                              if pair.get('ground_layout') == 'tiles' else '')),
             }
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
