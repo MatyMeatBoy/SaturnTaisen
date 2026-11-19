@@ -1905,6 +1905,14 @@
           "1:/SAKURA1/TITLE4.BIN": {
             "association": "inferred",
             "status": "unknown"
+          },
+          "1:/SAKURA2/BBG204.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bbg204-tactical-inset.md",
+            "pc": "SAKURA2/BG/BBG204.SPR",
+            "runtime_evidence": "docs/research/bbg204-tactical-inset.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-maps": {
@@ -10052,10 +10060,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/BBG203.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/BBG204.BIN": {
         "association": "unknown",
         "status": "unknown"
       },

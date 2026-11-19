@@ -66,14 +66,14 @@
       "next": "Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.",
       "details": [
         "El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.",
-        "El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 516 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.",
+        "El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 530 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.",
         "La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. El recuento de recursos preparados y la auditoría completa de apariciones en juego siguen pendientes."
       ],
       "total": 1267,
       "inventory": 1267,
       "matched": 712,
       "prepared": null,
-      "integrated": 516,
+      "integrated": 530,
       "verified": null
     },
     {
