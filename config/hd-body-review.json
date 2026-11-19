@@ -37,8 +37,15 @@
   "NC99"
  ],
  "rejected": {
-  "NC3290": "the Saturn body decodes wrongly (stride) and the PC picture is a full frame",
-  "NC3517": "the Saturn body decodes wrongly (stride) and the PC picture is nearly a full frame"
+  "NC3290": "short native body with separate face strips; the runtime table assumes a 144-row body",
+  "NC3517": "short native body with separate face strips; the runtime table assumes a 144-row body"
+ },
+ "paired_not_wired": {
+  "NC3125": "The PC edition fills the space outside the tilted native panel with painted scenery.",
+  "NC3126": "The PC edition fills the space outside the tilted native panel with painted scenery.",
+  "NC3290": "The PC face close-up uses a different vertical crop and fills the native face openings.",
+  "NC3517": "The PC two-character strip uses a different crop and fills both native face openings.",
+  "NC4138": "The PC edition bakes the flower box and background into the native body opening."
  },
  "note": "Tier-content pairs were checked side by side only for a random 16 of the first 64; the transparency flag removed full-frame PC pictures from both tiers. The Saturn side has blank faces in both; eyes and mouths are separate strips that are not paired yet.",
  "paired_full_frame": {

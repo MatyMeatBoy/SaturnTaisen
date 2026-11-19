@@ -359,6 +359,13 @@ def build(root, index_dir, portrait_audit):
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')
         elif name in EVE_PAIRS:
             row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/' + EVE_PAIRS[name] + '.SPR'}
+        elif kind == 'bodies' and name in body_review.get('paired_not_wired', {}):
+            row = {
+                'status': 'paired-not-wired',
+                'pc': f'SAKURA1/NC/{name}.SPR',
+                'reason': body_review['paired_not_wired'][name],
+                'pairing_evidence': 'docs/research/saturn-bg-format.md#tp5a-bounded-body-crops',
+            }
         elif path in bodies:
             pair = bodies[path]
             if name in body_review['rejected']:

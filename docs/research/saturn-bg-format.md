@@ -849,3 +849,30 @@ table was byte-identical after regeneration. The main workspace
 measured 59,000,907,790 logical bytes with hard links counted once and
 reparse points excluded, above the 20 GB cap. The delivered development
 ZIP remains 6,315,009,692 bytes.
+
+
+### TP5a bounded body crops
+
+The five files left after the TP5b cut-outs have the same byte contents
+on both prepared Saturn discs. Reading 8-bit rows from offset `0x610`
+with palette `0x410` revealed a coherent drawing at the widths below.
+The review bounds stop at the change from the body to the separate
+face-strip payload. They are offline comparison extents. VDP1 command
+dimensions and face-strip placement for these bodies remain unwitnessed.
+
+| Body | Saturn review extent | Native clear | PC subimage 0 | PC clear | Compositing difference |
+| --- | ---: | ---: | ---: | ---: | --- |
+| NC3125 | 200×96 | 39.1% | 398×205 | 0% | PC paints scenery around the tilted panel and fills the mouth opening. |
+| NC3126 | 192×96 | 32.0% | 385×209 | 0% | PC paints scenery around the tilted panel and fills the mouth opening. |
+| NC3290 | 80×96 | 63.3% | 167×210 | 0% | PC uses a taller face crop and fills the eye and mouth openings. |
+| NC3517 | 200×80 | 36.8% | 473×184 | 2.8% | PC uses a wider two-character strip and fills both face openings. |
+| NC4138 | 112×112 | 71.2% | 230×254 | 0% | PC paints the surroundings and fills the opening in front of the character with a flower box. |
+
+The coverage register records matching PC artwork for these five
+resources. Their compositor path stays native pending a verified
+alignment and an explicit way to preserve the animated face layers and
+scene around them. The generated body table is byte-identical.
+
+At block close the main workspace measured 59,916,175,934 logical
+bytes with hard links counted once and reparse points excluded, above
+the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
