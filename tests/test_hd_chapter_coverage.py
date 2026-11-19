@@ -60,6 +60,10 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(inset['pc'], 'SAKURA2/BG/BBG204.SPR')
         self.assertIs(inset['verified_in_game'], True)
         self.assertNotIn('1:/SAKURA2/BBG204.BIN', catalog['unassigned']['scene-pictures'])
+        for name in ('BBG002', 'BBG003', 'BBG008', 'BBG103', 'BBG104', 'BBG106', 'BBG205', 'BBG235'):
+            wired = catalog['unassigned']['scene-pictures'][f'1:/SAKURA2/{name}.BIN']
+            self.assertEqual((wired['status'], wired['pc']), ('hd', f'SAKURA2/BG/{name}.SPR'))
+            self.assertFalse(wired.get('verified_in_game'))
         chapter8 = by_chapter[8]['resources']['scene-pictures']
         city = chapter8.get('2:/SAKURA1/BG2159.BIN', {})
         self.assertEqual(city.get('association'), 'observed')

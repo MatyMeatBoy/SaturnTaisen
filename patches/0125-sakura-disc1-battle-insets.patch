@@ -1,0 +1,33 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -724,6 +724,8 @@
+     bool eve002Traced = false;
+     SceneHd bbg204;
+     bool bbg204Traced = false;
++    std::array<SceneHd, 7> bbgInsetImages;
++    std::array<bool, 7> bbgInsetTraces{};
+     struct NativeEveInset {
+         const char* name;
+         uint64_t palette;
+@@ -742,6 +744,20 @@
+          0x7FF1A8354F5328C7ull, {0, 24, 576, 288}, eve002, eve002Traced},
+         {"BBG204", 0xFB7D81F5464F27B2ull, 0xD3B104F491C0C105ull, "SAKURA2/BG/BBG204.SPR", 101141,
+          0x7218D90427AB8E97ull, {0, 0, 568, 284}, bbg204, bbg204Traced},
++        {"BBG003", 0x197A8477C531433Bull, 0xB8FB2814F4AC9659ull, "SAKURA2/BG/BBG003.SPR", 115917,
++         0x3637D22F0DC7D548ull, {60, 17, 404, 202}, bbgInsetImages[0], bbgInsetTraces[0]},
++        {"BBG008", 0x41D01AD83398ED85ull, 0xAFA30F61F4DB6AF5ull, "SAKURA2/BG/BBG008.SPR", 77603,
++         0x848AE70CE9019E1Bull, {0, 24, 568, 284}, bbgInsetImages[1], bbgInsetTraces[1]},
++        {"BBG103", 0x86E3822CB554B9F7ull, 0xAE07D97309492A35ull, "SAKURA2/BG/BBG103.SPR", 145727,
++         0xA63C747DDADB6FDFull, {0, 24, 560, 280}, bbgInsetImages[2], bbgInsetTraces[2]},
++        {"BBG104", 0xABD0D13E0D42EED3ull, 0x9EC81E8F9D2F4EDDull, "SAKURA2/BG/BBG104.SPR", 197841,
++         0x1EBCA41275C20059ull, {0, 32, 576, 288}, bbgInsetImages[3], bbgInsetTraces[3]},
++        {"BBG106", 0x7151C1F654A70069ull, 0xB110F46A7A0209C1ull, "SAKURA2/BG/BBG106.SPR", 186709,
++         0x23B51B7F9C94159Eull, {0, 20, 544, 272}, bbgInsetImages[4], bbgInsetTraces[4]},
++        {"BBG205", 0xC37A14C8F1D98E80ull, 0xC8578462D33514F9ull, "SAKURA2/BG/BBG205.SPR", 75534,
++         0x81B509F994100235ull, {0, 32, 576, 288}, bbgInsetImages[5], bbgInsetTraces[5]},
++        {"BBG235", 0x2BC159FCB08D0238ull, 0xA5E79E35A266849Dull, "SAKURA2/BG/BBG235.SPR", 210415,
++         0x2BCBC9714A83BC2Eull, {16, 8, 544, 272}, bbgInsetImages[6], bbgInsetTraces[6]},
+     };
+     SceneHd eve0116;
+     bool eve0116Traced = false;
