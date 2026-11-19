@@ -65,6 +65,7 @@ TH2_REPORT = 'docs/research/hd-chapter-2.md'
 STAGE21_REPORT = 'docs/research/stage21-pc-ground.md'
 STAGE21_MAP = (1, '/SAKURA2/MAP21.BIN')
 CHAPTER4_TACTICAL_REPORT = 'docs/research/hd-chapter-4.md#first-tactical-map-and-work-ram'
+STAGE04_MAP = (1, '/SAKURA2/MAP04.BIN')
 STAGE06_MAP = (1, '/SAKURA2/MAP06.BIN')
 CHAPTER5_ROUTE_REPORT = 'docs/research/hd-chapter-5.md#native-opening-observations'
 CHAPTER5_ROUTE_FILES = {
@@ -160,7 +161,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/TITLE3.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1022.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1008.BIN'): (3, 'docs/research/th3-native-attribution.md'),
-    (1, '/SAKURA2/MAP04.BIN'): (3, 'docs/research/th3-native-attribution.md'),
+    STAGE04_MAP: (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA2/UNIT04.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     **{(1, f'/SAKURA1/{name}.BIN'): (1, CHAPTER1_ROUTE_REPORT)
        for name in CHAPTER1_ROUTE_SCENES + CHAPTER1_ROUTE_BODIES},
@@ -379,6 +380,14 @@ def build(root, index_dir, portrait_audit):
                 'scope': 'source-4 ground only',
                 'verified_in_game': True,
                 'runtime_evidence': STAGE21_REPORT,
+            }
+        elif (disc, path) == STAGE04_MAP:
+            row = {
+                'status': 'hd',
+                'verified_in_game': True,
+                'runtime_evidence': 'docs/research/map04-pc-ground.md',
+                'pc': 'SAKURA2/MAP/MAP04/MAP04_A.SPR',
+                'scope': 'source-4 ground only',
             }
         elif (disc, path) == STAGE06_MAP:
             row = {

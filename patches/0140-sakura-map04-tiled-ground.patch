@@ -1,0 +1,116 @@
+diff --git a/port/tactical_ground.h b/port/tactical_ground.h
+--- a/port/tactical_ground.h
++++ b/port/tactical_ground.h
+@@ -14,6 +14,7 @@
+     uint32_t groundPage;
+     unsigned worldWidth, worldHeight, mapEndX;
+     const char* centreLayout;
++    bool usesPlacements = false;
+ };
+ 
+ // MAP01_A, ordinal zero, uses two source pixels per world unit.
+@@ -25,6 +26,11 @@
+ inline constexpr Entry kStage02{
+     "SAKURA2/MAP/MAP02/MAP02_A.SPR", 5829484, 0x437AE98D69D62C17ull,
+     0x25FF56EB6965E424ull, 0x40000, 1024, 1024, 1024, "stage02-hd-ground",
++};
++
++inline constexpr Entry kStage04{
++    "SAKURA2/MAP/MAP04/MAP04_A.SPR", 1839340, 0xB9A138FDA90D0DEFull,
++    0x451ACDDB5522070Eull, 0x40000, 1024, 1024, 1024, "stage04-hd-ground", true,
+ };
+ 
+ inline constexpr Entry kStage06{
+@@ -40,9 +46,70 @@
+ inline const Entry* Find(uint64_t signature) {
+     if (signature == kStage01.mapSignature) return &kStage01;
+     if (signature == kStage02.mapSignature) return &kStage02;
++    if (signature == kStage04.mapSignature) return &kStage04;
+     if (signature == kStage06.mapSignature) return &kStage06;
+     if (signature == kStage21.mapSignature) return &kStage21;
+     return nullptr;
++}
++
++inline uint32_t GroundPixel(uint32_t pixel) {
++    constexpr uint32_t kCyan = 0x00FFFF00;
++    return (pixel & 0x00FFFFFF) == kCyan || !(pixel >> 24) ? 0 : pixel;
++}
++
++// SPRED chunk 13 places decoded sprite ordinals in the 2x ground plane.
++inline std::vector<uint32_t> AssembleGroundTiles(std::span<const uint8_t> bytes,
++                                                  std::span<const PcSprite> images,
++                                                  const Entry& entry) {
++    constexpr unsigned kTile = 64, kWorldTile = kTile / 2;
++    if (bytes.size() < 32 || !entry.worldWidth || !entry.worldHeight ||
++        entry.worldWidth % kWorldTile || entry.worldHeight % kWorldTile)
++        return {};
++    const auto word = [&](size_t at) { return uint32_t(bytes[at]) << 8 | bytes[at + 1]; };
++    const auto dword = [&](size_t at) { return word(at) << 16 | word(at + 2); };
++    const size_t directoryEnd = dword(16);
++    if (directoryEnd < 32 || directoryEnd > bytes.size()) return {};
++
++    size_t positions = 0, length = 0;
++    for (size_t at = 16; at + 16 <= directoryEnd; at += 16) {
++        const size_t offset = dword(at), size = dword(at + 4);
++        if (!offset && !size) break;
++        if (offset < directoryEnd || offset > bytes.size() || size > bytes.size() - offset)
++            return {};
++        if (dword(at + 8) != 13) continue;
++        if (positions) return {};
++        positions = offset;
++        length = size;
++    }
++    if (length < 16 || word(positions + 2) != 1 || dword(positions + 4) ||
++        dword(positions + 8) || dword(positions + 12))
++        return {};
++    const size_t count = word(positions);
++    const unsigned columns = entry.worldWidth / kWorldTile;
++    const unsigned rows = entry.worldHeight / kWorldTile;
++    if (!count || count > size_t(columns) * rows || length != 16 + count * 16)
++        return {};
++
++    std::vector<bool> occupied(size_t(columns) * rows);
++    std::vector<uint32_t> ground(size_t(entry.worldWidth) * entry.worldHeight);
++    for (size_t at = positions + 16; at < positions + length; at += 16) {
++        const unsigned index = word(at), x = word(at + 4), y = word(at + 6);
++        if (index >= images.size() || word(at + 2) || dword(at + 8) || dword(at + 12) ||
++            x % kTile || y % kTile || x / kTile >= columns || y / kTile >= rows)
++            return {};
++        const auto placement = size_t(y / kTile) * columns + x / kTile;
++        const auto& image = images[index];
++        if (occupied[placement] || image.index != index || image.width != kTile ||
++            image.height != kTile || image.pixels.size() != kTile * kTile)
++            return {};
++        occupied[placement] = true;
++        for (unsigned line = 0; line < kWorldTile; ++line) {
++            const auto start = size_t(y / 2 + line) * entry.worldWidth + x / 2;
++            for (unsigned column = 0; column < kWorldTile; ++column)
++                ground[start + column] = GroundPixel(image.pixels[size_t(line * 2) * kTile + column * 2]);
++        }
++    }
++    return ground;
+ }
+ 
+ inline std::vector<uint32_t> Load(const std::filesystem::path& root, const Entry& entry) {
+@@ -56,8 +123,9 @@
+         return {};
+     std::vector<PcSprite> images;
+     std::string error;
+-    if (!DecodePcSprites(bytes, images, error) || images.size() != 1 ||
+-        images.front().index != 0 || images.front().width != entry.worldWidth * 2 ||
++    if (!DecodePcSprites(bytes, images, error)) return {};
++    if (entry.usesPlacements) return AssembleGroundTiles(bytes, images, entry);
++    if (images.size() != 1 || images.front().index != 0 || images.front().width != entry.worldWidth * 2 ||
+         images.front().height != entry.worldHeight * 2)
+         return {};
+     const auto& image = images.front();
+@@ -66,8 +134,7 @@
+     for (unsigned y = 0; y < image.height; y += 2) {
+         for (unsigned x = 0; x < image.width; x += 2) {
+             const auto pixel = image.pixels[size_t(y) * image.width + x];
+-            constexpr uint32_t kCyan = 0x00FFFF00;
+-            ground.push_back((pixel & 0x00FFFFFF) == kCyan || !(pixel >> 24) ? 0 : pixel);
++            ground.push_back(GroundPixel(pixel));
+         }
+     }
+     return ground;

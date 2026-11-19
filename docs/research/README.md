@@ -135,6 +135,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [HD chapter 2 report](hd-chapter-2.md): what chapter 2 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 3 report](hd-chapter-3.md): what chapter 3 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [th3-native-attribution.md](th3-native-attribution.md) — Exact disc-1 reads and native frame evidence.
+- [MAP04 tiled ground](map04-pc-ground.md) records the Chapter 3 ground draw and native animated layers.
 - [HD chapter 4 report](hd-chapter-4.md): what chapter 4 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 5 report](hd-chapter-5.md): what chapter 5 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 6 report](hd-chapter-6.md): what chapter 6 shows per resource class, its status, ranked next actions and what needs the owner's discs.
