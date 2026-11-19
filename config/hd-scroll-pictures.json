@@ -56,6 +56,30 @@
    "crop_cross": 16
   },
   {
+   "min_crop_correlation": 0.9963,
+   "name": "BG2077",
+   "axis": "x",
+   "width": 440,
+   "height": 144,
+   "native_bytes": 68296,
+   "native_fnv": "DF74A3948CC82F4F",
+   "palette": "C8472F16A1D8EDBF",
+   "cells": "9611D0429CB4967C",
+   "pc_file": "SAKURA1/BG/BG2077.SPR",
+   "pc_bytes": 217097,
+   "pc_fnv": "66E7E23F89A0E79F",
+   "pc_width": 1024,
+   "pc_height": 320,
+   "crop_cross": 0,
+   "fit": {
+    "rate_milli": 2312,
+    "origin": 0,
+    "length": 670,
+    "cross": 0,
+    "cross_length": 314
+   }
+  },
+  {
    "min_crop_correlation": 0.9425,
    "name": "BG2130",
    "axis": "x",
@@ -71,6 +95,30 @@
    "pc_width": 1024,
    "pc_height": 320,
    "crop_cross": 16
+  },
+  {
+   "min_crop_correlation": 0.9966,
+   "name": "BG2172",
+   "axis": "y",
+   "width": 288,
+   "height": 280,
+   "native_bytes": 84992,
+   "native_fnv": "E8770A77B0C2AE0E",
+   "palette": "C3DDD60B21EBD1A9",
+   "cells": "162AB11691B27D01",
+   "pc_file": "SAKURA1/BG/BG2172.SPR",
+   "pc_bytes": 239974,
+   "pc_fnv": "16585B25FA8C18C4",
+   "pc_width": 576,
+   "pc_height": 592,
+   "crop_cross": 26,
+   "fit": {
+    "rate_milli": 2008,
+    "origin": 5,
+    "length": 290,
+    "cross": 26,
+    "cross_length": 536
+   }
   },
   {
    "min_crop_correlation": 0.9125,
@@ -243,6 +291,30 @@
    "crop_cross": 16
   },
   {
+   "min_crop_correlation": 0.9994,
+   "name": "BG2518",
+   "axis": "y",
+   "width": 288,
+   "height": 296,
+   "native_bytes": 80992,
+   "native_fnv": "59CF77DD4F52A6AF",
+   "palette": "87B5B9962558B0C2",
+   "cells": "3C1C61D2B0C5978F",
+   "pc_file": "SAKURA1/BG/BG2518.SPR",
+   "pc_bytes": 267486,
+   "pc_fnv": "F3BB6F95F6C014A4",
+   "pc_width": 576,
+   "pc_height": 592,
+   "crop_cross": 27,
+   "fit": {
+    "rate_milli": 1831,
+    "origin": 10,
+    "length": 264,
+    "cross": 27,
+    "cross_length": 488
+   }
+  },
+  {
    "min_crop_correlation": 0.9682,
    "name": "BG2533",
    "axis": "x",
@@ -265,14 +337,11 @@
   "BG1280": "PC 1241x320 is not 2x of native 512x144",
   "BG1283": "PC art does not follow the native picture (min crop correlation 0.877)",
   "BG1310": "PC art does not follow the native picture (min crop correlation 0.750)",
-  "BG2077": "PC 1024x320 is not 2x of native 440x144",
   "BG2093": "PC 592x320 is not 2x of native 320x144",
-  "BG2172": "PC 576x592 is not 2x of native 288x280",
   "BG2247": "PC art does not follow the native picture (min crop correlation 0.200)",
   "BG2252": "PC art does not follow the native picture (min crop correlation 0.256)",
   "BG2290": "PC art does not follow the native picture (min crop correlation 0.731)",
   "BG2338": "native layout is not the variant-B name table",
-  "BG2518": "PC art does not follow the native picture (min crop correlation 0.459)",
   "BG4372": "cell key would read past the picture tile pool",
   "BBG238": "battle background: full 320x224 frame, not a 288x144 scroll window (TP2b)",
   "BBG239": "battle background: full 320x224 frame, not a 288x144 scroll window (TP2b)",
