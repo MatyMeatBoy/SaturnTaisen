@@ -35,8 +35,13 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [stage01-pc-ground.md](stage01-pc-ground.md) — Stage01 ground from the PC edition and Saturn camera and sprite comparisons.
 - [Stage21 ground](stage21-pc-ground.md) records the independently verified source-4 substitution in episode 4.
 - [bg2250-bg1002-visual.md](bg2250-bg1002-visual.md) — Disc 1 salute gradient and theatre lobby at 1440p.
+- [bbg204-tactical-inset.md](bbg204-tactical-inset.md) — Verified BBG204 tactical illustration in HD.
+- [scene-spot-check.md](scene-spot-check.md) — Spot checks of connected HD scene pictures.
+- [episode-title-pc-pairings.md](episode-title-pc-pairings.md) — PC counterparts for the episode title cards.
+- [bg2238-still.md](bg2238-still.md) — BG2238 in the Chapter 9 dream at 1440p.
 - [bg2533-pan.md](bg2533-pan.md) — Verified BG2533 pan from the PC edition.
 - [bg2248-pan.md](bg2248-pan.md) — Chapter 1 vertical blossom panorama with exact viewport verification.
+- [bg1207-pan.md](bg1207-pan.md) — Chapter 1 horizontal panorama with the original Saturn foreground.
 - [bg2159-disc2-visual.md](bg2159-disc2-visual.md) — Disc 2 Chapter 8 city view at 1440p.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 

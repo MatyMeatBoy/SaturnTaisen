@@ -17,6 +17,7 @@ BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
+BG1207_REPORT = 'docs/research/bg1207-pan.md'
 BG2248_REPORT = 'docs/research/bg2248-pan.md'
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
 CHAPTER1_ROUTE_REPORT = 'docs/research/hd-chapter-1.md#observations-from-the-full-cold-route'
@@ -62,6 +63,7 @@ SCENE_DRAWS = {
     (1, '/SAKURA1/BG1119.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (1, '/SAKURA1/BG1216.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
+    (2, '/SAKURA1/BG2238.BIN'): (9, 'docs/research/bg2238-still.md'),
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
@@ -71,6 +73,7 @@ CHAPTER_WITNESSES = {
     **SCENE_DRAWS,
     (1, '/SAKURA1/NC20.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
+    (1, '/SAKURA1/BG1207.BIN'): (1, BG1207_REPORT),
     (1, '/SAKURA1/BG2248.BIN'): (1, BG2248_REPORT),
     (1, '/SAKURA1/BG2533.BIN'): (5, 'docs/research/bg2533-pan.md'),
     (1, '/SAKURA2/EVE0101.BIN'): (1, BODY_REPORT),
@@ -245,6 +248,13 @@ def build(root, index_dir, portrait_audit):
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
                    'verified_in_game': True, 'runtime_evidence': BBG204_REPORT}
+        elif title := re.fullmatch(r'/SAKURA1/(TITLE[1-9])\.BIN', path):
+            row = {
+                'status': 'excluded',
+                'pc': f'SAKURA1/TITLE/{title[1]}.SPR',
+                'reason': 'Japanese lettering is baked into the PC image. The approved episode cards use localized centers.',
+                'decision_evidence': 'docs/research/episode-title-pc-pairings.md',
+            }
         elif path in bg:
             pair = bg[path]
             accepted = name not in bg_review['rejected'] and (
@@ -263,10 +273,18 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
+                elif path == '/SAKURA1/BG1207.BIN':
+                    row['status'] = 'hd'
+                    if disc == 1:
+                        row.update(verified_in_game=True, runtime_evidence=BG1207_REPORT)
                 elif path == '/SAKURA1/BG2248.BIN':
                     row['status'] = 'hd'
                     if disc == 1:
                         row.update(verified_in_game=True, runtime_evidence=BG2248_REPORT)
+                elif path == '/SAKURA1/BG2238.BIN':
+                    row['status'] = 'hd'
+                    if (disc, path) in SCENE_DRAWS:
+                        row.update(verified_in_game=True, runtime_evidence=SCENE_DRAWS[(disc, path)][1])
                 elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
                     row['runtime_evidence'] = SCENE_DRAWS[(disc, path)][1]

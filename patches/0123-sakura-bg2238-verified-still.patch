@@ -1,0 +1,75 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -25,6 +25,7 @@
+ #include "bg2533_verified_pan.h"
+ #include "bg2248_verified_pan.h"
+ #include "bg1207_verified_pan.h"
++#include "bg2238_verified_still.h"
+ #include "scene_bg_table.h"
+ #include "eve_inset.h"
+ #include "body_table.h"
+@@ -670,6 +671,7 @@
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
++    SceneHd bg2238;
+     SceneHd bg1207;
+     std::vector<uint32_t> bg1207Native;
+     SceneHd bg2248;
+@@ -2156,6 +2158,24 @@
+                                     }
+                                 }
+                             }
++                            if (!drewHd && !drewClip && !choosing && !port.menu.IsOpen() &&
++                                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++                                port.videoRenderer->BackgroundPaletteFingerprint(2) == kBG2238Palette &&
++                                port.videoRenderer->BackgroundCellFingerprint(2, kBG2238CellBytes) == kBG2238Cells &&
++                                MatchesBG2238Still(softwareShown, planes.topSource)) {
++                                if (!bg2238.tried) {
++                                    bg2238.tried = true;
++                                    queuePinnedPan(bg2238, "SAKURA1/BG/BG2238.SPR", 1958195,
++                                                   0x2C1DE54E3EA0927Dull, 592, 320);
++                                }
++                                finishPinnedPan(bg2238);
++                                if (bg2238.texture) {
++                                    constexpr SDL_FRect pcCrop{8, 28, 544, 272};
++                                    drewHd = SDL_RenderTexture(renderer, bg2238.texture, &pcCrop, &imageTarget);
++                                    if (drewHd && std::getenv("SATRECOMP_PAN_TRACE"))
++                                        std::fprintf(stderr, "verified still: BG2238\n");
++                                }
++                            }
+                             if(!drewClip && !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 && port.videoRenderer &&
+                                planes.source.size()==320*224) {
+                                 for(const uint32_t layer:{2u,4u}) {
+diff --git a/port/bg2238_verified_still.h b/port/bg2238_verified_still.h
+new file mode 100644
+--- /dev/null
++++ b/port/bg2238_verified_still.h
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include <cstdint>
++#include <span>
++
++namespace port {
++inline constexpr uint64_t kBG2238Palette = 0x5DEDEF54BF2F059Dull;
++// The first blank cell fills the margins and repeats in the name table.
++inline constexpr uint64_t kBG2238Cells = 0xCA9BDE72C500A276ull;
++inline constexpr unsigned kBG2238CellBytes = 46016;
++
++inline bool MatchesBG2238Still(std::span<const uint32_t> rgb, std::span<const uint8_t> layers) {
++    if (rgb.size() != 320 * 224 || layers.size() != rgb.size()) return false;
++    uint64_t fingerprint = 14695981039346656037ull;
++    for (int y = 8; y < 152; ++y) {
++        for (int x = 16; x < 304; ++x) {
++            const auto at = y * 320 + x;
++            if (layers[at] != 2) return false;
++            for (unsigned shift = 0; shift < 24; shift += 8)
++                fingerprint = (fingerprint ^ uint8_t(rgb[at] >> shift)) * 1099511628211ull;
++        }
++    }
++    return fingerprint == 0x095A6EAF8E529EE5ull;
++}
++}

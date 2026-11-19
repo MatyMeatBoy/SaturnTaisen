@@ -1,0 +1,225 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -24,6 +24,7 @@
+ #include "pc_spr.h"
+ #include "bg2533_verified_pan.h"
+ #include "bg2248_verified_pan.h"
++#include "bg1207_verified_pan.h"
+ #include "scene_bg_table.h"
+ #include "eve_inset.h"
+ #include "body_table.h"
+@@ -669,10 +670,45 @@
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
++    SceneHd bg1207;
++    std::vector<uint32_t> bg1207Native;
+     SceneHd bg2248;
+     std::vector<uint32_t> bg2248Native;
+     SceneHd bg2533;
+     std::vector<uint32_t> bg2533Native;
++    auto queuePinnedPan = [&](SceneHd& pan, const char* relativePath, size_t fileSize,
++                              uint64_t fingerprint, unsigned width, unsigned height) {
++        const auto file = std::filesystem::path(port.opt.pcAssetsPath) / relativePath;
++        pan.pending = std::async(std::launch::async, [file, fileSize, fingerprint, width, height] {
++            SceneHdPixels decoded;
++            std::vector<uint8_t> bytes;
++            if (!ReadPcBackdropFile(file, bytes, fileSize) || AtlasFingerprint(bytes) != fingerprint) return decoded;
++            std::vector<PcSprite> images;
++            std::string error;
++            if (!DecodePcSprites(bytes, images, error)) return decoded;
++            const auto part = std::find_if(images.begin(), images.end(), [width, height](const auto& item) {
++                return item.index == 0 && item.width == width && item.height == height;
++            });
++            if (part != images.end()) {
++                decoded.width = part->width;
++                decoded.height = part->height;
++                decoded.pixels = std::move(part->pixels);
++            }
++            return decoded;
++        });
++    };
++    auto finishPinnedPan = [&](SceneHd& pan) {
++        if (!pan.pending.valid() || pan.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
++            return;
++        auto decoded = pan.pending.get();
++        if (decoded.pixels.empty()) return;
++        auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++            SDL_TEXTUREACCESS_STATIC, int(decoded.width), int(decoded.height));
++        if (picture && SDL_UpdateTexture(picture, nullptr, decoded.pixels.data(), int(decoded.width * 4))) {
++            SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_LINEAR);
++            pan.texture = picture;
++        } else if (picture) SDL_DestroyTexture(picture);
++    };
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
+     SceneHd ic01;
+@@ -2064,43 +2100,11 @@
+                                         bg2248Native = DecodePinnedPan(native, kBG2248Width, kBG2248Height,
+                                                                         kBG2248Bytes, 0x484258326571AF9Cull);
+                                     }
+-                                    if (!bg2248Native.empty()) {
+-                                        const auto file = std::filesystem::path(port.opt.pcAssetsPath) /
+-                                                          "SAKURA1/BG/BG2248.SPR";
+-                                        bg2248.pending = std::async(std::launch::async, [file] {
+-                                            SceneHdPixels decoded;
+-                                            std::vector<uint8_t> bytes;
+-                                            if (!ReadPcBackdropFile(file, bytes, 370887) ||
+-                                                AtlasFingerprint(bytes) != 0x47D2A7B028841B72ull) return decoded;
+-                                            std::vector<PcSprite> images;
+-                                            std::string error;
+-                                            if (!DecodePcSprites(bytes, images, error)) return decoded;
+-                                            const auto part = std::find_if(images.begin(), images.end(), [](const auto& item) {
+-                                                return item.index == 0 && item.width == 2 * kBG2248Width &&
+-                                                       item.height == 2 * kBG2248Height;
+-                                            });
+-                                            if (part != images.end()) {
+-                                                decoded.width = part->width;
+-                                                decoded.height = part->height;
+-                                                decoded.pixels = std::move(part->pixels);
+-                                            }
+-                                            return decoded;
+-                                        });
+-                                    }
++                                    if (!bg2248Native.empty())
++                                        queuePinnedPan(bg2248, "SAKURA1/BG/BG2248.SPR", 370887,
++                                                       0x47D2A7B028841B72ull, 2 * kBG2248Width, 2 * kBG2248Height);
+                                 }
+-                                if (bg2248.pending.valid() &&
+-                                    bg2248.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+-                                    auto decoded = bg2248.pending.get();
+-                                    if (!decoded.pixels.empty()) {
+-                                        auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+-                                            SDL_TEXTUREACCESS_STATIC, int(decoded.width), int(decoded.height));
+-                                        if (picture && SDL_UpdateTexture(picture, nullptr, decoded.pixels.data(),
+-                                                                         int(decoded.width * 4))) {
+-                                            SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_LINEAR);
+-                                            bg2248.texture = picture;
+-                                        } else if (picture) SDL_DestroyTexture(picture);
+-                                    }
+-                                }
++                                finishPinnedPan(bg2248);
+                                 if (bg2248.texture) {
+                                     const auto offset = FindBG2248Offset(bg2248Native, softwareShown, planes.topSource);
+                                     if (offset) {
+@@ -2112,11 +2116,51 @@
+                                     }
+                                 }
+                             }
++                            const bool bg1207Layer = port.videoRenderer &&
++                                port.videoRenderer->BackgroundPaletteFingerprint(4) == kBG1207Palette &&
++                                port.videoRenderer->BackgroundCellFingerprint(4, 41472) == kBG1207Cells;
++                            if (!drewHd && !drewClip && bg1207Layer && !port.opt.pcAssetsPath.empty() &&
++                                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !choosing && !port.menu.IsOpen()) {
++                                if (!bg1207.tried) {
++                                    bg1207.tried = true;
++                                    std::vector<uint8_t> native;
++                                    if (port.discFiles.ReadBounded("BG1207.BIN", native, kBG1207Bytes)) {
++                                        bg1207Native = DecodePinnedPan(native, kBG1207Width, kBG1207Height,
++                                                                        kBG1207Bytes, 0xB348FED200EB5F33ull);
++                                    }
++                                    if (!bg1207Native.empty())
++                                        queuePinnedPan(bg1207, "SAKURA1/BG/BG1207.SPR", 430485,
++                                                       0x79337C665113FFEAull, 1024, 320);
++                                }
++                                finishPinnedPan(bg1207);
++                                if (bg1207.texture) {
++                                    const auto offset = FindBG1207Offset(bg1207Native, softwareShown, planes.topSource,
++                                        port.videoRenderer->BackgroundIsOpaque(2));
++                                    if (offset) {
++                                        const SDL_FRect pcCrop{float(*offset * 2), 16.0f, float(2 * kPanInsetWidth),
++                                                               float(2 * kBG1207Height)};
++                                        drewHd = SDL_RenderTexture(renderer, bg1207.texture, &pcCrop, &imageTarget);
++                                        if (drewHd) {
++                                            sceneHdForeground = zoomForeground;
++                                            for (int y = 8; y < 152; ++y)
++                                                for (int x = 16; x < 304; ++x) {
++                                                    const auto at = size_t(y) * 320 + x;
++                                                    if (planes.topSource[at] == 4) sceneHdForeground[at] = 0;
++                                                }
++                                            SDL_UpdateTexture(content, nullptr, sceneHdForeground.data(), 320 * sizeof(uint32_t));
++                                            SDL_RenderTexture(renderer, content, &imageCrop, &imageTarget);
++                                            SDL_UpdateTexture(content, nullptr, zoomForeground.data(), 320 * sizeof(uint32_t));
++                                            if (std::getenv("SATRECOMP_PAN_TRACE"))
++                                                std::fprintf(stderr, "verified pan: BG1207 x=%u\n", *offset);
++                                        }
++                                    }
++                                }
++                            }
+                             if(!drewClip && !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 && port.videoRenderer &&
+                                planes.source.size()==320*224) {
+                                 for(const uint32_t layer:{2u,4u}) {
+                                     if(drewHd)break;
+-                                    if(layer==4 && bg2248Layer)continue;
++                                    if(layer==4 && (bg2248Layer || bg1207Layer))continue;
+                                     const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
+                                     constexpr unsigned kNoSlot=kSceneBgCount+kSceneBgAmbiguousCount;
+                                     unsigned slot=kNoSlot;
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -179,6 +179,13 @@
+         const auto& offset=m_regs2.colorOffset[m_regs2.colorOffsetSelect[layer]];
+         auto signed9=[](unsigned value){return static_cast<int16_t>((int(value&0x1FF)^0x100)-0x100);};
+         return {signed9(offset.r),signed9(offset.g),signed9(offset.b)};
++    }
++    // This layer can be kept as an independent foreground in host presentation.
++    bool BackgroundIsOpaque(uint32 layer) const {
++        if (layer < 1 || layer > 5 || !m_regs2.layerEnabled[layer] || m_regs2.colorCalcExtended) return false;
++        const auto& bg = m_regs2.bgParams[layer - 1];
++        return !bg.colorCalcEnable && !bg.lineColorScreenEnable && !bg.shadowEnable &&
++               BackgroundColorOffset(layer) == std::array<int16_t, 3>{};
+     }
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
+diff --git a/port/bg1207_verified_pan.h b/port/bg1207_verified_pan.h
+new file mode 100644
+--- /dev/null
++++ b/port/bg1207_verified_pan.h
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "bg2533_verified_pan.h"
++
++namespace port {
++inline constexpr unsigned kBG1207Width = 512;
++inline constexpr unsigned kBG1207Height = 144;
++inline constexpr size_t kBG1207Bytes = 79952;
++inline constexpr uint64_t kBG1207Palette = 0x6EE7138F39DF8CFEull;
++inline constexpr uint64_t kBG1207Cells = 0x7F3401C09AF54AA3ull;
++
++inline std::optional<unsigned> FindBG1207Offset(
++    std::span<const uint32_t> picture, std::span<const uint32_t> frame,
++    std::span<const uint8_t> top, bool opaqueActorLayer) {
++    if (picture.size() != kBG1207Width * kBG1207Height || frame.size() != kPanFrameWidth * kPanFrameHeight ||
++        top.size() != frame.size()) return {};
++    const auto agrees = [&](unsigned start, unsigned x, unsigned y) {
++        const auto at = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;
++        const auto expected = picture[y * kBG1207Width + start + x];
++        if (top[at] == 4) return (frame[at] & 0xFFFFFF) == expected;
++        return top[at] == 2 && opaqueActorLayer;
++    };
++    std::optional<unsigned> result;
++    for (unsigned offset = 0; offset <= kBG1207Width - kPanInsetWidth; ++offset) {
++        if (!agrees(offset, 17, 13) || !agrees(offset, 139, 77) || !agrees(offset, 247, 114)) continue;
++        bool verified = true;
++        unsigned foreground = 0;
++        for (unsigned y = 0; y < kBG1207Height && verified; ++y) {
++            for (unsigned x = 0; x < kPanInsetWidth; ++x) {
++                const auto at = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;
++                // Keep the verified foreground small so the native viewport identifies the crop.
++                if (!agrees(offset, x, y) || (top[at] == 2 && ++foreground > 1024)) {
++                    verified = false;
++                    break;
++                }
++            }
++        }
++        if (!verified) continue;
++        if (result) return {};
++        result = offset;
++    }
++    return result;
++}
++}

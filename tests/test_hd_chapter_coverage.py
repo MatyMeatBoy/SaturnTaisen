@@ -97,3 +97,27 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertEqual(row['pc'], 'SAKURA1/BG/BG2238.SPR')
             self.assertEqual(row['status'], 'unsupported-size')
             self.assertFalse(row.get('verified_in_game'))
+
+    def test_pc_title_donors_remain_excluded_in_both_disc_inventories(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
+        scenes = {key: row for group in groups for key, row in group['scene-pictures'].items()}
+        for disc in (1, 2):
+            for episode in range(1, 10):
+                row = scenes[f'{disc}:/SAKURA1/TITLE{episode}.BIN']
+                self.assertEqual(row['status'], 'excluded')
+                self.assertEqual(row['pc'], f'SAKURA1/TITLE/TITLE{episode}.SPR')
+                self.assertFalse(row.get('verified_in_game'))
+            self.assertEqual(scenes[f'{disc}:/SAKURA1/TITLE10.BIN']['status'], 'unknown')
+
+    def test_bg2238_only_records_the_witnessed_disc_and_chapter(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter9 = next(chapter for chapter in catalog['chapters'] if chapter['chapter'] == 9)
+        scene = chapter9['resources']['scene-pictures']['2:/SAKURA1/BG2238.BIN']
+        self.assertEqual((scene['status'], scene['association']), ('hd', 'observed'))
+        self.assertTrue(scene['verified_in_game'])
+        self.assertEqual(scene['runtime_evidence'], 'docs/research/bg2238-still.md')
+        disc1 = catalog['unassigned']['scene-pictures']['1:/SAKURA1/BG2238.BIN']
+        self.assertFalse(disc1.get('verified_in_game'))
