@@ -55,7 +55,8 @@ def merge_patch_lists(main_list, branch_list):
         if path in merged:
             continue
         number = patch_number(path)
-        if number in taken:
+        if number in taken or number < max(taken):
+            # a clash, or lower than what main already has: the stack must stay in increasing order
             number = max(taken) + 1
             new = re.sub(r'^patches/\d+-', 'patches/%04d-' % number, path)
             renames[path] = new
