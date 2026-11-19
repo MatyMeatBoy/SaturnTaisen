@@ -10107,11 +10107,15 @@
       },
       "1:/SAKURA2/BBG002.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG002.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/BBG003.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG003.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/BBG004.BIN": {
         "association": "unknown",
@@ -10131,19 +10135,27 @@
       },
       "1:/SAKURA2/BBG008.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG008.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/BBG103.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG103.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/BBG104.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG104.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/BBG106.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG106.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/BBG203.BIN": {
         "association": "unknown",
@@ -10151,11 +10163,15 @@
       },
       "1:/SAKURA2/BBG205.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG205.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/BBG235.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/disc1-battle-insets.md",
+        "pc": "SAKURA2/BG/BBG235.SPR",
+        "status": "hd"
       },
       "1:/SAKURA2/EVE102.BIN": {
         "association": "unknown",

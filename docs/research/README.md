@@ -138,3 +138,5 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [HD package gate](hd-package-gate.md) records generated-art validation and clean-profile preparation with PC movies.
 
 - [clip-hook-design.md](clip-hook-design.md) — PC video hook design and the second clip and skip verification.
+
+- [Disc 1 battle insets](disc1-battle-insets.md)

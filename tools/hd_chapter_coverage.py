@@ -46,6 +46,8 @@ STAGE21_REPORT = 'docs/research/stage21-pc-ground.md'
 STAGE21_MAP = (1, '/SAKURA2/MAP21.BIN')
 BBG204_INSET = (1, '/SAKURA2/BBG204.BIN')
 BBG204_REPORT = 'docs/research/bbg204-tactical-inset.md'
+BBG_INSET_REPORT = 'docs/research/disc1-battle-insets.md'
+BBG_INSET_PAIRS = {'BBG002', 'BBG003', 'BBG008', 'BBG103', 'BBG104', 'BBG106', 'BBG205', 'BBG235'}
 EVE002_REPORT = 'docs/research/eve002-tactical-inset.md'
 EVE0116_REPORT = 'docs/research/eve0116-tactical-inset.md'
 EVE0118_REPORT = 'docs/research/eve0118-tactical-inset.md'
@@ -257,6 +259,8 @@ def build(root, index_dir, portrait_audit):
                 'reason': 'Japanese lettering is baked into the PC image. The approved episode cards use localized centers.',
                 'decision_evidence': 'docs/research/episode-title-pc-pairings.md',
             }
+        elif disc == 1 and name in BBG_INSET_PAIRS and path == f'/SAKURA2/{name}.BIN':
+            row = {'status': 'hd', 'pc': f'SAKURA2/BG/{name}.SPR', 'pairing_evidence': BBG_INSET_REPORT}
         elif path in bg:
             pair = bg[path]
             accepted = name not in bg_review['rejected'] and (
