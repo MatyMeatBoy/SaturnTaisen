@@ -135,3 +135,25 @@ without changing the active build tree.
 The in-game A/B with this patch, clean post-skip audio handoff, separate
 mixer eligibility, and drift/resume remain open. The decoder change does
 not set gains, change source eligibility, or establish lip sync.
+
+## Audio returns to Saturn after skip (T112b)
+
+Patch0080 switches the SDL PCM queue from the source of the presented film,
+rather than the lifetime of the decoder. A newly opened decoder cannot draw
+or gate audio using the previous clip's texture. The SDL queue is cleared
+when the source changes so its queued data does not play over the next scene.
+
+The Windows runtime target compiled, and a direct link with the generated
+Ninja response file produced an isolated candidate because another process
+held the default executable open. Candidate SHA-256
+379e8344bef60ca10faa4755a43f509bbd38644771f906a2ce06a528b2b9ee6c.
+At normal speed, the same English disc-1 boot replay with B at 900 produced
+1,800 matching guest hashes with or without PC assets, also matching the
+pre-fix native run. All runs reported zero interpreted blocks. At screenshot
+pass 700 RGB changed only in the film rectangle. At pass 1300 the whole
+title screenshot matched. The trace switches to PC audio at guest frame
+590 and back to Saturn at 942. The last four seconds of the SDL disk
+capture have RMS 762.8 on the PC-skip run and 754.9 on the native control,
+on the signed 16-bit scale. The pre-fix PC-skip capture was entirely silent
+over that interval. This validates the skip handoff of MOVIE000, not accuracy
+of A/V sync across the clip catalog or restores.
