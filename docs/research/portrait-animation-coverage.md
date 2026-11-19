@@ -171,3 +171,37 @@ still needs a checkpoint that reaches that branch.
 At block close the project measured 63,129,173,134 logical bytes
 with hard links counted once and reparse points excluded, above the
 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+
+## Yoneda 00e9 storage portrait
+
+The English disc-2 Chapter 9 natural storage briefing ends with
+the exact `00e9` VDP1 base and no active strip. The archived
+`chapter9-after-storage/terminal.state` is unchanged, SHA-256
+`946f5869b4f17c4cd746bb06eeb0f6bb66ad80282db3c965ef03729b0b55cbfa`.
+The prepared atlas is KAO.SPR index 232. Its native atlas SHA-256 is
+`2b4e014a32b4ed8c1165d8754c61e50bdd47743ef01503e7909bf18958db281b`,
+and the prepared 2× RGBA hash is
+`da69e3b1378b05773b2f1fd2973d81e399c4ec1b77db6bef7070ed05fdb04c1e`.
+
+The same muted development runtime replayed 12 strict-native frames
+with the one-portrait pack present and absent, in Enhanced and
+Original. All four guest logs match, SHA-256
+`27935605ffd961da7321963025b8480b189c9cf5542824ff21701210cd200275`.
+All runs reported zero interpreted blocks. At 2560×1440 the runtime
+logged `00E9 density=2 patch=0 y=0`. Enhanced changes only the
+portrait rectangle (404,1090)–(644,1378), and all 69,120 RGB pixels
+in the rectangle equal the prepared base. Original RGB matches
+at both sampled frames. The register marks this Chapter 9 base
+occurrence only. Its Chapter 1 occurrence and both animation
+strips stay outside this verification scope.
+
+The bounded Iris Command Room investigation replayed the
+unmodified `prebattle-3000` state with normal A inputs. The trace
+reached English record 10261 before the wall-clock limit, short
+of the 10312 selector for `00a1`. A natural activation of
+the swapped Iris strips remains open.
+
+At block close the project measured 63,922,050,823 logical bytes
+after removing the duplicate trial pack. The delivered development
+ZIP remains 6,315,009,692 bytes.
