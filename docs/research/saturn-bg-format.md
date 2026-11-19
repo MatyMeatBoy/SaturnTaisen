@@ -142,3 +142,45 @@ Result on the saved scenes: `NC11` (the girl in the pink kimono) now draws a ful
 The ten title cards (`TITLE1..10.BIN`) are on **VDP2 layer 4** (a layer trace in `title-final.state` plus `chapter1-title-new-game.movie` shows layer 4 taking the palette fingerprint `F84F4FA528984E99` of `TITLE1` at frame 6040 of that run, after the loading screen and the flower plane). Patch0071 widens them without any asset: when layer 4 has one of the ten card fingerprints, the window area around the native 320x224 picture is filled from four strips made of the displayed picture's own border (the left and right strips are the average of the eight outermost columns for every row, smoothed over nine rows; the top and bottom strips the average of the four outermost rows for every column, smoothed over nine columns), stretched with the linear filter, and the native picture is drawn again over them. Nothing of the game's art leaves the player's machine. The fade-in over the flower plane works the same way because the strips come from the frame as displayed.
 
 Seen on `TITLE1` at 1920x1080 (frames 6050-6400): the sky continues to the left, the white blossoms to the right, the lettering stays inside the native picture. It is a plain extension, not painted art: the right side shows a faint vertical banding next to the picture's right edge where the native columns mix pink and white. The generative art the owner asked for (a painted 16:9 card) would replace it; the Spanish cards from `tools/es/portadas_es.py` use the same layer and fingerprints (the palette is not changed), so they widen too. Guest hashes identical to v0.2.2 over the 6,400 frames of that run, 0 interpreted.
+
+### Wide variant B visual review (T105a)
+
+The earlier offset 0x210 yields displaced tiles and coloured bands. In the 30 disc-1 BG files
+with marker 00010002, the big-endian dimensions are at 0x04 and 0x06, and the declared tile count
+is at 0x08. The width × height big-endian u32 pattern names start at 0x610. Tile bytes start
+immediately after that table. Each tile is 64 bytes and the low 30 bits of each pattern name
+are twice its tile index. The high bits can request flips. The review reconstruction used
+bit 30 for horizontal and bit 31 for vertical, pending a runtime witness for the flip mapping.
+
+The table and tile spans account for the exact file length in 29 of 30 files. BG4302 declares
+1,333 tiles and contains 1,273. All pattern indices in the 30 files fit the bytes present.
+The map includes formerly undecoded BG2290, BG2518, BG2533 and BG4372. Existing catalog
+fingerprints still reflect the earlier implementation and need regeneration with the decoder correction.
+
+For the 12 wide pairs already in the plan, reconstruct native tiles in table order
+with the RGB555 palette at 0x10, select the largest picture in the same-number PC SPR,
+and compare side by side at half PC size. Each row below matches the same artwork by eye.
+Whole-image scores use the 32×16 luminance signature of match_hd_all.py. The provisional
+crop search uses a box the size of the native frame, scans half-PC pixels every 4 horizontally
+and 2 vertically, and reports its highest correlation. These are offline measurements.
+
+| BG | Visible match | Whole | Best crop x, y | Crop score |
+|---|---|---:|---|---:|
+| 1207 | Hanami groups, lanterns and trees | 0.988 | 0, 6 | 0.966 |
+| 1257 | Collapsed red gate and brick walls | 0.883 | 80, 0 | 0.827 |
+| 1280 | Painted battle, pine and gold clouds | 0.713 | 56, 16 | 0.901 |
+| 1282 | Breaking wave and sea wall | 0.962 | 0, 8 | 0.970 |
+| 1283 | Ruined avenue and brick viaduct | 0.950 | 0, 8 | 0.914 |
+| 1285 | Burning street and silhouettes | 0.962 | 0, 8 | 0.977 |
+| 1310 | Wave above the coastal town | 0.884 | 0, 10 | 0.829 |
+| 2077 | Soldiers confronting the creature | 0.988 | 16, 10 | 0.758 |
+| 2093 | Distant winged figure | 0.927 | PC narrower than Saturn | — |
+| 2130 | White machine beside the ruins | 0.997 | 0, 8 | 0.953 |
+| 2238 | Close-up of the winged figure | 0.797 | PC narrower than Saturn | — |
+| 2515 | Couple by the window | 0.998 | 0, 8 | 0.988 |
+
+BG1280 is the strongest crop candidate. For BG1257 and BG2077, the whole-image score
+beats every fixed-size crop, and BG2093 and BG2238 cannot be handled by that crop model.
+Even among equal-width pairs, a fixed vertical crop can score below the resized whole scene.
+Use in-game scroll and stable landmarks to validate each transform before enabling it.
+No runtime, pack, release, or approved Zoom geometry was changed in this review.
