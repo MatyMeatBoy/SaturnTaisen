@@ -1,0 +1,2607 @@
+{
+ "schema": 1,
+ "scope": "Saturn NC*.BIN bodies to PC NC pictures by content; data only.",
+ "summary": {
+  "content": 64,
+  "candidate": 80
+ },
+ "undecoded": [
+  "SAKURA1/NC3125.BIN",
+  "SAKURA1/NC3126.BIN",
+  "SAKURA1/NC4138.BIN"
+ ],
+ "pairs": [
+  {
+   "saturn_file": "SAKURA1/NC10.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "D94960090307DDF0",
+   "same_name_pc": "NC10.SPR",
+   "same_name_correlation": 0.962,
+   "best_pc": "NC10.SPR",
+   "best_correlation": 0.962,
+   "pc_sha256": "982651b5ffd39b8fa93d4a946c165960115432f3e36659dae16ff4f62c9f4a31",
+   "pc_size": [
+    326,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC11.BIN",
+   "size": [
+    168,
+    144
+   ],
+   "palette_fnv": "D94960090307DDF0",
+   "same_name_pc": "NC11.SPR",
+   "same_name_correlation": 0.889,
+   "best_pc": "NC11.SPR",
+   "best_correlation": 0.889,
+   "pc_sha256": "4c81e10d15b19e0a0a96ee874ca1739bba304f5fd60167c645dbfe318a5983f7",
+   "pc_size": [
+    294,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC12.BIN",
+   "size": [
+    184,
+    144
+   ],
+   "palette_fnv": "D94960090307DDF0",
+   "same_name_pc": "NC12.SPR",
+   "same_name_correlation": 0.948,
+   "best_pc": "NC12.SPR",
+   "best_correlation": 0.948,
+   "pc_sha256": "a7c9a83e255537ad1283807f158f6b98ded78578791ab2dafdf39a482197b1a1",
+   "pc_size": [
+    346,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC13.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "D94960090307DDF0",
+   "same_name_pc": "NC13.SPR",
+   "same_name_correlation": 0.895,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.895,
+   "pc_sha256": "b5c6cd3ad3889c0ae23f8acecac8cd5c3896c98ab44e44861ae682d26e90e48c",
+   "pc_size": [
+    298,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC14.BIN",
+   "size": [
+    160,
+    144
+   ],
+   "palette_fnv": "D94960090307DDF0",
+   "same_name_pc": "NC14.SPR",
+   "same_name_correlation": 0.955,
+   "best_pc": "NC14.SPR",
+   "best_correlation": 0.955,
+   "pc_sha256": "e31417f14a01a78d899a84050663454556a80234b3c80a2df1d1d8f363779005",
+   "pc_size": [
+    294,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC15.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "D94960090307DDF0",
+   "same_name_pc": "NC15.SPR",
+   "same_name_correlation": 0.964,
+   "best_pc": "NC15.SPR",
+   "best_correlation": 0.964,
+   "pc_sha256": "56de05a6e59acf0fc26fe35321505c59abb421db6e982cdb65eec74d12f7022b",
+   "pc_size": [
+    334,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC16.BIN",
+   "size": [
+    248,
+    144
+   ],
+   "palette_fnv": "D94960090307DDF0",
+   "same_name_pc": "NC16.SPR",
+   "same_name_correlation": 0.92,
+   "best_pc": "NC16.SPR",
+   "best_correlation": 0.92,
+   "pc_sha256": "81062b1e4a9059c8fb9db749b43513b97ec6ec1cad0b9b1b2c71cf75eef4e2d8",
+   "pc_size": [
+    504,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC20.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC20.SPR",
+   "same_name_correlation": 0.842,
+   "best_pc": "NC20.SPR",
+   "best_correlation": 0.842,
+   "pc_sha256": "4f09fa3e7aa10a284160713e4df4f8499c2de1fcd355249b592873049eb25723",
+   "pc_size": [
+    296,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC21.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC21.SPR",
+   "same_name_correlation": 0.898,
+   "best_pc": "NC21.SPR",
+   "best_correlation": 0.898,
+   "pc_sha256": "6af7cfe871c3f20d515fd773e9b9c3663a1e04f2c2e8f9086c2ea8e3a02a096c",
+   "pc_size": [
+    320,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC22.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC22.SPR",
+   "same_name_correlation": 0.212,
+   "best_pc": "NC3261.SPR",
+   "best_correlation": 0.415,
+   "pc_sha256": "c69e3df21ad339b0ebe9f27ecabfb961c0c43c195c4ea96ae6fe753de9566683",
+   "pc_size": [
+    528,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC23.BIN",
+   "size": [
+    120,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC23.SPR",
+   "same_name_correlation": 0.919,
+   "best_pc": "NC23.SPR",
+   "best_correlation": 0.919,
+   "pc_sha256": "40109150428e922ed65a45702f2eff5ac1d26f9c97dbe10cc055498d91e0284c",
+   "pc_size": [
+    240,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC24.BIN",
+   "size": [
+    184,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC24.SPR",
+   "same_name_correlation": 0.774,
+   "best_pc": "NC24.SPR",
+   "best_correlation": 0.774,
+   "pc_sha256": "c9c3e8f63530d4fed8945202ab460414c04916836ebfc1e6cde196cb34d7210b",
+   "pc_size": [
+    368,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC25.BIN",
+   "size": [
+    224,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC25.SPR",
+   "same_name_correlation": 0.657,
+   "best_pc": "NC25.SPR",
+   "best_correlation": 0.657,
+   "pc_sha256": "7d306654c3808520fe3dc927c9806ee3e449610014f9eb542f6b51a16bc00e26",
+   "pc_size": [
+    440,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC26.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC26.SPR",
+   "same_name_correlation": 0.849,
+   "best_pc": "NC26.SPR",
+   "best_correlation": 0.849,
+   "pc_sha256": "6a53e887b7a452f98912f3eb82aeb374dd2cba41c9a6c8c1f8fe28731dd59d87",
+   "pc_size": [
+    304,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC27.BIN",
+   "size": [
+    184,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC27.SPR",
+   "same_name_correlation": 0.367,
+   "best_pc": "NC27.SPR",
+   "best_correlation": 0.367,
+   "pc_sha256": "f1b39ab449c84a1c60d0961a1b210d45da7bc19c735178761533291f4abc2581",
+   "pc_size": [
+    392,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC28.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "6882DD6CCD8B28FD",
+   "same_name_pc": "NC28.SPR",
+   "same_name_correlation": 0.612,
+   "best_pc": "NC20.SPR",
+   "best_correlation": 0.723,
+   "pc_sha256": "81581264f869aecf9af43b2539190af00ac17a8f58e1452240bf34b0c47e032b",
+   "pc_size": [
+    296,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC30.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "7C339105B5D31EDC",
+   "same_name_pc": "NC30.SPR",
+   "same_name_correlation": 0.93,
+   "best_pc": "NC30.SPR",
+   "best_correlation": 0.93,
+   "pc_sha256": "65f65d640970fe5c76634379375342c876268a854fd7f0fa3f84df6c25768150",
+   "pc_size": [
+    368,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3001.BIN",
+   "size": [
+    160,
+    144
+   ],
+   "palette_fnv": "36602FF13DE7E5BF",
+   "same_name_pc": "NC3001.SPR",
+   "same_name_correlation": 0.833,
+   "best_pc": "NC3002.SPR",
+   "best_correlation": 0.848,
+   "pc_sha256": "fc7a26f45ee40232242fc4decad3c7de4844f04bda0e928338c3b87aea238001",
+   "pc_size": [
+    335,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3002.BIN",
+   "size": [
+    160,
+    144
+   ],
+   "palette_fnv": "E0F6F0D4CC58F941",
+   "same_name_pc": "NC3002.SPR",
+   "same_name_correlation": 0.863,
+   "best_pc": "NC3001.SPR",
+   "best_correlation": 0.878,
+   "pc_sha256": "f09936e1b9f667375d30fba3eaef3571c2757bdd0297c631f3e296e2173acdb7",
+   "pc_size": [
+    337,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3003.BIN",
+   "size": [
+    232,
+    144
+   ],
+   "palette_fnv": "974FC47DFA3CBD36",
+   "same_name_pc": "NC3003.SPR",
+   "same_name_correlation": 0.934,
+   "best_pc": "NC3003.SPR",
+   "best_correlation": 0.934,
+   "pc_sha256": "7857a97445b964aafe5ef8b6af99a2dff6db549d32bf40c40e58d7e3a9b90717",
+   "pc_size": [
+    470,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3004.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "1133EBC5C750D2B8",
+   "same_name_pc": "NC3004.SPR",
+   "same_name_correlation": 0.424,
+   "best_pc": "NC3519.SPR",
+   "best_correlation": 0.623,
+   "pc_sha256": "f03e5e07703030eb40b8f46e668aa08289ba117147536f85e5f7b505fdfb272d",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3005.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "B5BA38B44C005809",
+   "same_name_pc": "NC3005.SPR",
+   "same_name_correlation": 0.304,
+   "best_pc": "NC3519.SPR",
+   "best_correlation": 0.44,
+   "pc_sha256": "2803684427b9136bffdc30110537899fef94a74d85c14cfe4f7087ec5388859b",
+   "pc_size": [
+    544,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3006.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "5A51CBC991A35EAE",
+   "same_name_pc": "NC3006.SPR",
+   "same_name_correlation": 0.171,
+   "best_pc": "NC25.SPR",
+   "best_correlation": 0.245,
+   "pc_sha256": "72d4932460bf8a421fde91b678b850467bedcc258d2a339cb66826f478051158",
+   "pc_size": [
+    544,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3007.BIN",
+   "size": [
+    253,
+    144
+   ],
+   "palette_fnv": "9A8FC3B9A75C4369",
+   "same_name_pc": "NC3007.SPR",
+   "same_name_correlation": 0.352,
+   "best_pc": "NC3261.SPR",
+   "best_correlation": 0.536,
+   "pc_sha256": "fb349c018f8b1a1d812779db4612bfd66ff8f5deaf25f76b2821bfb0e5396920",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3008.BIN",
+   "size": [
+    224,
+    144
+   ],
+   "palette_fnv": "4874E2C8828E3D43",
+   "same_name_pc": "NC3008.SPR",
+   "same_name_correlation": 0.847,
+   "best_pc": "NC3008.SPR",
+   "best_correlation": 0.847,
+   "pc_sha256": "d003486cb92182ec69b8e4071bded588bc8ce3b8657a43ee73baa48d57b2f969",
+   "pc_size": [
+    447,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3009.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "8DF7B22D2902B600",
+   "same_name_pc": "NC3009.SPR",
+   "same_name_correlation": 0.116,
+   "best_pc": "NC3124.SPR",
+   "best_correlation": 0.161,
+   "pc_sha256": "4268cd806df7a7c89c8650ab6be45242613fa312202cfafff9854ea2a90320fd",
+   "pc_size": [
+    536,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3010.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "56DA5B1FA69509C0",
+   "same_name_pc": "NC3010.SPR",
+   "same_name_correlation": 0.177,
+   "best_pc": "NC3050.SPR",
+   "best_correlation": 0.255,
+   "pc_sha256": "0d44fe78a519ba3f4ad12ddc78fad10001885759776125098a96afed36de3aaa",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3011.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "55DBF2D2BD56C610",
+   "same_name_pc": "NC3011.SPR",
+   "same_name_correlation": 0.347,
+   "best_pc": "NC3124.SPR",
+   "best_correlation": 0.391,
+   "pc_sha256": "573c3a04f2895ca9080a6e172417785a5856e4dd07738d166a3a7ea4224d1b2b",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3013.BIN",
+   "size": [
+    197,
+    144
+   ],
+   "palette_fnv": "F72D4E655CEC6347",
+   "same_name_pc": "NC3013.SPR",
+   "same_name_correlation": 0.099,
+   "best_pc": "NC3261.SPR",
+   "best_correlation": 0.186,
+   "pc_sha256": "b5fca5448908acd9413c5648bd193392358958fe9e9ee6f85593ddf42392211f",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3014.BIN",
+   "size": [
+    232,
+    144
+   ],
+   "palette_fnv": "1CDF0FA192D73EF6",
+   "same_name_pc": "NC3014.SPR",
+   "same_name_correlation": 0.681,
+   "best_pc": "NC3014.SPR",
+   "best_correlation": 0.681,
+   "pc_sha256": "b8af13f77fd4af5d66ec0c35c1e6a46300d312ae391595f4a2faaada431ec672",
+   "pc_size": [
+    464,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3015.BIN",
+   "size": [
+    257,
+    144
+   ],
+   "palette_fnv": "58DABB3BD4B2D5BC",
+   "same_name_pc": "NC3015.SPR",
+   "same_name_correlation": 0.136,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.315,
+   "pc_sha256": "93a70b8d1b7a3b267d3936207b704264eff9c66f8ee672bebdb140d65c715c1f",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3016.BIN",
+   "size": [
+    224,
+    144
+   ],
+   "palette_fnv": "14989BCDD29B7236",
+   "same_name_pc": "NC3016.SPR",
+   "same_name_correlation": 0.913,
+   "best_pc": "NC3016.SPR",
+   "best_correlation": 0.913,
+   "pc_sha256": "be346837fecc42279db1cabdb527b966b675cc75e5ac95baa0e2041fee8e81f7",
+   "pc_size": [
+    448,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3017.BIN",
+   "size": [
+    248,
+    144
+   ],
+   "palette_fnv": "53FBDB1C41FAB5FB",
+   "same_name_pc": "NC3017.SPR",
+   "same_name_correlation": 0.786,
+   "best_pc": "NC3017.SPR",
+   "best_correlation": 0.786,
+   "pc_sha256": "c6a0818428f9c290e8f36c37aacc5832e4ae9c7c8e3bc48d2eade1f77be2ee8c",
+   "pc_size": [
+    488,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3018.BIN",
+   "size": [
+    240,
+    144
+   ],
+   "palette_fnv": "4DAA65018239993B",
+   "same_name_pc": "NC3018.SPR",
+   "same_name_correlation": 0.52,
+   "best_pc": "NC3018.SPR",
+   "best_correlation": 0.52,
+   "pc_sha256": "7fe8151eae3d4c89a472517bd42d20bee969bd94ecd6828063f499ad00068c8b",
+   "pc_size": [
+    488,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3021.BIN",
+   "size": [
+    256,
+    144
+   ],
+   "palette_fnv": "FB1996115EE6DDB5",
+   "same_name_pc": "NC3021.SPR",
+   "same_name_correlation": 0.903,
+   "best_pc": "NC3021.SPR",
+   "best_correlation": 0.903,
+   "pc_sha256": "0de10280d33bf6f0fdb9be67c7c00f015cb91a073b4be5f49645cc6f24c2d0e5",
+   "pc_size": [
+    520,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3022.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "2A3FDDA13FB5670E",
+   "same_name_pc": "NC3022.SPR",
+   "same_name_correlation": 0.166,
+   "best_pc": "NC3043.SPR",
+   "best_correlation": 0.342,
+   "pc_sha256": "7b8ac0cd7a9deac7b39c94f397fb80de74b723ae3115081909d9cdf8d814715f",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3023.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "7883C90469814C25",
+   "same_name_pc": "NC3023.SPR",
+   "same_name_correlation": 0.015,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.169,
+   "pc_sha256": "4819b7f2e7bb64fee097f72a61392377d516b7f8b50f4dbd5760cdc49cef9a44",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3024.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "35A2C50E8355F4E3",
+   "same_name_pc": "NC3024.SPR",
+   "same_name_correlation": 0.036,
+   "best_pc": "NC36.SPR",
+   "best_correlation": 0.216,
+   "pc_sha256": "3b8c90e48efb5b742d30967de44f8c5a66f63a961eccfccb5f0f251f1273bf1c",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3025.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "6B127FC6D7E05566",
+   "same_name_pc": "NC3025.SPR",
+   "same_name_correlation": 0.194,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.33,
+   "pc_sha256": "8af4d3ed71b825a961b9e626c6d1e7e950dd42abbca33fe372b8db2cdd29aa2e",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3027.BIN",
+   "size": [
+    258,
+    144
+   ],
+   "palette_fnv": "5D8983F6EAE7F586",
+   "same_name_pc": "NC3027.SPR",
+   "same_name_correlation": 0.225,
+   "best_pc": "NC36.SPR",
+   "best_correlation": 0.375,
+   "pc_sha256": "93acdf078afaae62b42721fea67eb03d1eb803d64421efc1718f090c72077839",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3028.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "FA5E1C47E3304273",
+   "same_name_pc": "NC3028.SPR",
+   "same_name_correlation": 0.069,
+   "best_pc": "NC36.SPR",
+   "best_correlation": 0.521,
+   "pc_sha256": "17b9252f9a7ef0a48e5787efce08289f19625e4afe4079a2d4042b23a9162b6b",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3029.BIN",
+   "size": [
+    218,
+    144
+   ],
+   "palette_fnv": "5F99E14FA62C1B39",
+   "same_name_pc": "NC3029.SPR",
+   "same_name_correlation": 0.033,
+   "best_pc": "NC3030.SPR",
+   "best_correlation": 0.23,
+   "pc_sha256": "0303e9c2450f647c3e9ab6a6a7335785ec750c06df53fb912a02728634450c6b",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3030.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "3D6CDBB02FEA0092",
+   "same_name_pc": "NC3030.SPR",
+   "same_name_correlation": 0.374,
+   "best_pc": "NC30.SPR",
+   "best_correlation": 0.49,
+   "pc_sha256": "55f8cafc7dfc6f1a36432ccc55adaf67c1c56661a87ddb6972e0044272a742a8",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3031.BIN",
+   "size": [
+    256,
+    144
+   ],
+   "palette_fnv": "DDE8F680A37AF932",
+   "same_name_pc": "NC3031.SPR",
+   "same_name_correlation": 0.77,
+   "best_pc": "NC3031.SPR",
+   "best_correlation": 0.77,
+   "pc_sha256": "80f6658d3fab41d4b395db0fd6ec4df0943be853a9340642d7084b4990f2bee5",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3032.BIN",
+   "size": [
+    224,
+    144
+   ],
+   "palette_fnv": "5C75B74379BFFF24",
+   "same_name_pc": "NC3032.SPR",
+   "same_name_correlation": 0.849,
+   "best_pc": "NC3032.SPR",
+   "best_correlation": 0.849,
+   "pc_sha256": "f1e5dc03e88fac10c41b3de619da1407f46d23177183d7bf0b8b17b79358cdb3",
+   "pc_size": [
+    448,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3037.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "DD504BE8A6766E61",
+   "same_name_pc": "NC3037.SPR",
+   "same_name_correlation": 0.665,
+   "best_pc": "NC3037.SPR",
+   "best_correlation": 0.665,
+   "pc_sha256": "6c37122a690287874229eaac015ee058389256f9eb06d757f7cd24f46f3a105c",
+   "pc_size": [
+    299,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3038.BIN",
+   "size": [
+    160,
+    144
+   ],
+   "palette_fnv": "883C3C4BB22BE69A",
+   "same_name_pc": "NC3038.SPR",
+   "same_name_correlation": 0.617,
+   "best_pc": "NC3038.SPR",
+   "best_correlation": 0.617,
+   "pc_sha256": "86f85c9f19594b8312dc142c818264c264a374d6855b0c81f714dcc976eeacf9",
+   "pc_size": [
+    320,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3040.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "4B39C3F6ECED975C",
+   "same_name_pc": "NC3040.SPR",
+   "same_name_correlation": 0.204,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.393,
+   "pc_sha256": "d82917df54330d857c13c6935d897fa3ec3f445d4cbba08abdfea803ebd1cf2e",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3042.BIN",
+   "size": [
+    258,
+    144
+   ],
+   "palette_fnv": "D78B2213D488C805",
+   "same_name_pc": "NC3042.SPR",
+   "same_name_correlation": 0.016,
+   "best_pc": "NC91.SPR",
+   "best_correlation": 0.323,
+   "pc_sha256": "0e03d4a3430bcc15b3472a70fc0c963d37b5767dd24d9b99fa6a339446daeeb0",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3043.BIN",
+   "size": [
+    256,
+    144
+   ],
+   "palette_fnv": "5BB8411CF9112718",
+   "same_name_pc": "NC3043.SPR",
+   "same_name_correlation": 0.528,
+   "best_pc": "NC3043.SPR",
+   "best_correlation": 0.528,
+   "pc_sha256": "adb2b69fa5e635470c85486a334226a68caf28905c5ee6f486caa5899e9c4f72",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3045.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "B416BDB2AE5C9EEB",
+   "same_name_pc": "NC3045.SPR",
+   "same_name_correlation": 0.372,
+   "best_pc": "NC36.SPR",
+   "best_correlation": 0.572,
+   "pc_sha256": "9b155a1ae770d3233c172309833da59cc856aaa0fd8b7a65d2bf90821c548475",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3047.BIN",
+   "size": [
+    188,
+    144
+   ],
+   "palette_fnv": "5BF9794238B4796B",
+   "same_name_pc": "NC3047.SPR",
+   "same_name_correlation": 0.122,
+   "best_pc": "NC3261.SPR",
+   "best_correlation": 0.307,
+   "pc_sha256": "dc62cf0c80f9bdc2fe5ada26025d79988b217dadb209df3728d2bec45761ed01",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3050.BIN",
+   "size": [
+    192,
+    144
+   ],
+   "palette_fnv": "BF3471AE2F0192FC",
+   "same_name_pc": "NC3050.SPR",
+   "same_name_correlation": 0.867,
+   "best_pc": "NC3050.SPR",
+   "best_correlation": 0.867,
+   "pc_sha256": "a48f1e646834174fdff30f488d09d4fc733c5ce187e8925422a85a60d49fb6e5",
+   "pc_size": [
+    404,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3056.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "2EB8322F86F67611",
+   "same_name_pc": "NC3056.SPR",
+   "same_name_correlation": 0.078,
+   "best_pc": "NC3043.SPR",
+   "best_correlation": 0.228,
+   "pc_sha256": "34b528ebcde49b6021a956a5af426ccac77888315db6b298ed55147c07550794",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3057.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "C3DEEAF19327F8FE",
+   "same_name_pc": "NC3057.SPR",
+   "same_name_correlation": 0.191,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.344,
+   "pc_sha256": "835ae6bf0983870c309c62338f1e57d2801f3db4a709b47e93a921660018fc91",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3058.BIN",
+   "size": [
+    204,
+    144
+   ],
+   "palette_fnv": "C73AF03217F8DC24",
+   "same_name_pc": "NC3058.SPR",
+   "same_name_correlation": 0.083,
+   "best_pc": "NC23.SPR",
+   "best_correlation": 0.305,
+   "pc_sha256": "29767381cc0d349651cf25dad84a25ca6e71b2a01346fbd54cd8f982cf1d952e",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3059.BIN",
+   "size": [
+    234,
+    144
+   ],
+   "palette_fnv": "BDDDAB80BB0658A1",
+   "same_name_pc": "NC3059.SPR",
+   "same_name_correlation": 0.066,
+   "best_pc": "NC3519.SPR",
+   "best_correlation": 0.374,
+   "pc_sha256": "aba61ebf1df9e327c912692a334e121b56872938973cd55847ee996cbd8bd094",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3060.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "7847B77B2CFB238B",
+   "same_name_pc": "NC3060.SPR",
+   "same_name_correlation": -0.055,
+   "best_pc": "NC3043.SPR",
+   "best_correlation": 0.265,
+   "pc_sha256": "c4abc685f95a180e4e8db0a0e096045b11b919969240c3ea7c84eed280c82a0a",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3071.BIN",
+   "size": [
+    232,
+    144
+   ],
+   "palette_fnv": "4013B2EE6E267F7B",
+   "same_name_pc": "NC3071.SPR",
+   "same_name_correlation": 0.807,
+   "best_pc": "NC3071.SPR",
+   "best_correlation": 0.807,
+   "pc_sha256": "5f7030755d87259625fb36765c3b46a06261a8c871648ccbdcda8a3b557a742b",
+   "pc_size": [
+    480,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC31.BIN",
+   "size": [
+    168,
+    144
+   ],
+   "palette_fnv": "7C339105B5D31EDC",
+   "same_name_pc": "NC31.SPR",
+   "same_name_correlation": 0.934,
+   "best_pc": "NC30.SPR",
+   "best_correlation": 0.949,
+   "pc_sha256": "dc761d04d5bee573e82781906fe9dfe62a3dd33a7ac121772ad657adad37f16f",
+   "pc_size": [
+    352,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3101.BIN",
+   "size": [
+    120,
+    144
+   ],
+   "palette_fnv": "10E23F2455645C0D",
+   "same_name_pc": "NC3101.SPR",
+   "same_name_correlation": 0.847,
+   "best_pc": "NC3101.SPR",
+   "best_correlation": 0.847,
+   "pc_sha256": "c5814410e783594d7f05a1bb1332d21406b64fc983a1d12bb17d95b8d7a015b8",
+   "pc_size": [
+    260,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3102.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "FFEEA4A523095641",
+   "same_name_pc": "NC3102.SPR",
+   "same_name_correlation": 0.94,
+   "best_pc": "NC3102.SPR",
+   "best_correlation": 0.94,
+   "pc_sha256": "e42c55ee718a1f072883d31d688b1dad46cb18ae52d3977a39350859b43f2fe1",
+   "pc_size": [
+    295,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3106.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "E1D1F13FE188AA12",
+   "same_name_pc": "NC3106.SPR",
+   "same_name_correlation": 0.514,
+   "best_pc": "NC91.SPR",
+   "best_correlation": 0.598,
+   "pc_sha256": "02e031ad69febd2b029da92aa18589d36242eaae4ddd45445d8d02cee93068c5",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3107.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "CF3E1DFB39980794",
+   "same_name_pc": "NC3107.SPR",
+   "same_name_correlation": 0.517,
+   "best_pc": "NC91.SPR",
+   "best_correlation": 0.592,
+   "pc_sha256": "239de3528e4aa79ded53d4583579097b87cfdb0a62c919bb7dcb540b3bf87174",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3109.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "74C769D87D6A0AF8",
+   "same_name_pc": "NC3109.SPR",
+   "same_name_correlation": -0.051,
+   "best_pc": "NC36.SPR",
+   "best_correlation": 0.354,
+   "pc_sha256": "4f1ec45d4dd53f7db21e243fa1bcfa456a43b6cece8d2ac33e908ef56d779adb",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3124.BIN",
+   "size": [
+    216,
+    144
+   ],
+   "palette_fnv": "E3F090E8EE78D9DA",
+   "same_name_pc": "NC3124.SPR",
+   "same_name_correlation": 0.522,
+   "best_pc": "NC3124.SPR",
+   "best_correlation": 0.522,
+   "pc_sha256": "756fa396402c4693006cf779719e1bfcfbd0816d0c98d4dfae9d532101148c95",
+   "pc_size": [
+    417,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3128.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "6B00FA2FCB9D298F",
+   "same_name_pc": "NC3128.SPR",
+   "same_name_correlation": 0.356,
+   "best_pc": "NC3128.SPR",
+   "best_correlation": 0.356,
+   "pc_sha256": "d87d0779a6e8b9747f6affd35322c48efc6903736266f099ee74cfa91a7d7a6f",
+   "pc_size": [
+    378,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3129.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "80E1B6593C02C4F9",
+   "same_name_pc": "NC3129.SPR",
+   "same_name_correlation": 0.38,
+   "best_pc": "NC3129.SPR",
+   "best_correlation": 0.38,
+   "pc_sha256": "2461de27edc1e887afed44768d2788fa98ce03d873f84a5c2fcd6487477d2a9a",
+   "pc_size": [
+    386,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3173.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "997816CFEC89A5D1",
+   "same_name_pc": "NC3173.SPR",
+   "same_name_correlation": 0.926,
+   "best_pc": "NC3173.SPR",
+   "best_correlation": 0.926,
+   "pc_sha256": "ece431ee586d54db0803b4ce90681101f4137d026685028646f8286c9e91491c",
+   "pc_size": [
+    361,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC32.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "7C339105B5D31EDC",
+   "same_name_pc": "NC32.SPR",
+   "same_name_correlation": 0.833,
+   "best_pc": "NC32.SPR",
+   "best_correlation": 0.833,
+   "pc_sha256": "9b71ab43683c06a4403ea5ae45a1e818f2c25600ed2925feeae316b43241c7e6",
+   "pc_size": [
+    304,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3210.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "2FE3B1874544CAC7",
+   "same_name_pc": "NC3210.SPR",
+   "same_name_correlation": 0.776,
+   "best_pc": "NC3210.SPR",
+   "best_correlation": 0.776,
+   "pc_sha256": "2e3982f04f2658bc6074583177ad5559b791939706d883b0ef85fd52f693536e",
+   "pc_size": [
+    402,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3222.BIN",
+   "size": [
+    224,
+    144
+   ],
+   "palette_fnv": "865BDC05E81A77B1",
+   "same_name_pc": "NC3222.SPR",
+   "same_name_correlation": 0.633,
+   "best_pc": "NC3222.SPR",
+   "best_correlation": 0.633,
+   "pc_sha256": "d83219bea8dd7c6c49f2e79870ebad4c7c18539f97a73727355e116e604faf5a",
+   "pc_size": [
+    490,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3250.BIN",
+   "size": [
+    224,
+    144
+   ],
+   "palette_fnv": "1F2181BB1A828135",
+   "same_name_pc": "NC3250.SPR",
+   "same_name_correlation": 0.854,
+   "best_pc": "NC3250.SPR",
+   "best_correlation": 0.854,
+   "pc_sha256": "bea789670cfc1918bc28dedace6ba6bee6c871574fc5a1ecbe8d7c79d05e15c7",
+   "pc_size": [
+    446,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3254.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "F9667C5A4D74A193",
+   "same_name_pc": "NC3254.SPR",
+   "same_name_correlation": 0.69,
+   "best_pc": "NC3254.SPR",
+   "best_correlation": 0.69,
+   "pc_sha256": "6c0fef79f52b35c6a64dee8a20f44886e24a1db59b26acaf914c72ee2cc005bc",
+   "pc_size": [
+    352,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3255.BIN",
+   "size": [
+    208,
+    144
+   ],
+   "palette_fnv": "F1A534E17FC22AA4",
+   "same_name_pc": "NC3255.SPR",
+   "same_name_correlation": 0.816,
+   "best_pc": "NC3255.SPR",
+   "best_correlation": 0.816,
+   "pc_sha256": "6df39f370a2045755f4623f8409d35bd8af20755aff83714c9c0eeee7400913e",
+   "pc_size": [
+    420,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3256.BIN",
+   "size": [
+    216,
+    144
+   ],
+   "palette_fnv": "6428F64C89AAD9C3",
+   "same_name_pc": "NC3256.SPR",
+   "same_name_correlation": 0.796,
+   "best_pc": "NC3256.SPR",
+   "best_correlation": 0.796,
+   "pc_sha256": "a053771dce45f350bfd9f81903c2eefe959c78e6032b4a102f8f12727606e4b4",
+   "pc_size": [
+    422,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3261.BIN",
+   "size": [
+    216,
+    144
+   ],
+   "palette_fnv": "7801743C1345F91D",
+   "same_name_pc": "NC3261.SPR",
+   "same_name_correlation": 0.878,
+   "best_pc": "NC3261.SPR",
+   "best_correlation": 0.878,
+   "pc_sha256": "8651e34289d8bb182a1314090e783420981f5044cfdaf75b52b71a09e30a58a8",
+   "pc_size": [
+    454,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3264.BIN",
+   "size": [
+    216,
+    144
+   ],
+   "palette_fnv": "A60B8B93C9233CCB",
+   "same_name_pc": "NC3264.SPR",
+   "same_name_correlation": 0.796,
+   "best_pc": "NC3256.SPR",
+   "best_correlation": 0.796,
+   "pc_sha256": "630d5aadb1dbcf794760377a4d30f607d2b66582385a65453cb9e155030e512b",
+   "pc_size": [
+    422,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3285.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "28AA9CEC4ED47AA4",
+   "same_name_pc": "NC3285.SPR",
+   "same_name_correlation": 0.538,
+   "best_pc": "NC30.SPR",
+   "best_correlation": 0.659,
+   "pc_sha256": "435bca25773599e7b4860689f8051d73d057c3916d2bac222ac3105b7f44432c",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3286.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "DCA80A13EBB215B8",
+   "same_name_pc": "NC3286.SPR",
+   "same_name_correlation": 0.249,
+   "best_pc": "NC81.SPR",
+   "best_correlation": 0.372,
+   "pc_sha256": "145b6fa9b5312efc1bd21226d7b4282e5c6e5ee4ad18879cd92a032e963a582e",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3290.BIN",
+   "size": [
+    80,
+    144
+   ],
+   "palette_fnv": "193F22096D889622",
+   "same_name_pc": "NC3290.SPR",
+   "same_name_correlation": -0.109,
+   "best_pc": "NC83.SPR",
+   "best_correlation": 0.266,
+   "pc_sha256": "2443ee3f70723d24eb1647e2cbb197fea72b0d1061b15b9b8d3b3f1f784155ce",
+   "pc_size": [
+    167,
+    210
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC33.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "7C339105B5D31EDC",
+   "same_name_pc": "NC33.SPR",
+   "same_name_correlation": 0.755,
+   "best_pc": "NC33.SPR",
+   "best_correlation": 0.755,
+   "pc_sha256": "a34ffb30cdb831fe30131b21312d0017541b14032ece00701269a8046a2cfd6d",
+   "pc_size": [
+    320,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC34.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "7C339105B5D31EDC",
+   "same_name_pc": "NC34.SPR",
+   "same_name_correlation": 0.801,
+   "best_pc": "NC34.SPR",
+   "best_correlation": 0.801,
+   "pc_sha256": "8bdba9b42b266b181655c50dad49fb1229152e58719f4bd13270a51585556179",
+   "pc_size": [
+    320,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC35.BIN",
+   "size": [
+    200,
+    144
+   ],
+   "palette_fnv": "7C339105B5D31EDC",
+   "same_name_pc": "NC35.SPR",
+   "same_name_correlation": 0.936,
+   "best_pc": "NC35.SPR",
+   "best_correlation": 0.936,
+   "pc_sha256": "73fcb7569be77e48744a923e24036ebac19863f5c8bc1d323b9868b3d1e6b9db",
+   "pc_size": [
+    400,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3502.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "28B647248D18D86B",
+   "same_name_pc": "NC3502.SPR",
+   "same_name_correlation": 0.133,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.239,
+   "pc_sha256": "f228f55d046b0b44b8e206ffd89decbe18d21007f174cffedbca47e748973e41",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3503.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "8674EA2AFABB8747",
+   "same_name_pc": "NC3503.SPR",
+   "same_name_correlation": 0.513,
+   "best_pc": "NC40.SPR",
+   "best_correlation": 0.541,
+   "pc_sha256": "95a3735c4f9862b0b9fe8be769c545aa29df95be43f8e51c980f8b36284a0782",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3516.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "4E83AB1CC1356F30",
+   "same_name_pc": "NC3516.SPR",
+   "same_name_correlation": 0.156,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.359,
+   "pc_sha256": "24edf66cfa0b8e27134b25c211b058487d01b14ecc0f7ca0f3e3149e21465817",
+   "pc_size": [
+    558,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3517.BIN",
+   "size": [
+    200,
+    144
+   ],
+   "palette_fnv": "751CEE614B4F184C",
+   "same_name_pc": "NC3517.SPR",
+   "same_name_correlation": 0.428,
+   "best_pc": "NC3517.SPR",
+   "best_correlation": 0.428,
+   "pc_sha256": "ed293ff03307f70101f14cf7d702aa65621deda22a3b3b00c8520b48d590b384",
+   "pc_size": [
+    473,
+    184
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3518.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "32A7D0D641DB6F6A",
+   "same_name_pc": "NC3518.SPR",
+   "same_name_correlation": 0.241,
+   "best_pc": "NC3124.SPR",
+   "best_correlation": 0.386,
+   "pc_sha256": "12ae8cd30019da4a5cafac0b831e922ba6faa6cfaae35d788e5527eb080fd5c3",
+   "pc_size": [
+    576,
+    288
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3519.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "77E6BFF916985E15",
+   "same_name_pc": "NC3519.SPR",
+   "same_name_correlation": 0.604,
+   "best_pc": "NC13.SPR",
+   "best_correlation": 0.604,
+   "pc_sha256": "84507bb4ee2e02b512a424101c65f74ba36596d56182adace635e0a777577f25",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC3525.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "12F89E80C39AE346",
+   "same_name_pc": "NC3525.SPR",
+   "same_name_correlation": 0.503,
+   "best_pc": "NC36.SPR",
+   "best_correlation": 0.722,
+   "pc_sha256": "91d2866cf6600a16bd9d0b743353301ae991aa87c49bcf7d97a6ca850cce54f3",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC36.BIN",
+   "size": [
+    136,
+    144
+   ],
+   "palette_fnv": "7C339105B5D31EDC",
+   "same_name_pc": "NC36.SPR",
+   "same_name_correlation": 0.876,
+   "best_pc": "NC36.SPR",
+   "best_correlation": 0.876,
+   "pc_sha256": "dd7a732b4937525c43dc48ecade018134ea158981eca25ab204d03faa1317f7a",
+   "pc_size": [
+    289,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC40.BIN",
+   "size": [
+    160,
+    144
+   ],
+   "palette_fnv": "DAD6B4DA04B87FD7",
+   "same_name_pc": "NC40.SPR",
+   "same_name_correlation": 0.925,
+   "best_pc": "NC40.SPR",
+   "best_correlation": 0.925,
+   "pc_sha256": "d2db922033c17835d2aba87ea52571c0c0b6a8368f2b5b075582e665f6985aa0",
+   "pc_size": [
+    320,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC41.BIN",
+   "size": [
+    168,
+    144
+   ],
+   "palette_fnv": "DAD6B4DA04B87FD7",
+   "same_name_pc": "NC41.SPR",
+   "same_name_correlation": 0.844,
+   "best_pc": "NC41.SPR",
+   "best_correlation": 0.844,
+   "pc_sha256": "f4739a4d47d545198123bf45482f3758fc7daa47a63b1721d2b3c6de36cc1af0",
+   "pc_size": [
+    352,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4182.BIN",
+   "size": [
+    217,
+    144
+   ],
+   "palette_fnv": "D9DBBEDE46D86257",
+   "same_name_pc": "NC4182.SPR",
+   "same_name_correlation": 0.049,
+   "best_pc": "NC40.SPR",
+   "best_correlation": 0.439,
+   "pc_sha256": "92dd4cfed158d4ce8335ea94f0dc18ee7b58afd0c6874d54768abc31770928a7",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4199.BIN",
+   "size": [
+    256,
+    144
+   ],
+   "palette_fnv": "899E7B2F239E04BB",
+   "same_name_pc": "NC4199.SPR",
+   "same_name_correlation": 0.42,
+   "best_pc": "NC4199.SPR",
+   "best_correlation": 0.42,
+   "pc_sha256": "93e13607bcb5a9db3d27161b48e447ca1f7940b4f83d823e3ef5a8f899b85bee",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC42.BIN",
+   "size": [
+    256,
+    144
+   ],
+   "palette_fnv": "DAD6B4DA04B87FD7",
+   "same_name_pc": "NC42.SPR",
+   "same_name_correlation": 0.886,
+   "best_pc": "NC42.SPR",
+   "best_correlation": 0.886,
+   "pc_sha256": "8aa7fb92a139eb86778d7d2a7caec6c725c7985bd29992de3eba8d201fb913bf",
+   "pc_size": [
+    512,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4281.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "D2D23E58AFBB7195",
+   "same_name_pc": "NC4281.SPR",
+   "same_name_correlation": 0.032,
+   "best_pc": "NC99.SPR",
+   "best_correlation": 0.151,
+   "pc_sha256": "9a5765dfc9468ee1114bec79fe9ffc94b0c6dd7ddbf428dc7cd24b403229a210",
+   "pc_size": [
+    544,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC43.BIN",
+   "size": [
+    192,
+    144
+   ],
+   "palette_fnv": "DAD6B4DA04B87FD7",
+   "same_name_pc": "NC43.SPR",
+   "same_name_correlation": 0.903,
+   "best_pc": "NC43.SPR",
+   "best_correlation": 0.903,
+   "pc_sha256": "632b4ed26010204d1f7be1ded17afbfed2ec09a556909939b20bac479370189f",
+   "pc_size": [
+    384,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4329.BIN",
+   "size": [
+    249,
+    144
+   ],
+   "palette_fnv": "0D2634241A2DB9F1",
+   "same_name_pc": "NC4329.SPR",
+   "same_name_correlation": -0.168,
+   "best_pc": "NC93.SPR",
+   "best_correlation": 0.298,
+   "pc_sha256": "81adfb9863e64255054fc6e013cd6451fdf655fa79d299aef35fae010ad5821b",
+   "pc_size": [
+    530,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4332.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "4F2526254188CE76",
+   "same_name_pc": "NC4332.SPR",
+   "same_name_correlation": 0.324,
+   "best_pc": "NC3519.SPR",
+   "best_correlation": 0.426,
+   "pc_sha256": "92a6333a1a0963b404aff2becb2e4284b80580e9d16b228d3abeec27cf998339",
+   "pc_size": [
+    570,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4335.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "0BAC1DE1C14C5249",
+   "same_name_pc": "NC4335.SPR",
+   "same_name_correlation": 0.881,
+   "best_pc": "NC4335.SPR",
+   "best_correlation": 0.881,
+   "pc_sha256": "d6931d2d8cc46c996b6f275f2e3cbba45ee4f2367191bdbdd4149f4224af3bf0",
+   "pc_size": [
+    360,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4336.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "C1A7C365F5367D1F",
+   "same_name_pc": "NC4336.SPR",
+   "same_name_correlation": 0.882,
+   "best_pc": "NC4335.SPR",
+   "best_correlation": 0.882,
+   "pc_sha256": "d6931d2d8cc46c996b6f275f2e3cbba45ee4f2367191bdbdd4149f4224af3bf0",
+   "pc_size": [
+    360,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4338.BIN",
+   "size": [
+    184,
+    144
+   ],
+   "palette_fnv": "30C5D431DFE5998C",
+   "same_name_pc": "NC4338.SPR",
+   "same_name_correlation": 0.901,
+   "best_pc": "NC4338.SPR",
+   "best_correlation": 0.901,
+   "pc_sha256": "10e11da2616ba17059eef8f7d1e31ba8e0111c5f3161815551fe95bbd134d5ff",
+   "pc_size": [
+    390,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4339.BIN",
+   "size": [
+    184,
+    144
+   ],
+   "palette_fnv": "30C5D431DFE5998C",
+   "same_name_pc": "NC4339.SPR",
+   "same_name_correlation": 0.903,
+   "best_pc": "NC4338.SPR",
+   "best_correlation": 0.903,
+   "pc_sha256": "10e11da2616ba17059eef8f7d1e31ba8e0111c5f3161815551fe95bbd134d5ff",
+   "pc_size": [
+    390,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4341.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "D0676A44F2C3C5CD",
+   "same_name_pc": "NC4341.SPR",
+   "same_name_correlation": 0.13,
+   "best_pc": "NC33.SPR",
+   "best_correlation": 0.23,
+   "pc_sha256": "b85a883da6cb7d368c978ce328bc8efb068ffbdab69c63a8bcb9b902819a7232",
+   "pc_size": [
+    530,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4342.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "0215EE320C8719E6",
+   "same_name_pc": "NC4342.SPR",
+   "same_name_correlation": 0.132,
+   "best_pc": "NC33.SPR",
+   "best_correlation": 0.23,
+   "pc_sha256": "b85a883da6cb7d368c978ce328bc8efb068ffbdab69c63a8bcb9b902819a7232",
+   "pc_size": [
+    530,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4344.BIN",
+   "size": [
+    240,
+    144
+   ],
+   "palette_fnv": "58A746FAF8DE2379",
+   "same_name_pc": "NC4344.SPR",
+   "same_name_correlation": 0.942,
+   "best_pc": "NC4344.SPR",
+   "best_correlation": 0.942,
+   "pc_sha256": "be3e557ad1ef2c9301574d211a27f97ecd6407ca6a8a872caa46e050de46a1cc",
+   "pc_size": [
+    510,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4355.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "407C66AB419E4B79",
+   "same_name_pc": "NC4355.SPR",
+   "same_name_correlation": 0.438,
+   "best_pc": "NC3519.SPR",
+   "best_correlation": 0.533,
+   "pc_sha256": "473e1ed0804f92ab41f4f9443f2269347051ec5fe12cf28c2b16f81e7f48a2ff",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC4384.BIN",
+   "size": [
+    192,
+    144
+   ],
+   "palette_fnv": "580412287A3E018B",
+   "same_name_pc": "NC4384.SPR",
+   "same_name_correlation": 0.86,
+   "best_pc": "NC4384.SPR",
+   "best_correlation": 0.86,
+   "pc_sha256": "9927c56db7b0e221e5e9b11fb96bcbb20cd4d2d051ac7256469cd262362c2977",
+   "pc_size": [
+    368,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC44.BIN",
+   "size": [
+    208,
+    144
+   ],
+   "palette_fnv": "DAD6B4DA04B87FD7",
+   "same_name_pc": "NC44.SPR",
+   "same_name_correlation": 0.638,
+   "best_pc": "NC44.SPR",
+   "best_correlation": 0.638,
+   "pc_sha256": "6d3beec04f282567af347309a1c1618b5d16dcc0aee6f62d09ca92f58ef7d8f5",
+   "pc_size": [
+    424,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC50.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "3E10D7D4AD184D6F",
+   "same_name_pc": "NC50.SPR",
+   "same_name_correlation": 0.666,
+   "best_pc": "NC50.SPR",
+   "best_correlation": 0.666,
+   "pc_sha256": "5b2a4bf5ace9bb1be8218ff9a6b0979f310029e43dd0cb6ec98c547e8bcd2adf",
+   "pc_size": [
+    288,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC51.BIN",
+   "size": [
+    168,
+    144
+   ],
+   "palette_fnv": "3E10D7D4AD184D6F",
+   "same_name_pc": "NC51.SPR",
+   "same_name_correlation": 0.734,
+   "best_pc": "NC51.SPR",
+   "best_correlation": 0.734,
+   "pc_sha256": "9469e7e1310c8c0fb9806ce2d75966971716e356946d6c7de2de7b0859761874",
+   "pc_size": [
+    336,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC52.BIN",
+   "size": [
+    136,
+    144
+   ],
+   "palette_fnv": "3E10D7D4AD184D6F",
+   "same_name_pc": "NC52.SPR",
+   "same_name_correlation": 0.477,
+   "best_pc": "NC52.SPR",
+   "best_correlation": 0.477,
+   "pc_sha256": "707fae2d9f0f38fd52cc77a16c89eeed069e7815b09f55ccadcc2448fea065d4",
+   "pc_size": [
+    272,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC53.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "3E10D7D4AD184D6F",
+   "same_name_pc": "NC53.SPR",
+   "same_name_correlation": 0.818,
+   "best_pc": "NC53.SPR",
+   "best_correlation": 0.818,
+   "pc_sha256": "6c106245e4367ab28209708b91d0ca038b9201b8380e67feaebdd33fbb644f17",
+   "pc_size": [
+    288,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC54.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "3E10D7D4AD184D6F",
+   "same_name_pc": "NC54.SPR",
+   "same_name_correlation": 0.815,
+   "best_pc": "NC54.SPR",
+   "best_correlation": 0.815,
+   "pc_sha256": "9ccdce875052e57e5c06d2c9e0e451191f923f5f33895a1762fcbe7c99e4930f",
+   "pc_size": [
+    304,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC55.BIN",
+   "size": [
+    192,
+    144
+   ],
+   "palette_fnv": "3E10D7D4AD184D6F",
+   "same_name_pc": "NC55.SPR",
+   "same_name_correlation": 0.961,
+   "best_pc": "NC55.SPR",
+   "best_correlation": 0.961,
+   "pc_sha256": "06a16364f840d8692cbac6aee90d1423e9b05ec42a05a4ba98b3b7b94473fbc0",
+   "pc_size": [
+    368,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC56.BIN",
+   "size": [
+    136,
+    144
+   ],
+   "palette_fnv": "3E10D7D4AD184D6F",
+   "same_name_pc": "NC56.SPR",
+   "same_name_correlation": 0.686,
+   "best_pc": "NC56.SPR",
+   "best_correlation": 0.686,
+   "pc_sha256": "154573e276551a4b195ecf80359ca91465e28fbfea79004e6664cb3537ecfe0d",
+   "pc_size": [
+    288,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC60.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "4E4AEDD1FD0A4788",
+   "same_name_pc": "NC60.SPR",
+   "same_name_correlation": 0.751,
+   "best_pc": "NC60.SPR",
+   "best_correlation": 0.751,
+   "pc_sha256": "a4a3bad1899f5fb43d7add18df0a3051ef5cb8e002d985812af25a7d4c66f335",
+   "pc_size": [
+    288,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC61.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "4E4AEDD1FD0A4788",
+   "same_name_pc": "NC61.SPR",
+   "same_name_correlation": 0.874,
+   "best_pc": "NC61.SPR",
+   "best_correlation": 0.874,
+   "pc_sha256": "44b3f6b686e808dd14e229aead10f468b312711a3363c6edf0c5450eb27c6e1a",
+   "pc_size": [
+    288,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC62.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "4E4AEDD1FD0A4788",
+   "same_name_pc": "NC62.SPR",
+   "same_name_correlation": 0.798,
+   "best_pc": "NC62.SPR",
+   "best_correlation": 0.798,
+   "pc_sha256": "5030b9709563abbe0f3a9abe34ff557a9c48b35a2ca29c4234c55f448c39963f",
+   "pc_size": [
+    312,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC63.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "4E4AEDD1FD0A4788",
+   "same_name_pc": "NC63.SPR",
+   "same_name_correlation": 0.8,
+   "best_pc": "NC63.SPR",
+   "best_correlation": 0.8,
+   "pc_sha256": "d6163f7f0824582153f809929933e43a90a9e76ee3790bd0e7a37f298f62facf",
+   "pc_size": [
+    280,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC64.BIN",
+   "size": [
+    233,
+    144
+   ],
+   "palette_fnv": "4E4AEDD1FD0A4788",
+   "same_name_pc": "NC64.SPR",
+   "same_name_correlation": 0.034,
+   "best_pc": "NC14.SPR",
+   "best_correlation": 0.322,
+   "pc_sha256": "46064f609fa1ebfdea506e67a7259014f82428fae1ce2e847bd6a5dcb4af3a88",
+   "pc_size": [
+    440,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC65.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "4E4AEDD1FD0A4788",
+   "same_name_pc": "NC65.SPR",
+   "same_name_correlation": 0.926,
+   "best_pc": "NC65.SPR",
+   "best_correlation": 0.926,
+   "pc_sha256": "5d2801dfad3dcf1c25910c143716e29450dbea1c45de7200d93c7ce38df7b291",
+   "pc_size": [
+    344,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC70.BIN",
+   "size": [
+    136,
+    144
+   ],
+   "palette_fnv": "7A3B2536B3BA8227",
+   "same_name_pc": "NC70.SPR",
+   "same_name_correlation": 0.908,
+   "best_pc": "NC70.SPR",
+   "best_correlation": 0.908,
+   "pc_sha256": "150bc0fb5ef7152437782dc556f2aca8344b7ac50ba2387764333ee1ebf495ed",
+   "pc_size": [
+    264,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC71.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "7A3B2536B3BA8227",
+   "same_name_pc": "NC71.SPR",
+   "same_name_correlation": 0.919,
+   "best_pc": "NC71.SPR",
+   "best_correlation": 0.919,
+   "pc_sha256": "f74bbe31c6ea8055c0664a9fda14f7950aa957d9328f5f2133cc469bb8aad0b0",
+   "pc_size": [
+    288,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC72.BIN",
+   "size": [
+    136,
+    144
+   ],
+   "palette_fnv": "7A3B2536B3BA8227",
+   "same_name_pc": "NC72.SPR",
+   "same_name_correlation": 0.879,
+   "best_pc": "NC72.SPR",
+   "best_correlation": 0.879,
+   "pc_sha256": "e57099d5dc498cca623c4c97a7f012a1ce6c93a38be2fa145af9f28848d7c2a0",
+   "pc_size": [
+    264,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC73.BIN",
+   "size": [
+    128,
+    144
+   ],
+   "palette_fnv": "7A3B2536B3BA8227",
+   "same_name_pc": "NC73.SPR",
+   "same_name_correlation": 0.765,
+   "best_pc": "NC73.SPR",
+   "best_correlation": 0.765,
+   "pc_sha256": "7e32badd7538ce209b1aed77b9d21dae574b003191bb35810e735ba59bceb9b4",
+   "pc_size": [
+    274,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC75.BIN",
+   "size": [
+    248,
+    144
+   ],
+   "palette_fnv": "FE54BDFA4B2906F0",
+   "same_name_pc": "NC75.SPR",
+   "same_name_correlation": 0.883,
+   "best_pc": "NC75.SPR",
+   "best_correlation": 0.883,
+   "pc_sha256": "1bd6aa0a4ebb6b51206dee8e9a3038128c45445fcf1b9b0e52355b930347e73f",
+   "pc_size": [
+    490,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC76.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "FE54BDFA4B2906F0",
+   "same_name_pc": "NC76.SPR",
+   "same_name_correlation": -0.016,
+   "best_pc": "NC32.SPR",
+   "best_correlation": 0.148,
+   "pc_sha256": "42daba07f75b8dad386bcfffc2a2bcea6086f173124ed0b6b0127e5360567aaa",
+   "pc_size": [
+    544,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC80.BIN",
+   "size": [
+    208,
+    144
+   ],
+   "palette_fnv": "B118A8EE9A87239D",
+   "same_name_pc": "NC80.SPR",
+   "same_name_correlation": 0.584,
+   "best_pc": "NC80.SPR",
+   "best_correlation": 0.584,
+   "pc_sha256": "bca45bdc2887f40a9e826976e13c279c20e810f0e292ea7880fcaac4bbffefd6",
+   "pc_size": [
+    416,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC81.BIN",
+   "size": [
+    208,
+    144
+   ],
+   "palette_fnv": "B118A8EE9A87239D",
+   "same_name_pc": "NC81.SPR",
+   "same_name_correlation": 0.782,
+   "best_pc": "NC81.SPR",
+   "best_correlation": 0.782,
+   "pc_sha256": "e6c1b70c5e67adf0bea542e205d56dc1e1e136d3076ca4cb49a56a047e345f76",
+   "pc_size": [
+    416,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC82.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "B118A8EE9A87239D",
+   "same_name_pc": "NC82.SPR",
+   "same_name_correlation": 0.653,
+   "best_pc": "NC82.SPR",
+   "best_correlation": 0.653,
+   "pc_sha256": "80000be028ec623b35ffc6311675e04f4c24c16f20a08c1920f63ea6033b1f75",
+   "pc_size": [
+    368,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC83.BIN",
+   "size": [
+    176,
+    144
+   ],
+   "palette_fnv": "B118A8EE9A87239D",
+   "same_name_pc": "NC83.SPR",
+   "same_name_correlation": 0.83,
+   "best_pc": "NC83.SPR",
+   "best_correlation": 0.83,
+   "pc_sha256": "3dd06f945e57be1b2aad9d9077623c5a083b14a97a68697b348fd589bb4a99c3",
+   "pc_size": [
+    376,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC90.BIN",
+   "size": [
+    258,
+    144
+   ],
+   "palette_fnv": "88558DAC08E48CF1",
+   "same_name_pc": "NC90.SPR",
+   "same_name_correlation": 0.201,
+   "best_pc": "NC91.SPR",
+   "best_correlation": 0.456,
+   "pc_sha256": "3c89debfe56bec1111c2ac68f28732203927abd636d4065e52b0f5003f6c1fe4",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC91.BIN",
+   "size": [
+    240,
+    144
+   ],
+   "palette_fnv": "1F80B39C35B98AD6",
+   "same_name_pc": "NC91.SPR",
+   "same_name_correlation": 0.971,
+   "best_pc": "NC91.SPR",
+   "best_correlation": 0.971,
+   "pc_sha256": "2f806430c43b81c3796fc53d04f45b1d7a2e29429e599aa907addaaed9ec1b7a",
+   "pc_size": [
+    480,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC92.BIN",
+   "size": [
+    224,
+    144
+   ],
+   "palette_fnv": "DCD7DD562C52EC68",
+   "same_name_pc": "NC92.SPR",
+   "same_name_correlation": 0.88,
+   "best_pc": "NC92.SPR",
+   "best_correlation": 0.88,
+   "pc_sha256": "c849a6f1a4e147e41b2da6f331aab513bb8c599f381c9c5a90e3f85689781aaf",
+   "pc_size": [
+    448,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC93.BIN",
+   "size": [
+    160,
+    144
+   ],
+   "palette_fnv": "E9102A07AF40246A",
+   "same_name_pc": "NC93.SPR",
+   "same_name_correlation": 0.96,
+   "best_pc": "NC93.SPR",
+   "best_correlation": 0.96,
+   "pc_sha256": "51cee9ee958d067e3042f69666d8e9f162aae3bc71047fe325119dcf58917a0a",
+   "pc_size": [
+    318,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC94.BIN",
+   "size": [
+    232,
+    144
+   ],
+   "palette_fnv": "1F80B39C35B98AD6",
+   "same_name_pc": "NC94.SPR",
+   "same_name_correlation": 0.892,
+   "best_pc": "NC94.SPR",
+   "best_correlation": 0.892,
+   "pc_sha256": "13660fa4c98ad5053d6b1d60ea433b977f3737b082d2282addcb9eea0f0e442b",
+   "pc_size": [
+    480,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC95.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "2DB65AD068E0F22D",
+   "same_name_pc": "NC95.SPR",
+   "same_name_correlation": 0.883,
+   "best_pc": "NC95.SPR",
+   "best_correlation": 0.883,
+   "pc_sha256": "14e0def3da2c1709e78f01dce433405f59f0bf6bb1b20a2b72a01cfe639a63ce",
+   "pc_size": [
+    288,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC96.BIN",
+   "size": [
+    144,
+    144
+   ],
+   "palette_fnv": "B7F060C823BFD1E2",
+   "same_name_pc": "NC96.SPR",
+   "same_name_correlation": 0.397,
+   "best_pc": "NC96.SPR",
+   "best_correlation": 0.397,
+   "pc_sha256": "05a500503d75e48be2cd95a6ca44643940e2c924a4680ddeea5bf3481c4fba2a",
+   "pc_size": [
+    272,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC97.BIN",
+   "size": [
+    152,
+    144
+   ],
+   "palette_fnv": "5761309C84789D4E",
+   "same_name_pc": "NC97.SPR",
+   "same_name_correlation": 0.92,
+   "best_pc": "NC97.SPR",
+   "best_correlation": 0.92,
+   "pc_sha256": "67e7ca5eec231be1b5ff0d1902ce829172dfdceda7c710a6b268aafc2325eaa1",
+   "pc_size": [
+    272,
+    320
+   ],
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/NC98.BIN",
+   "size": [
+    259,
+    144
+   ],
+   "palette_fnv": "3F22D38D8F703DC2",
+   "same_name_pc": "NC98.SPR",
+   "same_name_correlation": 0.144,
+   "best_pc": "NC3261.SPR",
+   "best_correlation": 0.525,
+   "pc_sha256": "07e7883afadd24c17e21132614dbe35d51db60fb217dc960505b52d1f84b8e06",
+   "pc_size": [
+    576,
+    320
+   ],
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/NC99.BIN",
+   "size": [
+    136,
+    144
+   ],
+   "palette_fnv": "61DE5F1C75B5E390",
+   "same_name_pc": "NC99.SPR",
+   "same_name_correlation": 0.37,
+   "best_pc": "NC3071.SPR",
+   "best_correlation": 0.374,
+   "pc_sha256": "65e3df19242f14917582208e79454e81461d9c4e1aef267d7cb87cbc7546980d",
+   "pc_size": [
+    272,
+    320
+   ],
+   "tier": "candidate"
+  }
+ ]
+}

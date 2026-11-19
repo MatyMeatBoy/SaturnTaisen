@@ -185,6 +185,49 @@ def _table(data):
     return pairs[0][0], pairs[0][1], pairs[1][0], pairs[1][1], pairs[2][0]
 
 
+def nc_records(data):
+    """The (type, x1, y1, x2, y2) records of an NC*.BIN: nine bytes each from 0x11, type 0x3C-0x3F."""
+    records, at = [], 0x11
+    while at + 9 <= 0x410 and data[at] in (0x3C, 0x3D, 0x3E, 0x3F):
+        records.append((data[at],) + struct.unpack_from('>4H', data, at + 1))
+        at += 9
+    return records
+
+
+def nc_stride(data):
+    """Row stride of the body bitmap at 0x610 (the lag with the smallest mean difference), or None."""
+    segment = data[0x610:0x610 + 6000]
+    if len(segment) < 3000:
+        return None
+    best = min(range(60, 260), key=lambda w: sum(abs(segment[i] - segment[i + w]) for i in range(0, len(segment) - w, 3)))
+    return best
+
+
+def decode_nc(data):
+    """The large-character body of an NC*.BIN as an RGBA picture (palette at 0x410, bitmap at 0x610, index 0 clear).
+
+    The face is blank: the eyes and mouth are separate strips that follow the body. Width is the detected
+    stride, height is 144."""
+    if len(data) < 0x610 + 6000 or data[:2] != bytes([0, 2]):
+        return None
+    records = nc_records(data)
+    width = nc_stride(data)
+    if not width:
+        return None
+    # Every body seen so far is 144 rows high (the records only mark the parts, their y2 can be smaller).
+    height = 144
+    if width * height > len(data) - 0x610:
+        return None
+    words = struct.unpack_from('>256H', data, 0x410)
+    palette = [((w & 31) * 255 // 31, ((w >> 5) & 31) * 255 // 31, ((w >> 10) & 31) * 255 // 31) for w in words]
+    image = Image.new('RGBA', (width, height))
+    pixels = image.load()
+    for i in range(width * height):
+        index = data[0x610 + i]
+        pixels[i % width, i // width] = (0, 0, 0, 0) if index == 0 else palette[index] + (255,)
+    return image
+
+
 class Iso:
     """Minimal ISO 9660 reader for a 2048-byte-sector data track."""
 
