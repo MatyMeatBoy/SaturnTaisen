@@ -19,6 +19,7 @@ def main():
     data = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
     review = json.loads((Path(sys.argv[1]).parent / 'hd-scene-bg-review.json').read_text(encoding='utf-8'))
     confirmed, rejected = set(review['eye_confirmed_number_tier']), set(review['rejected'])
+    guarded = set(review.get('guarded_viewport', []))
     # Saturn picture -> PC picture chosen by content for a (palette, cells) group whose PC candidates differ (see the review file).
     choice = review.get('shared_cell_choice', {})
     names_by_cells = {}
@@ -28,7 +29,7 @@ def main():
         name = pair['saturn_file'].split('/')[-1][:-4]
         if pair.get('size') != [288, 144] or not pair['saturn_file'].startswith(('SAKURA1/', 'SAKURA2/EVE', 'SAKURA2/BBG')):
             continue
-        if name[2:3] in '34' or name in rejected or name == 'BG0000':
+        if name[2:3] in '34' or name in rejected or name in guarded or name == 'BG0000':
             continue
         if not (pair.get('tier') == 'content' or (pair.get('tier') == 'number' and name in confirmed)):
             continue

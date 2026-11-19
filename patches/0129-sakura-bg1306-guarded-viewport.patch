@@ -1,0 +1,80 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -26,6 +26,7 @@
+ #include "bg2248_verified_pan.h"
+ #include "bg1207_verified_pan.h"
+ #include "bg2238_verified_still.h"
++#include "bg1306_viewport.h"
+ #include "scene_bg_table.h"
+ #include "eve_inset.h"
+ #include "body_table.h"
+@@ -671,6 +672,8 @@
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
++    SceneHd bg1306;
++    std::vector<uint32_t> bg1306Native;
+     SceneHd bg2238;
+     SceneHd bg1285;
+     std::vector<uint32_t> bg1285Native;
+@@ -2232,6 +2235,33 @@
+                                         std::fprintf(stderr, "verified still: BG2238\n");
+                                 }
+                             }
++                            if (!drewHd && !drewClip && !choosing && !port.menu.IsOpen() &&
++                                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0) {
++                                constexpr uint64_t palette = 0x1848CC9D30088D80ull;
++                                for (uint8_t layer : {2u, 4u}) {
++                                    if (port.videoRenderer->BackgroundPaletteFingerprint(layer) != palette) continue;
++                                    if (bg1306Native.empty() && !bg1306.tried) {
++                                        std::vector<uint8_t> native;
++                                        if (port.discFiles.ReadBounded("BG1306.BIN", native, 45488))
++                                            bg1306Native = DecodePinnedPan(native, 288, 144, 45488, 0x537EEAF5D96F5F42ull);
++                                        if (bg1306Native.empty()) {
++                                            bg1306.tried = true;
++                                            break;
++                                        }
++                                    }
++                                    if (!MatchesBG1306Viewport(bg1306Native, softwareShown, planes.topSource, layer)) continue;
++                                    if (!bg1306.tried) {
++                                        bg1306.tried = true;
++                                        queuePinnedPan(bg1306, "SAKURA1/BG/BG1306.SPR", 172303, 0x7D7DD16CEF7A95CCull, 576, 320);
++                                    }
++                                    finishPinnedPan(bg1306);
++                                    if (bg1306.texture) {
++                                        constexpr SDL_FRect pcCrop{2, 7, 574, 310};
++                                        drewHd = SDL_RenderTexture(renderer, bg1306.texture, &pcCrop, &imageTarget);
++                                    }
++                                    break;
++                                }
++                            }
+                             if(!drewClip && !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 && port.videoRenderer &&
+                                planes.source.size()==320*224) {
+                                 for(const uint32_t layer:{2u,4u}) {
+diff --git a/port/bg1306_viewport.h b/port/bg1306_viewport.h
+new file mode 100644
+--- /dev/null
++++ b/port/bg1306_viewport.h
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include <cstdint>
++#include <span>
++
++namespace port {
++inline bool MatchesBG1306Viewport(std::span<const uint32_t> picture, std::span<const uint32_t> frame,
++                                  std::span<const uint8_t> layers, uint8_t layer) {
++    if ((layer != 2 && layer != 4) || picture.size() != 288 * 144 ||
++        frame.size() != 320 * 224 || layers.size() != frame.size()) return false;
++    for (unsigned y = 0; y < 144; ++y) {
++        for (unsigned x = 0; x < 288; ++x) {
++            const auto at = (y + 8) * 320 + x + 16;
++            if (layers[at] != layer || (frame[at] & 0xFFFFFFu) != picture[y * 288 + x])
++                return false;
++        }
++    }
++    return true;
++}
++}
