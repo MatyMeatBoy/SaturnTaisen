@@ -1,0 +1,57 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 3312ad4..367f73d 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -606,13 +606,13 @@ int RunWindowed(Port &port) {
+     // T19: large character bodies. A body on screen is one VDP1 texture whose bytes are the bitmap of its NC file;
+     // the face is small sprites whose bytes are frames that follow the bitmap, in the same order as the parts of
+     // the PC picture. Both are redrawn from the PC picture; anything else inside the body rectangle means native.
+-    struct BodyPixels {unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;};
++    struct BodyPixels {unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;};
+     struct BodyHd {
+         bool tried=false;SDL_Texture* body=nullptr;unsigned bodyW=0,bodyH=0;
+         std::future<BodyPixels> pending;std::vector<SDL_Texture*> parts;std::vector<unsigned> partW,partH,runCount;
+         std::vector<uint8_t> nc;std::unordered_map<uint64_t,long> offsets;
+         std::vector<uint32_t> bodyPixels;std::vector<std::vector<uint32_t>> partPixels;
+-        std::vector<std::vector<float>> partSig;std::unordered_map<uint64_t,int> matches;std::unordered_map<unsigned,std::array<float,2>> refinedPos;
++        std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;std::unordered_map<uint64_t,int> matches;std::unordered_map<unsigned,std::array<float,2>> refinedPos;
+     };
+     std::vector<BodyHd> bodyHd(kBodyCount);
+     using PresentationSprite=satrecomp::video::Renderer::PresentationSprite;
+@@ -1215,6 +1215,8 @@ int RunWindowed(Port &port) {
+                                                 result.partW.push_back(images[i].width);result.partH.push_back(images[i].height);
+                                                 result.parts.push_back(key(images[i].pixels,images[i].width,images[i].height));
+                                                 result.partSig.push_back(BodySignature(result.parts.back(),images[i].width,images[i].height));
++                                                size_t opaque=0;for(uint32_t px:result.parts.back())opaque+=(px>>24)!=0;
++                                                result.partOpaque.push_back(result.parts.back().empty()?0.0f:float(opaque)/float(result.parts.back().size()));
+                                             }
+                                             return result;
+                                         });
+@@ -1231,7 +1233,7 @@ int RunWindowed(Port &port) {
+                                         return texture;
+                                     };
+                                     st.body=make(decoded.body,decoded.bodyW,decoded.bodyH);st.bodyW=decoded.bodyW;st.bodyH=decoded.bodyH;
+-                                    st.bodyPixels=decoded.body;st.partPixels=decoded.parts;st.partSig=std::move(decoded.partSig);
++                                    st.bodyPixels=decoded.body;st.partPixels=decoded.parts;st.partSig=std::move(decoded.partSig);st.partOpaque=std::move(decoded.partOpaque);
+                                     for(size_t i=0;i<decoded.parts.size();i++) {
+                                         st.parts.push_back(make(decoded.parts[i],decoded.partW[i],decoded.partH[i]));
+                                         st.partW.push_back(decoded.partW[i]);st.partH.push_back(decoded.partH[i]);
+@@ -1307,8 +1309,16 @@ int RunWindowed(Port &port) {
+                                             std::vector<uint32_t> rgba(sp->pixels.size());
+                                             for(size_t i=0;i<rgba.size();i++)rgba[i]=sp->pixels[i]?palette[sp->pixels[i]]:0u;
+                                             const auto signature=BodySignature(rgba,fw,fh);
+-                                            double best=0.30;
+-                                            for(size_t k=0;k<st.partSig.size();k++) {
++                                            // Small frames (mouths) are easier to confuse and matter less: a lower bar for them.
++                                            double best=fw*fh<=600?0.12:0.30;
++                                            size_t opaqueCount=0;for(uint32_t px:rgba)opaqueCount+=(px>>24)!=0;
++                                            if(opaqueCount*100<rgba.size()*3) {
++                                                // A frame that is (nearly) clear, such as a closed mouth drawn only by the body: the PC
++                                                // part with the fewest opaque pixels, if that is also nearly clear.
++                                                float least=0.10f;
++                                                for(size_t k=0;k<st.partOpaque.size();k++)if(st.partOpaque[k]<least) {least=st.partOpaque[k];part=int(k);}
++                                                best=0.0;
++                                            } else for(size_t k=0;k<st.partSig.size();k++) {
+                                                 double dot=0;for(size_t i=0;i<signature.size();i++)dot+=double(signature[i])*st.partSig[k][i];
+                                                 if(dot>best) {best=dot;part=int(k);}
+                                             }
