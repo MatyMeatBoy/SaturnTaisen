@@ -42,12 +42,48 @@ local coordinate. VDP1 VRAM at SRCA × 8 = 0x5C280 is byte-identical to the
 exact 512 palette bytes, matching table fingerprint 994AF50BC61B12E6.
 T108 has a 224×224 PC counterpart for this card.
 
-An earlier item-menu state can contain the same texture and palette with
-no active 112×112 command. Bind any replacement to the presented sprite
-command and preserve the card rectangle, dialogue and borders.
-This is one positive runtime witness. A second approved card, replacement
-drawing, fallback and guest parity with the replacement remain open.
+The menu before selection can retain the texture and palette with no active
+112×112 command. Patch 0090 requires the approved command and matching whole
+texture and palette fingerprints. It tracks actual VDP1 writes on each
+framebuffer and checks the card against VDP2 scanout. Zero-indexed texels,
+pixels covered by later commands, and pixels won by other layers stay native.
+Unsupported blends, clipped draw targets, missing art, and Original mode use
+the native presentation. The 38 approved Saturn texture and palette pairs
+were identical on both prepared discs. All 38 paired PC subimages decoded to
+opaque 224×224 pictures with the SHA-256 recorded by T108. The runtime table
+can be regenerated with this command.
 
+```text
+python tools/gen_item_table.py config/hd-item-map.json item_card_table.h --textures config/hd-item-texture-fingerprints.json
+```
+
+#### Runtime evidence
+
+The letter was replayed from `options-nav.state` using the inputs above.
+At 1920×1080 the approved viewport placed it at (680,104), scaled from 112×112
+to 560×560. All 287,325 destination pixels belonging to visible card texels
+matched the PC source. The 26,275 other pixels inside the rectangle and the
+entire surrounding frame matched the same runtime with the PC file absent.
+Preselection captures also matched.
+
+A second letter replay and the Jean-Paul replay both start from the legitimate
+`leave-dressing.state` (SHA-256 `4784c3eb1643676b39abb0b0bcc01092a782e5fefedf5d728a8041d70a4b4d62`),
+the point after collecting the bear and leaving the dressing room. Both re-enter
+by holding Down on frames 20–25, pressing A on 45–52, and opening inventory with
+Start on 700–707. The remaining inputs and observed results are:
+
+| Case | Input after opening inventory | Frame 1000 |
+| --- | --- | --- |
+| ITEM07 with cursor | Up+Left 810–827, Left 828–841, A 890–897, Right 930–954 | HD color replaces 280,575 destination pixels. All 171 cursor-covered native texels and 1,051 transparent texels retain their original RGB blocks. No RGB difference extends past the card rectangle. |
+| ITEM12, excluded bear | Up+Left 810–827, A 890–897 | Fully native. Active command 0x5C0 uses the same geometry and mode as ITEM07. Texture FNV `2E3976D6862A7486`, palette FNV `235B09AEB829FB4C`. The PC asset is an icon-only match. |
+
+Strict-native windowed runs compared all 190 guest hashes of the first letter
+route and all 1,010 guest hashes of each dressing-room route. Across the relevant
+runs, the Original viewport and ITEM12 Enhanced viewport matched the previous
+runtime pixel for pixel, and the ITEM07 asset-absent Enhanced viewport matched
+it as well. Every run reported zero interpreted blocks. The other 37 approved
+cards have offline evidence and still need direct in-game witnesses. There was
+no release package change.
 
 ## T110 offline geometry and palette review
 
@@ -74,12 +110,8 @@ received a visual check against the actual native and PC textures.
 
 The [offline review table](../../config/hd-system-hud-review.json) lists
 all candidates, their PC source identities, and the command and CRAM
-fingerprints used to distinguish the six observed textures. A saved
-command establishes the native payload and coordinates. Runtime acceptance
-still needs the presented-frame association and palette variation checked
-across state changes. In particular, the arrow keys above qualify only the
-recorded appearance. Before enabling them, T110a will verify the selected
-and disabled states and test placement in gameplay.
+fingerprints used to distinguish the six observed textures. The runtime
+acceptance for the confirmed inventory layout is documented below.
 
 Separately, `WALL1.BIN` at 320x224 matches the floral composition of
 `SAKURA1/WALL/KABE0100.SPR` subimage 0 at 640x480. The whole-image grey
@@ -88,3 +120,39 @@ The file hashes and native palette fingerprint 0x48291F6F1C8A4707 agree
 with the existing KABE00 and KABE0100 provenance. Width scales at 2x and
 height at 15/7, so keep the existing backdrop path and avoid a raw stretch.
 There is no new direct replacement for this backdrop in T110.
+
+
+## T110a inventory brackets in game
+
+Patch 0093 draws the two 16×32 PC FONT_CSL glyphs over the four 8×16 native
+brackets. It requires the complete group of scaled VDP1 commands at native
+x=64, 104, 128 and 168, y=108. The VDP1 texture fingerprints and inclusive
+corners identify the glyphs. VDP2 scanout supplies each bracket's mode-1 CRAM
+bank and indices 6 and 9. The idle bank is 0x5A0 and the hover and confirmation
+bank is 0x5E0. The inventory label and hand cursor use their native paths.
+
+The rasterizer follows actual framebuffer writes. A later opaque writer keeps
+its native pixels, even when it writes the same color as the bracket. The
+overlay covers only texels still owned by a bracket at scanout. Effects,
+incomplete or changed groups, other palette banks, and unavailable or
+unrecognized PC assets fall back to Saturn. The verified gray and pink shades
+are reused at twice the native density within the existing integer-scaled
+viewport. The verified states do not establish a disabled-button palette.
+
+| Disc 1 replay | Captured frames |
+| --- | --- |
+| English idle | 60 |
+| English Option and Return hover | 62 and 104 |
+| English Option confirm and exit | 68 and 92 |
+| English Return confirm and exit | 113 and 140 |
+| English hand over the left Option bracket | 76 |
+| Spanish idle after leaving Options | 115 |
+
+Seven private replays at 1920×1080 each compared the asset-present and
+asset-absent viewports in Original, Enhanced Set, and Enhanced
+Zoom. Each of the 656 guest frame hashes matched the other profiles for its
+input route, with zero interpreted blocks across all 43 runs including the
+altered-asset control. Every Original capture matched pixel for pixel. The
+Enhanced changes stayed inside the four verified glyph rectangles, including
+at hand overlap. Exit captures and the altered-asset control matched the
+asset-absent viewport pixel for pixel. No release package was made.
