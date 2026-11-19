@@ -722,3 +722,17 @@ chapter 1 with verified HD draws. No package was built. The main
 workspace measured 47,202,628,804 logical bytes, counting hard links once
 and excluding reparse points, above the 20 GB cap. The existing
 development ZIP remains 6,315,009,692 bytes.
+
+
+## Disc 1 battle item cards
+
+`SAKURA2/BBG004.BIN` through `BBG007.BIN` use the same three offset/size pairs as variant C. Their cell map has 196 big-endian 16-bit names covering 14 × 14 cells. Each name selects a 64-byte 8 bpp tile. The palette has 256 RGB555 entries. The decoder exposes the 112 × 112 bitmap and its tile and palette bytes through the usual entry points. Of the `BG`, `BBG` and `EVE` resources in `SAKURA1` and `SAKURA2` on both prepared English discs, these are the four that use the 196-cell map.
+
+| Saturn | Same-number PC file in `SAKURA2/BG` | Item | Saturn palette FNV-1a |
+| --- | --- | --- | --- |
+| BBG004 | BBG004.SPR | Gold pendant | `319E682E63DC3A4E` |
+| BBG005 | BBG005.SPR | Floral hairpin | `15ED0C1910A55981` |
+| BBG006 | BBG006.SPR | Flower | `45CE415D5026BA41` |
+| BBG007 | BBG007.SPR | Blue pendant | `EF9307D85B802E5B` |
+
+All four PC resources have one 224 × 224 image. Direct visual comparison confirms the items, with changes to the frame colors and a smaller flower in the PC card. `EVT04.BIN` references BBG004 at offset `0x1588`. A runtime capture still needs to establish the footprint, frame treatment and exact point of substitution. These four results verify decoding and pairing only.

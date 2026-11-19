@@ -37,6 +37,31 @@ class PackageArtTests(unittest.TestCase):
                 (folder/'provenance.json').write_text(json.dumps(manifest))
             self.assertEqual(len(generated_backgrounds(folder,screen=True)),4)
             with self.assertRaises(RuntimeError):generated_backgrounds(folder)
+    def test_loading_art_accepts_only_transparent_white_ink_in_the_scroll_window(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            file = folder / 'LOAD-es-lettering-v1.png'
+            report = folder / 'provenance.json'
+            image = Image.new('RGBA', (48, 198), (255, 255, 255, 0))
+            image.putpixel((10, 10), (255, 255, 255, 128))
+            manifest = {'source_pixels_included': False, 'backgrounds': [{
+                'file': file.name, 'kind': 'generated Spanish loading lettering only',
+                'logical_grid': [48, 198], 'native_origin': [136, 13],
+            }]}
+
+            def write_fixture():
+                image.save(file)
+                manifest['backgrounds'][0]['sha256'] = hashlib.sha256(file.read_bytes()).hexdigest()
+                report.write_text(json.dumps(manifest), encoding='utf-8')
+
+            write_fixture()
+            self.assertEqual(list(generated_backgrounds(folder, screen=True)), [file.name])
+            image.putpixel((10, 10), (255, 0, 0, 128))
+            write_fixture()
+            with self.assertRaisesRegex(RuntimeError, 'loading lettering'):
+                generated_backgrounds(folder, screen=True)
+
     def test_legacy_episode_strips_are_rejected(self):
         from PIL import Image
         with tempfile.TemporaryDirectory() as directory:

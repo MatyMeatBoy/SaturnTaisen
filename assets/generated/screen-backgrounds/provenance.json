@@ -2,6 +2,20 @@
   "schema": 1,
   "backgrounds": [
     {
+      "file": "LOAD-es-lettering-v1.png",
+      "sha256": "64ba275114052cc220cb354728866a924742cb4a872f3b96311d06698abf5e4d",
+      "method": "Original built-in ImageGen brush lettering, white ink fitted to the native scroll window",
+      "logical_grid": [
+        48,
+        198
+      ],
+      "native_origin": [
+        136,
+        13
+      ],
+      "kind": "generated Spanish loading lettering only"
+    },
+    {
       "file": "OPENING-v1.png",
       "sha256": "07bac72eea69b68a394aa8c5e5a45f65137c3c386ef8dc670ad90f2a5a0c6f81",
       "source_layer_sha256": "2b65bbd6419c6fb46fd7d493f9c4e551d59c681835662e53abf2488c03239748",

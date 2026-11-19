@@ -53,7 +53,9 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
         pattern=r'STAGE01-right-v1\.png' if tactical else r'(?:OPENING|TITLE|STATUS|PAUSE01|LOADING)-v1\.png' if screen else r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
         episode_surround = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-surround-v2\.png', name)
         lettering = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-es-lettering-v1\.png', name)
-        if (not episode_surround and not lettering and not re.fullmatch(pattern, name)) or name in result:
+        loading_lettering = screen and name == 'LOAD-es-lettering-v1.png'
+        if (not episode_surround and not lettering and not loading_lettering and
+                not re.fullmatch(pattern, name)) or name in result:
             raise RuntimeError('Invalid/duplicate generated background identity')
         file=folder/name
         if file.is_symlink() or not file.is_file() or digest(file)!=row['sha256']:
@@ -91,6 +93,23 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
             ):
                 raise RuntimeError('Unexpected Spanish episode lettering: ' + name)
             episode_lettering.add(lettering[1])
+        if loading_lettering:
+            if (
+                data.get('source_pixels_included') is not False
+                or row.get('kind') != 'generated Spanish loading lettering only'
+                or row.get('logical_grid') != [48, 198]
+                or row.get('native_origin') != [136, 13]
+                or len(header) != 26 or header[12:16] != b'IHDR'
+                or struct.unpack('>II', header[16:24]) != (48, 198)
+                or header[24:26] != bytes((8, 6))
+            ):
+                raise RuntimeError('Unexpected Spanish loading lettering: ' + name)
+            from PIL import Image
+            with Image.open(file) as image:
+                red, green, blue, alpha = image.split()
+                if (alpha.getextrema()[0] != 0 or alpha.getextrema()[1] == 0
+                        or any(channel.getextrema() != (255, 255) for channel in (red, green, blue))):
+                    raise RuntimeError('Expected transparent white ink only in Spanish loading lettering: ' + name)
         result[name]=file
     if episode_surrounds:
         expected = {f'EPISODE{number:02}' for number in range(1, 11)}
@@ -288,7 +307,7 @@ Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Tai
 3. Copia en esta carpeta `roms` tus tres archivos (los dos discos de Saturn y, para el mod HD, la imagen de PC): el launcher los reconoce y prepara el juego solo (unos minutos, una sola vez). También puedes elegirlos en **Preparar juego**.
 4. Pulsa **Jugar**. F11 cambia pantalla completa; Esc/F1 o Start+Select abre los ajustes.
 
-**Idiomas.** «Inglés v0.1 Taisen» y «Español v0.1 Taisen» se aplican sobre una copia de tus discos; cada paso se comprueba con SHA-256 y tus archivos solo se leen. El idioma se cambia en el launcher al instante. Créditos de la traducción inglesa y detalle de las capas: `parches/CREDITOS.md`. En español siguen en inglés los rótulos de episodio, la pantalla LOADING, el menú de extras y los subtítulos de vídeo.
+**Idiomas.** «Inglés v0.1 Taisen» y «Español v0.1 Taisen» se aplican sobre una copia de tus discos; cada paso se comprueba con SHA-256 y tus archivos solo se leen. El idioma se cambia en el launcher al instante. Créditos de la traducción inglesa y detalle de las capas: `parches/CREDITOS.md`. La presentación Mejorada usa letras de pincel generadas en la pantalla CARGANDO del disco 1 español. El menú de extras y los subtítulos de vídeo siguen en inglés.
 
 **Mod HD.** Con tu edición de PC se prepara una sola vez todo el material HD (imágenes de fondos, escenas, eventos, CG, mapas, unidades, personajes, menús y las películas) en `data/hd-resources`, solo en tu PC y nunca compartido. Hoy ya se ven 19 fondos y los retratos HD; el resto se irá activando en próximas versiones sin volver a preparar nada.
 

@@ -38,6 +38,7 @@ PALETTE_AT = HEADER + PICTURE
 SIZE = 45120
 VARIANT_B = b'\x00\x01\x00\x02'
 VARIANT_B_MAP_AT = 0x610
+MAPPED_CELL_DIMENSIONS = {196: (14, 14), 648: (36, 18), 1120: (40, 28)}
 CHARACTER_NUMBER = 0x7FFF
 FLIP_HORIZONTAL = 1 << 30
 FLIP_VERTICAL = 1 << 31
@@ -161,7 +162,7 @@ def picture_bytes(data):
 def _mapped(data, picture_at, picture_size, map_at, map_size, palette_at):
     """Variant C picture: unique 8x8 tiles plus a map (u16 per cell = 2 x tile number, VDP2 pattern names)."""
     entries = map_size // 2
-    dims = {648: (36, 18), 1120: (40, 28)}.get(entries)
+    dims = MAPPED_CELL_DIMENSIONS.get(entries)
     if dims is None:
         return None
     cells_w, cells_h = dims
@@ -210,8 +211,8 @@ def palette_fingerprint(data):
 
 
 def _table(data):
-    """Variant C (disc 2 battle backgrounds `BBG*.BIN`): big-endian (offset, size) pairs from 0x00, ended by a
-    zero pair: the unique tiles, the map (1296 or 2240 bytes) and the 512-byte palette.
+    """Variant C (battle pictures `BBG*.BIN`): big-endian (offset, size) pairs from 0x00, ended by a
+    zero pair: the unique tiles, the 16-bit cell map and the 512-byte palette.
     Returns (picture_at, picture_size, map_at, map_size, palette_at) or None."""
     pairs = []
     for at in range(0, 64, 8):
@@ -223,9 +224,13 @@ def _table(data):
         if offset + size > len(data):
             return None
         pairs.append((offset, size))
-    if len(pairs) != 3 or pairs[0][0] != 0x18 or pairs[2][1] != 512 or pairs[1][1] not in (1296, 2240):
+    if len(pairs) != 3:
         return None
-    return pairs[0][0], pairs[0][1], pairs[1][0], pairs[1][1], pairs[2][0]
+    (picture_at, picture_size), (map_at, map_size), (palette_at, palette_size) = pairs
+    cells, remainder = divmod(map_size, 2)
+    if picture_at != 0x18 or palette_size != 512 or remainder or cells not in MAPPED_CELL_DIMENSIONS:
+        return None
+    return picture_at, picture_size, map_at, map_size, palette_at
 
 
 def nc_records(data):
