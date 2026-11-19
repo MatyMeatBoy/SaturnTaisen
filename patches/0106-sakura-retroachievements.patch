@@ -1,0 +1,2134 @@
+diff --git a/port/main.cpp b/port/main.cpp
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -778,6 +778,14 @@
+ 
+ #endif // SATRECOMP_OWN_MACHINE
+ 
++bool Port::DevelopmentStatesAllowed() const {
++#ifdef SATRECOMP_WITH_RA
++    if (achievements)
++        return false;
++#endif
++    return DevStatesAllowed();
++}
++
+ void Port::RunFrame() {
+     // Debugging aid (SATRECOMP_PEEK=ADDR,ADDR,... hex): these longwords of memory, whenever one has changed
+     // since the frame before
+@@ -860,7 +868,7 @@
+     if (!menuTest.empty() && strtoull(menuTest.c_str(), nullptr, 10) == frame) {
+         const size_t first = menuTest.find(':'), second = menuTest.find(':', first + 1);
+         const std::string keys = menuTest.substr(first + 1, second == std::string::npos ? std::string::npos : second - first - 1);
+-        menu.Open(DevStatesAllowed());
++        menu.Open(DevelopmentStatesAllowed());
+         for (const char key : keys) {
+             const uint16_t button = key == 'u' ? kPadUp : key == 'd' ? kPadDown : key == 'l' ? kPadLeft : key == 'r' ? kPadRight : key == 'a' ? kPadA : key == 's' ? kPadStart : 0;
+             MenuAct(menu.Buttons(button));
+@@ -917,6 +925,11 @@
+     soundtrack.on = satrecomp::FeatureOn("custom_soundtrack"); // (switched in the menu: from this frame on)
+     saturn->RunFrame();
+     frame++;
++#ifdef SATRECOMP_WITH_RA
++    if (achievements)
++        achievements->Frame({saturn->ramLow, satrecomp::Machine::kRamSize},
++                            {saturn->ramHigh, satrecomp::Machine::kRamSize});
++#endif
+     if (satrecomp::TheGame().frame) {
+         satrecomp::TheGame().frame();
+     }
+@@ -1127,7 +1140,7 @@
+ }
+ 
+ bool Port::SetResetPoint(std::string &error) {
+-    if (!DevStatesAllowed()) {
++    if (!DevelopmentStatesAllowed()) {
+         error = "The reset point is a development tool.";
+         return false;
+     }
+@@ -1139,10 +1152,15 @@
+         error = "The game cannot be reset yet.";
+         return false;
+     }
+-    return LoadStateData(powerOn, error);
++    const bool reset = LoadStateData(powerOn, error);
++#ifdef SATRECOMP_WITH_RA
++    if (reset && achievements)
++        achievements->Reset();
++#endif
++    return reset;
+ }
+ bool Port::GoToResetPoint(std::string &error) {
+-    if (!DevStatesAllowed()) {
++    if (!DevelopmentStatesAllowed()) {
+         error = "The reset point is a development tool.";
+         return false;
+     }
+@@ -1154,7 +1172,7 @@
+ }
+ 
+ bool Port::SaveState(const std::string &path, std::string &error) {
+-    if (!DevStatesAllowed()) {
++    if (!DevelopmentStatesAllowed()) {
+         error = "Save states are a development tool.";
+         return false;
+     }
+@@ -1170,7 +1188,7 @@
+ }
+ 
+ bool Port::LoadState(const std::string &path, std::string &error) {
+-    if (!DevStatesAllowed()) {
++    if (!DevelopmentStatesAllowed()) {
+         error = "Load states are a development tool.";
+         return false;
+     }
+@@ -1676,6 +1694,17 @@
+         return 1;
+     }
+ 
++#ifdef SATRECOMP_WITH_RA
++    if (!o.headless && !o.settingsPath.empty() && o.stateLoad.empty() && o.stateSave.empty() &&
++        o.moviePlay.empty() && o.movieRecord.empty() && !o.autoSeed) {
++        try {
++            p.achievements = port::ra::Session::Open(std::filesystem::u8path(o.settingsPath).parent_path(),
++                p.discFiles.SystemArea(), port::ra::WinHttpExchange(SATRECOMP_RA_USER_AGENT));
++        } catch (...) {
++            std::fprintf(stderr, "RetroAchievements could not be started.\n");
++        }
++    }
++#endif
+     int rc = 0;
+     if (o.headless) {
+         for (uint64_t f = 0; (o.frames == 0 || f < o.frames) && !p.quit; f++) {
+diff --git a/port/port.h b/port/port.h
+--- a/port/port.h
++++ b/port/port.h
+@@ -10,6 +10,9 @@
+ #include "choice_preload.h"
+ #include "menu.h"
+ #include "soundtrack.h"
++#ifdef SATRECOMP_WITH_RA
++#include "ra_host.h"
++#endif
+ 
+ #include <atomic>
+ #include <cstdint>
+@@ -118,6 +121,8 @@
+     // Pad states (pressed bits) for the current frame
+     std::atomic<uint16_t> pad[2] = {0, 0};
+     uint64_t frame = 0;
++
++    bool DevelopmentStatesAllowed() const;
+ 
+     Movie playMovie;
+     Movie recMovie;
+@@ -195,6 +200,9 @@
+     // The Display page's Shader: the preset to draw through (a .slangp file), or "" for none (port/shading.h)
+     std::string ShaderPreset() const;
+     uint64_t StateHash();
++#ifdef SATRECOMP_WITH_RA
++    std::unique_ptr<ra::Session> achievements;
++#endif
+ };
+ 
+ // Debugging aid (--video-stats): see video_stats.cpp
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -458,7 +458,16 @@
+         SDL_SetRenderVSync(renderer, 0);
+         return true;
+     };
++#ifdef SATRECOMP_WITH_RA
++    SDL_Texture* achievedBadge = nullptr;
++    std::filesystem::path achievedBadgePath;
++#endif
+     auto closeWindow = [&]() {
++#ifdef SATRECOMP_WITH_RA
++        if (achievedBadge) SDL_DestroyTexture(achievedBadge);
++        achievedBadge = nullptr;
++        achievedBadgePath.clear();
++#endif
+         portraitPack.Close();
+         backgroundWorkers.Cancel();backgroundWorkers.Wait();
+         backgroundWarmupStarted=false;
+@@ -2339,6 +2348,34 @@
+             const unsigned action=sakuraUi.Draw(port.menu);
+             if (action) port.MenuAct(port.menu.Press(action));
+         }
++#ifdef SATRECOMP_WITH_RA
++        if (port.achievements && sakuraUi.Active() && !port.menu.IsOpen() && !choosing &&
++            baseFit.scale > 0 && high >= 88) {
++            const auto* popup = port.achievements->Popup(port.frame);
++            const int left = std::min({baseFit.x, textFit.x, choiceTextFit.x});
++            const int top = std::min({baseFit.y, textFit.y, choiceTextFit.y});
++            // Use a margin outside the native canvas and the dialogue/choice viewports.
++            const bool leftMargin = left - canvasLeft >= 144;
++            const bool topMargin = top >= 72 && canvasWidth >= 220;
++            if (popup && (leftMargin || topMargin)) {
++                if (achievedBadgePath != popup->badge) {
++                    if (achievedBadge) SDL_DestroyTexture(achievedBadge);
++                    achievedBadge = nullptr;
++                    achievedBadgePath = popup->badge;
++                }
++                if (!achievedBadge && !achievedBadgePath.empty()) {
++                    const auto filename = achievedBadgePath.u8string();
++                    if (auto* image = SDL_LoadPNG(reinterpret_cast<const char*>(filename.c_str()))) {
++                        achievedBadge = SDL_CreateTextureFromSurface(renderer, image);
++                        SDL_DestroySurface(image);
++                    }
++                }
++                const int toastWidth = leftMargin ? std::min(184, left - canvasLeft - 12) : 208;
++                sakuraUi.AchievementToast(canvasLeft + 6, 6, toastWidth, popup->title, popup->points, achievedBadge);
++                port.achievements->PopupShown(port.frame);
++            }
++        }
++#endif
+         if (!windowShot.empty()) {
+             if (SDL_Surface* surface=SDL_RenderReadPixels(renderer,nullptr)) {
+                 SDL_SavePNG(surface,windowShot.c_str());
+@@ -2371,7 +2408,7 @@
+         if (port.menu.IsOpen()) {
+             port.menu.Close();
+         } else if (port.MenuPicture(menuBase, menuWidth, menuHeight)) {
+-            port.menu.Open(DevStatesAllowed());
++            port.menu.Open(port.DevelopmentStatesAllowed());
+             menuDirty = true;
+         }
+     };
+@@ -2531,12 +2568,12 @@
+             case SDL_EVENT_KEY_DOWN:
+                 if ((ev.key.scancode == SDL_SCANCODE_ESCAPE || ev.key.scancode == SDL_SCANCODE_F1) && !ev.key.repeat) {
+                     toggleMenu();
+-                } else if (DevStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F5 || ev.key.scancode == SDL_SCANCODE_F9)) {
++                } else if (port.DevelopmentStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F5 || ev.key.scancode == SDL_SCANCODE_F9)) {
+                     // F5 keeps the game in the slot, F9 goes back to it; F6 / F7: the slot before, the next
+                     if (!port.menu.IsOpen()) {
+                         quickState(ev.key.scancode == SDL_SCANCODE_F5);
+                     }
+-                } else if (DevStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F2 || ev.key.scancode == SDL_SCANCODE_F3)) {
++                } else if (port.DevelopmentStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F2 || ev.key.scancode == SDL_SCANCODE_F3)) {
+                     if (!port.menu.IsOpen()) {
+                         resetPoint(ev.key.scancode == SDL_SCANCODE_F2);
+                     }
+@@ -2548,7 +2585,7 @@
+                 } else if (ev.key.scancode == SDL_SCANCODE_MINUS || ev.key.scancode == SDL_SCANCODE_EQUALS) {
+                     const int speed = port.menu.Speed();
+                     setSpeed(ev.key.scancode == SDL_SCANCODE_MINUS ? (speed == 100 ? 50 : 25) : (speed == 25 ? 50 : 100));
+-                } else if (DevStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F6 || ev.key.scancode == SDL_SCANCODE_F7)) {
++                } else if (port.DevelopmentStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F6 || ev.key.scancode == SDL_SCANCODE_F7)) {
+                     port.menu.SetSlot(port.menu.Slot() + (ev.key.scancode == SDL_SCANCODE_F7 ? 1 : -1));
+                     menuDirty = true;
+                 } else if (ev.key.scancode == SDL_SCANCODE_F11 ||
+@@ -2712,6 +2749,10 @@
+             silent = port.menu.muted;
+             SDL_SetAudioStreamGain(audio.stream, silent ? 0.0f : 1.0f);
+         }
++#ifdef SATRECOMP_WITH_RA
++        if (port.achievements && (choosing || paused || port.menu.IsOpen()))
++            port.achievements->Idle();
++#endif
+         if(choosing) {
+             showSoftware(); SDL_Delay(8); nextFrame=SDL_GetTicksNS(); continue;
+         }
+diff --git a/port/sakura_ui.h b/port/sakura_ui.h
+--- a/port/sakura_ui.h
++++ b/port/sakura_ui.h
+@@ -17,6 +17,9 @@
+     void SetGameAtlas(std::span<const uint8_t> atlas);
+     void GameText(const std::vector<UiTextLine>&,int x,int y,int scale,int cropX,int cropY);
+     void GameChoiceText(const std::vector<UiTextLine>&,int x,int y,int scale,int cropX,int cropY);
++#ifdef SATRECOMP_WITH_RA
++    void AchievementToast(int x,int y,int width,const std::string& title,uint32_t points,SDL_Texture* badge);
++#endif
+     bool HasGameFont() const { return gameFont!=nullptr; }
+     bool Active() const { return active; }
+ private:
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+--- a/port/sakura_ui.cpp
++++ b/port/sakura_ui.cpp
+@@ -137,6 +137,38 @@
+     ImGui::PopFont();draw->PopClipRect();
+     ImGui::Render();ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
+ }
++#ifdef SATRECOMP_WITH_RA
++void SakuraUi::AchievementToast(int x,int y,int width,const std::string& title,uint32_t points,SDL_Texture* badge) {
++    if (!active || width < 120)
++        return;
++    ImGui_ImplSDLRenderer3_NewFrame(); ImGui_ImplSDL3_NewFrame(); ImGui::NewFrame();
++    auto* draw = ImGui::GetForegroundDrawList();
++    const ImVec2 origin{float(x), float(y)};
++    const ImVec2 end{float(x + width), float(y + 58)};
++    const auto& colors = ui::palette();
++    draw->AddRectFilled(origin, end, colors.surface, 9.0f);
++    draw->AddRect(origin, end, colors.accent, 9.0f);
++    int textX = x + 8;
++    if (badge) {
++        draw->AddImage(ImTextureID(reinterpret_cast<uintptr_t>(badge)),
++                       ImVec2(float(x + 8), float(y + 12)), ImVec2(float(x + 42), float(y + 46)));
++        textX = x + 49;
++    }
++    const auto heading = ui::fit_end(title, ui::Font::Semibold, 14, float(x + width - textX - 8));
++    const auto scored = "+" + std::to_string(points) + " puntos";
++    draw->PushClipRect(origin, end, true);
++    ui::push_font(ui::Font::Semibold, 14);
++    draw->AddText(ImVec2(float(textX), float(y + 9)), colors.text, heading.c_str());
++    ui::pop_font();
++    ui::push_font(ui::Font::Regular, 12);
++    draw->AddText(ImVec2(float(textX), float(y + 34)), colors.secondary, scored.c_str());
++    ui::pop_font();
++    draw->PopClipRect();
++    ImGui::Render();
++    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
++}
++#endif
++
+ unsigned SakuraUi::Draw(Menu& menu) {
+     if (!active) return 0;
+     ImGui_ImplSDLRenderer3_NewFrame(); ImGui_ImplSDL3_NewFrame(); ImGui::NewFrame();
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -73,6 +73,15 @@
+ target_include_directories(${GAME} PRIVATE runtime port "${WORK_DIR}/gen")
+ target_link_libraries(${GAME} PRIVATE SDL3::SDL3 ZLIB::ZLIB sakura_ui)
+ target_compile_options(${GAME} PRIVATE -Wno-unused-parameter)
++if (WIN32 AND GAME STREQUAL "sakura")
++    include(cmake/sakura_ra.cmake)
++    if (EXISTS "${GAME_DIR}/../../VERSION")
++        file(STRINGS "${GAME_DIR}/../../VERSION" SAKURA_VERSION LIMIT_COUNT 1)
++    endif()
++    sakura_enable_ra(${GAME} "${SAKURA_VERSION}")
++    target_link_libraries(sakura_ui PRIVATE sakura_ra)
++    target_compile_definitions(sakura_ui PRIVATE SATRECOMP_WITH_RA)
++endif()
+ 
+ # The reference build (-DSATRECOMP_REFERENCE=ON, 'make ref'): the same game code on the Ymir hardware model,
+ # a development tool to compare with. It has Ymir's interpreters and renderers, which the checks of the
+diff --git a/launcher/CMakeLists.txt b/launcher/CMakeLists.txt
+--- a/launcher/CMakeLists.txt
++++ b/launcher/CMakeLists.txt
+@@ -8,7 +8,7 @@
+ #   GAME_NAME GAME_EXE DISC_NAME DISC_PRODUCT DISC_VERSION APP_ID HOME_ENV DISCLAIMER, and optionally
+ #   GAME_VERSION (the game repository's VERSION) and UPDATE_REPO
+ cmake_minimum_required(VERSION 3.20)
+-project(satrecomp_launcher CXX)
++project(satrecomp_launcher LANGUAGES C CXX)
+ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ if(NOT CMAKE_BUILD_TYPE)
+@@ -31,6 +31,16 @@
+     endif()
+ endif()
+ include(../recomp-common/launcher/launcher.cmake)
++if (WIN32 AND GAME_EXE STREQUAL "sakura")
++    include(../cmake/sakura_ra.cmake)
++    sakura_enable_ra(launcher "${GAME_VERSION}")
++    target_sources(launcher PRIVATE src/ra_launcher.cpp)
++    if(MSVC)
++        set_source_files_properties(src/ra_launcher.cpp PROPERTIES COMPILE_OPTIONS "/std:c++20")
++    else()
++        set_source_files_properties(src/ra_launcher.cpp PROPERTIES COMPILE_OPTIONS "-std=gnu++20")
++    endif()
++endif()
+ 
+ # (the game's combined buttons, game.cfg's `combos`: on the Controllers page as the game reads them, port/bindings.h)
+ set(GAME_COMBOS "")
+diff --git a/launcher/src/description.cpp b/launcher/src/description.cpp
+--- a/launcher/src/description.cpp
++++ b/launcher/src/description.cpp
+@@ -8,6 +8,9 @@
+ #include "sakura_saves.h"
+ #include "sakura_hd.h"
+ #include "sakura_setup.h"
++#ifdef SATRECOMP_WITH_RA
++#include "ra_launcher.h"
++#endif
+ #include "sakura_resources.h"
+ #include <stdexcept>
+ 
+@@ -271,6 +274,9 @@
+         // Inicio: title, Jugar and three switches. Everything else (the player's files, saves, screen) is in Opciones.
+         d.simple_home = true;
+         d.mute_argument = nullptr; // (nobody wants to start in silence; the game menu has the volume)
++#ifdef SATRECOMP_WITH_RA
++        d.pages.push_back({"RetroAchievements",DrawRetroAchievements,nullptr,RetroAchievementsBusy});
++#endif
+         d.extra_home = [](launcher::PageContext& page) {DrawSakuraHome(page);};
+         d.extra_options = [](launcher::PageContext& page) {DrawSakuraFiles(page);DrawSakuraSaves(page);};
+         d.extra_home_busy = [] {return SakuraSetupBusy() || SakuraHdBusy();};
+diff --git a/recomp-common/launcher/src/app.cpp b/recomp-common/launcher/src/app.cpp
+--- a/recomp-common/launcher/src/app.cpp
++++ b/recomp-common/launcher/src/app.cpp
+@@ -563,6 +563,8 @@
+       prefs_(folder_ / "launcher.ini"),
+       program_folder_(base_path()),
+       about_(the_description()) {
++    if (!collection_ && about_.simple_home && about_.game_page)
++        page_ = static_cast<int>(about_.pages.size());
+     prefs_.load();
+     for (const Target& target : targets()) {
+         auto slot = std::make_unique<Slot>(target.folder / "settings.ini");
+diff --git a/cmake/sakura_ra.cmake b/cmake/sakura_ra.cmake
+new file mode 100644
+--- /dev/null
++++ b/cmake/sakura_ra.cmake
+@@ -0,0 +1,36 @@
++include(FetchContent)
++FetchContent_Declare(rcheevos
++    URL https://codeload.github.com/RetroAchievements/rcheevos/zip/refs/tags/v12.5.0
++    URL_HASH SHA256=c2f619e3f113631e1f780361f7ffdbb8c65dc85ff846438b6f2d396b0b830c27
++    DOWNLOAD_EXTRACT_TIMESTAMP ON)
++FetchContent_MakeAvailable(rcheevos)
++file(GLOB RA_EVALUATORS CONFIGURE_DEPENDS "${rcheevos_SOURCE_DIR}/src/rcheevos/*.c")
++file(GLOB RA_SERVICES CONFIGURE_DEPENDS "${rcheevos_SOURCE_DIR}/src/rapi/*.c")
++add_library(sakura_ra STATIC
++    "${rcheevos_SOURCE_DIR}/src/rc_client.c"
++    "${rcheevos_SOURCE_DIR}/src/rc_compat.c"
++    "${rcheevos_SOURCE_DIR}/src/rc_util.c"
++    "${rcheevos_SOURCE_DIR}/src/rc_version.c"
++    "${rcheevos_SOURCE_DIR}/src/rhash/md5.c"
++    ${RA_EVALUATORS} ${RA_SERVICES}
++    "${CMAKE_CURRENT_LIST_DIR}/../port/ra_client.cpp"
++    "${CMAKE_CURRENT_LIST_DIR}/../port/ra_journal.cpp"
++    "${CMAKE_CURRENT_LIST_DIR}/../port/ra_profile.cpp"
++    "${CMAKE_CURRENT_LIST_DIR}/../port/ra_transport.cpp"
++    "${CMAKE_CURRENT_LIST_DIR}/../port/ra_host.cpp")
++target_include_directories(sakura_ra PUBLIC "${rcheevos_SOURCE_DIR}/include"
++    PRIVATE "${rcheevos_SOURCE_DIR}/src/rcheevos" "${rcheevos_SOURCE_DIR}/src/rhash")
++target_compile_features(sakura_ra PRIVATE cxx_std_20)
++target_link_libraries(sakura_ra PUBLIC crypt32 winhttp)
++if(MINGW)
++    target_link_libraries(sakura_ra PUBLIC winpthread)
++endif()
++
++function(sakura_enable_ra target version)
++    if(NOT version)
++        set(version "0.0.0")
++    endif()
++    target_link_libraries(${target} PRIVATE sakura_ra)
++    target_compile_definitions(${target} PRIVATE SATRECOMP_WITH_RA
++        "SATRECOMP_RA_USER_AGENT=L\"SaturnTaisen/${version} rcheevos/12.5.0\"")
++endfunction()
+diff --git a/port/ra_client.cpp b/port/ra_client.cpp
+new file mode 100644
+--- /dev/null
++++ b/port/ra_client.cpp
+@@ -0,0 +1,379 @@
++#include "ra_client.h"
++
++#include <md5.h>
++#include <rc_consoles.h>
++#include <rc_api_runtime.h>
++
++#include <algorithm>
++#include <charconv>
++#include <cstring>
++#include <ctime>
++#include <limits>
++#include <stdexcept>
++#include <utility>
++
++namespace port::ra {
++namespace {
++constexpr std::string_view kDisc1Hash = "c4db9d08d56d1fbf78322852775d4818";
++constexpr std::string_view kDisc2Hash = "c306c094d0177459b31f411cd4cd44a9";
++
++Achievement CopyAchievement(const rc_client_achievement_t& source, bool acknowledged = false) {
++    const bool unlocked = acknowledged || source.unlocked != RC_CLIENT_ACHIEVEMENT_UNLOCKED_NONE;
++    char url[512]{};
++    rc_client_achievement_get_image_url(&source, unlocked ? RC_CLIENT_ACHIEVEMENT_STATE_UNLOCKED
++                                                        : RC_CLIENT_ACHIEVEMENT_STATE_ACTIVE,
++                                        url, sizeof(url));
++    return {source.id, source.points, unlocked, source.title ? source.title : "",
++            source.description ? source.description : "", url};
++}
++
++uint32_t AwardId(std::string_view data) {
++    if (!data.starts_with("r=awardachievement&"))
++        return 0;
++    const auto position = data.find("&a=");
++    if (position == data.npos)
++        return 0;
++    const auto rest = data.substr(position + 3);
++    const auto field = rest.substr(0, rest.find('&'));
++    uint32_t id = 0;
++    const auto result = std::from_chars(field.data(), field.data() + field.size(), id);
++    return result.ec == std::errc{} && result.ptr == field.data() + field.size() ? id : 0;
++}
++}
++
++uint32_t ReadSaturnMemory(std::span<const uint8_t> low, std::span<const uint8_t> high,
++                         uint32_t address, std::span<uint8_t> output) {
++    if (low.size() != kBankSize || high.size() != kBankSize || address >= 2*kBankSize || output.empty())
++        return 0;
++
++    size_t written = 0;
++    if (address < kBankSize) {
++        written = std::min(output.size(), size_t(kBankSize - address));
++        std::memcpy(output.data(), low.data() + address, written);
++        if (written == output.size())
++            return static_cast<uint32_t>(written);
++        address = kBankSize;
++    }
++    const auto offset = address - kBankSize;
++    const auto count = std::min(output.size() - written, size_t(kBankSize - offset));
++    std::memcpy(output.data() + written, high.data() + offset, count);
++    return static_cast<uint32_t>(written + count);
++}
++
++bool IsKnownDiscHash(std::string_view hash) {
++    return hash == kDisc1Hash || hash == kDisc2Hash;
++}
++
++std::string SaturnDiscHash(std::span<const uint8_t> firstSector) {
++    constexpr std::string_view magic = "SEGA SEGASATURN ";
++    constexpr int hashLength = 512;
++    if (firstSector.size() < hashLength || !std::equal(magic.begin(), magic.end(), firstSector.begin()))
++        return {};
++
++    md5_state_t state;
++    md5_byte_t digest[16];
++    md5_init(&state);
++    md5_append(&state, firstSector.data(), hashLength);
++    md5_finish(&state, digest);
++    constexpr char hex[] = "0123456789abcdef";
++    std::string hash;
++    hash.reserve(sizeof(digest)*2);
++    for (const auto byte : digest) {
++        hash.push_back(hex[byte >> 4]);
++        hash.push_back(hex[byte & 15]);
++    }
++    return hash;
++}
++
++Client::Client(const std::filesystem::path& profile) {
++    if (!profile.empty())
++        journal_.emplace(profile);
++    client_ = rc_client_create(ReadMemory, Send);
++    if (!client_)
++        throw std::bad_alloc();
++    rc_client_set_userdata(client_, this);
++    rc_client_set_hardcore_enabled(client_, 0);
++    rc_client_set_allow_background_memory_reads(client_, 0);
++    rc_client_set_event_handler(client_, OnEvent);
++}
++
++Client::~Client() {
++    closing_ = true;
++    // Resolve requests before destroying the upstream client and its callback state.
++    while (!completions_.empty())
++        Respond(completions_.begin()->first, 400, R"({"Success":false,"Error":"Session closed."})");
++    rc_client_destroy(client_);
++}
++
++std::optional<Credentials> Client::AuthenticatedAccount() const {
++    const auto* user = rc_client_get_user_info(client_);
++    if (user && user->username && user->token)
++        return Credentials{user->username, user->token};
++    return std::nullopt;
++}
++
++bool Client::Login(std::string_view username, std::string_view token) {
++    if (state_ == State::SigningIn || rc_client_get_user_info(client_) ||
++        username.empty() || username.size()>128 || token.empty() || token.size()>512 ||
++        username.find('\0') != username.npos || token.find('\0') != token.npos)
++        return false;
++    state_ = State::SigningIn;
++    const std::string user(username), secret(token);
++    rc_client_begin_login_with_token(client_, user.c_str(), secret.c_str(), OnLogin, this);
++    return true;
++}
++
++bool Client::SetMedia(std::string_view discHash) {
++    const bool supported = IsKnownDiscHash(discHash);
++    desiredHash_ = supported ? discHash : std::string_view{};
++    if (!supported && state_ != State::SigningIn)
++        state_ = State::UnsupportedMedia;
++    if (supported && !closing_ && rc_client_get_user_info(client_))
++        StartMedia();
++    return supported;
++}
++
++void Client::StartMedia() {
++    if (closing_ || !identifyingHash_.empty())
++        return;
++    if (desiredHash_.empty()) {
++        state_ = State::WaitingForMedia;
++        return;
++    }
++    if (loadedHash_ == desiredHash_) {
++        state_ = State::Ready;
++        ReplayUnsentAwards();
++        return;
++    }
++    state_ = State::Loading;
++    identifyingHash_ = desiredHash_;
++    if (loadedHash_.empty())
++        rc_client_begin_load_game(client_, identifyingHash_.c_str(), OnMedia, this);
++    else
++        rc_client_begin_change_media(client_, identifyingHash_.c_str(), OnMedia, this);
++}
++
++void Client::OnLogin(int result, const char*, rc_client_t*, void* opaque) {
++    auto& self = *static_cast<Client*>(opaque);
++    if (self.closing_)
++        return;
++    if (result == RC_OK)
++        self.StartMedia();
++    else
++        self.state_ = State::Error;
++}
++
++void Client::OnMedia(int result, const char*, rc_client_t* client, void* opaque) {
++    auto& self = *static_cast<Client*>(opaque);
++    const auto identified = std::exchange(self.identifyingHash_, {});
++    if (self.closing_)
++        return;
++    const auto* game = rc_client_get_game_info(client);
++    if (result != RC_OK || !game || game->id != kGameId || game->console_id != RC_CONSOLE_SATURN) {
++        self.loadedHash_.clear();
++        self.state_ = State::Error;
++        return;
++    }
++    self.loadedHash_ = identified;
++    if (self.desiredHash_.empty())
++        self.state_ = State::UnsupportedMedia;
++    else
++        self.StartMedia();
++}
++
++void Client::Evaluate(std::span<const uint8_t> low, std::span<const uint8_t> high) {
++    if (low.size() != kBankSize || high.size() != kBankSize)
++        return;
++    if (state_ != State::Ready && !(state_ == State::Loading && loadedHash_.empty())) {
++        Idle();
++        return;
++    }
++    low_ = low;
++    high_ = high;
++    rc_client_do_frame(client_);
++    low_ = {};
++    high_ = {};
++}
++
++void Client::Idle() {
++    rc_client_idle(client_);
++}
++
++void Client::Reset() {
++    if (state_ == State::Ready)
++        rc_client_reset(client_);
++    unlocks_.clear();
++}
++
++uint32_t Client::ReadMemory(uint32_t address, uint8_t* output, uint32_t count, rc_client_t* client) {
++    auto& self = *static_cast<Client*>(rc_client_get_userdata(client));
++    return ReadSaturnMemory(self.low_, self.high_, address, {output, count});
++}
++
++void Client::Send(const rc_api_request_t* request, rc_client_server_callback_t callback,
++                  void* data, rc_client_t* client) {
++    auto& self = *static_cast<Client*>(rc_client_get_userdata(client));
++    const uint64_t id = ++self.nextRequest_;
++    self.completions_.emplace(id, Completion{callback, data, std::nullopt});
++    if (!self.closing_) {
++        self.requests_.push_back({id, request->url, request->post_data ? request->post_data : "",
++                                  request->content_type ? request->content_type : ""});
++    }
++}
++
++std::vector<Request> Client::TakeRequests() {
++    auto requests = std::exchange(requests_, {});
++    if (!journal_)
++        return requests;
++
++    std::vector<Request> ready;
++    for (auto& request : requests) {
++        const auto id = AwardId(request.data);
++        if (!id) {
++            if (request.data.starts_with("r=awardachievement"))
++                Respond(request.id, 400, R"({"Success":false,"Error":"Invalid award."})");
++            else
++                ready.push_back(std::move(request));
++            continue;
++        }
++
++        auto& completion = completions_.at(request.id);
++        if (!completion.award) {
++            const auto* user = rc_client_get_user_info(client_);
++            if (user) {
++                const auto pending = journal_->Pending(user->username);
++                const auto record = std::ranges::find(pending, id, &PendingAward::achievement);
++                if (record != pending.end())
++                    completion.award = *record;
++            }
++        }
++        if (completion.award && !acknowledgedAwards_.contains(id))
++            ready.push_back(std::move(request));
++        else
++            Respond(request.id, 400, R"({"Success":false,"Error":"Award not pending."})");
++    }
++    return ready;
++}
++
++bool Client::Respond(uint64_t id, int status, std::string_view body) {
++    const auto found = completions_.find(id);
++    if (found == completions_.end())
++        return false;
++    const auto completion = found->second;
++    completions_.erase(found);
++    const std::string terminated(body);
++    const rc_api_server_response_t response{terminated.c_str(), terminated.size(), status};
++    if (completion.award && !closing_) {
++        const bool synced = AcceptAward(*completion.award, response);
++        const bool temporary = status == RC_API_SERVER_RESPONSE_RETRYABLE_CLIENT_ERROR ||
++            status == 408 || status == 429 || status >= 500;
++        syncEvents_.push_back({completion.award->achievement,
++            synced ? SyncState::Synced : temporary ? SyncState::Deferred : SyncState::Rejected});
++    }
++    if (completion.callback)
++        completion.callback(&response, completion.data);
++    return true;
++}
++
++void Client::OnEvent(const rc_client_event_t* event, rc_client_t* client) {
++    auto& self = *static_cast<Client*>(rc_client_get_userdata(client));
++    if (event->type == RC_CLIENT_EVENT_DISCONNECTED)
++        self.disconnected_ = true;
++    else if (event->type == RC_CLIENT_EVENT_RECONNECTED)
++        self.disconnected_ = false;
++    if (self.state_ != State::Ready || event->type != RC_CLIENT_EVENT_ACHIEVEMENT_TRIGGERED || !event->achievement)
++        return;
++    const auto& achievement = *event->achievement;
++    if (self.acknowledgedAwards_.contains(achievement.id))
++        return;
++    if (self.journal_ && achievement.category == RC_CLIENT_ACHIEVEMENT_CATEGORY_CORE) {
++        const auto* user = rc_client_get_user_info(client);
++        if (user)
++            self.journal_->Enqueue({user->username, self.loadedHash_, kGameId, achievement.id, achievement.unlock_time});
++    }
++    self.unlocks_.push_back(CopyAchievement(achievement));
++}
++
++std::vector<Achievement> Client::Achievements() const {
++    if (state_ != State::Ready)
++        return {};
++    std::vector<Achievement> output;
++    auto* list = rc_client_create_achievement_list(client_, RC_CLIENT_ACHIEVEMENT_CATEGORY_CORE,
++                                                    RC_CLIENT_ACHIEVEMENT_LIST_GROUPING_LOCK_STATE);
++    if (!list)
++        return output;
++    for (uint32_t index = 0; index < list->num_buckets; ++index) {
++        const auto& bucket = list->buckets[index];
++        for (uint32_t achievement = 0; achievement < bucket.num_achievements; ++achievement)
++            output.push_back(CopyAchievement(*bucket.achievements[achievement],
++                acknowledgedAwards_.contains(bucket.achievements[achievement]->id)));
++    }
++    rc_client_destroy_achievement_list(list);
++    return output;
++}
++
++void Client::ReplayUnsentAwards() {
++    if (!journal_ || replayQueued_ || offline_)
++        return;
++    const auto* user = rc_client_get_user_info(client_);
++    if (!user)
++        return;
++    replayQueued_ = true;
++
++    const auto now = std::time(nullptr);
++    for (const auto& award : journal_->Pending(user->username)) {
++        const auto* achievement = rc_client_get_achievement_info(client_, award.achievement);
++        if (!achievement || achievement->category != RC_CLIENT_ACHIEVEMENT_CATEGORY_CORE || award.earnedAt > now)
++            continue;
++        if (achievement->unlocked != RC_CLIENT_ACHIEVEMENT_UNLOCKED_NONE) {
++            journal_->Acknowledge(award);
++            continue;
++        }
++        // Use the original game hash and earning time with the current verified login token.
++        const auto age = std::min<uint64_t>(now - award.earnedAt, std::numeric_limits<uint32_t>::max());
++        const rc_api_award_achievement_request_t params{
++            user->username, user->token, award.achievement, 0, award.hash.c_str(), static_cast<uint32_t>(age)
++        };
++        rc_api_request_t request{};
++        if (rc_api_init_award_achievement_request(&request, &params) == RC_OK) {
++            const auto id = ++nextRequest_;
++            completions_.emplace(id, Completion{nullptr, nullptr, award});
++            requests_.push_back({id, request.url, request.post_data, request.content_type});
++        }
++        rc_api_destroy_request(&request);
++    }
++}
++
++bool Client::AcceptAward(const PendingAward& award, const rc_api_server_response_t& response) {
++    if (!journal_ || response.http_status_code < 200 || response.http_status_code >= 300)
++        return false;
++
++    rc_api_award_achievement_response_t parsed{};
++    const auto status = rc_api_process_award_achievement_server_response(&parsed, &response);
++    const bool confirmed = status == RC_OK && parsed.response.succeeded &&
++        parsed.awarded_achievement_id == award.achievement;
++    rc_api_destroy_award_achievement_response(&parsed);
++    if (!confirmed)
++        return false;
++
++    acknowledgedAwards_.insert(award.achievement);
++    journal_->Acknowledge(award);
++    return true;
++}
++
++void Client::SetOfflineProgress(const Progress& progress) {
++    offline_ = true;
++    for (const auto& row : progress.achievements)
++        if (row.unlocked)
++            acknowledgedAwards_.insert(row.id);
++}
++
++std::vector<SyncEvent> Client::TakeSyncEvents() {
++    return std::exchange(syncEvents_, {});
++}
++
++std::vector<Achievement> Client::TakeUnlocks() {
++    return std::exchange(unlocks_, {});
++}
++
++}
+diff --git a/port/ra_client.h b/port/ra_client.h
+new file mode 100644
+--- /dev/null
++++ b/port/ra_client.h
+@@ -0,0 +1,111 @@
++#pragma once
++
++#include "ra_journal.h"
++#include "ra_profile.h"
++
++#include <rc_client.h>
++
++#include <cstdint>
++#include <map>
++#include <optional>
++#include <set>
++#include <span>
++#include <string>
++#include <string_view>
++#include <vector>
++
++namespace port::ra {
++
++inline constexpr uint32_t kBankSize = 0x100000;
++inline constexpr uint32_t kGameId = 16546;
++
++uint32_t ReadSaturnMemory(std::span<const uint8_t> low, std::span<const uint8_t> high,
++                         uint32_t address, std::span<uint8_t> output);
++bool IsKnownDiscHash(std::string_view hash);
++std::string SaturnDiscHash(std::span<const uint8_t> firstSector);
++
++enum class State { SignedOut, SigningIn, WaitingForMedia, Loading, Ready, UnsupportedMedia, Error };
++
++struct Request {
++    uint64_t id;
++    std::string url;
++    std::string data;
++    std::string contentType;
++};
++
++enum class SyncState { Synced, Deferred, Rejected };
++struct SyncEvent { uint32_t id; SyncState state; };
++
++struct Achievement {
++    uint32_t id;
++    uint32_t points;
++    bool unlocked;
++    std::string title;
++    std::string description;
++    std::string badgeUrl;
++};
++
++// The owner calls all methods on the emulation thread. The transport receives
++// independent request values and returns the responses by ID.
++class Client {
++public:
++    explicit Client(const std::filesystem::path& profile = {});
++    ~Client();
++    Client(const Client&) = delete;
++    Client& operator=(const Client&) = delete;
++
++    std::optional<Credentials> AuthenticatedAccount() const;
++    State GetState() const { return state_; }
++    bool Login(std::string_view username, std::string_view token);
++    bool SetMedia(std::string_view discHash);
++    void Evaluate(std::span<const uint8_t> low, std::span<const uint8_t> high);
++    void Idle();
++    void Reset();
++
++    std::vector<Request> TakeRequests();
++    bool Respond(uint64_t id, int status, std::string_view body);
++    std::vector<Achievement> Achievements() const;
++    std::vector<Achievement> TakeUnlocks();
++    std::vector<SyncEvent> TakeSyncEvents();
++    bool Disconnected() const { return offline_ || disconnected_; }
++    void SetOfflineProgress(const Progress& progress);
++
++private:
++    struct Completion {
++        rc_client_server_callback_t callback;
++        void* data;
++        std::optional<PendingAward> award;
++    };
++
++    static uint32_t ReadMemory(uint32_t address, uint8_t* output, uint32_t count, rc_client_t* client);
++    static void Send(const rc_api_request_t* request, rc_client_server_callback_t callback,
++                     void* data, rc_client_t* client);
++    static void OnLogin(int result, const char*, rc_client_t*, void* self);
++    static void OnMedia(int result, const char*, rc_client_t*, void* self);
++    static void OnEvent(const rc_client_event_t* event, rc_client_t* client);
++
++    void StartMedia();
++    void ReplayUnsentAwards();
++    bool AcceptAward(const PendingAward& award, const rc_api_server_response_t& response);
++
++    rc_client_t* client_ = nullptr;
++    State state_ = State::SignedOut;
++    std::string desiredHash_;
++    std::string loadedHash_;
++    std::string identifyingHash_;
++    std::span<const uint8_t> low_;
++    std::span<const uint8_t> high_;
++    uint64_t nextRequest_ = 0;
++    std::vector<Request> requests_;
++    std::map<uint64_t, Completion> completions_;
++    std::vector<Achievement> unlocks_;
++    std::vector<SyncEvent> syncEvents_;
++    bool offline_ = false;
++    bool disconnected_ = false;
++    std::optional<AwardJournal> journal_;
++    std::set<uint32_t> acknowledgedAwards_;
++    bool replayQueued_ = false;
++    bool closing_ = false;
++};
++
++}
+diff --git a/port/ra_journal.cpp b/port/ra_journal.cpp
+new file mode 100644
+--- /dev/null
++++ b/port/ra_journal.cpp
+@@ -0,0 +1,136 @@
++#include "ra_journal.h"
++
++#include "ra_client.h"
++
++#include <algorithm>
++#include <atomic>
++#include <chrono>
++#include <fstream>
++#include <optional>
++#include <system_error>
++
++#ifdef _WIN32
++#define WIN32_LEAN_AND_MEAN
++#define NOMINMAX
++#include <windows.h>
++#endif
++
++namespace port::ra {
++namespace {
++namespace fs = std::filesystem;
++
++std::string AccountKey(std::string_view username) {
++    if (username.empty() || username.size() > 128)
++        return {};
++
++    std::string result;
++    for (unsigned char ch : username) {
++        if (ch >= 'A' && ch <= 'Z')
++            ch += 'a' - 'A';
++        if ((ch < 'a' || ch > 'z') && (ch < '0' || ch > '9') && ch != '_' && ch != '-')
++            return {};
++        result.push_back(static_cast<char>(ch));
++    }
++    return result;
++}
++
++bool Valid(const PendingAward& award) {
++    return award.game == kGameId && award.achievement != 0 && award.earnedAt > 0 &&
++        !AccountKey(award.username).empty() && IsKnownDiscHash(award.hash);
++}
++
++std::optional<PendingAward> Read(const fs::path& path) {
++    std::error_code error;
++    if (fs::file_size(path, error) > 512 || error)
++        return std::nullopt;
++
++    std::ifstream stream(path);
++    std::string schema;
++    PendingAward item;
++    if (!(stream >> schema >> item.username >> item.hash >> item.game >> item.achievement >> item.earnedAt) ||
++        schema != "SATURN-RA-AWARD-1" || !Valid(item))
++        return std::nullopt;
++    stream >> std::ws;
++    if (!stream.eof())
++        return std::nullopt;
++    return item;
++}
++
++bool Publish(const fs::path& temporary, const fs::path& final) {
++#ifdef _WIN32
++    return MoveFileExW(temporary.c_str(), final.c_str(), MOVEFILE_WRITE_THROUGH) != 0;
++#else
++    std::error_code error;
++    fs::create_hard_link(temporary, final, error);
++    return !error;
++#endif
++}
++}
++
++AwardJournal::AwardJournal(const fs::path& profile) : folder_(profile / "retroachievements" / "pending") {}
++
++std::filesystem::path AwardJournal::PathFor(const PendingAward& award) const {
++    return (folder_ / ("user-" + AccountKey(award.username))) / (std::to_string(award.achievement) + ".award");
++}
++
++bool AwardJournal::Enqueue(const PendingAward& award) const {
++    if (!Valid(award))
++        return false;
++    const auto final = PathFor(award);
++    const auto matches = [&] {
++        const auto existing = Read(final);
++        return existing && AccountKey(existing->username) == AccountKey(award.username) &&
++            existing->game == award.game && existing->achievement == award.achievement;
++    };
++    if (matches())
++        return true;
++
++    std::error_code error;
++    fs::create_directories(final.parent_path(), error);
++    if (error)
++        return false;
++
++    static std::atomic<uint64_t> sequence = 0;
++    const auto tick = std::chrono::steady_clock::now().time_since_epoch().count();
++    auto temporary = final;
++    temporary += ".tmp-" + std::to_string(tick) + "-" + std::to_string(++sequence);
++    std::ofstream stream(temporary, std::ios::trunc);
++    stream << "SATURN-RA-AWARD-1\n" << award.username << '\n' << award.hash << '\n'
++           << award.game << '\n' << award.achievement << '\n' << award.earnedAt << '\n';
++    stream.close();
++    const bool published = stream && Publish(temporary, final);
++    fs::remove(temporary, error);
++    return published || matches();
++}
++
++std::vector<PendingAward> AwardJournal::Pending(std::string_view username) const {
++    std::vector<PendingAward> result;
++    const auto account = AccountKey(username);
++    if (account.empty())
++        return result;
++
++    std::error_code error;
++    for (fs::directory_iterator it(folder_ / ("user-" + account), error), end; !error && it != end; it.increment(error)) {
++        const auto path = it->path();
++        if (path.extension() != ".award")
++            continue;
++        auto item = Read(path);
++        if (item && AccountKey(item->username) == account && PathFor(*item) == path)
++            result.push_back(std::move(*item));
++    }
++    std::ranges::sort(result, {}, &PendingAward::earnedAt);
++    return result;
++}
++
++bool AwardJournal::Acknowledge(const PendingAward& award) const {
++    if (!Valid(award))
++        return false;
++    const auto path = PathFor(award);
++    const auto prior = Read(path);
++    if (!prior || *prior != award)
++        return false;
++    std::error_code error;
++    return fs::remove(path, error) && !error;
++}
++
++}
+diff --git a/port/ra_journal.h b/port/ra_journal.h
+new file mode 100644
+--- /dev/null
++++ b/port/ra_journal.h
+@@ -0,0 +1,36 @@
++#pragma once
++
++#include <cstdint>
++#include <filesystem>
++#include <string>
++#include <string_view>
++#include <vector>
++
++namespace port::ra {
++
++struct PendingAward {
++    std::string username;
++    std::string hash;
++    uint32_t game;
++    uint32_t achievement;
++    int64_t earnedAt;
++    bool operator==(const PendingAward&) const = default;
++};
++
++class AwardJournal {
++public:
++    explicit AwardJournal(const std::filesystem::path& profile);
++
++    // A true return also covers an existing pending record for this account
++    // and achievement. Preserve the original earning time in that case.
++    bool Enqueue(const PendingAward& award) const;
++    std::vector<PendingAward> Pending(std::string_view username) const;
++    bool Acknowledge(const PendingAward& award) const;
++
++private:
++    std::filesystem::path PathFor(const PendingAward& award) const;
++
++    std::filesystem::path folder_;
++};
++
++}
+diff --git a/port/ra_profile.cpp b/port/ra_profile.cpp
+new file mode 100644
+--- /dev/null
++++ b/port/ra_profile.cpp
+@@ -0,0 +1,275 @@
++#include "ra_profile.h"
++
++#include <algorithm>
++#include <atomic>
++#include <chrono>
++#include <charconv>
++#include <ctime>
++#include <fstream>
++#include <iomanip>
++#include <iterator>
++#include <sstream>
++#include <string_view>
++
++#ifdef _WIN32
++#define WIN32_LEAN_AND_MEAN
++#define NOMINMAX
++#include <windows.h>
++#include <dpapi.h>
++#endif
++
++namespace port::ra {
++namespace {
++namespace fs = std::filesystem;
++
++fs::path Folder(const fs::path& profile) {
++    return profile / "retroachievements";
++}
++
++bool AtomicWrite(const fs::path& path, std::string_view bytes) {
++    std::error_code error;
++    fs::create_directories(path.parent_path(), error);
++    if (error)
++        return false;
++
++    static std::atomic<uint64_t> sequence = 0;
++    const auto ticks = std::chrono::steady_clock::now().time_since_epoch().count();
++    auto partial = path;
++    partial += "." + std::to_string(ticks) + "-" + std::to_string(++sequence) + ".tmp";
++    std::ofstream out(partial, std::ios::binary | std::ios::trunc);
++    out.write(bytes.data(), static_cast<std::streamsize>(bytes.size()));
++    out.close();
++    bool success = false;
++    if (out) {
++#ifdef _WIN32
++        success = MoveFileExW(partial.c_str(), path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0;
++#else
++        fs::rename(partial, path, error);
++        success = !error;
++#endif
++    }
++    if (!success)
++        fs::remove(partial, error);
++    return success;
++}
++
++std::string ReadBounded(const fs::path& path, size_t maxBytes) {
++    std::error_code error;
++    const auto size = fs::file_size(path, error);
++    if (error || size == 0 || size > maxBytes)
++        return {};
++    std::ifstream in(path, std::ios::binary);
++    std::string bytes(static_cast<size_t>(size),'\0');
++    if (!in.read(bytes.data(), static_cast<std::streamsize>(bytes.size())) || in.peek() != std::char_traits<char>::eof())
++        return {};
++    return bytes;
++}
++
++std::string Clean(std::string_view string, size_t max) {
++    std::string text(string.substr(0, max));
++    for (auto& ch : text)
++        if (static_cast<unsigned char>(ch) < 32 || ch == 127)
++            ch = ' ';
++    return text;
++}
++
++bool Valid(const Credentials& account) {
++    return !account.username.empty() && !account.token.empty() &&
++        account.username.size() <= 128 && account.token.size() <= 512 &&
++        account.username == Clean(account.username, 128) && account.token == Clean(account.token, 512);
++}
++fs::path OfflinePath(const fs::path& profile, std::string_view username, std::string_view hash) {
++    constexpr std::string_view accountChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
++    if (profile.empty() || username.empty() || username.size() > 128 ||
++        username.find_first_not_of(accountChars) != username.npos || hash.size() != 32 ||
++        hash.find_first_not_of("0123456789abcdef") != hash.npos)
++        return {};
++    return Folder(profile) / ("user-" + std::string(username)) / (std::string(hash) + ".cache");
++}
++
++#ifdef _WIN32
++bool ProtectAndWrite(const fs::path& path, std::string& plain) {
++    DATA_BLOB input{static_cast<DWORD>(plain.size()), reinterpret_cast<BYTE*>(plain.data())};
++    DATA_BLOB encrypted{};
++    const bool protectedData = CryptProtectData(&input, L"SaturnTaisen RetroAchievements", nullptr, nullptr,
++        nullptr, CRYPTPROTECT_UI_FORBIDDEN, &encrypted) != 0;
++    SecureZeroMemory(plain.data(), plain.size());
++    if (!protectedData)
++        return false;
++    const std::string_view data(reinterpret_cast<const char*>(encrypted.pbData), encrypted.cbData);
++    const bool saved = AtomicWrite(path, data);
++    LocalFree(encrypted.pbData);
++    return saved;
++}
++
++std::string ReadAndUnprotect(const fs::path& path, size_t maxBytes) {
++    auto bytes = ReadBounded(path, maxBytes);
++    if (bytes.empty())
++        return {};
++    DATA_BLOB encrypted{static_cast<DWORD>(bytes.size()), reinterpret_cast<BYTE*>(bytes.data())};
++    DATA_BLOB plain{};
++    if (!CryptUnprotectData(&encrypted, nullptr, nullptr, nullptr, nullptr, CRYPTPROTECT_UI_FORBIDDEN, &plain))
++        return {};
++    const std::string decoded(reinterpret_cast<const char*>(plain.pbData), plain.cbData);
++    SecureZeroMemory(plain.pbData, plain.cbData);
++    LocalFree(plain.pbData);
++    return decoded;
++}
++#endif
++
++}
++
++std::optional<Credentials> LoadCredentials(const std::filesystem::path& profile) {
++#ifdef _WIN32
++    auto data = ReadAndUnprotect(Folder(profile) / "account.dat", 8192);
++    const auto delimiter = data.find('\0');
++    std::optional<Credentials> account;
++    if (delimiter != data.npos) {
++        Credentials result{data.substr(0, delimiter), data.substr(delimiter + 1)};
++        if (Valid(result))
++            account = std::move(result);
++        SecureZeroMemory(result.token.data(), result.token.size());
++    }
++    SecureZeroMemory(data.data(), data.size());
++    return account;
++#else
++    (void) profile;
++    return std::nullopt;
++#endif
++}
++
++bool SaveCredentials(const std::filesystem::path& profile, const Credentials& credentials) {
++#ifdef _WIN32
++    if (profile.empty() || !Valid(credentials))
++        return false;
++
++    std::string plain = credentials.username;
++    plain.push_back('\0');
++    plain += credentials.token;
++    return ProtectAndWrite(Folder(profile) / "account.dat", plain);
++#else
++    (void) profile;
++    (void) credentials;
++    return false;
++#endif
++}
++
++bool ForgetCredentials(const std::filesystem::path& profile) {
++    if (profile.empty())
++        return false;
++    std::error_code error;
++    fs::remove(Folder(profile) / "account.dat", error);
++    return !error;
++}
++
++bool SaveProgress(const std::filesystem::path& profile, const Progress& progress) {
++    if (profile.empty() || progress.achievements.size() > 512)
++        return false;
++    std::ostringstream data;
++    data << "SATURN-RA-PROGRESS-1\n" << std::quoted(Clean(progress.username,128)) << ' '
++         << std::quoted(Clean(progress.state,32)) << '\n';
++    data << progress.achievements.size() << '\n';
++    for (const auto& row : progress.achievements)
++        data << row.id << ' ' << row.points << ' ' << row.unlocked << ' '
++             << std::quoted(Clean(row.title,256)) << ' ' << std::quoted(Clean(row.description,512)) << ' '
++             << std::quoted(Clean(row.badgeKey,128)) << '\n';
++    return AtomicWrite(Folder(profile) / "progress.txt", data.str());
++}
++
++std::optional<Progress> LoadProgress(const std::filesystem::path& profile) {
++    std::istringstream data(ReadBounded(Folder(profile) / "progress.txt", 1024 * 1024));
++    std::string version;
++    Progress progress;
++    size_t count = 0;
++    if (!(data >> version >> std::quoted(progress.username) >> std::quoted(progress.state) >> count) ||
++        version != "SATURN-RA-PROGRESS-1" || count > 512)
++        return std::nullopt;
++
++    progress.achievements.reserve(count);
++    for (size_t index = 0; index < count; ++index) {
++        ProgressRow row{};
++        if (!(data >> row.id >> row.points >> row.unlocked >> std::quoted(row.title) >>
++              std::quoted(row.description) >> std::quoted(row.badgeKey)) || !row.id)
++            return std::nullopt;
++        progress.achievements.push_back(std::move(row));
++    }
++    data >> std::ws;
++    return data.eof() ? std::optional(std::move(progress)) : std::nullopt;
++}
++
++
++bool SaveOfflineSession(const std::filesystem::path& profile, std::string_view username,
++                        std::string_view hash, const OfflineSession& session) {
++#ifdef _WIN32
++    const auto path = OfflinePath(profile, username, hash);
++    if (path.empty() || session.catalog.empty() || session.catalog.size() > 4*1024*1024 ||
++        session.unlocks.empty() || session.unlocks.size() > 512*1024)
++        return false;
++    std::string bytes = "SATURN-RA-SESSION-1\n" + std::string(username) + "\n" + std::string(hash) +
++        "\n" + std::to_string(session.catalog.size()) + "\n" + session.catalog + session.unlocks;
++    return ProtectAndWrite(path, bytes);
++#else
++    (void) profile; (void) username; (void) hash; (void) session;
++    return false;
++#endif
++}
++
++std::optional<OfflineSession> LoadOfflineSession(const std::filesystem::path& profile,
++                                               std::string_view username, std::string_view hash) {
++#ifdef _WIN32
++    const auto path = OfflinePath(profile, username, hash);
++    if (path.empty())
++        return std::nullopt;
++    const auto bytes = ReadAndUnprotect(path, 5*1024*1024);
++    const auto header = "SATURN-RA-SESSION-1\n" + std::string(username) + "\n" + std::string(hash) + "\n";
++    if (!bytes.starts_with(header))
++        return std::nullopt;
++    const auto split = bytes.find('\n', header.size());
++    if (split == bytes.npos)
++        return std::nullopt;
++    size_t size = 0;
++    const auto range = std::from_chars(bytes.data() + header.size(), bytes.data() + split, size);
++    if (range.ec != std::errc{} || range.ptr != bytes.data() + split || !size ||
++        size > 4*1024*1024 || size >= bytes.size() - split - 1)
++        return std::nullopt;
++    return OfflineSession{bytes.substr(split + 1, size), bytes.substr(split + 1 + size)};
++#else
++    (void) profile; (void) username; (void) hash;
++    return std::nullopt;
++#endif
++}
++
++std::string ReadActivity(const std::filesystem::path& profile) {
++    return ReadBounded(Folder(profile) / "activity.log", 16384);
++}
++
++void AddActivity(const std::filesystem::path& profile, std::string_view type, uint32_t id) {
++    auto activity = ReadActivity(profile);
++    if (activity.size() > 15000) {
++        const auto line = activity.find('\n', activity.size() - 12000);
++        activity.erase(0, line == activity.npos ? activity.size() : line + 1);
++    }
++    activity += std::to_string(std::time(nullptr)) + " " + Clean(type,32) + " " + std::to_string(id) + "\n";
++    AtomicWrite(Folder(profile) / "activity.log", activity);
++}
++
++bool SaveBadge(const std::filesystem::path& profile, std::string_view filename, std::string_view bytes) {
++    constexpr std::string_view png = "\x89PNG\r\n\x1a\n";
++    if (!filename.ends_with(".png") || filename.size() > 36 ||
++        filename.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.") != filename.npos ||
++        filename.find("..") != filename.npos || bytes.size() < 33 || bytes.size() > 256*1024 ||
++        !bytes.starts_with(png) || bytes.substr(12,4) != "IHDR")
++        return false;
++    auto word = [&](size_t at) {
++        uint32_t result = 0;
++        for (size_t index = 0; index < 4; ++index)
++            result = (result << 8) | static_cast<unsigned char>(bytes[at + index]);
++        return result;
++    };
++    const auto width = word(16), height = word(20);
++    if (!width || !height || width > 256 || height > 256)
++        return false;
++    return AtomicWrite(Folder(profile) / "badges" / filename, bytes);
++}
++
++}
+diff --git a/port/ra_profile.h b/port/ra_profile.h
+new file mode 100644
+--- /dev/null
++++ b/port/ra_profile.h
+@@ -0,0 +1,53 @@
++#pragma once
++
++#include <cstdint>
++#include <filesystem>
++#include <optional>
++#include <string>
++#include <string_view>
++#include <vector>
++
++namespace port::ra {
++
++struct Credentials {
++    std::string username;
++    std::string token;
++    bool operator==(const Credentials&) const = default;
++};
++
++std::optional<Credentials> LoadCredentials(const std::filesystem::path& profile);
++bool SaveCredentials(const std::filesystem::path& profile, const Credentials& credentials);
++bool ForgetCredentials(const std::filesystem::path& profile);
++
++struct ProgressRow {
++    uint32_t id;
++    uint32_t points;
++    bool unlocked;
++    std::string title;
++    std::string description;
++    std::string badgeKey;
++};
++
++struct Progress {
++    std::string username;
++    std::string state;
++    std::vector<ProgressRow> achievements;
++};
++
++std::optional<Progress> LoadProgress(const std::filesystem::path& profile);
++struct OfflineSession {
++    std::string catalog;
++    std::string unlocks;
++};
++bool SaveOfflineSession(const std::filesystem::path& profile, std::string_view username,
++                        std::string_view hash, const OfflineSession& session);
++std::optional<OfflineSession> LoadOfflineSession(const std::filesystem::path& profile,
++                                               std::string_view username, std::string_view hash);
++
++std::string ReadActivity(const std::filesystem::path& profile);
++void AddActivity(const std::filesystem::path& profile, std::string_view type, uint32_t id);
++bool SaveBadge(const std::filesystem::path& profile, std::string_view filename, std::string_view bytes);
++
++bool SaveProgress(const std::filesystem::path& profile, const Progress& progress);
++
++}
+diff --git a/port/ra_transport.cpp b/port/ra_transport.cpp
+new file mode 100644
+--- /dev/null
++++ b/port/ra_transport.cpp
+@@ -0,0 +1,178 @@
++#include "ra_transport.h"
++
++#include <algorithm>
++#include <array>
++#include <chrono>
++#include <memory>
++#include <utility>
++
++#ifdef _WIN32
++#define WIN32_LEAN_AND_MEAN
++#define NOMINMAX
++#include <windows.h>
++#include <winhttp.h>
++#endif
++
++namespace port::ra {
++
++Endpoint ClassifyEndpoint(std::string_view url, bool post) {
++    if (url == "https://retroachievements.org/dorequest.php")
++        return post ? Endpoint::Api : Endpoint::Invalid;
++    constexpr std::string_view start = "https://media.retroachievements.org/Badge/";
++    if (post || !url.starts_with(start) || !url.ends_with(".png"))
++        return Endpoint::Invalid;
++    const auto file = url.substr(start.size(), url.size() - start.size() - 4);
++    if (file.empty() || file.size() > 32 ||
++        !std::ranges::all_of(file, [](char ch) {
++            return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') ||
++                (ch >= '0' && ch <= '9') || ch == '_' || ch == '-';
++        }))
++        return Endpoint::Invalid;
++    return Endpoint::Badge;
++}
++
++RequestWorker::RequestWorker(Exchange exchange)
++    : exchange_(std::move(exchange)), worker_(&RequestWorker::Run, this) {}
++
++RequestWorker::~RequestWorker() {
++    {
++        const std::lock_guard lock(mutex_);
++        stopping_ = true;
++    }
++    work_.notify_one();
++    worker_.join();
++}
++
++bool RequestWorker::Submit(Request request) {
++    {
++        const std::lock_guard lock(mutex_);
++        if (stopping_ || requests_.size() + responses_.size() >= 128)
++            return false;
++        requests_.push_back(std::move(request));
++    }
++    work_.notify_one();
++    return true;
++}
++
++std::vector<Response> RequestWorker::TakeResponses() {
++    const std::lock_guard lock(mutex_);
++    return std::exchange(responses_, {});
++}
++
++void RequestWorker::Run() {
++    for (;;) {
++        Request request;
++        {
++            std::unique_lock lock(mutex_);
++            work_.wait(lock, [this] { return stopping_ || !requests_.empty(); });
++            if (stopping_)
++                return;
++            request = std::move(requests_.front());
++            requests_.pop_front();
++        }
++        Response result{request.id, RC_API_SERVER_RESPONSE_CLIENT_ERROR, {}};
++        try {
++            result = exchange_(request);
++            result.id = request.id;
++        } catch (...) {}
++        const std::lock_guard lock(mutex_);
++        if (!stopping_)
++            responses_.push_back(std::move(result));
++    }
++}
++
++#ifdef _WIN32
++namespace {
++struct CloseHttp {
++    void operator()(void* handle) const { WinHttpCloseHandle(handle); }
++};
++using Http = std::unique_ptr<void, CloseHttp>;
++
++Response WinHttpRequest(const Request& request, const std::wstring& agent) {
++    const auto invalid = Response{request.id, RC_API_SERVER_RESPONSE_CLIENT_ERROR, {}};
++    const auto retryable = Response{request.id, RC_API_SERVER_RESPONSE_RETRYABLE_CLIENT_ERROR, {}};
++    const auto endpoint = ClassifyEndpoint(request.url, !request.data.empty());
++    if (endpoint == Endpoint::Invalid || agent.empty() || request.data.size() > 4096)
++        return invalid;
++
++    const bool api = endpoint == Endpoint::Api;
++    if (api && request.contentType != "application/x-www-form-urlencoded")
++        return invalid;
++    constexpr wchar_t requestHeader[] = L"Content-Type: application/x-www-form-urlencoded";
++    constexpr DWORD tls = WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2;
++    const Http session(WinHttpOpen(agent.c_str(), WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,
++        WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0));
++    if (!session || !WinHttpSetTimeouts(session.get(), 3000, 3000, 3000, 3000))
++        return retryable;
++    DWORD protocols = tls;
++#ifdef WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_3
++    protocols |= WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_3;
++#endif
++    if (!WinHttpSetOption(session.get(), WINHTTP_OPTION_SECURE_PROTOCOLS, &protocols, sizeof(protocols))) {
++        protocols = tls;
++        if (!WinHttpSetOption(session.get(), WINHTTP_OPTION_SECURE_PROTOCOLS, &protocols, sizeof(protocols)))
++            return invalid;
++    }
++    const Http connection(WinHttpConnect(session.get(), api ? L"retroachievements.org" : L"media.retroachievements.org",
++                                          INTERNET_DEFAULT_HTTPS_PORT, 0));
++    if (!connection)
++        return retryable;
++
++    const auto pathAt = request.url.find('/', std::string_view("https://").size());
++    const std::wstring path(request.url.begin() + pathAt, request.url.end());
++    const Http handle(WinHttpOpenRequest(connection.get(), api ? L"POST" : L"GET", path.c_str(), nullptr,
++                                         WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE));
++    if (!handle)
++        return retryable;
++    DWORD redirects = WINHTTP_OPTION_REDIRECT_POLICY_NEVER;
++    DWORD autoLogon = WINHTTP_AUTOLOGON_SECURITY_LEVEL_HIGH;
++    if (!WinHttpSetOption(handle.get(), WINHTTP_OPTION_REDIRECT_POLICY, &redirects, sizeof(redirects)) ||
++        !WinHttpSetOption(handle.get(), WINHTTP_OPTION_AUTOLOGON_POLICY, &autoLogon, sizeof(autoLogon)))
++        return invalid;
++
++    const auto length = static_cast<DWORD>(request.data.size());
++    if (!WinHttpSendRequest(handle.get(), api ? requestHeader : WINHTTP_NO_ADDITIONAL_HEADERS,
++                            api ? static_cast<DWORD>(-1) : 0,
++                            api ? const_cast<char*>(request.data.data()) : WINHTTP_NO_REQUEST_DATA, length, length, 0) ||
++        !WinHttpReceiveResponse(handle.get(), nullptr))
++        return retryable;
++    DWORD status = 0;
++    DWORD statusSize = sizeof(status);
++    if (!WinHttpQueryHeaders(handle.get(), WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
++                              WINHTTP_HEADER_NAME_BY_INDEX, &status, &statusSize, WINHTTP_NO_HEADER_INDEX))
++        return retryable;
++
++    Response result{request.id, static_cast<int>(status), {}};
++    const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(12);
++    const size_t limit = api ? 8 * 1024 * 1024 : 256 * 1024;
++    std::array<char, 8192> bytes;
++    for (;;) {
++        DWORD read = 0;
++        if (!WinHttpReadData(handle.get(), bytes.data(), static_cast<DWORD>(bytes.size()), &read))
++            return retryable;
++        if (read == 0)
++            return result;
++        if (read > limit - result.body.size())
++            return invalid;
++        result.body.append(bytes.data(), read);
++        if (std::chrono::steady_clock::now() > deadline)
++            return retryable;
++    }
++}
++}
++#endif
++
++Exchange WinHttpExchange(std::wstring userAgent) {
++#ifdef _WIN32
++    return [agent = std::move(userAgent)](const Request& request) {
++        return WinHttpRequest(request, agent);
++    };
++#else
++    (void) userAgent;
++    return [](const Request& request) {
++        return Response{request.id, RC_API_SERVER_RESPONSE_CLIENT_ERROR, {}};
++    };
++#endif
++}
++
++}
+diff --git a/port/ra_transport.h b/port/ra_transport.h
+new file mode 100644
+--- /dev/null
++++ b/port/ra_transport.h
+@@ -0,0 +1,47 @@
++#pragma once
++
++#include "ra_client.h"
++
++#include <condition_variable>
++#include <deque>
++#include <functional>
++#include <mutex>
++#include <thread>
++
++namespace port::ra {
++
++enum class Endpoint { Invalid, Api, Badge };
++Endpoint ClassifyEndpoint(std::string_view url, bool post);
++
++struct Response {
++    uint64_t id;
++    int status;
++    std::string body;
++};
++
++using Exchange = std::function<Response(const Request&)>;
++Exchange WinHttpExchange(std::wstring userAgent);
++
++class RequestWorker {
++public:
++    explicit RequestWorker(Exchange exchange);
++    ~RequestWorker();
++    RequestWorker(const RequestWorker&) = delete;
++    RequestWorker& operator=(const RequestWorker&) = delete;
++
++    bool Submit(Request request);
++    std::vector<Response> TakeResponses();
++
++private:
++    void Run();
++
++    Exchange exchange_;
++    std::mutex mutex_;
++    std::condition_variable work_;
++    std::deque<Request> requests_;
++    std::vector<Response> responses_;
++    bool stopping_ = false;
++    std::thread worker_;
++};
++
++}
+diff --git a/port/ra_host.cpp b/port/ra_host.cpp
+new file mode 100644
+--- /dev/null
++++ b/port/ra_host.cpp
+@@ -0,0 +1,227 @@
++#include "ra_host.h"
++
++#include <iomanip>
++#include <sstream>
++#include <utility>
++
++namespace port::ra {
++namespace {
++
++std::string_view StateLabel(const Client& client) {
++    switch (client.GetState()) {
++    case State::SignedOut: return "signed_out";
++    case State::SigningIn: return "signing_in";
++    case State::WaitingForMedia: return "waiting_for_media";
++    case State::Loading: return "loading";
++    case State::Ready: return client.Disconnected() ? "offline" : "ready";
++    case State::UnsupportedMedia: return "unsupported_media";
++    case State::Error: return "connection_error";
++    }
++    return "connection_error";
++}
++
++std::string BadgeName(std::string_view url) {
++    return ClassifyEndpoint(url, false) == Endpoint::Badge
++        ? std::string(url.substr(url.find_last_of('/') + 1)) : std::string{};
++}
++
++}
++
++std::unique_ptr<Session> Session::Open(const std::filesystem::path& profile,
++                                       std::span<const uint8_t> systemArea, Exchange exchange) {
++    if (profile.empty())
++        return nullptr;
++    auto account = LoadCredentials(profile);
++    if (!account)
++        return nullptr;
++    const auto hash = SaturnDiscHash(systemArea);
++    if (!IsKnownDiscHash(hash)) {
++        SaveProgress(profile, {account->username, "unsupported_media", {}});
++        return nullptr;
++    }
++    return std::make_unique<Session>(profile, std::move(*account), hash, std::move(exchange));
++}
++
++Session::Session(std::filesystem::path profile, Credentials credentials, std::string_view hash, Exchange exchange)
++    : profile_(std::move(profile)), credentials_(std::move(credentials)), username_(credentials_.username),
++      mediaHash_(hash), client_(profile_), worker_(std::move(exchange)) {
++    if (client_.SetMedia(hash))
++        client_.Login(credentials_.username, credentials_.token);
++    Dispatch();
++}
++
++void Session::Frame(std::span<const uint8_t> low, std::span<const uint8_t> high) {
++    Receive();
++    client_.Evaluate(low, high);
++    Dispatch();
++}
++
++void Session::Idle() {
++    Receive();
++    client_.Idle();
++    Dispatch();
++}
++
++void Session::Reset() {
++    client_.Reset();
++    popups_.clear();
++    expiry_ = 0;
++}
++
++const Notification* Session::Popup(uint64_t frame) {
++    if (expiry_ && frame >= expiry_) {
++        if (!popups_.empty())
++            popups_.pop_front();
++        expiry_ = 0;
++    }
++    return popups_.empty() ? nullptr : &popups_.front();
++}
++
++void Session::PopupShown(uint64_t frame) {
++    if (!popups_.empty() && !expiry_)
++        expiry_ = frame + 240;
++}
++
++void Session::Receive() {
++    for (const auto& result : worker_.TakeResponses()) {
++        if (result.id == activeBadgeId_) {
++            if (result.status == 200)
++                SaveBadge(profile_, BadgeName(activeBadge_), result.body);
++            activeBadge_.clear();
++            activeBadgeId_ = 0;
++        } else {
++            HandleApi(result);
++        }
++    }
++}
++
++bool Session::StartOffline(uint64_t pendingLogin) {
++    offline_ = LoadOfflineSession(profile_, username_, mediaHash_);
++    if (!offline_)
++        return false;
++    Progress view{username_, "offline", {}};
++    const auto previous = LoadProgress(profile_);
++    if (previous && previous->username == username_)
++        view.achievements = previous->achievements;
++    client_.SetOfflineProgress(view);
++
++    // Only rcheevos' in-process callbacks see this response. This session
++    // never sends claims or catalog requests to the network.
++    std::ostringstream login;
++    login << R"({"Success":true,"User":)" << std::quoted(credentials_.username)
++          << R"(,"Token":)" << std::quoted(credentials_.token)
++          << R"(,"Score":0,"SoftcoreScore":0,"Messages":0})";
++    client_.Respond(pendingLogin, 200, login.str());
++    return true;
++}
++
++void Session::HandleApi(const Response& response) {
++    const auto context = handshake_.find(response.id);
++    if (context != handshake_.end()) {
++        const auto step = context->second;
++        handshake_.erase(context);
++        const int status = response.status;
++        if (step == Handshake::Login) {
++            const bool temporary = status == RC_API_SERVER_RESPONSE_RETRYABLE_CLIENT_ERROR ||
++                status == 408 || status == 429 || status >= 500;
++            if (temporary && StartOffline(response.id)) {
++                credentials_.token.clear();
++                return;
++            }
++            credentials_.token.clear();
++        } else if (status == 200) {
++            if (step == Handshake::Catalog)
++                received_.catalog = response.body;
++            else
++                received_.unlocks = response.body;
++        }
++    }
++    client_.Respond(response.id, response.status, response.body);
++}
++
++void Session::QueueBadge(std::string_view url, bool priority) {
++    if (offline_)
++        return;
++    const auto name = BadgeName(url);
++    if (name.empty())
++        return;
++    std::error_code error;
++    if (std::filesystem::exists(profile_ / "retroachievements" / "badges" / name, error))
++        return;
++    if (requestedBadges_.emplace(url).second) {
++        if (priority)
++            badgeQueue_.emplace_front(url);
++        else
++            badgeQueue_.emplace_back(url);
++    }
++}
++
++void Session::Dispatch() {
++    auto actions = client_.TakeRequests();
++    for (auto& request : actions) {
++        const auto id = request.id;
++        const std::string_view form = request.data;
++        if (offline_) {
++            if (form.starts_with("r=achievementsets"))
++                client_.Respond(id, 200, offline_->catalog);
++            else if (form.starts_with("r=startsession"))
++                client_.Respond(id, 200, offline_->unlocks);
++            else
++                client_.Respond(id, RC_API_SERVER_RESPONSE_RETRYABLE_CLIENT_ERROR, {});
++            continue;
++        }
++        if (form.starts_with("r=login2"))
++            handshake_.emplace(id, Handshake::Login);
++        else if (form.starts_with("r=achievementsets"))
++            handshake_.emplace(id, Handshake::Catalog);
++        else if (form.starts_with("r=startsession"))
++            handshake_.emplace(id, Handshake::Session);
++        if (!worker_.Submit(std::move(request)))
++            HandleApi({id, RC_API_SERVER_RESPONSE_RETRYABLE_CLIENT_ERROR, {}});
++    }
++    if (!cacheWritten_ && !offline_ && client_.GetState() == State::Ready &&
++        !received_.catalog.empty() && !received_.unlocks.empty()) {
++        cacheWritten_ = SaveOfflineSession(profile_, username_, mediaHash_, received_);
++        received_ = {};
++    }
++
++    const auto status = StateLabel(client_);
++    const auto unlocks = client_.TakeUnlocks();
++    const auto sync = client_.TakeSyncEvents();
++    for (const auto& earned : unlocks) {
++        AddActivity(profile_, "earned", earned.id);
++        QueueBadge(earned.badgeUrl, true);
++        const auto name = BadgeName(earned.badgeUrl);
++        if (popups_.size() < 68)
++            popups_.push_back({earned.title, earned.points, name.empty() ? std::filesystem::path{} :
++                profile_ / "retroachievements" / "badges" / name});
++    }
++    for (const auto& event : sync) {
++        const auto label = event.state == SyncState::Synced ? "synced"
++            : event.state == SyncState::Deferred ? "queued" : "rejected";
++        AddActivity(profile_, label, event.id);
++    }
++    if (status != lastState_ || !unlocks.empty() || !sync.empty()) {
++        Progress view{username_, std::string(status), {}};
++        for (const auto& item : client_.Achievements()) {
++            view.achievements.push_back({item.id,item.points,item.unlocked,item.title,item.description,BadgeName(item.badgeUrl)});
++            QueueBadge(item.badgeUrl, false);
++        }
++        if (view.achievements.empty()) {
++            const auto old = LoadProgress(profile_);
++            if (old && old->username == username_)
++                view.achievements = old->achievements;
++        }
++        SaveProgress(profile_, view);
++        lastState_ = status;
++    }
++    if (actions.empty() && !activeBadgeId_ && !badgeQueue_.empty()) {
++        activeBadge_ = std::move(badgeQueue_.front());
++        badgeQueue_.pop_front();
++        const auto id = ++nextBadgeId_;
++        if (worker_.Submit({id,activeBadge_,{},{}}))
++            activeBadgeId_ = id;
++    }
++}
++
++}
+diff --git a/port/ra_host.h b/port/ra_host.h
+new file mode 100644
+--- /dev/null
++++ b/port/ra_host.h
+@@ -0,0 +1,56 @@
++#pragma once
++
++#include "ra_profile.h"
++#include "ra_transport.h"
++
++#include <memory>
++
++namespace port::ra {
++
++struct Notification {
++    std::string title;
++    uint32_t points;
++    std::filesystem::path badge;
++};
++
++class Session {
++public:
++    static std::unique_ptr<Session> Open(const std::filesystem::path& profile,
++                                        std::span<const uint8_t> systemArea, Exchange exchange);
++
++    Session(std::filesystem::path profile, Credentials credentials, std::string_view hash, Exchange exchange);
++    void Frame(std::span<const uint8_t> low, std::span<const uint8_t> high);
++    void Idle();
++    void Reset();
++    const Notification* Popup(uint64_t frame);
++    void PopupShown(uint64_t frame);
++
++private:
++    void Receive();
++    void Dispatch();
++    void HandleApi(const Response& response);
++    bool StartOffline(uint64_t pendingLogin);
++    void QueueBadge(std::string_view url, bool priority);
++
++    std::filesystem::path profile_;
++    Credentials credentials_;
++    std::string username_;
++    std::string mediaHash_;
++    Client client_;
++    RequestWorker worker_;
++    std::deque<std::string> badgeQueue_;
++    std::set<std::string> requestedBadges_;
++    std::string activeBadge_;
++    uint64_t nextBadgeId_ = uint64_t{1} << 63;
++    uint64_t activeBadgeId_ = 0;
++    std::deque<Notification> popups_;
++    uint64_t expiry_ = 0;
++    std::string lastState_;
++    enum class Handshake { Login, Catalog, Session };
++    std::map<uint64_t,Handshake> handshake_;
++    OfflineSession received_;
++    std::optional<OfflineSession> offline_;
++    bool cacheWritten_ = false;
++};
++
++}
+diff --git a/launcher/src/ra_launcher.cpp b/launcher/src/ra_launcher.cpp
+new file mode 100644
+--- /dev/null
++++ b/launcher/src/ra_launcher.cpp
+@@ -0,0 +1,159 @@
++#include "ra_launcher.h"
++#include "launcher.h"
++#include "ui.h"
++
++#include "../../port/ra_client.h"
++#include "../../port/ra_profile.h"
++#include "../../port/ra_transport.h"
++
++#include <algorithm>
++#include <array>
++#include <memory>
++#include <string>
++#include <unordered_map>
++
++namespace {
++using namespace port::ra;
++using ui::Font;
++
++struct LoginFlow {
++    const std::filesystem::path profile;
++    Client client;
++    RequestWorker worker;
++    LoginFlow(std::filesystem::path folder, std::string_view username, std::string_view token)
++      : profile(std::move(folder)), worker(WinHttpExchange(SATRECOMP_RA_USER_AGENT)) {
++        client.Login(username, token);
++    }
++};
++
++std::unique_ptr<LoginFlow> login;
++std::string message;
++std::array<char,129> username{};
++std::array<char,513> token{};
++std::unordered_map<std::string,SDL_Texture*> badgeTextures;
++std::filesystem::path badgeProfile;
++SDL_Renderer* badgeRenderer = nullptr;
++
++void PollLogin() {
++    if (!login)
++        return;
++    for (const auto& response : login->worker.TakeResponses())
++        login->client.Respond(response.id, response.status, response.body);
++    for (auto& request : login->client.TakeRequests()) {
++        const auto id = request.id;
++        if (!login->worker.Submit(std::move(request)))
++            login->client.Respond(id, RC_API_SERVER_RESPONSE_CLIENT_ERROR, {});
++    }
++    if (auto account=login->client.AuthenticatedAccount()) {
++        message=SaveCredentials(login->profile,*account) ? "Cuenta conectada" : "No se pudo guardar el token";
++        login.reset();
++    } else if (login->client.GetState()==State::Error || login->client.GetState()==State::SignedOut) {
++        message="No se pudo verificar la cuenta. Revisa la conexión y el token.";
++        login.reset();
++    }
++    if (login)
++        ui::request_frames(2);
++}
++
++std::string Status(std::string_view state) {
++    if(state=="ready") return "Última sesión conectada";
++    if(state=="offline") return "Sin conexión. Los logros pendientes se conservarán.";
++    if(state=="signing_in" || state=="loading") return "Conectando…";
++    if(state=="unsupported_media") return "Disco sin catálogo compatible";
++    if(state=="connection_error") return "No se pudo establecer la sesión";
++    return "Abre el juego para cargar los logros.";
++}
++
++SDL_Texture* Badge(launcher::PageContext& page,std::string_view filename) {
++    if (filename.empty() || ClassifyEndpoint("https://media.retroachievements.org/Badge/"+std::string(filename),false)
++                           != Endpoint::Badge)
++        return nullptr;
++    auto* renderer=SDL_GetRenderer(page.window);
++    if(!renderer)
++        return nullptr;
++    if(badgeRenderer!=renderer || badgeProfile!=page.folder) {
++        if(badgeRenderer==renderer)
++            for(const auto& [name,texture]:badgeTextures) SDL_DestroyTexture(texture);
++        badgeTextures.clear();
++        badgeRenderer=renderer;
++        badgeProfile=page.folder;
++    }
++    const auto found=badgeTextures.find(std::string(filename));
++    if(found!=badgeTextures.end())
++        return found->second;
++    const auto path=(page.folder/"retroachievements"/"badges"/filename).u8string();
++    auto* surface=SDL_LoadPNG(reinterpret_cast<const char*>(path.c_str()));
++    if(!surface)
++        return nullptr;
++    auto* texture=SDL_CreateTextureFromSurface(renderer,surface);
++    SDL_DestroySurface(surface);
++    if(texture)
++        badgeTextures.emplace(filename,texture);
++    return texture;
++}
++}
++
++bool RetroAchievementsBusy() { return bool(login); }
++
++void DrawRetroAchievements(launcher::PageContext& page) {
++    PollLogin();
++    const auto& p = ui::palette();
++    ui::text("RetroAchievements",Font::Semibold,ui::size::kHeading,p.primary);
++    ui::gap(12);
++    const auto account=LoadCredentials(page.folder);
++    if(account) {
++        ui::text(account->username.c_str(),Font::Semibold,ui::size::kLead,p.text);
++        if(ui::button("Cerrar sesión",ui::Kind::Secondary,0.0f,!page.playing && !login)) {
++            message=ForgetCredentials(page.folder) ? "Sesión cerrada" : "No se pudo cerrar la sesión";
++            return;
++        }
++    } else {
++        ui::text("Usuario",Font::Regular,ui::size::kDetail,p.secondary);
++        ImGui::SetNextItemWidth(std::min(page.width,ui::px(360)));
++        ImGui::InputText("##raUser",username.data(),username.size());
++        ui::text("Token",Font::Regular,ui::size::kDetail,p.secondary);
++        ImGui::SetNextItemWidth(std::min(page.width,ui::px(360)));
++        ImGui::InputText("##raToken",token.data(),token.size(),ImGuiInputTextFlags_Password);
++        if(ui::button("Conectar",ui::Kind::Primary,0.0f,!login && !page.playing && username[0] && token[0])) {
++            login=std::make_unique<LoginFlow>(page.folder,username.data(),token.data());
++            for(volatile char& ch:token) ch=0;
++            message="Verificando la cuenta…";
++        }
++    }
++    if(!message.empty())
++        ui::text(message.c_str(),Font::Regular,ui::size::kBody,p.secondary);
++    if(!account)
++        return;
++
++    const auto progress=LoadProgress(page.folder);
++    if(progress && progress->username==account->username) {
++        ui::gap(14);
++        ui::text(Status(progress->state).c_str(),Font::Regular,ui::size::kBody,p.secondary);
++        unsigned count=0, points=0, possible=0;
++        for(const auto& row:progress->achievements) {
++            possible+=row.points;
++            if(row.unlocked) {++count;points+=row.points;}
++        }
++        const auto summary=std::to_string(count)+" de "+std::to_string(progress->achievements.size())+
++            " logros  ·  "+std::to_string(points)+" de "+std::to_string(possible)+" puntos";
++        ui::text(summary.c_str(),Font::Semibold,ui::size::kLead,p.text);
++        for(const auto& row:progress->achievements) {
++            ui::gap(7);
++            if(auto* icon=Badge(page,row.badgeKey)) {
++                ImGui::Image(ImTextureID(reinterpret_cast<uintptr_t>(icon)),ImVec2(ui::px(32),ui::px(32)));
++                ImGui::SameLine();
++            }
++            ImGui::BeginGroup();
++            ui::text(row.title.c_str(),Font::Semibold,ui::size::kBody,p.text,page.width-ui::px(64));
++            const auto caption=std::string(row.unlocked?"Desbloqueado  ·  ":"Bloqueado  ·  ")+std::to_string(row.points)+" puntos";
++            ui::text(caption.c_str(),Font::Regular,ui::size::kDetail,p.secondary);
++            ui::text(row.description.c_str(),Font::Regular,ui::size::kDetail,p.secondary,page.width-ui::px(64));
++            ImGui::EndGroup();
++        }
++    } else {
++        ui::text("Abre el juego para cargar los logros.",Font::Regular,ui::size::kBody,p.secondary);
++    }
++    const auto activity=ReadActivity(page.folder);
++    if(!activity.empty() && ImGui::CollapsingHeader("Actividad de sincronización"))
++        ImGui::TextUnformatted(activity.c_str());
++}
+diff --git a/launcher/src/ra_launcher.h b/launcher/src/ra_launcher.h
+new file mode 100644
+--- /dev/null
++++ b/launcher/src/ra_launcher.h
+@@ -0,0 +1,5 @@
++#pragma once
++
++namespace launcher { struct PageContext; }
++void DrawRetroAchievements(launcher::PageContext& page);
++bool RetroAchievementsBusy();

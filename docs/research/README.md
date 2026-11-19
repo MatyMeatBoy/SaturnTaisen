@@ -95,6 +95,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [first-film-script-phase.md](first-film-script-phase.md): Research on the 0100.BIN cursor and limits of the image-less phases.
 
 - [RetroAchievements 16546 on Saturn](retroachievements-16546.md)
+- [RetroAchievements runtime and offline verification](retroachievements-runtime.md)
 - [dialogue-preload-runtime.md](dialogue-preload-runtime.md): Immutable catalog, bounded reading, and preloaded narrative with native reveal cells; global coverage pending.
 - [chapter1-victory-followup.md](chapter1-victory-followup.md): Satan's defeat, relocated routines, post-battle lock, and save/Resume validation.
 - [LIPS group identification via the cursor](lips-script-cursor.md) — two panels verified with the script, the table, and native tiles.
