@@ -414,3 +414,71 @@ body bounding box (346,50)–(853,482), right and bottom exclusive. Earlier
 captures 2960–2969 also matched before the body appeared. This is a
 character alpha fade from transparent, not a white or black full-screen fade.
 No runtime or package was rebuilt.
+
+
+### Presented-frame vertical scroll witness (T105c)
+
+Used the known v0.2.4 runtime (SHA-256 `1a94790eefc8492ca80499bbbd3e7517cb4db565908bcee86ae5b12f44c94b9e`)
+on prepared Spanish disc 1. Load `guion-es/pruebas/load-file1-ref-es.state`
+(SHA-256 `21b68c7870978c6461a314498f8f7f5422f28fd965e7c91ca0c31df9ae446e8f`)
+at frame 0 with a separate copy of that directory's `b.bin`. Replay
+`5 0400 0` then `11 0000 0` and leave the controls neutral. Keep all
+paths absolute and use Original mode, strict native, headless and muted.
+A 2,202-frame capture and three shorter repeats had identical overlapping
+guest hashes and zero interpreted blocks. Local logs, states and images
+are in `local/work/codex-t105c`.
+
+After the menu load, BG2252 is the vertically scrolling theatre exterior.
+The 79,168 tile bytes are at VDP2 VRAM 0x4A000. All 1,332 relocated pattern
+names match at 0x44108 with 256-byte row stride. The active NBG2 plane starts
+at 0x44000, so the image begins at (16,8) in plane coordinates. NBG2 uses
+registers SCXN2/SCYN2 at 0x90/0x92, with unit source increment and no
+per-line scroll on this layer. The native 288x144 scene window remains
+screen rectangle [16,304) x [8,152). The visible source starts at
+(0, SCYN2) for these captures.
+
+The screenshot named frame N aligns with the save taken at N-1 in this
+harness. Saving at N during the pan puts the register one source row ahead.
+Use the scroll from the same presented frame in the runtime and do not
+apply a fixed one-row correction. RGB555 values expanded with the native
+five-bit shift yield these exact screen comparisons.
+
+| Shot | Save | SCYN2 | Exact pixels in native inset |
+|---:|---:|---:|---:|
+| 850 | 849 | 6 | 41,472 / 41,472 |
+| 900 | 899 | 31 | 41,472 / 41,472 |
+| 950 | 949 | 56 | 41,472 / 41,472 |
+| 1000 | 999 | 81 | 41,472 / 41,472 |
+| 1050 | 1049 | 106 | 41,472 / 41,472 |
+| 1100 | 1099 | 131 | 41,472 / 41,472 |
+| 1150 | 1149 | 144 | 41,472 / 41,472 |
+
+The VRAM identity and scroll persist after the pan. Shot 1200 is a blend.
+By shot 1250 the room is visible on top, with NBG0 priority 3 and NBG2
+priority 2. At shot 1150 those priorities were 2 and 3. This makes
+`load-confirm-ref-es.state` a useful occlusion control: its exact BG2252
+tile bytes survive, but their presence cannot qualify replacement.
+
+The same-number PC art at 576x592 nominally has exact 2x dimensions.
+Its roof and tower are drawn at different screen positions and the windows
+shift nonuniformly over the pan. The whole-image luminance signature scored
+0.616, and exact 2x source crops over the seven matching native frames
+scored 0.295-0.539. BG2252 is excluded as a replacement and retained as a
+scroll and occlusion witness. The matching and rendering gates must be
+evaluated separately.
+
+Scanned the 15 wide and 14 tall catalog entries over 152 candidate state
+files for complete VRAM tile-pool hits. BG2252 is the only complete hit.
+A second pass over 165 files with four 256-byte anchors also found partial
+BG2247 and BG2252 pools in unrelated views. BG2247 has only 62 of 1,332
+relocated names in the NBG2 map in representative hits, so those fragments
+do not establish a scrolling route.
+
+T105c2 needs per-identity source geometry and the visible NBG layer's
+scroll, plane origin and map bounds carried alongside the captured
+presentation. For this example, compute the source offset as live scroll
+plus inset origin minus plane image origin. The two origins coincide in
+the native frame. Verify wrap, non-unit increments, line effects, colour
+offsets, blends and occlusion before extending eligibility. Keep native
+in those cases until supported, and preserve the current inset and Zoom
+framing. General SDK support and replacement remain open.
