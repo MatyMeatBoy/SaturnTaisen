@@ -43,3 +43,15 @@ The remaining HD work is split by chapter so several bots can work at once witho
 **S12 packaging (TS12):** the release package gate for everything generated or paired (cards sides, clips, art folders) and a clean-machine run of `preparar-juego.exe` with a PC edition that has MOVIE.
 
 Rows TH0-TH10, TS11 and TS12 in `docs/PENDIENTES.md` mirror this list; update the row of the shard you take.
+
+## Rules for many workers at once (read before opening a PR)
+
+1. **Take one row**, write your name and branch in its `Status` cell in a first small PR, then work. Do not take a row another worker already marked.
+2. **Branch from the latest `origin/main`**, one shard per branch, `pendientes/<row>-<topic>`. Rebase on `origin/main` again right before the PR.
+3. **Shared files conflict**: `docs/PENDIENTES.md`, `docs/research/bg-matching-progress.md`, `config/hd-scene-bg-review.json`, `config/dependencies.json`. For the docs and the JSON, keep both sides (lists and keys are unions); never delete another worker's row or entry. Keep your own text in rows you own only.
+4. **SDK patches**: take the next free number after the highest in `config/dependencies.json` at the moment of the PR, list it last, and run `python tools/check_patch_stack.py` (numbers unique and increasing, every file listed, the whole stack applies). If it reports a duplicate number, `git mv` your patch to the next free one and fix the list. Never edit an earlier patch: add a new one.
+5. **Row IDs**: a new row takes the next free `T` number only after you grep `docs/PENDIENTES.md` for it; sub-rows use a letter suffix of your parent row (`T105a`).
+6. **Never commit** discs, BIOS, saves, original PC assets, game pixels, `local/`, or untranslated Japanese script text. Generated art goes under `assets/generated/` with `provenance.json`.
+7. **A PR says**: which row it closes or advances, the commands run with their output, and what is still not verified. Mark "implemented", "tested" and "in a package" separately. A saved state or a screenshot does not complete a chapter.
+8. **Runtime changes** must keep the guest per-frame hashes identical to the previous build (strict native replay, `interpreted 0`); say which replay.
+9. **One dev runtime at a time** builds in `local/build/sakura`: workers without a compiler or the discs do the code, tests and data halves and say so; do not run `build_runtime.py` while another worker has unrecorded dependency edits.
