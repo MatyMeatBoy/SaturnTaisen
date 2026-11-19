@@ -13,3 +13,5 @@ SaturnTaisenFirst distributes its integration code under GPL-3.0-only. The resea
 - **Python**, Python Software Foundation License; **PyInstaller**, GPL with exception for packaged binaries. The packaged importer carries its notices in the distribution's licenses folder.
 
 The development package must keep the license texts of the components it includes. The repository contains its own sources and reproducible patches; the game's original assets, BIOS, dumps, and saves remain local. Sakura Wars and its images belong to their rights holders; the project is not affiliated with SEGA.
+
+- **rcheevos 12.5.0** (MIT, RetroAchievements.org) evaluates RetroAchievements and derives the Saturn disc identifier. Its MD5 implementation carries a separate Aladdin Enterprises notice. Both notices are distributed in the Windows package's `licenses` directory. [rcheevos 12.5.0 source](https://github.com/RetroAchievements/rcheevos/tree/v12.5.0)
