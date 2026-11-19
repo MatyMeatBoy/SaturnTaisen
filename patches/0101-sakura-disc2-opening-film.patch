@@ -1,0 +1,39 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1882,6 +1882,35 @@
+                 SDL_RenderFillRect(renderer,&edge);
+             }
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
++            // Disc 2's opening film is presented in the native theatre without a
++            // recognized replacement backdrop. Keep that framing and only touch its film plate.
++            if (shownDisc == 2 && satrecomp::FeatureValue("presentation_mode") == 1 &&
++                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++                port.videoRenderer && texW == 320 && texH == 224) {
++                const auto& frame = port.videoRenderer->PresentationFrame();
++                const auto offset = port.videoRenderer->BackgroundColorOffset(1);
++                bool exactPlate = frame.topSource.size() == 320*224 &&
++                                  frame.source.size() == frame.topSource.size() &&
++                                  offset == std::array<int16_t,3>{};
++                unsigned film = 0;
++                for (unsigned y = 0; y < 224 && exactPlate; ++y) {
++                    for (unsigned x = 0; x < 320; ++x) {
++                        const bool inside = x >= 16 && x < 304 && y >= 8 && y < 152;
++                        if ((frame.topSource[y*320 + x] == 1) != inside) {
++                            exactPlate = false;
++                            break;
++                        }
++                        film += inside && frame.source[y*320 + x] == 1;
++                    }
++                }
++                if (exactPlate && film == 288*144 && UpdateClip(frame.source)) {
++                    const SDL_FRect target{where.x + where.w * (16.0f / 320),
++                                           where.y + where.h * (8.0f / 224),
++                                           where.w * (288.0f / 320), where.h * (144.0f / 224)};
++                    // Keep the synchronized Saturn audio for this newly recognized film path.
++                    SDL_RenderTexture(renderer, clipTexture, nullptr, &target);
++                }
++            }
+             if(port.videoRenderer && texW==320 && texH==224) {
+                 const int scale=static_cast<int>(where.h/224);
+                 if(where.w==320*scale && where.h==224*scale)

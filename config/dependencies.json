@@ -98,7 +98,8 @@
       "patches/0095-sakura-approved-episode-cards-only.patch",
       "patches/0096-sakura-clip-resume-from-state.patch",
       "patches/0097-sakura-dev-states-off-in-packages.patch",
-      "patches/0098-sakura-bg2533-verified-pan.patch"
+      "patches/0098-sakura-bg2533-verified-pan.patch",
+      "patches/0101-sakura-disc2-opening-film.patch"
     ]
   }
 }
