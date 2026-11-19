@@ -125,3 +125,16 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(scene['runtime_evidence'], 'docs/research/bg2238-still.md')
         disc1 = catalog['unassigned']['scene-pictures']['1:/SAKURA1/BG2238.BIN']
         self.assertFalse(disc1.get('verified_in_game'))
+
+    def test_ending_bank_donors_are_subimage_pairs_with_no_runtime_claim(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        catalog = catalog['unassigned']['scene-pictures']
+        for disc in (1, 2):
+            for name in ('AI', 'GE', 'KA', 'KO', 'MA', 'SA', 'SU'):
+                with self.subTest(disc=disc, ending=name):
+                    row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']
+                    self.assertEqual((row['association'], row['status']), ('unknown', 'paired-not-wired'))
+                    self.assertEqual(row['pc'], f'SAKURA1/ENDING/END_{name}.SPR')
+                    self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3] if name == 'GE' else [6, 7])
+                    self.assertFalse(row.get('verified_in_game'))

@@ -25,6 +25,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 
 ## Presentation and HD
 
+- [Ending bank pairs](ending-bank-pairs.md) — TP3c multi-record layouts, confirmed counterparts and compositor boundaries.
 - [saturn-background-loading.md](saturn-background-loading.md) — background loading and HD mod ([saturn-background-loading.json](saturn-background-loading.json), [saturn-background-compression.json](saturn-background-compression.json)).
 - [saturn-background-workers.md](saturn-background-workers.md) — multi-core background preparation ([saturn-background-workers.json](saturn-background-workers.json)).
 - [saturn-hd-characters.md](saturn-hd-characters.md) — PC characters for the HD mod ([pc-character-inventory.json](pc-character-inventory.json)).
