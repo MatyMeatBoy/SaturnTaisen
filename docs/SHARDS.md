@@ -108,3 +108,7 @@ Open, each one a PR that arrives connected (see the rule above):
 - **W9 packaging (TS12)**: gate and clean-machine run for everything generated or paired.
 
 Rows W1-W9 are in `docs/PENDIENTES.md`; take one, write your name in its status, and send the PR whole.
+
+## Claims and the 30-minute rule (owner, 2026-11-19)
+
+Take a shard by claiming its row in a first small PR: `python tools/shard_claims.py --claim TW1 --who <name> --branch pendientes/<branch>` (it writes `CLAIM[name|branch|UTC time]` at the start of the row's status cell). A claim stays valid while its branch gets commits; **a shard nobody has worked on for 30 minutes goes back to the pool**: any worker or the coordinator runs `python tools/shard_claims.py --release-stale` (add `--dry-run` to look first) and every claim older than 30 minutes with no newer commit on its branch becomes `open · released (stale claim of <name>, <time>)`. `--list` shows the claims and their idle time. Push a commit (even a draft) to keep a claim alive; if you stop, release it yourself. A released shard may be taken by anyone, and the previous worker's branch is fair material for the next one.
