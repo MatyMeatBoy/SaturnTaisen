@@ -152,3 +152,5 @@ One line per document. The JSON files are the machine-readable evidence for thei
 
 - [EVE0101 registered inset](eve0101-registered-inset.md)
 - [Full-frame battle pictures](bbg-full-frame.md)
+
+- [Constrained scroll fits and scenario references](tp2a-remaining-scroll.md)
