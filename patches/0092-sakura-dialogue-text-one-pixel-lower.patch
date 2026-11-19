@@ -1,0 +1,15 @@
+diff --git a/port/narrative_text.h b/port/narrative_text.h
+index 49202e9..aaf3619 100644
+--- a/port/narrative_text.h
++++ b/port/narrative_text.h
+@@ -22,7 +22,9 @@ inline constexpr int kTextLeft=56,kTextTop=160,kTextRight=304,kTextBottom=212;
+ inline float NarrativeRowTop(int nativeY,int scale) {
+     // Four native rows start at 160,172,184,196. Keep their fixed order but
+     // recover one pixel per row, leaving room for the HD font's descenders.
+-    return float((nativeY-std::max(0,(nativeY-160)/12)-1)*scale);
++    // Owner (2026-11-19): with the smaller HD text the top of the first line sat too close to the top of the box, so every row now
++    // starts one native pixel lower (four to six window pixels at 1080p/1440p) than before; the row pitch is unchanged.
++    return float((nativeY-std::max(0,(nativeY-160)/12))*scale);
+ }
+ inline bool NarrativeInkFits(int x,int y,std::span<const uint8_t> tile) {
+     if(tile.size()!=128)return false;
