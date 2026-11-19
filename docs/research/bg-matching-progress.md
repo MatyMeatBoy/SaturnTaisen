@@ -28,3 +28,7 @@ Rejected: `SAKURA1/BG2173` for the episode title card (false positive, no matchi
 - Source: the 297,107-frame cold run (inputs of `local/work/rb-full/input.movie`), one screenshot every 250 frames (about 1,190 frames), strict native mode.
 - Status when written: running; 875 screenshots ranked (93 strong, 13 distinct candidates, 12 confirmed). After it ends: rank all screenshots, confirm candidates visually, and update this table and the scene-images counter in `config/hd-progress.json`.
 - Count so far: 12 of 1,267 scene images matched, 0 integrated.
+
+## Shard B review (T77, 2026-11-19)
+
+Shard B = `SAKURA1/BG11xx`, `BG12xx`, `BG13xx`: 200 decoded pictures (138 `content`, 60 `number`, 2 `missing`). 53 `number` pairs were already reviewed; the 7 remaining were compared by eye on a contact sheet (Saturn decode left, PC picture right) and all confirmed as the same scene: BG1207 (blossom picnic), BG1257 (ruined buildings), BG1280 (battle scroll), BG1282 (breaking wave), BG1283 (ruined street), BG1285 (burning street), BG1310 (large wave). Correlation is low (-0.27 to 0.47) because the Saturn decodes of BG1257, BG1283, BG1285 and BG1310 show band/strip artefacts (decoder layout, see `docs/research/saturn-bg-format.md`), so the match rests on composition, not pixels. Added to `eye_confirmed_number_tier`. `config/hd-scene-bg-pairs.json` is unchanged: it records screenshot-confirmed pairs with an evidence frame and none was taken.
