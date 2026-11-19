@@ -197,7 +197,13 @@
     "EVE207"
   ],
   "guarded_viewport": [
-    "BG1306"
+    "BG1306",
+    "BG2207",
+    "BG2265",
+    "BG2266",
+    "BG2267",
+    "BG2268",
+    "BG2269"
   ],
   "rejected": {
     "BG0000": "blank placeholder picture",

@@ -45,6 +45,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [bg1207-pan.md](bg1207-pan.md) — Chapter 1 horizontal panorama with the original Saturn foreground.
 - [bg1285-pan.md](bg1285-pan.md) — Chapter 10 horizontal panorama of the burning city.
 - [bg2295-pan.md](bg2295-pan.md) — Exact crop and runtime wiring for the damaged Koubu panorama.
+- [forest-vertical-pans.md](forest-vertical-pans.md) — Exact pairing of six Chapter 10 forest variants.
 - [bg2159-disc2-visual.md](bg2159-disc2-visual.md) — Disc 2 Chapter 8 city view at 1440p.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 

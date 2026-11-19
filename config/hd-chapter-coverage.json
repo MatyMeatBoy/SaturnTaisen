@@ -8714,8 +8714,7 @@
       "1:/SAKURA1/BG2207.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2207.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2208.BIN": {
         "association": "unknown",
@@ -8950,32 +8949,27 @@
       "1:/SAKURA1/BG2265.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2265.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2266.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2266.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2267.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2267.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2268.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2268.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2269.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2269.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2270.BIN": {
         "association": "unknown",
@@ -12629,8 +12623,7 @@
       "2:/SAKURA1/BG2207.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2207.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2208.BIN": {
         "association": "unknown",
@@ -12875,32 +12868,27 @@
       "2:/SAKURA1/BG2265.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2265.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2266.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2266.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2267.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2267.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2268.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2268.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2269.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2269.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2270.BIN": {
         "association": "unknown",
