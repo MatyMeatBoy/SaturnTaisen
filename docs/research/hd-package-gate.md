@@ -1,20 +1,20 @@
 # TS12 HD package gate
 
-The public package validates the generated-art provenance in all four art
-folders. Each episode must have a left and right 39 × 224 RGBA strip, and the
-two strips must declare the same palette fingerprint. The package manifest
-records the hashes of the approved art and language layers at their exact
-release paths. The gate rejects stray PC movies and SPR images, prepared
-game files, profiles and saves.
+The active public package requires both generated layers for all ten episode cards. Each 640 × 360 surround has a transparent center and is paired with an approved Spanish lettering layer. The gate validates each layer against its provenance, rejects obsolete side strips, and pins the files at their release paths. It also validates generated backgrounds, PC background extensions, and tactical extensions from their own provenance manifests.
 
-For a PC edition supplied as an extracted cabinet folder, setup reads
-`MOVIE` beside the cabinets and writes the clips directly to the private HD
-pack. The old helper moved the whole input folder into its temporary working
-directory, which could delete the player’s clips when setup cleaned up. A
-synthetic cabinet extraction reproduces the fault and checks both the input
-clip and the resulting private copy.
+The final staged-tree check requires exact source hashes at these paths under `data/`.
 
-## Validation
+- `config/hd-scroll-pictures.json` and `config/film-fad-map.json`.
+- `preparar-juego.exe`, `herramientas/unshield.exe`, and `herramientas/xdelta3.exe`.
+- `licenses/unshield-MIT.txt` and `licenses/xdelta3-Apache-2.0.txt`.
+
+The scroll JSON describes the source scroll rows. The renderer uses a generated table compiled into the runtime. The film JSON identifies eligible clip starts. The public release rejects stray MPG, MPEG, CPK and SPR files, prepared game files, private HD resources, profiles and saves. Setup copies PC clips from the owner's edition into the private HD pack, including `MOVIE` beside an extracted installation cabinet folder.
+
+## Gate verification
+
+The package-art tests checked the twenty approved public card layers, staged recipe/tool paths and hashes, missing and modified files, and the rejection of stray movie data. The release-marker and synthetic setup suites exercise the existing development-state marker and private PC clip extraction. A separate clean-machine package build and preparation run remain open.
+
+## Earlier staging evidence
 
 - `python -B -m unittest discover -s tests -p test_package_art.py -v`
 - `python -B -m unittest discover -s tests -p test_taisen_setup.py -v`

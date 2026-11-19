@@ -122,15 +122,16 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     return result
 
 
-def release_file_manifest(destination, allowed_art, allowed_patches):
+def release_file_manifest(destination, allowed_art, allowed_patches, required_data=None):
     """Validate the staged public tree and record the exact bytes that will ship."""
     protected_suffixes = {
         '.iso', '.cue', '.bin', '.img', '.mdf', '.mds', '.chd', '.cdd', '.ccd', '.bup',
         '.sro', '.xdelta', '.state', '.png', '.jpg', '.jpeg', '.bmp', '.wav', '.flac', '.mp3',
-        '.mpg', '.mpeg', '.spr', '.stfb', '.stfp', '.zip', '.7z', '.rar',
+        '.mpg', '.mpeg', '.cpk', '.spr', '.stfb', '.stfp', '.zip', '.7z', '.rar',
     }
     private_folders = {'data/game', 'data/hd-resources', 'data/user'}
-    allowed = {f'data/{path}': checksum for path, checksum in (allowed_art | allowed_patches).items()}
+    pinned = allowed_art | allowed_patches | (required_data or {})
+    allowed = {f'data/{path}': checksum for path, checksum in pinned.items()}
     files = []
     for file in sorted(destination.rglob('*')):
         relative = file.relative_to(destination).as_posix()
@@ -157,6 +158,13 @@ def release_file_manifest(destination, allowed_art, allowed_patches):
 def package(destination,toolchain,archive=True,runtime=None,owner_root=None,build_dir=None,controller_mapper=None,video_patches=None):
     owner=Path(owner_root or ROOT).resolve()
     tracked=set(subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0'))
+    required_data = {}
+    for name in ('film-fad-map.json', 'hd-scroll-pictures.json'):
+        relative = f'config/{name}'
+        source = ROOT / relative
+        if relative not in tracked or not source.is_file():
+            raise RuntimeError(f'Missing tracked package recipe: {relative}')
+        required_data[relative] = digest(source)
     destination=destination.resolve()
     destination.mkdir(parents=True,exist_ok=False)
     # The release root shows only what the player touches: SaturnTaisen.exe (the launcher, linked statically so
@@ -169,6 +177,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     for source,name in executables.items():
         selected=Path(runtime) if runtime is not None and source=='sakura.exe' else build/source
         shutil.copy2(selected,app/name)
+        if name == 'preparar-juego.exe':
+            required_data[name] = digest(selected)
     if controller_mapper is not None:
         shutil.copy2(Path(controller_mapper),app/'Mapear M30.exe')
     # Resolve the actual PE imports, including dependencies of toolchain DLLs.
@@ -230,6 +240,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         for file in (source,licence):
             if not file.is_file():raise RuntimeError(f'Missing setup tool or license: {file}')
         shutil.copy2(source,helpers/name);shutil.copy2(licence,licenses/notice)
+        required_data[f'herramientas/{name}'] = digest(source)
+        required_data[f'licenses/{notice}'] = digest(licence)
     # Language patches: differences only, each pinned by parches.json. The video layer is a release asset.
     patch_manifest=json.loads((ROOT/'parches/parches.json').read_text(encoding='utf-8'))
     patch_target=app/'parches';patch_target.mkdir()
@@ -321,7 +333,7 @@ Esta versión no certifica toda la campaña ni todos los mandos; el cambio autom
 
 En la carpeta solo verás `SaturnTaisen.exe`, `roms` y `data`. Dentro de `data`, `user/` contiene tus partidas, ajustes y `logs/`, y `game/` y `hd-resources/` lo ya preparado. No las borres al actualizar: puedes descomprimir una versión nueva encima y no se rehace nada que siga vigente.
 ''',encoding='utf-8',newline='\n')
-    files=release_file_manifest(destination,allowed_art,allowed_patches)
+    files=release_file_manifest(destination,allowed_art,allowed_patches,required_data)
     manifest={'version':(ROOT/'VERSION').read_text().strip(),
               'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
               'source_dirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),
