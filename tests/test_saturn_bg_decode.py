@@ -46,6 +46,16 @@ class SaturnBgTests(unittest.TestCase):
         self.assertEqual(image.getpixel((8 + 4, 8 + 3)), (255, 0, 0))
         self.assertIsNone(bg.decode(bytes(data[:70000])))
 
+    def test_title_cards_start_their_table_at_two(self):
+        data = bytearray(512 + 4480 + 1121 * 64)
+        for cell in range(1120):
+            struct.pack_into('>I', data, 512 + cell * 4, cell * 2 + 2)
+        struct.pack_into('>H', data, 3 * 2, 31)  # palette 3 = R31
+        data[512 + 4480 + 1 * 64 + 2 * 8 + 5] = 3  # tile 1 is the first cell: pixel (5,2)
+        image = bg.decode(bytes(data))
+        self.assertEqual(image.size, (320, 224))
+        self.assertEqual(image.getpixel((5, 2)), (255, 0, 0))
+
     def test_screen_map_has_firm_eyecatches(self):
         import json
         data = json.loads((ROOT / 'config/hd-screen-map.json').read_text(encoding='utf-8'))
