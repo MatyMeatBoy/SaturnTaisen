@@ -1,0 +1,51 @@
+diff --git a/video/layers.cpp b/video/layers.cpp
+index 706e731..af647b1 100644
+--- a/video/layers.cpp
++++ b/video/layers.cpp
+@@ -596,6 +596,16 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+         uint32 palette = 0;
+         uint8 priority = 0;
+         bool perDot = false;
++        // (plain pointers and the colour RAM's layout, read once: the one-byte stores below would otherwise make the
++        // compiler read the line vectors and the registers again for every dot)
++        const uint8 *const windowIn = window.data();
++        uint32 *const colorOut = out.color.data();
++        uint8 *const priorityOut = out.priority.data();
++        const uint32 cramMode = regs2.vramControl.colorRAMMode;
++        const uint8 *const cram = m_mem.cram;
++        const uint32 cramMask = cramMode == 0 ? 0x7FE : 0xFFE;
++        const uint32 cramOffset = bg.cramOffset;
++        const bool transparency = bg.enableTransparency;
+         for (uint32 x = 0; x < width; x++, fracX += scroll.incH) {
+             const uint32 sx = fracX >> 8;
+             if ((sx >> 3) != current) {
+@@ -639,18 +649,23 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+                 }
+                 perDot = bg.priorityMode == PriorityMode::PerDot && ch.specialPriority;
+             }
+-            if (window[x]) {
+-                out.priority[x] = 0;
++            if (windowIn[x]) {
++                priorityOut[x] = 0;
+                 continue;
+             }
+             const uint32 from = ch.flipH ? (sx & 7) ^ 7 : sx & 7;
+             const uint32 dot = wide ? dots[from] : (dots[from >> 1] >> ((~from & 1) * 4)) & 0xF;
+-            if (dot == 0 && bg.enableTransparency) {
+-                out.priority[x] = 0;
++            if (dot == 0 && transparency) {
++                priorityOut[x] = 0;
+                 continue;
+             }
+-            out.color[x] = Color(bg.cramOffset + (wide ? ((palette & 0x700) | dot) : (palette | dot)));
+-            out.priority[x] = perDot ? static_cast<uint8>(priority | static_cast<uint8>(matches[(dot >> 1) & 7])) : priority;
++            const uint32 index = cramOffset + (wide ? ((palette & 0x700) | dot) : (palette | dot));
++            if (cramMode >= 2) {
++                colorOut[x] = CramLong((index * 4) & 0xFFC);
++            } else {
++                colorOut[x] = To888(Be16(&cram[(index * 2) & cramMask]));
++            }
++            priorityOut[x] = perDot ? static_cast<uint8>(priority | static_cast<uint8>(matches[(dot >> 1) & 7])) : priority;
+         }
+         // (what the dot by dot way leaves behind, should the next line be drawn that way)
+         fetcher.current = fetcher.next = ch;
