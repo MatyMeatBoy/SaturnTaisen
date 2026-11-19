@@ -190,3 +190,16 @@ class ChapterCoverageTest(unittest.TestCase):
                 with self.subTest(disc=disc, body=name):
                     row = bodies[f'{disc}:/SAKURA1/{name}.BIN']
                     self.assertEqual((row['status'], row['pc']), ('hd', f'SAKURA1/NC/{name}.SPR'))
+
+    def test_chapter4_map_pair_and_resident_work_ram_have_distinct_scope(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter4 = catalog['chapters'][3]['resources']
+        ground = chapter4['tactical-maps']['1:/SAKURA2/MAP06.BIN']
+        self.assertEqual((ground['association'], ground['status']), ('observed', 'paired-not-wired'))
+        self.assertEqual(ground['pc'], 'SAKURA2/MAP/MAP06/MAP06_A.SPR')
+        self.assertFalse(ground.get('verified_in_game'))
+        self.assertTrue(chapter4['tactical-maps']['1:/SAKURA2/MAP21.BIN']['verified_in_game'])
+        for name in ('WKL06', 'WKL21'):
+            row = chapter4['menus-hud'][f'1:/SAKURA2/{name}.BIN']
+            self.assertEqual((row['association'], row['status']), ('resident', 'unknown'))
