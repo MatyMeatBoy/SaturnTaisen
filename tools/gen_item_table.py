@@ -5,10 +5,11 @@ Usage: python tools/gen_item_table.py config/hd-item-map.json OUT_HEADER.h
 Same pattern as tools/gen_scene_bg_table.py (T74): the key is the FNV-1a palette fingerprint of the
 ITEMnn.BIN picture (112x112, 8 bpp, palette first). Tier `content` pairs and the exact full-card matches confirmed in hd-item-review.json are kept. A palette that maps
 to different PC pictures cannot identify one and is skipped. Output is deterministic (sorted by palette).
-Not wired into the runtime yet: VDP1 sprite recognition is a separate row.
+With --textures, generate the runtime header with both texture and palette fingerprints.
 """
+import argparse
 import json
-import sys
+import re
 from pathlib import Path
 
 
@@ -40,13 +41,51 @@ def render(rows):
     return '\n'.join(lines) + '\n'
 
 
+def render_runtime(rows, textures):
+    palettes = {palette for palette, _ in rows}
+    if set(textures) != palettes:
+        raise ValueError('The texture fingerprint set must match the approved palettes')
+    if any(not re.fullmatch('[0-9A-F]{16}', fingerprint) for fingerprint in textures.values()):
+        raise ValueError('Expected uppercase 64-bit texture fingerprints')
+    if len(set(textures.values())) != len(textures):
+        raise ValueError('Duplicate card texture fingerprint')
+    lines = [
+        '// Approved T102/T108 item artwork and matching Saturn texture and palette fingerprints.',
+        '#pragma once',
+        '',
+        '#include <cstdint>',
+        '',
+        'namespace port {',
+        'struct ItemCardEntry {',
+        '    uint64_t texture, palette;',
+        '    const char* file;',
+        '    unsigned index;',
+        '};',
+        'inline constexpr ItemCardEntry kItemCards[]={',
+    ]
+    lines.extend(
+        '    {0x%sull,0x%sull,"%s",%d},' % (textures[palette], palette, file, index)
+        for palette, (file, index) in rows
+    )
+    return '\n'.join([*lines, '};', '}']) + '\n'
+
+
 def main():
-    map_path = Path(sys.argv[1])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('map', type=Path)
+    parser.add_argument('header', type=Path)
+    parser.add_argument('--textures', type=Path, help='include verified Saturn texture fingerprints for runtime')
+    args = parser.parse_args()
+    map_path = args.map
     data = json.loads(map_path.read_text(encoding='utf-8'))
     review_path = map_path.with_name('hd-item-review.json')
     review = json.loads(review_path.read_text(encoding='utf-8'))['pairs'] if review_path.is_file() else ()
     rows = build_rows(data, review)
-    Path(sys.argv[2]).write_text(render(rows), encoding='utf-8')
+    if args.textures:
+        header = render_runtime(rows, json.loads(args.textures.read_text(encoding='utf-8')))
+    else:
+        header = render(rows)
+    args.header.write_text(header, encoding='utf-8')
     print(len(rows), 'entries')
 
 

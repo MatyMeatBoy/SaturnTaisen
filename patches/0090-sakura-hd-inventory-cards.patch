@@ -1,0 +1,443 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 2634bbd..d07b97d 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -683,6 +683,82 @@ int RunWindowed(Port &port) {
+         std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;std::unordered_map<uint64_t,int> matches;std::unordered_map<unsigned,std::array<float,2>> refinedPos;
+     };
+     std::vector<BodyHd> bodyHd(kBodyCount);
++    using ItemCapture=satrecomp::video::Renderer::ItemCardCapture;
++    constexpr int nativeItemSize=satrecomp::video::Renderer::kItemCardSize;
++    constexpr int hdItemSize=2*nativeItemSize;
++    struct ItemHdImage {
++        bool tried=false;
++        std::vector<uint32_t> rgba;
++    };
++    std::array<ItemHdImage,std::size(kItemCards)> itemImages{};
++    SDL_Texture* itemOverlay=nullptr;
++    std::array<uint32_t,hdItemSize*hdItemSize> itemOverlayPixels{};
++    auto captureItems=[&]() {
++        if(port.videoRenderer)
++            port.videoRenderer->CaptureItemCards(!port.opt.pcAssetsPath.empty() &&
++                satrecomp::FeatureValue("pc_hd_backgrounds")==0 && satrecomp::FeatureValue("presentation_mode")==1);
++    };
++    captureItems();
++    auto drawItem=[&](const std::optional<ItemCapture>& capture,const SDL_FRect& crop,
++                      const SDL_FRect& target,int scale) {
++        if(!capture || capture->rows!=nativeItemSize || scale<2 || choosing || port.menu.IsOpen() ||
++           satrecomp::FeatureValue("pc_hd_backgrounds")!=0 || port.opt.pcAssetsPath.empty())
++            return;
++        const auto& card=*capture;
++        if(card.x<crop.x || card.y<crop.y || card.x+nativeItemSize>crop.x+crop.w ||
++           card.y+nativeItemSize>crop.y+crop.h)
++            return;
++        if(std::none_of(card.pixels.begin(),card.pixels.end(),[](uint8_t visible){return visible!=0;}))
++            return;
++        auto& image=itemImages[card.entry-kItemCards];
++        if(!image.tried) {
++            image.tried=true;
++            std::vector<uint8_t> bytes;
++            const auto file=std::filesystem::u8path(port.opt.pcAssetsPath)/card.entry->file;
++            if(ReadPcBackdropFile(file,bytes,2u<<20)) {
++                std::vector<PcSprite> sprites;
++                std::string error;
++                if(DecodePcSprites(bytes,sprites,error))for(auto& sprite:sprites) {
++                    if(sprite.index==card.entry->index && sprite.width==hdItemSize && sprite.height==hdItemSize &&
++                       sprite.pixels.size()==hdItemSize*hdItemSize &&
++                       std::all_of(sprite.pixels.begin(),sprite.pixels.end(),[](uint32_t color){return (color>>24)==255;})) {
++                        image.rgba=std::move(sprite.pixels);
++                        break;
++                    }
++                }
++            }
++        }
++        if(image.rgba.empty())return;
++
++        // An unowned native texel always leaves its complete 2x2 destination transparent.
++        for(int y=0;y<nativeItemSize;y++)for(int x=0;x<nativeItemSize;x++) {
++            const bool visible=card.pixels[y*nativeItemSize+x]!=0;
++            const size_t at=size_t(2*y)*hdItemSize+2*x;
++            for(const size_t sample:{at,at+1,at+hdItemSize,at+hdItemSize+1})
++                itemOverlayPixels[sample]=visible?image.rgba[sample]:0;
++        }
++        if(!itemOverlay) {
++            itemOverlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
++                                         hdItemSize,hdItemSize);
++            if(!itemOverlay)return;
++            if(!SDL_SetTextureScaleMode(itemOverlay,SDL_SCALEMODE_NEAREST) ||
++               !SDL_SetTextureBlendMode(itemOverlay,SDL_BLENDMODE_BLEND)) {
++                SDL_DestroyTexture(itemOverlay);itemOverlay=nullptr;
++                return;
++            }
++        }
++        if(!SDL_UpdateTexture(itemOverlay,nullptr,itemOverlayPixels.data(),hdItemSize*sizeof(uint32_t)))return;
++        const SDL_FRect where{target.x+(card.x-crop.x)*scale,target.y+(card.y-crop.y)*scale,
++                              float(nativeItemSize*scale),float(nativeItemSize*scale)};
++        if(SDL_RenderTexture(renderer,itemOverlay,nullptr,&where) && std::getenv("SATRECOMP_ITEM_TRACE")) {
++            static const ItemCardEntry* traced=nullptr;
++            if(traced!=card.entry) {
++                traced=card.entry;
++                fprintf(stderr,"hd item: %s target %.0f,%.0f,%.0f,%.0f owned=%td\n",card.entry->file,
++                        where.x,where.y,where.w,where.h,std::count(card.pixels.begin(),card.pixels.end(),uint8_t(1)));
++            }
++        }
++    };
+     using PresentationSprite=satrecomp::video::Renderer::PresentationSprite;
+     struct BodyFace {int x=0,y=0,w=0,h=0;unsigned ordinal=0;};
+     struct BodyDraw {bool valid=false;int slot=-1,x=0,y=0,w=0,h=0;std::vector<BodyFace> faces;std::vector<std::array<int,4>> keep;};
+@@ -692,6 +768,7 @@ int RunWindowed(Port &port) {
+         if (!renderer) {
+             return;
+         }
++        captureItems();
+         frameProfile.mark=frameProfile.on?SDL_GetTicksNS():0;
+         int wide = 0, high = 0;
+         SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);
+@@ -1625,6 +1702,7 @@ int RunWindowed(Port &port) {
+                                 SDL_RenderTexture(renderer,content,&source,&target);
+                             }
+                         }
++                        drawItem(planes.itemCard,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                             static bool logged=false;if(!logged) {logged=true;fprintf(stderr,"scene zoom: image=%dx%d scale=%d dialogue=%dx%d scale=%d y=%d shadow=%d\n",zoom.picture.w,zoom.picture.h,zoom.picture.scale,fit.w,fit.h,fit.scale,fit.y,zoom.shadow);}
+@@ -1677,6 +1755,7 @@ int RunWindowed(Port &port) {
+                     SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
++                if(!scene.movieOnly && !splitZoom)drawItem(planes.itemCard,crop,target,fit.scale);
+                 portraitViewport=!scene.movieOnly;
+                 }
+             }
+@@ -2599,6 +2678,7 @@ int RunWindowed(Port &port) {
+     for (auto *gp : gamepads) {
+         SDL_CloseGamepad(gp);
+     }
++    if(itemOverlay)SDL_DestroyTexture(itemOverlay);
+     if (texture) {
+         SDL_DestroyTexture(texture);
+     }
+diff --git a/port/item_card_table.h b/port/item_card_table.h
+new file mode 100644
+index 0000000..c1bf041
+--- /dev/null
++++ b/port/item_card_table.h
+@@ -0,0 +1,52 @@
++// Approved T102/T108 item artwork and matching Saturn texture and palette fingerprints.
++#pragma once
++
++#include <cstdint>
++
++namespace port {
++struct ItemCardEntry {
++    uint64_t texture, palette;
++    const char* file;
++    unsigned index;
++};
++inline constexpr ItemCardEntry kItemCards[]={
++    {0x6DC7D97E4F7633DCull,0x099D19E1E11F37C6ull,"SAKURA1/ITEM/ITEM16.SPR",0},
++    {0xB06E59ADFC18AD1Aull,0x108ED2DDE08341B2ull,"SAKURA1/ITEM/ITEM86.SPR",0},
++    {0x128856D62E6D0FADull,0x10C89C527FFCB9C2ull,"SAKURA1/ITEM/ITEM04.SPR",0},
++    {0x4DC1768AB7A60A63ull,0x15ED0C1910A55981ull,"SAKURA1/ITEM/ITEM11.SPR",0},
++    {0x39A9E84FF1229357ull,0x171664C1DAF0CF91ull,"SAKURA1/ITEM/ITEM06.SPR",0},
++    {0x36AE24C15CB1820Bull,0x1E1DD96213A55D65ull,"SAKURA1/ITEM/ITEM20.SPR",0},
++    {0x2D503210E0A48632ull,0x1E8A994F2468AEBBull,"SAKURA1/ITEM/ITEM08.SPR",0},
++    {0xD99EF6C784804CFBull,0x21B193A67DB5FA2Eull,"SAKURA1/ITEM/ITEM13.SPR",0},
++    {0x6E04335A82058D02ull,0x2D137F2B8DF551F0ull,"SAKURA1/ITEM/ITEM14.SPR",0},
++    {0x898FCFE74FEA9F7Full,0x2E47A35C322CCC89ull,"SAKURA1/ITEM/ITEM73.SPR",0},
++    {0xE5443BD5B5FA5653ull,0x316FECED2E10D0EAull,"SAKURA1/ITEM/ITEM54.SPR",0},
++    {0xF9E623E54FFDDC21ull,0x319E682E63DC3A4Eull,"SAKURA1/ITEM/ITEM71.SPR",0},
++    {0x430246A9FF137579ull,0x387DCE34CACCD6A7ull,"SAKURA1/ITEM/ITEM85.SPR",0},
++    {0xBB03A85201354831ull,0x5271F081C5BD49D7ull,"SAKURA1/ITEM/ITEM21.SPR",0},
++    {0x15BF957A23244B02ull,0x537B73B6FA6A4F15ull,"SAKURA1/ITEM/ITEM05.SPR",0},
++    {0xF4C5AABBF4DD0292ull,0x54E9F038D82CBC99ull,"SAKURA1/ITEM/ITEM83.SPR",0},
++    {0x12F6B4536865728Bull,0x57E4DAF6F8585BFFull,"SAKURA1/ITEM/ITEM24.SPR",0},
++    {0x840F79E03E7D1B93ull,0x6466A6F9B1F7EA80ull,"SAKURA1/ITEM/ITEM23.SPR",0},
++    {0x6F1265616E0EA3CAull,0x65C8FC622A77BAB0ull,"SAKURA1/ITEM/ITEM28.SPR",0},
++    {0x3B92D666271D3C85ull,0x74099F7AEC509876ull,"SAKURA1/ITEM/ITEM26.SPR",0},
++    {0xCF6F6BF8FC611739ull,0x74ED114A442F4EC7ull,"SAKURA1/ITEM/ITEM25.SPR",0},
++    {0xB283711C8C0CD4E3ull,0x80B84481F2781882ull,"SAKURA1/ITEM/ITEM01.SPR",0},
++    {0x80D86EBA9A84EE93ull,0x88084F702BA36EE2ull,"SAKURA1/ITEM/ITEM84.SPR",0},
++    {0x79F449402718468Dull,0x994AF50BC61B12E6ull,"SAKURA1/ITEM/ITEM07.SPR",0},
++    {0x3657507E5D5A5303ull,0xA4028703597B1000ull,"SAKURA1/ITEM/ITEM75.SPR",0},
++    {0xA6B4BC8A4F14FBA8ull,0xA8092407C03A18D6ull,"SAKURA1/ITEM/ITEM17.SPR",0},
++    {0x0BAB35565A1D5DD1ull,0xA873984774ABC2F7ull,"SAKURA1/ITEM/ITEM77.SPR",0},
++    {0xC151CF3232D40C1Cull,0xADAD7CB4EC65AB83ull,"SAKURA1/ITEM/ITEM02.SPR",0},
++    {0x62AC606C3002BE28ull,0xB523CF1B006F77C1ull,"SAKURA1/ITEM/ITEM18.SPR",0},
++    {0xB605179C649CEEFBull,0xC242BA182D7EC5E0ull,"SAKURA1/ITEM/ITEM76.SPR",0},
++    {0xFB09972A536B9A4Full,0xCF1A68798F00AD0Bull,"SAKURA1/ITEM/ITEM15.SPR",0},
++    {0x0C0569C8A309427Cull,0xD50AB11439DB0712ull,"SAKURA1/ITEM/ITEM82.SPR",0},
++    {0x71A26B1AE690917Aull,0xD7DB18F1465A60AAull,"SAKURA1/ITEM/ITEM72.SPR",0},
++    {0x05EA66FDE8ECF154ull,0xDF9FA63EF573EBD3ull,"SAKURA1/ITEM/ITEM67.SPR",0},
++    {0xA483CBABD26E8E8Full,0xEF9307D85B802E5Bull,"SAKURA1/ITEM/ITEM10.SPR",0},
++    {0x1E1A8A9519CA69DBull,0xEFC368E743B234FCull,"SAKURA1/ITEM/ITEM19.SPR",0},
++    {0x02E3D030461421D8ull,0xF1EB5D044E4CF3DCull,"SAKURA1/ITEM/ITEM40.SPR",0},
++    {0xB06E22DC82AC4F20ull,0xF31F6164CD1D6A3Bull,"SAKURA1/ITEM/ITEM22.SPR",0},
++};
++}
+diff --git a/video/raster.cpp b/video/raster.cpp
+index 1814a17..fb1e6f4 100644
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -72,6 +72,16 @@ SV_INLINE bool Renderer::RasterPixel(sint32 x, sint32 y, uint16 mode, uint16 col
+     }
+     offset &= 0x3FFFF;
+     uint8 *fb = m_rasterFB;
++    if(m_itemCaptureActive && !m_presentRasterTarget && m_drawnItemCard[m_captureDrawFB]) {
++        auto& card=*m_drawnItemCard[m_captureDrawFB];
++        const sint32 column=x-card.x,row=y-card.y;
++        if(column>=0 && column<kItemCardSize && row>=0 && row<kItemCardSize) {
++            auto& owner=card.pixels[size_t(row)*kItemCardSize+column];
++            // A normal later write covers the card. A blend through it is left to native composition.
++            if(m_itemWriting)owner=1;
++            else if(owner)owner=(mode&kMsbOn) || (mode&3)!=0 ? 2 : 0;
++        }
++    }
+     GlyphPlateStamp* stamp=nullptr;
+     if(m_glyphCaptureActive && !m_presentRasterTarget && x<320 && y<212 && y>=48)
+         stamp=&m_glyphStamps[m_captureDrawFB][size_t(y)*320+size_t(x)];
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index d6144bd..57bd363 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -34,6 +34,8 @@ void Renderer::Reset(bool hard) {
+     m_lastCommands.clear();
+     for(auto& sprites:m_presentSprites)sprites.clear();
+     m_presentation.sprites.clear();m_captureValid=false;
++    m_drawnItemCard={};m_presentation.itemCard.reset();
++    m_itemCaptureActive=false;m_itemWriting=false;
+     m_presentation.glyphPlate.clear();
+     m_glyphPlateReady={};m_glyphCaptureActive=false;
+     m_presentation.panelMix.clear();
+@@ -88,6 +90,8 @@ void Renderer::Serialize(Archive &ar) {
+         m_commands.clear();
+         for(auto& sprites:m_presentSprites)sprites.clear();
+         m_captureValid=false;
++        m_drawnItemCard={};m_presentation.itemCard.reset();
++        m_itemCaptureActive=false;m_itemWriting=false;
+         m_presentation.glyphPlate.clear();
+         m_glyphPlateReady={};m_glyphCaptureActive=false;
+         m_presentation.panelMix.clear();
+@@ -115,7 +119,10 @@ void Renderer::Serialize(Archive &ar) {
+ // --- registers ---
+ 
+ void Renderer::WriteVdp1Reg(uint32 address, uint16 value) {
+-    if(m_drawing) {m_menuReplayStable=false;m_glyphCaptureActive=false;}
++    if(m_drawing) {
++        m_menuReplayStable=false;m_glyphCaptureActive=false;
++        m_drawnItemCard[m_captureDrawFB].reset();m_itemCaptureActive=false;
++    }
+     m_regs1.Write(address, value);
+ }
+ 
+@@ -155,6 +162,8 @@ void Renderer::LatchDisplayMode() {
+ // --- VDP1 ---
+ 
+ void Renderer::InvalidateGlyphPlate(uint32 framebuffer) {
++    m_drawnItemCard[framebuffer].reset();
++    if(framebuffer==m_captureDrawFB)m_itemCaptureActive=false;
+     m_glyphPlateReady[framebuffer]=false;
+     if(framebuffer==m_captureDrawFB)m_glyphCaptureActive=false;
+ }
+@@ -184,6 +193,11 @@ void Renderer::BeginDrawing() {
+         m_width==320 && m_height==224 && m_regs1.fbSizeH>=320 && m_regs1.fbSizeV>=224 &&
+         !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable &&
+         !m_regs2.TVMD.IsInterlaced();
++    m_drawnItemCard[m_captureDrawFB].reset();
++    m_itemCaptureActive=m_captureItemCards && m_capturePresentation && m_compose && !m_gpu && !m_check &&
++        m_width==320 && m_height==224 && m_regs1.fbSizeH>=320 && m_regs1.fbSizeV>=224 &&
++        !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable &&
++        !m_regs2.TVMD.IsInterlaced();
+     m_glyphHasInk=false;m_glyphCommand=0;
+     if(m_glyphCaptureActive)m_glyphStamps[m_captureDrawFB].assign(320*224,{});
+     m_presentWideReady[m_captureDrawFB]=m_capturePresentation && m_presentation.scrollWidth>0 && !m_gpu &&
+@@ -225,6 +239,7 @@ void Renderer::DrawCommand(uint32 address) {
+             const size_t start=size_t(cmd.words[4])*8;
+             for(size_t i=0;i<bytes;i++)shown.pixels[i]=m_mem.vram1[(start+i)&0x7FFFF];
+             m_captureBytes+=bytes;
++            if(m_itemCaptureActive)TrackItemCommand(shown);
+         }
+     }
+     if (m_gpu) {
+@@ -237,6 +252,7 @@ void Renderer::DrawCommand(uint32 address) {
+                 m_glyphCommand=static_cast<uint16>(m_captureCount);
+         }
+         RasterCommand(cmd);
++        m_itemWriting=false;
+         m_glyphCommand=0;
+         if(m_presentWideReady[m_captureDrawFB] && (cmd.words[0]&15)<8) {
+             std::span<const uint8> pixels;
+@@ -246,6 +262,37 @@ void Renderer::DrawCommand(uint32 address) {
+     }
+ }
+ 
++namespace {
++uint64 ItemFingerprint(std::span<const uint8> bytes) {
++    uint64 value=14695981039346656037ull;
++    for(uint8 byte:bytes)value=(value^byte)*1099511628211ull;
++    return value;
++}
++}
++
++void Renderer::TrackItemCommand(const PresentationSprite& sprite) {
++    const auto& command=sprite.command.words;
++    if((command[0]&0x3F)!=0 || command[2]!=0x00A0 || command[3]!=0xC600 || command[5]!=0x0E70 ||
++       sprite.x<0 || sprite.x>320-kItemCardSize || sprite.y<0 || sprite.y>224-kItemCardSize)
++        return;
++    const auto hash=ItemFingerprint(sprite.pixels);
++    for(const auto& entry : ::port::kItemCards) {
++        if(entry.texture!=hash)continue;
++        auto& captured=m_drawnItemCard[m_captureDrawFB];
++        if(captured) {
++            // Only one card may own pixels for a draw pass.
++            captured.reset();m_itemCaptureActive=false;
++            return;
++        }
++        captured.emplace();
++        captured->entry=&entry;
++        captured->serial=++m_itemCardSerial;
++        captured->x=sprite.x;captured->y=sprite.y;
++        m_itemWriting=true;
++        return;
++    }
++}
++
+ void Renderer::RasterWideCommand(const Command& cmd,std::span<const uint8> pixels,uint8* target) {
+     const auto& bg=m_regs2.bgParams[3];
+     if(m_scrollSpriteFilter && m_captureValid && m_captureCount &&
+@@ -421,6 +468,8 @@ void Renderer::SetResolution(uint32 h, uint32 v, bool exclusive) {
+ }
+ 
+ void Renderer::BeginFrame() {
++    m_presentation.itemCard.reset();
++    m_itemFrameInvalid=false;
+     if (m_capturePresentation) {
+         m_presentation.width=m_width; m_presentation.height=m_height;
+         m_presentation.foreground.assign(static_cast<size_t>(m_width)*m_height,0);
+@@ -608,6 +657,36 @@ bool Renderer::SpriteLine(uint32 y,const uint8* alternateFb) {
+ // has a pixel there (priority 0: none); between equals, sprites before RBG0 before NBG0..NBG3; the back screen
+ // where there is none. Basic two-screen colour calculation, then colour offset and sprite shadows.
+ // Special/extended and line-screen calculations still require the reference.
++bool Renderer::BeginItemCardLine(uint32 line) {
++    if(!m_captureItemCards || !m_capturePresentation || m_itemFrameInvalid)return false;
++    const auto& drawn=m_drawnItemCard[m_displayFB];
++    auto& presented=m_presentation.itemCard;
++    const bool current=drawn && line>=uint32(drawn->y) && line<uint32(drawn->y+kItemCardSize);
++    if(!current && (!presented || line>=uint32(presented->y+kItemCardSize)))return false;
++    // The observed Saturn card uses 11 colour bits, mode-1 CRAM and bank 0x600.
++    // Verify those settings at scanout, where palette writes and sprite composition take effect.
++    const auto& sprite=m_regs2.spriteParams;
++    if(!current || (presented && presented->serial!=drawn->serial) ||
++       (m_drawing && m_displayFB==m_captureDrawFB) ||
++       m_width!=320 || m_height!=224 || m_regs2.TVMD.IsInterlaced() || m_regs1.pixel8Bits ||
++       m_regs1.fbRotEnable || m_regs1.dblInterlaceEnable || m_regs1.hdtvEnable ||
++       sprite.type!=1 || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
++       m_regs2.vramControl.colorRAMMode!=1 ||
++       ItemFingerprint(ColorBytes(0xC00,512))!=drawn->entry->palette) {
++        m_itemFrameInvalid=true;presented.reset();
++        return false;
++    }
++    if(!presented) {
++        if(line!=uint32(drawn->y)) {m_itemFrameInvalid=true;return false;}
++        presented.emplace();
++        presented->entry=drawn->entry;
++        presented->serial=drawn->serial;
++        presented->x=drawn->x;presented->y=drawn->y;
++    }
++    ++presented->rows;
++    return true;
++}
++
+ bool Renderer::PrepareGlyphLine(uint32 y) {
+     if(m_presentation.glyphPlate.empty() || !m_glyphPlateReady[m_displayFB] || m_width!=320 || m_height!=224 ||
+        y<48 || y>=212 || m_regs1.fbSizeH<320 || m_regs1.fbSizeV<224 || m_regs1.fbRotEnable ||
+@@ -862,6 +941,8 @@ void Renderer::ComposeLine(uint32 y) {
+         return {color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,episodeWeight,capturesUnshadowedPanel};
+     };
+     const bool glyphLine=supported && PrepareGlyphLine(line);
++    const bool itemLine=supported && y==line && BeginItemCardLine(y);
++    const auto* drawnItem=itemLine?&*m_drawnItemCard[m_displayFB]:nullptr;
+     for (uint32 x = 0; x < width; x++) {
+         const auto [color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,episodeWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
+         if(glyphLine && presentationSource==kSprites && m_glyphLineOwners[x]) {
+@@ -872,6 +953,17 @@ void Renderer::ComposeLine(uint32 y) {
+                 {rgba,restored.source<5?rgba:0,m_glyphLineOwners[x],m_glyphStamps[m_displayFB][at].underOwner,
+                  restored.unshadowedPanel?(restored.top==5?restored.floralCover:restored.panel) : ::port::PanelMix{}};
+         }
++        if(drawnItem && !m_itemFrameInvalid && x>=uint32(drawnItem->x) &&
++           x<uint32(drawnItem->x+kItemCardSize)) {
++            const size_t at=size_t(y-drawnItem->y)*kItemCardSize+(x-drawnItem->x);
++            const auto owner=drawnItem->pixels[at];
++            if(owner==2 || (owner==1 && top==kSprites && (whiteWeight!=0 ||
++               ((color.u32^m_sprite.color[x])&0xFFFFFF)!=0))) {
++                m_itemFrameInvalid=true;m_presentation.itemCard.reset();
++            } else if(owner==1 && top==kSprites) {
++                m_presentation.itemCard->pixels[at]=1;
++            }
++        }
+         out[x] = color.u32;
+         if (m_capturePresentation && y<m_presentation.height) {
+             const size_t at=static_cast<size_t>(y)*width+x;
+diff --git a/video/renderer.h b/video/renderer.h
+index 03b02df..f0997f2 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -8,6 +8,8 @@
+ // Nothing here knows which machine model calls it (docs/VIDEO.md).
+ #pragma once
+ 
++#include "../port/item_card_table.h"
++
+ #include "base.h"
+ #include "frame.h"
+ #include "glyph_plate.h"
+@@ -66,6 +68,14 @@ public:
+         uint16 owner=0,underOwner=0;
+         ::port::PanelMix panelMix;
+     };
++    static constexpr int kItemCardSize=112;
++    struct ItemCardCapture {
++        const ::port::ItemCardEntry* entry=nullptr;
++        uint64 serial=0;
++        sint32 x=0,y=0;
++        unsigned rows=0;
++        std::array<uint8,kItemCardSize*kItemCardSize> pixels{};
++    };
+     struct Presentation {
+         uint32 width=0,height=0;
+         std::vector<uint32> foreground,underSprites;
+@@ -85,6 +95,7 @@ public:
+         // A nonzero underOwner must also be removed before erasing this pixel.
+         std::vector<GlyphPlatePixel> glyphPlate;
+         std::vector<PresentationSprite> sprites;
++        std::optional<ItemCardCapture> itemCard;
+         std::array<uint8,0x1000> palette{};
+         uint32 scrollWidth=0;
+         std::vector<uint32> scrollPixels;
+@@ -124,6 +135,7 @@ public:
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
+     void CaptureGlyphPlate(bool enabled) {m_captureGlyphPlate=enabled;}
++    void CaptureItemCards(bool enabled) {m_captureItemCards=enabled;}
+     void Vdp1FramebufferWritten() {InvalidateGlyphPlate(m_displayFB^1u);}
+     void CaptureScrollExtension(uint32 extra,uint64 signature=0) {
+         m_captureScrollExtra=extra>64?64:extra;m_captureScrollSignature=signature;
+@@ -232,6 +244,9 @@ private:
+     bool m_glyphCaptureActive=false,m_glyphHasInk=false;
+     uint16 m_glyphCommand=0;
+     std::vector<uint8> m_glyphScratch;
++    std::array<std::optional<ItemCardCapture>,2> m_drawnItemCard;
++    uint64 m_itemCardSerial=0;
++    bool m_captureItemCards=false,m_itemCaptureActive=false,m_itemWriting=false,m_itemFrameInvalid=false;
+     std::array<uint16,320> m_glyphLineOwners{};
+     uint32 m_captureScrollExtra=0;
+     uint64 m_captureScrollSignature=0;
+@@ -339,6 +354,8 @@ private:
+     bool SpriteLine(uint32 y,const uint8* alternateFb=nullptr);
+     bool PrepareGlyphLine(uint32 y);
+     void InvalidateGlyphPlate(uint32 framebuffer);
++    void TrackItemCommand(const PresentationSprite& sprite);
++    bool BeginItemCardLine(uint32 line);
+ 
+     // --- scroll screens (layers.cpp) ---
+     static constexpr uint32 kMaxLine = 704 + 2 * 256;
