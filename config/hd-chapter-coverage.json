@@ -12625,11 +12625,15 @@
       },
       "1:/SAKURA1/BG1130.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1134",
+        "pc": "SAKURA1/BG/BG1134.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1135",
+        "pc": "SAKURA1/BG/BG1135.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
@@ -16435,11 +16439,15 @@
       },
       "2:/SAKURA1/BG1130.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1134",
+        "pc": "SAKURA1/BG/BG1134.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1135",
+        "pc": "SAKURA1/BG/BG1135.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
