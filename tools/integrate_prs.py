@@ -13,7 +13,7 @@ Resolution rules
                        on main is renamed to the next free number (file and list entry).
 Never run it with someone else's uncommitted work in the checkout: it switches branches.
 """
-import argparse, json, pathlib, re, subprocess, sys
+import argparse, json, pathlib, re, subprocess, sys, time
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
@@ -116,8 +116,15 @@ def integrate(number, dry):
     if dry:
         return 'ready (dry run)'
     run('git', 'push', '-q', 'origin', 'HEAD:' + branch)
-    merged = run('gh', 'pr', 'merge', str(number), '--merge', check=False)
-    return 'merged' if merged.returncode == 0 else 'not merged: ' + merged.stderr.strip()[:200]
+    for attempt in range(4):
+        merged = run('gh', 'pr', 'merge', str(number), '--merge', check=False)
+        if merged.returncode == 0:
+            return 'merged'
+        # GitHub answers "Base branch was modified" for a few seconds after another merge: wait and try again.
+        if 'Base branch was modified' not in merged.stderr and 'not mergeable' not in merged.stderr:
+            break
+        time.sleep(10)
+    return 'not merged: ' + merged.stderr.strip()[:200]
 
 
 def main():
