@@ -1,0 +1,500 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 1dd9fb1..40d68e9 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -702,7 +702,76 @@ int RunWindowed(Port &port) {
+             port.videoRenderer->CaptureItemCards(!port.opt.pcAssetsPath.empty() &&
+                 satrecomp::FeatureValue("pc_hd_backgrounds")==0 && satrecomp::FeatureValue("presentation_mode")==1);
+     };
++    auto captureBrackets=[&]() {
++        if(port.videoRenderer)
++            port.videoRenderer->CaptureSystemBrackets(!port.opt.pcAssetsPath.empty() &&
++                satrecomp::FeatureValue("pc_hd_backgrounds")==0 && satrecomp::FeatureValue("presentation_mode")==1);
++    };
+     captureItems();
++    captureBrackets();
++    using BracketCapture=satrecomp::video::Renderer::BracketCapture;
++    constexpr int bracketStart=system_hud::kAnchors.front();
++    constexpr int bracketWidth=system_hud::kAnchors.back()+system_hud::kWidth-bracketStart;
++    constexpr int bracketHeight=system_hud::kHeight;
++    SDL_Texture* bracketOverlay=nullptr;
++    bool bracketLoadTried=false;
++    std::array<std::vector<uint32_t>,2> bracketArt;
++    auto drawBrackets=[&](const std::optional<BracketCapture>& capture,const SDL_FRect& crop,
++                          const SDL_FRect& target,int scale) {
++        if(!capture || capture->rows!=bracketHeight || scale<2 || choosing || port.menu.IsOpen() ||
++           satrecomp::FeatureValue("presentation_mode")!=1 ||
++           satrecomp::FeatureValue("pc_hd_backgrounds")!=0 || port.opt.pcAssetsPath.empty() ||
++           bracketStart<crop.x || bracketStart+bracketWidth>crop.x+crop.w ||
++           system_hud::kY<crop.y || system_hud::kY+bracketHeight>crop.y+crop.h)
++            return;
++        if(!bracketLoadTried) {
++            bracketLoadTried=true;
++            const auto file=std::filesystem::u8path(port.opt.pcAssetsPath)/"SAKURA1/SYSTEM/FONT_CSL.SPR";
++            std::vector<uint8_t> bytes;
++            if(ReadPcBackdropFile(file,bytes,16u<<10) && system_hud::Fingerprint(bytes)==6335578075252081888ull) {
++                std::vector<PcSprite> sprites;
++                std::string error;
++                if(DecodePcSprites(bytes,sprites,error))for(auto& sprite:sprites)
++                    if(sprite.index<bracketArt.size() && sprite.width==16 && sprite.height==32 &&
++                       sprite.pixels.size()==512)
++                        bracketArt[sprite.index]=std::move(sprite.pixels);
++            }
++        }
++        if(bracketArt[0].empty() || bracketArt[1].empty())return;
++
++        constexpr int stride=bracketWidth*2;
++        std::array<uint32_t,stride*bracketHeight*2> pixels{};
++        bool visible=false;
++        for(size_t slot=0;slot<capture->arrows.size();++slot) {
++            const auto& owners=capture->owners[slot];
++            if(std::ranges::none_of(owners,[](uint8_t owner){return owner!=0;}))continue;
++            std::array<uint32_t,512> arrow{};
++            const auto& colors=capture->colors[slot];
++            if(!system_hud::MaskArrow(std::span<const uint32_t,512>(bracketArt[slot%2].data(),512),
++                                      owners,colors[0],colors[1],arrow))
++                return;
++            const int x=(capture->arrows[slot].x-bracketStart)*2;
++            for(int row=0;row<bracketHeight*2;++row)
++                std::copy_n(arrow.begin()+16*row,16,pixels.begin()+row*stride+x);
++            visible=true;
++        }
++        if(!visible)return;
++        if(!bracketOverlay) {
++            bracketOverlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
++                                            stride,bracketHeight*2);
++            if(!bracketOverlay)return;
++            if(!SDL_SetTextureScaleMode(bracketOverlay,SDL_SCALEMODE_NEAREST) ||
++               !SDL_SetTextureBlendMode(bracketOverlay,SDL_BLENDMODE_BLEND)) {
++                SDL_DestroyTexture(bracketOverlay);
++                bracketOverlay=nullptr;
++                return;
++            }
++        }
++        if(!SDL_UpdateTexture(bracketOverlay,nullptr,pixels.data(),stride*sizeof(uint32_t)))return;
++        const SDL_FRect dest{target.x+(bracketStart-crop.x)*scale,target.y+(system_hud::kY-crop.y)*scale,
++                             float(bracketWidth*scale),float(bracketHeight*scale)};
++        SDL_RenderTexture(renderer,bracketOverlay,nullptr,&dest);
++    };
+     auto drawItem=[&](const std::optional<ItemCapture>& capture,const SDL_FRect& crop,
+                       const SDL_FRect& target,int scale) {
+         if(!capture || capture->rows!=nativeItemSize || scale<2 || choosing || port.menu.IsOpen() ||
+@@ -773,6 +842,7 @@ int RunWindowed(Port &port) {
+             return;
+         }
+         captureItems();
++        captureBrackets();
+         frameProfile.mark=frameProfile.on?SDL_GetTicksNS():0;
+         int wide = 0, high = 0;
+         SDL_GetCurrentRenderOutputSize(renderer, &wide, &high);
+@@ -1748,6 +1818,7 @@ int RunWindowed(Port &port) {
+                             }
+                         }
+                         drawItem(planes.itemCard,imageCrop,imageTarget,zoom.picture.scale);
++                        drawBrackets(planes.brackets,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                             static bool logged=false;if(!logged) {logged=true;fprintf(stderr,"scene zoom: image=%dx%d scale=%d dialogue=%dx%d scale=%d y=%d shadow=%d\n",zoom.picture.w,zoom.picture.h,zoom.picture.scale,fit.w,fit.h,fit.scale,fit.y,zoom.shadow);}
+@@ -1800,7 +1871,10 @@ int RunWindowed(Port &port) {
+                     SDL_RenderTexture(renderer,content,&crop,&target);
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+-                if(!scene.movieOnly && !splitZoom)drawItem(planes.itemCard,crop,target,fit.scale);
++                if(!scene.movieOnly && !splitZoom) {
++                    drawItem(planes.itemCard,crop,target,fit.scale);
++                    drawBrackets(planes.brackets,crop,target,fit.scale);
++                }
+                 portraitViewport=!scene.movieOnly;
+                 }
+             }
+@@ -1818,6 +1892,11 @@ int RunWindowed(Port &port) {
+                 SDL_RenderFillRect(renderer,&edge);
+             }
+             SDL_RenderTexture(renderer, texture, nullptr, &where);
++            if(port.videoRenderer && texW==320 && texH==224) {
++                const int scale=static_cast<int>(where.h/224);
++                if(where.w==320*scale && where.h==224*scale)
++                    drawBrackets(port.videoRenderer->PresentationFrame().brackets,{0,0,320,224},where,scale);
++            }
+         }
+         }
+         if(portraitViewport && !choosing && !port.menu.IsOpen() && satrecomp::FeatureValue("pc_hd_portraits")==0) {
+@@ -2756,6 +2835,7 @@ int RunWindowed(Port &port) {
+         SDL_CloseGamepad(gp);
+     }
+     if(itemOverlay)SDL_DestroyTexture(itemOverlay);
++    if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);
+     if (texture) {
+         SDL_DestroyTexture(texture);
+     }
+diff --git a/port/system_brackets.h b/port/system_brackets.h
+new file mode 100644
+index 0000000..afba8a0
+--- /dev/null
++++ b/port/system_brackets.h
+@@ -0,0 +1,64 @@
++#pragma once
++
++#include <algorithm>
++#include <array>
++#include <cstdint>
++#include <span>
++
++namespace system_hud {
++inline constexpr std::array kAnchors{64, 104, 128, 168};
++inline constexpr int kY=108, kWidth=8, kHeight=16;
++inline constexpr uint64_t Fingerprint(std::span<const uint8_t> bytes) {
++    uint64_t value=14695981039346656037ull;
++    for(uint8_t byte:bytes)value=(value^byte)*1099511628211ull;
++    return value;
++}
++inline constexpr std::array<uint64_t,2> kTexture{0xEF39DE9F9400A5ADull,0xD8731754E21634EDull};
++inline constexpr std::array<uint64_t,2> kPalette{0xA34A4A3675D9F164ull,0xD5E6859F7CCE70F2ull};
++inline constexpr std::array<uint16_t,2> kColor{0xA2D0,0xA2F0};
++
++struct Arrow {
++    int x,y,right,bottom;
++    uint16_t control,mode,color,size;
++    uint64_t texture,palette;
++};
++
++// The four verified inventory marks form one stable layout. The corners are inclusive.
++// Matching just one familiar texture is insufficient because other screens use the glyph.
++inline bool Eligible(std::span<const Arrow> arrows) {
++    const auto& anchors=kAnchors;
++    if(arrows.size()!=anchors.size())return false;
++    for(unsigned i=0;i<anchors.size();++i) {
++        const auto& arrow=arrows[i];
++        const auto bank=std::ranges::find(kColor,arrow.color);
++        if(arrow.x!=anchors[i] || arrow.y!=108 || arrow.right!=arrow.x+7 || arrow.bottom!=arrow.y+15 ||
++           (arrow.control&0x0FFF)!=1 || arrow.mode!=0x0080 || arrow.size!=0x0110 ||
++           arrow.texture!=kTexture[i%2] || bank==kColor.end() ||
++           arrow.palette!=kPalette[bank-kColor.begin()] ||
++           arrow.color!=arrows[i^1].color)
++            return false;
++    }
++    return arrows[0].color==kColor[0] || arrows[2].color==kColor[0];
++}
++
++// Ownership comes from actual VDP1 writes and VDP2 scanout. Zero preserves the composed
++// output including transparent holes and occluders. Two is an effect that requires fallback.
++inline bool MaskArrow(std::span<const uint32_t,512> pc, std::span<const uint8_t,128> owned,
++                      uint32_t dark,uint32_t light,std::span<uint32_t,512> overlay) {
++    std::ranges::fill(overlay,0);
++    bool visible=false;
++    for(int y=0;y<16;y++)for(int x=0;x<8;x++) {
++        const auto owner=owned[y*8+x];
++        if(owner==0)continue;
++        if(owner!=1)return false;
++        const int at=(2*y)*16+2*x;
++        for(int sample:{at,at+1,at+16,at+17}) {
++            if(pc[sample]==0xFF626262)overlay[sample]=dark;
++            else if(pc[sample]==0xFF949494)overlay[sample]=light;
++            else return false;
++        }
++        visible=true;
++    }
++    return visible;
++}
++}
+diff --git a/video/raster.cpp b/video/raster.cpp
+index fb1e6f4..05eeb9a 100644
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -82,6 +82,23 @@ SV_INLINE bool Renderer::RasterPixel(sint32 x, sint32 y, uint16 mode, uint16 col
+             else if(owner)owner=(mode&kMsbOn) || (mode&3)!=0 ? 2 : 0;
+         }
+     }
++    if(m_bracketCaptureActive && !m_presentRasterTarget) {
++        // Use the physical destination, including framebuffer wrap and wide commands.
++        const uint32 pixel=offset/2;
++        const uint32 row=pixel/regs1.fbSizeH-system_hud::kY;
++        if(row<system_hud::kHeight) {
++            const uint32 destX=pixel%regs1.fbSizeH;
++            auto& group=m_drawnBrackets[m_captureDrawFB];
++            for(size_t slot=0;slot<system_hud::kAnchors.size();++slot) {
++                const uint32 column=destX-system_hud::kAnchors[slot];
++                if(column>=system_hud::kWidth)continue;
++                auto& owner=group.owners[slot][row*system_hud::kWidth+column];
++                if(m_bracketWriting==static_cast<int>(slot))owner=1;
++                else if(owner)owner=(mode&kMsbOn) || (mode&3)!=0 ? 2 : 0;
++                break;
++            }
++        }
++    }
+     GlyphPlateStamp* stamp=nullptr;
+     if(m_glyphCaptureActive && !m_presentRasterTarget && x<320 && y<212 && y>=48)
+         stamp=&m_glyphStamps[m_captureDrawFB][size_t(y)*320+size_t(x)];
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 57bd363..5597a50 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -36,6 +36,8 @@ void Renderer::Reset(bool hard) {
+     m_presentation.sprites.clear();m_captureValid=false;
+     m_drawnItemCard={};m_presentation.itemCard.reset();
+     m_itemCaptureActive=false;m_itemWriting=false;
++    m_drawnBrackets={};m_presentation.brackets.reset();
++    m_bracketCaptureActive=false;m_bracketWriting=-1;
+     m_presentation.glyphPlate.clear();
+     m_glyphPlateReady={};m_glyphCaptureActive=false;
+     m_presentation.panelMix.clear();
+@@ -92,6 +94,8 @@ void Renderer::Serialize(Archive &ar) {
+         m_captureValid=false;
+         m_drawnItemCard={};m_presentation.itemCard.reset();
+         m_itemCaptureActive=false;m_itemWriting=false;
++        m_drawnBrackets={};m_presentation.brackets.reset();
++        m_bracketCaptureActive=false;m_bracketWriting=-1;
+         m_presentation.glyphPlate.clear();
+         m_glyphPlateReady={};m_glyphCaptureActive=false;
+         m_presentation.panelMix.clear();
+@@ -122,6 +126,7 @@ void Renderer::WriteVdp1Reg(uint32 address, uint16 value) {
+     if(m_drawing) {
+         m_menuReplayStable=false;m_glyphCaptureActive=false;
+         m_drawnItemCard[m_captureDrawFB].reset();m_itemCaptureActive=false;
++        m_drawnBrackets[m_captureDrawFB]={};m_bracketCaptureActive=false;
+     }
+     m_regs1.Write(address, value);
+ }
+@@ -162,6 +167,8 @@ void Renderer::LatchDisplayMode() {
+ // --- VDP1 ---
+ 
+ void Renderer::InvalidateGlyphPlate(uint32 framebuffer) {
++    m_drawnBrackets[framebuffer]={};
++    if(framebuffer==m_captureDrawFB)m_bracketCaptureActive=false;
+     m_drawnItemCard[framebuffer].reset();
+     if(framebuffer==m_captureDrawFB)m_itemCaptureActive=false;
+     m_glyphPlateReady[framebuffer]=false;
+@@ -198,6 +205,12 @@ void Renderer::BeginDrawing() {
+         m_width==320 && m_height==224 && m_regs1.fbSizeH>=320 && m_regs1.fbSizeV>=224 &&
+         !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable &&
+         !m_regs2.TVMD.IsInterlaced();
++    m_drawnBrackets[m_captureDrawFB]={};
++    m_bracketCaptureActive=m_captureBrackets && m_capturePresentation && m_compose && !m_gpu && !m_check &&
++        m_width==320 && m_height==224 && m_regs1.fbSizeH>=320 && m_regs1.fbSizeV>=224 &&
++        !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable &&
++        !m_regs2.TVMD.IsInterlaced();
++    if(m_bracketCaptureActive)m_drawnBrackets[m_captureDrawFB].serial=++m_bracketSerial;
+     m_glyphHasInk=false;m_glyphCommand=0;
+     if(m_glyphCaptureActive)m_glyphStamps[m_captureDrawFB].assign(320*224,{});
+     m_presentWideReady[m_captureDrawFB]=m_capturePresentation && m_presentation.scrollWidth>0 && !m_gpu &&
+@@ -231,6 +244,8 @@ void Renderer::DrawCommand(uint32 address) {
+         // Bounded host-only metadata; unsupported/excessive draws retain native output.
+         if(m_captureCount>=4096 || bytes>0x80000 || bytes>4*1024*1024-m_captureBytes) {
+             sprites.clear();m_captureValid=false;
++            m_bracketCaptureActive=false;
++            m_drawnBrackets[m_captureDrawFB]={};
+         }else {
+             if(m_captureCount==sprites.size())sprites.emplace_back();
+             auto& shown=sprites[m_captureCount++];shown.command=cmd;shown.pixels.resize(bytes);
+@@ -240,6 +255,7 @@ void Renderer::DrawCommand(uint32 address) {
+             for(size_t i=0;i<bytes;i++)shown.pixels[i]=m_mem.vram1[(start+i)&0x7FFFF];
+             m_captureBytes+=bytes;
+             if(m_itemCaptureActive)TrackItemCommand(shown);
++            if(m_bracketCaptureActive)TrackBracketCommand(shown);
+         }
+     }
+     if (m_gpu) {
+@@ -253,6 +269,7 @@ void Renderer::DrawCommand(uint32 address) {
+         }
+         RasterCommand(cmd);
+         m_itemWriting=false;
++        m_bracketWriting=-1;
+         m_glyphCommand=0;
+         if(m_presentWideReady[m_captureDrawFB] && (cmd.words[0]&15)<8) {
+             std::span<const uint8> pixels;
+@@ -270,6 +287,32 @@ uint64 ItemFingerprint(std::span<const uint8> bytes) {
+ }
+ }
+ 
++void Renderer::TrackBracketCommand(const PresentationSprite& sprite) {
++    using namespace system_hud;
++    const auto& cmd=sprite.command.words;
++    if((cmd[0]&0x8FFF)!=1 || cmd[2]!=0x0080 || cmd[5]!=0x0110 || sprite.y!=kY ||
++       sprite.pixels.size()!=64)
++        return;
++    const auto anchor=std::ranges::find(kAnchors,sprite.x);
++    if(anchor==kAnchors.end())return;
++    const auto slot=anchor-kAnchors.begin();
++    const int right=bit::sign_extend<13>(cmd[10])+m_ctx.localCoordX;
++    const int bottom=bit::sign_extend<13>(cmd[11])+m_ctx.localCoordY;
++    const auto texture=Fingerprint(sprite.pixels);
++    if(right!=sprite.x+kWidth-1 || bottom!=sprite.y+kHeight-1 || texture!=kTexture[slot%2] ||
++       std::ranges::find(kColor,cmd[3])==kColor.end())
++        return;
++    auto& drawn=m_drawnBrackets[m_captureDrawFB];
++    auto& arrow=drawn.arrows[slot];
++    if(arrow.texture) {
++        drawn={};
++        m_bracketCaptureActive=false;
++        return;
++    }
++    arrow={sprite.x,sprite.y,right,bottom,cmd[0],cmd[2],cmd[3],cmd[5],texture,0};
++    m_bracketWriting=static_cast<int>(slot);
++}
++
+ void Renderer::TrackItemCommand(const PresentationSprite& sprite) {
+     const auto& command=sprite.command.words;
+     if((command[0]&0x3F)!=0 || command[2]!=0x00A0 || command[3]!=0xC600 || command[5]!=0x0E70 ||
+@@ -470,6 +513,7 @@ void Renderer::SetResolution(uint32 h, uint32 v, bool exclusive) {
+ void Renderer::BeginFrame() {
+     m_presentation.itemCard.reset();
+     m_itemFrameInvalid=false;
++    m_presentation.brackets.reset();
+     if (m_capturePresentation) {
+         m_presentation.width=m_width; m_presentation.height=m_height;
+         m_presentation.foreground.assign(static_cast<size_t>(m_width)*m_height,0);
+@@ -657,6 +701,51 @@ bool Renderer::SpriteLine(uint32 y,const uint8* alternateFb) {
+ // has a pixel there (priority 0: none); between equals, sprites before RBG0 before NBG0..NBG3; the back screen
+ // where there is none. Basic two-screen colour calculation, then colour offset and sprite shadows.
+ // Special/extended and line-screen calculations still require the reference.
++bool Renderer::BeginBracketLine(uint32 line) {
++    using namespace system_hud;
++    if(!m_captureBrackets || !m_capturePresentation || line<kY || line>=kY+kHeight)
++        return false;
++    auto& presented=m_presentation.brackets;
++    const auto& drawn=m_drawnBrackets[m_displayFB];
++    const auto& sprite=m_regs2.spriteParams;
++    if(!drawn.serial || (m_drawing && m_displayFB==m_captureDrawFB) ||
++       m_width!=320 || m_height!=224 || m_regs2.TVMD.IsInterlaced() || m_regs1.pixel8Bits ||
++       m_regs1.fbRotEnable || m_regs1.dblInterlaceEnable || m_regs1.hdtvEnable ||
++       sprite.type!=1 || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
++       m_regs2.vramControl.colorRAMMode!=1 ||
++       (line!=kY && (!presented || presented->serial!=drawn.serial || presented->rows!=line-kY))) {
++        presented.reset();
++        return false;
++    }
++    auto arrows=drawn.arrows;
++    std::array<std::array<uint32,2>,4> colors{};
++    for(size_t slot=0;slot<arrows.size();++slot) {
++        auto& arrow=arrows[slot];
++        const uint32 bank=(arrow.color&0x7FF)*2;
++        arrow.palette=Fingerprint(ColorBytes(bank,32));
++        colors[slot]={
++            ConvertRGB555to888(Color555{CramWord(bank+6*2)}).u32|0xFF000000,
++            ConvertRGB555to888(Color555{CramWord(bank+9*2)}).u32|0xFF000000};
++    }
++    if(!Eligible(arrows)) {
++        presented.reset();
++        return false;
++    }
++    if(line==kY) {
++        presented.emplace();
++        presented->serial=drawn.serial;
++        presented->arrows=arrows;
++        presented->colors=colors;
++    }
++    // A static texture can express a single palette per arrow for the whole frame.
++    if(colors!=presented->colors) {
++        presented.reset();
++        return false;
++    }
++    ++presented->rows;
++    return true;
++}
++
+ bool Renderer::BeginItemCardLine(uint32 line) {
+     if(!m_captureItemCards || !m_capturePresentation || m_itemFrameInvalid)return false;
+     const auto& drawn=m_drawnItemCard[m_displayFB];
+@@ -942,6 +1031,7 @@ void Renderer::ComposeLine(uint32 y) {
+     };
+     const bool glyphLine=supported && PrepareGlyphLine(line);
+     const bool itemLine=supported && y==line && BeginItemCardLine(y);
++    const bool bracketLine=supported && y==line && BeginBracketLine(y);
+     const auto* drawnItem=itemLine?&*m_drawnItemCard[m_displayFB]:nullptr;
+     for (uint32 x = 0; x < width; x++) {
+         const auto [color,top,presentationSource,whiteWeight,panel,floralCover,mapWeight,episodeWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
+@@ -953,6 +1043,23 @@ void Renderer::ComposeLine(uint32 y) {
+                 {rgba,restored.source<5?rgba:0,m_glyphLineOwners[x],m_glyphStamps[m_displayFB][at].underOwner,
+                  restored.unshadowedPanel?(restored.top==5?restored.floralCover:restored.panel) : ::port::PanelMix{}};
+         }
++        if(bracketLine && m_presentation.brackets && x>=64 && x<176) {
++            const auto& drawn=m_drawnBrackets[m_displayFB];
++            for(size_t slot=0;slot<drawn.arrows.size();++slot) {
++                const uint32 column=x-drawn.arrows[slot].x;
++                if(column>=system_hud::kWidth)continue;
++                const size_t at=(y-system_hud::kY)*system_hud::kWidth+column;
++                const auto owner=drawn.owners[slot][at];
++                if(owner==2 || (owner==1 && top==kSprites && (whiteWeight!=0 ||
++                   (regs2.colorOffsetEnable[kSprites] && regs2.colorOffset[regs2.colorOffsetSelect[kSprites]].nonZero) ||
++                   ((color.u32^m_sprite.color[x])&0xFFFFFF)!=0))) {
++                    m_presentation.brackets.reset();
++                } else if(owner==1 && top==kSprites) {
++                    m_presentation.brackets->owners[slot][at]=1;
++                }
++                break;
++            }
++        }
+         if(drawnItem && !m_itemFrameInvalid && x>=uint32(drawnItem->x) &&
+            x<uint32(drawnItem->x+kItemCardSize)) {
+             const size_t at=size_t(y-drawnItem->y)*kItemCardSize+(x-drawnItem->x);
+diff --git a/video/renderer.h b/video/renderer.h
+index 337c3f5..a1f4692 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -10,6 +10,7 @@
+ 
+ #include <cstdio>
+ #include "../port/item_card_table.h"
++#include "../port/system_brackets.h"
+ 
+ #include "base.h"
+ #include "frame.h"
+@@ -77,6 +78,13 @@ public:
+         unsigned rows=0;
+         std::array<uint8,kItemCardSize*kItemCardSize> pixels{};
+     };
++    struct BracketCapture {
++        uint64 serial=0;
++        unsigned rows=0;
++        std::array<system_hud::Arrow,4> arrows{};
++        std::array<std::array<uint8,128>,4> owners{};
++        std::array<std::array<uint32,2>,4> colors{};
++    };
+     struct Presentation {
+         uint32 width=0,height=0;
+         std::vector<uint32> foreground,underSprites;
+@@ -89,7 +97,7 @@ public:
+         std::vector<uint8> source;
+         std::vector<uint8> topSource; // Actual winning layer before visibility remapping.
+         std::vector<uint8> underSource;
+-        // 0: unmodified sprite; 1–31: exact white weight; 255: unsupported.
++        // 0: unmodified sprite; 1â€“31: exact white weight; 255: unsupported.
+         std::vector<uint8> spriteWhiteWeight;
+         // Visible glyph pixels, indexed by the same viewport as source.
+         // owner is the last writer's one-based index in sprites; zero means no plate.
+@@ -97,6 +105,7 @@ public:
+         std::vector<GlyphPlatePixel> glyphPlate;
+         std::vector<PresentationSprite> sprites;
+         std::optional<ItemCardCapture> itemCard;
++        std::optional<BracketCapture> brackets;
+         std::array<uint8,0x1000> palette{};
+         uint32 scrollWidth=0;
+         std::vector<uint32> scrollPixels;
+@@ -174,6 +183,7 @@ public:
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
+     void CaptureGlyphPlate(bool enabled) {m_captureGlyphPlate=enabled;}
++    void CaptureSystemBrackets(bool enabled) {m_captureBrackets=enabled;}
+     void CaptureItemCards(bool enabled) {m_captureItemCards=enabled;}
+     void Vdp1FramebufferWritten() {InvalidateGlyphPlate(m_displayFB^1u);}
+     void CaptureScrollExtension(uint32 extra,uint64 signature=0) {
+@@ -286,6 +296,10 @@ private:
+     std::array<std::optional<ItemCardCapture>,2> m_drawnItemCard;
+     uint64 m_itemCardSerial=0;
+     bool m_captureItemCards=false,m_itemCaptureActive=false,m_itemWriting=false,m_itemFrameInvalid=false;
++    std::array<BracketCapture,2> m_drawnBrackets{};
++    uint64 m_bracketSerial=0;
++    int m_bracketWriting=-1;
++    bool m_captureBrackets=false,m_bracketCaptureActive=false;
+     std::array<uint16,320> m_glyphLineOwners{};
+     uint32 m_captureScrollExtra=0;
+     uint64 m_captureScrollSignature=0;
+@@ -395,6 +409,8 @@ private:
+     void InvalidateGlyphPlate(uint32 framebuffer);
+     void TrackItemCommand(const PresentationSprite& sprite);
+     bool BeginItemCardLine(uint32 line);
++    void TrackBracketCommand(const PresentationSprite& sprite);
++    bool BeginBracketLine(uint32 line);
+ 
+     // --- scroll screens (layers.cpp) ---
+     static constexpr uint32 kMaxLine = 704 + 2 * 256;

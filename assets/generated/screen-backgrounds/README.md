@@ -12,10 +12,9 @@ LOADING is a provisional generated blue-violet tiled logo backdrop. The animated
 
 The generated-only tactical strip is tracked separately in `assets/generated/tactical-extensions`; owner reference composites remain local. It is not part of this generated-screen allowlist.
 
-Episode 01–10 have their own generated left and right sides. Each supplied image is
-a 39×224 RGBA strip with a transparent seam at the edge touching the native card.
-The same strips work in English and Spanish: the card's native 320×224 center supplies
-its own title and edges. The composite logical width is 398 pixels at full native
-height, the largest whole-pixel width within 16:9. The 20 files contain generated
-pixels only. The input artwork and proof compositions stay local. Runtime composition
-of the strips, including fades and letterboxing, is tracked under T107e.
+Episode 01–10 use the approved generated 640×360 surrounds in Enhanced
+mode. Each PNG has an empty 320×224 center drawn at the largest integer
+scale that fits. English uses the Saturn center. Spanish setup generates
+its localized center from the installed discs and the generated lettering
+layers. Both use the same floral crossfade and outer artwork. Original
+mode continues to show the native Saturn card. See TCODEX in the queue.

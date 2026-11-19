@@ -186,7 +186,7 @@ def build(root, index_dir, portrait_audit):
                         # Character cut-outs on a key colour and the blank picture are never replaced (tools/gen_scene_bg_table.py).
                         row['status'] = 'excluded'
                         row['reason'] = 'cut-out on a key colour or blank picture, not replaced by design'
-                    elif pair.get('size') != [288, 144] or not path.startswith('/SAKURA1/'):
+                    elif pair.get('size') != [288, 144] or not path.startswith(('/SAKURA1/', '/SAKURA2/EVE')):
                         # The runtime draws a 288x144 picture only; wide and tall ones need scroll support (T105c).
                         row['status'] = 'unsupported-size'
                         row['reason'] = 'size %s, the runtime draws 288x144 pictures only' % (pair.get('size'),)
