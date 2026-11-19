@@ -73,6 +73,8 @@ CHAPTER5_ROUTE_FILES = {
 }
 CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
 CHAPTER_FILE_RESIDENCIES = {
+    '1:/SAKURA2/UNIT10.BIN:0f44592f6e4323a8b977622fcb69f9d42da29e5f81e285d09f817a1bc4438496': (7, 'docs/research/th7-native-attribution.md'),
+    '1:/SAKURA2/WKL10.BIN:7b4dae276347d0e295392eeb42e181276638be1e626825d99a63394e2f2ed453': (7, 'docs/research/th7-native-attribution.md'),
     '1:/SAKURA2/WKL06.BIN:f9306a073a1c603658e7b6c132b6ef36e889086e990f2c8856e056db1c14af4b':
         (4, CHAPTER4_TACTICAL_REPORT),
     '1:/SAKURA2/WKL21.BIN:60fed250c11dab1d28df048763315fc62b159a0cee502a73b473a63cef2734f3':
@@ -119,6 +121,9 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA1/BG1267.BIN'): (7, 'docs/research/th7-native-attribution.md'),
+    (1, '/SAKURA1/BG1268.BIN'): (7, 'docs/research/th7-native-attribution.md'),
+    (1, '/SAKURA1/BG2080.BIN'): (7, 'docs/research/th7-native-attribution.md'),
     (1, '/SAKURA1/TITLE6.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG1199.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG4119.BIN'): (6, 'docs/research/th6-native-attribution.md'),
@@ -509,6 +514,8 @@ def build(root, index_dir, portrait_audit):
             if (disc == 1 and path == '/SAKURA4' and offset in CHAPTER1_ROUTE_FILMS
                     and row.get('pc') == CHAPTER1_ROUTE_FILMS[offset]):
                 chapter, report = 1, CHAPTER1_ROUTE_REPORT
+            if (disc, path, fad, row.get('pc')) == (1, '/SAKURA4', 80874, 'MOVIE019'):
+                chapter, report = 7, 'docs/research/th7-native-attribution.md'
             add('film', f'{disc}:{path}+{offset}', row, chapter,
                 'observed' if chapter else 'unknown', report)
     census = load(root / MENU_CENSUS)
