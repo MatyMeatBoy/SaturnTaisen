@@ -35,4 +35,19 @@ The GE pictures are whole-screen variants. The runtime needs the ending viewport
 
 PC subimages 0, 1 and 9 depict a different view of the theatre exterior. The PC mark at subimage 11 has different geometry and lettering. The native exterior records and the native ending mark, including localized Fin variants, remain the display sources.
 
-The comparison uses `decode_saturn_bg.py`'s row-major tile decode and `decode_spred.py`, with 32×16 grayscale signatures to rank PC candidates. The four GE variants and the two group photographs were reviewed side by side. The private full-file SHA checks, decoded contact sheets and per-record scores are in `local/work/codex-th1/tp3c-cg`. Wiring awaits an ending-specific viewport and composition witness.
+The comparison uses `decode_saturn_bg.py`'s row-major tile decode and `decode_spred.py`, with 32×16 grayscale signatures to rank PC candidates. The four GE variants and the two group photographs were reviewed side by side. The private full-file SHA checks, decoded contact sheets and per-record scores are in `local/work/codex-th1/tp3c-cg`.
+
+## Observed Sakura ending on English disc 2
+
+The archived `SakuraTaisen/Data/SaveData/Mednafen/GameCompleted.bkr` seed (SHA-256 `e981b37dd8f9111cbc1a6e9c3c564b6610978dbdc9ced59b73acbec1da9b1674`) provides a direct route. From the title select Continue, load slot 1 (`Finale / Final Judgement`), and advance the post-victory dialogue and Sakura epilogue with normal controller input. The run reaches the animated ending through ordinary game transitions. The separately unlocked Long Day menu is available from this seed.
+
+The interpreter state at the aperture contains the complete 407,908-byte `SA_CG.BIN` at Low WRAM `00204000`. Its first 38,400 cell bytes are at VDP2 VRAM offset `0x8040`, and all 512 palette bytes match at CRAM offset `0x200`. The complete English disc-2 `ENDING.BIN` (178,968 bytes) is present at High WRAM `06080000`.
+
+| Interpreter capture | Ending picture and observed composition | Exact native RGB match |
+| --- | --- | --- |
+| `ending-bank3`, frame 5,200 | `SA_CG` record 0 through a black-surround aperture. Source rectangle (57, 0, 264, 120), destination (57, 24, 264, 144). | 24,840 pixels |
+| `ending-cg-live`, frame 1,440 | Unobstructed `SA_CG` record 1. Source rectangle (0, 0, 320, 120), destination (0, 24, 320, 144). | 38,400 pixels |
+
+Rectangles use half-open bounds. The pixel comparison expands each native RGB555 channel with a left shift of three. Intermediate captures show separate character insets over the full-width theatre strip and separate credits text. A full-screen substitution cannot preserve these layers. The already-cataloged PC exterior art also uses a different framing. The two observed exterior records retain the original draw, and wiring for the group photographs and GE variants remains open.
+
+The current strict build (`sakura.exe` SHA-256 `38bed813262e937e7cfe328b8ab2e3ec35aef280e4996675558465ccfbde300f`) completes a 20,164-frame cold replay from this seed through theatre narration before the CG bank loads. Resuming the exact aperture state under strict AOT then stops at master PC `06080104`, which is file offset `0x104` of the byte-matched `ENDING.BIN` at `06080000`. The earlier static model used `00204000` as an inferred candidate origin. The observed high-WRAM placement and execution site are recorded in the [ending module analysis](ending-module-analysis.json). The state, input movies, captured frames and hashes remain in `local/work/codex-th1`.
