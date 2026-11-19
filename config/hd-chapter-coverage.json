@@ -1134,14 +1134,16 @@
             "status": "hd"
           },
           "00a1": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/portrait-animation-coverage.md#iris-00a1-command-room-portrait",
             "pc_index": 160,
-            "status": "hd"
+            "runtime_evidence": "docs/research/portrait-animation-coverage.md#iris-00a1-command-room-portrait",
+            "status": "hd",
+            "verified_in_game": true
           },
           "00c0": {
             "association": "inferred",
@@ -1879,9 +1881,9 @@
             "status": "hd"
           },
           "1:/SAKURA1/0102FCE.BIN": {
-            "association": "inferred",
+            "association": "resident",
             "decision_evidence": "docs/research/portrait-animation-coverage.md#residual-portraits-00a1-and-0169",
-            "evidence": "config/hd-portrait-recipe.json",
+            "evidence": "docs/research/portrait-animation-coverage.md#iris-00a1-command-room-portrait",
             "identities": [
               "0001",
               "0002",
