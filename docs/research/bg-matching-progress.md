@@ -92,6 +92,28 @@ The main workspace measured 51,405,524,876 logical bytes with hard links counted
 once and reparse points excluded. The delivered development ZIP remains
 6,315,009,692 bytes.
 
+## TP4b re-search of the unpaired BG2xxx files (2026-11-19)
+
+Same run of `tools/match_bg_files.py` as TP4a (718 disc 1 backgrounds against every PC `BG*.SPR`, lower score is better). The register lists 14 distinct `unpaired` BG2xxx files. **None obtains a firm counterpart**: every best candidate is `ambiguous`, and each file keeps its recorded eye-review reason. Names and scores only.
+
+| Saturn | Best PC | Score | Reason kept |
+|---|---|---|---|
+| BG2035 | BG2250 | 0.1119 | characters baked into the PC picture |
+| BG2044 | BG1328 | 0.1360 | characters baked in |
+| BG2050 | BG2028 | 0.0322 | characters baked in |
+| BG2059 | BG2250 | 0.0589 | characters baked in |
+| BG2071 | BG2030 | 0.0291 | characters baked in |
+| BG2109 | BG2525 | 0.0514 | characters baked in |
+| BG2119 | BG2132 | 0.1833 | composition or colour grading differs |
+| BG2123 | BG2123 | 0.0900 | characters baked in (same number) |
+| BG2155 | BG2030 | 0.0385 | composition or colour grading differs |
+| BG2240 | BG4383 | 0.1314 | composition or colour grading differs |
+| BG2241 | BG2241 | 0.1646 | composition or colour grading differs (same number) |
+| BG2243 | BG3140 | 0.2201 | composition or colour grading differs |
+| BG2252 | BG2143 | 0.0724 | PC redraw shifts landmarks; native pan stays (T105c) |
+| BG2263 | BG1326 | 0.1967 | composition or colour grading differs |
+
+No pair added. The "characters baked in" files are pictures where the PC image contains actors the Saturn draws as sprites, so substituting them would duplicate or hide the native actors; they stay native by design.
 ## TP4c decision on the unpaired BG3xxx/BG4xxx pictures (2026-11-19)
 
 The register lists 25 distinct `unpaired` BG3xxx/BG4xxx files, the tactical-era battle pictures. `tools/gen_scene_bg_table.py` skips BG3xxx/BG4xxx by rule (character cut-outs on a key colour), and 22 of the files below carry a rejection reason in `config/hd-scene-bg-review.json`; BG3092, BG3100 and BG4049 have none recorded yet (they need an eye review). **Decision: none is wired; all stay native.** Reasons as recorded:
