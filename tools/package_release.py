@@ -274,6 +274,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     # One profile however the game is started: the launcher's own portable folder (user/SaturnTaisen). A profile an
     # earlier release kept directly in user/ is still used, so its saves and settings are not left behind.
     (app/'portable.txt').write_text('',encoding='ascii')
+    # Save states, load states and the reset point are development tools: the runtime switches them off when this file sits beside it.
+    (app/'release.marker').write_text('Release build: save states, load states and the reset point are off (the game is played naturally).',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
     (inputs/'LEEME.txt').write_text(f'''SaturnTaisen {version}
 
