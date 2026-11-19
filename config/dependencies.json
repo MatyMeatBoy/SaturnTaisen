@@ -92,7 +92,8 @@
       "patches/0089-sakura-verified-body-faces.patch",
       "patches/0090-sakura-hd-inventory-cards.patch",
       "patches/0091-sakura-scene-picture-cells-key.patch",
-      "patches/0092-sakura-dialogue-text-one-pixel-lower.patch"
+      "patches/0092-sakura-dialogue-text-one-pixel-lower.patch",
+      "patches/0093-sakura-hd-system-brackets.patch"
     ]
   }
 }
