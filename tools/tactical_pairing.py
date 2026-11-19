@@ -19,6 +19,12 @@ units: inventory of the 27 Saturn `/SAKURA2/UNITnn.BIN` files (26 names; UNIT01 
 offset table followed by data that no decoder in `tools/` reads, and the PC has per-character files, not per-stage
 banks, so no content pairing is possible yet. Every item is recorded as `no-counterpart` with the reason; Saturn
 files with identical bytes are grouped (`same_as`).
+
+items: the 57 PC `SAKURA1/ITEM/*.SPR` pictures seen from the PC side. The Saturn `ITEMnn.BIN` pairs already exist
+(`config/hd-item-map.json`, content signature from `match_hd_items.py`, and the eye review `config/hd-item-review.json`);
+this view joins them: a PC picture is `paired` when at least one Saturn item is confirmed to it (review `confirmed`, or
+tier `content` with no review row), `ambiguous` when it is only the best candidate of items the review marked `icon_only`
+or `rejected`, and `no-counterpart` when no Saturn item ranks it first. The Saturn side is summarised the same way.
 """
 import argparse
 import hashlib
@@ -255,6 +261,50 @@ def build_units(saturn_units, pc_root):
             'saturn_units': saturn_rows, 'pc_units': pc_rows}
 
 
+def item_verdicts(item_map, review):
+    """Saturn item file -> (pc_file, verdict) with verdict confirmed | icon_only | rejected | candidate."""
+    reviewed = {p['saturn_file']: p for p in review['pairs']}
+    result = {}
+    for pair in item_map['pairs']:
+        row = reviewed.get(pair['saturn_file'])
+        if row:
+            result[pair['saturn_file']] = (row['pc_file'], row['verdict'])
+        elif pair['tier'] == 'content':
+            result[pair['saturn_file']] = (pair['pc_file'], 'confirmed')
+        else:
+            result[pair['saturn_file']] = (pair['pc_file'], 'candidate')
+    return result
+
+
+def build_items(item_map, review, pc_root):
+    verdicts = item_verdicts(item_map, review)
+    by_pc = {}
+    for saturn, (pc, verdict) in sorted(verdicts.items()):
+        by_pc.setdefault(pc, []).append((saturn, verdict))
+    rows = []
+    for path in sorted((Path(pc_root) / 'SAKURA1' / 'ITEM').glob('*.SPR')):
+        raw = path.read_bytes()
+        relative = path.relative_to(pc_root).as_posix()
+        images = spr_images(raw)
+        refs = by_pc.get(relative, [])
+        confirmed = [s for s, v in refs if v == 'confirmed']
+        row = {'pc': relative, 'size': len(raw), 'sha256': sha256(raw), 'images': len(images),
+               'image_sizes': sorted({'%dx%d' % i[:2] for i in images}),
+               'saturn_confirmed': confirmed, 'saturn_other': [f'{s}:{v}' for s, v in refs if v != 'confirmed']}
+        if confirmed:
+            row['status'] = 'paired'
+        elif refs:
+            row.update(status='ambiguous', reason='only the best candidate of Saturn items the review did not confirm')
+        else:
+            row.update(status='no-counterpart', reason='no Saturn ITEM ranks this picture first')
+        rows.append(row)
+    saturn = [{'saturn': s, 'pc': pc, 'verdict': v} for s, (pc, v) in sorted(verdicts.items())]
+    count = lambda items, key: {k: sum(1 for i in items if i[key] == k) for k in sorted({i[key] for i in items})}
+    return {'schema': SCHEMA, 'scope': 'PC SAKURA1/ITEM pictures joined with the Saturn item pairs and review; data only.',
+            'summary': {'pc': count(rows, 'status'), 'saturn': count(saturn, 'verdict')},
+            'pc_items': rows, 'saturn_items': saturn}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='command', required=True)
@@ -269,6 +319,12 @@ def main(argv=None):
     units.add_argument('--iso1', required=True)
     units.add_argument('--iso2', required=True)
     units.add_argument('--out', type=Path, required=True)
+    items = sub.add_parser('items')
+    items.add_argument('--pc', type=Path, required=True)
+    config_dir = Path(__file__).resolve().parent.parent / 'config'
+    items.add_argument('--map', type=Path, default=config_dir / 'hd-item-map.json')
+    items.add_argument('--review', type=Path, default=config_dir / 'hd-item-review.json')
+    items.add_argument('--out', type=Path, required=True)
     args = parser.parse_args(argv)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     if args.command == 'maps':
@@ -279,6 +335,11 @@ def main(argv=None):
     elif args.command == 'units':
         result = build_units(read_saturn_units([(1, args.iso1), (2, args.iso2)]), args.pc)
         args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + '\n', encoding='utf-8', newline='\n')
+        print(result['summary'])
+    elif args.command == 'items':
+        result = build_items(json.loads(args.map.read_text(encoding='utf-8')),
+                             json.loads(args.review.read_text(encoding='utf-8')), args.pc)
+        args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + chr(10), encoding='utf-8', newline=chr(10))
         print(result['summary'])
 
 
