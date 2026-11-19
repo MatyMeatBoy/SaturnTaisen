@@ -59,6 +59,24 @@ class SaturnBgTests(unittest.TestCase):
         self.assertIsNone(bg.decode(data))
         self.assertIsNone(bg.picture_bytes(data))
 
+    def test_variant_c_square_item_picture(self):
+        picture_at = 0x18
+        table_at = picture_at + 2 * 64
+        table_size = 14 * 14 * 2
+        palette_at = table_at + table_size
+        data = bytearray(palette_at + 512)
+        struct.pack_into('>6I', data, 0, picture_at, 128, table_at, table_size, palette_at, 512)
+        struct.pack_into('>H', data, table_at + (14 + 2) * 2, 2)
+        data[picture_at + 64 + 4 * 8 + 3] = 5
+        struct.pack_into('>H', data, palette_at + 5 * 2, 31)
+
+        image = bg.decode(data)
+        self.assertEqual(image.size, (112, 112))
+        self.assertEqual(image.getpixel((19, 12)), (255, 0, 0))
+        self.assertEqual(image.getpixel((3, 4)), (0, 0, 0))
+        self.assertEqual(bg.picture_bytes(data), data[picture_at:table_at])
+        self.assertEqual(bg.palette_bytes(data), data[palette_at:])
+
     def test_variant_d_full_screen_picture_with_u32_table(self):
         data = bytearray(512 + 4480 + 1120 * 64)
         for cell in range(1120):
