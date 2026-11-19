@@ -1,0 +1,131 @@
+diff --git a/machine/cd.cpp b/machine/cd.cpp
+index 4bcedc4..24f6bd5 100644
+--- a/machine/cd.cpp
++++ b/machine/cd.cpp
+@@ -185,6 +185,7 @@ void Machine::CdCommand() {
+             cd.fad = start & 0x7FFFFF;
+             m_cdPlayStart = start & 0x7FFFFF;
+             m_cdPlaySerial++;
++            m_cdPlayResumed = false;
+         }
+         cd.playEnd = (end & 0x800000) ? cd.fad + (end & 0x7FFFFF) : m_disc.leadOutFAD;
+         cd.status = 0x03;
+diff --git a/machine/machine.h b/machine/machine.h
+index b0464d3..9687779 100644
+--- a/machine/machine.h
++++ b/machine/machine.h
+@@ -45,6 +45,9 @@ public:
+     // Host-only witness for the HD clip hook (T113): the start FAD of the last accepted CD play command and how many there were.
+     uint32 CdPlaySerial() const { return m_cdPlaySerial; }
+     uint32 CdPlayStart() const { return m_cdPlayStart; }
++    // T115: where the guest is reading now (the oldest sector still buffered, else the pickup) and whether the play witness comes from a loaded state.
++    uint32 CdPosition() const { return m_cd.buffered ? m_cd.bufferFAD[0] : m_cd.fad; }
++    bool CdPlayResumed() const { return m_cdPlayResumed; }
+     Machine();
+     ~Machine();
+ 
+@@ -232,6 +235,7 @@ private:
+         uint64 periodicDue = 0;
+     } m_cd;
+     uint32 m_cdPlaySerial = 0, m_cdPlayStart = 0;
++    bool m_cdPlayResumed = false;
+     void CdReset();
+     uint16 CdRead(uint32 address);
+     void CdWrite(uint32 address, uint16 value);
+diff --git a/machine/state.cpp b/machine/state.cpp
+index e8a6315..77ff8ce 100644
+--- a/machine/state.cpp
++++ b/machine/state.cpp
+@@ -71,6 +71,11 @@ void Machine::Serialize(Archive &ar) {
+         ramLow = m_ramLow.data();
+         ++g_codeEpoch; // (work RAM is other RAM now: translations are compared with it again)
+         ++g_activity;
++        // T115: a loaded state holds no play command, only the pickup; present it as a play at the guest's read position so a host that
++        // follows the film (the PC clip) can arm itself mid-film. Host-only: nothing the guest or the hashes see.
++        ++m_cdPlaySerial;
++        m_cdPlayResumed = true;
++        m_cdPlayStart = CdPosition();
+     }
+ }
+ 
+diff --git a/port/main.cpp b/port/main.cpp
+index db12d10..43fe1d2 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -650,7 +650,7 @@ bool Port::Init() {
+             satrecomp::FeatureValue("text_style") == 0 ? choiceCatalog->Locate(
+             std::span<const uint8_t>(saturn->ramLow,0x100000),
+             std::span<const uint8_t>(saturn->ramHigh,0x100000),*dialogueCatalog) : DialogueWitness{};
+-        fbPlaySerial = saturn->CdPlaySerial();fbPlayStart = saturn->CdPlayStart();
++        fbPlaySerial = saturn->CdPlaySerial();fbPlayStart = saturn->CdPlayStart();fbPlayCdPos = saturn->CdPosition();fbPlayResumed = saturn->CdPlayResumed();
+         if(!discNumber) {const auto archive=discFiles.FileBytes("SAKURA4");discNumber=archive==255995904u?1:archive==208545792u?2:0;}
+         fbFirstMoviePhase = width==320 && height==224 && CaptureFirstMoviePhase(
+             std::span<const uint8_t>(saturn->ramLow,0x100000),std::span<const uint8_t>(saturn->ramHigh,0x100000),firstMovieScript);
+diff --git a/port/movie_decoder.h b/port/movie_decoder.h
+index 69421a3..5434c07 100644
+--- a/port/movie_decoder.h
++++ b/port/movie_decoder.h
+@@ -25,7 +25,9 @@ public:
+     struct Frame {double time=0;int width=0,height=0;std::vector<uint32_t> rgba;};   // 0xAABBGGRR (bytes R,G,B,A in memory)
+     ~MovieDecoder() {Close();}
+     // audio=false: the MP2 stream is not decoded at all (nobody drains it, and a full audio queue would stall the video).
+-    bool Open(const std::string& path,size_t queueFrames=8,bool audio=true) {
++    // startSeconds>0 (T115): begin at the intra frame at or before that time of the stream, and drop the audio that precedes it, to resume
++    // a clip in the middle. Frame and audio times stay those of the stream, so FrameAt(seconds) takes stream time.
++    bool Open(const std::string& path,size_t queueFrames=8,bool audio=true,double startSeconds=0) {
+         Close();
+         videoTrack = plm_create_with_filename(path.c_str());
+         if (!videoTrack) return false;
+@@ -35,10 +37,18 @@ public:
+         height_ = plm_get_height(videoTrack);
+         fps_ = plm_get_framerate(videoTrack);
+         duration_ = plm_get_duration(videoTrack);
++        audioSkip=0;
++        if (startSeconds > 0.0 && startSeconds < duration_) plm_seek(videoTrack, startSeconds, FALSE);
+         if (audio) {
+             // Independent demux cursors keep either queue from starving the other.
+             audioTrack = plm_create_with_filename(path.c_str());
+             if (audioTrack) {
++                if (startSeconds > 0.0 && startSeconds < duration_) {
++                    // (plm_seek needs the video stream: it decodes one intra frame, then syncs the audio to it)
++                    plm_set_audio_enabled(audioTrack, 1);
++                    if (plm_seek(audioTrack, startSeconds, FALSE))
++                        audioSkip=size_t(std::max(0.0,startSeconds-plm_get_time(audioTrack))*44100.0)*2;
++                }
+                 plm_set_video_enabled(audioTrack, 0);
+                 plm_set_loop(audioTrack, 0);
+             }
+@@ -109,7 +119,11 @@ private:
+                 for(auto& px:f.rgba)px|=0xFF000000u;   // pl_mpeg leaves the alpha byte 0
+                 frames.push_back(std::move(f));
+             }
+-            if(samples)audio.insert(audio.end(),samples->interleaved,samples->interleaved+samples->count*2);
++            if(samples) {
++                const float* from=samples->interleaved;size_t n=samples->count*2;
++                if(audioSkip) {const size_t drop=std::min(audioSkip,n);from+=drop;n-=drop;audioSkip-=drop;}
++                audio.insert(audio.end(),from,from+n);
++            }
+         }
+         finished = true;
+     }
+@@ -120,7 +134,7 @@ private:
+     std::condition_variable wake;
+     std::deque<Frame> frames;
+     std::deque<float> audio;
+-    size_t maxQueue=8;
++    size_t maxQueue=8,audioSkip=0;
+     bool stop=false;
+     std::atomic<bool> finished{false};
+     int width_=0,height_=0;double fps_=0,duration_=0;
+diff --git a/port/port.h b/port/port.h
+index dba1e34..7c6feaf 100644
+--- a/port/port.h
++++ b/port/port.h
+@@ -104,6 +104,7 @@ struct Port {
+     std::vector<uint32_t> fb;
+     uint32_t fbWidth = 0, fbHeight = 0;
+     uint64_t fbSerial = 0;
++    uint32_t fbPlayCdPos = 0; bool fbPlayResumed = false; // T115: guest read position, and the witness comes from a loaded state
+     uint32_t fbPlaySerial = 0, fbPlayStart = 0; // CD play-command witness captured with this framebuffer (T113)
+     int discNumber = 0;                         // 1 or 2, from the size of /SAKURA4 (0 unknown)
+     bool fbFirstMoviePhase = false; // host-only witness captured with this framebuffer
