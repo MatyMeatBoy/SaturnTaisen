@@ -36,6 +36,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Stage21 ground](stage21-pc-ground.md) records the independently verified source-4 substitution in episode 4.
 - [bg2250-bg1002-visual.md](bg2250-bg1002-visual.md) — Disc 1 salute gradient and theatre lobby at 1440p.
 - [bg2533-pan.md](bg2533-pan.md) — Verified BG2533 pan from the PC edition.
+- [bg2159-disc2-visual.md](bg2159-disc2-visual.md) — Disc 2 Chapter 8 city view at 1440p.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 
 ## Controllers

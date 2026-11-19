@@ -2075,6 +2075,14 @@
           }
         },
         "scene-pictures": {
+          "2:/SAKURA1/BG2159.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2159-disc2-visual.md",
+            "pc": "SAKURA1/BG/BG2159.SPR",
+            "runtime_evidence": "docs/research/bg2159-disc2-visual.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/TITLE8.BIN": {
             "association": "inferred",
             "status": "unknown"
@@ -12352,11 +12360,6 @@
       "2:/SAKURA1/BG2158.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2158.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2159.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2159.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2160.BIN": {

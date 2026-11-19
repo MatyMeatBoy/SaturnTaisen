@@ -54,6 +54,13 @@ class ChapterCoverageTest(unittest.TestCase):
                 report = 'docs/research/coverage-campaign-v026.md'
                 self.assertEqual((scene['evidence'], scene['runtime_evidence']), (report, report))
                 self.assertIs(scene['verified_in_game'], True)
+        chapter8 = by_chapter[8]['resources']['scene-pictures']
+        city = chapter8.get('2:/SAKURA1/BG2159.BIN', {})
+        self.assertEqual(city.get('association'), 'observed')
+        self.assertEqual(city.get('status'), 'hd')
+        self.assertIs(city.get('verified_in_game'), True)
+        self.assertEqual(city.get('runtime_evidence'), 'docs/research/bg2159-disc2-visual.md')
+        self.assertNotIn('2:/SAKURA1/BG2159.BIN', catalog['unassigned']['scene-pictures'])
         self.assertEqual(chapter1['portraits']['0001']['association'], 'inferred')
         self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
