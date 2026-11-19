@@ -54,7 +54,11 @@ def decode(data):
 
 
 def _screen_ok(data):
-    return 76000 <= len(data) <= 77000 and struct.unpack_from('>4I', data, 512) == (0, 2, 4, 6)
+    if not 76000 <= len(data) <= 77000:
+        return False
+    first = struct.unpack_from('>4I', data, 512)
+    # The table counts up by 2 per cell; IC/KABE/OMAKE/LOAD start at 0, TITLE* at 2 (one more cell in the file).
+    return first[0] in (0, 2) and first[1:] == (first[0] + 2, first[0] + 4, first[0] + 6)
 
 
 def _screen(data):
