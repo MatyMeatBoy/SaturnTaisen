@@ -32,15 +32,16 @@ EVE_PAIRS = {
 }
 # The documented draws include partial native faces and conditional fallbacks.
 BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
-# Scene draws witnessed on disc 1 in the office replay and the Chapter 1 campaign.
-CHAPTER1_SCENE_DRAWS = {
-    **{(1, f'/SAKURA1/BG{number}.BIN'): BODY_REPORT for number in (1011, 1012, 1017)},
-    **{(1, f'/SAKURA1/BG{number}.BIN'): CAMPAIGN_REPORT for number in (1001, 1006, 1045, 1209, 2159, 2250, 2251)},
+# Draw evidence applies to the exact disc, resource, and chapter observed.
+SCENE_DRAWS = {
+    **{(1, f'/SAKURA1/BG{number}.BIN'): (1, BODY_REPORT) for number in (1011, 1012, 1017)},
+    **{(1, f'/SAKURA1/BG{number}.BIN'): (1, CAMPAIGN_REPORT) for number in (1001, 1006, 1045, 1209, 2159, 2250, 2251)},
+    (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
-    **{key: (1, report) for key, report in CHAPTER1_SCENE_DRAWS.items()},
+    **SCENE_DRAWS,
     (1, '/SAKURA1/BG1119.BIN'): (1, BG_REPORT),
     (1, '/SAKURA1/NC20.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
@@ -222,9 +223,9 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
-                elif key in bg_table and (disc, path) in CHAPTER1_SCENE_DRAWS:
+                elif key in bg_table and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
-                    row['runtime_evidence'] = CHAPTER1_SCENE_DRAWS[(disc, path)]
+                    row['runtime_evidence'] = SCENE_DRAWS[(disc, path)][1]
                 elif (disc, path) == (1, '/SAKURA2/EVE0116.BIN'):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE0116_REPORT)
                 elif (disc, path) == (1, '/SAKURA2/EVE002.BIN'):

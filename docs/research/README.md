@@ -35,6 +35,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [stage01-pc-ground.md](stage01-pc-ground.md) — Stage01 ground from the PC edition and Saturn camera and sprite comparisons.
 - [Stage21 ground](stage21-pc-ground.md) records the independently verified source-4 substitution in episode 4.
 - [bg2533-pan.md](bg2533-pan.md) — Verified BG2533 pan from the PC edition.
+- [bg2159-disc2-visual.md](bg2159-disc2-visual.md) — Disc 2 Chapter 8 city view at 1440p.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 
 ## Controllers
