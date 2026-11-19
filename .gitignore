@@ -24,7 +24,6 @@
 !/tools/es/*.py
 !/tools/controller_mapper.cpp
 !/tools/controller_capture.h
-!/tools/launcher_stub.c
 !/tests/
 /tests/**
 !/tests/*.py

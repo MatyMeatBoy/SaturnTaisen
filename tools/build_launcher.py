@@ -28,7 +28,7 @@ def main():
             'DISC_PRODUCT':'GS-9037','DISC_VERSION':'V1.005','APP_ID':'MatyMeatBoy.SaturnTaisen',
             'HOME_ENV':'SATURN_TAISEN_FIRST_HOME','GAME_VERSION':version,'DISCLAIMER':'Proyecto independiente'}
     command=[str(args.toolchain/'bin/cmake.exe'),'-S',str(DEP/'launcher'),'-B',str(build),'-G','Ninja',
-             '-DCMAKE_BUILD_TYPE=Release',f'-DCMAKE_CXX_COMPILER={args.toolchain.as_posix()}/bin/clang++.exe',
+             '-DCMAKE_BUILD_TYPE=Release','-DLAUNCHER_STATIC=ON',f'-DCMAKE_CXX_COMPILER={args.toolchain.as_posix()}/bin/clang++.exe',
              f'-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH={destination.as_posix()}',
              f'-DGAME_DIR:PATH={(ROOT/"games/sakura").as_posix()}',
              *[f'-D{key}:STRING={value}' for key,value in values.items()]]

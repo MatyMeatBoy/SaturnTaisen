@@ -70,12 +70,13 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     tracked=set(subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0'))
     destination=destination.resolve()
     destination.mkdir(parents=True,exist_ok=False)
-    # The release root shows only what the player touches: SaturnTaisen.exe (a tiny static starter), discos/ for
-    # their files, LEEME.txt and recomp-launcher.json for frontends. Everything else lives in app/.
-    app=destination/'app';app.mkdir()
+    # The release root shows only what the player touches: SaturnTaisen.exe (the launcher, linked statically so
+    # it needs nothing beside it), roms/ for their files and recomp-launcher.json for frontends. Everything else
+    # (game, helpers, DLLs, licences, prepared discs, HD pack, saves) is in data/, where the launcher looks.
+    app=destination/'data';app.mkdir()
     build=Path(build_dir).resolve() if build_dir else owner/'local/build/sakura'
-    executables={'sakura-launcher.exe':'SaturnTaisen.exe','sakura.exe':'sakura.exe',
-                 'import-saves.exe':'import-saves.exe','preparar-juego.exe':'preparar-juego.exe'}
+    shutil.copy2(build/'sakura-launcher.exe',destination/'SaturnTaisen.exe')
+    executables={'sakura.exe':'sakura.exe','import-saves.exe':'import-saves.exe','preparar-juego.exe':'preparar-juego.exe'}
     for source,name in executables.items():
         selected=Path(runtime) if runtime is not None and source=='sakura.exe' else build/source
         shutil.copy2(selected,app/name)
@@ -84,10 +85,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     # Resolve the actual PE imports, including dependencies of toolchain DLLs.
     available={p.name.casefold():p for p in (toolchain/'bin').glob('*.dll')}
     pending=list(app.glob('*.exe'))
-    # The root starter: no DLL beside it, so it is linked statically and must import system libraries only.
+    # The launcher at the top is static: it must import system libraries only (checked below).
     starter=destination/'SaturnTaisen.exe'
-    subprocess.run([str(toolchain/'bin/clang.exe'),'-O2','-static','-mwindows','-o',str(starter),str(ROOT/'tools/launcher_stub.c'),'-luser32'],
-                   env=dict(os.environ,PATH=str(toolchain/'bin')+os.pathsep+os.environ.get('PATH','')),check=True)
     pending.append(starter)
     seen=set()
     copied=[]
@@ -103,6 +102,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
             if key in seen:
                 continue
             seen.add(key)
+            if key in available and file==starter:
+                raise RuntimeError(f'The launcher at the top must be static, but it imports {name}')
             if key in available:
                 source=available[key]
                 target=app/source.name
@@ -151,11 +152,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
                 raise RuntimeError('Language patch missing or different from parches.json: '+entry['patch'])
             shutil.copy2(source,patch_target/entry['patch']);allowed_patches['parches/'+entry['patch']]=entry['patch_sha256']
     shutil.copy2(ROOT/'recomp-launcher.json',destination/'recomp-launcher.json')
-    inputs=destination/'discos';inputs.mkdir()
-    (inputs/'LEEME.txt').write_text('Copia aqui tus tres archivos y abre SaturnTaisen.exe: los reconoce y prepara el juego solo:\n\n'
-        '  - Disco 1 de Sakura Taisen para Saturn (.cue con sus pistas)\n  - Disco 2 de Sakura Taisen para Saturn (.cue con sus pistas)\n'
-        '  - Opcional, para el mod HD: la imagen del disco de la edicion de PC (.mdf o .iso)\n\n'
-        'Tambien puedes elegirlos desde el launcher sin copiarlos. Tus archivos solo se leen.\n',encoding='ascii',newline='\r\n')
+    inputs=destination/'roms';inputs.mkdir()
     # Only original project sources and reproducible patches, no generated code.
     for folder,patterns in {'tools':['*.py','controller_mapper.cpp','controller_capture.h'],'patches':['*.patch'],'config':['*.json'],
                             'tests':['*.py','*.cpp','*.movie'],'tests/native':['*.cpp','CMakeLists.txt'],
@@ -203,35 +200,35 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     # earlier release kept directly in user/ is still used, so its saves and settings are not left behind.
     (app/'portable.txt').write_text('',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
-    (destination/'LEEME.txt').write_text(f'''SaturnTaisen {version}
+    (inputs/'LEEME.txt').write_text(f'''SaturnTaisen {version}
 
 Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Taisen para Saturn (Japón, `.cue` con sus pistas) y, si quieres el mod HD, la imagen del disco de la edición de PC (`.mdf` o `.iso`). Todo lo demás viene aquí: no hace falta instalar ni descargar nada.
 
 1. Descomprime la carpeta en un lugar donde puedas guardar archivos (unos 3 GB libres).
 2. Abre **SaturnTaisen.exe**.
-3. Copia antes tus tres archivos en la carpeta `discos`: el launcher los reconoce y prepara el juego solo (unos minutos, una sola vez). También puedes elegirlos en **Preparar juego**.
+3. Copia en esta carpeta `roms` tus tres archivos (los dos discos de Saturn y, para el mod HD, la imagen de PC): el launcher los reconoce y prepara el juego solo (unos minutos, una sola vez). También puedes elegirlos en **Preparar juego**.
 4. Pulsa **Jugar**. F11 cambia pantalla completa; Esc/F1 o Start+Select abre los ajustes.
 
 **Idiomas.** «Inglés v0.1 Taisen» y «Español v0.1 Taisen» se aplican sobre una copia de tus discos; cada paso se comprueba con SHA-256 y tus archivos solo se leen. El idioma se cambia en el launcher al instante. Créditos de la traducción inglesa y detalle de las capas: `parches/CREDITOS.md`. En español siguen en inglés los rótulos de episodio, la pantalla LOADING, el menú de extras y los subtítulos de vídeo.
 
-**Mod HD.** Con tu edición de PC se prepara una sola vez todo el material HD (imágenes de fondos, escenas, eventos, CG, mapas, unidades, personajes, menús y las películas) en `app/hd-resources`, solo en tu PC y nunca compartido. Hoy ya se ven 19 fondos y los retratos HD; el resto se irá activando en próximas versiones sin volver a preparar nada.
+**Mod HD.** Con tu edición de PC se prepara una sola vez todo el material HD (imágenes de fondos, escenas, eventos, CG, mapas, unidades, personajes, menús y las películas) en `data/hd-resources`, solo en tu PC y nunca compartido. Hoy ya se ven 19 fondos y los retratos HD; el resto se irá activando en próximas versiones sin volver a preparar nada.
 
 **Presentación.** Escala entera sin suavizado. Original conserva la composición de Saturn; Mejorada recompone las escenas reconocidas hasta 16:9 y vuelve a la original cuando no reconoce la escena. Los fondos generados son preliminares.
 
 **Partidas.** Importa desde la sección Tus partidas: se crea una copia separada y los originales no se modifican.
 
-**Otros frontends.** `recomp-launcher.json` describe la entrada única (`SaturnTaisen.exe`, el único programa de la carpeta) y la preparación por línea de comandos (`app/preparar-juego.exe`).
+**Otros frontends.** `recomp-launcher.json` describe la entrada única (`SaturnTaisen.exe`, el único programa a la vista) y la preparación por línea de comandos (`data/preparar-juego.exe`).
 
 Esta versión no certifica toda la campaña ni todos los mandos; el cambio automático de disco y RetroAchievements siguen pendientes. Consulta las notas de versión.
 
-En la carpeta solo verás `SaturnTaisen.exe`, `discos` y `app`. Dentro de `app`, `user/` contiene tus partidas, ajustes y `logs/`, y `game/` y `hd-resources/` lo ya preparado. No las borres al actualizar: puedes descomprimir una versión nueva encima y no se rehace nada que siga vigente.
+En la carpeta solo verás `SaturnTaisen.exe`, `roms` y `data`. Dentro de `data`, `user/` contiene tus partidas, ajustes y `logs/`, y `game/` y `hd-resources/` lo ya preparado. No las borres al actualizar: puedes descomprimir una versión nueva encima y no se rehace nada que siga vigente.
 ''',encoding='utf-8',newline='\n')
     forbidden={'.iso','.cue','.bin','.bup','.sro','.xdelta','.state','.png','.jpg','.wav'}
     files=[]
     for file in sorted(destination.rglob('*')):
         if not file.is_file():
             continue
-        relative=file.relative_to(destination).as_posix().removeprefix('app/')  # (allow-lists name paths inside app/)
+        relative=file.relative_to(destination).as_posix().removeprefix('data/')  # (allow-lists name paths inside data/)
         generated_match=relative in allowed_art and digest(file)==allowed_art[relative]
         if allowed_patches.get(relative)==digest(file):generated_match=True
         if file.suffix.casefold() in forbidden and not generated_match:

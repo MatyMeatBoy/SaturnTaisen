@@ -17,7 +17,8 @@ void ShutdownSakuraSaves() {}
 void DrawSakuraHd(launcher::PageContext&) {}
 void ShutdownSakuraHd() {}
 bool SakuraHdBusy() {return false;}
-void DrawSakuraSetup(launcher::PageContext&) {}
+void DrawSakuraHome(launcher::PageContext&) {}
+void DrawSakuraFiles(launcher::PageContext&) {}
 void ShutdownSakuraSetup() {}
 bool SakuraSetupBusy() {return false;}
 
