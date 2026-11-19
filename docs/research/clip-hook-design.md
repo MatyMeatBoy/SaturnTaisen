@@ -41,3 +41,10 @@ title, but the PC clip does not arm before the skip. The loaded guest resumes
 the Saturn film while the host start witness is absent. Synchronised PC
 resume and disc 2 are still open. This was a muted replay, with no audio
 assessment or package build.
+
+## Resume from a saved state (T115, patch0091, NOT BUILT OR RUN)
+
+Finding: the machine state serialises `m_cd` (pickup `fad`, `playEnd`, buffered sector FADs) but not the host-only play witness (`m_cdPlaySerial`, `m_cdPlayStart`), so after a load the clip hook never arms. Patch0091 (written, untested) presents a load as a play at the guest read position (`CdPosition()`: oldest buffered sector, else the pickup) and flags it `CdPlayResumed()`; both reach the frontend through `fbPlayCdPos` and `fbPlayResumed`. `MovieDecoder::Open` gains `startSeconds` (plm_seek to the intra frame, audio synced and trimmed). Host-only, so guest hashes are not expected to change.
+
+Still to do in the frontend (not written): on a resumed serial, map position to time as (pos - stream FAD) / sectors * Duration(), pass it to `Open`, and add it to the elapsed time in `FrameAt`. The linear mapping and the lead of the guest's own ring buffer must be measured in a continuous run first (trace cd position against clip time). The build was not completed: a copied ninja tree rescans about 3,100 units; the plan is to compile only the 34 non-generated translation units from a clean patched tree (local/deps/satrecomp-t115, main patches through 0089 plus 0091) and link against the existing block objects.
+Disc 2: cold boot start FAD 0x195 maps to MOVIE100 (11,500 sectors); the run with and without `--pc-assets` was not done. Long-clip drift (patch0083 trace) not measured.
