@@ -25,3 +25,25 @@ python tools/audit_pc_menus.py --pc-root <PC extraction> --disc local/prepared/d
 ## Next step
 
 For each candidate with `found=true`: decode both images (PC via the native exporter `sakura.exe --export-pc-spr`, Saturn via the tools already existing in `tools/es/`), compare geometry, and check whether the PC separates text from the background in a way Saturn does not. No name match here demonstrates compatible composition, palette, or geometry — this is a list of candidates to verify, not an integration.
+
+### Item detail sprite witness (T109)
+
+In the chapter 1 item menu, replayed the saved options-nav state with the
+English disc and the v0.2.4 reference executable
+(SHA-256 1a94790eefc8492ca80499bbbd3e7517cb4db565908bcee86ae5b12f44c94b9e).
+Hold Up from frame 1, release at 59 and confirm with A from 76 to 79.
+The frame-180 capture shows the letter card and dialogue. All 180 frames
+ran strict-native with zero interpreted blocks.
+
+State frame 179 contains a 112×112 VDP1 command at 0xCE0, with PMOD 0x00A0,
+COLR 0xC600, SRCA 0xB850, SIZE 0x0E70 and origin (-56,-88) relative to the
+local coordinate. VDP1 VRAM at SRCA × 8 = 0x5C280 is byte-identical to the
+12,544 picture bytes of ITEM07.BIN. CRAM byte offset 0xC00 contains the
+exact 512 palette bytes, matching table fingerprint 994AF50BC61B12E6.
+T108 has a 224×224 PC counterpart for this card.
+
+An earlier item-menu state can contain the same texture and palette with
+no active 112×112 command. Bind any replacement to the presented sprite
+command and preserve the card rectangle, dialogue and borders.
+This is one positive runtime witness. A second approved card, replacement
+drawing, fallback and guest parity with the replacement remain open.
