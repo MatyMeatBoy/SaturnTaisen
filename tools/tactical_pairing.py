@@ -6,12 +6,19 @@ Sub-commands (each block is its own verifiable slice):
   python tools/tactical_pairing.py maps --pc ROOT --iso1 "local/prepared/disc1/Track 01.iso" \
       --iso2 "local/prepared/disc2/Track 01.iso" --out config/hd-tactical-map-pairs.json
 
+  python tools/tactical_pairing.py units --pc ROOT --iso1 ... --iso2 ... --out config/hd-tactical-unit-inventory.json
+
 ROOT is a folder holding the extracted PC `SAKURA1/...` and `SAKURA2/...` trees (SPR headers are parsed, never decoded).
 
 maps: each Saturn `/SAKURA2/MAPnn.BIN` (13 on disc 1, 14 on disc 2) is paired with the PC `MAP/MAPnn/MAPnn.BIN` by
 SHA-256 identity (the two editions ship the same terrain file), and the PC `MAPnn.TAB` text names the ground,
 priority and animated SPR files of the map. Statuses: `paired` (identical BIN and a ground SPR present),
 `paired-no-ground` (identical BIN, the TAB names no SPR that exists), `no-counterpart` (no PC BIN or different bytes).
+
+units: inventory of the 27 Saturn `/SAKURA2/UNITnn.BIN` files (26 names; UNIT01 is on both discs) and the 291 PC `SAKURA2/UNIT/**.SPR`. The Saturn bank is an
+offset table followed by data that no decoder in `tools/` reads, and the PC has per-character files, not per-stage
+banks, so no content pairing is possible yet. Every item is recorded as `no-counterpart` with the reason; Saturn
+files with identical bytes are grouped (`same_as`).
 """
 import argparse
 import hashlib
@@ -187,6 +194,67 @@ def read_saturn_maps(isos):
     return out
 
 
+def read_saturn_units(isos):
+    import decode_saturn_bg as saturn
+    out = {}
+    for disc, path in isos:
+        iso = saturn.Iso(path)
+        for name, extent in iso.files('SAKURA2'):
+            if re.fullmatch(r'UNIT\d+\.BIN', name):
+                out[f'{disc}:/SAKURA2/{name}'] = iso.content(extent)
+    return out
+
+
+def saturn_unit_rows(saturn_units):
+    rows, first = [], {}
+    for key, data in sorted(saturn_units.items()):
+        digest = sha256(data)
+        row = {'saturn': key, 'size': len(data), 'sha256': digest,
+               'first_word': struct.unpack_from('>I', data, 0)[0] if len(data) >= 4 else None,
+               'status': 'no-counterpart',
+               'reason': 'Saturn unit bank is an offset table plus compressed data with no decoder; the PC has per-character files'}
+        if digest in first:
+            row['same_as'] = first[digest]
+        else:
+            first[digest] = key
+        rows.append(row)
+    return rows
+
+
+def pc_unit_rows(pc_root):
+    root = Path(pc_root)
+    rows = []
+    for path in sorted((root / 'SAKURA2' / 'UNIT').rglob('*')):
+        if not path.is_file() or path.suffix.lower() != '.spr':
+            continue
+        raw = path.read_bytes()
+        relative = path.relative_to(root).as_posix()
+        parts = relative.split('/')
+        row = {'pc': relative, 'group': '/'.join(parts[2:-1]) or '(root)',
+               'size': len(raw), 'sha256': sha256(raw), 'fnv': fnv1a64(raw)}
+        try:
+            images = spr_images(raw)
+            row.update(images=len(images), image_sizes=sorted({'%dx%d' % i[:2] for i in images}))
+        except ValueError as error:
+            row.update(images=None, error=str(error))
+        row.update(status='no-counterpart', reason='no decoded Saturn unit frames to compare with')
+        rows.append(row)
+    return rows
+
+
+def build_units(saturn_units, pc_root):
+    saturn_rows, pc_rows = saturn_unit_rows(saturn_units), pc_unit_rows(pc_root)
+    groups = {}
+    for row in pc_rows:
+        groups[row['group']] = groups.get(row['group'], 0) + 1
+    return {'schema': SCHEMA, 'scope': 'Saturn UNITnn.BIN and PC UNIT SPR inventory; no pairing established; data only.',
+            'summary': {'saturn_files': len(saturn_rows),
+                        'saturn_distinct': len({r['sha256'] for r in saturn_rows}),
+                        'pc_files': len(pc_rows), 'pc_groups': dict(sorted(groups.items())),
+                        'paired': 0, 'ambiguous': 0, 'no-counterpart': len(saturn_rows) + len(pc_rows)},
+            'saturn_units': saturn_rows, 'pc_units': pc_rows}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='command', required=True)
@@ -196,6 +264,11 @@ def main(argv=None):
     maps.add_argument('--iso2', required=True)
     maps.add_argument('--coverage', type=Path, default=Path(__file__).resolve().parent.parent / 'config/hd-chapter-coverage.json')
     maps.add_argument('--out', type=Path, required=True)
+    units = sub.add_parser('units')
+    units.add_argument('--pc', type=Path, required=True)
+    units.add_argument('--iso1', required=True)
+    units.add_argument('--iso2', required=True)
+    units.add_argument('--out', type=Path, required=True)
     args = parser.parse_args(argv)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     if args.command == 'maps':
@@ -203,6 +276,10 @@ def main(argv=None):
         result = build_maps(read_saturn_maps([(1, args.iso1), (2, args.iso2)]), args.pc, coverage)
         args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + '\n', encoding='utf-8', newline='\n')
         print(result['summary'], 'pc-only', result['pc_maps_without_saturn_file'])
+    elif args.command == 'units':
+        result = build_units(read_saturn_units([(1, args.iso1), (2, args.iso2)]), args.pc)
+        args.out.write_text(json.dumps(result, indent=1, sort_keys=True) + '\n', encoding='utf-8', newline='\n')
+        print(result['summary'])
 
 
 if __name__ == '__main__':

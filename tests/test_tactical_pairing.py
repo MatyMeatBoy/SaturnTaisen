@@ -114,6 +114,26 @@ class PairTests(unittest.TestCase):
         json.dumps(result)
 
 
+class UnitTests(unittest.TestCase):
+    def test_inventory_groups_identical_banks_and_lists_pc_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for rel, sizes in (('SAKURA/A.SPR', [(32, 48)]), ('BOSS/KAGE/B.SPR', [(8, 8), (8, 8)]), ('X.SPR', [(4, 4)])):
+                path = Path(tmp) / 'SAKURA2' / 'UNIT' / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(fake_spr(sizes))
+            (Path(tmp) / 'SAKURA2' / 'UNIT' / 'SAKURA' / 'note.DAT').write_bytes(b'ignored')
+            banks = {'1:/SAKURA2/UNIT02.BIN': bytes((0, 0, 0, 208)) + b'a' * 20, '1:/SAKURA2/UNIT03.BIN': bytes((0, 0, 0, 208)) + b'a' * 20,
+                     '2:/SAKURA2/UNIT14.BIN': bytes((0, 0, 0, 208)) + b'b' * 20}
+            result = tp.build_units(banks, tmp)
+        self.assertEqual(result['summary']['saturn_files'], 3)
+        self.assertEqual(result['summary']['saturn_distinct'], 2)
+        self.assertEqual(result['summary']['pc_files'], 3)
+        self.assertEqual(result['summary']['pc_groups'], {'(root)': 1, 'BOSS/KAGE': 1, 'SAKURA': 1})
+        self.assertEqual(result['saturn_units'][1]['same_as'], '1:/SAKURA2/UNIT02.BIN')
+        self.assertEqual(result['summary']['paired'], 0)
+        self.assertEqual({r['status'] for r in result['pc_units']}, {'no-counterpart'})
+
+
 class CommittedDataTests(unittest.TestCase):
     def test_committed_map_pairs_are_data_only(self):
         path = Path(__file__).resolve().parent.parent / 'config/hd-tactical-map-pairs.json'
@@ -124,6 +144,15 @@ class CommittedDataTests(unittest.TestCase):
             if row['status'] == 'paired':
                 self.assertTrue(row['identical'])
                 self.assertEqual(row['sha256'], row['pc_bin_sha256'])
+
+    def test_committed_unit_inventory_is_data_only(self):
+        path = Path(__file__).resolve().parent.parent / 'config/hd-tactical-unit-inventory.json'
+        data = json.loads(path.read_text(encoding='utf-8'))
+        self.assertEqual(data['summary']['pc_files'], 291)
+        self.assertEqual(data['summary']['saturn_files'], 27)
+        for row in data['saturn_units'] + data['pc_units']:
+            self.assertRegex(row['sha256'], r'^[0-9a-f]{64}$')
+            self.assertEqual(row['status'], 'no-counterpart')
 
 
 if __name__ == '__main__':
