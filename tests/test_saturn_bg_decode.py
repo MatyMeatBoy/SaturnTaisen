@@ -35,6 +35,26 @@ class SaturnBgTests(unittest.TestCase):
         self.assertEqual(image.size, (32, 16))
         self.assertEqual(image.getpixel((8 + 2, 8 + 1)), (255, 0, 0))
 
+    def test_variant_d_full_screen_picture_with_u32_table(self):
+        data = bytearray(512 + 4480 + 1120 * 64)
+        for cell in range(1120):
+            struct.pack_into('>I', data, 512 + cell * 4, cell * 2)
+        struct.pack_into('>H', data, 5 * 2, 31)  # palette 5 = R31
+        data[512 + 4480 + 41 * 64 + 3 * 8 + 4] = 5  # cell 41 = (1,1), pixel (4,3)
+        image = bg.decode(bytes(data))
+        self.assertEqual(image.size, (320, 224))
+        self.assertEqual(image.getpixel((8 + 4, 8 + 3)), (255, 0, 0))
+        self.assertIsNone(bg.decode(bytes(data[:70000])))
+
+    def test_screen_map_has_firm_eyecatches(self):
+        import json
+        data = json.loads((ROOT / 'config/hd-screen-map.json').read_text(encoding='utf-8'))
+        firm = [p for p in data['pairs'] if p['tier'] == 'content']
+        self.assertEqual(len(firm), 16)
+        for pair in firm:
+            self.assertGreaterEqual(pair['correlation'], 0.95)
+            self.assertTrue(pair['pc_file'].startswith('SAKURA1/ICATCH/'))
+
     def test_other_sizes_and_headers_are_rejected(self):
         self.assertIsNone(bg.decode(sample()[:-1]))
         self.assertIsNone(bg.decode(bytes([0, 2]) + sample()[2:]))
