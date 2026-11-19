@@ -11,3 +11,11 @@ Prompt summary for STATUS: continue the exact muted lavender/purple gradient and
 LOADING is a provisional generated blue-violet tiled logo backdrop. The animated native column is preserved. Its tile phase at the protected-center join still needs visual refinement before a release claims seamless loading transitions.
 
 The generated-only tactical strip is tracked separately in `assets/generated/tactical-extensions`; owner reference composites remain local. It is not part of this generated-screen allowlist.
+
+Episode 01–10 have their own generated left and right sides. Each supplied image is
+a 39×224 RGBA strip with a transparent seam at the edge touching the native card.
+The same strips work in English and Spanish: the card's native 320×224 center supplies
+its own title and edges. The composite logical width is 398 pixels at full native
+height, the largest whole-pixel width within 16:9. The 20 files contain generated
+pixels only. The input artwork and proof compositions stay local. Runtime composition
+of the strips, including fades and letterboxing, is tracked under T107e.
