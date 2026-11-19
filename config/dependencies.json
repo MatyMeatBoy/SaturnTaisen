@@ -69,7 +69,8 @@
       "patches/0064-sakura-hd-character-bodies.patch",
       "patches/0065-sakura-body-skip-reasons.patch",
       "patches/0066-sakura-body-frames-by-content.patch",
-      "patches/0067-sakura-body-small-and-clear-frames.patch"
+      "patches/0067-sakura-body-small-and-clear-frames.patch",
+      "patches/0068-sakura-body-clear-matches-only.patch"
     ]
   }
 }

@@ -1,0 +1,34 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 367f73d..ec55d37 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1309,8 +1309,10 @@ int RunWindowed(Port &port) {
+                                             std::vector<uint32_t> rgba(sp->pixels.size());
+                                             for(size_t i=0;i<rgba.size();i++)rgba[i]=sp->pixels[i]?palette[sp->pixels[i]]:0u;
+                                             const auto signature=BodySignature(rgba,fw,fh);
+-                                            // Small frames (mouths) are easier to confuse and matter less: a lower bar for them.
+-                                            double best=fw*fh<=600?0.12:0.30;
++                                            // A wrong expression is worse than the native one, so a match must be clear: a minimum
++                                            // correlation (lower for small frames, which carry less detail) and a lead over the second best.
++                                            const double minimum=fw*fh<=600?0.30:0.50;
++                                            double best=minimum,second=-1.0;
+                                             size_t opaqueCount=0;for(uint32_t px:rgba)opaqueCount+=(px>>24)!=0;
+                                             if(opaqueCount*100<rgba.size()*3) {
+                                                 // A frame that is (nearly) clear, such as a closed mouth drawn only by the body: the PC
+@@ -1318,9 +1320,13 @@ int RunWindowed(Port &port) {
+                                                 float least=0.10f;
+                                                 for(size_t k=0;k<st.partOpaque.size();k++)if(st.partOpaque[k]<least) {least=st.partOpaque[k];part=int(k);}
+                                                 best=0.0;
+-                                            } else for(size_t k=0;k<st.partSig.size();k++) {
+-                                                double dot=0;for(size_t i=0;i<signature.size();i++)dot+=double(signature[i])*st.partSig[k][i];
+-                                                if(dot>best) {best=dot;part=int(k);}
++                                            } else {
++                                                for(size_t k=0;k<st.partSig.size();k++) {
++                                                    double dot=0;for(size_t i=0;i<signature.size();i++)dot+=double(signature[i])*st.partSig[k][i];
++                                                    if(dot>best) {second=best>minimum?best:second;best=dot;part=int(k);}
++                                                    else if(dot>second)second=dot;
++                                                }
++                                                if(part>=0 && second>0 && best-second<0.05)part=-1;
+                                             }
+                                             st.matches[hash]=part;
+                                             if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body frame %ux%u -> PC part %d (correlation %.2f)",fw,fh,part,part>=0?best:0.0);fputc(10,stderr);}
