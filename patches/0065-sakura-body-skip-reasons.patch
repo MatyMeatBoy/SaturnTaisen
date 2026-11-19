@@ -1,0 +1,69 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 956ebca..009b01c 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1221,6 +1221,8 @@ int RunWindowed(Port &port) {
+                                 const size_t bodyEnd=0x610+size_t(entry.stride)*144;
+                                 bool ok=st.body && !st.nc.empty() && st.nc.size()>bodyEnd && bw>0 && bh>0 && (st.runCount.size()==1 || st.runCount.size()==2);
+                                 std::vector<std::pair<long,const PresentationSprite*>> found;
++                                const char* why=nullptr;
++                                if(!ok)why=st.body?"unsupported number of runs":"PC picture not ready";
+                                 if(ok)for(const auto& sp:planes.sprites) {
+                                     if(&sp==bodySprite || (sp.command.words[0]&15)>7 || sp.pixels.empty())continue;
+                                     const int sw=spriteWidth(sp),sh=spriteHeight(sp);
+@@ -1234,7 +1236,7 @@ int RunWindowed(Port &port) {
+                                         offset=at==st.nc.end()?-1:long(at-st.nc.begin());
+                                         st.offsets[hash]=offset;
+                                     }
+-                                    if(offset<0) {ok=false;break;}
++                                    if(offset<0) {ok=false;why="a sprite over the body is not a face frame";break;}
+                                     found.emplace_back(offset,&sp);
+                                 }
+                                 if(ok && !found.empty()) {
+@@ -1250,14 +1252,14 @@ int RunWindowed(Port &port) {
+                                         unsigned ordinal=0;
+                                         if(secondStart<0 || offset<secondStart) {
+                                             const long firstSize=secondStart<0?size:long(found.front().second->pixels.size());
+-                                            if(size!=firstSize || (offset-first)%size) {ok=false;break;}
++                                            if(size!=firstSize || (offset-first)%size) {ok=false;why="first-run frame size or offset";break;}
+                                             ordinal=unsigned((offset-first)/size);
+-                                            if(ordinal>=st.runCount[0]) {ok=false;break;}
++                                            if(ordinal>=st.runCount[0]) {ok=false;why="ordinal beyond the first run";break;}
+                                         } else {
+-                                            if((offset-secondStart)%size) {ok=false;break;}
++                                            if((offset-secondStart)%size) {ok=false;why="second-run offset";break;}
+                                             ordinal=st.runCount[0]+unsigned((offset-secondStart)/size);
+                                         }
+-                                        if(ordinal>=st.parts.size() || !st.parts[ordinal]) {ok=false;break;}
++                                        if(ordinal>=st.parts.size() || !st.parts[ordinal]) {ok=false;why="no PC part for the frame";break;}
+                                         bodyDraw.faces.push_back({sp->x,sp->y,spriteWidth(*sp),spriteHeight(*sp),ordinal});
+                                     }
+                                 }
+@@ -1265,7 +1267,7 @@ int RunWindowed(Port &port) {
+                                 if(ok && !bodyDraw.faces.empty()) {
+                                     for(int y=std::max(by,0);y<std::min(by+bh,152) && ok;y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++) {
+                                         const size_t at=size_t(y)*320+x;
+-                                        if(planes.source[at]==0 && planes.spriteWhiteWeight[at]!=0) {ok=false;break;}
++                                        if(planes.source[at]==0 && planes.spriteWhiteWeight[at]!=0) {ok=false;why="a blend over the body";break;}
+                                     }
+                                     for(uint32_t layer=0;layer<7 && ok;layer++) {
+                                         const auto offset=port.videoRenderer->BackgroundColorOffset(layer);
+@@ -1276,7 +1278,17 @@ int RunWindowed(Port &port) {
+                                     bodyDraw.valid=true;bodyDraw.slot=slot;bodyDraw.x=bx;bodyDraw.y=by;bodyDraw.w=bw;bodyDraw.h=bh;
+                                     for(int y=std::max(by,0);y<std::min(by+bh,152);y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++)
+                                         if(planes.source[size_t(y)*320+x]==0)zoomForeground[size_t(y)*320+x]=0;
+-                                } else bodyDraw.faces.clear();
++                                } else {
++                                    bodyDraw.faces.clear();
++                                    static std::set<std::string> reported;
++                                    if(std::getenv("SATRECOMP_BACKGROUND_STATS") && reported.insert(std::string(entry.disc)+(why?why:"no face sprite")).second) {
++                                        fprintf(stderr,"body skipped: %s (%s); body end %zu, runs",entry.disc,why?why:"no face sprite found",bodyEnd);
++                                        for(auto count:st.runCount)fprintf(stderr," %u",count);
++                                        fprintf(stderr,"; frames (offset,size)");
++                                        for(const auto& [offset,sp]:found)fprintf(stderr," (%ld,%zu)",offset,sp->pixels.size());
++                                        fputc(10,stderr);
++                                    }
++                                }
+                             }
+                         }
+                         SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
