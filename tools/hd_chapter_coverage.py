@@ -8,6 +8,8 @@ import sys
 from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools'))
+import gen_item_table  # noqa: E402
 CHAPTERS = range(1, 11)
 CATEGORIES = (
     'scene-pictures', 'bodies', 'portraits', 'film',
@@ -71,6 +73,19 @@ EVE_PAIRS = {
     'EVE0118': 'BBG101', 'EVE102': 'BBG102', 'EVE105': 'BBG105',
     'EVE202': 'BBG202', 'EVE205': 'BBG205', 'EVE207': 'BBG207',
 }
+# Menu/HUD pictures the runtime draws from the SYSTEM census (docs/research/pc-menu-hud-inventory.json), as
+# (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
+MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
+SYSTEM_HUD_DRAWS = {
+    ('SAKURA1/SYSTEM/FONT_CSL.SPR', 0): ('patch 0093, port/system_brackets.h: left inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
+    ('SAKURA1/SYSTEM/FONT_CSL.SPR', 1): ('patch 0093, port/system_brackets.h: right inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
+    ('SAKURA1/SYSTEM/SIS_ICON.SPR', 2): ('patch 0112, port/load_disc_icon.h: CD-1 load emblem', MENU_REPORT + '#t110b-cd-1-emblem-in-the-load-menu'),
+}
+# SYSTEM files that belong to another category and must not be counted twice in hud-menus.
+SYSTEM_HUD_EXCLUDED = {
+    'SAKURA1/SYSTEM/KAO.SPR': 'portrait atlas (394 faces): counted in the portraits category through the FCE recipe and portrait pack',
+}
+MENU_CENSUS = 'docs/research/pc-menu-hud-inventory.json'
 # The documented draws include partial native faces and conditional fallbacks.
 BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
 # Draw evidence applies to the exact disc, resource, and chapter observed.
@@ -211,6 +226,9 @@ def build(root, index_dir, portrait_audit):
     }
     items = pairs(config('hd-item-map'))
     item_review = pairs(config('hd-item-review'))
+    # Same selection as tools/gen_item_table.py: the palettes that the runtime item-card table (patch 0090) holds.
+    item_runtime = {palette for palette, _ in gen_item_table.build_rows(
+        config('hd-item-map'), config('hd-item-review')['pairs'])} & set(config('hd-item-texture-fingerprints'))
     cold_bg = {
         '/' + row['pc_file'].replace('/BG/', '/').replace('.SPR', '.BIN'): row['evidence_frame']
         for row in config('hd-scene-bg-pairs')['pairs']
@@ -401,7 +419,9 @@ def build(root, index_dir, portrait_audit):
         elif path in items:
             pair = items[path]
             if pair['tier'] == 'content' or item_review.get(path, {}).get('verdict') == 'confirmed':
-                row = {'status': 'paired-not-wired', 'pc': pair['pc_file']}
+                row = {'status': 'paired-not-wired', 'pc': pair['pc_file'], 'pc_image_index': pair['pc_image_index']}
+                if pair['palette_fnv'].upper() in item_runtime:
+                    row.update(status='hd', runtime_evidence=MENU_REPORT + '#item-detail-sprite-witness-t109')
             elif path in item_review:
                 row['status'] = 'unpaired'
         if kind == 'portraits' and f'{disc}:{path}' in fce_atlases and row['status'] == 'unknown':
@@ -431,6 +451,23 @@ def build(root, index_dir, portrait_audit):
                 chapter, report = 1, CHAPTER1_ROUTE_REPORT
             add('film', f'{disc}:{path}+{offset}', row, chapter,
                 'observed' if chapter else 'unknown', report)
+    census = load(root / MENU_CENSUS)
+    for file in census['menus']:
+        name = file['pc_path']
+        if name in SYSTEM_HUD_EXCLUDED:
+            unassigned['menus-hud']['pc:' + name] = {
+                'status': 'excluded', 'pc': name, 'images': len(file['images']), 'association': 'unknown',
+                'reason': SYSTEM_HUD_EXCLUDED[name]}
+        for image in file['images']:
+            if (name, image['index']) in SYSTEM_HUD_DRAWS:
+                note, evidence = SYSTEM_HUD_DRAWS[(name, image['index'])]
+                unassigned['menus-hud'][f"pc:{name}#{image['index']}"] = {
+                    'status': 'hd', 'pc': name, 'pc_image_index': image['index'], 'association': 'unknown',
+                    'draw': note, 'runtime_evidence': evidence}
+    hud_census = {
+        'system_images': sum(len(file['images']) for file in census['menus']),
+        'item_images': len({(p['pc_file'], p['pc_image_index']) for p in config('hd-item-map')['pairs']}),
+    }
     for portrait in portraits:
         ident = portrait['id']
         if not re.fullmatch('[0-9a-f]{4}', ident):
@@ -468,6 +505,7 @@ def build(root, index_dir, portrait_audit):
             'inferred': 'Episode file numbering or chapter 1 atlas membership provides a candidate.',
             'unknown': 'No chapter attribution in the inputs.',
         },
+        'hud_census': hud_census,
         'chapters': list(chapters.values()),
         'unassigned': unassigned,
     }

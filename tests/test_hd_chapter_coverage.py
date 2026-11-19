@@ -109,6 +109,17 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertEqual(row['status'], 'unsupported-size')
             self.assertFalse(row.get('verified_in_game'))
 
+    def test_menu_hud_measure_counts_distinct_pc_images_once(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
+        rows = [row for group in groups for row in group['menus-hud'].values()]
+        drawn = {(row['pc'], row['pc_image_index']) for row in rows if row['status'] == 'hd'}
+        self.assertEqual(len(drawn), 41)
+        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 3)
+        self.assertEqual(sum(row.get('images', 0) for row in rows if row['status'] == 'excluded'), 394)
+        self.assertEqual(catalog['hud_census'], {'system_images': 572, 'item_images': 50})
+
     def test_pc_title_donors_remain_excluded_in_both_disc_inventories(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
