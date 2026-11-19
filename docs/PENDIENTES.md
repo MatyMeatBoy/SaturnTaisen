@@ -114,7 +114,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | TP2b | P0 | shard | open | Scroll battle backgrounds `unsupported-size`, BBG1/BBG2/BBG3 (8 pictures): geometry per picture, as TP2a. |
 | TP3a | P0 | shard | open | `unknown` TITLE1-TITLE9 pictures (9): establish the pairing (palette, cell hash, PC set) and wire them. |
 | TP3b | P0 | shard | open | `unknown` BBG0/BBG1/BBG2 battle backgrounds (14): establish pairing and wire (typical EVE/BBG pairs are 576x320 PC on 288x144, patch0094/0104). BBG004-007 decode at 112x112 and are visually paired with 224x224 PC items; runtime witnesses and wiring pending. |
-| TP3c | P0 | shard | open | `unknown` single pictures KO, MA, SU, AI, GE, KA, SA and BG2xxx (9): pairing then wiring. |
+| TP3c | P0 | shard | open | `unknown` single pictures KO, MA, SU, AI, GE, KA, SA and BG2xxx (9): pairing then wiring. BG2338 is decoded and paired with PC BG2238 subimage 17. Its 320×160 draw remains pending a live viewport and timing witness. |
 | TP4a | P1 | shard | open | `unpaired` BG1xxx/BG0xxx (16): look for the PC counterpart again; record the reason where none exists. |
 | TP4b | P1 | shard | open | `unpaired` BG2xxx (15): same method. |
 | TP4c | P1 | shard | open | `unpaired` BG3xxx/BG4xxx (25, tactical-era battle pictures held out by the table rule): decide wiring or record why not. Excluded (224) stay by design. |
