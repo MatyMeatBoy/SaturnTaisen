@@ -11,7 +11,7 @@ Writes config/film-fad-map.json: names, FADs and durations only, no game data.
     python tools/gen_film_fad_map.py --iso1 "local/prepared/disc1/Track 01.iso" --iso2 "local/prepared/disc2/Track 01.iso" \
         --pc-movies "<folder with MOVIE*.MPG>" --ffprobe ffprobe
 """
-import argparse, json, pathlib, subprocess, sys, tempfile
+import argparse, hashlib, json, pathlib, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
@@ -51,6 +51,23 @@ def align(saturn, pc, gap=10.0):
     return pairs[::-1]
 
 
+def find_pc_aliases(unpaired, paired, paths):
+    sizes = {name: paths[name].stat().st_size for name in (*unpaired, *paired)}
+    aliases = {}
+    for name in unpaired:
+        candidates = [target for target in paired if sizes[target] == sizes[name]]
+        if not candidates:
+            continue
+        with paths[name].open('rb') as source:
+            digest = hashlib.file_digest(source, 'sha256').hexdigest()
+        for target in candidates:
+            with paths[target].open('rb') as source:
+                if hashlib.file_digest(source, 'sha256').hexdigest() == digest:
+                    aliases[name] = {'canonical': target, 'sha256': digest}
+                    break
+    return aliases
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--iso1', required=True); ap.add_argument('--iso2', required=True)
@@ -79,9 +96,8 @@ def main():
                 p = pathlib.Path(tmp) / 'clip.cpk'; p.write_bytes(iso.read(v['byte_length']))
                 streams.append({'disc': r['disc'], 'file': r['iso_path'], 'index': index, 'fad': fad,
                                 'fad_hex': '0x%X' % fad, 'sectors': -(-v['byte_length'] // 2048), 'duration': duration(a.ffprobe, p)})
-    pc = []
-    for f in sorted(pathlib.Path(a.pc_movies).glob('*.MPG')):
-        pc.append({'name': f.stem, 'duration': duration(a.ffprobe, f)})
+    pc_paths = {f.stem: f for f in sorted(pathlib.Path(a.pc_movies).glob('*.MPG'))}
+    pc = [{'name': name, 'duration': duration(a.ffprobe, path)} for name, path in pc_paths.items()]
     stub = [s for s in streams if 'same_as_fad' not in s and s['duration'] is not None and s['duration'] < 0.5]
     real = [s for s in streams if s not in stub and 'same_as_fad' not in s]
     pcreal = [c for c in pc if c['name'] != 'REDLOGO']
@@ -107,8 +123,12 @@ def main():
             for k in ('duration', 'movie', 'pc_duration', 'alternate_cut'):
                 if k in first:
                     s[k] = first[k]
+    paired_names = [clip['name'] for j, clip in enumerate(pcreal) if j in paired]
+    unpaired_names = [clip['name'] for j, clip in enumerate(pcreal) if j not in paired]
+    aliases = find_pc_aliases(unpaired_names, paired_names, pc_paths)
     result = {'formula': 'FAD = 150 + LBA + byte_offset / 2048', 'streams': streams,
-              'unpaired_pc': [c['name'] for j, c in enumerate(pcreal) if j not in paired] + ['REDLOGO'],
+              'unpaired_pc': [name for name in unpaired_names if name not in aliases] + ['REDLOGO'],
+              'pc_aliases': aliases,
               'unpaired_saturn': [s for s in real if 'movie' not in s]}
     pathlib.Path(a.out).write_text(json.dumps(result, indent=1) + '\n', encoding='utf8')
     print(len(streams), 'saturn streams,', sum(1 for s in streams if 'movie' in s), 'paired, unpaired pc:', result['unpaired_pc'])

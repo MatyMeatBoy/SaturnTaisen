@@ -399,8 +399,12 @@ def build(root, index_dir, portrait_audit):
             if film and film['file'] == path:
                 row['status'] = 'unpaired'
                 if movie := film.get('movie'):
-                    row.update(status='paired-not-wired' if film['alternate_cut'] else 'hd',
+                    row.update(status='excluded' if film['alternate_cut'] else 'hd',
                                pc=movie, alternate_cut=film['alternate_cut'])
+                    if film['alternate_cut']:
+                        row['reason'] = 'alternate PC edit stays native to preserve the Saturn timing'
+                elif path == '/SAKURA1/OPSAKURA.CPK' and 0 < film.get('duration', 0) < 0.5:
+                    row.update(status='excluded', reason='short native transition without a PC clip')
             chapter, report = observed.get((ident, offset), (None, None))
             if (disc == 1 and path == '/SAKURA4' and offset in CHAPTER1_ROUTE_FILMS
                     and row.get('pc') == CHAPTER1_ROUTE_FILMS[offset]):
@@ -430,8 +434,8 @@ def build(root, index_dir, portrait_audit):
         'status': {
             'hd': 'Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.',
             'wired-unverified': 'Reserved: in a table but not drawn by the runtime. Bodies in the runtime table are `hd` now; `verified_in_game` says whether a draw was observed.',
-            'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette) or an alternate film cut, which stays native. Not a to-do list: check `reason` first.',
-            'excluded': 'Paired but never replaced by design (key-colour character cut-outs, the blank picture).',
+            'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette). Check `reason` first.',
+            'excluded': 'Native by design (key-colour cut-outs, blank pictures, alternate film edits or native transitions).',
             'unsupported-size': 'Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).',
             'unpaired': 'The catalog records a rejected or absent counterpart.',
             'unknown': 'Pairing or integration is not established by the input catalogs.',

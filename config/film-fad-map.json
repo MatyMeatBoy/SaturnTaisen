@@ -648,8 +648,13 @@
   }
  ],
  "unpaired_pc": [
-  "MOVIE118",
   "REDLOGO"
  ],
+ "pc_aliases": {
+  "MOVIE118": {
+   "canonical": "MOVIE015",
+   "sha256": "2b4c08d17ed8a364b103495c45440ebe7f47423d837d6d2e335de84113df28ac"
+  }
+ },
  "unpaired_saturn": []
 }
