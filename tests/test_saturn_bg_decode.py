@@ -74,7 +74,7 @@ class SaturnBgTests(unittest.TestCase):
         import json
         data = json.loads((ROOT / 'config/hd-body-map.json').read_text(encoding='utf-8'))
         firm = [p for p in data['pairs'] if p['tier'] == 'content']
-        self.assertGreaterEqual(len(firm), 60)
+        self.assertGreaterEqual(len(firm), 100)
         for pair in firm:
             self.assertEqual(pair['same_name_pc'], pair['best_pc'])
             self.assertGreaterEqual(pair['same_name_correlation'], 0.75)
