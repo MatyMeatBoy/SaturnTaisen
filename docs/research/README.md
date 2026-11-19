@@ -136,7 +136,9 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [HD chapter 4 report](hd-chapter-4.md): what chapter 4 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 5 report](hd-chapter-5.md): what chapter 5 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 6 report](hd-chapter-6.md): what chapter 6 shows per resource class, its status, ranked next actions and what needs the owner's discs.
+- [th6-native-attribution.md](th6-native-attribution.md) — Exact disc-1 reads and native composite pixels.
 - [HD chapter 7 report](hd-chapter-7.md): what chapter 7 shows per resource class, its status, ranked next actions and what needs the owner's discs.
+- [th7-native-attribution.md](th7-native-attribution.md) — Exact disc-1 reads and native viewport pixels and exact tactical residency.
 - [HD chapter 8 report](hd-chapter-8.md): what chapter 8 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 9 report](hd-chapter-9.md): what chapter 9 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 10 report](hd-chapter-10.md): what chapter 10 shows per resource class, its status, ranked next actions and what needs the owner's discs.
@@ -147,3 +149,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Disc 1 battle insets](disc1-battle-insets.md)
 
 - [Film catalog decisions](film-catalog-decisions.md)
+
+- [EVE0101 registered inset](eve0101-registered-inset.md)
+- [Full-frame battle pictures](bbg-full-frame.md)
+
+- [Constrained scroll fits and scenario references](tp2a-remaining-scroll.md)

@@ -2319,9 +2319,11 @@
           },
           "1:/SAKURA2/EVE0101.BIN": {
             "association": "observed",
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/eve0101-registered-inset.md",
             "pc": "SAKURA2/BG/BBG001.SPR",
-            "status": "paired-not-wired"
+            "runtime_evidence": "docs/research/eve0101-registered-inset.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA2/EVE0116.BIN": {
             "association": "observed",
@@ -4062,9 +4064,36 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1025.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1025.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1199.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1199.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG4059.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG4059.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
+          },
+          "1:/SAKURA1/BG4119.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md",
+            "pc": "SAKURA1/BG/BG4119.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
+          },
           "1:/SAKURA1/TITLE6.BIN": {
-            "association": "inferred",
+            "association": "observed",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+            "evidence": "docs/research/th6-native-attribution.md",
             "pc": "SAKURA1/TITLE/TITLE6.SPR",
             "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
             "status": "excluded"
@@ -4079,8 +4108,23 @@
       "disc": 1,
       "resources": {
         "bodies": {},
-        "film": {},
-        "menus-hud": {},
+        "film": {
+          "1:/SAKURA4+164800512": {
+            "alternate_cut": false,
+            "association": "observed",
+            "evidence": "docs/research/th7-native-attribution.md",
+            "fad": 80874,
+            "pc": "MOVIE019",
+            "status": "hd"
+          }
+        },
+        "menus-hud": {
+          "1:/SAKURA2/WKL10.BIN": {
+            "association": "resident",
+            "evidence": "docs/research/th7-native-attribution.md",
+            "status": "unknown"
+          }
+        },
         "portraits": {
           "1:/SAKURA1/0700FCE.BIN": {
             "association": "resident",
@@ -4235,6 +4279,24 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1267.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th7-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1267.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1268.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th7-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1268.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG2080.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th7-native-attribution.md",
+            "pc": "SAKURA1/BG/BG2080.SPR",
+            "status": "hd"
+          },
           "1:/SAKURA1/TITLE7.BIN": {
             "association": "inferred",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
@@ -4244,7 +4306,13 @@
           }
         },
         "tactical-maps": {},
-        "tactical-units": {}
+        "tactical-units": {
+          "1:/SAKURA2/UNIT10.BIN": {
+            "association": "resident",
+            "evidence": "docs/research/th7-native-attribution.md",
+            "status": "unknown"
+          }
+        }
       }
     },
     {
@@ -6905,13 +6973,6 @@
         "pc": "MOVIE018",
         "status": "hd"
       },
-      "1:/SAKURA4+164800512": {
-        "alternate_cut": false,
-        "association": "unknown",
-        "fad": 80874,
-        "pc": "MOVIE019",
-        "status": "hd"
-      },
       "1:/SAKURA4+178169856": {
         "alternate_cut": true,
         "association": "unknown",
@@ -7663,10 +7724,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/WKL09.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/WKL10.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
@@ -11895,11 +11952,6 @@
         "pc": "SAKURA1/BG/BG1024.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1025.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1025.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1026.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1026.SPR",
@@ -12565,11 +12617,6 @@
         "pc": "SAKURA1/BG/BG1196.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1199.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1199.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1203.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1203.SPR",
@@ -12801,16 +12848,6 @@
       "1:/SAKURA1/BG1266.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1266.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1267.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1267.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1268.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1268.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1275.BIN": {
@@ -13567,11 +13604,6 @@
       "1:/SAKURA1/BG2079.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2079.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2080.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2080.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2081.BIN": {
@@ -14954,12 +14986,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/BG4059.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4059.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "1:/SAKURA1/BG4060.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4060.SPR",
@@ -15073,12 +15099,6 @@
       "1:/SAKURA1/BG4116.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4116.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "1:/SAKURA1/BG4119.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4119.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -19577,7 +19597,7 @@
       "2:/SAKURA2/EVE0101.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG001.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA2/EVE0116.BIN": {
         "association": "unknown",
@@ -19706,10 +19726,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/UNIT09.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/UNIT10.BIN": {
         "association": "unknown",
         "status": "unknown"
       },

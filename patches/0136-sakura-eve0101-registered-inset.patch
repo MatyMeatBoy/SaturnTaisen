@@ -1,0 +1,83 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -738,6 +738,8 @@
+     std::array<SceneHd, 4> bbgItemImages;
+     std::array<bool, 4> bbgItemTraces{};
+     constexpr port::EveRect itemNative{104, 40, 112, 112};
++    SceneHd eve0101;
++    bool eve0101Traced = false;
+     struct NativeEveInset {
+         const char* name;
+         uint64_t palette;
+@@ -749,6 +751,8 @@
+         SceneHd& image;
+         bool& traced;
+         port::EveRect rect = port::kEve202NativeRect;
++        std::optional<port::EveRect> drawRect;
++        unsigned feather = 0;
+     };
+     const NativeEveInset nativeEveInsets[]{
+         {"EVE202", port::kEve202Palette, 0x9B31BCF15EF165E9ull, port::kEve202PcFile, 97616,
+@@ -779,16 +783,19 @@
+          0x701D49A9BAB9C368ull, {0, 0, 224, 224}, bbgItemImages[2], bbgItemTraces[2], itemNative},
+         {"BBG007", 0xEF9307D85B802E5Bull, 0xE7C5EE547670B065ull, "SAKURA2/BG/BBG007.SPR", 30742,
+          0x2320C6D66870B316ull, {0, 0, 224, 224}, bbgItemImages[3], bbgItemTraces[3], itemNative},
++        {"EVE0101", 0xD3C319A0279AEDB3ull, 0xBB29706F138712A9ull, "SAKURA2/BG/BBG001.SPR", 109669,
++         0x5542041CD4EA4363ull, {2, 1, 574, 319}, eve0101, eve0101Traced, port::kEve202NativeRect,
++         port::EveRect{24, 16, 255, 132}, 24},
+     };
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+     bool eve0118Traced = false;
+-    auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop) {
++    auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop, unsigned feather = 0) {
+         if (!inset.tried) {
+             inset.tried = true;
+             inset.pending = std::async(std::launch::async,
+-                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop]() {
++                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop, feather]() {
+                     SceneHdPixels result;
+                     std::vector<uint8_t> bytes;
+                     if (!ReadPcBackdropFile(path, bytes, size) || bytes.size() != size ||
+@@ -804,7 +811,16 @@
+                         result.pixels.reserve(size_t(crop.width) * crop.height);
+                         for (int y = 0; y < crop.height; ++y) {
+                             const auto first = image.pixels.begin() + (y + crop.y) * image.width + crop.x;
+-                            result.pixels.insert(result.pixels.end(), first, first + crop.width);
++                            if (feather == 0) {
++                                result.pixels.insert(result.pixels.end(), first, first + crop.width);
++                                continue;
++                            }
++                            for (int x = 0; x < crop.width; ++x) {
++                                const unsigned edge = std::min({x, y, crop.width - 1 - x, crop.height - 1 - y});
++                                const unsigned t = std::min(edge, feather) * 255 / feather;
++                                const unsigned opacity = t * t * (3 * 255 - 2 * t) / (255 * 255);
++                                result.pixels.push_back((first[x] & 0x00FFFFFFu) | (opacity << 24));
++                            }
+                         }
+                         break;
+                     }
+@@ -819,7 +835,7 @@
+             SDL_TEXTUREACCESS_STATIC, pixels.width, pixels.height);
+         if (picture && SDL_UpdateTexture(picture, nullptr, pixels.pixels.data(), pixels.width * 4)) {
+             SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_NEAREST);
+-            SDL_SetTextureBlendMode(picture, SDL_BLENDMODE_NONE);
++            SDL_SetTextureBlendMode(picture, feather ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+             inset.texture = picture;
+         } else if (picture) SDL_DestroyTexture(picture);
+     };
+@@ -2599,9 +2615,10 @@
+                 }
+                 if (knownInset) {
+                     if (nativeRgb == inset->rgb) {
+-                        loadEveInset(inset->image, inset->file, inset->size, inset->fileHash, inset->crop);
++                        loadEveInset(inset->image, inset->file, inset->size, inset->fileHash, inset->crop, inset->feather);
+                         if (inset->image.texture) {
+-                            const auto fit = port::EveInsetDestination(inset->rect, baseFit.x, baseFit.y, baseFit.scale);
++                            const auto fit = port::EveInsetDestination(inset->drawRect.value_or(inset->rect),
++                                baseFit.x, baseFit.y, baseFit.scale);
+                             const SDL_FRect target{float(fit.x), float(fit.y), float(fit.width), float(fit.height)};
+                             if (SDL_RenderTexture(renderer, inset->image.texture, nullptr, &target) &&
+                                 !inset->traced && std::getenv("SATRECOMP_EVE_TRACE")) {

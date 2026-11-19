@@ -28,6 +28,12 @@ class ChapterCoverageTest(unittest.TestCase):
         by_chapter = {row['chapter']: row for row in catalog['chapters']}
         self.assertEqual([by_chapter[n]['disc'] for n in range(1, 11)], [1]*7 + [2]*3)
         chapter1 = by_chapter[1]['resources']
+        eve = chapter1['scene-pictures']['1:/SAKURA2/EVE0101.BIN']
+        self.assertEqual((eve['status'], eve['pc']), ('hd', 'SAKURA2/BG/BBG001.SPR'))
+        self.assertIs(eve['verified_in_game'], True)
+        eve_disc2 = catalog['unassigned']['scene-pictures']['2:/SAKURA2/EVE0101.BIN']
+        self.assertEqual(eve_disc2['status'], 'hd')
+        self.assertNotIn('verified_in_game', eve_disc2)
         ground = chapter1['tactical-maps']['1:/SAKURA2/MAP01.BIN']
         self.assertEqual((ground['association'], ground['scope']), ('observed', 'source-4 ground only'))
         self.assertEqual(ground['status'], 'hd')
@@ -105,6 +111,22 @@ class ChapterCoverageTest(unittest.TestCase):
             transition = catalog['unassigned']['film'][f'{disc}:/SAKURA1/OPSAKURA.CPK+0']
             self.assertEqual(transition['status'], 'excluded')
             self.assertNotIn('pc', transition)
+
+    def test_chapter7_separates_native_display_from_tactical_residency(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 7)
+        for name in ('BG1267', 'BG1268', 'BG2080'):
+            with self.subTest(scene=name):
+                scene = chapter['scene-pictures'][f'1:/SAKURA1/{name}.BIN']
+                self.assertEqual(scene['association'], 'observed')
+                self.assertFalse(scene.get('verified_in_game'))
+                self.assertIn(f'2:/SAKURA1/{name}.BIN', catalog['unassigned']['scene-pictures'])
+        film = chapter['film']['1:/SAKURA4+164800512']
+        self.assertEqual((film['association'], film['fad'], film['pc']), ('observed', 80874, 'MOVIE019'))
+        self.assertEqual(chapter['tactical-units']['1:/SAKURA2/UNIT10.BIN']['association'], 'resident')
+        self.assertEqual(chapter['menus-hud']['1:/SAKURA2/WKL10.BIN']['association'], 'resident')
+        self.assertNotIn('1:/SAKURA2/MAP10.BIN', chapter['tactical-maps'])
 
     def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
         root = Path(__file__).resolve().parents[1]

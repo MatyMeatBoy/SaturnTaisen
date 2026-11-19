@@ -33,3 +33,22 @@ Not added (the generator prints the reason, kept under `skipped` in the JSON):
 - Opening film replay (SATRECOMP_SKIP_CHOOSER, strict native, 6201 guest frames) with the new runtime matches the previous `frames.hash` byte for byte, with zero interpreted blocks.
 - C++ tests: `tests/test_bg2533_pan.cpp`, `test_bg2248_pan.cpp`, `test_bg1207_pan.cpp` (unchanged) and `test_scroll_pictures.cpp` (rule, unique keys, existing crops, lookup, 456- and 512-wide matcher). Compile each with `clang++ -std=gnu++20 -I<satrecomp>/port`.
 - The new rows are not seen in a replay. They draw only when the live layer keys and the exact native window match, and otherwise leave the native composition. Appearance and package inclusion stay open.
+
+## Remaining ten: offline alignment measurements (not wired)
+
+Offline fit of the PC crop as an axis-aligned affine map of the native offset `o` (box start = a*o + b on the scroll axis, length L, cross start c, cross length cl), scored with the generator signature (32x16 grey correlation, 8-px sweep). No generator, table or runtime change yet; no patch, no build, no replay was done. `local/work/tp2rest` holds the scripts (not committed).
+
+| Picture | a, b, L, c, cl (PC px) | mean / min correlation | Verdict |
+|---|---|---|---|
+| BG2518 | 1.831, 9.8, 264, 27, 487.5 | 1.000 / 1.000 | alignable (anisotropic scale) |
+| BG2172 | 2.008, 4.5, 289.5, 25.5, 536.4 | 0.999 / 0.999 | alignable |
+| BG2077 | 2.312, 0, 669.5, 0.2, 314 | 0.998 / 0.997 | alignable (whole picture stretched to PC size) |
+| BG2093 | 1.828, 22.5, 514.2, 0, 320 | 0.969 / 0.967 | alignable |
+| BG1310 | 1.905, 36.2, 560.8, 8, 312 | 0.953 / 0.948 | alignable |
+| BG1283 | 1.991, 0, 570, 0, 320 | 0.947 / 0.929 | alignable (2x, full 320 height) |
+| BG2290 | about 2.18, about -18, about 620, 0, 319 | per-window 0.98-0.99 for o>=24 | needs the box start clamped to [0, pcW-L]; native offsets below about 24 have no PC counterpart; unverified as a whole |
+| BG1257 | 2.570, 4, 735, 0, 304 | 0.878 / 0.867 | not aligned: best free per-window fit 0.866-0.895 |
+| BG1280 | 2.089, 83, 598, 32, 288 | 0.865 / 0.809 | not aligned: first ~110 native px correlate 0.81-0.82 |
+| BG2247 | best 1.856, 35, 262, 30, 524 | 0.561 / 0.392 | not aligned: PC is a different 3D camera/perspective render, not an affine map |
+
+To finish: add per-row fit fields (scale, origin, length, cross, cross length, clamped start) to `ScrollPicture`/`ScrollPcCrop` as a new patch (next free number), keep rule rows identical, relax the row-valid test for fitted rows, rerun the generator with these fits, build in a clean copy, replay the opening film.

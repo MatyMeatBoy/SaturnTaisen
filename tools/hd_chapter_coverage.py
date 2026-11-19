@@ -73,6 +73,8 @@ CHAPTER5_ROUTE_FILES = {
 }
 CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
 CHAPTER_FILE_RESIDENCIES = {
+    '1:/SAKURA2/UNIT10.BIN:0f44592f6e4323a8b977622fcb69f9d42da29e5f81e285d09f817a1bc4438496': (7, 'docs/research/th7-native-attribution.md'),
+    '1:/SAKURA2/WKL10.BIN:7b4dae276347d0e295392eeb42e181276638be1e626825d99a63394e2f2ed453': (7, 'docs/research/th7-native-attribution.md'),
     '1:/SAKURA2/WKL06.BIN:f9306a073a1c603658e7b6c132b6ef36e889086e990f2c8856e056db1c14af4b':
         (4, CHAPTER4_TACTICAL_REPORT),
     '1:/SAKURA2/WKL21.BIN:60fed250c11dab1d28df048763315fc62b159a0cee502a73b473a63cef2734f3':
@@ -82,6 +84,7 @@ BBG204_INSET = (1, '/SAKURA2/BBG204.BIN')
 BBG204_REPORT = 'docs/research/bbg204-tactical-inset.md'
 BBG_INSET_REPORT = 'docs/research/disc1-battle-insets.md'
 BBG_INSET_PAIRS = {'BBG002', 'BBG003', 'BBG004', 'BBG005', 'BBG006', 'BBG007', 'BBG008', 'BBG103', 'BBG104', 'BBG106', 'BBG205', 'BBG235'}
+EVE0101_REPORT = 'docs/research/eve0101-registered-inset.md'
 EVE002_REPORT = 'docs/research/eve002-tactical-inset.md'
 EVE0116_REPORT = 'docs/research/eve0116-tactical-inset.md'
 EVE0118_REPORT = 'docs/research/eve0118-tactical-inset.md'
@@ -118,6 +121,14 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA1/BG1267.BIN'): (7, 'docs/research/th7-native-attribution.md'),
+    (1, '/SAKURA1/BG1268.BIN'): (7, 'docs/research/th7-native-attribution.md'),
+    (1, '/SAKURA1/BG2080.BIN'): (7, 'docs/research/th7-native-attribution.md'),
+    (1, '/SAKURA1/TITLE6.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG1199.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG4119.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG1025.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    (1, '/SAKURA1/BG4059.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG1198.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/TITLE3.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1022.BIN'): (3, 'docs/research/th3-native-attribution.md'),
@@ -133,7 +144,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/BG1207.BIN'): (1, BG1207_REPORT),
     (1, '/SAKURA1/BG2248.BIN'): (1, BG2248_REPORT),
     (1, '/SAKURA1/BG2533.BIN'): (5, 'docs/research/bg2533-pan.md'),
-    (1, '/SAKURA2/EVE0101.BIN'): (1, BODY_REPORT),
+    (1, '/SAKURA2/EVE0101.BIN'): (1, EVE0101_REPORT),
     (1, '/SAKURA2/EVE0116.BIN'): (1, EVE0116_REPORT),
     (1, '/SAKURA2/EVE0118.BIN'): (1, EVE0118_REPORT),
     (1, '/SAKURA2/EVE202.BIN'): (2, BODY_REPORT),
@@ -384,6 +395,10 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
+                elif path == '/SAKURA2/EVE0101.BIN':
+                    row['status'] = 'hd'
+                    if disc == 1:
+                        row.update(verified_in_game=True, runtime_evidence=EVE0101_REPORT)
                 elif path == '/SAKURA1/BG2295.BIN' or name in bg_review.get('guarded_viewport', []):
                     row['status'] = 'hd'
                 elif path == '/SAKURA1/BG1285.BIN':
@@ -499,6 +514,8 @@ def build(root, index_dir, portrait_audit):
             if (disc == 1 and path == '/SAKURA4' and offset in CHAPTER1_ROUTE_FILMS
                     and row.get('pc') == CHAPTER1_ROUTE_FILMS[offset]):
                 chapter, report = 1, CHAPTER1_ROUTE_REPORT
+            if (disc, path, fad, row.get('pc')) == (1, '/SAKURA4', 80874, 'MOVIE019'):
+                chapter, report = 7, 'docs/research/th7-native-attribution.md'
             add('film', f'{disc}:{path}+{offset}', row, chapter,
                 'observed' if chapter else 'unknown', report)
     census = load(root / MENU_CENSUS)

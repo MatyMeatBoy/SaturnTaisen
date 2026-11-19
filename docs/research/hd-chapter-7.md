@@ -1,5 +1,9 @@
 # HD chapter 7 coverage report (TH7)
 
+The [Chapter 7 native evidence](th7-native-attribution.md) adds observed scene pictures and resident tactical files to the chapter register. It records display, residency, and disc reads separately. The complete replay and HD exit test are open.
+
+## Earlier catalog snapshot
+
 Source: `config/hd-chapter-coverage.json` (chapters[6], unassigned, association), cross-checked with `config/hd-scene-bg-map.json`, `hd-scene-bg-review.json`, `hd-body-map.json`, `hd-item-map.json`, `film-fad-map.json` and `docs/PENDIENTES.md`. Names, hashes and counts only. This is an offline data report; no replay was run, so nothing here certifies the chapter.
 
 ## 1. Scope (what the data attributes to chapter 7, disc 1)
