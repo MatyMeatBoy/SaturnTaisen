@@ -17,6 +17,7 @@ BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
+BG1285_REPORT = 'docs/research/bg1285-pan.md'
 BG1207_REPORT = 'docs/research/bg1207-pan.md'
 BG2248_REPORT = 'docs/research/bg2248-pan.md'
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
@@ -73,6 +74,7 @@ CHAPTER_WITNESSES = {
     **SCENE_DRAWS,
     (1, '/SAKURA1/NC20.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
+    (2, '/SAKURA1/BG1285.BIN'): (10, BG1285_REPORT),
     (1, '/SAKURA1/BG1207.BIN'): (1, BG1207_REPORT),
     (1, '/SAKURA1/BG2248.BIN'): (1, BG2248_REPORT),
     (1, '/SAKURA1/BG2533.BIN'): (5, 'docs/research/bg2533-pan.md'),
@@ -273,6 +275,10 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
+                elif path == '/SAKURA1/BG1285.BIN':
+                    row['status'] = 'hd'
+                    if disc == 2:
+                        row.update(verified_in_game=True, runtime_evidence=BG1285_REPORT)
                 elif path == '/SAKURA1/BG1207.BIN':
                     row['status'] = 'hd'
                     if disc == 1:

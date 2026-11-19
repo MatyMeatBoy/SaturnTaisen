@@ -1,0 +1,124 @@
+diff --git a/port/bg1207_verified_pan.h b/port/bg1207_verified_pan.h
+--- a/port/bg1207_verified_pan.h
++++ b/port/bg1207_verified_pan.h
+@@ -4,29 +4,29 @@
+ #include "bg2533_verified_pan.h"
+ 
+ namespace port {
+-inline constexpr unsigned kBG1207Width = 512;
+-inline constexpr unsigned kBG1207Height = 144;
++inline constexpr unsigned kHorizontalPanWidth = 512;
++inline constexpr unsigned kHorizontalPanHeight = 144;
+ inline constexpr size_t kBG1207Bytes = 79952;
+ inline constexpr uint64_t kBG1207Palette = 0x6EE7138F39DF8CFEull;
+ inline constexpr uint64_t kBG1207Cells = 0x7F3401C09AF54AA3ull;
+ 
+-inline std::optional<unsigned> FindBG1207Offset(
++inline std::optional<unsigned> FindHorizontalPanOffset(
+     std::span<const uint32_t> picture, std::span<const uint32_t> frame,
+     std::span<const uint8_t> top, bool opaqueActorLayer) {
+-    if (picture.size() != kBG1207Width * kBG1207Height || frame.size() != kPanFrameWidth * kPanFrameHeight ||
++    if (picture.size() != kHorizontalPanWidth * kHorizontalPanHeight || frame.size() != kPanFrameWidth * kPanFrameHeight ||
+         top.size() != frame.size()) return {};
+     const auto agrees = [&](unsigned start, unsigned x, unsigned y) {
+         const auto at = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;
+-        const auto expected = picture[y * kBG1207Width + start + x];
++        const auto expected = picture[y * kHorizontalPanWidth + start + x];
+         if (top[at] == 4) return (frame[at] & 0xFFFFFF) == expected;
+         return top[at] == 2 && opaqueActorLayer;
+     };
+     std::optional<unsigned> result;
+-    for (unsigned offset = 0; offset <= kBG1207Width - kPanInsetWidth; ++offset) {
++    for (unsigned offset = 0; offset <= kHorizontalPanWidth - kPanInsetWidth; ++offset) {
+         if (!agrees(offset, 17, 13) || !agrees(offset, 139, 77) || !agrees(offset, 247, 114)) continue;
+         bool verified = true;
+         unsigned foreground = 0;
+-        for (unsigned y = 0; y < kBG1207Height && verified; ++y) {
++        for (unsigned y = 0; y < kHorizontalPanHeight && verified; ++y) {
+             for (unsigned x = 0; x < kPanInsetWidth; ++x) {
+                 const auto at = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;
+                 // Keep the verified foreground small so the native viewport identifies the crop.
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -672,6 +672,8 @@
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
+     SceneHd bg2238;
++    SceneHd bg1285;
++    std::vector<uint32_t> bg1285Native;
+     SceneHd bg1207;
+     std::vector<uint32_t> bg1207Native;
+     SceneHd bg2248;
+@@ -2121,27 +2123,38 @@
+                             const bool bg1207Layer = port.videoRenderer &&
+                                 port.videoRenderer->BackgroundPaletteFingerprint(4) == kBG1207Palette &&
+                                 port.videoRenderer->BackgroundCellFingerprint(4, 41472) == kBG1207Cells;
+-                            if (!drewHd && !drewClip && bg1207Layer && !port.opt.pcAssetsPath.empty() &&
++                            const bool bg1285Layer = port.videoRenderer &&
++                                port.videoRenderer->BackgroundPaletteFingerprint(4) == 0x8B6362BE73FB2551ull &&
++                                port.videoRenderer->BackgroundCellFingerprint(4, 41472) == 0xBE01460AC7277CC6ull;
++                            if (!drewHd && !drewClip && (bg1207Layer || bg1285Layer) && !port.opt.pcAssetsPath.empty() &&
+                                 satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !choosing && !port.menu.IsOpen()) {
+-                                if (!bg1207.tried) {
+-                                    bg1207.tried = true;
++                                auto& pan = bg1207Layer ? bg1207 : bg1285;
++                                auto& nativePixels = bg1207Layer ? bg1207Native : bg1285Native;
++                                const char* name = bg1207Layer ? "BG1207" : "BG1285";
++                                if (!pan.tried) {
++                                    pan.tried = true;
+                                     std::vector<uint8_t> native;
+-                                    if (port.discFiles.ReadBounded("BG1207.BIN", native, kBG1207Bytes)) {
+-                                        bg1207Native = DecodePinnedPan(native, kBG1207Width, kBG1207Height,
+-                                                                        kBG1207Bytes, 0xB348FED200EB5F33ull);
++                                    const size_t nativeSize = bg1207Layer ? kBG1207Bytes : 77648;
++                                    const uint64_t nativeFingerprint = bg1207Layer ? 0xB348FED200EB5F33ull : 0x84BEAAAE2A751658ull;
++                                    if (port.discFiles.ReadBounded(std::string(name) + ".BIN", native, nativeSize)) {
++                                        nativePixels = DecodePinnedPan(native, kHorizontalPanWidth, kHorizontalPanHeight,
++                                                                        nativeSize, nativeFingerprint);
+                                     }
+-                                    if (!bg1207Native.empty())
+-                                        queuePinnedPan(bg1207, "SAKURA1/BG/BG1207.SPR", 430485,
+-                                                       0x79337C665113FFEAull, 1024, 320);
++                                    if (!nativePixels.empty()) {
++                                        const auto file = std::string("SAKURA1/BG/") + name + ".SPR";
++                                        const size_t pcSize = bg1207Layer ? 430485 : 228628;
++                                        const uint64_t pcFingerprint = bg1207Layer ? 0x79337C665113FFEAull : 0x6C426261DECC3F7Eull;
++                                        queuePinnedPan(pan, file.c_str(), pcSize, pcFingerprint, 1024, 320);
++                                    }
+                                 }
+-                                finishPinnedPan(bg1207);
+-                                if (bg1207.texture) {
+-                                    const auto offset = FindBG1207Offset(bg1207Native, softwareShown, planes.topSource,
+-                                        port.videoRenderer->BackgroundIsOpaque(2));
++                                finishPinnedPan(pan);
++                                if (pan.texture) {
++                                    const auto offset = FindHorizontalPanOffset(nativePixels, softwareShown, planes.topSource,
++                                        bg1207Layer && port.videoRenderer->BackgroundIsOpaque(2));
+                                     if (offset) {
+                                         const SDL_FRect pcCrop{float(*offset * 2), 16.0f, float(2 * kPanInsetWidth),
+-                                                               float(2 * kBG1207Height)};
+-                                        drewHd = SDL_RenderTexture(renderer, bg1207.texture, &pcCrop, &imageTarget);
++                                                               float(2 * kHorizontalPanHeight)};
++                                        drewHd = SDL_RenderTexture(renderer, pan.texture, &pcCrop, &imageTarget);
+                                         if (drewHd) {
+                                             sceneHdForeground = zoomForeground;
+                                             for (int y = 8; y < 152; ++y)
+@@ -2153,7 +2166,7 @@
+                                             SDL_RenderTexture(renderer, content, &imageCrop, &imageTarget);
+                                             SDL_UpdateTexture(content, nullptr, zoomForeground.data(), 320 * sizeof(uint32_t));
+                                             if (std::getenv("SATRECOMP_PAN_TRACE"))
+-                                                std::fprintf(stderr, "verified pan: BG1207 x=%u\n", *offset);
++                                                std::fprintf(stderr, "verified pan: %s x=%u\n", name, *offset);
+                                         }
+                                     }
+                                 }
+@@ -2180,7 +2193,7 @@
+                                planes.source.size()==320*224) {
+                                 for(const uint32_t layer:{2u,4u}) {
+                                     if(drewHd)break;
+-                                    if(layer==4 && (bg2248Layer || bg1207Layer))continue;
++                                    if(layer==4 && (bg2248Layer || bg1207Layer || bg1285Layer))continue;
+                                     const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
+                                     constexpr unsigned kNoSlot=kSceneBgCount+kSceneBgAmbiguousCount;
+                                     unsigned slot=kNoSlot;

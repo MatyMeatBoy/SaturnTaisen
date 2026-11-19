@@ -118,7 +118,8 @@
       "patches/0120-sakura-bbg204-tactical-inset.patch",
       "patches/0121-sakura-presentation-once-borderless.patch",
       "patches/0122-sakura-bg1207-verified-horizontal-pan.patch",
-      "patches/0123-sakura-bg2238-verified-still.patch"
+      "patches/0123-sakura-bg2238-verified-still.patch",
+      "patches/0124-sakura-bg1285-verified-horizontal-pan.patch"
     ]
   }
 }
