@@ -29,3 +29,17 @@ Bots take shards in this order; anything that does not move HD mode toward done 
 Order for the fastest visible gain: S1, S2 (independent, small), then S3 and S4, then S5 and S8. S6 and S7 are performance and can run in parallel with anything else.
 
 Each PR should say which shard it closes, the commands run and their results, and what is still not verified.
+
+## HD by chapter (added 2026-11-19)
+
+The remaining HD work is split by chapter so several bots can work at once without touching the same files. Every chapter shard has the same scope and the same exit test; take one, say so in the queue row, and keep PRs small.
+
+**H0 (T120), do first, anyone:** `tools/hd_chapter_coverage.py` + `config/hd-chapter-coverage.json`: for each of the 10 chapters list the resources the chapter shows (scene pictures BG/EVE/CG, NC bodies, portraits, FILM clips, tactical maps and units, menus/HUD) from the scene index and the existing `config/hd-*-map.json`, marking each as `hd`, `paired-not-wired`, `unpaired` or `unknown`. Also refresh `docs/HD_PROGRESS.md` and `config/hd-progress.json`, whose counts are stale (it still reports 0 integrated scene pictures; 459 are wired and the bodies and clips are in).
+
+**H1-H10 (T121-T130), one per chapter** (chapters 1-5 on disc 1, 6-10 on disc 2; take the numbering from the scene index). Scope of each: (a) every scene picture the chapter shows has an HD pair or a recorded reason it has none; (b) every NC body and portrait the chapter uses is matched and, where the matcher leaves a face native, listed with its frame layout (follow T106a-d); (c) the chapter's FILM clips are mapped (`config/film-fad-map.json`) and each alternate cut has a decision; (d) the tactical maps/units of the chapter are listed for S11. Exit test: a continuous strict-native replay of the chapter's path with the HD runtime shows per-frame guest hashes identical to the build without HD and a short report (`docs/research/hd-chapter-N.md`) with the screenshots the owner can open, what is HD, what stays native and why. Do not claim a chapter complete from a saved state alone.
+
+**S11 tactical mode (T131):** the 542 PC SPR candidates (UNIT, MAP, ITEM): pair, wire a recogniser, wide extension of the maps (generated art welcome; keep generated files separate from game pixels).
+
+**S12 packaging (T132):** the release package gate for everything generated or paired (cards sides, clips, art folders) and a clean-machine run of `preparar-juego.exe` with a PC edition that has MOVIE.
+
+Rows T120-T132 in `docs/PENDIENTES.md` mirror this list; update the row of the shard you take.
