@@ -26,14 +26,38 @@ class SaturnBgTests(unittest.TestCase):
         self.assertEqual(image.getpixel((8 + 3, 8 + 5)), (8 * 255 // 31, 16 * 255 // 31, 255))
         self.assertEqual(image.getpixel((0, 0)), (0, 0, 0))
 
-    def test_variant_b_has_size_in_header_and_palette_first(self):
-        data = bytearray(0x210 + 4 * 2 * 64)
-        data[:8] = bytes([0, 1, 0, 2, 0, 4, 0, 2])
+    def variant_b_sample(self):
+        table_at = 0x610
+        tile_at = table_at + 4 * 4
+        data = bytearray(tile_at + 2 * 64)
+        struct.pack_into('>4H', data, 0, 1, 2, 4, 1)
+        struct.pack_into('>H', data, 8, 2)
         struct.pack_into('>H', data, 0x10 + 7 * 2, 31)  # palette 7 = R31
-        data[0x210 + 5 * 64 + 8 + 2] = 7  # cell 5 = (1,1), pixel (2,1)
-        image = bg.decode(bytes(data))
-        self.assertEqual(image.size, (32, 16))
-        self.assertEqual(image.getpixel((8 + 2, 8 + 1)), (255, 0, 0))
+        struct.pack_into('>4I', data, table_at, 2, 0x40000002, 0x80000002, 0xC0000002)
+        data[tile_at + 64 + 8 + 2] = 7  # second tile, pixel (2,1)
+        return data, tile_at
+
+    def test_variant_b_maps_reused_tiles_and_flips_independently(self):
+        data, tile_at = self.variant_b_sample()
+        image = bg.decode(data)
+        self.assertEqual(image.size, (32, 8))
+        for x, y in [(2, 1), (13, 1), (18, 6), (29, 6)]:
+            self.assertEqual(image.getpixel((x, y)), (255, 0, 0))
+        self.assertIn((4, (255, 0, 0)), image.getcolors())
+        self.assertEqual(bg.picture_bytes(data), data[tile_at:])
+
+    def test_variant_b_counts_physical_tiles_when_declared_count_is_high(self):
+        data, _ = self.variant_b_sample()
+        struct.pack_into('>H', data, 8, 5)  # BG4302-like count, higher than the payload
+        self.assertIsNotNone(bg.decode(data))
+        self.assertIsNone(bg.decode(data[:-1]))
+        self.assertIsNone(bg.picture_bytes(data[:-1]))
+
+    def test_variant_b_rejects_pattern_names_outside_the_tile_payload(self):
+        data, _ = self.variant_b_sample()
+        struct.pack_into('>I', data, 0x610, 4)
+        self.assertIsNone(bg.decode(data))
+        self.assertIsNone(bg.picture_bytes(data))
 
     def test_variant_d_full_screen_picture_with_u32_table(self):
         data = bytearray(512 + 4480 + 1120 * 64)
