@@ -133,6 +133,18 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(chapter['menus-hud']['1:/SAKURA2/WKL10.BIN']['association'], 'resident')
         self.assertNotIn('1:/SAKURA2/MAP10.BIN', chapter['tactical-maps'])
 
+    def test_chapter8_native_scenes_preserve_donor_decisions(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 8)
+        for name, status in (('BG1050', 'hd'), ('BG1212', 'unpaired'), ('BG4187', 'excluded'), ('TITLE8', 'excluded')):
+            with self.subTest(scene=name):
+                row = chapter['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
+                self.assertEqual((row['association'], row['status']), ('observed', status))
+                self.assertFalse(row.get('verified_in_game'))
+                self.assertNotIn(f'1:/SAKURA1/{name}.BIN', chapter['scene-pictures'])
+        self.assertNotIn('2:/SAKURA1/BG1341.BIN', chapter['scene-pictures'])
+
     def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
