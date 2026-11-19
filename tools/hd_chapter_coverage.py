@@ -240,6 +240,9 @@ def build(root, index_dir, portrait_audit):
                 row['verified_in_game'] = disc == 1
                 if disc == 1:
                     row['runtime_evidence'] = 'docs/research/ic01-hd-intermission.md'
+            else:
+                row['reason'] = ('no saved state or route reaches this intermission, so its palette key, '
+                                 'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')
         elif name in EVE_PAIRS:
             row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/' + EVE_PAIRS[name] + '.SPR'}
         elif path in bodies:

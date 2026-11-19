@@ -9901,76 +9901,91 @@
       "1:/SAKURA1/IC02.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0200.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC03.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0300.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC04.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0400.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC0501.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0501.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC0502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0502.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC06.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0600.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC07.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0700.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC08.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0800.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC09.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0900.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC1001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1001.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC1002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1002.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC1003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1003.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC1004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1004.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC1005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1005.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC1006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1006.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/KA_CG.BIN": {
@@ -13800,76 +13815,91 @@
       "2:/SAKURA1/IC02.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0200.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC03.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0300.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC04.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0400.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC0501.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0501.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC0502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0502.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC06.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0600.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC07.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0700.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC08.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0800.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC09.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0900.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC1001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1001.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC1002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1002.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC1003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1003.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC1004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1004.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC1005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1005.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/IC1006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1006.SPR",
+        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
       "2:/SAKURA1/KA_CG.BIN": {
