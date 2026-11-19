@@ -1,0 +1,77 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 73b0d90..cc053cc 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -603,6 +603,11 @@ int RunWindowed(Port &port) {
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
+     std::vector<SceneHd> sceneHd(kSceneBgCount);
+     std::vector<uint32_t> sceneHdForeground;
++    // T87: the episode title cards (TITLE1..10.BIN, 320x224 on VDP2 layer 4) fill the 16:9 window: the area around the
++    // native picture takes the colour of the picture's own edge rows and columns (no asset, so no game pixels leave the
++    // player's machine). Four 1-pixel strips, stretched with the linear filter.
++    SDL_Texture* cardStrip[4]={nullptr,nullptr,nullptr,nullptr};   // left, right (1x224), top, bottom (320x1)
++    std::vector<uint32_t> cardPixels;
+     // T19: large character bodies. A body on screen is one VDP1 texture whose bytes are the bitmap of its NC file;
+     // the face is small sprites whose bytes are frames that follow the bitmap, in the same order as the parts of
+     // the PC picture. Both are redrawn from the PC picture; anything else inside the body rectangle means native.
+@@ -904,6 +909,13 @@ int RunWindowed(Port &port) {
+                     fputc(10,stderr);
+                 }
+             }
++            if(std::getenv("SATRECOMP_LAYER_TRACE") && port.videoRenderer) {
++                static uint64_t last[6]={};static uint64_t frames=0;frames++;
++                for(uint32_t layer=1;layer<=5;layer++) {
++                    const uint64_t fp=port.videoRenderer->BackgroundPaletteFingerprint(layer);
++                    if(fp!=last[layer]) {last[layer]=fp;fprintf(stderr,"layer %u palette %016llX at frame %llu",layer,static_cast<unsigned long long>(fp),static_cast<unsigned long long>(frames));fputc(10,stderr);}
++                }
++            }
+             const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height,planes.underSource);
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
+@@ -1650,6 +1662,46 @@ int RunWindowed(Port &port) {
+                 }
+             }
+         }
++        if(port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1 && softwareShown.size()==320*224 && wide>0 && high>0) {
++            static constexpr uint64_t kCards[10]={0xF84F4FA528984E99ull,0xFA7EA6C32652FF94ull,0xB17571E06A3D73A2ull,0x9C6046FA0FD22004ull,
++                0x584308F5B85AE012ull,0xF530E4A419F666C8ull,0xFDCEEE68F831DE9Full,0xECA61ED3EEA4FABBull,0xE8DCC5B80A127438ull,0x36BDFD7BBC63CCE7ull};
++            const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(4);
++            bool isCard=false;for(const auto card:kCards)isCard=isCard||card==fingerprint;
++            const auto cardFit=FitInteger(wide,high,320,224);
++            if(isCard && cardFit.scale>0 && (cardFit.x>canvasLeft || cardFit.y>0 || cardFit.x+cardFit.w<canvasLeft+canvasWidth || cardFit.y+cardFit.h<high)) {
++                auto average=[&](int x0,int y0,int x1,int y1)->uint32_t {
++                    uint32_t r=0,g=0,b=0;int n=0;
++                    for(int y=y0;y<y1;y++)for(int x=x0;x<x1;x++) {const uint32_t px=softwareShown[size_t(y)*320+x];r+=px&255;g+=(px>>8)&255;b+=(px>>16)&255;n++;}
++                    return n?(0xFF000000u|(r/n)|((g/n)<<8)|((b/n)<<16)):0xFF000000u;
++                };
++                const int widths[4]={1,1,320,320},heights[4]={224,224,1,1};
++                for(int k=0;k<4;k++) {
++                    if(!cardStrip[k]) {
++                        cardStrip[k]=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,widths[k],heights[k]);
++                        if(cardStrip[k])SDL_SetTextureScaleMode(cardStrip[k],SDL_SCALEMODE_LINEAR);
++                    }
++                    if(!cardStrip[k])continue;
++                    cardPixels.assign(size_t(widths[k])*heights[k],0xFF000000u);
++                    if(k==0)for(int y=0;y<224;y++)cardPixels[size_t(y)]=average(0,std::max(0,y-4),8,std::min(224,y+5));
++                    if(k==1)for(int y=0;y<224;y++)cardPixels[size_t(y)]=average(312,std::max(0,y-4),320,std::min(224,y+5));
++                    if(k==2)for(int x=0;x<320;x++)cardPixels[size_t(x)]=average(std::max(0,x-4),0,std::min(320,x+5),4);
++                    if(k==3)for(int x=0;x<320;x++)cardPixels[size_t(x)]=average(std::max(0,x-4),220,std::min(320,x+5),224);
++                    SDL_UpdateTexture(cardStrip[k],nullptr,cardPixels.data(),widths[k]*4);
++                }
++                const SDL_FRect leftArea{float(canvasLeft),0,float(cardFit.x-canvasLeft),float(high)};
++                const SDL_FRect rightArea{float(cardFit.x+cardFit.w),0,float(canvasLeft+canvasWidth-(cardFit.x+cardFit.w)),float(high)};
++                const SDL_FRect topArea{float(cardFit.x),0,float(cardFit.w),float(cardFit.y)};
++                const SDL_FRect bottomArea{float(cardFit.x),float(cardFit.y+cardFit.h),float(cardFit.w),float(high-(cardFit.y+cardFit.h))};
++                // The top and bottom strips stretch the whole width; the left and right ones the whole height, over the corners.
++                if(cardStrip[2] && topArea.h>0)SDL_RenderTexture(renderer,cardStrip[2],nullptr,&topArea);
++                if(cardStrip[3] && bottomArea.h>0)SDL_RenderTexture(renderer,cardStrip[3],nullptr,&bottomArea);
++                if(cardStrip[0] && leftArea.w>0)SDL_RenderTexture(renderer,cardStrip[0],nullptr,&leftArea);
++                if(cardStrip[1] && rightArea.w>0)SDL_RenderTexture(renderer,cardStrip[1],nullptr,&rightArea);
++                // The native card again on top (anything the areas above covered at its edge is restored).
++                if(texture) {const SDL_FRect nativeTarget{float(cardFit.x),float(cardFit.y),float(cardFit.w),float(cardFit.h)};SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);}
++                enhanced=true;
++            }
++        }
+         if(canvasLeft>0) {
+             SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);SDL_SetRenderDrawColor(renderer,0,0,0,255);
+             const SDL_FRect left{0,0,float(canvasLeft),float(high)},right{float(canvasLeft+canvasWidth),0,float(wide-canvasLeft-canvasWidth),float(high)};
