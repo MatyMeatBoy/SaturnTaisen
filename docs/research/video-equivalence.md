@@ -111,3 +111,27 @@ and changing candidate lags do not support a timing correction. Verify the scene
 and its sound against the Saturn stream before relying on duration-based audio
 eligibility for that ID. A normal-speed runtime audio capture, resync test and
 owner listening review remain open. This audit changed no mixer rules.
+
+## Runtime clip audio throughput (T112a)
+
+Normal-speed English disc-1 cold-boot replays used the SDL disk audio driver
+with isolated profiles. Both runs produced 1,800 identical strict-native guest
+hashes and zero interpreted blocks. At B skip, the title image returned in
+both cases. The PC-audio run reported 546 short top-ups in its first 600 calls.
+Its captured output was silent at the title while the Saturn-audio control
+resumed ordinary title audio. Audio remained gated by an open decoder after
+the film stopped being presented; the presentation-based release of that gate
+requires its own runtime check.
+
+Before this patch, the decoder requested at most one MP2 packet per video
+frame: a 24 fps film cannot supply 44.1 kHz PCM at that ratio. The worker now
+uses independent bounded queues and separate pl_mpeg demux cursors. In a
+two-second paced wall-clock test, the old decoder produced 129,024 interleaved
+floats on MOVIE000, below the 158,760 minimum. The fixed path delivered more
+than 176,000 in both synthetic 24/30 fps clips and three owner PC clips
+(MOVIE000, MOVIE001 and MOVIE030). The SDK patch was composed and tested
+without changing the active build tree.
+
+The in-game A/B with this patch, clean post-skip audio handoff, separate
+mixer eligibility, and drift/resume remain open. The decoder change does
+not set gains, change source eligibility, or establish lip sync.
