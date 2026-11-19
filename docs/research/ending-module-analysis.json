@@ -39,5 +39,62 @@
       "aligned_candidates": 54078
     }
   ],
-  "runtime_ownership_correction": "Continue function bodies at 0020528E and 00208A02 match LOGO.SH2, not ENDING.BIN. ENDING candidates remain static coverage for later testing."
+  "runtime_ownership_correction": "Continue function bodies at 0020528E and 00208A02 match LOGO.SH2, not ENDING.BIN. ENDING candidates remain static coverage for later testing.",
+  "observed_english_disc2_ending": {
+    "seed_sha256": "e981b37dd8f9111cbc1a6e9c3c564b6610978dbdc9ced59b73acbec1da9b1674",
+    "aperture_state_sha256": "b2784626ee154dde48546f96f913c92f14c8c2fc397cb7479afcd1eed043e897",
+    "ending_binary_sha256": "f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553",
+    "sakura_bank_sha256": "bfa8956ef011d63249840b13736c7f027faa16dd3044b043243d08bddabf331c",
+    "ending_full_high_wram": "06080000",
+    "sakura_bank_full_low_wram": "00204000",
+    "first_record_cells_vdp2_vram_offset": "0x8040",
+    "first_record_palette_cram_offset": "0x200",
+    "proof_of_pixels": [
+      {
+        "record": 0,
+        "frame": 5200,
+        "sha256": "48314a865259f5f92002ac4e2da4110288d1215aae9dd5f7feff316b1acb8811",
+        "capture_rect_ltrb": [
+          57,
+          24,
+          264,
+          144
+        ],
+        "source_rect_ltrb": [
+          57,
+          0,
+          264,
+          120
+        ],
+        "exact_rgb_pixels": 24840
+      },
+      {
+        "record": 1,
+        "frame": 1440,
+        "sha256": "6b41f74e0591f470ce9b00fe7d0101f09a4ccebba39701f2d4514a8fb60d8c5a",
+        "capture_rect_ltrb": [
+          0,
+          24,
+          320,
+          144
+        ],
+        "source_rect_ltrb": [
+          0,
+          0,
+          320,
+          120
+        ],
+        "exact_rgb_pixels": 38400
+      }
+    ],
+    "strict_native": {
+      "cold_prefix_frames": 20164,
+      "cold_movie_sha256": "a7b28d84a5a808cad77db4ff7b3fa334051f31bb1dbd682c177d7c04c67be3ce",
+      "cold_hash_log_sha256": "972ad1b1ec6ae8414a244be23cce8f8c3620512cd2dd916dc0eee8472c895f7c",
+      "ending_resume_error": "strict AOT: untranslated master SH-2 block at 06080104",
+      "ending_file_offset": "0x104"
+    },
+    "ending_binary_bytes": 178968,
+    "sakura_bank_bytes": 407908
+  }
 }
