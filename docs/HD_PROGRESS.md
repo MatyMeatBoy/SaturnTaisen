@@ -7,29 +7,29 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 302/304 (99,3%) | 302/304 (99,3%) | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 12/1267 (0,9%) | 0/1267 (0%) | 0/1267 (0%) | 0/1267 (0%) |
-| Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | 9/166 (5,4%) |
-| Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | 0/50 (0%) | 0/50 (0%) | 0/50 (0%) |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1267/1267 (100%) | 712/1267 (56,1%) | Sin dato | 459/1267 (36,2%) | Sin dato |
+| Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
+| Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) | 0/542 (0%) |
 | HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | imágenes PC candidatas (147 paquetes) | 3596/3596 (100%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) | 0/3596 (0%) |
+| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 129/147 (87,7%) | Sin dato | 6/147 (4%) | Sin dato |
 
 ## Resumen global de integración
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | 0/1267 (0%) | 0/1267 (0%) |
-| Escenas y transiciones | Sin dato | 9/166 (5,4%) |
-| Vídeos | 0/50 (0%) | 0/50 (0%) |
+| Imágenes de escena | 459/1267 (36,2%) | Sin dato |
+| Escenas y transiciones | Sin dato | Sin dato |
+| Vídeos | 44/50 (88%) | Sin dato |
 | Modo táctico | 0/542 (0%) | 0/542 (0%) |
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
+| Personajes grandes NC | 6/147 (4%) | Sin dato |
 
-- **Integración global indicativa (media de 7/8 categorías con total): 28,4%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 321/6350 (5%).** Mezcla unidades distintas; solo orienta.
+- **Integración global indicativa (media de 7/8 categorías con total): 46,7%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 830/2901 (28,6%).** Mezcla unidades distintas; solo orienta.
 - Categorías sin total confirmado: ninguna.
 
 ## Qué cuenta en cada etapa
@@ -69,37 +69,39 @@ Rangos de ID Saturn pendientes en hexadecimal
 
 Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
 
-- 1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte.
-- 12 pares aprobados por captura (pasada 1, 875 capturas revisadas): BG1119, BG1209, BG2251, BG1001, BG1002, BG1006, BG1007, BG1021, BG1116, BG2039, BG1075, BG1120. Datos en config/hd-scene-bg-pairs.json; registro en docs/research/bg-matching-progress.md.
-- **Siguiente paso**. Emparejar cada archivo con su escena Saturn, empaquetarlo e integrarlo; verificar variantes de iluminación y fundidos.
+- El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.
+- El cruce TH0 registra 712 archivos PC con una correspondencia aceptada en los catálogos de BG, EVE y pantallas IC. La tabla de huellas de paleta contiene 459 entradas y 459 archivos SPR distintos con integración en el código fuente.
+- El preparador copia el material HD desde la edición PC del propietario. Falta un recuento de archivos preparados y verificados individualmente. Las imágenes de variante ancha, escenas EVE y eyecatches mantienen su ruta nativa.
+- **Siguiente paso**. Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
+- [hd-chapter-coverage.md](research/hd-chapter-coverage.md).
+- [saturn-bg-format.md](research/saturn-bg-format.md).
 
 ### Escenas y transiciones
 
 Visitas, elecciones, mapas, combates, menús, películas y transiciones navegadas en ambos discos.
 
-- El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.
-- Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.
-- 166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas.
-- **Siguiente paso**. Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.
+- El índice enriquecido lista 166 candidatos de recursos y 26 observaciones de ejecución, incluidas 17 del barrido de episodios.
+- Una tabla de diálogo o un flujo de vídeo puede aparecer en varias rutas. Las observaciones de estados y capturas carecen de un denominador común con las 166 entradas de recursos.
+- **Siguiente paso**. Vincular cada aparición a una escena o transición y verificar HD, Zoom y fallback cuando corresponda.
 
 - [scene-tagging.md](research/scene-tagging.md).
 - [wide-map-crossfades.md](research/wide-map-crossfades.md).
 - [chapter-sweep.md](research/chapter-sweep.md).
+- [hd-chapter-coverage.md](research/hd-chapter-coverage.md).
 
 ### Vídeos
 
 Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.
 
-- 50 clips Saturn únicos (flujos FILM deduplicados entre ambos discos; el cortometraje de 0,15 s del logo queda fuera) frente a 52 MPEG de PC (51 MOVIE + REDLOGO).
-- Sin sustitución integrada: falta decodificación MPEG-1/MP2 en el runtime, sincronía de audio, subtítulos y salto.
-- 44 pares con duración dentro de 0,5 s y orden consecutivo idéntico (flujo k de /SAKURA4 ↔ MOVIE00k).
-- Seis pares con duración distinta (743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102, def7a6↔020 con 3,7 s) se aceptan por contenido: cada clip PC es la mejor coincidencia única en una firma de luminancia de cinco fotogramas frente a los 52 clips PC. Se registran como cortes alternativos.
-- **Siguiente paso**. Comprobar audio, subtítulos y saltos de los seis cortes alternativos y diseñar la reproducción PC dentro del runtime.
+- 50 clips Saturn únicos y emparejados. La tabla del runtime conecta el vídeo PC para 44 clips y conserva el vídeo y el audio Saturn en los seis cortes alternativos.
+- El preparador copia películas si la edición PC las incluye. MOVIE000 y MOVIE001 tienen observaciones de vídeo en juego. La validación completa de subtítulos, audio, sincronización, salto y cambio de disco sigue abierta.
+- **Siguiente paso**. Verificar audio y vídeo a velocidad normal, saltos y reanudaciones, subtítulos y ambos discos.
 
 - [scene-tagging.md](research/scene-tagging.md).
 - [intro-petals-transition.md](research/intro-petals-transition.md).
+- [video-equivalence.md](research/video-equivalence.md).
 
 ### Modo táctico
 
@@ -134,13 +136,15 @@ Los 19 temas decorativos únicos del catálogo KABE con alternativas HD, incluid
 
 ### Personajes grandes NC
 
-Cuerpos y poses fuera del retrato de diálogo. El total de poses y composiciones nativas permanece abierto.
+Cuerpos Saturn fuera del retrato de diálogo. La cara y sus cuadros se auditan aparte.
 
-- 147 paquetes PC y 3.596 imágenes decodificadas sin errores de cabecera; 147 pares de nombre candidatos. Faltan las equivalencias por pose y el dibujo en runtime.
-- **Siguiente paso**. Vincular índices por pose y validar ancla, proporción y animación en capturas Saturn para cada sustitución.
+- Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. Hay 129 pares de cuerpo utilizables según el mapa y la revisión. Los recuentos usan cuerpos, una unidad por archivo Saturn.
+- Se observaron seis cuerpos dibujados en HD en estados de juego. Según el cuadro, los ojos o la boca pueden seguir nativos. Sigue pendiente el recuento de poses, expresiones, fundidos y apariciones verificadas.
+- **Siguiente paso**. Comprobar los cuerpos restantes y las expresiones con fallback nativo.
 
 - [saturn-hd-characters.md](research/saturn-hd-characters.md).
 - [pc-character-inventory.json](research/pc-character-inventory.json).
+- [saturn-bg-format.md](research/saturn-bg-format.md).
 
 ## Actualizar el registro
 

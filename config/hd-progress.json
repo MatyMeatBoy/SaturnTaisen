@@ -55,19 +55,26 @@
       "sources": [
         {
           "path": "docs/research/pc-asset-census.md"
+        },
+        {
+          "path": "docs/research/hd-chapter-coverage.md"
+        },
+        {
+          "path": "docs/research/saturn-bg-format.md"
         }
       ],
-      "next": "Emparejar cada archivo con su escena Saturn, empaquetarlo e integrarlo; verificar variantes de iluminación y fundidos.",
+      "next": "Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.",
       "details": [
-        "1.267 archivos SPR: 766 BG, 235 EVENT, 222 CG, 13 ENDING, 10 TITLE y 21 ICATCH. Ninguno está emparejado ni integrado todavía; los 19 temas KABE se cuentan aparte.",
-        "12 pares aprobados por captura (pasada 1, 875 capturas revisadas): BG1119, BG1209, BG2251, BG1001, BG1002, BG1006, BG1007, BG1021, BG1116, BG2039, BG1075, BG1120. Datos en config/hd-scene-bg-pairs.json; registro en docs/research/bg-matching-progress.md."
+        "El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.",
+        "El cruce TH0 registra 712 archivos PC con una correspondencia aceptada en los catálogos de BG, EVE y pantallas IC. La tabla de huellas de paleta contiene 459 entradas y 459 archivos SPR distintos con integración en el código fuente.",
+        "El preparador copia el material HD desde la edición PC del propietario. Falta un recuento de archivos preparados y verificados individualmente. Las imágenes de variante ancha, escenas EVE y eyecatches mantienen su ruta nativa."
       ],
       "total": 1267,
       "inventory": 1267,
-      "matched": 12,
-      "prepared": 0,
-      "integrated": 0,
-      "verified": 0
+      "matched": 712,
+      "prepared": null,
+      "integrated": 459,
+      "verified": null
     },
     {
       "id": "scenes",
@@ -83,20 +90,22 @@
         },
         {
           "path": "docs/research/chapter-sweep.md"
+        },
+        {
+          "path": "docs/research/hd-chapter-coverage.md"
         }
       ],
-      "next": "Vincular cada aparición a una escena o transición estable, registrar el modo nativo y verificar HD, Zoom y fallback cuando corresponda.",
+      "next": "Vincular cada aparición a una escena o transición y verificar HD, Zoom y fallback cuando corresponda.",
       "details": [
-        "El índice inicial lista 166 candidatos de recursos y nueve observaciones de ejecución. Una tabla de diálogo o un flujo de vídeo puede aparecer en más de una ruta.",
-        "Pendientes prioritarios: otras rutas de mapa a habitación, continuidad de diálogos y animación en escenas posteriores, combates completos, cambio de disco y clips con subtítulos.",
-        "166 candidatos del índice privado de recursos; 9 observaciones de ejecución. Emparejado, preparado e integrado siguen sin medir por escena (Sin dato): una tabla o flujo puede aparecer en varias escenas."
+        "El índice enriquecido lista 166 candidatos de recursos y 26 observaciones de ejecución, incluidas 17 del barrido de episodios.",
+        "Una tabla de diálogo o un flujo de vídeo puede aparecer en varias rutas. Las observaciones de estados y capturas carecen de un denominador común con las 166 entradas de recursos."
       ],
       "total": 166,
       "inventory": 166,
       "matched": null,
       "prepared": null,
       "integrated": null,
-      "verified": 9
+      "verified": null
     },
     {
       "id": "movies",
@@ -109,21 +118,22 @@
         },
         {
           "path": "docs/research/intro-petals-transition.md"
+        },
+        {
+          "path": "docs/research/video-equivalence.md"
         }
       ],
-      "next": "Comprobar audio, subtítulos y saltos de los seis cortes alternativos y diseñar la reproducción PC dentro del runtime.",
+      "next": "Verificar audio y vídeo a velocidad normal, saltos y reanudaciones, subtítulos y ambos discos.",
       "details": [
-        "50 clips Saturn únicos (flujos FILM deduplicados entre ambos discos; el cortometraje de 0,15 s del logo queda fuera) frente a 52 MPEG de PC (51 MOVIE + REDLOGO).",
-        "Sin sustitución integrada: falta decodificación MPEG-1/MP2 en el runtime, sincronía de audio, subtítulos y salto.",
-        "44 pares con duración dentro de 0,5 s y orden consecutivo idéntico (flujo k de /SAKURA4 ↔ MOVIE00k).",
-        "Seis pares con duración distinta (743bce↔009, d33904↔105, b39c1e↔004, ab833c↔011, 7b1472↔102, def7a6↔020 con 3,7 s) se aceptan por contenido: cada clip PC es la mejor coincidencia única en una firma de luminancia de cinco fotogramas frente a los 52 clips PC. Se registran como cortes alternativos."
+        "50 clips Saturn únicos y emparejados. La tabla del runtime conecta el vídeo PC para 44 clips y conserva el vídeo y el audio Saturn en los seis cortes alternativos.",
+        "El preparador copia películas si la edición PC las incluye. MOVIE000 y MOVIE001 tienen observaciones de vídeo en juego. La validación completa de subtítulos, audio, sincronización, salto y cambio de disco sigue abierta."
       ],
       "total": 50,
       "inventory": 50,
       "matched": 50,
-      "prepared": 0,
-      "integrated": 0,
-      "verified": 0
+      "prepared": null,
+      "integrated": 44,
+      "verified": null
     },
     {
       "id": "tactical",
@@ -202,26 +212,30 @@
     {
       "id": "large-characters",
       "label": "Personajes grandes NC",
-      "unit": "imágenes PC candidatas (147 paquetes)",
-      "scope": "Cuerpos y poses fuera del retrato de diálogo. El total de poses y composiciones nativas permanece abierto.",
+      "unit": "cuerpos Saturn (archivos NC)",
+      "scope": "Cuerpos Saturn fuera del retrato de diálogo. La cara y sus cuadros se auditan aparte.",
       "sources": [
         {
           "path": "docs/research/saturn-hd-characters.md"
         },
         {
           "path": "docs/research/pc-character-inventory.json"
+        },
+        {
+          "path": "docs/research/saturn-bg-format.md"
         }
       ],
-      "next": "Vincular índices por pose y validar ancla, proporción y animación en capturas Saturn para cada sustitución.",
+      "next": "Comprobar los cuerpos restantes y las expresiones con fallback nativo.",
       "details": [
-        "147 paquetes PC y 3.596 imágenes decodificadas sin errores de cabecera; 147 pares de nombre candidatos. Faltan las equivalencias por pose y el dibujo en runtime."
+        "Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. Hay 129 pares de cuerpo utilizables según el mapa y la revisión. Los recuentos usan cuerpos, una unidad por archivo Saturn.",
+        "Se observaron seis cuerpos dibujados en HD en estados de juego. Según el cuadro, los ojos o la boca pueden seguir nativos. Sigue pendiente el recuento de poses, expresiones, fundidos y apariciones verificadas."
       ],
-      "total": 3596,
-      "inventory": 3596,
-      "matched": 0,
-      "prepared": 0,
-      "integrated": 0,
-      "verified": 0
+      "total": 147,
+      "inventory": 147,
+      "matched": 129,
+      "prepared": null,
+      "integrated": 6,
+      "verified": null
     }
   ]
 }
