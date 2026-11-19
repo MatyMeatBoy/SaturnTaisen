@@ -23,12 +23,13 @@ int main(int argc,char** argv) {
             assert(f.width==d.Width() && f.height==d.Height() && f.rgba.size()==size_t(f.width)*size_t(f.height));
             assert(f.time>last);last=f.time;frames++;
         }
-        audioFloats+=d.Audio(samples,4096);
+        const size_t due = size_t(now * 44100) * 2;
+        if (due > audioFloats) audioFloats += d.Audio(samples, std::min(size_t(4096), due - audioFloats));
         std::this_thread::sleep_for(std::chrono::milliseconds(2));
     }
     d.Close();
     std::printf("movie decoder: %zu frames, %zu audio floats in 2 s, last frame time %.3f\n",frames,audioFloats,last);
     assert(frames>=double(d.Fps())*1.5);     // the worker keeps up with real time
-    assert(audioFloats>=44100*2*1.0);        // and the audio is there (at least one second of stereo)
+    if (audioFloats < 44100*2*1.8) return 2;  // same real-time interval as the video
     return 0;
 }
