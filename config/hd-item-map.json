@@ -1,0 +1,1210 @@
+{
+ "schema": 1,
+ "scope": "Saturn ITEMnn.BIN to PC item pictures by content; data only.",
+ "summary": {
+  "content": 12,
+  "candidate": 68
+ },
+ "pairs": [
+  {
+   "saturn_file": "SAKURA1/ITEM01.BIN",
+   "palette_fnv": "80B84481F2781882",
+   "pc_file": "SAKURA1/ITEM/ITEM01.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "b65fd652b62b872c14b18f3fcb81b72ed677d30931100ac248279a87c5fabe48",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.889,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.749,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM02.BIN",
+   "palette_fnv": "ADAD7CB4EC65AB83",
+   "pc_file": "SAKURA1/ITEM/ITEM02.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "90bc3797d25b085ffd14a6f6b0fc2d48a7c05b6d3efa2ca2a0008b016697c2be",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.902,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.836,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM03.BIN",
+   "palette_fnv": "303817C07D8AD3EA",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 2,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.83,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.83,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM04.BIN",
+   "palette_fnv": "10C89C527FFCB9C2",
+   "pc_file": "SAKURA1/ITEM/ITEM04.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "a58ed43ae9eab8485d59e39d9136cdf104ea5dab43b35d8f66b7105ae68f16d2",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.815,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.714,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM05.BIN",
+   "palette_fnv": "537B73B6FA6A4F15",
+   "pc_file": "SAKURA1/ITEM/ITEM05.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "7a04e9ba4a2b624df9bb787de446a30550ce5cb7d103024c319c534bce984417",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.654,
+   "runner_up": "SAKURA1/ITEM/ITEM07.SPR",
+   "runner_up_correlation": 0.397,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM06.BIN",
+   "palette_fnv": "171664C1DAF0CF91",
+   "pc_file": "SAKURA1/ITEM/ITEM06.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "40e44e59573d6bd88ab16a2cbca731d882f7aa0cdaf16cc76bc6f35a04017261",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.726,
+   "runner_up": "SAKURA1/ITEM/BURO03.SPR",
+   "runner_up_correlation": 0.689,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM07.BIN",
+   "palette_fnv": "994AF50BC61B12E6",
+   "pc_file": "SAKURA1/ITEM/ITEM07.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "6eca594f460fdc1b21de1fbc1e536c576427dff6cc89924c01206e8a60a86662",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.906,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.74,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM08.BIN",
+   "palette_fnv": "1E8A994F2468AEBB",
+   "pc_file": "SAKURA1/ITEM/ITEM08.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "0c22fb01aaa4b9d880f8c72dbe304c4768d33ee6ed14872861bfeb55e0fc2e9e",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.961,
+   "runner_up": "SAKURA1/ITEM/ITEM28.SPR",
+   "runner_up_correlation": 0.683,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM09.BIN",
+   "palette_fnv": "45CE415D5026BA41",
+   "pc_file": "SAKURA1/ITEM/ITEM07.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "6eca594f460fdc1b21de1fbc1e536c576427dff6cc89924c01206e8a60a86662",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.617,
+   "runner_up": "SAKURA1/ITEM/ITEM09.SPR",
+   "runner_up_correlation": 0.534,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM10.BIN",
+   "palette_fnv": "EF9307D85B802E5B",
+   "pc_file": "SAKURA1/ITEM/ITEM10.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "0b95d67c70e04f1333eb25d28937147825b378fccaa1cf4f9beb45e4de1f4cd2",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.927,
+   "runner_up": "SAKURA1/ITEM/ITEM71.SPR",
+   "runner_up_correlation": 0.867,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM11.BIN",
+   "palette_fnv": "15ED0C1910A55981",
+   "pc_file": "SAKURA1/ITEM/ITEM11.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "1e73e88f1acf1e357b0c99976564fbc5949454eb63a2935c3bc65704d1cb9e4b",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.926,
+   "runner_up": "SAKURA1/ITEM/ITEM72.SPR",
+   "runner_up_correlation": 0.787,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM12.BIN",
+   "palette_fnv": "235B09AEB829FB4C",
+   "pc_file": "SAKURA1/ITEM/ITEMICON.SPR",
+   "pc_image_index": 12,
+   "pc_sha256": "a4095c819d9193e661ed4f98543e21307bde9e356815289b51daccf71406a754",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.873,
+   "runner_up": "SAKURA1/ITEM/ITEM12.SPR",
+   "runner_up_correlation": 0.865,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM13.BIN",
+   "palette_fnv": "21B193A67DB5FA2E",
+   "pc_file": "SAKURA1/ITEM/ITEM13.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "42bcec19840ab412f2559625f9c755d0a777222784528438d067d07986f0a8cd",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.842,
+   "runner_up": "SAKURA1/ITEM/ITEM71.SPR",
+   "runner_up_correlation": 0.713,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM14.BIN",
+   "palette_fnv": "2D137F2B8DF551F0",
+   "pc_file": "SAKURA1/ITEM/ITEM14.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "702aff407ecebd61dfbb591f4a1a3b1eadb38f5ab77efc41a719a7038c1aaf6b",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.867,
+   "runner_up": "SAKURA1/ITEM/ITEM71.SPR",
+   "runner_up_correlation": 0.741,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM15.BIN",
+   "palette_fnv": "CF1A68798F00AD0B",
+   "pc_file": "SAKURA1/ITEM/ITEM15.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "7c67b1ca347b6d224e814562d4c85cdd53add8ce3b0ac657243c74db10cf9b91",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.916,
+   "runner_up": "SAKURA1/ITEM/ITEM20.SPR",
+   "runner_up_correlation": 0.622,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM16.BIN",
+   "palette_fnv": "099D19E1E11F37C6",
+   "pc_file": "SAKURA1/ITEM/ITEM16.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "f78334bea8e9c4f82288f0f05e3684b938125fb3e6a5835972f27b4b427d8ea0",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.895,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.872,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM17.BIN",
+   "palette_fnv": "A8092407C03A18D6",
+   "pc_file": "SAKURA1/ITEM/ITEM17.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "cd07675d6a64a7094b19c6fa4c0cfea9ed8447c4b6de5057ad72e5d26a268386",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.854,
+   "runner_up": "SAKURA1/ITEM/ITEM71.SPR",
+   "runner_up_correlation": 0.744,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM18.BIN",
+   "palette_fnv": "B523CF1B006F77C1",
+   "pc_file": "SAKURA1/ITEM/ITEM18.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "15ab4f02d5a366bf587a4432c3474f8d03cfbf121f22bf2aab166d36707cad04",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.851,
+   "runner_up": "SAKURA1/ITEM/ITEM75.SPR",
+   "runner_up_correlation": 0.449,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM19.BIN",
+   "palette_fnv": "EFC368E743B234FC",
+   "pc_file": "SAKURA1/ITEM/ITEM19.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "3fff945a4ddbbe3fa3937c4be39a09904a446493ba03e93603c056f9674d4d16",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.89,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.652,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM20.BIN",
+   "palette_fnv": "1E1DD96213A55D65",
+   "pc_file": "SAKURA1/ITEM/ITEM20.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "461cff83daa6a8d4abf550f945672c27475be801155f5b4805cf6410de90ebcc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.923,
+   "runner_up": "SAKURA1/ITEM/ITEM11.SPR",
+   "runner_up_correlation": 0.701,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM21.BIN",
+   "palette_fnv": "5271F081C5BD49D7",
+   "pc_file": "SAKURA1/ITEM/ITEM21.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "6007f029516341cb7dc65d5cd869ef150d584cc3191481c03b09e52b5b48f1ff",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.822,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.797,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM22.BIN",
+   "palette_fnv": "F31F6164CD1D6A3B",
+   "pc_file": "SAKURA1/ITEM/ITEM22.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "5cef81641108b3345d43cc72e9524a883c81de73b836ef1770c199677d0860d2",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.809,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.782,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM23.BIN",
+   "palette_fnv": "6466A6F9B1F7EA80",
+   "pc_file": "SAKURA1/ITEM/ITEM23.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "fb265b30eeac706804e32ae4233e240edc5e36692b1b7bfcb1ace952902d3580",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.84,
+   "runner_up": "SAKURA1/ITEM/ITEM07.SPR",
+   "runner_up_correlation": 0.567,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM24.BIN",
+   "palette_fnv": "57E4DAF6F8585BFF",
+   "pc_file": "SAKURA1/ITEM/ITEM24.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "f42fcc4ecc2832d6f1708e6feabe0034dac3784dafd167c0f181350cf1c908a0",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.803,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.715,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM25.BIN",
+   "palette_fnv": "74ED114A442F4EC7",
+   "pc_file": "SAKURA1/ITEM/ITEM25.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "fed8fe14140a6decff79fef48f08f3498f84202de863d7034eadf59d49bc9694",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.854,
+   "runner_up": "SAKURA1/ITEM/ITEM26.SPR",
+   "runner_up_correlation": 0.343,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM26.BIN",
+   "palette_fnv": "74099F7AEC509876",
+   "pc_file": "SAKURA1/ITEM/ITEM26.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "83bb60e7048ed747bb042c33d3c456d8358362adfb2efcc535a39a4d36154395",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.821,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.648,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM27.BIN",
+   "palette_fnv": "61BE6F092AD8446C",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 13,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.876,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.876,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM28.BIN",
+   "palette_fnv": "65C8FC622A77BAB0",
+   "pc_file": "SAKURA1/ITEM/ITEM28.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "e410097490de27cf1e112343945d8831586e55a207a4832a700e97b4cd8da3b5",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.907,
+   "runner_up": "SAKURA1/ITEM/ITEM77.SPR",
+   "runner_up_correlation": 0.817,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM40.BIN",
+   "palette_fnv": "F1EB5D044E4CF3DC",
+   "pc_file": "SAKURA1/ITEM/ITEM40.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "a8912cd273202c4e513fea750555bf71dbd9347b3fa6f2ede0b2f0213cddc157",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.845,
+   "runner_up": "SAKURA1/ITEM/ITEM72.SPR",
+   "runner_up_correlation": 0.496,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM41.BIN",
+   "palette_fnv": "1A17C6C485AA2BA2",
+   "pc_file": "SAKURA1/ITEM/ITEM67.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "bc41e952949441c5a1d516ce53467f0c08d9916ead34eb9b728e4ec2c259bdda",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.716,
+   "runner_up": "SAKURA1/ITEM/ITEM15.SPR",
+   "runner_up_correlation": 0.667,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM42.BIN",
+   "palette_fnv": "B9B5839CB8AA2ABD",
+   "pc_file": "SAKURA1/ITEM/ITEMICON.SPR",
+   "pc_image_index": 28,
+   "pc_sha256": "a4095c819d9193e661ed4f98543e21307bde9e356815289b51daccf71406a754",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.394,
+   "runner_up": "SAKURA1/ITEM/ITEM28.SPR",
+   "runner_up_correlation": 0.367,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM43.BIN",
+   "palette_fnv": "DB0D45B848A260BF",
+   "pc_file": "SAKURA1/ITEM/ITEM09.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "8ab7ec7ac37b142a440bdc878a75ad434358612163e0f53c8b17686814d8cdcb",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.447,
+   "runner_up": "SAKURA1/ITEM/ITEM07.SPR",
+   "runner_up_correlation": 0.43,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM44.BIN",
+   "palette_fnv": "579205122AB30E18",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 13,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.589,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.589,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM45.BIN",
+   "palette_fnv": "29856A5EC882E328",
+   "pc_file": "SAKURA1/ITEM/ITEMICON.SPR",
+   "pc_image_index": 84,
+   "pc_sha256": "a4095c819d9193e661ed4f98543e21307bde9e356815289b51daccf71406a754",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.667,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.649,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM46.BIN",
+   "palette_fnv": "67F5A93CB6EDE27A",
+   "pc_file": "SAKURA1/ITEM/ITEM28.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "e410097490de27cf1e112343945d8831586e55a207a4832a700e97b4cd8da3b5",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.544,
+   "runner_up": "SAKURA1/ITEM/ITEM77.SPR",
+   "runner_up_correlation": 0.461,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM47.BIN",
+   "palette_fnv": "E65F5D093D38B6EA",
+   "pc_file": "SAKURA1/ITEM/ITEM77.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "85bd88e35def4db6d039756c27636997a94e3ca96faa9781a292807ece84f0fa",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.673,
+   "runner_up": "SAKURA1/ITEM/ITEM84.SPR",
+   "runner_up_correlation": 0.641,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM48.BIN",
+   "palette_fnv": "CDA0E96DCD722D53",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 1,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.617,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.617,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM49.BIN",
+   "palette_fnv": "FD6CB8C639A4B97C",
+   "pc_file": "SAKURA1/ITEM/ITEM86.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "1bf6f3737afbbe0ff2bff405642949fbfc44d8a6e8509b2de6195177cf6b4043",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.532,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.501,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM50.BIN",
+   "palette_fnv": "13043C3BF96CC705",
+   "pc_file": "SAKURA1/ITEM/ITEM03.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "05225b96b9760996ec6d4432b190680f27da59322f52b579ae5f7771c726e363",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.648,
+   "runner_up": "SAKURA1/ITEM/ITEM27.SPR",
+   "runner_up_correlation": 0.619,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM51.BIN",
+   "palette_fnv": "039129D8423426D9",
+   "pc_file": "SAKURA1/ITEM/ITEM20.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "461cff83daa6a8d4abf550f945672c27475be801155f5b4805cf6410de90ebcc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.74,
+   "runner_up": "SAKURA1/ITEM/ITEM67.SPR",
+   "runner_up_correlation": 0.665,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM52.BIN",
+   "palette_fnv": "644AD04734585365",
+   "pc_file": "SAKURA1/ITEM/ITEM86.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "1bf6f3737afbbe0ff2bff405642949fbfc44d8a6e8509b2de6195177cf6b4043",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.543,
+   "runner_up": "SAKURA1/ITEM/ITEM10.SPR",
+   "runner_up_correlation": 0.517,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM53.BIN",
+   "palette_fnv": "7EDD80C9D4F57538",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.697,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.697,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM54.BIN",
+   "palette_fnv": "316FECED2E10D0EA",
+   "pc_file": "SAKURA1/ITEM/ITEM54.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "6785c4b8f96bdccd797f9b7590b84f3d8fccc51919c48c7f30f8ea1252aebbc4",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.789,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.771,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM55.BIN",
+   "palette_fnv": "940E125732326D7C",
+   "pc_file": "SAKURA1/ITEM/ITEMICON.SPR",
+   "pc_image_index": 19,
+   "pc_sha256": "a4095c819d9193e661ed4f98543e21307bde9e356815289b51daccf71406a754",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.524,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.496,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM56.BIN",
+   "palette_fnv": "EF286B9EBC3583D7",
+   "pc_file": "SAKURA1/ITEM/ITEMICON.SPR",
+   "pc_image_index": 20,
+   "pc_sha256": "a4095c819d9193e661ed4f98543e21307bde9e356815289b51daccf71406a754",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.419,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.384,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM57.BIN",
+   "palette_fnv": "36A941EE399C2CFA",
+   "pc_file": "SAKURA1/ITEM/ITEM07.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "6eca594f460fdc1b21de1fbc1e536c576427dff6cc89924c01206e8a60a86662",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.657,
+   "runner_up": "SAKURA1/ITEM/ITEM23.SPR",
+   "runner_up_correlation": 0.591,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM58.BIN",
+   "palette_fnv": "B677BFA4E2BE5F3D",
+   "pc_file": "SAKURA1/ITEM/ITEM84.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "4a6509817cde45466150ad534a0dcc6b030e2b400557266064558f56811b59f7",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.699,
+   "runner_up": "SAKURA1/ITEM/ITEM73.SPR",
+   "runner_up_correlation": 0.679,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM59.BIN",
+   "palette_fnv": "D094A17249E3EE6F",
+   "pc_file": "SAKURA1/ITEM/ITEM20.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "461cff83daa6a8d4abf550f945672c27475be801155f5b4805cf6410de90ebcc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.655,
+   "runner_up": "SAKURA1/ITEM/ITEM11.SPR",
+   "runner_up_correlation": 0.56,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM60.BIN",
+   "palette_fnv": "D6441755F7A6F93D",
+   "pc_file": "SAKURA1/ITEM/ITEM08.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "0c22fb01aaa4b9d880f8c72dbe304c4768d33ee6ed14872861bfeb55e0fc2e9e",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.711,
+   "runner_up": "SAKURA1/ITEM/ITEM77.SPR",
+   "runner_up_correlation": 0.632,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM61.BIN",
+   "palette_fnv": "6120BACC6F99F51A",
+   "pc_file": "SAKURA1/ITEM/ITEM20.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "461cff83daa6a8d4abf550f945672c27475be801155f5b4805cf6410de90ebcc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.677,
+   "runner_up": "SAKURA1/ITEM/ITEM75.SPR",
+   "runner_up_correlation": 0.594,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM62.BIN",
+   "palette_fnv": "1595430173A81C01",
+   "pc_file": "SAKURA1/ITEM/ITEM77.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "85bd88e35def4db6d039756c27636997a94e3ca96faa9781a292807ece84f0fa",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.834,
+   "runner_up": "SAKURA1/ITEM/ITEM28.SPR",
+   "runner_up_correlation": 0.784,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM63.BIN",
+   "palette_fnv": "82636DDE690AF094",
+   "pc_file": "SAKURA1/ITEM/ITEM20.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "461cff83daa6a8d4abf550f945672c27475be801155f5b4805cf6410de90ebcc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.732,
+   "runner_up": "SAKURA1/ITEM/ITEM07.SPR",
+   "runner_up_correlation": 0.687,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM64.BIN",
+   "palette_fnv": "DDD0709154290AC2",
+   "pc_file": "SAKURA1/ITEM/ITEM77.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "85bd88e35def4db6d039756c27636997a94e3ca96faa9781a292807ece84f0fa",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.696,
+   "runner_up": "SAKURA1/ITEM/ITEM84.SPR",
+   "runner_up_correlation": 0.644,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM65.BIN",
+   "palette_fnv": "AB4FE8E3E524B485",
+   "pc_file": "SAKURA1/ITEM/ITEM71.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "d52a28d9c4d7b1e3223a30fac240cc377d3374912945c0d85aa85bcda64182a7",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.811,
+   "runner_up": "SAKURA1/ITEM/ITEM10.SPR",
+   "runner_up_correlation": 0.783,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM66.BIN",
+   "palette_fnv": "AF2461EF71CD5E12",
+   "pc_file": "SAKURA1/ITEM/ITEM77.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "85bd88e35def4db6d039756c27636997a94e3ca96faa9781a292807ece84f0fa",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.752,
+   "runner_up": "SAKURA1/ITEM/ITEM08.SPR",
+   "runner_up_correlation": 0.692,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM67.BIN",
+   "palette_fnv": "DF9FA63EF573EBD3",
+   "pc_file": "SAKURA1/ITEM/ITEM67.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "bc41e952949441c5a1d516ce53467f0c08d9916ead34eb9b728e4ec2c259bdda",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.893,
+   "runner_up": "SAKURA1/ITEM/ITEM76.SPR",
+   "runner_up_correlation": 0.783,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM68.BIN",
+   "palette_fnv": "7BA779F32D5DD676",
+   "pc_file": "SAKURA1/ITEM/ITEM07.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "6eca594f460fdc1b21de1fbc1e536c576427dff6cc89924c01206e8a60a86662",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.763,
+   "runner_up": "SAKURA1/ITEM/ITEM20.SPR",
+   "runner_up_correlation": 0.71,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM69.BIN",
+   "palette_fnv": "C2D6A711E56B6850",
+   "pc_file": "SAKURA1/ITEM/ITEM20.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "461cff83daa6a8d4abf550f945672c27475be801155f5b4805cf6410de90ebcc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.718,
+   "runner_up": "SAKURA1/ITEM/ITEM07.SPR",
+   "runner_up_correlation": 0.675,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM70.BIN",
+   "palette_fnv": "B2934A765D221472",
+   "pc_file": "SAKURA1/ITEM/ITEM84.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "4a6509817cde45466150ad534a0dcc6b030e2b400557266064558f56811b59f7",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.795,
+   "runner_up": "SAKURA1/ITEM/ITEM77.SPR",
+   "runner_up_correlation": 0.734,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM71.BIN",
+   "palette_fnv": "319E682E63DC3A4E",
+   "pc_file": "SAKURA1/ITEM/ITEM71.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "d52a28d9c4d7b1e3223a30fac240cc377d3374912945c0d85aa85bcda64182a7",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.919,
+   "runner_up": "SAKURA1/ITEM/ITEM10.SPR",
+   "runner_up_correlation": 0.835,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM72.BIN",
+   "palette_fnv": "D7DB18F1465A60AA",
+   "pc_file": "SAKURA1/ITEM/ITEM72.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "852336ba73ee218a440e60313d16a448f7f9055894e785d58c93e7a9a82a8583",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.926,
+   "runner_up": "SAKURA1/ITEM/ITEM11.SPR",
+   "runner_up_correlation": 0.824,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM73.BIN",
+   "palette_fnv": "2E47A35C322CCC89",
+   "pc_file": "SAKURA1/ITEM/ITEM73.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "3f50528b818d6f036a38d9469bb9289810574e9c725cd9931d5b98159d68e9cc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.923,
+   "runner_up": "SAKURA1/ITEM/ITEM77.SPR",
+   "runner_up_correlation": 0.742,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM74.BIN",
+   "palette_fnv": "82E210F992C22946",
+   "pc_file": "SAKURA1/ITEM/ITEM07.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "6eca594f460fdc1b21de1fbc1e536c576427dff6cc89924c01206e8a60a86662",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.791,
+   "runner_up": "SAKURA1/ITEM/ITEM20.SPR",
+   "runner_up_correlation": 0.634,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM75.BIN",
+   "palette_fnv": "A4028703597B1000",
+   "pc_file": "SAKURA1/ITEM/ITEM75.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "c0686811a78dbf57b60eeaa7a1ef00ffc0d0d4d06aa97794d81b2a1f3c374c43",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.667,
+   "runner_up": "SAKURA1/ITEM/ITEM11.SPR",
+   "runner_up_correlation": 0.608,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM76.BIN",
+   "palette_fnv": "C242BA182D7EC5E0",
+   "pc_file": "SAKURA1/ITEM/ITEM76.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "7121f5c2f3aeea19921ed6fb767ab6628352d371aa46e9cec8a0fb34c5268135",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.775,
+   "runner_up": "SAKURA1/ITEM/ITEM67.SPR",
+   "runner_up_correlation": 0.68,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM77.BIN",
+   "palette_fnv": "A873984774ABC2F7",
+   "pc_file": "SAKURA1/ITEM/ITEM77.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "85bd88e35def4db6d039756c27636997a94e3ca96faa9781a292807ece84f0fa",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.917,
+   "runner_up": "SAKURA1/ITEM/ITEM28.SPR",
+   "runner_up_correlation": 0.763,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM78.BIN",
+   "palette_fnv": "0EF48DAB1D5E1B4A",
+   "pc_file": "SAKURA1/ITEM/ITEM73.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "3f50528b818d6f036a38d9469bb9289810574e9c725cd9931d5b98159d68e9cc",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.436,
+   "runner_up": "SAKURA1/ITEM/ITEM77.SPR",
+   "runner_up_correlation": 0.407,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM79.BIN",
+   "palette_fnv": "45CA843DF1DD0345",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 1,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.629,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.629,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM80.BIN",
+   "palette_fnv": "1035514B4683B258",
+   "pc_file": "SAKURA1/ITEM/ITEM10.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "0b95d67c70e04f1333eb25d28937147825b378fccaa1cf4f9beb45e4de1f4cd2",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.782,
+   "runner_up": "SAKURA1/ITEM/ITEM14.SPR",
+   "runner_up_correlation": 0.766,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM81.BIN",
+   "palette_fnv": "A1D682AAAB68D46B",
+   "pc_file": "SAKURA1/ITEM/ITEM08.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "0c22fb01aaa4b9d880f8c72dbe304c4768d33ee6ed14872861bfeb55e0fc2e9e",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.83,
+   "runner_up": "SAKURA1/ITEM/ITEM10.SPR",
+   "runner_up_correlation": 0.736,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM82.BIN",
+   "palette_fnv": "D50AB11439DB0712",
+   "pc_file": "SAKURA1/ITEM/ITEM82.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "eec1e4a88ceb8fac4081c1d1c382caadd8697ea28b28f86fa6e359826037d631",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.802,
+   "runner_up": "SAKURA1/ITEM/ITEM84.SPR",
+   "runner_up_correlation": 0.572,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM83.BIN",
+   "palette_fnv": "54E9F038D82CBC99",
+   "pc_file": "SAKURA1/ITEM/ITEM83.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "db0bac93011688b6060e51bc22fde3f570a87e6baea8bfc829ee6cb83c434f03",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.814,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.769,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM84.BIN",
+   "palette_fnv": "88084F702BA36EE2",
+   "pc_file": "SAKURA1/ITEM/ITEM84.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "4a6509817cde45466150ad534a0dcc6b030e2b400557266064558f56811b59f7",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.811,
+   "runner_up": "SAKURA1/ITEM/ITEM73.SPR",
+   "runner_up_correlation": 0.715,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM85.BIN",
+   "palette_fnv": "387DCE34CACCD6A7",
+   "pc_file": "SAKURA1/ITEM/ITEM85.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "483490a7ac2d6fe30037b890b3fc8911026e99f63c944eb3eb4cc365ecef3b9c",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.672,
+   "runner_up": "SAKURA1/ITEM/ITEM15.SPR",
+   "runner_up_correlation": 0.133,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM86.BIN",
+   "palette_fnv": "108ED2DDE08341B2",
+   "pc_file": "SAKURA1/ITEM/ITEM86.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "1bf6f3737afbbe0ff2bff405642949fbfc44d8a6e8509b2de6195177cf6b4043",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.775,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.633,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM87.BIN",
+   "palette_fnv": "4EC64308D1BAC6C7",
+   "pc_file": "SAKURA1/ITEM/ITEM71.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "d52a28d9c4d7b1e3223a30fac240cc377d3374912945c0d85aa85bcda64182a7",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.447,
+   "runner_up": "SAKURA1/ITEM/ITEM11.SPR",
+   "runner_up_correlation": 0.427,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM88.BIN",
+   "palette_fnv": "E67B55F8492779C6",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 2,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.568,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.568,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM89.BIN",
+   "palette_fnv": "37FEC5F870AC4A7C",
+   "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc_image_index": 9,
+   "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
+   "pc_size": [
+    72,
+    72
+   ],
+   "correlation": 0.436,
+   "runner_up": "SAKURA1/ITEM/ITEMICON.SPR",
+   "runner_up_correlation": 0.436,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM90.BIN",
+   "palette_fnv": "7361E6EEEFA49FC0",
+   "pc_file": "SAKURA1/ITEM/ITEM75.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "c0686811a78dbf57b60eeaa7a1ef00ffc0d0d4d06aa97794d81b2a1f3c374c43",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.426,
+   "runner_up": "SAKURA1/ITEM/ITEM11.SPR",
+   "runner_up_correlation": 0.397,
+   "tier": "candidate"
+  },
+  {
+   "saturn_file": "SAKURA1/ITEM91.BIN",
+   "palette_fnv": "C468872E25AC914B",
+   "pc_file": "SAKURA1/ITEM/ITEM82.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "eec1e4a88ceb8fac4081c1d1c382caadd8697ea28b28f86fa6e359826037d631",
+   "pc_size": [
+    224,
+    224
+   ],
+   "correlation": 0.542,
+   "runner_up": "SAKURA1/ITEM/BUROICON.SPR",
+   "runner_up_correlation": 0.525,
+   "tier": "candidate"
+  }
+ ]
+}
