@@ -416,6 +416,16 @@ character alpha fade from transparent, not a white or black full-screen fade.
 No runtime or package was rebuilt.
 
 
+### NC3250 alpha fade and native underlay witness (T106e)
+
+English disc 1 shows Ogami saluting during the opening orders sequence. The three VDP1 commands resolve to NC3250 body offset 1,552, eyes at 33,808 and mouth at 46,096. Their native geometries are 224×144 at (16,8), 128×32 at (96,48) and 32×32 at (144,104). The official NC3250.SPR contains body subimage 0 at 446×320 and nine face parts, grouped into three eyes and six mouths. The opaque witness uses eye subimage 1 and mouth subimage 4.
+
+The 2560×1440 replay used three short relays before the body, during its alpha fade and while it was opaque. Captures at passes 6, 12 and 26 before the body and during the fade were pixel-identical when the body donor was present or absent. The alpha fade retained both native face commands. The opaque samples drew the two matching PC face parts above the PC body in the existing Zoom placement. At each opaque sample, all changes caused by the body asset lay inside the 224×144 body's projected rectangle. Original matched pixel for pixel with the donor present and absent.
+
+With NC3250.SPR present and BG2250.SPR absent, the old composition revealed the floral backdrop around the slimmer PC silhouette. The fallback restores native BG2250 from resolved VDP2 scanout where the renderer removed NC3250 sprite pixels. It requires the exact BG2250 layer-2 palette and cells. The PC body, choices of face parts, and framing use their existing paths.
+
+An independent check selected 405 native layer-2 centers where the VDP1 command draws and the PC body is fully transparent. The corrected output exactly reproduced native BG2250 at all 405 centers in each opaque sample. All prior-versus-candidate guest hashes matched with zero interpreted blocks. The shared-BG2250, fade, missing-body and Original comparisons were pixel-identical. Other NC3250 expressions and full-screen color fades still need separate witnesses. No package change.
+
 ### Presented-frame vertical scroll witness (T105c)
 
 Used the known v0.2.4 runtime (SHA-256 `1a94790eefc8492ca80499bbbd3e7517cb4db565908bcee86ae5b12f44c94b9e`)

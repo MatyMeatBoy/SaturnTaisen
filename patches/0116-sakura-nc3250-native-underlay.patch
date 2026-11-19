@@ -1,0 +1,33 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2115,7 +2115,28 @@
+                                     }
+                                 }
+                             }
+-                            if(!drewHd && !drewClip)SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
++                            if(!drewHd && !drewClip) {
++                                // NC3250 leaves gaps in the Saturn silhouette where the PC outline is narrower.
++                                // Fill those holes with the native BG2250 pixels when its PC plate is unavailable.
++                                const bool restoreUnderlay=bodyDraw.valid &&
++                                    std::strcmp(kBodies[bodyDraw.slot].disc,"NC3250.BIN")==0 &&
++                                    planes.underSprites.size()==320*224 && planes.underSource.size()==320*224 &&
++                                    port.videoRenderer->BackgroundPaletteFingerprint(2)==0x9C0FF162F58EEF08ull &&
++                                    port.videoRenderer->BackgroundCellFingerprint(2,41472)==0xC4C7F645EC52ABC2ull;
++                                if(restoreUnderlay) {
++                                    sceneHdForeground=zoomForeground;
++                                    for(int y=std::max(bodyDraw.y,8);y<std::min(bodyDraw.y+bodyDraw.h,152);y++)
++                                        for(int x=std::max(bodyDraw.x,16);x<std::min(bodyDraw.x+bodyDraw.w,304);x++) {
++                                            const auto at=size_t(y)*320+x;
++                                            if(!zoomForeground[at] && planes.source[at]==0 && planes.underSource[at]==2)
++                                                sceneHdForeground[at]=planes.underSprites[at];
++                                        }
++                                    SDL_UpdateTexture(content,nullptr,sceneHdForeground.data(),320*sizeof(uint32_t));
++                                }
++                                SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
++                                if(restoreUnderlay)
++                                    SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
++                            }
+                         }
+                         if(bodyDraw.valid) {
+                             const auto& st=bodyHd[size_t(bodyDraw.slot)];
