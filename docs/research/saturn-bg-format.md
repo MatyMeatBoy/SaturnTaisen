@@ -584,3 +584,30 @@ profiles. The other nine titles were prepared and inspected offline.
 The workspace measured 44,432,477,351 logical bytes before archiving the
 English reference runtime. The development ZIP remains 6,315,009,692 bytes.
 No new release ZIP was built.
+
+### Verified NC20 and NC30 face selection (TW4)
+
+`python tools/gen_verified_face_table.py TRACK01.iso PC_ROOT OUTPUT.h`
+checks the pinned Saturn and PC hashes and regenerates the SDK table of
+117 unique texture signatures. The runtime checks the installed assets
+before using the table, looks up the native face bytes and dimensions,
+and resolves the original SPR index through the decoder's compact list.
+This matters because NC20 has holes before index 8 and NC30 before index 6.
+Unknown frames or mismatched assets retain their native face sprite. The
+existing zoom layout, placement refinement and blend guards are shared.
+
+The isolated runtime (SHA-256
+`d0f41d2c0f57af3eaeccb3ec3218b42a6bca9865f590eea1b993c6e6221f5365`)
+selected NC20 eyes 11–13 and mouth 45 in the 900-frame `post-3000` replay.
+The 2,500-frame `post-18000` and `chapter1-continuous-47999` replays selected
+NC30 eyes 12–14 and mouth 42. For example, eye 12 resolves to compact slot 6,
+not slot 11. Native and HD captures at frames 60, 120 and 240 confirm
+corresponding expressions while the HD guard applies. Frames where other
+sprites cross the character continue through the existing native fallback.
+
+All 7,700 guest hashes across five paired replays were identical and every
+run recorded zero interpreted blocks. All 117 identities were verified
+offline; the gameplay captures cover the expressions reached in these
+runs. NC30 is now recorded as a Chapter 1 witness. No package was built.
+Project measured 48,329,341,192 logical bytes, above the cap. The existing
+development ZIP is 6,315,009,692 bytes.

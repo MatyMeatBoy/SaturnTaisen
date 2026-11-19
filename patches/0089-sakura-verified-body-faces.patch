@@ -1,0 +1,223 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -23,6 +23,7 @@
+ #include "pc_spr.h"
+ #include "scene_bg_table.h"
+ #include "body_table.h"
++#include "verified_body_faces.h"
+ #include "film_clip_table.h"
+ #define PL_MPEG_IMPLEMENTATION
+ #include "movie_decoder.h"
+@@ -676,9 +677,10 @@
+     // T19: large character bodies. A body on screen is one VDP1 texture whose bytes are the bitmap of its NC file;
+     // the face is small sprites whose bytes are frames that follow the bitmap, in the same order as the parts of
+     // the PC picture. Both are redrawn from the PC picture; anything else inside the body rectangle means native.
+-    struct BodyPixels {unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;};
++    struct BodyPixels {uint64_t pcAsset=0;std::vector<unsigned> originalIndex;unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;};
+     struct BodyHd {
+         bool tried=false;SDL_Texture* body=nullptr;unsigned bodyW=0,bodyH=0;
++        VerifiedBodyFaces verified;bool verifiedAssets=false;std::vector<unsigned> originalIndex;
+         std::future<BodyPixels> pending;std::vector<SDL_Texture*> parts;std::vector<unsigned> partW,partH,runCount;
+         std::vector<uint8_t> nc;std::unordered_map<uint64_t,long> offsets;
+         std::vector<uint32_t> bodyPixels;std::vector<std::vector<uint32_t>> partPixels;
+@@ -1256,10 +1258,12 @@
+                                 const auto& entry=kBodies[slot];
+                                 if(!st.tried) {
+                                     st.tried=true;
++                                    st.verified=VerifiedFacesFor(entry.disc);
+                                     if(port.discFiles.Read(entry.disc,st.nc)) {
+                                         st.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/entry.pc]() {
+                                             BodyPixels result;std::vector<uint8_t> bytes;
+                                             if(!ReadPcBackdropFile(file,bytes,64u<<20))return result;
++                                            result.pcAsset=AtlasFingerprint(bytes);
+                                             std::vector<PcSprite> images;std::string error;
+                                             if(!DecodePcSprites(bytes,images,error) || images.empty())return result;
+                                             size_t big=0;
+@@ -1290,6 +1294,7 @@
+                                             result.bodyW=images[big].width;result.bodyH=images[big].height;result.body=key(images[big].pixels,images[big].width,images[big].height);
+                                             for(size_t i=0;i<images.size();i++) {
+                                                 if(i==big || (images[i].width==16 && images[i].height==16))continue;
++                                                result.originalIndex.push_back(images[i].index);
+                                                 result.partW.push_back(images[i].width);result.partH.push_back(images[i].height);
+                                                 result.parts.push_back(key(images[i].pixels,images[i].width,images[i].height));
+                                                 result.partSig.push_back(BodySignature(result.parts.back(),images[i].width,images[i].height));
+@@ -1302,6 +1307,10 @@
+                                 }
+                                 if(st.pending.valid() && st.pending.wait_for(std::chrono::seconds(0))==std::future_status::ready) {
+                                     auto decoded=st.pending.get();
++                                    st.originalIndex=std::move(decoded.originalIndex);
++                                    st.verifiedAssets=!st.verified.frames.empty() &&
++                                        AtlasFingerprint(st.nc)==st.verified.nativeAsset &&
++                                        decoded.pcAsset==st.verified.pcAsset;
+                                     auto make=[&](const std::vector<uint32_t>& pixels,unsigned w,unsigned h)->SDL_Texture* {
+                                         if(!w || !h || pixels.size()!=size_t(w)*h)return nullptr;
+                                         auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,int(w),int(h));
+@@ -1381,7 +1390,21 @@
+                                         const uint64_t hash=AtlasFingerprint(sp->pixels);
+                                         int part=-1;
+                                         auto known=st.matches.find(hash);
+-                                        if(layoutOk)part=layoutPart[frameIndex];
++                                        if(!st.verified.frames.empty()) {
++                                            if(st.verifiedAssets) {
++                                                const unsigned width=unsigned(spriteWidth(*sp)),height=unsigned(spriteHeight(*sp));
++                                                for(const auto& candidate:st.verified.frames) {
++                                                    if(candidate.hash!=hash || candidate.width!=width || candidate.height!=height)continue;
++                                                    const auto item=std::find(st.originalIndex.begin(),st.originalIndex.end(),candidate.pcIndex);
++                                                    if(item!=st.originalIndex.end()) {
++                                                        part=int(item-st.originalIndex.begin());
++                                                        if(std::getenv("SATRECOMP_FACE_MAP_TRACE") && st.matches.emplace(hash,part).second)
++                                                            std::fprintf(stderr,"verified face: %s %ux%u original=%u compact=%d\n",entry.disc,width,height,candidate.pcIndex,part);
++                                                    }
++                                                    break;
++                                                }
++                                            }
++                                        } else if(layoutOk)part=layoutPart[frameIndex];
+                                         else if(known!=st.matches.end())part=known->second;
+                                         else {
+                                             const unsigned fw=unsigned(spriteWidth(*sp)),fh=unsigned(spriteHeight(*sp));
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+new file mode 100644
+--- /dev/null
++++ b/port/verified_body_faces.h
+@@ -0,0 +1,140 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <cstdint>
++#include <span>
++#include <string_view>
++namespace port {
++struct VerifiedBodyFace { uint64_t hash; unsigned width, height, pcIndex; };
++struct VerifiedBodyFaces {
++    uint64_t nativeAsset, pcAsset;
++    std::span<const VerifiedBodyFace> frames;
++};
++inline constexpr VerifiedBodyFace kNC20[] = {
++    {0x00C3995FAC06E28Dull, 24, 24, 49},
++    {0x023C3CEE9BEA1FD8ull, 24, 24, 41},
++    {0x044DC6BD4238795Aull, 24, 24, 55},
++    {0x04730AFBE17C2375ull, 24, 24, 45},
++    {0x0922AC7449539934ull, 24, 24, 67},
++    {0x12C08FE69FE7BCBFull, 24, 24, 51},
++    {0x1EAA6CE225D284DDull, 24, 24, 43},
++    {0x23EA6AB513ECE210ull, 24, 24, 65},
++    {0x254591A69CB81A11ull, 48, 32, 24},
++    {0x2665FE7805FCA68Cull, 24, 24, 75},
++    {0x29E16A8BF0A5FCE4ull, 24, 24, 78},
++    {0x2C4758B3477019D4ull, 48, 32, 25},
++    {0x31C4C9A1E7BF7383ull, 24, 24, 69},
++    {0x32C3B8913FDB9059ull, 48, 16, 15},
++    {0x371631C92127F020ull, 24, 24, 76},
++    {0x38CBDE6D23764343ull, 48, 32, 20},
++    {0x3BBEDBE326EBD304ull, 24, 24, 72},
++    {0x3CC9CBF3B7D3F7A0ull, 24, 24, 56},
++    {0x40AF2DD492909FC1ull, 24, 24, 53},
++    {0x42239773C0671A3Eull, 24, 24, 47},
++    {0x53097D7D0025159Bull, 48, 24, 27},
++    {0x535F93171DD1FDE7ull, 24, 24, 62},
++    {0x59DC7F09EEEE5F2Bull, 24, 24, 71},
++    {0x66305AE0CA455359ull, 24, 24, 77},
++    {0x67AD446F5051B71Dull, 24, 24, 74},
++    {0x68B1E2BD1B57FDAFull, 48, 16, 13},
++    {0x6CF1C0A029A26B2Aull, 24, 24, 40},
++    {0x6D9DFD6F096D0D32ull, 48, 16, 8},
++    {0x6DCC379CDC564E30ull, 48, 16, 11},
++    {0x70AB5873023D6FF8ull, 48, 24, 17},
++    {0x7700FC9337D7C663ull, 48, 24, 26},
++    {0x77223F8DD72DA99Cull, 48, 16, 12},
++    {0x82FDEA3BDFA2785Eull, 48, 32, 22},
++    {0x8959BDFAC69A6071ull, 24, 24, 44},
++    {0x8AEA0394093DC759ull, 24, 24, 64},
++    {0x96D41F5E90C04404ull, 24, 24, 70},
++    {0x9E31F5D77A20D5BCull, 24, 24, 39},
++    {0xA2AAFBA4FC0854D2ull, 24, 24, 58},
++    {0xA44203EC4C7F6C4Cull, 24, 24, 79},
++    {0xA5F56C06DC30A3C7ull, 24, 24, 57},
++    {0xB39FF1B9201E7BF4ull, 24, 24, 50},
++    {0xB632E332ABC810A3ull, 48, 32, 23},
++    {0xB88FF148CFF924F6ull, 24, 24, 61},
++    {0xBAEB1C0B96B2402Eull, 24, 24, 48},
++    {0xBC7CADBB07B23F74ull, 48, 16, 14},
++    {0xBD6772C2ED28751Cull, 24, 24, 42},
++    {0xC0CD813D802A4E47ull, 24, 24, 59},
++    {0xC38C324ED722EE8Bull, 48, 24, 19},
++    {0xC6B612C8DC9C4A37ull, 24, 24, 52},
++    {0xC8DCDB4A53001BD1ull, 24, 24, 60},
++    {0xC94F4381026AAD8Dull, 48, 16, 9},
++    {0xD666571821A2FB15ull, 24, 24, 73},
++    {0xD6DD4553B83498D2ull, 48, 24, 28},
++    {0xDB6B782331D6CF10ull, 24, 24, 46},
++    {0xDD68E66A4FFDE06Cull, 24, 24, 63},
++    {0xE31C2F505EFF970Cull, 24, 24, 54},
++    {0xE623FE892368BC6Cull, 48, 16, 16},
++    {0xE713BAEB095389E6ull, 24, 24, 80},
++    {0xEB47CF17D633FE35ull, 48, 24, 18},
++    {0xF2711C2741BD14DDull, 48, 32, 21},
++    {0xF444717E23207477ull, 24, 24, 66},
++    {0xF87465D018F26F87ull, 48, 16, 10},
++    {0xFF6393AAAE0815BCull, 24, 24, 68},
++};
++
++inline constexpr VerifiedBodyFace kNC30[] = {
++    {0x0257E6C9A4EBB16Bull, 32, 16, 12},
++    {0x075A165838D37EECull, 24, 16, 50},
++    {0x0870AC6C5BE06FD1ull, 24, 16, 61},
++    {0x0F39D30A1DFD13CFull, 24, 16, 40},
++    {0x11D5D5328659CD1Full, 32, 16, 18},
++    {0x177BFF0AC8A33D4Eull, 24, 16, 32},
++    {0x200025EB15D47F36ull, 24, 16, 55},
++    {0x2A5A187B8BE20E4Eull, 32, 16, 16},
++    {0x2C0288CC954CDDFEull, 24, 16, 59},
++    {0x2C65F0BAFF25C64Aull, 32, 16, 17},
++    {0x2DBF4F875FFC6075ull, 24, 16, 37},
++    {0x2E4283B2FEE9A8E5ull, 32, 16, 8},
++    {0x3041B8DA3BDFFF2Cull, 24, 16, 34},
++    {0x38B3B6F2EF06221Bull, 24, 16, 65},
++    {0x3C18961EC9A8F8EEull, 24, 16, 36},
++    {0x3C35B4DC8D501E31ull, 24, 16, 42},
++    {0x42ED6C8E7FA7103Bull, 24, 16, 33},
++    {0x43D36B793420927Bull, 32, 16, 22},
++    {0x441126A069DE8E12ull, 24, 16, 30},
++    {0x45F73DA3854AF0AFull, 24, 16, 49},
++    {0x463B6344F2371C4Aull, 32, 16, 21},
++    {0x4A9FD613CCEBA461ull, 24, 16, 57},
++    {0x4C5C68652C296E94ull, 24, 16, 47},
++    {0x4F9AEC8111CED343ull, 32, 16, 6},
++    {0x57A6B14C35653DEEull, 24, 16, 62},
++    {0x692AB4BEF9976FA0ull, 24, 16, 48},
++    {0x6C32B767B53D9D97ull, 32, 16, 23},
++    {0x70F18B15F5A8322Full, 24, 16, 52},
++    {0x747A7B414E3332EBull, 32, 16, 15},
++    {0x750C8A03500D4D2Dull, 32, 16, 7},
++    {0x7743212F8DDB1C7Dull, 24, 16, 43},
++    {0x77DCA7E0D07E3F85ull, 24, 16, 41},
++    {0x79B03685BC82D8D2ull, 24, 16, 39},
++    {0x81DC64584E60E004ull, 24, 16, 54},
++    {0x849AB5EE58AFBAEFull, 24, 16, 60},
++    {0x8CDEEEDD1195891Eull, 24, 16, 53},
++    {0x903ACBA718873D03ull, 24, 16, 64},
++    {0xA1882B850F9881F1ull, 32, 16, 14},
++    {0xAAE1C3E09C5EA106ull, 32, 16, 13},
++    {0xBAF8E6F1835F76B2ull, 32, 16, 19},
++    {0xC07B2067CE0CC580ull, 24, 16, 35},
++    {0xC1490F61270A7C89ull, 24, 16, 31},
++    {0xC2B7B7CD71E90528ull, 24, 16, 58},
++    {0xC428940F90BBF160ull, 32, 16, 20},
++    {0xCAA0D6E0E55A0EAAull, 32, 16, 11},
++    {0xCB187D90C06DCE92ull, 32, 16, 10},
++    {0xCB7DE66D6B6D86AEull, 24, 16, 56},
++    {0xCB9412DCEB25AC79ull, 24, 16, 45},
++    {0xCC80360CA2611B7Cull, 24, 16, 63},
++    {0xE0F4C969ABFD88B0ull, 32, 16, 9},
++    {0xE7C201EAF7CF8B2Bull, 24, 16, 46},
++    {0xE8EFA488F528E276ull, 24, 16, 51},
++    {0xE9302D1A1734BDBCull, 24, 16, 38},
++    {0xF70BF8DE5FF2D6A7ull, 24, 16, 44},
++};
++
++inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
++    if (name == "NC20.BIN") return {0x6D5853C18EC0B141ull, 0x6509F77B3891DF92ull, kNC20};
++    if (name == "NC30.BIN") return {0x005AB85B5EA60FEFull, 0xBA8DF2D0A3C0FC13ull, kNC30};
++    return {};
++}
++}
