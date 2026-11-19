@@ -1690,6 +1690,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG2248.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2248-pan.md",
+            "pc": "SAKURA1/BG/BG2248.SPR",
+            "runtime_evidence": "docs/research/bg2248-pan.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG2250.BIN": {
             "association": "observed",
             "evidence": "docs/research/coverage-campaign-v026.md",
@@ -8758,12 +8766,6 @@
         "reason": "size [288, 296], the runtime draws 288x144 pictures only",
         "status": "unsupported-size"
       },
-      "1:/SAKURA1/BG2248.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2248.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
-      },
       "1:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2249.SPR",
@@ -12619,8 +12621,7 @@
       "2:/SAKURA1/BG2248.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2248.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
