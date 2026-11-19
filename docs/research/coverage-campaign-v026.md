@@ -7,3 +7,5 @@
 - Clip: MOVIE001.
 
 This is a draw trace, not a visual review: framing of each item is still to be checked by eye. The register marks them `verified_in_game` (drawn by the runtime) only.
+
+Second run (seeds 21-26, 30,000 frames from 4,000): adds body NC25 and scene picture BG1045; the rest repeats the first run.
