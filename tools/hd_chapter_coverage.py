@@ -19,6 +19,7 @@ BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
+YONEDA_STORAGE_REPORT = PORTRAIT_REPORT + '#yoneda-00e9-storage-portrait'
 
 RESIDUAL_PORTRAIT_REPORT = PORTRAIT_REPORT + '#residual-portraits-00a1-and-0169'
 NATIVE_PORTRAIT_DECISIONS = {
@@ -594,7 +595,10 @@ def build(root, index_dir, portrait_audit):
                 'inferred' if sources else 'unknown', PORTRAIT_REPORT if sources else None)
         for episode, (atlases, evidence) in NATIVE_ROUTE_PORTRAITS.items():
             if ident in atlases:
-                add('portraits', ident, dict(row, atlases=[atlases[ident]]), episode, 'observed', evidence)
+                occurrence = dict(row, atlases=[atlases[ident]])
+                if episode == 9 and ident == '00e9':
+                    occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
+                add('portraits', ident, occurrence, episode, 'observed', evidence)
 
     return {
         'schema': 1,

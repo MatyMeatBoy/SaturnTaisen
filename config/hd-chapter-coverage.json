@@ -4730,7 +4730,9 @@
             ],
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
             "pc_index": 232,
-            "status": "hd"
+            "runtime_evidence": "docs/research/portrait-animation-coverage.md#yoneda-00e9-storage-portrait",
+            "status": "hd",
+            "verified_in_game": true
           },
           "00fa": {
             "association": "observed",

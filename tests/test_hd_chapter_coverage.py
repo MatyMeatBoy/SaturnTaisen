@@ -304,6 +304,11 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertFalse(row.get('verified_in_game'))
         self.assertTrue(chapter9['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
         self.assertEqual(chapter9['portraits']['2:/SAKURA1/0901FCE.BIN']['association'], 'resident')
+        yoneda = chapter9['portraits']['00e9']
+        self.assertEqual(yoneda['pc_index'], 232)
+        self.assertTrue(yoneda['verified_in_game'])
+        self.assertTrue(yoneda['runtime_evidence'].endswith('#yoneda-00e9-storage-portrait'))
+        self.assertFalse(catalog['chapters'][0]['resources']['portraits']['00e9'].get('verified_in_game'))
         for identity in ('0001', '00e9'):
             self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
             self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')
