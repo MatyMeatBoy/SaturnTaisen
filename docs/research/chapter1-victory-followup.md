@@ -75,13 +75,13 @@ With the 674,182-block candidate, `west-dialogue/finish.state` was loaded once a
 
 The movie has SHA-256 `3e7db4e78a2c498d892864fa850bc363bc5faa769bbfe8c525ab842249732693` and the resulting SRAM has SHA-256 `6d96f3daa07711500e1b8d2d7cbe1e69ac8bc285e83124271597347a9e4e03df`. The verification record is kept in `local/work/chapter1-victory-followup/t10-save-resume-native-full/verification.json`.
 
-Still to be done: joining the earlier handoffs and testing New Game through to the end of the chapter. The already-delivered test.2 ZIP precedes this candidate.
+The later [full cold replay](#full-cold-chapter-1-replay) joins those handoffs from New Game. The already-delivered test.2 ZIP precedes this candidate.
 
 ## Continue from a cold boot
 
 The 674,182-block candidate was restarted with a copy of the SRAM produced by the battle save. `tests/cold-load.movie` opens Continue, selects slot 1, and confirms the load. The hanami epilogue screen appears at frame 7,000. The 9,500-frame replay starts without loading emulator states. All guest hashes match and 19 RGB captures match between strict AOT and the interpreted reference of the same executable. The SRAM copy keeps its initial SHA-256 and the candidate logs zero interpreted blocks. The last guest hash is `d74aa82a82d17894`.
 
-The private report is at `local/work/chapter1-victory-followup/t10-cold-continue/comparison.json`. Two repeats of the full route from New Game, with save, restart and Continue, are still pending.
+The private report is at `local/work/chapter1-victory-followup/t10-cold-continue/comparison.json`. The later [full cold replay](#full-cold-chapter-1-replay) verifies both profiles and their restarts.
 
 ## From the corridor to the night-time save
 
@@ -89,7 +89,7 @@ From `stairs-scan.state`, progress continues through the corridor's LIPS choice,
 
 A single initial load replays the 29,597 hashes of the four segments. For the same 29,597 frames, the interpreted reference matches in hashes, final RGB, and saved SRAM. The AOT candidate logged zero interpreted blocks. The last guest hash is `f5282806f43e9908`. The movie has SHA-256 `34df861ba09b6ba1899d4708ce44e3cb31abe4acd7ee5404f247683bc0288596` and the saved SRAM has SHA-256 `2e96cc84378141ecc42d37c1ba1d71976974f6984ce85c791b68d9b95390801c`. The private evidence is at `local/work/chapter1-victory-followup/corridor-bridge/verification.json`.
 
-The corridor anchor corresponds to frame 119,780 of the earlier New-Game replay, per the historical state comparison, except for the sound RAM pointer that the loader restores. The splice from New Game is still to be tested.
+The corridor anchor corresponds to frame 119,780 of the earlier New-Game replay, per the historical state comparison, except for the sound RAM pointer that the loader restores. The later [full cold replay](#full-cold-chapter-1-replay) verifies this join.
 
 ## From the night-time save to the battle tutorial
 
@@ -97,4 +97,27 @@ From the night-time save, the `Resume` command returns control to the theater. T
 
 With a single initial load of the night-time save state, the 674,182-block candidate replays the 147,730 guest hashes of the 21 segments. The final RGB and the saved SRAM match, with zero interpreted blocks. The last guest hash is `f26cfda21efe6e60`. The movie has SHA-256 `0e8cd95c6802a3ad702794cf25299366fd468a82cb5b8088da73ea8640aa5fef` and the resulting SRAM, `5c71f7178690356219a0c800e1206412ad059de11dd9981873472c15e83868d0`. In the battle-entry segment, 5,400 hashes, nine RGB captures and the SRAM also match between strict AOT and the interpreted reference.
 
-The private evidence is at `local/work/chapter1-victory-followup/corridor-bridge/continuous-night-to-tutorial/verification.json`. The new tutorial's handoff reaches an interface similar to that of the historical state, with RGB and guest RAM differences. Still to be done: linking the new route with the already-verified battle turns, and testing two full routes from New Game with save, restart and Continue.
+The private evidence is at `local/work/chapter1-victory-followup/corridor-bridge/continuous-night-to-tutorial/verification.json`. The new tutorial's handoff reaches an interface similar to that of the historical state, with RGB and guest RAM differences. The [full cold replay](#full-cold-chapter-1-replay) below records the completed route.
+
+## Full cold Chapter 1 replay
+
+The English disc 1 route now runs from a cold New Game through the first battle, the postbattle save, and Resume to the hanami epilogue. The 511,978-frame input movie uses ordinary controls and starts both runs with a fresh profile and SRAM. The first guest hash agrees with a separate cold frame-zero reference with blank SRAM. The route joins the corridor at frame 119,780, the overnight save at 149,376, the corrected battle tutorial at 297,105 and the verified bridge approach at 324,603. From the later tactical handoff at 459,334, Maria and Sakura defeat the shrine guard. Ogami survives the fourth enemy phase by using Heal and defeats Satan in round five. The route overwrites slot 1 and selects Resume.
+
+| Verification | Native headless | Enhanced SDL |
+| --- | --- | --- |
+| New Game to hanami | 511,978 frames | 511,978 frames |
+| Fresh launch and Continue from the SRAM written by that run | 9,500 frames | 9,500 frames |
+| Interpreted blocks | 0 | 0 |
+
+Both full hash logs were identical and matched the verified segment references. Both fresh Continue runs matched the same 9,500 guest hashes, reached hanami, and preserved the completed SRAM. The full Enhanced profile used a 1280×720 window with PC backgrounds and verified portrait replacement enabled. It preloaded 38 backgrounds and 604 portrait variants. The native comparison reproduced the final hanami RGB from its final state and matched the segment reference. The Enhanced captures show the opening, corridor, prebattle save, tutorial, shrine, farewell, postbattle Save Complete and epilogue. The terminal emulator state files differ in four bytes at offsets 4,217,313–4,217,316.
+
+- Runtime SHA-256: `d7db281302bef15e84f227bb191bb830406a330efc4f5c2515fa5bf209e1c360` (674,182 recompiled blocks).
+- Full input movie SHA-256: `091b157c76066ee44131c2102ea64aa0a7c7c0713dc1066e0ac637e640762c1c`.
+- Full guest hash log SHA-256: `d5eabf510c933aa7896c26e4d4614426c9bc28b257266583baec44d1afeec9b8`.
+- Chapter SRAM SHA-256: `473e662f04143fb15de6f4d92ad73f5a7c405f78a055d203fcc47a8fddf95876`.
+- Cold Continue movie SHA-256: `0a54353b4d3a3338010a1d0f033306a1c6e8855d22b978d1f8f69424541419b3`.
+- Cold Continue guest hash log SHA-256: `5dde4196767eea71d70366355d6063bdf4344cba0adc7369e37921c1af7d6776`.
+
+Private commands and evidence live under `local/work/codex-th1`. `run-earned-route.ps1 -Mode native` and `-Mode hd` run the full movie. `compare-earned-route.py` checks the logs, the guest hash rows and the postbattle SRAM. `run-earned-continue.ps1` starts a fresh process from each actual battery save. The full-run comparison and the separate Continue reports are under `earned-route/`. The plan records the segment boundaries and the expected hashes.
+
+This closes the replay requirement for one English disc 1 path on the pinned runtime. Chapter 1 asset attribution and unresolved HD replacements remain under TH1, and package validation remains under T26. The replay evidence stays local and the released packages are unchanged.

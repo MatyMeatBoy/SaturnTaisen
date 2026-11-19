@@ -132,3 +132,13 @@ Send PRs as early as you have a verified slice, then keep sending: the coordinat
 ## Priority order (owner, 2026-11-19)
 
 Scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, TP4a/b/c unpaired), then large bodies (TP5), portraits (TP6), videos (TP7); verification and cleanup last (TP8). Each shard is sized for one PR; send it as soon as the picture is connected and its A/B hash check is done.
+
+## Lessons for shard workers (from the integration desk)
+
+- **Scene pictures (TP1-TP4):** the table has two keys. First key = palette; second key = palette + hash of the cell data. A group of Saturn pictures sharing a palette is resolved by comparing the PC candidates: identical PC images (pixel-identical although the SPR bytes differ) -> keep the lowest name; tint variants -> choose by mean absolute difference at 288x144 against the Saturn picture (see `shared_cell_choice` in `config/hd-scene-bg-review.json`, patch0118). Do not trust the 48x24 coarse signature alone.
+- **IC pictures (IC02-IC1006):** they belong to the intermission between episodes. Battle saves and chapter jumps land inside a dialogue and never reach them. Needs a backup RAM saved at each chapter's intermission (or a full play to the end of an episode). Without that, do not wire blind (patch0107 depends on a witnessed frame).
+- **Counting:** the register counts a picture once per disc and chapter; the single HD total (docs/HD_PROGRESS.md) counts connected items over candidates. Do not compare them.
+- **Before sending a runtime patch:** `tools/check_patch_stack.py`, compile, link your own exe (the shared `sakura.exe` is locked), replay the opening film and compare `frames.hash` with the previous release. A table-only patch still needs the compile and the replay. The integration desk repeats the build, but a PR that already says what was drawn arrives faster.
+- **Chapter jump:** `tools/chapter_jump.py` states at frame 11,999 are inside dialogue; pressing Start there does not open any menu. For a menu or an intermission you need a save made there.
+- **Do not re-anchor patches by script without compiling:** a re-anchored hunk can land outside its scope (it broke main once).
+- **When you finish:** update the row in docs/PENDIENTES.md in the same PR and say what you drew, what you compared and what you did not run.
