@@ -1,0 +1,37 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 3885c41..73b0d90 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1323,8 +1323,16 @@ int RunWindowed(Port &port) {
+                                                 // score is the Dice overlap of the two dark masks, the best shift of each part.
+                                                 const float kxp=float(st.bodyW)/float(bw),kyp=float(st.bodyH)/float(bh);
+                                                 const float cxp=(sp->x-bx+fw*0.5f)*kxp,cyp=(sp->y-by+fh*0.5f)*kyp;
+-                                                auto dark=[](uint32_t px){
+-                                                    return (px>>24) && (0.299*(px&255)+0.587*((px>>8)&255)+0.114*((px>>16)&255))<80.0;
++                                                // Outlines, pupils and lips by darkness; a frame with almost no dark pixels (most mouths) by the
++                                                // reddish pixels of the lips instead.
++                                                size_t darkProbe=0;
++                                                for(uint32_t px:rgba)darkProbe+=(px>>24) && (0.299*(px&255)+0.587*((px>>8)&255)+0.114*((px>>16)&255))<80.0;
++                                                const bool byColour=darkProbe<6;
++                                                auto dark=[byColour](uint32_t px){
++                                                    if(!(px>>24))return false;
++                                                    const int r=int(px&255),g=int((px>>8)&255),b=int((px>>16)&255);
++                                                    if(byColour)return r>=130 && r-g>=45 && r-b>=25;
++                                                    return (0.299*r+0.587*g+0.114*b)<80.0;
+                                                 };
+                                                 std::vector<char> saturnMask(rgba.size(),0);
+                                                 size_t saturnDark=0;
+@@ -1352,8 +1360,11 @@ int RunWindowed(Port &port) {
+                                                     else if(bestShift>second)second=bestShift;
+                                                 }
+                                                 rawBest=best;rawSecond=second;
+-                                                // Near-ties are between parts of almost the same shape, so either gives the same expression.
+-                                                if(part>=0 && best<0.50)part=-1;
++                                                // A clear score, or a lead over the second best. Near-ties at a high score are between parts
++                                                // of almost the same shape (either gives the same expression); near-ties at a low score are not.
++                                                // The lip-colour match carries less shape, so it needs a higher score.
++                                                if(part>=0 && byColour && best<0.75)part=-1;
++                                                if(part>=0 && !byColour && !(best>=0.65 || (best>=0.50 && best-second>=0.04)))part=-1;
+                                             }
+                                             st.matches[hash]=part;
+                                             if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body frame %ux%u -> PC part %d (best %.2f, second %.2f)",fw,fh,part,rawBest,rawSecond);fputc(10,stderr);}
