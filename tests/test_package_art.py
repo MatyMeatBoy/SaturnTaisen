@@ -91,6 +91,40 @@ class PackageArtTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, 'episode side pair'):
                 generated_backgrounds(folder, screen=True)
 
+    def test_episode_surrounds_require_an_empty_center_and_complete_set(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            report = folder / 'provenance.json'
+            manifest = {'source_pixels_included': False, 'backgrounds': []}
+            entries = manifest['backgrounds']
+
+            def register(file, image, **fields):
+                image.save(folder / file)
+                entries.append(dict(file=file, sha256=hashlib.sha256((folder / file).read_bytes()).hexdigest(),
+                                    palette_fnv='F84F4FA528984E99', **fields))
+
+            for number in range(1, 11):
+                for side in ('left', 'right'):
+                    register(f'EPISODE{number:02}-{side}-v1.png', Image.new('RGBA', (39, 224)),
+                             logical_grid=[39, 224])
+                surround = Image.new('RGBA', (640, 360), 'pink')
+                surround.paste((0, 0, 0, 0), (160, 68, 480, 292))
+                register(f'EPISODE{number:02}-surround-v2.png', surround,
+                         logical_grid=[640, 360], native_center=[160, 68, 320, 224])
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            self.assertEqual(len(generated_backgrounds(folder, screen=True)), 30)
+            entries.pop()
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError, 'episode surrounds'):
+                generated_backgrounds(folder, screen=True)
+            surround.putpixel((160, 68), (1, 2, 3, 0))
+            register('EPISODE10-surround-v2.png', surround,
+                     logical_grid=[640, 360], native_center=[160, 68, 320, 224])
+            report.write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError, 'contains center pixels'):
+                generated_backgrounds(folder, screen=True)
+
     def test_only_manifest_pinned_files_are_selected(self):
         with tempfile.TemporaryDirectory() as directory:
             folder=Path(directory);data=b'\x89PNG\r\n\x1a\nfixture'

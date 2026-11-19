@@ -293,6 +293,166 @@
       ],
       "palette_fnv": "36BDFD7BBC63CCE7",
       "native_center_overlay": true
+    },
+    {
+      "file": "EPISODE01-surround-v2.png",
+      "sha256": "e109173d7527cc2ac58daffc08d327ba9a056ac8fa1dc1d7671b5f0c5d560155",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "F84F4FA528984E99",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE02-surround-v2.png",
+      "sha256": "28f1fae4727968cc59958f5f46bd8dc50b04a70f1da1def2e5db3d6a92b1b96d",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "FA7EA6C32652FF94",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE03-surround-v2.png",
+      "sha256": "1d480a6d528b563c0b7371be185910bf7dab42dd0a3ad1f2e6da6adff5a64bd6",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "B17571E06A3D73A2",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE04-surround-v2.png",
+      "sha256": "0f746d6898e1722fcb110ac3002d9e4bee3da5e92e0317faf2cf90d6dcbf3bc6",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "9C6046FA0FD22004",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE05-surround-v2.png",
+      "sha256": "8ee0d4d696f0688e2ea7bc77d16781bd7bed1de7e377ba91c4f861c073a4f2cb",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "584308F5B85AE012",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE06-surround-v2.png",
+      "sha256": "9f1d2d292650ae0f60194b9fd314c6eab4a0dd93351f91a150985380b173d667",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "F530E4A419F666C8",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE07-surround-v2.png",
+      "sha256": "a2ae2981aa3fed5d9c1a751031580c3f97f489bd2abc021c72c10f87546e68f6",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "FDCEEE68F831DE9F",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE08-surround-v2.png",
+      "sha256": "d4139f9d59f057d4091ef4e1613a282c60ba3c2119f005897c5dff7731382251",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "ECA61ED3EEA4FABB",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE09-surround-v2.png",
+      "sha256": "5809edc9f2af0fc1c1392ea92928c666ca6f2c63d44d4bbe56f381a7bb54bcfa",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "E8DCC5B80A127438",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
+    },
+    {
+      "file": "EPISODE10-surround-v2.png",
+      "sha256": "b94047983f2e891147b1c9e82962c0a10977e610e906a7120093e440c833c0c8",
+      "logical_grid": [
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
+        224
+      ],
+      "palette_fnv": "36BDFD7BBC63CCE7",
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     }
   ],
   "source_pixels_included": false
