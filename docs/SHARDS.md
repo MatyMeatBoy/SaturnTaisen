@@ -8,7 +8,7 @@ Each shard is independent, has its own files and its own "done" test. Rules for 
 
 Bots take shards in this order; anything that does not move HD mode toward done waits. Conflicts in shared files (`docs/PENDIENTES.md`, `docs/research/bg-matching-progress.md`, `config/hd-scene-bg-review.json`): rebase on `origin/main` and keep both sides (lists and keys are unions); the coordinator does the same when integrating.
 
-1. **Runtime, visible in game:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106), S10 Spanish cards (T107).
+1. **Runtime, visible in game:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106).
 2. **Data that feeds the runtime:** the background review shards (T76-T711), item and body maps.
 3. **Performance:** S6 VDP (T103), S7 SH-2 (T104), only after a visible item is blocked on someone else.
 4. **Owner-only:** painted art (T87).
@@ -24,7 +24,6 @@ Bots take shards in this order; anything that does not move HD mode toward done 
 | S7 SH-2 speed | T104 | no | block dispatch in the dependency | SH-2 time (about 6.5 ms per frame) lower with identical guest state hashes |
 | S8 scroll and battle backgrounds | T105 | yes | `tools/decode_saturn_bg.py`, `gen_scene_bg_table.py`, recognisers | The BBG/EVE and scrolling pictures are decoded, paired with the PC pictures and recognised at runtime like the 459 scene pictures; variant-B wide pictures handled |
 | S9 faces | T106 | yes | body/face tables | `NC30` and `NC20` get native-face patches (mouth/eye frames the matcher leaves native) and the fade-in of a body is checked |
-| S10 Spanish cards | T107 | yes | `tools/es/portadas_es.py`, the Spanish layer | The 16:9 widening recognises the Spanish cards (their palette fingerprints) and painted art replaces the program drafts (the owner reviews T87) |
 
 Order for the fastest visible gain: S1, S2 (independent, small), then S3 and S4, then S5 and S8. S6 and S7 are performance and can run in parallel with anything else.
 
@@ -54,7 +53,7 @@ Rows TH0-TH10, TS11 and TS12 in `docs/PENDIENTES.md` mirror this list; update th
 6. **Never commit** discs, BIOS, saves, original PC assets, game pixels, `local/`, or untranslated Japanese script text. Generated art goes under `assets/generated/` with `provenance.json`.
 7. **A PR says**: which row it closes or advances, the commands run with their output, and what is still not verified. Mark "implemented", "tested" and "in a package" separately. A saved state or a screenshot does not complete a chapter.
 8. **Runtime changes** must keep the guest per-frame hashes identical to the previous build (strict native replay, `interpreted 0`); say which replay.
-9. **One dev runtime at a time** builds in `local/build/sakura`: workers without a compiler or the discs do the code, tests and data halves and say so; do not run `build_runtime.py` while another worker has unrecorded dependency edits.
+9. **Run from your own copy of the executable.** Several workers share this machine and a running `sakura.exe` locks the file, so the linker fails with `Permission denied` for everybody (seen 2026-11-19). Copy the build to `local/build/sakura-<your-name>/sakura.exe` and run your replays from there; never kill another worker's process; build when no process holds the shared path. **One dev runtime at a time** builds in `local/build/sakura`: workers without a compiler or the discs do the code, tests and data halves and say so; do not run `build_runtime.py` while another worker has unrecorded dependency edits.
 
 ## How to read the coverage numbers (read before picking work from them)
 
@@ -80,3 +79,41 @@ A pairing, a review or a report is not a finished shard. The PR that closes a sh
 5. **If something blocks the connection**, the PR says what (a missing runtime feature, the owner's discs, an ambiguous key) and opens or links the row that unblocks it; it does not close the shard.
 
 Reviews and pairings that are still waiting on a human eye are the only exception: they may ship as data-only PRs, marked as such in the title.
+
+## How a pairing becomes a drawn picture (follow the chain, send it whole)
+
+| Class | Data (names, hashes) | Generator | Runtime table in the SDK | Runtime code (`port/frontend_sdl.cpp`) | Proof |
+| --- | --- | --- | --- | --- | --- |
+| Scene pictures 288x144 | `config/hd-scene-bg-map.json` + `hd-scene-bg-review.json` | `tools/gen_scene_bg_table.py` | `port/scene_bg_table.h`, key = palette fingerprint of the picture layer | T74 draw: PC picture under the native overlays | `tests/test_saturn_bg_decode.py`, replay hashes, screenshot |
+| Large bodies NC | `hd-body-map.json` + `hd-body-review.json`, `hd-nc30/nc20-face-map.json` | `tools/gen_body_table.py` (needs the disc image) | `port/body_table.h`, key = hash of the VDP1 texture | body + face draw (matcher by layout, shape, lip colour) | `SATRECOMP_BODY_TRACE`, HD/native pairs |
+| FILM clips | `film-fad-map.json`, `clip-audio-map.json` | `tools/gen_film_clip_table.py` | `port/film_clip_table.h`, key = (disc, start FAD range) | `UpdateClip` + `port::MovieDecoder` | `SATRECOMP_CLIP_TRACE`, opening-film replay |
+| Items / menus / HUD | `hd-item-map.json`, `hd-item-review.json`, `hd-system-hud-review.json` | `tools/gen_item_table.py` | `port/item_card_table.h` | not connected yet (T109): VDP1 sprite + CRAM bank to PC picture | ITEM07 witness in `docs/research/pc-menu-hud.md` |
+
+A table is regenerated by its generator and added to an SDK patch (`port/*.h` in `patches/00NN-*.patch`, listed last in `config/dependencies.json`); `python tools/check_patch_stack.py` must pass. The runtime change that reads it goes in the same patch.
+
+## Where the shards stand (2026-11-19) and the open connected shards
+
+Done and in `main`: S1 film map (T98), S2 decoder (T99), S3 video in the runtime (T100/T116, patches 0073/0078/0080), S4 clip audio (T101/T111, patches 0074/0080/0083, listening open), S6 VDP speed (T103), S7 SH-2 dispatch (T104), TH0 coverage register, the card work moved to Codex (TCODEX).
+
+Open, each one a PR that arrives connected (see the rule above):
+
+- **W1 ambiguous-palette pictures**: 128 BG entries (64 per disc) share a palette with a picture that maps to another PC file. Add a second key (for example a hash of the layer's tile data or of its VDP2 cell table) to `gen_scene_bg_table.py`, extend the runtime match, regenerate. Closes up to 64 pictures.
+- **W2 IC and EVE recognisers (T96/T105b)**: 32 IC and 12 EVE pictures, decoders and pairs exist; write the runtime recogniser for the palette-first full-screen pictures.
+- **W3 wide and tall pictures (T105c/T105d)**: 73 entries of another size; the variant-B decoder and the native scroll witness (BG2252) exist; add per-frame scroll offset to the T74 draw.
+- **W4 NC30 and NC20 native faces (T106a/b)**: the face maps are verified offline; the runtime consumer is missing.
+- **W5 HUD and menus (T102/T109/T110)**: the table generator and the ITEM07 witness exist; connect the item pictures (VDP1 sprite + CRAM bank to the PC picture) and the SYSTEM menus.
+- **W6 tactical mode (TS11)**: 542 UNIT/MAP/ITEM files, nothing paired yet; pair, table, recogniser, wide maps.
+- **W7 verification replays (TH1-TH10)**: 246 body entries are `wired-unverified` and most chapters have no replay; each replay needs the owner's discs and records which items drew, with hash parity. Attribute resources to chapters through `CHAPTER_WITNESSES` in `tools/hd_chapter_coverage.py`.
+- **W8 video leftovers**: the six alternate cuts (decision per clip), disc 2 clips, resume after a skip, listening to the audio (T112: MOVIE005/018/030/119 need special review), the release package.
+- **WRA RetroAchievements (TRA)**: the whole feature, see its row: rcheevos client, badge popups, sync and offline queue, launcher login and log; save states are never available to players.
+- **W9 packaging (TS12)**: gate and clean-machine run for everything generated or paired.
+
+Rows W1-W9 are in `docs/PENDIENTES.md`; take one, write your name in its status, and send the PR whole.
+
+## Claims and the 30-minute rule (owner, 2026-11-19)
+
+Take a shard by claiming its row in a first small PR: `python tools/shard_claims.py --claim TW1 --who <name> --branch pendientes/<branch>` (it writes `CLAIM[name|branch|UTC time]` at the start of the row's status cell). A claim stays valid while its branch gets commits; **a shard nobody has worked on for 30 minutes goes back to the pool**: any worker or the coordinator runs `python tools/shard_claims.py --release-stale` (add `--dry-run` to look first) and every claim older than 30 minutes with no newer commit on its branch becomes `open · released (stale claim of <name>, <time>)`. `--list` shows the claims and their idle time. Push a commit (even a draft) to keep a claim alive; if you stop, release it yourself. A released shard may be taken by anyone, and the previous worker's branch is fair material for the next one.
+
+## Save states are for testing only (owner rule, 2026-11-19)
+
+The game is played naturally: save states, load states, quick states (F5/F9), the reset point (F2/F3), the slot keys (F6/F7) and their menu rows never reach players. The runtime (patch 0097, `port/dev_states.h`) switches them off whenever a `release.marker` file sits beside `sakura.exe`; `tools/package_release.py` writes that file into every package, so a package is always natural play, and development builds (no marker) keep `--state-load/--state-save` for replays. Never copy `release.marker` next to a development executable, and never ship a package without it (`tests/test_release_marker.py`). A future in-game save-anywhere feature (owner idea: like a modern visual novel) is a separate design and not these tools.

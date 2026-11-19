@@ -85,7 +85,20 @@
       "patches/0080-sakura-clip-audio-presented-handoff.patch",
       "patches/0081-sakura-episode-native-scale-fade.patch",
       "patches/0082-sakura-episode-sides-always.patch",
-      "patches/0083-sakura-clip-av-offset-trace.patch"
+      "patches/0083-sakura-clip-av-offset-trace.patch",
+      "patches/0084-sakura-sh2-wait-detector-in-place.patch",
+      "patches/0085-sakura-episode-surround.patch",
+      "patches/0086-sakura-spanish-episode-lettering.patch",
+      "patches/0089-sakura-verified-body-faces.patch",
+      "patches/0090-sakura-hd-inventory-cards.patch",
+      "patches/0091-sakura-scene-picture-cells-key.patch",
+      "patches/0092-sakura-dialogue-text-one-pixel-lower.patch",
+      "patches/0093-sakura-hd-system-brackets.patch",
+      "patches/0094-sakura-scene-table-event-pictures.patch",
+      "patches/0095-sakura-approved-episode-cards-only.patch",
+      "patches/0096-sakura-clip-resume-from-state.patch",
+      "patches/0097-sakura-dev-states-off-in-packages.patch",
+      "patches/0098-sakura-bg2533-verified-pan.patch"
     ]
   }
 }

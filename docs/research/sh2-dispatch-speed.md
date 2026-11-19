@@ -65,3 +65,21 @@ byte-identical in the three scenarios (1,200 of 1,200 frames each) and the frame
    bookkeeping, `Access::GetRegisters` for the wait detector on every dispatch. Profile B and decide. T120.
 2. Entry layout: the fields read on every dispatch span two cache lines of a 96-byte entry; packing them and
    compacting the chain heads could save further misses. T121.
+
+## T120 / T121 follow-up (patch 0084)
+
+Not profiled with the sampler again; the two fixed costs read from the code were removed. (1) The wait detector built a
+96-byte `Registers` copy at every dispatch and compared it with the snapshot; it now compares the CPU in place
+(`Access::SameRegisters`, PC first) and copies only when it takes a snapshot. (2) `e->runs++` stored to the cold `Entry` at
+every dispatch; `runs` is read only when recording, so it is counted only then. `Run` and `Matches` were left as they are.
+
+A = same tree without the patch, B = with it (`vdp_parity_bench.py ab`, 3 interleaved runs, median, ms per frame):
+
+| scenario | SH-2 A | SH-2 B | emulation A | emulation B |
+| --- | --- | --- | --- | --- |
+| office | 2.713 | 2.117 | 8.688 | 8.119 |
+| resume | 2.887 | 2.228 | 9.312 | 8.710 |
+| attack | 2.092 | 1.647 | 11.399 | 10.965 |
+
+Video phases did not move. Hashes: 1,200 of 1,200 identical to `sakura-674182-validated.exe` in the three scenarios;
+window shots identical to A. T121 (hot fields first, `alignas(64)`) gave no measurable change on top of B and was dropped.

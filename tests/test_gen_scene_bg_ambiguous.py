@@ -1,0 +1,50 @@
+import json, pathlib, re, subprocess, sys, tempfile, unittest
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+
+
+def pair(name, palette, pc, cells, tier='content'):
+    return {'saturn_file': 'SAKURA1/%s.BIN' % name, 'decoded': True, 'size': [288, 144], 'palette_fnv': palette,
+            'pc_file': 'SAKURA1/BG/%s.SPR' % pc, 'pc_image_index': 0, 'tier': tier, 'cells_fnv': cells}
+
+
+def generate(pairs, confirmed=()):
+    with tempfile.TemporaryDirectory() as folder:
+        folder = pathlib.Path(folder)
+        (folder / 'm.json').write_text(json.dumps({'pairs': pairs}), encoding='utf-8')
+        (folder / 'hd-scene-bg-review.json').write_text(json.dumps(
+            {'eye_confirmed_number_tier': list(confirmed), 'rejected': []}), encoding='utf-8')
+        out = folder / 'o.h'
+        subprocess.run([sys.executable, str(ROOT / 'tools/gen_scene_bg_table.py'), str(folder / 'm.json'), str(out)],
+                       check=True, capture_output=True)
+        text = out.read_text(encoding='utf-8')
+    first = re.findall(r'\{0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text.split('kSceneBgAmbiguous')[0])
+    second = re.findall(r'\{0x([0-9A-F]+)ull,0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text)
+    return first, second
+
+
+class AmbiguousPaletteTable(unittest.TestCase):
+    def test_shared_palette_goes_to_the_second_table(self):
+        # BG1 and BG2 share a palette and map to different PC files (a content pair and a number pair confirmed by eye).
+        first, second = generate([pair('BG1011', 'AA', 'BG1011', '01'), pair('BG1012', 'AA', 'BG1012', '02')])
+        self.assertEqual(first, [])
+        self.assertEqual({(p, c, f) for p, c, f, _ in second},
+                         {('AA', '01', 'SAKURA1/BG/BG1011.SPR'), ('AA', '02', 'SAKURA1/BG/BG1012.SPR')})
+
+    def test_unique_palette_stays_in_the_first_table(self):
+        first, second = generate([pair('BG1011', 'AA', 'BG1011', '01'), pair('BG1012', 'BB', 'BG1012', '02')])
+        self.assertEqual(len(first), 2)
+        self.assertEqual(second, [])
+
+    def test_identical_cells_for_two_pc_files_stay_out(self):
+        first, second = generate([pair('BG1011', 'AA', 'BG1011', '01'), pair('BG1012', 'AA', 'BG1012', '01')])
+        self.assertEqual((first, second), ([], []))
+
+    def test_rejected_and_cut_out_pictures_never_enter(self):
+        first, second = generate([pair('BG3011', 'AA', 'BG3011', '01'), pair('BG1012', 'AA', 'BG1012', '02')])
+        self.assertEqual([(p, f) for p, f, _ in first], [('AA', 'SAKURA1/BG/BG1012.SPR')])
+        self.assertEqual(second, [])
+
+
+if __name__ == '__main__':
+    unittest.main()

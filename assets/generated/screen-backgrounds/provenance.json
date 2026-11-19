@@ -55,244 +55,254 @@
       "native_center_overlay": true
     },
     {
-      "file": "EPISODE01-left-v1.png",
-      "sha256": "27a196856b09545e37f7c971acd48b4d2927661cea283979bbf6f289bc19c893",
-      "generated_source_sha256": "43f0d971ab98b53c87818e9b79d55f6f7df2dc1416e97d4115a406011a6fe1c0",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE01-surround-v2.png",
+      "sha256": "e109173d7527cc2ac58daffc08d327ba9a056ac8fa1dc1d7671b5f0c5d560155",
       "logical_grid": [
-        39,
+        640,
+        360
+      ],
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "F84F4FA528984E99",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE01-right-v1.png",
-      "sha256": "485b09941e7a241b3ff0508cc097dece8294410462dcedffa22dd1343f720a6d",
-      "generated_source_sha256": "43f0d971ab98b53c87818e9b79d55f6f7df2dc1416e97d4115a406011a6fe1c0",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE02-surround-v2.png",
+      "sha256": "28f1fae4727968cc59958f5f46bd8dc50b04a70f1da1def2e5db3d6a92b1b96d",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "F84F4FA528984E99",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE02-left-v1.png",
-      "sha256": "7762d44a123635c7cdd5e8cbfa61c6ac00b77848bef155d58047f8bdc04efd3b",
-      "generated_source_sha256": "f152a73bff94590f3934540899975238664b0449ddd32319d3c9fb22dbdb6075",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "FA7EA6C32652FF94",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE02-right-v1.png",
-      "sha256": "d8b94a6d7844c1aaeb09ade0bc57e9998c782cd14f265624fe38a42d8782d80c",
-      "generated_source_sha256": "f152a73bff94590f3934540899975238664b0449ddd32319d3c9fb22dbdb6075",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE03-surround-v2.png",
+      "sha256": "1d480a6d528b563c0b7371be185910bf7dab42dd0a3ad1f2e6da6adff5a64bd6",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "FA7EA6C32652FF94",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE03-left-v1.png",
-      "sha256": "7f484d71bf45c25fb7e195bc61a9520966ca5b038d0b2c8be09eb579db00551a",
-      "generated_source_sha256": "63d1aea0be0e567b929fe8d888846f63d4cbc3b9d1a79489cb7cb6c1f67f04fd",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "B17571E06A3D73A2",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE03-right-v1.png",
-      "sha256": "3dc5db202450a5688022bac1a0b4c3cd06396427121ff0ed91ce386d74c9a442",
-      "generated_source_sha256": "63d1aea0be0e567b929fe8d888846f63d4cbc3b9d1a79489cb7cb6c1f67f04fd",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE04-surround-v2.png",
+      "sha256": "0f746d6898e1722fcb110ac3002d9e4bee3da5e92e0317faf2cf90d6dcbf3bc6",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "B17571E06A3D73A2",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE04-left-v1.png",
-      "sha256": "dd51f5fabe2b6fafbb556e47d1d8785c76f5d0e45e66002c8122916bfa0c4817",
-      "generated_source_sha256": "3f3a4cdeb7e2c4603170b57ddac99cbcf91fda7aae64f10efa0d684b29074378",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "9C6046FA0FD22004",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE04-right-v1.png",
-      "sha256": "ab19bb230a5784df98d2caf188328073ab3a64e974322c666b9f21bf6ff2870f",
-      "generated_source_sha256": "3f3a4cdeb7e2c4603170b57ddac99cbcf91fda7aae64f10efa0d684b29074378",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE05-surround-v2.png",
+      "sha256": "8ee0d4d696f0688e2ea7bc77d16781bd7bed1de7e377ba91c4f861c073a4f2cb",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "9C6046FA0FD22004",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE05-left-v1.png",
-      "sha256": "1b30276f6cf4e035f5ac805aca7a7e40bbd85433f6981d22c9008c21236e679c",
-      "generated_source_sha256": "543da9c93898a2e182969ae2d01116289ab51cddb31570e52d44faf0264fdc3f",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "584308F5B85AE012",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE05-right-v1.png",
-      "sha256": "ec3a0bc7fb5832ed443b30de2cabfde7984435edbc0f0a16cc604e747480c2c7",
-      "generated_source_sha256": "543da9c93898a2e182969ae2d01116289ab51cddb31570e52d44faf0264fdc3f",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE06-surround-v2.png",
+      "sha256": "9f1d2d292650ae0f60194b9fd314c6eab4a0dd93351f91a150985380b173d667",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "584308F5B85AE012",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE06-left-v1.png",
-      "sha256": "5ddd0fe85e1ab6357cda9e8afdd220b6f6409a9521cdfa377db56496c7fd46fa",
-      "generated_source_sha256": "748d4be20f3f7cb85ebb02d7a9872eaf6f1e235b9f79694ddec013066df86826",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "F530E4A419F666C8",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE06-right-v1.png",
-      "sha256": "6374a1ec1c55423b3a31bdb3851ca975dc2b5efbba36033d61115d2729ab60cb",
-      "generated_source_sha256": "748d4be20f3f7cb85ebb02d7a9872eaf6f1e235b9f79694ddec013066df86826",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE07-surround-v2.png",
+      "sha256": "a2ae2981aa3fed5d9c1a751031580c3f97f489bd2abc021c72c10f87546e68f6",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "F530E4A419F666C8",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE07-left-v1.png",
-      "sha256": "ab8bde8117b0a5b7b70c79370e1c2232643f2ebac0d848dfd2f102e588ed4bc5",
-      "generated_source_sha256": "9b9c58d2333d10709cf24735b0032ab5dcaa955d9bc11d89acb5876476cc4eee",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "FDCEEE68F831DE9F",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE07-right-v1.png",
-      "sha256": "94ade7730c3617e103c693bd27908783647a553049aa3200598c6730078161e6",
-      "generated_source_sha256": "9b9c58d2333d10709cf24735b0032ab5dcaa955d9bc11d89acb5876476cc4eee",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE08-surround-v2.png",
+      "sha256": "d4139f9d59f057d4091ef4e1613a282c60ba3c2119f005897c5dff7731382251",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "FDCEEE68F831DE9F",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE08-left-v1.png",
-      "sha256": "9b484ea956f6f4d05938544d4b3032bdc8d2bbbd573de56dfee18f038407656d",
-      "generated_source_sha256": "a867b408af8be83846f7b4dde19c8228aa1c0bc0c95457dcf08bec38defc022a",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "ECA61ED3EEA4FABB",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE08-right-v1.png",
-      "sha256": "cb04dba3696d1e19a6007af2f06b75fe959cf3cb43892ba10e5e7747b5e51dad",
-      "generated_source_sha256": "a867b408af8be83846f7b4dde19c8228aa1c0bc0c95457dcf08bec38defc022a",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE09-surround-v2.png",
+      "sha256": "5809edc9f2af0fc1c1392ea92928c666ca6f2c63d44d4bbe56f381a7bb54bcfa",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "ECA61ED3EEA4FABB",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE09-left-v1.png",
-      "sha256": "8dfd86d87da2a66f6c2378d610c0261db4526e41cc9135a9e4f072c166368df5",
-      "generated_source_sha256": "e81f1383fe18442e6d3043a0e9c128a8e61a507045e8a9a6d1543f44d4409492",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "E8DCC5B80A127438",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE09-right-v1.png",
-      "sha256": "25ee901a1c1bb731c7360cba6b76d381df76ccf374fd9b705d87d2b82f908671",
-      "generated_source_sha256": "e81f1383fe18442e6d3043a0e9c128a8e61a507045e8a9a6d1543f44d4409492",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE10-surround-v2.png",
+      "sha256": "b94047983f2e891147b1c9e82962c0a10977e610e906a7120093e440c833c0c8",
       "logical_grid": [
-        39,
-        224
+        640,
+        360
       ],
-      "palette_fnv": "E8DCC5B80A127438",
-      "native_center_overlay": true
-    },
-    {
-      "file": "EPISODE10-left-v1.png",
-      "sha256": "46c4b385783099da5495cb2f0518097da4e2853cf258d16b32f51e7e21e2f739",
-      "generated_source_sha256": "4b4a7601e22ee6d6c6ab7102a558a20e85969337c8c9de8c0323350093112050",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
-      "logical_grid": [
-        39,
+      "native_center": [
+        160,
+        68,
+        320,
         224
       ],
       "palette_fnv": "36BDFD7BBC63CCE7",
-      "native_center_overlay": true
+      "method": "ImageGen outpainting from the Saturn card; perimeter color matching; native center removed"
     },
     {
-      "file": "EPISODE10-right-v1.png",
-      "sha256": "b8d9383a39eec4bf90853a71ca0f7f2f965711ebcbc60576fdef3cf8f335c5e7",
-      "generated_source_sha256": "4b4a7601e22ee6d6c6ab7102a558a20e85969337c8c9de8c0323350093112050",
-      "method": "PixelGen v1 original side illustration; native-density sampling and seam alpha",
+      "file": "EPISODE01-es-lettering-v1.png",
+      "sha256": "b42ce55c7ee048debe55874a6827cf84a8c48c11b798b6e25a37357988b1f9d5",
       "logical_grid": [
-        39,
+        320,
         224
       ],
-      "palette_fnv": "36BDFD7BBC63CCE7",
-      "native_center_overlay": true
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE02-es-lettering-v1.png",
+      "sha256": "5711e6a93313db0cc66a15e013dbe6d251acfd64e4e8dab69124ff3c4924c86c",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE03-es-lettering-v1.png",
+      "sha256": "6d20245ce6676a2209fa6b21e235993b32e7f243e7f3e9611d54ca0217ff4b78",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE04-es-lettering-v1.png",
+      "sha256": "fb69fe4934857f23d7cb9e318bb88adc26f3bb606378e761e0967bced0336752",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE05-es-lettering-v1.png",
+      "sha256": "5aec5c2ea414ed7d9e203df5a30d1fe1f964339f58a267a39df5242b85224658",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE06-es-lettering-v1.png",
+      "sha256": "a1997165195d502a069c2dc33fd740544af111563bff29f33451afabd4ca164b",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE07-es-lettering-v1.png",
+      "sha256": "c8fc631c981017272c32a0ac3af7e32b216f26950061860b789ca833c7edfc79",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE08-es-lettering-v1.png",
+      "sha256": "453cc06aa6cabc7437cc93c559dd48a0328c9fd629f05b2d128675e2eab3a5b1",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE09-es-lettering-v1.png",
+      "sha256": "d5bf7b5fe94739185fdc85c2ef3c17a742a3f40669856322d654e62c1c611f88",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
+    },
+    {
+      "file": "EPISODE10-es-lettering-v1.png",
+      "sha256": "d0998b52bbaa324db6a3ad4bea8077e232f30264dd849aa70885ec085f90799a",
+      "logical_grid": [
+        320,
+        224
+      ],
+      "kind": "generated Spanish lettering only"
     }
   ],
   "source_pixels_included": false

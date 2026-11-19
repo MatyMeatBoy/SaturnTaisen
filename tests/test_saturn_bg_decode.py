@@ -124,6 +124,11 @@ class SaturnBgTests(unittest.TestCase):
             if pair['tier'] == 'missing':
                 continue
             self.assertEqual(len(pair['cells_sha256']), 64)
+            if pair['saturn_file'].startswith('SAKURA2/EVE'):
+                # An event picture is paired by eye with a PC battle background of another name (tools/add_eve_pairs.py).
+                self.assertTrue(pair['pc_file'].startswith('SAKURA2/BG/BBG'))
+                self.assertGreaterEqual(pair['correlation'], 0.8)
+                continue
             self.assertEqual(pair['pc_file'].split('/')[-1][:-4], pair['saturn_file'].split('/')[-1][:-4])
             self.assertIn(pair['tier'], ('content', 'number'))
 

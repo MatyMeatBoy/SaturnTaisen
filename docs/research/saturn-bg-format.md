@@ -514,3 +514,121 @@ art directory. The gameplay witness covers Episode 1, while the package gate
 covers all ten asset pairs. No new ZIP was built. At this checkpoint the
 project accounted for 39,407,546,051 unique logical file bytes, above the cap;
 the unchanged development ZIP is 6,315,009,692 bytes.
+
+### Full generated episode surrounds (T107f)
+
+Each Saturn card's palette fingerprint selects one 640×360 RGBA artwork
+surround. The 320×224 center is zeroed in the PNG and drawn from the guest
+frame at the largest integer scale that fits. Only the exterior is clipped
+or enlarged to reach the presentation limits. At 1920×1080 the center is
+4×, from (320,92) to (1600,988). At 2560×1440 it is 6×, from (320,48)
+to (2240,1392). Both use the same 16:9 artwork without stretching in
+these modes.
+
+The renderer uses the Saturn card's uniform NBG2 blend weight. During
+the blend it draws the selected scene backdrop at the same integer cover
+as the normal scene. Original mode never enters the replacement branch.
+The PNG manifest pins all ten assets and checks palette identity, format,
+and the empty center. The Saturn source cards and local review images
+stay under `local/`. This change adds no localized lettering.
+
+The episode layer uses the captured card RGB over the wide floral backdrop
+at the native ratio through the center too. When only some pixels have
+a verified two-screen recipe, other pixels keep their native composition.
+The fully visible center uses the guest frame directly.
+
+Isolated Windows runtime SHA-256 `5c2100ae3265fbcc637a9af931468ea875452f411dccf33f5fea9f13141b1588`.
+Two 6,670-frame English Episode 1 replays with the PC backdrop assets,
+at 1920×1080 and 2560×1440, had the same first 6,550 guest hashes as
+Original and zero interpreted blocks. The fully visible center is
+pixel-identical at both scales. At frames 6075, 6095, 6500 and 6545
+the measured mean RGB error relative to the same full-screen blend
+was below 0.65 per channel in the center and the sampled exterior.
+Frame 6570 returns to the same wide background before drawing the next
+dialogue. The measured exterior and upper center return exactly.
+All ten art files passed the runtime palette identity, opacity, and
+package checks. Episode 1 is the gameplay witness. No new package
+was built. Main workspace measured 41,263,274,196 logical bytes,
+excluding duplicate hard links and junctions; the development ZIP
+remains 6,315,009,692 bytes.
+
+### Spanish Enhanced episode lettering (T107b/T107c)
+
+The shipped 320×224 transparent layers contain only the generated Spanish
+lettering. Each borrows the English card's fill and outline treatment.
+Episode 2 uses black with a white stroke, Episode 4 gold with a white
+stroke, and Episode 7 white with a blue glow.
+
+Preparation uses both locally prepared disc 1 images. It masks the English
+lettering on the Saturn card, paints the corresponding Spanish overlay and
+stores the flattened center under the active profile. The lookup requires
+the fingerprint of the entire active Spanish TITLE file. The enhanced
+renderer loads the center at the same integer fit as the English version and
+uses the same fade weight. The file prepared by the user is never bundled.
+Existing Spanish profiles can generate the replacement by running setup
+again with their prepared games in place. Disc images are read only.
+
+The frozen Windows setup helper generated all ten centers over an existing
+two-disc setup. Each native center matched the corresponding local preview.
+The isolated runtime (SHA-256
+`436519c96826eb1fbdcd005f2e2060fc5a5c3e3abb0a74a67e4df0177db1288e`)
+ran four 6,670-frame Episode 1 replays. The first 6,550 guest hashes in every run
+matched the corresponding Original reference. The full center matched the
+localized image exactly at 1080p (4×) and 1440p (6×) in Spanish Enhanced.
+Mean channel error for full-screen fade samples stayed below 0.59 at both
+resolutions. The upper half returned to the same wide floral image after the
+card. Four sampled frames in Spanish Original and in English Enhanced were
+pixel-identical to their controls, with the Spanish files installed in both
+profiles. The other nine titles were prepared and inspected offline.
+
+The workspace measured 44,432,477,351 logical bytes before archiving the
+English reference runtime. The development ZIP remains 6,315,009,692 bytes.
+No new release ZIP was built.
+
+### Verified NC20 and NC30 face selection (TW4)
+
+`python tools/gen_verified_face_table.py TRACK01.iso PC_ROOT OUTPUT.h`
+checks the pinned Saturn and PC hashes and regenerates the SDK table of
+117 unique texture signatures. The runtime checks the installed assets
+before using the table, looks up the native face bytes and dimensions,
+and resolves the original SPR index through the decoder's compact list.
+This matters because NC20 has holes before index 8 and NC30 before index 6.
+Unknown frames or mismatched assets retain their native face sprite. The
+existing zoom layout, placement refinement and blend guards are shared.
+
+The isolated runtime (SHA-256
+`d0f41d2c0f57af3eaeccb3ec3218b42a6bca9865f590eea1b993c6e6221f5365`)
+selected NC20 eyes 11–13 and mouth 45 in the 900-frame `post-3000` replay.
+The 2,500-frame `post-18000` and `chapter1-continuous-47999` replays selected
+NC30 eyes 12–14 and mouth 42. For example, eye 12 resolves to compact slot 6,
+not slot 11. Native and HD captures at frames 60, 120 and 240 confirm
+corresponding expressions while the HD guard applies. Frames where other
+sprites cross the character continue through the existing native fallback.
+
+All 7,700 guest hashes across five paired replays were identical and every
+run recorded zero interpreted blocks. All 117 identities were verified
+offline; the gameplay captures cover the expressions reached in these
+runs. NC30 is now recorded as a Chapter 1 witness. No package was built.
+Project measured 48,329,341,192 logical bytes, above the cap. The existing
+development ZIP is 6,315,009,692 bytes.
+
+### Approved episode cards only (TCODEX)
+
+The approved surrounds and the two language-specific centers are the sole
+Enhanced path. The earlier strips, stretched edges, mirrored underlay
+and full-card override are removed from the renderer. The 20 older PNGs
+are removed from active art and rejected by the packaging allowlist.
+The package requires all ten surrounds and all ten Spanish lettering
+layers. Original mode uses the Saturn renderer.
+
+The English and Spanish Enhanced replay profiles at 1440p deliberately
+contain legacy files, including a bright magenta full-card override.
+All 6,670 guest hashes per replay and seven capture frames each match
+the approved controls. The expected transitions and language-specific
+centers continue to display. The runtime SHA-256 is
+`a63a77fb3eb0d1b6f00753f3635802574fc26e0b5d4ed24336fbe744f3006c7e`.
+No release ZIP was replaced.
+
+The Saturn Original control at 1080p also matches all 6,670 guest
+hashes and seven capture frames with those same legacy files present.
+All three replays report zero interpreted blocks.

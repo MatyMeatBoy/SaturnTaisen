@@ -1,0 +1,169 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index bee87ff..1dd9fb1 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -606,7 +606,7 @@ int RunWindowed(Port &port) {
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
+-    std::vector<SceneHd> sceneHd(kSceneBgCount);
++    std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
+     // T113/S3: the PC clip (MOVIEnnn.MPG) that replaces a Saturn FILM in the picture. Armed by a CD play command whose start FAD is in
+     // the table; the clip starts when the film plane fills the picture and follows the guest's frame count; the guest is untouched.
+@@ -1625,9 +1625,30 @@ int RunWindowed(Port &port) {
+                                 for(const uint32_t layer:{2u,4u}) {
+                                     if(drewHd)break;
+                                     const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
+-                                    unsigned slot=kSceneBgCount;
++                                    constexpr unsigned kNoSlot=kSceneBgCount+kSceneBgAmbiguousCount;
++                                    unsigned slot=kNoSlot;
+                                     for(unsigned i=0;i<kSceneBgCount;i++)if(kSceneBg[i].palette==fingerprint) {slot=i;break;}
+-                                    if(slot==kSceneBgCount)continue;
++                                    if(slot==kNoSlot) {
++                                        // TW1: a palette shared by several pictures is told apart by the hash of the picture's cell data.
++                                        bool shared=false;
++                                        for(unsigned j=0;j<kSceneBgAmbiguousCount;j++)if(kSceneBgAmbiguous[j].palette==fingerprint) {shared=true;break;}
++                                        if(shared) {
++                                            const uint64_t cells=port.videoRenderer->BackgroundCellFingerprint(layer,41472);
++                                            for(unsigned j=0;j<kSceneBgAmbiguousCount;j++)
++                                                if(kSceneBgAmbiguous[j].palette==fingerprint && kSceneBgAmbiguous[j].cells==cells) {slot=kSceneBgCount+j;break;}
++                                            if(const char* dump=std::getenv("SATRECOMP_CELL_DUMP")) {
++                                                static bool dumped=false;
++                                                if(!dumped) {dumped=true;const uint32_t page=port.videoRenderer->DumpBackgroundVram(layer,dump);
++                                                             fprintf(stderr,"cell dump: layer %u first name table at 0x%X\n",layer,page);}
++                                            }
++                                            if(std::getenv("SATRECOMP_BACKGROUND_STATS"))
++                                                fprintf(stderr,"scene picture with a shared palette %016llX: cells %016llX -> %s\n",static_cast<unsigned long long>(fingerprint),
++                                                        static_cast<unsigned long long>(cells),slot==kNoSlot?"no match":kSceneBgAmbiguous[slot-kSceneBgCount].file);
++                                        }
++                                    }
++                                    if(slot==kNoSlot)continue;
++                                    const char* const sceneFile=slot<kSceneBgCount?kSceneBg[slot].file:kSceneBgAmbiguous[slot-kSceneBgCount].file;
++                                    const unsigned sceneIndex=slot<kSceneBgCount?kSceneBg[slot].index:kSceneBgAmbiguous[slot-kSceneBgCount].index;
+                                     const auto offset=port.videoRenderer->BackgroundColorOffset(layer);
+                                     if(offset[0]||offset[1]||offset[2])continue;
+                                     unsigned visible=0;
+@@ -1638,8 +1659,7 @@ int RunWindowed(Port &port) {
+                                         // Decode the PC picture on a worker thread: doing it here cost about 20 ms
+                                         // the first time a picture appeared. Until it is ready the native one shows.
+                                         hd.tried=true;
+-                                        const auto& entry=kSceneBg[slot];
+-                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/entry.file,index=entry.index]() {
++                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex]() {
+                                             SceneHdPixels result;
+                                             std::vector<uint8_t> bytes;
+                                             if(!ReadPcBackdropFile(file,bytes,64u<<20))return result;
+@@ -1661,7 +1681,7 @@ int RunWindowed(Port &port) {
+                                                 } else SDL_DestroyTexture(texture);
+                                             }
+                                         }
+-                                        if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"scene picture: %s usable=%d",kSceneBg[slot].file,hd.texture!=nullptr);fputc(10,stderr);}
++                                        if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"scene picture: %s usable=%d",sceneFile,hd.texture!=nullptr);fputc(10,stderr);}
+                                     }
+                                     if(!hd.texture)continue;
+                                     sceneHdForeground=zoomForeground;
+diff --git a/port/scene_bg_table.h b/port/scene_bg_table.h
+index 2f89342..a4ed98e 100644
+--- a/port/scene_bg_table.h
++++ b/port/scene_bg_table.h
+@@ -465,4 +465,42 @@ inline constexpr SceneBgEntry kSceneBg[]={
+     {0xFEC0CA3692170632ull,"SAKURA1/BG/BG2063.SPR",0},
+ };
+ inline constexpr unsigned kSceneBgCount=sizeof(kSceneBg)/sizeof(kSceneBg[0]);
++// Pictures whose palette is shared: looked up by (palette, FNV-1a 64 of the cell data copied to VDP2).
++struct SceneBgAmbiguousEntry {uint64_t palette;uint64_t cells;const char* file;unsigned index;};
++inline constexpr SceneBgAmbiguousEntry kSceneBgAmbiguous[]={
++    {0x094611C0B1A47600ull,0x4AB397A2F5E3F3D2ull,"SAKURA1/BG/BG1039.SPR",0},
++    {0x094611C0B1A47600ull,0x80FBDB6A9896E76Dull,"SAKURA1/BG/BG1040.SPR",0},
++    {0x0CBDFFEC96075844ull,0xDC31C85625C963ADull,"SAKURA1/BG/BG1053.SPR",0},
++    {0x0CBDFFEC96075844ull,0xEEA666012CA54CABull,"SAKURA1/BG/BG1052.SPR",0},
++    {0x18B035204213B40Bull,0x7B5A7775B2B258D8ull,"SAKURA1/BG/BG1103.SPR",0},
++    {0x18B035204213B40Bull,0x89112348BEC950C5ull,"SAKURA1/BG/BG1102.SPR",0},
++    {0x1C47CD5ADE38B139ull,0x0005822BE0EA6188ull,"SAKURA1/BG/BG1051.SPR",0},
++    {0x1C47CD5ADE38B139ull,0x42ECBDD7826C6386ull,"SAKURA1/BG/BG1050.SPR",0},
++    {0x1F2B18324D0E244Aull,0x4FC858AF2DFC47E2ull,"SAKURA1/BG/BG1079.SPR",0},
++    {0x1F2B18324D0E244Aull,0xD98986E040DB653Full,"SAKURA1/BG/BG1080.SPR",0},
++    {0x2952DF21A5A8CFFCull,0x5606D87586029684ull,"SAKURA1/BG/BG1295.SPR",0},
++    {0x2952DF21A5A8CFFCull,0x8B5E3BF132E607E9ull,"SAKURA1/BG/BG1296.SPR",0},
++    {0x39576B476985CD3Eull,0x319E1D5BA7A7D0DBull,"SAKURA1/BG/BG1101.SPR",0},
++    {0x39576B476985CD3Eull,0x3D2C38D88AC46B51ull,"SAKURA1/BG/BG1100.SPR",0},
++    {0x5A6B7B5A253D673Eull,0x4919FB3A4125BF82ull,"SAKURA1/BG/BG2245.SPR",0},
++    {0x5A6B7B5A253D673Eull,0xA6E7CE08792BCF63ull,"SAKURA1/BG/BG2246.SPR",0},
++    {0x5A6B7B5A253D673Eull,0xDB85B0339216A323ull,"SAKURA1/BG/BG2244.SPR",0},
++    {0x7051AC3C045BA3ABull,0x668253242DAA08A2ull,"SAKURA1/BG/BG1092.SPR",0},
++    {0x7051AC3C045BA3ABull,0x687EBE3050A0C543ull,"SAKURA1/BG/BG1093.SPR",0},
++    {0x920E13E042D6B404ull,0x0625783E9E5E054Cull,"SAKURA1/BG/BG1083.SPR",0},
++    {0x920E13E042D6B404ull,0x0F54D0BD71C64B2Eull,"SAKURA1/BG/BG1084.SPR",0},
++    {0xAB1B4C40FD8B2754ull,0x8B27C1D4C9ADB048ull,"SAKURA1/BG/BG1037.SPR",0},
++    {0xAB1B4C40FD8B2754ull,0xD268AEB6A8CA9184ull,"SAKURA1/BG/BG1038.SPR",0},
++    {0xCA3459FEC57B8E4Full,0x7D1376BD46C6C897ull,"SAKURA1/BG/BG2129.SPR",0},
++    {0xCA3459FEC57B8E4Full,0xC01DDAF167674C5Cull,"SAKURA1/BG/BG2128.SPR",0},
++    {0xD0BC54009915BF86ull,0x87F9949047B84561ull,"SAKURA1/BG/BG1098.SPR",0},
++    {0xD0BC54009915BF86ull,0xA7A42905EE250F85ull,"SAKURA1/BG/BG1099.SPR",0},
++    {0xD19F5F691C6A83C9ull,0x67CE640DB112E5A8ull,"SAKURA1/BG/BG1012.SPR",0},
++    {0xD19F5F691C6A83C9ull,0xCB480626235B8826ull,"SAKURA1/BG/BG1011.SPR",0},
++    {0xDE752DD5D444A316ull,0x57A6F27A9A0305F5ull,"SAKURA1/BG/BG1090.SPR",0},
++    {0xDE752DD5D444A316ull,0x71047E945A7CF409ull,"SAKURA1/BG/BG1089.SPR",0},
++    {0xF616B2BE76447393ull,0x44A12F42B10D87E2ull,"SAKURA1/BG/BG1014.SPR",0},
++    {0xF616B2BE76447393ull,0xB13A46144E675EABull,"SAKURA1/BG/BG1013.SPR",0},
++};
++inline constexpr unsigned kSceneBgAmbiguousCount=sizeof(kSceneBgAmbiguous)/sizeof(kSceneBgAmbiguous[0]);
+ }
+diff --git a/video/renderer.h b/video/renderer.h
+index f0997f2..337c3f5 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -8,6 +8,7 @@
+ // Nothing here knows which machine model calls it (docs/VIDEO.md).
+ #pragma once
+ 
++#include <cstdio>
+ #include "../port/item_card_table.h"
+ 
+ #include "base.h"
+@@ -126,6 +127,44 @@ public:
+         }
+         return hash;
+     }
++    // TW1: second key of a scene picture whose palette is shared with another picture: FNV-1a 64 of the `bytes` of cell data that start at
++    // the picture's first cell. The game copies the cell data of the picture to VRAM in order, one 8x8 cell of 64 bytes after the other
++    // (two character numbers apart), and the map names each of them once; the map's other entries repeat a filler cell. So the first cell is
++    // the lowest character number the first page names exactly once. Same hash as `cells_fnv` in config/hd-scene-bg-map.json. Only meant for
++    // palettes in kSceneBgAmbiguous (it walks the 64x64 names of the page).
++    uint64_t BackgroundCellFingerprint(uint32 layer, uint32 bytes) const {
++        if(layer<1 || layer>5)return 0;
++        const auto& bg=m_regs2.bgParams[layer-1];
++        std::vector<uint8> uses(0x8000,0);
++        for(uint32 entry=0;entry<64*64;entry++) {
++            uint32 number;
++            if(bg.twoWordChar)number=Vram2Long(bg.pageBaseAddresses[0]+entry*4)&0x7FFF;
++            else {   // the one word pattern name of layers.cpp (OneWordChar): number bits plus the supplementary bits of the register
++                const uint32 word=Vram2Word(bg.pageBaseAddresses[0]+entry*2);
++                const bool fourCell=bg.cellSizeShift!=0;
++                const uint32 numberBits=bg.extChar?12:10,supplStart=2*fourCell+2*bg.extChar;
++                number=(word&((1u<<numberBits)-1))<<(2*fourCell);
++                number|=((bg.supplScrollCharNum&0x1F)>>supplStart)<<(10+supplStart);
++                if(fourCell)number|=bg.supplScrollCharNum&3;
++                number&=0x7FFF;
++            }
++            if(uses[number]<2)uses[number]++;
++        }
++        uint32 first=0x8000;
++        for(uint32 number=0;number<0x8000;number++)if(uses[number]==1) {first=number;break;}
++        if(first==0x8000)return 0;
++        const uint32 address=first*0x20;   // a character number counts units of 0x20 bytes
++        uint64_t hash=14695981039346656037ull;
++        for(uint32 i=0;i<bytes;i++)hash=(hash^m_mem.vram2[(address+i)&0x7FFFF])*1099511628211ull;
++        return hash;
++    }
++    // Debug aid (TW1): writes the whole VDP2 VRAM (512 KB) to a file and returns the address the layer's first character points at.
++    uint32 DumpBackgroundVram(uint32 layer,const char* path) const {
++        if(layer<1 || layer>5)return 0;
++        if(FILE* f=fopen(path,"wb")) {fwrite(m_mem.vram2,1,0x80000,f);fclose(f);}
++        const auto& bg=m_regs2.bgParams[layer-1];
++        return bg.pageBaseAddresses[0];
++    }
+     std::array<int16_t,3> BackgroundColorOffset(uint32 layer=5) const {
+         if(layer>6 || !m_regs2.colorOffsetEnable[layer])return {};
+         const auto& offset=m_regs2.colorOffset[m_regs2.colorOffsetSelect[layer]];

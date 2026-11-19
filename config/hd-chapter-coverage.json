@@ -18,6 +18,14 @@
             "pc": "SAKURA1/NC/NC20.SPR",
             "runtime_evidence": "docs/research/saturn-bg-format.md",
             "status": "hd"
+          },
+          "1:/SAKURA1/NC30.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC30.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd"
           }
         },
         "film": {
@@ -1683,7 +1691,7 @@
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
             "pc": "SAKURA2/BG/BBG202.SPR",
-            "status": "paired-not-wired"
+            "status": "hd"
           }
         },
         "tactical-maps": {},
@@ -1808,6 +1816,13 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG2533.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2533-pan.md",
+            "pc": "SAKURA1/BG/BG2533.SPR",
+            "runtime_evidence": "docs/research/bg2533-pan.md",
+            "status": "hd"
+          },
           "1:/SAKURA1/TITLE5.BIN": {
             "association": "inferred",
             "status": "unknown"
@@ -2113,13 +2128,6 @@
         "association": "unknown",
         "pc": "SAKURA1/NC/NC28.SPR",
         "status": "wired-unverified"
-      },
-      "1:/SAKURA1/NC30.BIN": {
-        "association": "unknown",
-        "native_face_fallback": true,
-        "pc": "SAKURA1/NC/NC30.SPR",
-        "runtime_evidence": "docs/research/saturn-bg-format.md",
-        "status": "hd"
       },
       "1:/SAKURA1/NC3001.BIN": {
         "association": "unknown",
@@ -8731,7 +8739,9 @@
       },
       "1:/SAKURA1/BG2518.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/BG/BG2518.SPR",
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2519.BIN": {
         "association": "unknown",
@@ -8803,12 +8813,6 @@
         "pc": "SAKURA1/BG/BG2532.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG2533.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2533.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
-      },
       "1:/SAKURA1/BG2534.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2534.SPR",
@@ -8873,9 +8877,7 @@
       },
       "1:/SAKURA1/BG3051.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG3051.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "1:/SAKURA1/BG3052.BIN": {
         "association": "unknown",
@@ -8975,9 +8977,7 @@
       },
       "1:/SAKURA1/BG3091.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG3091.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "1:/SAKURA1/BG3092.BIN": {
         "association": "unknown",
@@ -9483,9 +9483,7 @@
       },
       "1:/SAKURA1/BG4284.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG4284.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "1:/SAKURA1/BG4287.BIN": {
         "association": "unknown",
@@ -9553,9 +9551,7 @@
       },
       "1:/SAKURA1/BG4375.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG4375.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "1:/SAKURA1/BG4376.BIN": {
         "association": "unknown",
@@ -9769,22 +9765,22 @@
       "1:/SAKURA2/EVE002.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG002.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA2/EVE0116.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG201.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA2/EVE0118.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG101.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA2/EVE102.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG102.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA2/EVE105.BIN": {
         "association": "unknown",
@@ -9794,12 +9790,12 @@
       "1:/SAKURA2/EVE205.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG205.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA2/EVE207.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG207.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",
@@ -12678,7 +12674,9 @@
       },
       "2:/SAKURA1/BG2518.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/BG/BG2518.SPR",
+        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2519.BIN": {
         "association": "unknown",
@@ -12820,9 +12818,7 @@
       },
       "2:/SAKURA1/BG3051.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG3051.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "2:/SAKURA1/BG3052.BIN": {
         "association": "unknown",
@@ -12922,9 +12918,7 @@
       },
       "2:/SAKURA1/BG3091.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG3091.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "2:/SAKURA1/BG3092.BIN": {
         "association": "unknown",
@@ -13430,9 +13424,7 @@
       },
       "2:/SAKURA1/BG4284.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG4284.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "2:/SAKURA1/BG4287.BIN": {
         "association": "unknown",
@@ -13500,9 +13492,7 @@
       },
       "2:/SAKURA1/BG4375.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG4375.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
+        "status": "unpaired"
       },
       "2:/SAKURA1/BG4376.BIN": {
         "association": "unknown",
@@ -13824,12 +13814,12 @@
       "2:/SAKURA2/EVE0116.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG201.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA2/EVE0118.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG101.SPR",
-        "status": "paired-not-wired"
+        "status": "hd"
       }
     },
     "tactical-maps": {
