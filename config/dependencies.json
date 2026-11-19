@@ -113,7 +113,8 @@
       "patches/0115-sakura-identical-scene-donor-aliases.patch",
       "patches/0116-sakura-nc3250-native-underlay.patch",
       "patches/0117-sakura-spanish-loading-lettering.patch",
-      "patches/0118-sakura-scene-table-shared-cells-choice.patch"
+      "patches/0118-sakura-scene-table-shared-cells-choice.patch",
+      "patches/0119-sakura-bg2248-verified-vertical-pan.patch"
     ]
   }
 }
