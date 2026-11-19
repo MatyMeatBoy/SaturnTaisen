@@ -331,6 +331,14 @@ class ChapterCoverageTest(unittest.TestCase):
         emblem = chapter5['portraits']['0169']
         self.assertEqual((emblem['association'], emblem['status']), ('observed', 'excluded'))
         self.assertEqual(catalog['chapters'][0]['resources']['portraits']['0169']['association'], 'inferred')
+        for identity, donor in (('010f', 270), ('016a', 361)):
+            row = chapter5['portraits'][identity]
+            self.assertEqual((row['association'], row['status'], row['pc_index']), ('observed', 'hd', donor))
+            self.assertTrue(row['verified_in_game'])
+            self.assertEqual(row['atlases'], ['1:/SAKURA1/0501FCE.BIN'])
+            self.assertTrue(row['runtime_evidence'].endswith('#verified-0501fce-portrait-bases'))
+        for identity in ('00ff', '0169', '1:/SAKURA1/0501FCE.BIN'):
+            self.assertFalse(chapter5['portraits'][identity].get('verified_in_game'))
         self.assertNotIn('016a', catalog['unassigned']['portraits'])
 
     def test_chapter9_native_observations_and_residency_are_distinct(self):

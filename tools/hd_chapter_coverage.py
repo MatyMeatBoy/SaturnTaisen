@@ -77,6 +77,8 @@ CHAPTER5_ROUTE_FILES = {
     'NC60', 'NC90', 'NC3058',
 }
 CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
+CHAPTER5_PORTRAIT_DRAWS = ('010f', '016a')
+CHAPTER5_PORTRAIT_REPORT = 'docs/research/hd-chapter-5.md#verified-0501fce-portrait-bases'
 CHAPTER9_ROUTE_REPORT = 'docs/research/hd-chapter-9.md#native-route-observations'
 CHAPTER9_ROUTE_FILES = {'BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100', 'NC81', 'NC3018'}
 NATIVE_ROUTE_FILES = {
@@ -640,6 +642,8 @@ def build(root, index_dir, portrait_audit):
                 occurrence = dict(row, atlases=[atlases[ident]])
                 if episode == 3 and ident in CHAPTER3_PORTRAIT_DRAWS:
                     occurrence.update(verified_in_game=True, runtime_evidence=CHAPTER3_PORTRAIT_REPORT)
+                elif episode == 5 and ident in CHAPTER5_PORTRAIT_DRAWS:
+                    occurrence.update(verified_in_game=True, runtime_evidence=CHAPTER5_PORTRAIT_REPORT)
                 elif episode == 9 and ident == '00e9':
                     occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
                 add('portraits', ident, occurrence, episode, 'observed', evidence)
