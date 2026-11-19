@@ -21,3 +21,7 @@ The pairs for IC02, IC03, IC04, IC0501, IC0502, IC06-IC09 and IC1001-IC1006 are 
 - Wiring them blind would draw an unverified, possibly misaligned picture over a screen the owner has not seen. Original is unaffected either way.
 
 To finish: reach each intermission once (chapters 2-10, both discs) with `SATRECOMP_IC01_TRACE=1`, record the palette fingerprint, layer footprint and RGB hash, add one `kScreenBackdrops` entry per identity and generalise the patch 0107 block into a table of (palette, rgb hash, PC file, size, hash, anchor, menu rectangle). Disc-1 and disc-2 copies of each picture are byte-identical, so one entry covers both.
+
+## Attempt to reach the other intermissions (2026-11-19)
+
+The public battle saves of banks 3, 5 and 7 were continued with `tools/chapter_jump.py` (12,000 frames, 0 untranslated blocks); the saved state at frame 11,999 is inside a dialogue. Pressing Start there for 400 frames with `SATRECOMP_IC01_TRACE=1` showed no IC picture. IC pictures belong to the intermission between episodes, which a battle save does not pass through. To unblock IC02-IC1006 a backup RAM saved at the intermission of each chapter (or a full play to the end of each episode) is needed.
