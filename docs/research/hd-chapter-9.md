@@ -2,7 +2,7 @@
 
 Source: `config/hd-chapter-coverage.json` (chapter 9 entry, `unassigned`, `association`), cross-checked against `docs/research/chapter-sweep.md`, `config/hd-scene-bg-map.json`, `config/hd-scene-bg-review.json`, `config/hd-body-map.json`, `config/hd-item-map.json`, `config/film-fad-map.json` and `docs/PENDIENTES.md` (row TH9, status open). Names, hashes and counts only. This is a data report; it is not a replay, and it does not certify the chapter.
 
-## 1. Scope
+## 1. Initial catalog snapshot
 
 Chapter 9 is on disc 2 (chapter-sweep row: CD-2, episode id `0900`). The coverage JSON attributes only these resources to it:
 
@@ -19,7 +19,7 @@ The empty lists are a gap in chapter evidence, not proof the chapter shows nothi
 
 Context pool (not attributed to any chapter): `unassigned` holds 1537 scene pictures, 293 bodies, 237 portraits, 53 FILM streams, 195 menus/HUD, 27 tactical maps, 27 tactical units. Chapter 9 must draw from it.
 
-Association levels: observed (seen in runtime evidence), resident (in RAM, not shown drawn), inferred (numbering/atlas candidate), unknown. Chapter 9 has no `observed` entry at all.
+Association levels: observed (seen in runtime evidence), resident (in RAM, not shown drawn), inferred (numbering/atlas candidate), unknown. The initial snapshot had no `observed` chapter-9 entry. Later evidence is below.
 
 ## 2. Status per class
 
@@ -73,3 +73,61 @@ Catalog totals (for sizing): scene-bg map 519 content + 216 number pairs, 5 miss
 - Can the portrait `unknown` rate (56 of 237 in the pool) be reduced by data already in `local/`?
 - Is the chapter 9 path in `docs/research/chapter-sweep.md` a Continue-screen entry only, or does it have a replayable input script for the strict-native hash check?
 - No chapter field exists in `config/hd-scene-bg-map.json`, `hd-body-map.json` or `hd-item-map.json`; should chapter attribution live only in `config/hd-chapter-coverage.json`?
+
+
+
+## Native route observations
+
+The English disc-2 public Chapter 9 slot provides the cold
+`0900` route and the BG2238 dream checkpoint. After the dream, the
+route visits Ayame's Room and reaches the underground storage
+briefing. The transition reads all five sectors of `0901.BIN` at
+FAD 109322. The following 7,200-frame relay remains in the
+briefing. Its trace has no `0902` read. The archived cold,
+3,600-frame transition and 7,200-frame briefing runs report
+zero interpreted blocks.
+
+The native 288×144 window at (16,8) matches the following
+stock images after RGB555 expansion. The named files also
+appear as picture operands in the reached 0900 or 0901 scripts.
+
+| Scene capture | Picture | Native RGB matches |
+| --- | --- | ---: |
+| Before the `0901` transition, frame 1200 | BG1072 | 29,284/41,472 |
+| Salon route, frame 4800 | BG1076 | 41,472/41,472 |
+| Storage approach, frame 3600 | BG1176 | 41,472/41,472 |
+| Storage briefing relay, frame 5400 | BG2098 | 41,472/41,472 |
+| Post-dream relay, frame 240 | BG2100 | 41,472/41,472 |
+
+The public-slot cold replay at frame 12000 has the exact
+active NC3018 240×144 body command, texture FNV-1a
+`7D9E3EEA1B69ABC7`. All 18,885 opaque pixels match the native
+capture at (64,8). The storage terminal state has NC81
+208×144, texture FNV-1a `CAEE5C58F639F871`. All 11,561
+opaque pixels match that capture at (64,8).
+
+| Portrait | Base FNV-1a | Observation |
+| --- | --- | --- |
+| 0001 | `74801C684C1AF22E` | Exact VDP1 command and all 1,920 RGB pixels in the Salon route. |
+| 00e9 | `391F36B3243EFF54` | Exact VDP1 command and all 1,920 RGB pixels at the end of storage. |
+| 00fa | `5E689D81D45781D9` | Exact active base in the dream relay state. |
+| 00fb | `EDD256F4A12B8B76` | Exact active base in the dream relay state. |
+| 0104 | `DA1433DE513C8A53` | Exact VDP1 command and all 1,920 RGB pixels at cold frame 12000. |
+
+Those command payloads belong to the exact resident `0900FCE`
+or `0901FCE` atlases, respectively. The complete 147,360-byte
+`0901FCE.BIN` matches the storage checkpoint in WRAM, SHA-256
+`bad07425e09a84a31c5b578fda68f9b685d2380328f3a0e5991faa33647bb522`.
+The catalog keeps that atlas resident. The displayed member
+00e9 has its own observation.
+
+BG2017 and BG2018 have identical Saturn file bytes on this
+disc. Their indistinguishable visible region provides no
+file-specific attribution here. The two already attributed
+Chapter 1 portrait occurrences and the separate BG2238 HD
+draw remain intact. This is native attribution. It does not
+add new HD draws, certify later routes or change a package.
+
+At block close the project measured 61,293,478,622 logical bytes
+with hard links counted once and reparse points excluded, above
+the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
