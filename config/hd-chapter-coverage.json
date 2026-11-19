@@ -2664,8 +2664,22 @@
             "status": "hd"
           }
         },
-        "tactical-maps": {},
-        "tactical-units": {}
+        "tactical-maps": {
+          "1:/SAKURA2/MAP02.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-2.md",
+            "pc": "SAKURA2/MAP/MAP02/MAP02_A.SPR",
+            "scope": "source-4 ground only",
+            "status": "paired-not-wired"
+          }
+        },
+        "tactical-units": {
+          "1:/SAKURA2/UNIT02.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-2.md",
+            "status": "unknown"
+          }
+        }
       }
     },
     {
@@ -19534,10 +19548,6 @@
       }
     },
     "tactical-maps": {
-      "1:/SAKURA2/MAP02.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
       "1:/SAKURA2/MAP03.BIN": {
         "association": "unknown",
         "status": "unknown"
@@ -19629,10 +19639,6 @@
     },
     "tactical-units": {
       "1:/SAKURA2/UNIT01.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/UNIT02.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
