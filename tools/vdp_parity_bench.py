@@ -37,7 +37,7 @@ def run(exe, tag, scenario, profile=False):
     (folder / 'settings.ini').write_text('[features]\npresentation_mode=1\nscene_view=1\npc_hd_portraits=0\n'
                                          'pc_hd_backgrounds=0\nhd_preload=0\nrun_ahead=0\n', encoding='ascii')
     shutil.copy2(ROOT / 'local/work/sakura/prebattle-immutable-seed.bin', folder / 'backup.bin')
-    env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
+    env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_') or k == 'SATRECOMP_SAMPLE'}
     env.update(SATRECOMP_STRICT_NATIVE='1', SATRECOMP_WINDOW_HIDDEN='1', SATRECOMP_SKIP_CHOOSER='1',
                SATRECOMP_BACKGROUND_WORKERS='0',
                SATRECOMP_WINDOW_KEYS=f'2:SIZE=1280x720,{FRAMES - 2}:WINDOWSHOT={(folder / "shot.png").as_posix()},{FRAMES}:QUIT')
@@ -71,7 +71,8 @@ def compare(a, b):
 def video_ms(log):
     video = re.search(r'video \(vdp phases\)\s+n=\d+ avg=([\d.]+)', log)
     emulation = re.search(r'emulation\s+n=\d+ avg=([\d.]+)', log)
-    return float(video.group(1)), float(emulation.group(1))
+    sh2 = re.search(r'sh-2 cpus\s+n=\d+ avg=([\d.]+)', log)
+    return float(video.group(1)), float(emulation.group(1)), float(sh2.group(1))
 
 
 def main():
@@ -91,7 +92,8 @@ def main():
                     runs[name].append(video_ms(run(exe, 'ab' + name, scenario, True)[0]))
             median = lambda name, i: statistics.median(r[i] for r in runs[name])
             print(f'{scenario}: video ms A {median("A", 0):.3f} B {median("B", 0):.3f}; emulation ms A {median("A", 1):.3f} '
-                  f'B {median("B", 1):.3f}; runs A {[r[0] for r in runs["A"]]} B {[r[0] for r in runs["B"]]}', flush=True)
+                  f'B {median("B", 1):.3f}; sh-2 ms A {median("A", 2):.3f} B {median("B", 2):.3f}; emulation runs A '
+                  f'{[r[1] for r in runs["A"]]} B {[r[1] for r in runs["B"]]}', flush=True)
 
 
 if __name__ == '__main__':
