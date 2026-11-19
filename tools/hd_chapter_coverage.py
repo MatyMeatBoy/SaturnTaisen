@@ -362,7 +362,9 @@ def build(root, index_dir, portrait_audit):
             }
         elif (disc, path) == TH2_GROUND:
             row = {
-                'status': 'paired-not-wired',
+                'status': 'hd',
+                'verified_in_game': True,
+                'runtime_evidence': 'docs/research/map02-pc-ground.md',
                 'pc': 'SAKURA2/MAP/MAP02/MAP02_A.SPR',
                 'scope': 'source-4 ground only',
             }
