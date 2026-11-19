@@ -13792,8 +13792,8 @@
       "1:/SAKURA1/BG2077.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2077.SPR",
-        "reason": "size [440, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2078.BIN": {
         "association": "unknown",
@@ -14171,8 +14171,8 @@
       "1:/SAKURA1/BG2172.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2172.SPR",
-        "reason": "size [288, 280], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2174.BIN": {
         "association": "unknown",
@@ -14687,8 +14687,8 @@
       "1:/SAKURA1/BG2518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2518.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2519.BIN": {
         "association": "unknown",
@@ -17627,8 +17627,8 @@
       "2:/SAKURA1/BG2077.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2077.SPR",
-        "reason": "size [440, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2078.BIN": {
         "association": "unknown",
@@ -18005,8 +18005,8 @@
       "2:/SAKURA1/BG2172.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2172.SPR",
-        "reason": "size [288, 280], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2173.BIN": {
         "association": "unknown",
@@ -18530,8 +18530,8 @@
       "2:/SAKURA1/BG2518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2518.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2519.BIN": {
         "association": "unknown",

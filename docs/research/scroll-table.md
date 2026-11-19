@@ -34,9 +34,9 @@ Not added (the generator prints the reason, kept under `skipped` in the JSON):
 - C++ tests: `tests/test_bg2533_pan.cpp`, `test_bg2248_pan.cpp`, `test_bg1207_pan.cpp` (unchanged) and `test_scroll_pictures.cpp` (rule, unique keys, existing crops, lookup, 456- and 512-wide matcher). Compile each with `clang++ -std=gnu++20 -I<satrecomp>/port`.
 - The new rows are not seen in a replay. They draw only when the live layer keys and the exact native window match, and otherwise leave the native composition. Appearance and package inclusion stay open.
 
-## Remaining ten: offline alignment measurements (not wired)
+## Ten candidates: offline alignment measurements
 
-Offline fit of the PC crop as an axis-aligned affine map of the native offset `o` (box start = a*o + b on the scroll axis, length L, cross start c, cross length cl), scored with the generator signature (32x16 grey correlation, 8-px sweep). No generator, table or runtime change yet; no patch, no build, no replay was done. `local/work/tp2rest` holds the scripts (not committed).
+Offline fit of the PC crop as an axis-aligned affine map of the native offset `o` (box start = a*o + b on the scroll axis, length L, cross start c, cross length cl), scored with the generator signature (32x16 grey correlation, 8-px sweep). These floating-point values were measured offline. The integer runtime fits for the three accepted donors are below. `local/work/tp2rest` holds the scripts (not committed).
 
 | Picture | a, b, L, c, cl (PC px) | mean / min correlation | Verdict |
 |---|---|---|---|
@@ -51,4 +51,14 @@ Offline fit of the PC crop as an axis-aligned affine map of the native offset `o
 | BG1280 | 2.089, 83, 598, 32, 288 | 0.865 / 0.809 | not aligned: first ~110 native px correlate 0.81-0.82 |
 | BG2247 | best 1.856, 35, 262, 30, 524 | 0.561 / 0.392 | the [live theatre pan](bg2247-native-pan.md) stays native because the PC camera changes the landmark positions. |
 
-To finish: add per-row fit fields (scale, origin, length, cross, cross length, clamped start) to `ScrollPicture`/`ScrollPcCrop` as a new patch (next free number), keep rule rows identical, relax the row-valid test for fitted rows, rerun the generator with these fits, build in a clean copy, replay the opening film.
+## Calibrated table rows
+
+The Saturn source and the PC image match for BG2077, BG2172 and BG2518. The generator scores the rounded PC rectangle against every integer Saturn viewport position. Offsets are measured from the original 288×144 Saturn viewport and use the existing exact native layer and viewport checks.
+
+| Picture | Axis | Saturn positions | PC crop size | Moving origin, first to last | Minimum correlation |
+|---|---|---:|---:|---:|---:|
+| BG2077 | X | 153 | 670×314 | 0 to 351 | 0.9963 |
+| BG2172 | Y | 137 | 536×290 | 5 to 278 | 0.9966 |
+| BG2518 | Y | 153 | 488×264 | 10 to 288 | 0.9994 |
+
+The fixed cross-axis origins are 0, 26 and 27 respectively. A C++ test checks bounds at every position, selected crops, and the previous geometry for legacy rows. The candidate frontend compiled and linked with patch 0143. The 1,500 opening guest hashes matched the patch 0142 build byte for byte. The calibrated rows still need natural in-game witnesses and package verification. BG1310 and BG1283 need live camera characterization. BG2290 has a range without a PC counterpart.

@@ -5,7 +5,7 @@ Rule (see docs/research/scroll-table.md): the Saturn shows a 288x144 window of a
 picture at 2x. The window slides along one axis (the larger one). The PC crop is therefore
   scroll axis: 2 * saturn_offset, length 576 (horizontal) / 288 (vertical)... i.e. 2 * window length
   cross axis : centred, (pc_cross - 2 * window_cross) / 2
-Everything below is derived from the Saturn BIN and the PC SPR only; there is no in-game input.
+Reviewed affine fits use the same exact native window guard with calibrated PC crop geometry.
 Only hashes, sizes and dimensions are written (no pixels).
 """
 import argparse, json, sys
@@ -22,6 +22,22 @@ from decode_spred import decode as decode_pc  # noqa: E402
 WINDOW = (288, 144)
 CELL_BYTES = 41472
 MIN_CORRELATION = 0.90
+
+# rate in PC pixels per 1,000 Saturn pixels, start and length on the
+# scroll axis, start and length on the fixed axis. See scroll-table.md.
+FITTED_CROPS = {
+    'BG2077': (2312, 0, 670, 0, 314),
+    'BG2172': (2008, 5, 290, 26, 536),
+    'BG2518': (1831, 10, 264, 27, 488),
+}
+
+
+def affine_crop(axis, offset, fit):
+    rate, origin, length, cross, cross_length = fit
+    start = origin + (rate * offset + 500) // 1000
+    if axis == 'x':
+        return start, cross, start + length, cross + cross_length
+    return cross, start, cross + cross_length, start + length
 
 
 def fnv(raw):
@@ -71,29 +87,41 @@ def derive(name, discs, pc_root):
     # PC art is 2x along the scroll axis; the cross axis is centred.
     cross_ok = (ph - 2 * WINDOW[1]) % 2 == 0 and ph >= 2 * WINDOW[1] if axis == 'x' else (pw - 2 * WINDOW[0]) % 2 == 0 and pw >= 2 * WINDOW[0]
     scroll_ok = pw == 2 * w if axis == 'x' else ph == 2 * h
-    if not (cross_ok and scroll_ok):
+    fit = FITTED_CROPS.get(name)
+    if fit is None and not (cross_ok and scroll_ok):
         return None, f'PC {pw}x{ph} is not 2x of native {w}x{h}'
     native = decode(raw).convert('RGB')
     art = parts[0].convert('RGB')
     cross = (ph - 2 * WINDOW[1]) // 2 if axis == 'x' else (pw - 2 * WINDOW[0]) // 2
     scores = []
-    for at in range(0, (w - WINDOW[0] if axis == 'x' else h - WINDOW[1]) + 1, 8):
+    limit = w - WINDOW[0] if axis == 'x' else h - WINDOW[1]
+    for at in range(0, limit + 1, 1 if fit else 8):
         if axis == 'x':
-            wanted, got = native.crop((at, 0, at + 288, 144)), art.crop((2 * at, cross, 2 * at + 576, cross + 288))
+            wanted = native.crop((at, 0, at + 288, 144))
+            box = (2 * at, cross, 2 * at + 576, cross + 288)
         else:
-            wanted, got = native.crop((0, at, 288, at + 144)), art.crop((cross, 2 * at, cross + 576, 2 * at + 288))
+            wanted = native.crop((0, at, 288, at + 144))
+            box = (cross, 2 * at, cross + 576, 2 * at + 288)
+        if fit:
+            box = affine_crop(axis, at, fit)
+            if not (0 <= box[0] < box[2] <= pw and 0 <= box[1] < box[3] <= ph):
+                return None, 'calibrated crop leaves the PC subimage'
+        got = art.crop(box)
         scores.append(correlation(signature(wanted), signature(got.resize((288, 144), Image.Resampling.BOX))))
     if min(scores) < MIN_CORRELATION:
         return None, f'PC art does not follow the native picture (min crop correlation {min(scores):.3f})'
-    return {
+    row = {
         'min_crop_correlation': round(min(scores), 4),
         'name': name, 'axis': axis, 'width': w, 'height': h,
         'native_bytes': len(raw), 'native_fnv': f'{fnv(raw):016X}',
         'palette': f'{palette_fingerprint(raw):016X}', 'cells': f'{fnv(tiles[cell_at:cell_at + CELL_BYTES]):016X}',
         'pc_file': f'SAKURA1/BG/{name}.SPR', 'pc_bytes': len(pc), 'pc_fnv': f'{fnv(pc):016X}',
         'pc_width': pw, 'pc_height': ph,
-        'crop_cross': ((ph - 2 * WINDOW[1]) // 2) if axis == 'x' else ((pw - 2 * WINDOW[0]) // 2),
-    }, None
+        'crop_cross': fit[3] if fit else cross,
+    }
+    if fit:
+        row['fit'] = dict(zip(('rate_milli', 'origin', 'length', 'cross', 'cross_length'), fit))
+    return row, None
 
 
 def main():
@@ -130,9 +158,11 @@ def main():
             style = {'BG1207': 'ScrollStyle::ActorForeground', 'BG2533': 'ScrollStyle::EdgeRamp'}.get(r['name'], 'ScrollStyle::Plain')
             cells = '0' if r['name'] == 'BG2533' else f"0x{r['cells']}ull"  # BG2533 was pinned by palette alone (patch 0098)
             axis = 'ScrollAxis::Horizontal' if r['axis'] == 'x' else 'ScrollAxis::Vertical'
+            fit = r.get('fit')
+            calibrated = ', {' + ', '.join(map(str, fit.values())) + '}' if fit else ''
             lines.append(f"{{\"{r['name']}\", {axis}, {r['width']}, {r['height']}, {r['native_bytes']}, 0x{r['native_fnv']}ull,\n"
                          f" 0x{r['palette']}ull, {cells}, \"{r['pc_file']}\", {r['pc_bytes']}, 0x{r['pc_fnv']}ull, {r['pc_width']}, {r['pc_height']},\n"
-                         f" {style}}},")
+                         f" {style}{calibrated}}},")
         Path(a.header).write_text('\n'.join(lines) + '\n', encoding='utf-8', newline='\n')
     for r in rows:
         print(r['name'], r['axis'], r['width'], r['height'], r['pc_width'], r['pc_height'])
