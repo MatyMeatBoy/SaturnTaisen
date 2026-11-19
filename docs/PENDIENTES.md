@@ -120,7 +120,10 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | T102 | P1 | shard | open · see docs/SHARDS.md | S5 HUD and menus recogniser from the T23/T54 inventory. |
 | T103 | P1 | shard | open · see docs/SHARDS.md | S6 VDP software drawing speed, pixel-identical (about 7 ms per frame). |
 | T104 | P1 | shard | open · see docs/SHARDS.md | S7 SH-2 block dispatch speed, identical guest hashes (about 6.5 ms per frame). |
-| T105 | P1 | shard | open · see docs/SHARDS.md | S8 scrolling and battle backgrounds (BBG/EVE, variant-B wide pictures). |
+| T105 | P1 | shard | partial - classification done, runtime open | S8 scrolling and battle backgrounds (BBG/EVE, variant-B wide pictures). `tools/plan_wide_bg.py` classifies the 32 non-288x144 decoded pairs of `config/hd-scene-bg-map.json` into `config/hd-wide-bg-plan.json` (`tests/test_wide_bg_plan.py`): 12 wide scrolls (all `number` tier, PC height 320 vs 144 x 2, so a plain stretch is wrong: needs a per-file crop), 13 tall (12 scale evenly at 2x, 1 does not), 7 full-screen 320x224. Not done: see T105a-T105c. |
+| T105a | P1 | open | eye review of the 12 wide variant-B pairs (BG1207, BG2207, ...) for crop and scroll offset against the PC picture |
+| T105b | P1 | open | EVE0xx/EVE1xx candidates against PC `SAKURA2/BG/BBG*.SPR` (EVE207-BBG207 0.999 firm; others need eye check) and BBG disc-2 runtime recogniser |
+| T105c | P1 | open | runtime scroll support in the T74 draw (per-frame scroll offset of the VDP2 layer) for wide and tall pictures; needs the runtime build |
 | T106 | P1 | shard | open · see docs/SHARDS.md | S9 native-face patches for NC30/NC20 and fade-in of bodies. |
 | T107 | P1 | shard | open · see docs/SHARDS.md | S10 Spanish cards: widening for their fingerprints, painted art (owner reviews T87). |
 
