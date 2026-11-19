@@ -124,7 +124,8 @@
       "patches/0126-sakura-body-nc3013-nc3047.patch",
       "patches/0127-sakura-tactical-inset-donor-crop.patch",
       "patches/0128-sakura-bg2295-exact-vertical-pan.patch",
-      "patches/0129-sakura-bg1306-guarded-viewport.patch"
+      "patches/0129-sakura-bg1306-guarded-viewport.patch",
+      "patches/0130-sakura-body-cutout-mask.patch"
     ]
   }
 }
