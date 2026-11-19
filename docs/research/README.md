@@ -107,6 +107,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [pc-saturn-name-links.json](pc-saturn-name-links.json): Name links between PC and Saturn resource folders (identifiers only).
 - [hd-completion-handoff.md](hd-completion-handoff.md): Handoff to finish the HD mod from another PC: state per area, what travels through Git, order of work and rules.
 - [HD coverage by chapter](hd-chapter-coverage.md) reports resource evidence, replacement status, and regeneration steps.
+- [Jumping to a chapter or scene](scene-jump.md) (test tool only): Continue from a copied save, states along the way, random exploration; what is not done.
 - [HD chapter 1 report](hd-chapter-1.md): what chapter 1 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 2 report](hd-chapter-2.md): what chapter 2 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 3 report](hd-chapter-3.md): what chapter 3 shows per resource class, its status, ranked next actions and what needs the owner's discs.
