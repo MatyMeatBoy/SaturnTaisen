@@ -209,3 +209,20 @@ class ChapterCoverageTest(unittest.TestCase):
         for name in ('WKL06', 'WKL21'):
             row = chapter4['menus-hud'][f'1:/SAKURA2/{name}.BIN']
             self.assertEqual((row['association'], row['status']), ('resident', 'unknown'))
+
+    def test_chapter5_native_observations_preserve_other_occurrences(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter3 = catalog['chapters'][2]['resources']
+        chapter5 = catalog['chapters'][4]['resources']
+        background = '1:/SAKURA1/BG1198.BIN'
+        self.assertEqual(chapter3['scene-pictures'][background]['association'], 'observed')
+        self.assertEqual(chapter5['scene-pictures'][background]['association'], 'observed')
+        self.assertFalse(chapter5['scene-pictures'][background].get('verified_in_game'))
+        body = chapter5['bodies']['1:/SAKURA1/NC3058.BIN']
+        self.assertEqual((body['association'], body['status']), ('observed', 'hd'))
+        self.assertFalse(body['verified_in_game'])
+        emblem = chapter5['portraits']['0169']
+        self.assertEqual((emblem['association'], emblem['status']), ('observed', 'unpaired'))
+        self.assertEqual(catalog['chapters'][0]['resources']['portraits']['0169']['association'], 'inferred')
+        self.assertNotIn('016a', catalog['unassigned']['portraits'])
