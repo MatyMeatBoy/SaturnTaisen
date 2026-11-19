@@ -148,3 +148,6 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Disc 1 battle insets](disc1-battle-insets.md)
 
 - [Film catalog decisions](film-catalog-decisions.md)
+
+- [EVE0101 registered inset](eve0101-registered-inset.md)
+- [Full-frame battle pictures](bbg-full-frame.md)

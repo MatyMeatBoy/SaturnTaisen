@@ -17143,6 +17143,26 @@
    "correlation": 0.999,
    "tier": "number",
    "cells_fnv": "261347F42E09935A"
+  },
+  {
+   "saturn_file": "SAKURA2/EVE0101.BIN",
+   "decoded": true,
+   "size": [
+    288,
+    144
+   ],
+   "cells_sha256": "1796ecc6f1b04ffe063ffcfdaf65beaa3422179d698b87d1d76b005d1cd7066f",
+   "palette_fnv": "D3C319A0279AEDB3",
+   "pc_file": "SAKURA2/BG/BBG001.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "723b78c8ad7ef3fa19008d57ea9f72f42bd7cf11d296e26288e14b1d53a201f3",
+   "pc_size": [
+    576,
+    320
+   ],
+   "correlation": 0.673,
+   "tier": "number",
+   "cells_fnv": "829F83A4643225D6"
   }
  ]
 }
