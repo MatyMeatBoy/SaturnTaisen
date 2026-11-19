@@ -111,3 +111,20 @@ Known limits: some cards keep a faint smudge where the English lettering was, th
 The drafted Spanish episode cards (`tools/es/portadas_es.py`) and the "CARGANDO" scroll (`tools/es/carga_es.py`) are now part of the Spanish disc 1: it was rebuilt with `python -X utf8 tools/es/construir_todo.py --disc 1 --portadas` (3 minutes; the eleven files keep their size, palette and cell table) and the layers were regenerated with `tools/build_taisen_patches.py` (7 minutes with xdelta3; the English layers and the Spanish disc-2 layer came out byte-identical, only `parches/espanol-v0.1-disc1.xdelta` changed, 584,930 to 676,258 bytes, and `parches.json` has its new checksums). The setup helper therefore builds Spanish discs with the cards and the scroll; the 16:9 widening of the cards works on them as on the English ones (same layer and fingerprints).
 
 They are program-made drafts (Arial Rounded Bold and Ink Free, not the hand-made lettering); the owner asked for generative art, which would replace them (rebuild the discs and the layers as above). `--portadas` stays an option of `construir_todo.py`; regenerate the layers whenever the cards change. The video layers (`videos-*.xdelta`, over 100 MB) were rebuilt unchanged and are release assets, not in Git.
+
+### Spanish draft cards in game (T107a)
+
+The ten TITLE files in the prepared Spanish disc 1 are byte-identical to the
+drafts from portadas_es.py and differ from the English files in their picture
+cells. verificar_portadas.py reported OK for all ten: each keeps its size,
+palette, cell table and fingerprint.
+
+Replayed chapter1-title-new-game.movie from intro-enhanced/title-final.state
+on the Spanish disc, in separate hidden profiles at 1920×1080. The runtime
+SHA-256 was cc7fa58737c37075efaea76a72cbe390454d21847ebadf1ca1b030e75ac046c2.
+Original and Enhanced produced 6,400 identical per-frame guest hashes and zero
+interpreted blocks. At screenshot pass 6200 the Spanish Episode 1 lettering is
+visible in both modes, and Enhanced fills the surrounding window from the card
+edges. The draft still shows banding on the right edge and retains its draft
+lettering. The other nine cards were verified on disc only. This run used an
+existing executable and disc, and did not create a package.
