@@ -77,27 +77,27 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | 0/1267 (0%) | 0/1267 (0%) |
-| Escenas y transiciones | Sin dato | 9/166 (5,4%) |
-| Vídeos | 0/50 (0%) | 0/50 (0%) |
+| Imágenes de escena | Sin dato | Sin dato |
+| Escenas y transiciones | Sin dato | Sin dato |
+| Vídeos | Sin dato | Sin dato |
 | Modo táctico | 0/542 (0%) | 0/542 (0%) |
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
+| Personajes grandes NC | Sin dato | Sin dato |
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | 0/1267 (0%) | 0/1267 (0%) |
-| Escenas y transiciones | Sin dato | 9/166 (5,4%) |
-| Vídeos | 0/50 (0%) | 0/50 (0%) |
+| Imágenes de escena | 459/1267 (36,2%) | Sin dato |
+| Escenas y transiciones | Sin dato | Sin dato |
+| Vídeos | 44/50 (88%) | Sin dato |
 | Modo táctico | 0/542 (0%) | 0/542 (0%) |
 | HUD y menús PC/Saturn | 0/572 (0%) | 0/572 (0%) |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 0/3596 (0%) | 0/3596 (0%) |
+| Personajes grandes NC | 6/147 (4%) | Sin dato |
 
-- **Integración global indicativa (media de 7/8 categorías con total): 28,4%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 321/6350 (5%).** Mezcla unidades distintas; solo orienta.
+- **Integración global indicativa (media de 7/8 categorías con total): 46,7%.** Cada categoría pesa igual.
+- **Integración global ponderada por unidad: 830/2901 (28,6%).** Mezcla unidades distintas; solo orienta.
 - Categorías sin total confirmado: ninguna.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
