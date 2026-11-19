@@ -100,6 +100,7 @@ BBG_INSET_REPORT = 'docs/research/disc1-battle-insets.md'
 BBG_INSET_PAIRS = {'BBG002', 'BBG003', 'BBG004', 'BBG005', 'BBG006', 'BBG007', 'BBG008', 'BBG103', 'BBG104', 'BBG106', 'BBG205', 'BBG235'}
 EVE0101_REPORT = 'docs/research/eve0101-registered-inset.md'
 EVE002_REPORT = 'docs/research/eve002-tactical-inset.md'
+EVE202_REPORT = 'docs/research/eve202-tactical-inset.md'
 EVE0116_REPORT = 'docs/research/eve0116-tactical-inset.md'
 EVE0118_REPORT = 'docs/research/eve0118-tactical-inset.md'
 EVE_PAIRS = {
@@ -168,7 +169,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA2/EVE0101.BIN'): (1, EVE0101_REPORT),
     (1, '/SAKURA2/EVE0116.BIN'): (1, EVE0116_REPORT),
     (1, '/SAKURA2/EVE0118.BIN'): (1, EVE0118_REPORT),
-    (1, '/SAKURA2/EVE202.BIN'): (2, BODY_REPORT),
+    (1, '/SAKURA2/EVE202.BIN'): (2, EVE202_REPORT),
     (1, '/SAKURA2/EVE002.BIN'): (2, EVE002_REPORT),
     STAGE01_MAP: (1, STAGE01_REPORT),
     TH2_GROUND: (2, TH2_REPORT),
@@ -424,6 +425,8 @@ def build(root, index_dir, portrait_audit):
                     row['status'] = 'hd'
                     if disc == 1:
                         row.update(verified_in_game=True, runtime_evidence=EVE0101_REPORT)
+                elif (disc, path) == (1, '/SAKURA2/EVE202.BIN'):
+                    row.update(status='hd', verified_in_game=True, runtime_evidence=EVE202_REPORT)
                 elif path == '/SAKURA1/BG2295.BIN' or name in bg_review.get('guarded_viewport', []):
                     row['status'] = 'hd'
                 elif path == '/SAKURA1/BG1285.BIN':

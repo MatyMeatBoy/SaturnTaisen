@@ -158,6 +158,16 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG1285.BIN']['verified_in_game'])
         self.assertNotIn('2:/SAKURA2/MAP19.BIN', chapter['tactical-maps'])
 
+    def test_eve202_only_attributes_the_witnessed_disc(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 2)
+        eve = chapter['scene-pictures']['1:/SAKURA2/EVE202.BIN']
+        self.assertEqual((eve['association'], eve['status']), ('observed', 'hd'))
+        self.assertIs(eve['verified_in_game'], True)
+        self.assertEqual(eve['runtime_evidence'], 'docs/research/eve202-tactical-inset.md')
+        self.assertFalse(catalog['unassigned']['scene-pictures'].get('2:/SAKURA2/EVE202.BIN', {}).get('verified_in_game'))
+
     def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
