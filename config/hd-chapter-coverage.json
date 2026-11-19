@@ -2465,6 +2465,14 @@
           }
         },
         "scene-pictures": {
+          "2:/SAKURA1/BG1285.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg1285-pan.md",
+            "pc": "SAKURA1/BG/BG1285.SPR",
+            "runtime_evidence": "docs/research/bg1285-pan.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/TITLE10.BIN": {
             "association": "inferred",
             "status": "unknown"
@@ -7503,8 +7511,7 @@
       "1:/SAKURA1/BG1285.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1285.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG1289.BIN": {
         "association": "unknown",
@@ -11331,12 +11338,6 @@
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1284.SPR",
         "status": "hd"
-      },
-      "2:/SAKURA1/BG1285.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1285.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG1289.BIN": {
         "association": "unknown",
