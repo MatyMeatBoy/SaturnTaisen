@@ -126,7 +126,7 @@ comparison. The PC archive SHA-256 is
 The SPR indices are content matches. The bytes at the corresponding
 offsets in FACE02.DAT alone do not give those SPR indices.
 
-The register now records the native bank residency and the three
+The initial attribution recorded native bank residency and three
 observed PC base pairs. The tactical command layout and palette
 are outside the existing narrative FCE compositor. Its six
 chapter-2 FCE atlas associations remain inferred, and no observed
@@ -136,3 +136,42 @@ strips, later phases and full chapter parity remain open.
 At block close the project measured 65,712,717,705 logical bytes,
 with hard links counted once and reparse points excluded, above the
 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+### FACE02 PC runtime
+
+Patch 0141 uses the top 80×96 crop of the three paired 80×160 PC sheets.
+The English disc-1 tactical portrait command, captured byte fingerprint,
+fixed position and composed 40×48 native RGB must all match. The composed
+pixels must all be owned by VDP1, which keeps other fades, masks and
+partially covered portraits native. The three bases are opaque on both
+platforms. Kohran's two expressions are complete native base frames with
+separate PC counterparts. The runtime decodes the exact PC archive
+asynchronously when first matched, keeps only the three crops and draws the
+unmodified donor colors at the existing nearest-neighbor integer viewport.
+Original, an open menu and disabled HD portraits use the native draw.
+
+The 24-frame muted strict A/B on the MAP04 stack used the same
+`intro/native`, `sakura-nearby` and `rocket-dialogue` saves as above. At
+pass 2 the async loader was pending and the frame was still identical.
+At pass 18, each 2560×1440 capture matched all 69,120 donor RGB pixels inside
+its portrait rectangle, with zero differences outside. This covered the
+`stage02-hd-ground` layout. All 24 guest hashes matched for each run with
+zero interpreted blocks.
+
+| FACE02 slot | Rectangle at 1440p | SHA-256 of matching 24-frame guest logs |
+|---|---|---|
+| 0 | x1040, y240, 240×288 | `f0293d42d82ff8826d73aae7f097e0009e1b9b01fd6de5a16e68d0e767b7511b` |
+| 30 | x416, y1008, 240×288 | `a721171e2d28885a53239a895f520a5ff2ff0d8308423a00335ebfd1f83d832b` |
+| 31 | x416, y1008, 240×288 | `30ea4bed296df967110a88b4d2b939af781ce631c643a6094f9fff4d986a5dd5` |
+
+Original, disabled HD portraits and the natural `round-two-kohran` slot 33
+at the same position had equal full RGB captures and guest hashes. Slot 33
+has native base FNV-1a `02EEF672B849CACB` and uses native rendering. The
+900-frame opening suite matched every guest hash and all three 1440p
+screenshots, with zero interpreted blocks. Opening hash-log SHA-256 is
+`3e0d0f59d0344ea51c62fd2a3c15311d7f8929e2b59b01a66c65cc83474737dd`.
+These three poses are the runtime coverage. Other commands and Chapter 2
+narrative FCE rows retain their prior coverage status.
+
+At this block close the project measured 63,457,660,640 logical bytes,
+above the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

@@ -2652,24 +2652,30 @@
             "evidence": "docs/research/hd-chapter-2.md#stage-02-tactical-portraits",
             "pc": "SAKURA2/SYSTEM/KAOSLG.SPR",
             "pc_index": 10,
+            "runtime_evidence": "docs/research/hd-chapter-2.md#face02-pc-runtime",
             "scope": "tactical portrait base only",
-            "status": "paired-not-wired"
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA2/FACE02.BIN#30": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-2.md#stage-02-tactical-portraits",
             "pc": "SAKURA2/SYSTEM/KAOSLG.SPR",
             "pc_index": 208,
+            "runtime_evidence": "docs/research/hd-chapter-2.md#face02-pc-runtime",
             "scope": "tactical portrait base only",
-            "status": "paired-not-wired"
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA2/FACE02.BIN#31": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-2.md#stage-02-tactical-portraits",
             "pc": "SAKURA2/SYSTEM/KAOSLG.SPR",
             "pc_index": 209,
+            "runtime_evidence": "docs/research/hd-chapter-2.md#face02-pc-runtime",
             "scope": "tactical portrait base only",
-            "status": "paired-not-wired"
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "scene-pictures": {

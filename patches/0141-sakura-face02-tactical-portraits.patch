@@ -1,0 +1,113 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -982,6 +982,19 @@
+     constexpr int bracketStart=system_hud::kAnchors.front();
+     constexpr int bracketWidth=system_hud::kAnchors.back()+system_hud::kWidth-bracketStart;
+     constexpr int bracketHeight=system_hud::kHeight;
++    static constexpr struct {
++        int slot, pc, x, y;
++        uint64_t indices, rgb;
++    } tacticalPortraits[] = {
++        {0, 10, 120, 32, 0x8D4FA9DE3B4F29EAull, 0xBBEB76C9D5ACB881ull},
++        {30, 208, 16, 160, 0x2555200A223EBE85ull, 0x06B84B53FE6D6FD9ull},
++        {31, 209, 16, 160, 0x6F3107BD0DBE3782ull, 0xA26BAA971CECC191ull},
++    };
++    std::array<SDL_Texture*, std::size(tacticalPortraits)> tacticalPortraitTextures{};
++    using TacticalPortraitArt = std::array<std::vector<uint32_t>, std::size(tacticalPortraits)>;
++    TacticalPortraitArt tacticalPortraitArt;
++    std::future<TacticalPortraitArt> pendingTacticalPortraitArt;
++    bool tacticalPortraitArchiveTried = false;
+     SDL_Texture* bracketOverlay=nullptr;
+     bool bracketLoadTried=false;
+     std::array<std::vector<uint32_t>,2> bracketArt;
+@@ -2561,6 +2574,81 @@
+                 presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
++            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 1 &&
++                satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_portraits") == 0 && !port.opt.pcAssetsPath.empty() &&
++                texW == 320 && texH == 224 && baseFit.scale >= 2 &&
++                where.x == baseFit.x && where.y == baseFit.y && where.w == baseFit.w && where.h == baseFit.h &&
++                softwareShown.size() == 320 * 224) {
++                const auto& frame = port.videoRenderer->PresentationFrame();
++                for (size_t slot = 0; slot < std::size(tacticalPortraits) && frame.topSource.size() == softwareShown.size(); ++slot) {
++                    const auto& known = tacticalPortraits[slot];
++                    const auto found = std::ranges::find_if(frame.sprites, [&](const auto& sprite) {
++                        const auto& cmd = sprite.command.words;
++                        return (cmd[0] & 0xC03F) == 0 && cmd[2] == 0xA0 && cmd[3] == 0x0580 &&
++                            cmd[5] == 0x0530 && sprite.x == known.x && sprite.y == known.y &&
++                            sprite.pixels.size() == 1920 && PcBackdropHash(sprite.pixels) == known.indices;
++                    });
++                    if (found == frame.sprites.end()) continue;
++                    std::array<uint8_t, 40 * 48 * 3> rgb{};
++                    bool covered = false;
++                    for (int y = 0; y < 48 && !covered; ++y)
++                        for (int x = 0; x < 40; ++x) {
++                            const size_t at = (known.y + y) * 320 + known.x + x;
++                            if (frame.topSource[at] != 0) { covered = true; break; }
++                            const uint32_t color = softwareShown[at];
++                            for (int channel = 0; channel < 3; ++channel)
++                                rgb[(y * 40 + x) * 3 + channel] = uint8_t(color >> (channel * 8));
++                        }
++                    if (covered || PcBackdropHash(rgb) != known.rgb) continue;
++                    if (!tacticalPortraitArchiveTried) {
++                        tacticalPortraitArchiveTried = true;
++                        const auto path = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA2/SYSTEM/KAOSLG.SPR";
++                        pendingTacticalPortraitArt = std::async(std::launch::async, [path] {
++                            TacticalPortraitArt result;
++                            std::vector<uint8_t> bytes;
++                            std::vector<PcSprite> images;
++                            std::string error;
++                            if (!ReadPcBackdropFile(path, bytes, 2195799) || bytes.size() != 2195799 ||
++                                PcBackdropHash(bytes) != 0xF82498B70402CAF0ull ||
++                                !DecodePcSprites(bytes, images, error)) return result;
++                            for (size_t i = 0; i < std::size(tacticalPortraits); ++i) {
++                                const auto donor = std::ranges::find_if(images, [i](const auto& image) {
++                                    return image.index == tacticalPortraits[i].pc && image.width == 80 &&
++                                        image.height == 160 && image.pixels.size() == 80 * 160;
++                                });
++                                if (donor == images.end()) continue;
++                                const auto base = std::span<const uint32_t>(donor->pixels).first(80 * 96);
++                                if (std::ranges::all_of(base, [](uint32_t color) { return color >> 24 == 255; }))
++                                    result[i].assign(base.begin(), base.end());
++                            }
++                            return result;
++                        });
++                    }
++                    if (pendingTacticalPortraitArt.valid() &&
++                        pendingTacticalPortraitArt.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                        tacticalPortraitArt = pendingTacticalPortraitArt.get();
++                    auto*& replacement = tacticalPortraitTextures[slot];
++                    if (!replacement) {
++                        const auto& donor = tacticalPortraitArt[slot];
++                        if (donor.empty()) continue;
++                        replacement = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, 80, 96);
++                        if (!replacement) continue;
++                        if (!SDL_UpdateTexture(replacement, nullptr, donor.data(), 80 * 4)) {
++                            SDL_DestroyTexture(replacement);
++                            replacement = nullptr;
++                            continue;
++                        }
++                        SDL_SetTextureScaleMode(replacement, SDL_SCALEMODE_NEAREST);
++                        SDL_SetTextureBlendMode(replacement, SDL_BLENDMODE_NONE);
++                    }
++                    const SDL_FRect target{where.x + known.x * float(baseFit.scale),
++                        where.y + known.y * float(baseFit.scale), 40.f * baseFit.scale, 48.f * baseFit.scale};
++                    if (SDL_RenderTexture(renderer, replacement, nullptr, &target) && std::getenv("SATRECOMP_FACE02_TRACE"))
++                        std::fprintf(stderr, "FACE02 drew slot=%d donor=%d x=%g y=%g\n",
++                            known.slot, known.pc, target.x, target.y);
++                }
++            }
+             // Disc 2's opening film is presented in the native theatre without a
+             // recognized replacement backdrop. Keep that framing and only touch its film plate.
+             if (shownDisc == 2 && satrecomp::FeatureValue("presentation_mode") == 1 &&
+@@ -3510,6 +3598,7 @@
+         SDL_CloseGamepad(gp);
+     }
+     if(itemOverlay)SDL_DestroyTexture(itemOverlay);
++    for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);
+     if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);
+     if (texture) {
+         SDL_DestroyTexture(texture);

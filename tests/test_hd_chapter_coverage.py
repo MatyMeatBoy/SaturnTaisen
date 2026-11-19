@@ -333,7 +333,9 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual((portraits[bank]['association'], portraits[bank]['status']), ('resident', 'unknown'))
         for slot, donor in ((0, 10), (30, 208), (31, 209)):
             row = portraits[f'{bank}#{slot}']
-            self.assertEqual((row['association'], row['status'], row['pc_index']), ('observed', 'paired-not-wired', donor))
-            self.assertFalse(row.get('verified_in_game'))
+            self.assertEqual((row['association'], row['status'], row['pc_index']), ('observed', 'hd', donor))
+            self.assertTrue(row['verified_in_game'])
+            self.assertEqual(row['scope'], 'tactical portrait base only')
+            self.assertTrue(row['runtime_evidence'].endswith('#face02-pc-runtime'))
         for atlas in range(1, 7):
             self.assertEqual(portraits[f'1:/SAKURA1/020{atlas}FCE.BIN']['association'], 'inferred')
