@@ -85,7 +85,8 @@
       "patches/0080-sakura-clip-audio-presented-handoff.patch",
       "patches/0081-sakura-episode-native-scale-fade.patch",
       "patches/0082-sakura-episode-sides-always.patch",
-      "patches/0083-sakura-clip-av-offset-trace.patch"
+      "patches/0083-sakura-clip-av-offset-trace.patch",
+      "patches/0084-sakura-sh2-wait-detector-in-place.patch"
     ]
   }
 }
