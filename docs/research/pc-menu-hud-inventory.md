@@ -166,3 +166,18 @@ Enhanced identifies the emblem by its VDP1 command geometry, indexed texture and
 The 2560×1440 comparison replayed the same settings, PC data and guest inputs on the candidate and its prior runtime. An independent reconstruction using the captured VDP1 and VDP2 layers matched the entire output frame. Only pixels inside the CD-1 emblem changed. Original mode, a missing or altered donor, and disabled PC backgrounds retained their native pixels. All profiles matched all 25 guest frame hashes with zero interpreted blocks. The existing FONT_CSL inventory brackets were active and matched the prior runtime pixel for pixel at 2560×1440 with all 61 guest hashes equal.
 
 SIS_ICON subimage 1 also matches the System RAM icon's silhouette. Its 2×2 blocks are all uniform, and the candidate keeps that icon native. Private captures and receipts are in `local/work/codex-tw5-next`. Other menu layouts, palette variants and disc 2 remain open. No package change.
+
+## HD measure of the menu/HUD category (TW5)
+
+The register (`config/hd-chapter-coverage.json`, category `menus-hud`) now carries the runtime-drawn menu/HUD pictures, and `tools/build_hd_progress.py` takes the `hud-menus` integrated count from it. The map is explicit in `tools/hd_chapter_coverage.py` (`SYSTEM_HUD_DRAWS`, `SYSTEM_HUD_EXCLUDED`; item cards come from the same selection as `tools/gen_item_table.py`). A picture counts once per PC image, whatever the disc.
+
+Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 50 distinct PC item pictures of `config/hd-item-map.json` = 228. Integrated: 41.
+
+| Piece | PC images | Patch / table | State |
+| --- | --- | --- | --- |
+| Inventory item cards | 38 `SAKURA1/ITEM/ITEMnn.SPR` (of 50 candidates) | 0090, `item_card_table.h` | drawn; the other 12 have no accepted pair or a duplicate palette |
+| Inventory brackets | FONT_CSL 2 of 2 | 0093, `system_brackets.h` | drawn (idle/hover/confirm) |
+| CD-1 load emblem | SIS_ICON 1 of 10 (subimage 2) | 0112, `load_disc_icon.h` | drawn on disc 1; subimage 1 (System RAM icon) kept native |
+| KAO | 394, excluded here | portrait pack | counted in portraits |
+
+Not drawn (open, 187 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 9, SISTEM 45, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 3 (needs layout), WINDOW 6; plus 12 item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
