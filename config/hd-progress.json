@@ -238,14 +238,14 @@
       ],
       "next": "Comprobar los cuerpos restantes y las expresiones con fallback nativo.",
       "details": [
-        "Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. Hay 131 pares de cuerpo utilizables según el mapa y la revisión. Los recuentos usan cuerpos, una unidad por archivo Saturn.",
-        "El catálogo del runtime integra 131 paquetes. Hay apariciones documentadas para 9 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos."
+        "Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. El registro cuenta los cuerpos emparejados e integrados por archivo Saturn, una vez aunque lo compartan ambos discos.",
+        "Hay apariciones documentadas para 9 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos."
       ],
       "total": 147,
       "inventory": 147,
-      "matched": 131,
+      "matched": 137,
       "prepared": null,
-      "integrated": 129,
+      "integrated": 137,
       "verified": 9
     }
   ]

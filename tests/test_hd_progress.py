@@ -3,6 +3,7 @@ from copy import deepcopy
 import json
 from pathlib import Path
 import sys
+from tempfile import TemporaryDirectory
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,6 +61,23 @@ class HdProgressTests(unittest.TestCase):
         self.assertEqual(report.global_status(data), 'Verificación pendiente')
         data['categories'][0]['total'] = None
         self.assertEqual(report.global_status(data), 'Indeterminado')
+
+    def test_body_counts_follow_native_resources_and_shared_donors(self):
+        data = specimen()
+        body = data['categories'][-1]
+        body.update(total=4, inventory=4, matched=2, prepared=None, integrated=2, verified=1)
+        resources = {
+            '1:/SAKURA1/NC10.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
+            '2:/SAKURA1/NC10.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
+            '1:/SAKURA1/NC11.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
+            '1:/SAKURA1/NC12.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
+            '1:/SAKURA1/NC13.BIN': {'status': 'paired-not-wired', 'pc': 'BODIES/OTHER.SPR'},
+        }
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'coverage.json'
+            path.write_text(json.dumps({'unassigned': {'bodies': resources}}), encoding='utf-8')
+            report.apply_register(data, path)
+        self.assertEqual((body['matched'], body['integrated'], body['verified']), (4, 3, 1))
 
     def test_committed_report_and_readme_are_current(self):
         config = json.loads((ROOT / 'config/hd-progress.json').read_text(encoding='utf-8'))

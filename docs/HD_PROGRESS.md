@@ -13,7 +13,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 131/147 (89,1%) | Sin dato | 131/147 (89,1%) | 9/147 (6,1%) |
+| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 137/147 (93,1%) | Sin dato | 137/147 (93,1%) | 9/147 (6,1%) |
 
 ## Resumen global de integración
 
@@ -26,9 +26,9 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Modo táctico | Sin dato |
 | HUD y menús PC/Saturn | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) |
-| Personajes grandes NC | 131/147 (89,1%) |
+| Personajes grandes NC | 137/147 (93,1%) |
 
-**HD total: 1038/1666 (62,3%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+**HD total: 1044/1666 (62,6%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico, HUD y menús PC/Saturn.
 
 ## Qué cuenta en cada etapa
@@ -141,8 +141,8 @@ Los 19 temas decorativos únicos del catálogo KABE con alternativas HD, incluid
 
 Cuerpos Saturn fuera del retrato de diálogo. La cara y sus cuadros se auditan aparte.
 
-- Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. Hay 131 pares de cuerpo utilizables según el mapa y la revisión. Los recuentos usan cuerpos, una unidad por archivo Saturn.
-- El catálogo del runtime integra 131 paquetes. Hay apariciones documentadas para 9 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos.
+- Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. El registro cuenta los cuerpos emparejados e integrados por archivo Saturn, una vez aunque lo compartan ambos discos.
+- Hay apariciones documentadas para 9 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos.
 - **Siguiente paso**. Comprobar los cuerpos restantes y las expresiones con fallback nativo.
 
 - [saturn-hd-characters.md](research/saturn-hd-characters.md).
