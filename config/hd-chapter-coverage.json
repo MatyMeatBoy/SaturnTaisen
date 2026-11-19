@@ -1619,18 +1619,18 @@
           "1:/SAKURA1/BG1001.BIN": {
             "association": "observed",
             "cold_run_frame": 22000,
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/coverage-campaign-v026.md",
             "pc": "SAKURA1/BG/BG1001.SPR",
-            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
           },
           "1:/SAKURA1/BG1006.BIN": {
             "association": "observed",
             "cold_run_frame": 29500,
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/coverage-campaign-v026.md",
             "pc": "SAKURA1/BG/BG1006.SPR",
-            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
           },
@@ -1660,9 +1660,9 @@
           },
           "1:/SAKURA1/BG1045.BIN": {
             "association": "observed",
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/coverage-campaign-v026.md",
             "pc": "SAKURA1/BG/BG1045.SPR",
-            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
           },
@@ -1676,34 +1676,34 @@
           "1:/SAKURA1/BG1209.BIN": {
             "association": "observed",
             "cold_run_frame": 8750,
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/coverage-campaign-v026.md",
             "pc": "SAKURA1/BG/BG1209.SPR",
-            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
           },
           "1:/SAKURA1/BG2159.BIN": {
             "association": "observed",
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/coverage-campaign-v026.md",
             "pc": "SAKURA1/BG/BG2159.SPR",
-            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
           },
           "1:/SAKURA1/BG2250.BIN": {
             "association": "observed",
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/coverage-campaign-v026.md",
             "pc": "SAKURA1/BG/BG2250.SPR",
-            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
           },
           "1:/SAKURA1/BG2251.BIN": {
             "association": "observed",
             "cold_run_frame": 12500,
-            "evidence": "docs/research/saturn-bg-format.md",
+            "evidence": "docs/research/coverage-campaign-v026.md",
             "pc": "SAKURA1/BG/BG2251.SPR",
-            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "runtime_evidence": "docs/research/coverage-campaign-v026.md",
             "status": "hd",
             "verified_in_game": true
           },
