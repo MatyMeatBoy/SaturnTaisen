@@ -6,4 +6,7 @@
 - Scene pictures: BG1001, BG1006, BG1209, BG2159, BG2250, BG2251 (all new in the register).
 - Clip: MOVIE001.
 
+All six scene pictures logged `usable=1`. BG1006 appeared in seeds 12 and 14.
+The other five appeared in all four seeds.
+
 This is a draw trace, not a visual review: framing of each item is still to be checked by eye. The register marks them `verified_in_game` (drawn by the runtime) only.
