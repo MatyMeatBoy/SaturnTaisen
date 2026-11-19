@@ -188,11 +188,12 @@ def build(root, index_dir, portrait_audit):
     endings = pairs(config('hd-ending-bank-map'))
     bodies = pairs(config('hd-body-map'))
     body_review = config('hd-body-review')
-    # Bodies in the runtime table: content pairs or eye-confirmed candidates, not rejected (the filter of tools/gen_body_table.py).
+    # Match tools/gen_body_table.py, including reviewed cut-outs with a candidate-tier pair.
+    confirmed_bodies = set(body_review['eye_confirmed_candidates']) | set(body_review.get('cutout', {}))
     body_runtime = {
         Path(path).stem for path, pair in bodies.items()
         if Path(path).stem not in body_review['rejected']
-        and (pair['tier'] == 'content' or Path(path).stem in body_review['eye_confirmed_candidates'])
+        and (pair['tier'] == 'content' or Path(path).stem in confirmed_bodies)
     }
     items = pairs(config('hd-item-map'))
     item_review = pairs(config('hd-item-review'))
@@ -376,8 +377,8 @@ def build(root, index_dir, portrait_audit):
             pair = bodies[path]
             if name in body_review['rejected']:
                 row['status'] = 'unpaired'
-            elif pair['tier'] == 'content' or name in body_review['eye_confirmed_candidates']:
-                row = {'status': 'hd' if name in BODY_DRAWS or name in body_runtime else 'paired-not-wired',
+            elif name in body_runtime:
+                row = {'status': 'hd',
                        'pc': 'SAKURA1/NC/' + (pair['best_pc'] if pair['tier'] == 'content' else pair['same_name_pc'])}
                 row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:
@@ -404,8 +405,12 @@ def build(root, index_dir, portrait_audit):
             if film and film['file'] == path:
                 row['status'] = 'unpaired'
                 if movie := film.get('movie'):
-                    row.update(status='paired-not-wired' if film['alternate_cut'] else 'hd',
+                    row.update(status='excluded' if film['alternate_cut'] else 'hd',
                                pc=movie, alternate_cut=film['alternate_cut'])
+                    if film['alternate_cut']:
+                        row['reason'] = 'alternate PC edit stays native to preserve the Saturn timing'
+                elif path == '/SAKURA1/OPSAKURA.CPK' and 0 < film.get('duration', 0) < 0.5:
+                    row.update(status='excluded', reason='short native transition without a PC clip')
             chapter, report = observed.get((ident, offset), (None, None))
             if (disc == 1 and path == '/SAKURA4' and offset in CHAPTER1_ROUTE_FILMS
                     and row.get('pc') == CHAPTER1_ROUTE_FILMS[offset]):
@@ -435,8 +440,8 @@ def build(root, index_dir, portrait_audit):
         'status': {
             'hd': 'Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.',
             'wired-unverified': 'Reserved: in a table but not drawn by the runtime. Bodies in the runtime table are `hd` now; `verified_in_game` says whether a draw was observed.',
-            'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette) or an alternate film cut, which stays native. Not a to-do list: check `reason` first.',
-            'excluded': 'Paired but never replaced by design (key-colour character cut-outs, the blank picture).',
+            'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette). Check `reason` first.',
+            'excluded': 'Native by design (key-colour cut-outs, blank pictures, alternate film edits or native transitions).',
             'unsupported-size': 'Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).',
             'unpaired': 'The catalog records a rejected or absent counterpart.',
             'unknown': 'Pairing or integration is not established by the input catalogs.',

@@ -4955,9 +4955,9 @@
   ],
   "schema": 1,
   "status": {
-    "excluded": "Paired but never replaced by design (key-colour character cut-outs, the blank picture).",
+    "excluded": "Native by design (key-colour cut-outs, blank pictures, alternate film edits or native transitions).",
     "hd": "Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.",
-    "paired-not-wired": "Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette) or an alternate film cut, which stays native. Not a to-do list: check `reason` first.",
+    "paired-not-wired": "Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette). Check `reason` first.",
     "unknown": "Pairing or integration is not established by the input catalogs.",
     "unpaired": "The catalog records a rejected or absent counterpart.",
     "unsupported-size": "Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).",
@@ -5261,7 +5261,9 @@
       },
       "1:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3060.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
@@ -5301,11 +5303,15 @@
       },
       "1:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3109.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3124.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3124.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
@@ -5323,11 +5329,15 @@
       },
       "1:/SAKURA1/NC3128.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3128.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3129.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3129.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/NC3173.BIN": {
         "association": "unknown",
@@ -6082,7 +6092,9 @@
       },
       "2:/SAKURA1/NC3060.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3060.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3071.BIN": {
         "association": "unknown",
@@ -6122,11 +6134,15 @@
       },
       "2:/SAKURA1/NC3109.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3109.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3124.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3124.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
@@ -6144,11 +6160,15 @@
       },
       "2:/SAKURA1/NC3128.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3128.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3129.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pc": "SAKURA1/NC/NC3129.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/NC3173.BIN": {
         "association": "unknown",
@@ -6630,7 +6650,8 @@
       "1:/SAKURA1/OPSAKURA.CPK+0": {
         "association": "unknown",
         "fad": 166362,
-        "status": "unpaired"
+        "reason": "short native transition without a PC clip",
+        "status": "excluded"
       },
       "1:/SAKURA4+0": {
         "alternate_cut": false,
@@ -6644,7 +6665,8 @@
         "association": "unknown",
         "fad": 49325,
         "pc": "MOVIE009",
-        "status": "paired-not-wired"
+        "reason": "alternate PC edit stays native to preserve the Saturn timing",
+        "status": "excluded"
       },
       "1:/SAKURA4+113262592": {
         "alternate_cut": false,
@@ -6658,7 +6680,8 @@
         "association": "unknown",
         "fad": 59553,
         "pc": "MOVIE011",
-        "status": "paired-not-wired"
+        "reason": "alternate PC edit stays native to preserve the Saturn timing",
+        "status": "excluded"
       },
       "1:/SAKURA4+132290560": {
         "alternate_cut": false,
@@ -6721,7 +6744,8 @@
         "association": "unknown",
         "fad": 87402,
         "pc": "MOVIE020",
-        "status": "paired-not-wired"
+        "reason": "alternate PC edit stays native to preserve the Saturn timing",
+        "status": "excluded"
       },
       "1:/SAKURA4+186963968": {
         "alternate_cut": false,
@@ -6735,7 +6759,8 @@
         "association": "unknown",
         "fad": 94337,
         "pc": "MOVIE105",
-        "status": "paired-not-wired"
+        "reason": "alternate PC edit stays native to preserve the Saturn timing",
+        "status": "excluded"
       },
       "1:/SAKURA4+200572928": {
         "alternate_cut": false,
@@ -6798,7 +6823,8 @@
         "association": "unknown",
         "fad": 29549,
         "pc": "MOVIE004",
-        "status": "paired-not-wired"
+        "reason": "alternate PC edit stays native to preserve the Saturn timing",
+        "status": "excluded"
       },
       "1:/SAKURA4+75612160": {
         "alternate_cut": false,
@@ -6831,7 +6857,8 @@
       "2:/SAKURA1/OPSAKURA.CPK+0": {
         "association": "unknown",
         "fad": 143193,
-        "status": "unpaired"
+        "reason": "short native transition without a PC clip",
+        "status": "excluded"
       },
       "2:/SAKURA2/FINAL.CPK+0": {
         "alternate_cut": false,
@@ -6936,7 +6963,8 @@
         "association": "unknown",
         "fad": 13499,
         "pc": "MOVIE102",
-        "status": "paired-not-wired"
+        "reason": "alternate PC edit stays native to preserve the Saturn timing",
+        "status": "excluded"
       },
       "2:/SAKURA4+33234944": {
         "alternate_cut": false,
@@ -6957,7 +6985,8 @@
         "association": "unknown",
         "fad": 28135,
         "pc": "MOVIE105",
-        "status": "paired-not-wired"
+        "reason": "alternate PC edit stays native to preserve the Saturn timing",
+        "status": "excluded"
       },
       "2:/SAKURA4+64991232": {
         "alternate_cut": false,

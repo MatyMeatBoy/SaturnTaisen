@@ -154,3 +154,19 @@ Shard workers do **not** verify every picture one by one in game. For a scene pi
 3. Add it to `config/hd-scene-bg-map.json` / the review file, regenerate `port/scene_bg_table.h` with `tools/gen_scene_bg_table.py`, record the patch.
 4. `tools/check_patch_stack.py`, compile, replay the opening film, hashes unchanged.
 5. Update the register (`tools/hd_chapter_coverage.py`) and the row in the same PR; send. Do not verify in game: one picture in ten is spot-checked later (TP9).
+
+## Working in parallel without stepping on each other
+
+- Several agents must never share one checkout: each does its git work in its own `git worktree` or clone (an agent once committed onto another's branch in the shared tree). Respect the limit of two worktrees in AGENTS.md; reuse the auxiliary one.
+- Build from a clean copy of the stack, not from the shared SDK tree (it may lag behind main). Link your own exe; never overwrite shared build outputs.
+- Take the next patch number only after `git fetch` and a look at the open PRs; if another PR lands first, renumber at rebase time. Two patches that touch the same function (for example the scroll pictures) are one shard: say so in the claim.
+- `tools/integrate_prs.py` with no arguments integrates every open PR in order and skips those that conflict; the PR author rebases the skipped ones.
+
+## Chapter order (owner, 2026-11-19: finish chapter 1, then 2, and so on)
+
+State of the register by chapter (resources with a witnessed chapter, not yet `hd`/`excluded` / attributed): chapter 1 is nearly closed (bodies 0/19, clips 0/3, scene pictures 1/32, portrait rows 8/129); chapters 2-10 have only a handful of attributed resources each (scene pictures 0 of 1-3 pending, portrait rows 3-7 pending). The rest of the material, about 1,500 scene pictures, 275 bodies and 195 menu/HUD images, is **not attributed to a chapter yet** (`unassigned`), so the shards cannot be sliced by chapter until it is.
+
+Therefore:
+1. **Attribution comes first, in chapter order.** TH2 ... TH10 (attribute the resources each chapter draws, by a traced replay from that chapter's save/jump, see `tools/chapter_jump.py` and `docs/research/hd-chapter-N.md`) are P0 and are taken in order 2, 3, 4 ... 10. Their output is rows moving from `unassigned` to the chapter in `config/hd-chapter-coverage.json` (the `CHAPTER_WITNESSES` table in `tools/hd_chapter_coverage.py`).
+2. **Completion follows the chapter.** Once a chapter has attributed resources, a worker finishing the type shards (TP1-TP7) takes the items of the lowest chapter first, then the next. Chapter 1 is done when its register shows no `unknown`/`paired-not-wired` row except the documented blocked ones (`00a1`, `0169`, the IC pictures).
+3. Until a chapter is attributed, the type shards (TP1-TP7) stay the way to make progress: they are chapter-independent (palette/cell matching).

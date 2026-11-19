@@ -17,7 +17,9 @@ class FilmFadMapTests(unittest.TestCase):
         self.assertEqual(len(self.streams), 54)
         self.assertEqual(len(paired), 52)
         self.assertEqual(len(self.streams) - len(paired), 2)
-        self.assertEqual(self.data['unpaired_pc'], ['MOVIE118', 'REDLOGO'])
+        self.assertEqual(self.data['unpaired_pc'], ['REDLOGO'])
+        self.assertEqual(self.data['pc_aliases']['MOVIE118']['canonical'], 'MOVIE015')
+        self.assertRegex(self.data['pc_aliases']['MOVIE118']['sha256'], r'^[0-9a-f]{64}$')
         self.assertEqual(self.data['unpaired_saturn'], [])
 
     def test_alternate_cuts(self):

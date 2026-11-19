@@ -91,7 +91,11 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
         self.assertEqual(len({row['pc'] for row in alternate_cuts}), 6)
-        self.assertTrue(all(row['status'] == 'paired-not-wired' for row in alternate_cuts))
+        self.assertTrue(all(row['status'] == 'excluded' for row in alternate_cuts))
+        for disc in (1, 2):
+            transition = catalog['unassigned']['film'][f'{disc}:/SAKURA1/OPSAKURA.CPK+0']
+            self.assertEqual(transition['status'], 'excluded')
+            self.assertNotIn('pc', transition)
 
     def test_bg2338_counterpart_remains_outside_the_runtime_table(self):
         root = Path(__file__).resolve().parents[1]
@@ -160,3 +164,15 @@ class ChapterCoverageTest(unittest.TestCase):
                     self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
                     self.assertEqual(row['status'], 'paired-not-wired')
                     self.assertFalse(row.get('verified_in_game'))
+
+    def test_cutout_body_review_is_reflected_in_runtime_coverage(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        review = json.loads((root / 'config/hd-body-review.json').read_text(encoding='utf-8'))
+        groups = [catalog['unassigned'], *(chapter['resources'] for chapter in catalog['chapters'])]
+        bodies = {key: row for group in groups for key, row in group.get('bodies', {}).items()}
+        for disc in (1, 2):
+            for name in review['cutout']:
+                with self.subTest(disc=disc, body=name):
+                    row = bodies[f'{disc}:/SAKURA1/{name}.BIN']
+                    self.assertEqual((row['status'], row['pc']), ('hd', f'SAKURA1/NC/{name}.SPR'))
