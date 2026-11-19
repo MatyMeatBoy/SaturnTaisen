@@ -117,3 +117,13 @@ Take a shard by claiming its row in a first small PR: `python tools/shard_claims
 ## Save states are for testing only (owner rule, 2026-11-19)
 
 The game is played naturally: save states, load states, quick states (F5/F9), the reset point (F2/F3), the slot keys (F6/F7) and their menu rows never reach players. The runtime (patch 0097, `port/dev_states.h`) switches them off whenever a `release.marker` file sits beside `sakura.exe`; `tools/package_release.py` writes that file into every package, so a package is always natural play, and development builds (no marker) keep `--state-load/--state-save` for replays. Never copy `release.marker` next to a development executable, and never ship a package without it (`tests/test_release_marker.py`). A future in-game save-anywhere feature (owner idea: like a modern visual novel) is a separate design and not these tools.
+
+## Speed against completeness (owner, 2026-11-19)
+
+Send PRs as early as you have a verified slice, then keep sending: the coordinator integrates everything that arrives, and a fast, small, honest PR is worth more than a late perfect one. The balance:
+
+- **Always in the PR (never skip):** the data or code of the slice, the tests you can run, the evidence you have (hashes, a screenshot, a trace) and an explicit list of what is not verified. A runtime patch must at least apply to the current stack (`python tools/check_patch_stack.py`) and compile in your build, or say plainly that it was not compiled.
+- **May come later (the coordinator completes it):** the full-chapter replay, other resolutions, packaging, a second asset, listening or eye checks that need the owner. Say which of these are pending; do not hold the PR for them.
+- **Draft or ready?** Ready if the slice is verified as far as you can; a draft only for an unfinished experiment. The coordinator marks a draft ready after verifying it, so a draft is never wasted.
+- **Split instead of waiting:** if a shard has an offline half (data, generator, tests) and a runtime half, send the offline half now and the runtime half as its own PR.
+- **Rebase before sending** (`git merge origin/main`, then `python tools/check_patch_stack.py`; `python tools/rebase_patch.py <patch> --author-ref=origin/<branch>` re-anchors a patch whose context moved, but it can misplace a block: always compile after).
