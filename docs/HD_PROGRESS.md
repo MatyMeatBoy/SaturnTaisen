@@ -13,7 +13,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | imágenes PC candidatas (29 archivos de menú/HUD) | 572/572 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 137/147 (93,1%) | Sin dato | 137/147 (93,1%) | 9/147 (6,1%) |
+| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 142/147 (96,5%) | Sin dato | 137/147 (93,1%) | 9/147 (6,1%) |
 
 ## Resumen global de integración
 

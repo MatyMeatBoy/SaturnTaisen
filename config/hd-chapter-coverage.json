@@ -2839,11 +2839,17 @@
       },
       "1:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3125.SPR",
+        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/NC3126.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3126.SPR",
+        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/NC3128.BIN": {
         "association": "unknown",
@@ -2915,7 +2921,10 @@
       },
       "1:/SAKURA1/NC3290.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3290.SPR",
+        "reason": "The PC face close-up uses a different vertical crop and fills the native face openings.",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/NC33.BIN": {
         "association": "unknown",
@@ -2955,7 +2964,10 @@
       },
       "1:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3517.SPR",
+        "reason": "The PC two-character strip uses a different crop and fills both native face openings.",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
@@ -2995,7 +3007,10 @@
       },
       "1:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC4138.SPR",
+        "reason": "The PC edition bakes the flower box and background into the native body opening.",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
@@ -3645,11 +3660,17 @@
       },
       "2:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3125.SPR",
+        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/NC3126.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3126.SPR",
+        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/NC3128.BIN": {
         "association": "unknown",
@@ -3735,7 +3756,10 @@
       },
       "2:/SAKURA1/NC3290.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3290.SPR",
+        "reason": "The PC face close-up uses a different vertical crop and fills the native face openings.",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/NC33.BIN": {
         "association": "unknown",
@@ -3775,7 +3799,10 @@
       },
       "2:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC3517.SPR",
+        "reason": "The PC two-character strip uses a different crop and fills both native face openings.",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
@@ -3815,7 +3842,10 @@
       },
       "2:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "pc": "SAKURA1/NC/NC4138.SPR",
+        "reason": "The PC edition bakes the flower box and background into the native body opening.",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/NC4182.BIN": {
         "association": "unknown",

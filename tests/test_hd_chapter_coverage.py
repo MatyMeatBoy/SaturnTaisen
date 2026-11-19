@@ -149,3 +149,14 @@ class ChapterCoverageTest(unittest.TestCase):
                     self.assertEqual(row['pc'], f'SAKURA1/BG/{name}.SPR')
                     self.assertEqual(row['status'], 'hd')
                     self.assertFalse(row.get('verified_in_game'))
+
+    def test_short_body_pairs_keep_native_compositing(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        for disc in (1, 2):
+            for name in ('NC3125', 'NC3126', 'NC3290', 'NC3517', 'NC4138'):
+                with self.subTest(disc=disc, body=name):
+                    row = catalog['unassigned']['bodies'][f'{disc}:/SAKURA1/{name}.BIN']
+                    self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
+                    self.assertEqual(row['status'], 'paired-not-wired')
+                    self.assertFalse(row.get('verified_in_game'))
