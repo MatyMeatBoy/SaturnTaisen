@@ -1,6 +1,6 @@
 # HD chapter 2: coverage report (shard TH2)
 
-Source: `config/hd-chapter-coverage.json` (chapter 2 entry, `unassigned`, `association`), cross-checked with `config/hd-scene-bg-map.json`, `hd-scene-bg-review.json`, `hd-body-map.json`, `hd-item-map.json`, `film-fad-map.json` and `docs/PENDIENTES.md`. Names, hashes and counts only. Nothing here is a replay result: no chapter-2 HD replay report exists yet (exit test of `docs/SHARDS.md` not met).
+Source: `config/hd-chapter-coverage.json` (chapter 2 entry, `unassigned`, `association`), cross-checked with `config/hd-scene-bg-map.json`, `hd-scene-bg-review.json`, `hd-body-map.json`, `hd-item-map.json`, `film-fad-map.json` and `docs/PENDIENTES.md`. Names, hashes and counts only. The counts below reflect the coverage inventory. The [EVE202 tactical inset](eve202-tactical-inset.md) now has a verified scene replay. The full chapter-2 HD replay remains open.
 
 ## 1. Scope
 
@@ -46,7 +46,7 @@ BG20xx heuristic subset (194 entries, 97 per disc): 74 hd, 18 paired-not-wired, 
 ## 3. Five highest-value next actions
 
 1. **Attribute chapter-2 scene pictures** (closes up to ~97 BG20xx entries per disc from unknown to chapter 2): run the chapter-2 strict-AOT replay (continue from episode 2 save, as in `chapter-sweep.md`), emit `observed-scene-resources.json`, rerun `python tools/hd_chapter_coverage.py --index local/work/scene-index-later --portrait-audit ...`; touch `CHAPTER_WITNESSES` in `tools/hd_chapter_coverage.py` only with documented witnesses. Needs the owner's discs.
-2. **Wire the paired-not-wired scenes** (about 18 BG20xx per disc plus `EVE202`): generator/table for the compiled scene table; data in `config/hd-scene-bg-map.json` + `config/hd-scene-bg-review.json`, then SDK patch (next free number in `config/dependencies.json`).
+2. **Wire the paired-not-wired scenes** (about 18 BG20xx per disc): generator/table for the compiled scene table; data in `config/hd-scene-bg-map.json` + `config/hd-scene-bg-review.json`, then SDK patch (next free number in `config/dependencies.json`).
 3. **Attribute and wire NC bodies** (246 paired-not-wired disc-wide, 0 attributed to ch.2): trace which `NCxx` chapter 2 draws, then extend the draw list `BODY_DRAWS` in `tools/hd_chapter_coverage.py` and `config/hd-body-map.json` (candidates/undecoded: 40 candidate, 104 content).
 4. **Resolve the 6 chapter-2 portraits** (`0201FCE`..`0206FCE`, all `unknown`): run `docs/research/portrait-animation-coverage.md` audit, then follow T106a-d for faces the matcher leaves native.
 5. **Map chapter-2 FILM and tactical lists** (53 FADs unattributed; 54 tactical files unknown): record which `MOVIE###` plays in episode 2 in `config/film-fad-map.json`; list tactical map/unit files for S11 (TS11) from the replay.
@@ -55,7 +55,7 @@ BG20xx heuristic subset (194 entries, 97 per disc): 74 hd, 18 paired-not-wired, 
 
 - Which scene pictures, bodies, portraits, FILM clips, tactical maps and menu/HUD items episode 2 actually draws (all attribution is inferred or absent).
 - Whether the 6 portraits `0201`-`0206` appear individually, and which expressions.
-- Whether paired scenes (`EVE202`, BG20xx) render correctly in-game; every pair is "not verified in the runtime".
+- Whether the other paired scenes (BG20xx) render correctly in-game. The [EVE202 tactical inset](eve202-tactical-inset.md) has a verified HD substitution.
 - Per-frame guest hash equality of a strict-native HD replay of the chapter-2 path (exit test).
 - Alternate FILM cut use, and which tactical stages chapter 2 runs.
 - Real-time text-in-picture issues (the reviews checked only Saturn-side/PC-side pictures).
@@ -64,6 +64,6 @@ BG20xx heuristic subset (194 entries, 97 per disc): 74 hd, 18 paired-not-wired, 
 
 - Is BG20xx numbering really episode 2? No document asserts it; `TITLE2` is similarly only inferred.
 - Why are chapter-2 bodies, FILM and menus/HUD empty in the JSON: no evidence yet, or truly none? Data cannot tell.
-- `EVE202` is `observed` for chapter 2 but `paired-not-wired`: is `BBG202` drawn at runtime or only resident?
+- `EVE202` draws `BBG202` on the verified disc-1 tactical path. The [runtime evidence](eve202-tactical-inset.md) covers two window sizes and the entry/exit cuts.
 - Chapter-2 evidence: PENDIENTES T29 and T25 show episode 2 was played/booted (EVT02 at `00204000`; disc 1 dialogue and battle), but no row ties that to HD coverage; TH2 is still `open` (row TH2, T25 Spanish notes).
 - Does the 0-count `bodies`/`film` for chapter 2 mean the coverage generator needs a chapter-2 observed-resources input like chapters 3-10 in `chapter-sweep.md`?
