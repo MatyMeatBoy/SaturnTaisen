@@ -17,6 +17,8 @@ BG_REPORT = 'docs/research/bg-matching-progress.md'
 BODY_REPORT = 'docs/research/saturn-bg-format.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
+STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
+STAGE01_MAP = (1, '/SAKURA2/MAP01.BIN')
 EVE_PAIRS = {
     'EVE002': 'BBG002', 'EVE0101': 'BBG001', 'EVE0116': 'BBG201',
     'EVE0118': 'BBG101', 'EVE102': 'BBG102', 'EVE105': 'BBG105',
@@ -33,6 +35,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/BG2533.BIN'): (5, 'docs/research/bg2533-pan.md'),
     (1, '/SAKURA2/EVE0101.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA2/EVE202.BIN'): (2, BODY_REPORT),
+    STAGE01_MAP: (1, STAGE01_REPORT),
 }
 
 
@@ -173,7 +176,14 @@ def build(root, index_dir, portrait_audit):
             chapter, report = CHAPTER_WITNESSES[(disc, path)]
             association = 'observed'
         row = {'status': 'unknown'}
-        if path in bg:
+        if (disc, path) == STAGE01_MAP:
+            row = {
+                'status': 'hd',
+                'pc': 'SAKURA2/MAP/MAP01/MAP01_A.SPR',
+                'scope': 'source-4 ground only',
+                'extension': 'STAGE01-right-v1.png',
+            }
+        elif path in bg:
             pair = bg[path]
             accepted = name not in bg_review['rejected'] and (
                 pair.get('tier') == 'content' or name in bg_review['eye_confirmed_number_tier']
@@ -252,10 +262,6 @@ def build(root, index_dir, portrait_audit):
             row['atlases'] = sources
         add('portraits', ident, row, 1 if sources else None,
             'inferred' if sources else 'unknown', PORTRAIT_REPORT if sources else None)
-
-    add('tactical-maps', '1:STAGE01', {
-        'status': 'unknown', 'extension': 'STAGE01-right-v1.png',
-    }, 1, 'observed', 'docs/research/pixelgen-v1.md')
 
     return {
         'schema': 1,

@@ -1639,11 +1639,13 @@
           }
         },
         "tactical-maps": {
-          "1:STAGE01": {
+          "1:/SAKURA2/MAP01.BIN": {
             "association": "observed",
-            "evidence": "docs/research/pixelgen-v1.md",
+            "evidence": "docs/research/stage01-pc-ground.md",
             "extension": "STAGE01-right-v1.png",
-            "status": "unknown"
+            "pc": "SAKURA2/MAP/MAP01/MAP01_A.SPR",
+            "scope": "source-4 ground only",
+            "status": "hd"
           }
         },
         "tactical-units": {}
@@ -13823,10 +13825,6 @@
       }
     },
     "tactical-maps": {
-      "1:/SAKURA2/MAP01.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
       "1:/SAKURA2/MAP02.BIN": {
         "association": "unknown",
         "status": "unknown"
