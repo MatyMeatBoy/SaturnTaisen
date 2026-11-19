@@ -111,7 +111,8 @@
       "patches/0112-sakura-hd-load-disc-icon.patch",
       "patches/0113-sakura-stage21-pc-ground.patch",
       "patches/0115-sakura-identical-scene-donor-aliases.patch",
-      "patches/0116-sakura-nc3250-native-underlay.patch"
+      "patches/0116-sakura-nc3250-native-underlay.patch",
+      "patches/0117-sakura-spanish-loading-lettering.patch"
     ]
   }
 }
