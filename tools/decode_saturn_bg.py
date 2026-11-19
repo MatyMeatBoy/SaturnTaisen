@@ -8,13 +8,16 @@ Format (verified on SAKURA1/BG1001.BIN, the theatre lobby):
   0xA250  palette, 256 big-endian RGB555 words (Saturn layout: bits 0-4 R, 5-9 G, 10-14 B)
   0xA450  trailing data (not needed to draw the picture; 45,120-byte files are zero padded)
 
-Variant B (header `00 01 00 02`, 31 files such as BG1207 and BG2207: wide or tall scenes) stores its size in
-the header and puts the palette first:
+Variant B (marker `00 01 00 02`, 30 files) stores a two-word VDP2 pattern-name table:
 
-  0x0000  00 01 00 02, cells wide (u16 BE), cells high (u16 BE), 8 more bytes
+  0x0000  marker, cells wide (u16 BE), cells high (u16 BE), declared tile count (u16 BE)
   0x0010  palette, 256 big-endian RGB555 words
-  0x0210  picture, 8 bpp, (cells wide) x (cells high) cells of 8x8, row-major (e.g. 64x18 = 512x144)
-  after   trailing data (not needed to draw)
+  0x0610  row-major pattern names, one u32 BE per cell
+  after   contiguous 64-byte 8 bpp tiles, starting immediately after the pattern names
+
+In the file, the low bits of each pattern name give a 32-byte character number (twice the tile
+index). Bit 30 flips horizontally and bit 31 vertically. The complete tile bytes in the file
+bound all reads because BG4302 declares more tiles than its file contains.
 
 The mini-game files (BGHANA, BGSLOT, ...) start with a palette and are not decoded here.
 
@@ -33,15 +36,18 @@ CELLS_W, CELLS_H = 36, 18
 PICTURE = CELLS_W * CELLS_H * 64
 PALETTE_AT = HEADER + PICTURE
 SIZE = 45120
+VARIANT_B = b'\x00\x01\x00\x02'
+VARIANT_B_MAP_AT = 0x610
+CHARACTER_NUMBER = 0x7FFF
+FLIP_HORIZONTAL = 1 << 30
+FLIP_VERTICAL = 1 << 31
 
 
 def decode(data):
     """Return an RGB Pillow image (288x144 for the common variant), or None when `data` is not a known layout."""
-    if data[:4] == b'\x00\x01\x00\x02' and len(data) >= 0x210:
-        cells_w, cells_h = struct.unpack_from('>HH', data, 4)
-        if not cells_w or not cells_h or 0x210 + cells_w * cells_h * 64 > len(data):
-            return None
-        return _cells(data, 0x10, 0x210, cells_w, cells_h)
+    if data[:4] == VARIANT_B:
+        layout = _variant_b_layout(data)
+        return _variant_b_image(data, *layout) if layout else None
     table = _table(data)
     if table:
         return _mapped(data, *table)
@@ -51,6 +57,43 @@ def decode(data):
     if len(data) != SIZE or data[:4] != b'\x00\x01\x00\x01':
         return None
     return _cells(data, PALETTE_AT, HEADER, CELLS_W, CELLS_H)
+
+
+def _variant_b_layout(data):
+    if len(data) < VARIANT_B_MAP_AT:
+        return None
+    cells_w, cells_h = struct.unpack_from('>HH', data, 4)
+    cell_count = cells_w * cells_h
+    picture_at = VARIANT_B_MAP_AT + cell_count * 4
+    if not cell_count or picture_at >= len(data):
+        return None
+    tile_count, remainder = divmod(len(data) - picture_at, 64)
+    if remainder:
+        return None
+    names = struct.unpack_from(f'>{cell_count}I', data, VARIANT_B_MAP_AT)
+    # These files use only the two flip flags and an even 15-bit character number.
+    supported_bits = FLIP_HORIZONTAL | FLIP_VERTICAL | (CHARACTER_NUMBER & ~1)
+    if any(name & ~supported_bits or (name & CHARACTER_NUMBER) // 2 >= tile_count for name in names):
+        return None
+    return cells_w, cells_h, picture_at, names
+
+
+def _variant_b_image(data, cells_w, cells_h, picture_at, names):
+    words = struct.unpack_from('>256H', data, 0x10)
+    palette = [((w & 31) * 255 // 31, ((w >> 5) & 31) * 255 // 31, ((w >> 10) & 31) * 255 // 31)
+               for w in words]
+    image = Image.new('RGB', (cells_w * 8, cells_h * 8))
+    pixels = image.load()
+    for cell, name in enumerate(names):
+        base = picture_at + (name & CHARACTER_NUMBER) * 32
+        left, top = (cell % cells_w) * 8, (cell // cells_w) * 8
+        flip_x = 7 if name & FLIP_HORIZONTAL else 0
+        flip_y = 7 if name & FLIP_VERTICAL else 0
+        for y in range(8):
+            row_at = base + (y ^ flip_y) * 8
+            for x in range(8):
+                pixels[left + x, top + y] = palette[data[row_at + (x ^ flip_x)]]
+    return image
 
 
 def _screen_ok(data):
@@ -102,9 +145,9 @@ def _cells(data, palette_at, picture_at, cells_w, cells_h):
 
 def picture_bytes(data):
     """The cell data the game copies to VDP2 (hash key for runtime recognition), or None."""
-    if data[:4] == b'\x00\x01\x00\x02' and len(data) >= 0x210:
-        cells_w, cells_h = struct.unpack_from('>HH', data, 4)
-        return data[0x210:0x210 + cells_w * cells_h * 64]
+    if data[:4] == VARIANT_B:
+        layout = _variant_b_layout(data)
+        return data[layout[2]:] if layout else None
     table = _table(data)
     if table:
         return data[table[0]:table[0] + table[1]]
@@ -143,7 +186,7 @@ def _mapped(data, picture_at, picture_size, map_at, map_size, palette_at):
 
 def palette_bytes(data):
     """The 256 palette words (512 bytes) the game loads into colour RAM for this picture, or None."""
-    if data[:4] == bytes([0, 1, 0, 2]) and len(data) >= 0x210:
+    if data[:4] == VARIANT_B and len(data) >= 0x210:
         return data[0x10:0x210]
     table = _table(data)
     if table:
