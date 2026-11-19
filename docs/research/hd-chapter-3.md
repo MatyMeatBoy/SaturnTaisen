@@ -2,6 +2,8 @@
 
 The [Chapter 3 native evidence](th3-native-attribution.md) adds observed scene pictures and tactical resources to the chapter register. It records display, residency, and disc reads separately. The complete replay and HD exit test are open.
 
+The [MAP04 ground](map04-pc-ground.md) has a strict-native 1440p substitution witness for the second tactical battle.
+
 ## Earlier catalog snapshot
 
 Source: `config/hd-chapter-coverage.json` (`chapters[2]`, `unassigned`, `association`), `docs/research/hd-chapter-coverage.md`, `docs/research/chapter-sweep.md`. Chapter 3 is on disc 1 and its Continue-screen anchor is episode `0301`. Names and counts only; no game pixels or script text.

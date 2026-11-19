@@ -3124,7 +3124,11 @@
           "1:/SAKURA2/MAP04.BIN": {
             "association": "observed",
             "evidence": "docs/research/th3-native-attribution.md",
-            "status": "unknown"
+            "pc": "SAKURA2/MAP/MAP04/MAP04_A.SPR",
+            "runtime_evidence": "docs/research/map04-pc-ground.md",
+            "scope": "source-4 ground only",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-units": {
