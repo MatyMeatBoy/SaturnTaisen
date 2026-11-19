@@ -49,16 +49,27 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
         name=row['file']
         if pc and screen:raise RuntimeError('Conflicting generated-art classes')
         pattern=r'STAGE01-right-v1\.png' if tactical else r'(?:OPENING|TITLE|STATUS|PAUSE01|LOADING)-v1\.png' if screen else r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
-        if not re.fullmatch(pattern,name) or name in result:
+        episode_side = screen and re.fullmatch(r'EPISODE(?:0[1-9]|10)-(?:left|right)-v1\.png', name)
+        if (not episode_side and not re.fullmatch(pattern, name)) or name in result:
             raise RuntimeError('Invalid/duplicate generated background identity')
         file=folder/name
         if file.is_symlink() or not file.is_file() or digest(file)!=row['sha256']:
             raise RuntimeError('Generated background checksum mismatch: '+name)
-        with file.open('rb') as stream:header=stream.read(24)
+        with file.open('rb') as stream:header=stream.read(26)
         if header[:8]!=b'\x89PNG\r\n\x1a\n':
             raise RuntimeError('Generated background is not a PNG: '+name)
-        if tactical and (len(header)!=24 or header[12:16]!=b'IHDR' or struct.unpack('>II',header[16:24])!=(39,224)):
+        if tactical and (len(header)<24 or header[12:16]!=b'IHDR' or struct.unpack('>II',header[16:24])!=(39,224)):
             raise RuntimeError('Unexpected generated tactical image extent')
+        if episode_side and (
+            data.get('source_pixels_included') is not False
+            or row.get('logical_grid') != [39, 224]
+            or not re.fullmatch(r'[0-9A-F]{16}', row.get('palette_fnv', ''))
+            or len(header) != 26
+            or header[12:16] != b'IHDR'
+            or struct.unpack('>II', header[16:24]) != (39, 224)
+            or header[24:26] != bytes((8, 6))
+        ):
+            raise RuntimeError('Unexpected generated episode side: ' + name)
         result[name]=file
     if not result:
         raise RuntimeError('Empty generated background manifest')

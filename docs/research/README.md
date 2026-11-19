@@ -19,6 +19,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [save-import.md](save-import.md) — save import ([public-save-fixtures.json](public-save-fixtures.json)).
 - [sh2-dispatch-speed.md](sh2-dispatch-speed.md) — T104: where the SH-2 dispatch time goes and the second chain table (patch 0074).
 
+- [vdp-software-speed.md](vdp-software-speed.md) — T103: where the VDP software drawing time goes, the one pixel-identical change shipped (patch 0073) and what is left.
+
 ## Presentation and HD
 
 - [saturn-background-loading.md](saturn-background-loading.md) — background loading and HD mod ([saturn-background-loading.json](saturn-background-loading.json), [saturn-background-compression.json](saturn-background-compression.json)).
@@ -99,3 +101,5 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [pc-asset-census.md](pc-asset-census.md): Header-level census of the PC edition cabinet that sizes the HD categories.
 - [pc-saturn-name-links.json](pc-saturn-name-links.json): Name links between PC and Saturn resource folders (identifiers only).
 - [hd-completion-handoff.md](hd-completion-handoff.md): Handoff to finish the HD mod from another PC: state per area, what travels through Git, order of work and rules.
+
+- [clip-hook-design.md](clip-hook-design.md) — PC video hook design and the second clip and skip verification.

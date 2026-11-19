@@ -74,7 +74,12 @@
       "patches/0069-sakura-body-frames-by-shape.patch",
       "patches/0070-sakura-body-mouths-by-colour.patch",
       "patches/0071-sakura-episode-card-16x9.patch",
-      "patches/0072-sakura-movie-decoder.patch"
+      "patches/0072-sakura-movie-decoder.patch",
+      "patches/0073-sakura-film-clip-hook.patch",
+      "patches/0074-sakura-film-clip-audio.patch",
+      "patches/0075-sakura-vdp-scroll-dot-colour.patch",
+      "patches/0076-sakura-card-wide-mirror.patch",
+      "patches/0077-sakura-sh2-dispatch-fast-chain.patch"
     ]
   }
 }

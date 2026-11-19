@@ -37,6 +37,33 @@ class PackageArtTests(unittest.TestCase):
                 (folder/'provenance.json').write_text(json.dumps(manifest))
             self.assertEqual(len(generated_backgrounds(folder,screen=True)),4)
             with self.assertRaises(RuntimeError):generated_backgrounds(folder)
+    def test_episode_side_requires_a_generated_only_native_strip(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            file = folder / 'EPISODE01-left-v1.png'
+            manifest = {'source_pixels_included': False, 'backgrounds': []}
+            report = folder / 'provenance.json'
+
+            def register(size):
+                Image.new('RGBA', size, (12, 30, 50, 255)).save(file)
+                manifest['backgrounds'] = [{
+                    'file': file.name, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest(),
+                    'logical_grid': [39, 224], 'palette_fnv': 'F84F4FA528984E99',
+                }]
+                report.write_text(json.dumps(manifest), encoding='utf8')
+
+            register((39, 224))
+            self.assertEqual(list(generated_backgrounds(folder, screen=True)), [file.name])
+            register((398, 224))
+            with self.assertRaises(RuntimeError):
+                generated_backgrounds(folder, screen=True)
+            register((39, 224))
+            manifest['source_pixels_included'] = True
+            report.write_text(json.dumps(manifest), encoding='utf8')
+            with self.assertRaises(RuntimeError):
+                generated_backgrounds(folder, screen=True)
+
     def test_only_manifest_pinned_files_are_selected(self):
         with tempfile.TemporaryDirectory() as directory:
             folder=Path(directory);data=b'\x89PNG\r\n\x1a\nfixture'

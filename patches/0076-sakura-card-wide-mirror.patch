@@ -1,0 +1,133 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 98904c6..7fb6373 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -655,6 +655,13 @@ int RunWindowed(Port &port) {
+     // native picture takes the colour of the picture's own edge rows and columns (no asset, so no game pixels leave the
+     // player's machine). Four 1-pixel strips, stretched with the linear filter.
+     SDL_Texture* cardStrip[4]={nullptr,nullptr,nullptr,nullptr};   // left, right (1x224), top, bottom (320x1)
++    // T87: a finished wide card (art/cards-wide/TITLEn.png, 16:9, made with the owner's image tool) replaces the extension; and the
++    // extension itself is the picture's own edge mirrored outward (exact at the seam, background only).
++    SDL_Texture* cardWide[10]={};bool cardWideTried[10]={};
++    SDL_Texture* cardMirror[2]={nullptr,nullptr};uint64_t cardMirrorKey=0;
++    // The generated sides (art/screen-backgrounds/EPISODEnn-left-v1.png and -right-v1.png, 39x224 RGBA, transparent where they touch the card):
++    // the card and its sides form a 398x224 picture that fills the 16:9 window at a fractional scale.
++    SDL_Texture* cardSide[10][2]={};bool cardSideTried[10]={};
+     std::vector<uint32_t> cardPixels;
+     // T19: large character bodies. A body on screen is one VDP1 texture whose bytes are the bitmap of its NC file;
+     // the face is small sprites whose bytes are frames that follow the bitmap, in the same order as the parts of
+@@ -1736,9 +1743,60 @@ int RunWindowed(Port &port) {
+             static constexpr uint64_t kCards[10]={0xF84F4FA528984E99ull,0xFA7EA6C32652FF94ull,0xB17571E06A3D73A2ull,0x9C6046FA0FD22004ull,
+                 0x584308F5B85AE012ull,0xF530E4A419F666C8ull,0xFDCEEE68F831DE9Full,0xECA61ED3EEA4FABBull,0xE8DCC5B80A127438ull,0x36BDFD7BBC63CCE7ull};
+             const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(4);
+-            bool isCard=false;for(const auto card:kCards)isCard=isCard||card==fingerprint;
+-            const auto cardFit=FitInteger(wide,high,320,224);
++            bool isCard=false;int cardIndex=-1;for(int c=0;c<10;c++)if(kCards[c]==fingerprint){isCard=true;cardIndex=c;}
++            auto cardFit=FitInteger(wide,high,320,224);
+             if(isCard && cardFit.scale>0 && (cardFit.x>canvasLeft || cardFit.y>0 || cardFit.x+cardFit.w<canvasLeft+canvasWidth || cardFit.y+cardFit.h<high)) {
++                if(!cardSideTried[cardIndex]) {
++                    cardSideTried[cardIndex]=true;
++                    for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++                        bool both=true;
++                        SDL_Texture* loaded[2]={};
++                        for(int s=0;s<2 && both;s++) {
++                            char name[48];std::snprintf(name,sizeof name,"EPISODE%02d-%s-v1.png",cardIndex+1,s==0?"left":"right");
++                            const auto file=folder/"art"/"screen-backgrounds"/name;std::error_code error;
++                            auto* image=std::filesystem::is_regular_file(file,error)?SDL_LoadPNG(file.string().c_str()):nullptr;
++                            if(!image){both=false;break;}
++                            if(image->w==39 && image->h==224)
++                                if(auto* converted=SDL_ConvertSurface(image,SDL_PIXELFORMAT_ABGR8888)) {
++                                    if((loaded[s]=SDL_CreateTextureFromSurface(renderer,converted))) {
++                                        SDL_SetTextureBlendMode(loaded[s],SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(loaded[s],SDL_SCALEMODE_LINEAR);
++                                    }
++                                    SDL_DestroySurface(converted);
++                                }
++                            SDL_DestroySurface(image);
++                            if(!loaded[s])both=false;
++                        }
++                        if(both) {cardSide[cardIndex][0]=loaded[0];cardSide[cardIndex][1]=loaded[1];break;}
++                        for(auto* texture:loaded)if(texture)SDL_DestroyTexture(texture);
++                    }
++                }
++                float cardSf=0;
++                if(cardSide[cardIndex][0] && cardSide[cardIndex][1]) {
++                    cardSf=std::min(float(canvasWidth)/398.0f,float(high)/224.0f);
++                    const int fullW=int(398.0f*cardSf),cardW=int(320.0f*cardSf),cardH=int(224.0f*cardSf),sideW=int(39.0f*cardSf);
++                    cardFit.w=cardW;cardFit.h=cardH;cardFit.x=canvasLeft+(canvasWidth-fullW)/2+sideW;cardFit.y=(high-cardH)/2;
++                }
++                if(!cardWideTried[cardIndex]) {
++                    cardWideTried[cardIndex]=true;
++                    char name[40];std::snprintf(name,sizeof name,"TITLE%d.png",cardIndex+1);
++                    for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++                        const auto file=folder/"art"/"cards-wide"/name;std::error_code error;
++                        if(!std::filesystem::is_regular_file(file,error))continue;
++                        if(auto* image=SDL_LoadPNG(file.string().c_str())) {
++                            if(auto* converted=SDL_ConvertSurface(image,SDL_PIXELFORMAT_ABGR8888)) {
++                                if((cardWide[cardIndex]=SDL_CreateTextureFromSurface(renderer,converted)))SDL_SetTextureScaleMode(cardWide[cardIndex],SDL_SCALEMODE_LINEAR);
++                                SDL_DestroySurface(converted);
++                            }
++                            SDL_DestroySurface(image);
++                        }
++                        if(cardWide[cardIndex])break;
++                    }
++                }
++                if(cardWide[cardIndex]) {
++                    const SDL_FRect whole{float(canvasLeft),0,float(canvasWidth),float(high)};
++                    SDL_RenderTexture(renderer,cardWide[cardIndex],nullptr,&whole);
++                    enhanced=true;
++                } else {
+                 auto average=[&](int x0,int y0,int x1,int y1)->uint32_t {
+                     uint32_t r=0,g=0,b=0;int n=0;
+                     for(int y=y0;y<y1;y++)for(int x=x0;x<x1;x++) {const uint32_t px=softwareShown[size_t(y)*320+x];r+=px&255;g+=(px>>8)&255;b+=(px>>16)&255;n++;}
+@@ -1765,11 +1823,49 @@ int RunWindowed(Port &port) {
+                 // The top and bottom strips stretch the whole width; the left and right ones the whole height, over the corners.
+                 if(cardStrip[2] && topArea.h>0)SDL_RenderTexture(renderer,cardStrip[2],nullptr,&topArea);
+                 if(cardStrip[3] && bottomArea.h>0)SDL_RenderTexture(renderer,cardStrip[3],nullptr,&bottomArea);
+-                if(cardStrip[0] && leftArea.w>0)SDL_RenderTexture(renderer,cardStrip[0],nullptr,&leftArea);
+-                if(cardStrip[1] && rightArea.w>0)SDL_RenderTexture(renderer,cardStrip[1],nullptr,&rightArea);
++                // Sides: the picture's own edge mirrored outward (distance d from the seam shows column d), so the seam is exact and
++                // the extension is background only; the 1-pixel strips above stay as the fallback under it.
++                {
++                    const int mirrorCols=28;
++                    if(!cardMirror[0]) {
++                        for(int s=0;s<2;s++) {
++                            cardMirror[s]=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,mirrorCols,224);
++                            if(cardMirror[s])SDL_SetTextureScaleMode(cardMirror[s],SDL_SCALEMODE_LINEAR);
++                        }
++                    }
++                    std::vector<uint32_t> side(size_t(mirrorCols)*224);
++                    for(int s=0;s<2 && cardMirror[s];s++) {
++                        for(int y=0;y<224;y++)for(int u=0;u<mirrorCols;u++) {
++                            // left texture: u=0 is the farthest column, u=mirrorCols-1 touches the picture; right texture: the other way round
++                            const int d=s==0?mirrorCols-1-u:u;
++                            const int source=s==0?d:319-d;
++                            side[size_t(y)*mirrorCols+u]=softwareShown[size_t(y)*320+source]|0xFF000000u;
++                        }
++                        SDL_UpdateTexture(cardMirror[s],nullptr,side.data(),mirrorCols*4);
++                    }
++                    auto drawSide=[&](int s,const SDL_FRect& area) {
++                        if(!cardMirror[s] || area.w<=0)return;
++                        const float nativeWidth=area.w/float(cardFit.scale);               // native pixels the area spans
++                        const float shown=std::min(nativeWidth,float(mirrorCols));
++                        // the columns nearest the seam; any area beyond the mirrored band keeps the strip colour
++                        SDL_FRect src{s==0?float(mirrorCols)-shown:0.0f,0,shown,224};
++                        SDL_FRect dst=area;dst.w=shown*float(cardFit.scale);if(s==0)dst.x=area.x+area.w-dst.w;
++                        SDL_RenderTexture(renderer,cardMirror[s],&src,&dst);
++                    };
++                    if(cardStrip[0] && leftArea.w>0)SDL_RenderTexture(renderer,cardStrip[0],nullptr,&leftArea);
++                    if(cardStrip[1] && rightArea.w>0)SDL_RenderTexture(renderer,cardStrip[1],nullptr,&rightArea);
++                    if(cardSf>0) {
++                        const float sideW=39.0f*cardSf;
++                        const SDL_FRect left{float(cardFit.x)-sideW,float(cardFit.y),sideW,float(cardFit.h)};
++                        const SDL_FRect right{float(cardFit.x+cardFit.w),float(cardFit.y),sideW,float(cardFit.h)};
++                        SDL_RenderTexture(renderer,cardSide[cardIndex][0],nullptr,&left);
++                        SDL_RenderTexture(renderer,cardSide[cardIndex][1],nullptr,&right);
++                    } else {drawSide(0,leftArea);drawSide(1,rightArea);}
++                }
+                 // The native card again on top (anything the areas above covered at its edge is restored).
+                 if(texture) {const SDL_FRect nativeTarget{float(cardFit.x),float(cardFit.y),float(cardFit.w),float(cardFit.h)};SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);}
+                 enhanced=true;
++                }
+             }
+         }
+         if(canvasLeft>0) {

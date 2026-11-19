@@ -1,0 +1,36 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 8094c45..98904c6 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -633,7 +633,7 @@ int RunWindowed(Port &port) {
+         }
+         if(!clipRunning) {
+             char name[48];std::snprintf(name,sizeof name,"MOVIE/MOVIE%03d.MPG",clipMovie);
+-            clipRunning=clipDecoder.Open((std::filesystem::u8path(port.opt.pcAssetsPath)/name).string(),8,false);
++            clipRunning=clipDecoder.Open((std::filesystem::u8path(port.opt.pcAssetsPath)/name).string(),24,true);
+             clipStartFrame=port.frame;clipMissing=0;
+             if(std::getenv("SATRECOMP_CLIP_TRACE"))std::fprintf(stderr,"clip: open %s -> %d\n",name,int(clipRunning));
+             if(!clipRunning) {clipMovie=-1;return false;}
+@@ -2220,6 +2220,22 @@ int RunWindowed(Port &port) {
+             audio.pending.clear(); // (no sound in slow motion)
+         }
+ 
++        if (clipRunning && audio.stream) {
++            // T101/S4: while a PC clip plays, its own MP2 audio (44.1 kHz stereo) replaces the Saturn film's sound. The guest's audio is not
++            // sent; the clip's audio tops the device queue up to about a tenth of a second, so it runs on wall-clock time like the device does
++            // (the decoder works far faster than real time). The guest and the clip's picture clock are untouched.
++            audio.pending.clear();
++            const int queuedFloats=SDL_GetAudioStreamQueued(audio.stream)/int(sizeof(int16_t));
++            const int wantFloats=4410*2-queuedFloats;
++            if(wantFloats>0) {
++                std::vector<float> pc;pc.resize(size_t(wantFloats));
++                const size_t got=clipDecoder.Audio(pc.data(),pc.size());
++                std::vector<int16_t> out(got);
++                for(size_t i=0;i<got;i++)out[i]=int16_t(std::lround(std::clamp(pc[i],-1.0f,1.0f)*32767.0f));
++                if(got)SDL_PutAudioStreamData(audio.stream,out.data(),int(got*sizeof(int16_t)));
++                if(std::getenv("SATRECOMP_CLIP_TRACE")) {static uint64_t calls=0,short_=0;calls++;short_+=got<size_t(wantFloats);if(calls%600==0)std::fprintf(stderr,"clip audio: %llu top-ups, %llu short\n",(unsigned long long)calls,(unsigned long long)short_);}
++            }
++        }
+         if (audio.stream && !audio.pending.empty()) {
+             // Drop audio rather than fall behind when running unthrottled
+             if (!port.opt.unthrottled || SDL_GetAudioStreamQueued(audio.stream) < 44100 * 4 / 5) {

@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "scope": "Offline visual correspondence for the pinned NC20 assets; original PC SPR subimage indices.",
+  "assets": {
+    "saturn_file": "SAKURA1/NC20.BIN",
+    "saturn_sha256": "7248d681335b0f85595d08f509e64cdb4b4c17a41de87a0982e4165e9ed76318",
+    "pc_file": "SAKURA1/NC/NC20.SPR",
+    "pc_sha256": "4f09fa3e7aa10a284160713e4df4f8499c2de1fcd355249b592873049eb25723"
+  },
+  "body": {
+    "saturn_offsets": [
+      1552
+    ],
+    "saturn_size": [
+      152,
+      144
+    ],
+    "saturn_sha256": "3f8108ea09f651152bf9611dd6b46efebb23f071fb641d0ab5cdb3c7877a9851",
+    "pc_index": 0,
+    "pc_size": [
+      296,
+      320
+    ]
+  },
+  "blank": {
+    "saturn_offset": 23440,
+    "length": 17280
+  },
+  "groups": [
+    {
+      "saturn_offset": 40720,
+      "eye_height": 16,
+      "pc_group": 1
+    },
+    {
+      "saturn_offset": 46480,
+      "eye_height": 16,
+      "pc_group": 2
+    },
+    {
+      "saturn_offset": 52240,
+      "eye_height": 16,
+      "pc_group": 3
+    },
+    {
+      "saturn_offset": 58000,
+      "eye_height": 24,
+      "pc_group": 4
+    },
+    {
+      "saturn_offset": 64912,
+      "eye_height": 32,
+      "pc_group": 5
+    },
+    {
+      "saturn_offset": 72976,
+      "eye_height": 32,
+      "pc_group": 6
+    },
+    {
+      "saturn_offset": 81040,
+      "eye_height": 24,
+      "pc_group": 7
+    },
+    {
+      "saturn_offset": 87952,
+      "eye_height": 16,
+      "pc_group": 1
+    }
+  ],
+  "fallback": "Use the native face sprite for blank or unknown textures, changed assets, conflicting matches or ambiguous placement.",
+  "frames": [
+    {"saturn_offsets": [40720, 87952], "saturn_size": [48, 16], "saturn_sha256": "987de84492444f0c604c483d52f72401def2e1753d52e14b805be9a77eed3d76", "pc_index": 8, "pc_size": [104, 63]},
+    {"saturn_offsets": [41488, 88720], "saturn_size": [48, 16], "saturn_sha256": "e81b4f67dd7f2ec9eef4b8e855053cd2a8a96ff05e20b7fe3fcc83cc45a6e269", "pc_index": 9, "pc_size": [104, 63]},
+    {"saturn_offsets": [42256, 89488], "saturn_size": [48, 16], "saturn_sha256": "400b332d72d2c38e46eb5d9815a8c2e29a2a907540a7e693a178a534cae0cf01", "pc_index": 10, "pc_size": [104, 63]},
+    {"saturn_offsets": [43024, 90256], "saturn_size": [24, 24], "saturn_sha256": "cadd0993b10365df48ffa8d46be3935dc3e16004bf9ee9d5efa7aedbb3037f2a", "pc_index": 39, "pc_size": [80, 63]},
+    {"saturn_offsets": [43600, 90832], "saturn_size": [24, 24], "saturn_sha256": "464987956ef0ea74de20014701ca76a71ad843f1a4ee643bc18e92cbf323d4cb", "pc_index": 40, "pc_size": [80, 63]},
+    {"saturn_offsets": [44176, 91408], "saturn_size": [24, 24], "saturn_sha256": "9c9adef803140677c5b189481030ce3c01b76217b8966466c3b357744ce6481a", "pc_index": 41, "pc_size": [80, 63]},
+    {"saturn_offsets": [44752, 91984], "saturn_size": [24, 24], "saturn_sha256": "32747270dbd3761b0e0da7aca2f209647ad7649c3b658dc7ddebf939f0bcd497", "pc_index": 42, "pc_size": [80, 63]},
+    {"saturn_offsets": [45328, 92560], "saturn_size": [24, 24], "saturn_sha256": "31aba4013bfa2c3eba85a9bd7863d1c54931e6c06764201dee620051bd25423a", "pc_index": 43, "pc_size": [80, 63]},
+    {"saturn_offsets": [45904, 93136], "saturn_size": [24, 24], "saturn_sha256": "e0d37bea1306770323058bdda51a739dbced0c7e5b6885b46956fbf10f829c09", "pc_index": 44, "pc_size": [80, 63]},
+    {"saturn_offsets": [46480], "saturn_size": [48, 16], "saturn_sha256": "2d74c2da38706004f81af6b1e3800a21b53010b45a10e23229fb22ddb89fbe70", "pc_index": 11, "pc_size": [104, 71]},
+    {"saturn_offsets": [47248], "saturn_size": [48, 16], "saturn_sha256": "43fb3bc205c5296634d4e9c0c104f9a76c3028c055b2acc2bba750cd9126e4e3", "pc_index": 12, "pc_size": [104, 71]},
+    {"saturn_offsets": [48016], "saturn_size": [48, 16], "saturn_sha256": "b3a5f682bc3fed03eb3a6d9f79872d87f5948680f8f10396be0e0bbf0cd7e365", "pc_index": 13, "pc_size": [104, 71]},
+    {"saturn_offsets": [48784], "saturn_size": [24, 24], "saturn_sha256": "6660af75db1f2eaf53b575308bbf588ca5ace980c862f3c5d6859e2ef3fce04a", "pc_index": 45, "pc_size": [80, 63]},
+    {"saturn_offsets": [49360], "saturn_size": [24, 24], "saturn_sha256": "ecdc1b8426f3e292bc0a9263e22178a523188afce5990651bbe9b6379e6bc699", "pc_index": 46, "pc_size": [80, 63]},
+    {"saturn_offsets": [49936], "saturn_size": [24, 24], "saturn_sha256": "96e011c34a840b6a7719ecf808527e5c4b06b262a0d79cfce0464b7a7d9cf517", "pc_index": 47, "pc_size": [80, 63]},
+    {"saturn_offsets": [50512], "saturn_size": [24, 24], "saturn_sha256": "1bd2387938bbcab52e7aba3aac58b570f48fb1da8d4a1022b880f7c60d8d151a", "pc_index": 48, "pc_size": [80, 63]},
+    {"saturn_offsets": [51088], "saturn_size": [24, 24], "saturn_sha256": "1d125a4c5af0304e8c2e61cc7f53d3b57caecb2b93445bb81564d925a72e0b8d", "pc_index": 49, "pc_size": [80, 63]},
+    {"saturn_offsets": [51664], "saturn_size": [24, 24], "saturn_sha256": "7f11b055da3f4c9e4e7b304eb42d8b7aecf3cc84e46ca86c7c3ec60b0bb322d2", "pc_index": 50, "pc_size": [80, 63]},
+    {"saturn_offsets": [52240], "saturn_size": [48, 16], "saturn_sha256": "a27847cd0ceff853f2d0355a2538c71c2138e182580ba65bb35bf596f4436d03", "pc_index": 14, "pc_size": [104, 71]},
+    {"saturn_offsets": [53008], "saturn_size": [48, 16], "saturn_sha256": "02fdb466745820b92f330260b2db61aae32ddd4c353e38b802b090415543f69d", "pc_index": 15, "pc_size": [104, 71]},
+    {"saturn_offsets": [53776], "saturn_size": [48, 16], "saturn_sha256": "df9fee50451dc809955b37fe33549e7c42374ad53ac7102fe89f4df13a51ad65", "pc_index": 16, "pc_size": [104, 71]},
+    {"saturn_offsets": [54544], "saturn_size": [24, 24], "saturn_sha256": "866f9db3e6892deb912baac76edfb81c39391af8c18e01fdbd5f0ad1f5f2eb6b", "pc_index": 51, "pc_size": [80, 63]},
+    {"saturn_offsets": [55120], "saturn_size": [24, 24], "saturn_sha256": "19ccedd27bba58e75e7ef8a9c77f30baac3a21d89f42f22a8db3f146a0c0a6e9", "pc_index": 52, "pc_size": [80, 63]},
+    {"saturn_offsets": [55696], "saturn_size": [24, 24], "saturn_sha256": "7e9f63d4f988309b60ef89960c2f48d20002b1e01153ff7a47f79f5f7138c927", "pc_index": 53, "pc_size": [80, 63]},
+    {"saturn_offsets": [56272], "saturn_size": [24, 24], "saturn_sha256": "e30dfc3c34425b00281580c9a9762e9abc6f16229d892c3d154cf04ecf9d0c55", "pc_index": 54, "pc_size": [80, 63]},
+    {"saturn_offsets": [56848], "saturn_size": [24, 24], "saturn_sha256": "b6c4157235f474609a9b17b36fc1ac82f7618df6173513814b5b970378937291", "pc_index": 55, "pc_size": [80, 63]},
+    {"saturn_offsets": [57424], "saturn_size": [24, 24], "saturn_sha256": "935c680b4fa8befa4e92104e0bf6f420db8e799f16b4e1f473423a8a33740dd8", "pc_index": 56, "pc_size": [80, 63]},
+    {"saturn_offsets": [58000], "saturn_size": [48, 24], "saturn_sha256": "71c808467ee07acfb2cdb0639ae301f454a8493dfe96e40ee52a1ec4198b0f1d", "pc_index": 17, "pc_size": [104, 71]},
+    {"saturn_offsets": [59152], "saturn_size": [48, 24], "saturn_sha256": "dfa3a2edfac5f78199c1e1447fe351d58d832427e2254936dba3f258f40fa05c", "pc_index": 18, "pc_size": [104, 71]},
+    {"saturn_offsets": [60304], "saturn_size": [48, 24], "saturn_sha256": "aac19bba552c3a3de701ef16994369f898a1df2a7464d0483cc57e03d94d6911", "pc_index": 19, "pc_size": [104, 71]},
+    {"saturn_offsets": [61456], "saturn_size": [24, 24], "saturn_sha256": "3e6d402ce9f405e09c572321d6fadab29604b56d7dc385a8d36a5ba71b87782b", "pc_index": 57, "pc_size": [80, 63]},
+    {"saturn_offsets": [62032], "saturn_size": [24, 24], "saturn_sha256": "e8bddc22fb6942a18a377d8b469a6724a64fe2a4fa846e848be5d19010928054", "pc_index": 58, "pc_size": [80, 63]},
+    {"saturn_offsets": [62608], "saturn_size": [24, 24], "saturn_sha256": "6e0c7b2945807031453227de792ed67e5ad619e122dc77ea6f325e88ca8349b9", "pc_index": 59, "pc_size": [80, 63]},
+    {"saturn_offsets": [63184], "saturn_size": [24, 24], "saturn_sha256": "0aa63b748ce6fe582348604a79910b878e9579c65cc2bc4cf012b073815a9701", "pc_index": 60, "pc_size": [80, 63]},
+    {"saturn_offsets": [63760], "saturn_size": [24, 24], "saturn_sha256": "83b8fc75bc0cf9501b2cfa909085e77180c99db3779e58e1ec869edd8181bee8", "pc_index": 61, "pc_size": [80, 63]},
+    {"saturn_offsets": [64336], "saturn_size": [24, 24], "saturn_sha256": "319e83f4c30462a6f06b10d87e89bc40c0973822e291ccacefbf1eadb1ba417f", "pc_index": 62, "pc_size": [80, 63]},
+    {"saturn_offsets": [64912], "saturn_size": [48, 32], "saturn_sha256": "df28558424ea15a5ccaa8d36061cfe80ef9066d8586813a8dc82efbb89a7aeb6", "pc_index": 20, "pc_size": [104, 71]},
+    {"saturn_offsets": [66448], "saturn_size": [48, 32], "saturn_sha256": "0d9b2649451f2dfd9222ebe36f95822e2335e0504eaac5eea837893352450a32", "pc_index": 21, "pc_size": [104, 71]},
+    {"saturn_offsets": [67984], "saturn_size": [48, 32], "saturn_sha256": "7484287139e80563a0ca61d4eb2a2081e418794240560a11e68037d9b7a92d84", "pc_index": 22, "pc_size": [104, 71]},
+    {"saturn_offsets": [69520], "saturn_size": [24, 24], "saturn_sha256": "d5382d5dc3a1580474aa02c25e572f87fbb9f34dfd0bc93066c519d9c4c7957c", "pc_index": 63, "pc_size": [80, 55]},
+    {"saturn_offsets": [70096], "saturn_size": [24, 24], "saturn_sha256": "a68e7ffb7841b3f0306591ccf05193cda9b28e96a6fb215da99d4db7b7501608", "pc_index": 64, "pc_size": [80, 55]},
+    {"saturn_offsets": [70672], "saturn_size": [24, 24], "saturn_sha256": "9f832d4646f5b3630e8f04741c94fc38cc4684ef18b925ee8287a3c97bbaf69d", "pc_index": 65, "pc_size": [80, 55]},
+    {"saturn_offsets": [71248], "saturn_size": [24, 24], "saturn_sha256": "8ab4709b1b4c7cd8f0e017587b7faa966cb2481aa587755fab5af63b4de2a4c0", "pc_index": 66, "pc_size": [80, 55]},
+    {"saturn_offsets": [71824], "saturn_size": [24, 24], "saturn_sha256": "f32ae74b38a38859b521c354d053753900606fdddc3b3be61534c2da38084e71", "pc_index": 67, "pc_size": [80, 55]},
+    {"saturn_offsets": [72400], "saturn_size": [24, 24], "saturn_sha256": "1bf34bc3953a082252a0ea3099a5b75e6023c3716c612edd09e58f7230d805b6", "pc_index": 68, "pc_size": [80, 55]},
+    {"saturn_offsets": [72976], "saturn_size": [48, 32], "saturn_sha256": "9bfeb05f8dcffa24cc3a7e678c3b07d845bd0a35d4bc5f614425c8770d3b8ff4", "pc_index": 23, "pc_size": [104, 71]},
+    {"saturn_offsets": [74512], "saturn_size": [48, 32], "saturn_sha256": "11717b80f279480b2ede5b2c69bf4320b89f3de14f9607fb86af296340e26aa8", "pc_index": 24, "pc_size": [104, 71]},
+    {"saturn_offsets": [76048], "saturn_size": [48, 32], "saturn_sha256": "0f5d4debbd47b4d21f7b550359ce5fb36fe2165b3a56c54fa0fc48f095022a7f", "pc_index": 25, "pc_size": [104, 71]},
+    {"saturn_offsets": [77584], "saturn_size": [24, 24], "saturn_sha256": "ca80bcea720c585bf30e73c7f172024fa4e92009de5b5cf6f21356643cff7f61", "pc_index": 69, "pc_size": [80, 55]},
+    {"saturn_offsets": [78160], "saturn_size": [24, 24], "saturn_sha256": "14a86d0d28b5d907fd51e4dd80e97bdbe5e805e43565b9f0ee5d4d016e49e02a", "pc_index": 70, "pc_size": [80, 55]},
+    {"saturn_offsets": [78736], "saturn_size": [24, 24], "saturn_sha256": "d7d7a00ce92e4b2241abc839ce81cb8a1b790d183ed24bc4dbb8092a4b5309ce", "pc_index": 71, "pc_size": [80, 55]},
+    {"saturn_offsets": [79312], "saturn_size": [24, 24], "saturn_sha256": "e754bdc9464eb0fa5c66de31f4a5652d4067a4101a59b4ea14cb5e99cc7dac35", "pc_index": 72, "pc_size": [80, 55]},
+    {"saturn_offsets": [79888], "saturn_size": [24, 24], "saturn_sha256": "05a08d1dfb606876900bcf312afb50eab6ea3dd460ef71cb5dccf9d2a6d3e0de", "pc_index": 73, "pc_size": [80, 55]},
+    {"saturn_offsets": [80464], "saturn_size": [24, 24], "saturn_sha256": "231d71852bc993e389f1e29c6f19f107f388566c7a7d41b529ebb68fa829b214", "pc_index": 74, "pc_size": [80, 55]},
+    {"saturn_offsets": [81040], "saturn_size": [48, 24], "saturn_sha256": "b2115dea41aebe06d44f13995ab721a1e743dc9119e5fb7ba6dc47ec08325362", "pc_index": 26, "pc_size": [104, 79]},
+    {"saturn_offsets": [82192], "saturn_size": [48, 24], "saturn_sha256": "f70db8a492effbba2fb63fd8d56c9bbbc31d3763314213622824fb0138c5048b", "pc_index": 27, "pc_size": [104, 79]},
+    {"saturn_offsets": [83344], "saturn_size": [48, 24], "saturn_sha256": "e8e9bcac58981cdff569a50d0ca4342e8c516ca039b1501d04d49cff4cfd86fa", "pc_index": 28, "pc_size": [104, 79]},
+    {"saturn_offsets": [84496], "saturn_size": [24, 24], "saturn_sha256": "526065bf9f3f2824cb59d15546686d86def7d415af366f00584a0ac03692bd37", "pc_index": 75, "pc_size": [80, 55]},
+    {"saturn_offsets": [85072], "saturn_size": [24, 24], "saturn_sha256": "8860fef0a88783314cd6f9ff2b9a82ae0cb2582e8e0b514034aa8acf7631facc", "pc_index": 76, "pc_size": [80, 55]},
+    {"saturn_offsets": [85648], "saturn_size": [24, 24], "saturn_sha256": "a3e82d71148b431d63ff5ba5afc06d3c6bdaf55bbc00fd1fb862a02245ac47e0", "pc_index": 77, "pc_size": [80, 55]},
+    {"saturn_offsets": [86224], "saturn_size": [24, 24], "saturn_sha256": "7d4e8c41b01d25c2291de67583d84b3a15e6f91a2f61c9d859aa55394367364e", "pc_index": 78, "pc_size": [80, 55]},
+    {"saturn_offsets": [86800], "saturn_size": [24, 24], "saturn_sha256": "dfcc4dec5b18f709b363a6ee1bc9df7cb36bd2e30b6f8bf310909b7bbee90dde", "pc_index": 79, "pc_size": [80, 55]},
+    {"saturn_offsets": [87376], "saturn_size": [24, 24], "saturn_sha256": "4b8e62ca8b054e5fdb0cc363aff14cc628f2a0380e2c18fce2b71fa3b87b00bc", "pc_index": 80, "pc_size": [80, 55]}
+  ]
+}

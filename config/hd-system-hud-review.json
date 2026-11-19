@@ -1,0 +1,390 @@
+{
+  "schema": 1,
+  "scope": "T110 offline geometry and palette review. Saved VDP1 commands are evidence; no runtime substitution is enabled.",
+  "system": [
+    {
+      "id": "BURO_W",
+      "pc_path": "SAKURA1/SYSTEM/BURO_W.SPR",
+      "pc_sha256": "a94a35689344d3a032b364c54b7e0219063fa9039d9294acd15b081aa30ee43c",
+      "pc_shapes": [
+        {
+          "size": [
+            208,
+            384
+          ],
+          "count": 2
+        }
+      ],
+      "status": "no_native_witness",
+      "note": "Two tabbed bromide panels; no matching native texture observed.",
+      "saved_command_evidence": []
+    },
+    {
+      "id": "FONT_CSL",
+      "pc_path": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+      "pc_sha256": "b2859bb85ed4ecc319d53bae88556e1b255be4c3ce3b4018aad838882bf0613b",
+      "pc_shapes": [
+        {
+          "size": [
+            16,
+            32
+          ],
+          "count": 2
+        }
+      ],
+      "status": "conditional_candidate",
+      "note": "Left and right cursors; both observed at exact 2x geometry. Verify anchor and selected/disabled states before enabling.",
+      "saved_command_evidence": [
+        {
+          "pc_index": 0,
+          "state": "codex-t109/nav1/final.state",
+          "vram_offset": 471552,
+          "xy": [
+            64,
+            108
+          ],
+          "size": [
+            8,
+            16
+          ],
+          "cmd_mode": "0080",
+          "cmd_color": "A2D0",
+          "texture_sha256": "4faa6243ef8bbffa5ad7750efe2e8e06813750341993423a60d0884b2121a9d4",
+          "cram_byte_offset": 1440,
+          "cram_words": 16,
+          "cram_sha256": "2f32c866f9b25a7c2b62d05bbfe6ea7911b59b21cedfe915a58eb122db2eca02",
+          "native_files": []
+        },
+        {
+          "pc_index": 1,
+          "state": "codex-t109/nav1/final.state",
+          "vram_offset": 471616,
+          "xy": [
+            104,
+            108
+          ],
+          "size": [
+            8,
+            16
+          ],
+          "cmd_mode": "0080",
+          "cmd_color": "A2D0",
+          "texture_sha256": "9ca0ddbb70641771978ac18a5de576f3960ccc61ad560f2a6ed62c81aa81fbaf",
+          "cram_byte_offset": 1440,
+          "cram_words": 16,
+          "cram_sha256": "2f32c866f9b25a7c2b62d05bbfe6ea7911b59b21cedfe915a58eb122db2eca02",
+          "native_files": []
+        }
+      ]
+    },
+    {
+      "id": "JYOUKI",
+      "pc_path": "SAKURA1/SYSTEM/JYOUKI.SPR",
+      "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+      "pc_shapes": [
+        {
+          "size": [
+            32,
+            64
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            48,
+            16
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            48,
+            32
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            48,
+            48
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            48,
+            64
+          ],
+          "count": 5
+        },
+        {
+          "size": [
+            64,
+            16
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            64,
+            32
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            64,
+            48
+          ],
+          "count": 2
+        },
+        {
+          "size": [
+            64,
+            64
+          ],
+          "count": 4
+        },
+        {
+          "size": [
+            80,
+            32
+          ],
+          "count": 2
+        }
+      ],
+      "status": "no_native_witness",
+      "note": "Cyan-keyed steam animation; retain native until an actual steam sequence is identified.",
+      "saved_command_evidence": []
+    },
+    {
+      "id": "KAO",
+      "pc_path": "SAKURA1/SYSTEM/KAO.SPR",
+      "pc_sha256": "a87fa674bffa73a575509761c90f8fcbd55663b61a9cfe0ff43383e00f5e0c33",
+      "pc_shapes": [
+        {
+          "size": [
+            80,
+            160
+          ],
+          "count": 394
+        }
+      ],
+      "status": "existing_portrait_source",
+      "note": "Portraits and animation strips are already handled by the FCE portrait recipe.",
+      "saved_command_evidence": []
+    },
+    {
+      "id": "OP_WIN",
+      "pc_path": "SAKURA1/SYSTEM/OP_WIN.SPR",
+      "pc_sha256": "7eeafa10b1a7398d210445b44dddcdba24e5c7dec0d487dde103304fa2e25f93",
+      "pc_shapes": [
+        {
+          "size": [
+            416,
+            304
+          ],
+          "count": 1
+        }
+      ],
+      "status": "keep_native",
+      "note": "Program menu; exact 2x geometry but the PC image contains Japanese labels.",
+      "saved_command_evidence": [
+        {
+          "pc_index": 0,
+          "state": "sakura/continue-probe.state",
+          "vram_offset": 8192,
+          "xy": [
+            56,
+            40
+          ],
+          "size": [
+            208,
+            152
+          ],
+          "cmd_mode": "00A0",
+          "cmd_color": "0500",
+          "texture_sha256": "a7114410872cd4da9c4b007fb859e451fc3c4b857a65afc3b103f836eb943ad5",
+          "cram_byte_offset": 2560,
+          "cram_words": 256,
+          "cram_sha256": "40c0c97c25e5be257aa926856f2945746811c6b0e95d55bd96f99d1cd3a34919",
+          "native_files": []
+        }
+      ]
+    },
+    {
+      "id": "R_HARI",
+      "pc_path": "SAKURA1/SYSTEM/R_HARI.SPR",
+      "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+      "pc_shapes": [
+        {
+          "size": [
+            32,
+            44
+          ],
+          "count": 7
+        }
+      ],
+      "status": "keep_native",
+      "note": "LIPS clock hand; the PC frames include clock-face pixels and differ in aspect. Preserve the native angle, clock face and timing.",
+      "saved_command_evidence": [
+        {
+          "pc_index": 0,
+          "state": "sakura/prebattle-3000.state",
+          "vram_offset": 213888,
+          "xy": [
+            160,
+            32
+          ],
+          "size": [
+            8,
+            16
+          ],
+          "cmd_mode": "00A0",
+          "cmd_color": "C500",
+          "texture_sha256": "738ab045d501d655ec43c434cf51362893f0394f4c9bb043fd004fda78f06ad6",
+          "cram_byte_offset": 2560,
+          "cram_words": 256,
+          "cram_sha256": "61e8c8e461e806a0f66eb071441a7231e27b9621a4d7c619d0ba16eccd051eb1",
+          "native_files": [
+            [
+              "/SAKURA1/VDP1.BIN",
+              74624
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SHADE_WA",
+      "pc_path": "SAKURA1/SYSTEM/SHADE_WA.SPR",
+      "pc_sha256": "5832cbc76a7afdd004ff6ab60d79f2ba761fb5160f08c4fe4abc063f4094dbdd",
+      "pc_shapes": [
+        {
+          "size": [
+            576,
+            320
+          ],
+          "count": 1
+        }
+      ],
+      "status": "no_native_witness",
+      "note": "Right and bottom edges of the scene picture shadow; no verified native texture.",
+      "saved_command_evidence": []
+    },
+    {
+      "id": "SHADE_WB",
+      "pc_path": "SAKURA1/SYSTEM/SHADE_WB.SPR",
+      "pc_sha256": "9ef57aa32f0f4c0760e4a54852f52e5fee8fbbf66c1b3d81cc77585c5b43dddf",
+      "pc_shapes": [
+        {
+          "size": [
+            608,
+            128
+          ],
+          "count": 1
+        }
+      ],
+      "status": "keep_native",
+      "note": "PC dialogue shadow, compared with a native gold-frame ornament of the same geometry. The rendered components differ.",
+      "saved_command_evidence": [
+        {
+          "pc_index": 0,
+          "state": "chapter1-victory-followup/t10-cold-continue/free/finish.state",
+          "vram_offset": 171904,
+          "xy": [
+            8,
+            152
+          ],
+          "size": [
+            304,
+            64
+          ],
+          "cmd_mode": "00A0",
+          "cmd_color": "C500",
+          "texture_sha256": "fcc11dab53903e4a2afbca9411cc91a0dc869dde7423ff0434c5a6ad72b39338",
+          "cram_byte_offset": 2560,
+          "cram_words": 256,
+          "cram_sha256": "00215fa9d581a4a328382ebb9b92dfe601d34138327be73b0d530a44f0b5d8bf",
+          "native_files": [
+            [
+              "/SAKURA1/VDP1.BIN",
+              32640
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TUIKA_W",
+      "pc_path": "SAKURA1/SYSTEM/TUIKA_W.SPR",
+      "pc_sha256": "09ae84738c3dafff43db3817ecdc1f59602a0c150161805448c5a56c7e474e90",
+      "pc_shapes": [
+        {
+          "size": [
+            384,
+            80
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            576,
+            48
+          ],
+          "count": 1
+        },
+        {
+          "size": [
+            576,
+            80
+          ],
+          "count": 1
+        }
+      ],
+      "status": "needs_layout",
+      "note": "PC bands; entry 0 and the native shorter band share the frame style but differ in aspect. Entries 1 and 2 remain unpaired.",
+      "saved_command_evidence": [
+        {
+          "pc_index": 0,
+          "state": "chapter1-victory-followup/corridor-bridge/continuous-native/finish.state",
+          "vram_offset": 466560,
+          "xy": [
+            32,
+            184
+          ],
+          "size": [
+            256,
+            24
+          ],
+          "cmd_mode": "0080",
+          "cmd_color": "02C0",
+          "texture_sha256": "fc6d55ccc94bd8b78891a88ec108e84a873694fbc00e729f967a55b32c3a3298",
+          "cram_byte_offset": 1408,
+          "cram_words": 16,
+          "cram_sha256": "26609af4706cdd340187e0cb7d6d9fbbad1f0e937f0555a1db0c0d636489781e",
+          "native_files": []
+        }
+      ]
+    }
+  ],
+  "wall": {
+    "saturn_file": "SAKURA1/WALL1.BIN",
+    "saturn_size": [
+      320,
+      224
+    ],
+    "saturn_sha256": "a86918224a0976b8a9fae13ebf62839c9ff83aec5895e3fc21218a37f4689a38",
+    "saturn_cells_sha256": "57e12c4af96295813c824ad67686d649aa08d8eaa6ef7943819f7babf203a4a5",
+    "palette_fnv": "48291F6F1C8A4707",
+    "pc_file": "SAKURA1/WALL/KABE0100.SPR",
+    "pc_size": [
+      640,
+      480
+    ],
+    "pc_index": 0,
+    "pc_sha256": "1570fd64b83780f413f8ef4e28ed23e8c30e4b0c4404488afc61af7f1d2dc8ea",
+    "status": "existing_backdrop_provenance",
+    "note": "Visually confirmed. Keep the existing generated backdrop route because the raw image scale factors differ between axes."
+  }
+}

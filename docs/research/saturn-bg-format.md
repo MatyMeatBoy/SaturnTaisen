@@ -306,3 +306,179 @@ reconstruct as 18 eyes and 36 mouths. NC35 starts at 30,352 and has a single
 group of three eyes and six mouths. No file with three or more PC runs passes
 this exact Saturn repetition rule. The audit leaves other possible Saturn
 periods, PC subimage assignment, and runtime integration open.
+
+
+### NC30 offline face-to-SPR map (T106a)
+
+The largest PC picture is subimage 0. Original SPR indices 6-23 are six triples
+of eyes. Indices 30-65 are six sextuples of mouths. The 96x47 dimension run
+contains all 18 eyes and the first 24 mouths. The 80x63 run contains the last
+12 mouths. Both comparisons retain every image's proportions. The native
+eye state and mouth shapes agree with their PC group by visual inspection
+across all 54 pairs. In particular, each eye triple moves from open towards
+closed, and each mouth sextuple starts closed, opens, and shows visible
+teeth in the third frame. The mouth crops include different amounts of
+surrounding skin in PC art.
+
+`config/hd-nc30-face-map.json` binds this review to whole-asset SHA-256 hashes,
+native byte offsets, frame dimensions and texture SHA-256, and original PC
+subimage indices and dimensions. The six prepared ISO language/disc variants
+contain identical NC30 bytes. The two source images can be replayed offline
+by reading each native slice in row-major order, applying the palette at
+0x410 with index zero transparent, and decoding the specified SPR subimage
+with the existing green chroma key. Each complete native face texture occurs
+once in the post-body payload.
+
+The saved VDP1 command chains provide three distinct native frame witnesses.
+All four states below contain the exact 176x144 body texture. Body, eye and
+mouth are at (-88,-104), (-24,-72) and (-8,-48) in command coordinates, with
+colour register 0x2000. These are native anchors for a replay comparison.
+
+| Saved state | Eye data in VDP1 | BIN offset / PC subimage | Mouth data in VDP1 | BIN offset / PC subimage |
+|---|---|---|---|---|
+| `maria-face-discovery` | 0x43640 | 34,576 / 12 | 0x43C40 | 36,112 / 42 |
+| `chapter1-continuous-47999` | 0x43640 | 34,576 / 12 | 0x43C40 | 36,112 / 42 |
+| `post-18000` | 0x43640 | 34,576 / 12 | 0x43C40 | 36,112 / 42 |
+| `maria-exit` | 0x43840 | 35,088 / 13 | 0x43C40 | 36,112 / 42 |
+
+For T106a2, resolve the original SPR index before compacting renderer parts
+and qualify the match against exact texture bytes and dimensions. An asset
+or frame outside the pinned table, or ambiguous placement in the HD body,
+keeps the native face sprite. Compare native and HD captures from the listed
+states, including progression through blink and mouth frames, and verify
+guest hashes with strict AOT. Saved-state command bytes establish native
+frame identity. The new HD rendering and placement remain unverified.
+
+
+### NC20 offline face-to-SPR map (T106b)
+
+NC20 has a 152x144 body ending at 23,440 and then 17,280 zero bytes. From
+40,720 to the end of the 93,712-byte file, eight consecutive groups each
+hold three eye frames followed by six 24x24 mouth frames. To recover the
+boundaries, the 24x24 mouth at 48,784 observed in the states provided a
+stable transparency footprint. Matching that footprint found the mouth
+runs, then the distances to the previous group end gave each eye height.
+Reading the native slices with the palette at 0x410 (index zero clear)
+produced coherent eyes and mouths in all groups.
+
+| Group | Eye start | Eye size | Mouth start | PC eye indices | PC mouth indices |
+|---:|---:|---|---:|---|---|
+| 1 | 40,720 | 48x16 | 43,024 | 8-10 | 39-44 |
+| 2 | 46,480 | 48x16 | 48,784 | 11-13 | 45-50 |
+| 3 | 52,240 | 48x16 | 54,544 | 14-16 | 51-56 |
+| 4 | 58,000 | 48x24 | 61,456 | 17-19 | 57-62 |
+| 5 | 64,912 | 48x32 | 69,520 | 20-22 | 63-68 |
+| 6 | 72,976 | 48x32 | 77,584 | 23-25 | 69-74 |
+| 7 | 81,040 | 48x24 | 84,496 | 26-28 | 75-80 |
+| 8 | 87,952 | 48x16 | 90,256 | 8-10 | 39-44 |
+
+Group 8 is byte-identical to group 1, frame by frame. The PC has seven
+matching visual groups across five size runs. The pinned PC asset contains
+body subimage 0 (296x320), 21 eyes and 42 mouths. The eye groups visibly
+range from the variants of calm and narrowed eyes to a wide-eyed reaction.
+The mouth in the sixth group opens much wider, and its visible teeth agree
+with the Saturn artwork in the corresponding frame. Compared all groups
+side by side, keeping the respective source proportions.
+
+`config/hd-nc20-face-map.json` records exact asset SHA-256 hashes, dimensions,
+and original SPR subimage indices for 63 unique face textures. Each of the
+nine repeated textures maps both offsets to the same original SPR index.
+Searched the whole face payload for every texture and the only repeated
+matches are those nine pairs. The 17,280 zero bytes have no PC candidate.
+Unknown identity, dimensions or placement retain the native face sprite.
+
+Two saved VDP1 command chains contain the exact body texture at 0x3D340
+(command coordinates -88,-104, colour 0x2000). Both show the same closed
+mouth at (-16,-56), 24x24, 0x47540 in VRAM, native offset 48,784 and
+PC index 45. At (-32,-72), the 48x16 eyes differ: `post-3000` has
+VRAM 0x46C40, offset 46,480 and PC index 11, while `morning-9000` has
+VRAM 0x46F40, offset 47,248 and PC index 12. T106b2 will compare the
+HD placement and expression progression using these states. The present
+witnesses establish native texture identity and command placement.
+
+### NC82 body fade-in witness (T106c)
+
+Replayed English disc 1 from office-return-3000.state with frames 3000 onward
+of office-return.movie rebased to zero. Both 1280×720 Enhanced profiles used
+the v0.2.4 reference (SHA-256
+1a94790eefc8492ca80499bbbd3e7517cb4db565908bcee86ae5b12f44c94b9e).
+Only one profile could see NC82.SPR. Its isolated PC directory shared that
+file with the owner's assets and provided no PC backgrounds.
+
+Both runs produced 3,000 identical guest hashes and zero interpreted blocks.
+At captures 2972–2984, sampled every three frames, Yoneda faded in over his
+office. Every full-window RGB pair in that interval was identical. The HD
+trace reported a blend over NC82 and the native fallback. At 2987–2996 the
+opaque body switched to HD. All four differences stayed within the same
+body bounding box (346,50)–(853,482), right and bottom exclusive. Earlier
+captures 2960–2969 also matched before the body appeared. This is a
+character alpha fade from transparent, not a white or black full-screen fade.
+No runtime or package was rebuilt.
+
+
+### Presented-frame vertical scroll witness (T105c)
+
+Used the known v0.2.4 runtime (SHA-256 `1a94790eefc8492ca80499bbbd3e7517cb4db565908bcee86ae5b12f44c94b9e`)
+on prepared Spanish disc 1. Load `guion-es/pruebas/load-file1-ref-es.state`
+(SHA-256 `21b68c7870978c6461a314498f8f7f5422f28fd965e7c91ca0c31df9ae446e8f`)
+at frame 0 with a separate copy of that directory's `b.bin`. Replay
+`5 0400 0` then `11 0000 0` and leave the controls neutral. Keep all
+paths absolute and use Original mode, strict native, headless and muted.
+A 2,202-frame capture and three shorter repeats had identical overlapping
+guest hashes and zero interpreted blocks. Local logs, states and images
+are in `local/work/codex-t105c`.
+
+After the menu load, BG2252 is the vertically scrolling theatre exterior.
+The 79,168 tile bytes are at VDP2 VRAM 0x4A000. All 1,332 relocated pattern
+names match at 0x44108 with 256-byte row stride. The active NBG2 plane starts
+at 0x44000, so the image begins at (16,8) in plane coordinates. NBG2 uses
+registers SCXN2/SCYN2 at 0x90/0x92, with unit source increment and no
+per-line scroll on this layer. The native 288x144 scene window remains
+screen rectangle [16,304) x [8,152). The visible source starts at
+(0, SCYN2) for these captures.
+
+The screenshot named frame N aligns with the save taken at N-1 in this
+harness. Saving at N during the pan puts the register one source row ahead.
+Use the scroll from the same presented frame in the runtime and do not
+apply a fixed one-row correction. RGB555 values expanded with the native
+five-bit shift yield these exact screen comparisons.
+
+| Shot | Save | SCYN2 | Exact pixels in native inset |
+|---:|---:|---:|---:|
+| 850 | 849 | 6 | 41,472 / 41,472 |
+| 900 | 899 | 31 | 41,472 / 41,472 |
+| 950 | 949 | 56 | 41,472 / 41,472 |
+| 1000 | 999 | 81 | 41,472 / 41,472 |
+| 1050 | 1049 | 106 | 41,472 / 41,472 |
+| 1100 | 1099 | 131 | 41,472 / 41,472 |
+| 1150 | 1149 | 144 | 41,472 / 41,472 |
+
+The VRAM identity and scroll persist after the pan. Shot 1200 is a blend.
+By shot 1250 the room is visible on top, with NBG0 priority 3 and NBG2
+priority 2. At shot 1150 those priorities were 2 and 3. This makes
+`load-confirm-ref-es.state` a useful occlusion control: its exact BG2252
+tile bytes survive, but their presence cannot qualify replacement.
+
+The same-number PC art at 576x592 nominally has exact 2x dimensions.
+Its roof and tower are drawn at different screen positions and the windows
+shift nonuniformly over the pan. The whole-image luminance signature scored
+0.616, and exact 2x source crops over the seven matching native frames
+scored 0.295-0.539. BG2252 is excluded as a replacement and retained as a
+scroll and occlusion witness. The matching and rendering gates must be
+evaluated separately.
+
+Scanned the 15 wide and 14 tall catalog entries over 152 candidate state
+files for complete VRAM tile-pool hits. BG2252 is the only complete hit.
+A second pass over 165 files with four 256-byte anchors also found partial
+BG2247 and BG2252 pools in unrelated views. BG2247 has only 62 of 1,332
+relocated names in the NBG2 map in representative hits, so those fragments
+do not establish a scrolling route.
+
+T105c2 needs per-identity source geometry and the visible NBG layer's
+scroll, plane origin and map bounds carried alongside the captured
+presentation. For this example, compute the source offset as live scroll
+plus inset origin minus plane image origin. The two origins coincide in
+the native frame. Verify wrap, non-unit increments, line effects, colour
+offsets, blends and occlusion before extending eligibility. Keep native
+in those cases until supported, and preserve the current inset and Zoom
+framing. General SDK support and replacement remain open.
