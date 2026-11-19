@@ -43,7 +43,7 @@ exact 512 palette bytes, matching table fingerprint 994AF50BC61B12E6.
 T108 has a 224×224 PC counterpart for this card.
 
 The menu before selection can retain the texture and palette with no active
-112×112 command. Patch 0088 requires the approved command and matching whole
+112×112 command. Patch 0090 requires the approved command and matching whole
 texture and palette fingerprints. It tracks actual VDP1 writes on each
 framebuffer and checks the card against VDP2 scanout. Zero-indexed texels,
 pixels covered by later commands, and pixels won by other layers stay native.
