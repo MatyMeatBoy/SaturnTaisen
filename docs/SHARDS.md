@@ -127,3 +127,8 @@ Send PRs as early as you have a verified slice, then keep sending: the coordinat
 - **Draft or ready?** Ready if the slice is verified as far as you can; a draft only for an unfinished experiment. The coordinator marks a draft ready after verifying it, so a draft is never wasted.
 - **Split instead of waiting:** if a shard has an offline half (data, generator, tests) and a runtime half, send the offline half now and the runtime half as its own PR.
 - **Rebase before sending** (`git merge origin/main`, then `python tools/check_patch_stack.py`; `python tools/rebase_patch.py <patch> --author-ref=origin/<branch>` re-anchors a patch whose context moved, but it can misplace a block: always compile after).
+
+
+## Priority order (owner, 2026-11-19)
+
+Scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, TP4a/b/c unpaired), then large bodies (TP5), portraits (TP6), videos (TP7); verification and cleanup last (TP8). Each shard is sized for one PR; send it as soon as the picture is connected and its A/B hash check is done.
