@@ -69,3 +69,7 @@ Notes from other files: `config/hd-scene-bg-map.json` summary is content 519, nu
 - The meaning of `unpaired` for the 84 menus/HUD entries (rejected versus absent counterpart) is not split in the data.
 - No tactical stage-to-chapter table exists in the inputs: no data for which `MAPnn` is chapter 5.
 - Row TH5 in `docs/PENDIENTES.md` is still `open` with no owner; this report does not change it.
+
+## BG2533 runtime witness
+
+The extended Episode 5 replay reached the BG2533 horizontal pan. The coverage generator records it as observed and HD. The scene uses the verified PC crop in Enhanced Zoom. See [BG2533 pan](bg2533-pan.md) for capture positions and fallback proof.
