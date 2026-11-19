@@ -1884,6 +1884,14 @@
             "pc": "SAKURA1/BG/BG1193.SPR",
             "status": "hd"
           },
+          "1:/SAKURA1/BG1207.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg1207-pan.md",
+            "pc": "SAKURA1/BG/BG1207.SPR",
+            "runtime_evidence": "docs/research/bg1207-pan.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1209.BIN": {
             "association": "observed",
             "cold_run_frame": 8750,
@@ -7181,12 +7189,6 @@
         "pc": "SAKURA1/BG/BG1206.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1207.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1207.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
-      },
       "1:/SAKURA1/BG1208.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1208.SPR",
@@ -11002,8 +11004,7 @@
       "2:/SAKURA1/BG1207.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1207.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "2:/SAKURA1/BG1208.BIN": {
         "association": "unknown",
