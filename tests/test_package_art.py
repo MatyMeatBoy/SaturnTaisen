@@ -157,6 +157,38 @@ class PackageArtTests(unittest.TestCase):
                 (folder/'provenance.json').write_text(json.dumps({'backgrounds':[{'file':name,'sha256':'0'*64}]}),encoding='utf-8')
                 with self.assertRaises(RuntimeError):generated_backgrounds(folder)
 
+    def test_tracked_episode_card_layers_pass_the_active_gate(self):
+        source = Path(__file__).resolve().parents[1] / 'assets/generated/screen-backgrounds'
+        images = generated_backgrounds(source, screen=True)
+        cards = {f'EPISODE{episode:02d}-{layer}.png'
+                 for episode in range(1, 11) for layer in ('surround-v2', 'es-lettering-v1')}
+        self.assertEqual({name for name in images if name.startswith('EPISODE')}, cards)
+
+    def test_manifest_checks_the_staged_recipes_and_preparation_tools(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            approved = {}
+            names = ('config/film-fad-map.json', 'config/hd-scroll-pictures.json',
+                     'preparar-juego.exe', 'herramientas/unshield.exe', 'herramientas/xdelta3.exe',
+                     'licenses/unshield-MIT.txt', 'licenses/xdelta3-Apache-2.0.txt')
+            for name in names:
+                staged = root / 'data' / name
+                staged.parent.mkdir(parents=True, exist_ok=True)
+                staged.write_bytes(name.encode())
+                approved[name] = hashlib.sha256(name.encode()).hexdigest()
+            files = release_file_manifest(root, {}, {}, approved)
+            self.assertEqual({row['path'] for row in files}, {'data/' + name for name in names})
+            for name in names:
+                with self.subTest(name=name):
+                    staged = root / 'data' / name
+                    staged.write_bytes(b'mismatched bytes')
+                    with self.assertRaisesRegex(RuntimeError, 'checksum mismatch'):
+                        release_file_manifest(root, {}, {}, approved)
+                    staged.unlink()
+                    with self.assertRaisesRegex(RuntimeError, 'Missing approved'):
+                        release_file_manifest(root, {}, {}, approved)
+                    staged.write_bytes(name.encode())
+
     def test_public_tree_rejects_original_movies_assets_and_misplaced_art(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -168,7 +200,7 @@ class PackageArtTests(unittest.TestCase):
             allowed = {relative: hashlib.sha256(data).hexdigest()}
             self.assertEqual([row['path'] for row in release_file_manifest(root, allowed, {})],
                              ['data/' + relative])
-            for unexpected in ('MOVIE000.MPG', 'data/BG1001.SPR', relative, 'data/hd-resources/receipt.json'):
+            for unexpected in ('MOVIE000.MPG', 'data/OPENING.CPK', 'data/BG1001.SPR', relative, 'data/hd-resources/receipt.json'):
                 file = root / unexpected
                 file.parent.mkdir(parents=True, exist_ok=True)
                 file.write_bytes(data)
