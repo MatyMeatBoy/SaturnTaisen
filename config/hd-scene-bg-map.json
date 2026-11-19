@@ -2,17 +2,13 @@
  "schema": 2,
  "scope": "Saturn BG*.BIN/BBG*.BIN to PC .SPR by shared file number, checked against every PC picture (normalised correlation of 32x16 grey signatures); data only. cells_sha256 identifies the native picture; tier `number` needs an eye check before drawing.",
  "summary": {
-  "content": 498,
-  "number": 233,
+  "content": 519,
+  "number": 216,
   "missing": 5
  },
  "duplicate_cell_hashes": 23,
  "undecoded": [
-  "SAKURA1/BG2290.BIN",
   "SAKURA1/BG2338.BIN",
-  "SAKURA1/BG2518.BIN",
-  "SAKURA1/BG2533.BIN",
-  "SAKURA1/BG4372.BIN",
   "SAKURA1/BGHANA.BIN",
   "SAKURA1/BGKOIKOI.BIN",
   "SAKURA1/BGMAIGO.BIN",
@@ -3836,7 +3832,7 @@
     512,
     144
    ],
-   "cells_sha256": "07ef2e429f067981b6131a2dbea77d52dcd4cd2a237ff5cfb46a97fa42406508",
+   "cells_sha256": "8f53920753b5a247056ef6d2a502dcc20a217a23b3768ea8834f96dce75a21a8",
    "palette_fnv": "6EE7138F39DF8CFE",
    "pc_file": "SAKURA1/BG/BG1207.SPR",
    "pc_image_index": 0,
@@ -3845,11 +3841,11 @@
     1024,
     320
    ],
-   "correlation": 0.468,
-   "rank": 52,
-   "best_other": "SAKURA1/BG/BG2516.SPR",
-   "best_other_correlation": 0.623,
-   "tier": "number"
+   "correlation": 0.988,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG4372.SPR",
+   "best_other_correlation": 0.985,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG1208.BIN",
@@ -4716,7 +4712,7 @@
     456,
     144
    ],
-   "cells_sha256": "a96899b31ff6700fac5a275b95c3b1b389f99c221c9c3fd59209e7421c1288c7",
+   "cells_sha256": "a22702787ac95df27d03a427750871e79f82a8ecea937106d718772f966b0352",
    "palette_fnv": "448239D6432A9B55",
    "pc_file": "SAKURA1/BG/BG1257.SPR",
    "pc_image_index": 0,
@@ -4725,11 +4721,11 @@
     1181,
     320
    ],
-   "correlation": 0.146,
-   "rank": 244,
-   "best_other": "SAKURA1/BG/BG2516.SPR",
-   "best_other_correlation": 0.637,
-   "tier": "number"
+   "correlation": 0.883,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2519.SPR",
+   "best_other_correlation": 0.663,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG1259.BIN",
@@ -5002,7 +4998,7 @@
     512,
     144
    ],
-   "cells_sha256": "08439445110c72e6c7a3ccc6feed872aa67428789b341ef1d5089974c5c4a43b",
+   "cells_sha256": "01f42b3237b118e1e09bbe65e67e901f0884590b2acc89e09fcd94d59e0366a4",
    "palette_fnv": "94A0F3C8D42BFDF3",
    "pc_file": "SAKURA1/BG/BG1280.SPR",
    "pc_image_index": 0,
@@ -5011,10 +5007,10 @@
     1241,
     320
    ],
-   "correlation": -0.273,
-   "rank": 699,
-   "best_other": "SAKURA1/BG/BG1356.SPR",
-   "best_other_correlation": 0.47,
+   "correlation": 0.712,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2021.SPR",
+   "best_other_correlation": 0.61,
    "tier": "number"
   },
   {
@@ -5046,7 +5042,7 @@
     512,
     144
    ],
-   "cells_sha256": "4f283b8bb3c970cb8483be7dcce39c55683474e1de227f940468211eeb56b316",
+   "cells_sha256": "ad3eac7f2862cd6c80f662f59c6e424dbe1ad09bb806c88f51de083f5368ba21",
    "palette_fnv": "1D0FF907BAB974CB",
    "pc_file": "SAKURA1/BG/BG1282.SPR",
    "pc_image_index": 0,
@@ -5055,11 +5051,11 @@
     1024,
     320
    ],
-   "correlation": -0.022,
-   "rank": 491,
-   "best_other": "SAKURA1/BG/BG2533.SPR",
-   "best_other_correlation": 0.34,
-   "tier": "number"
+   "correlation": 0.962,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2078.SPR",
+   "best_other_correlation": 0.382,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG1283.BIN",
@@ -5068,7 +5064,7 @@
     472,
     144
    ],
-   "cells_sha256": "fce408ea8773d08762452b6827fe47ad4f0a50c67e7b3bcb316e793141efd8ae",
+   "cells_sha256": "73a1f30cb397fddc80b89263d14ccdc8d95f3d0bc97fdd28830736df8f242457",
    "palette_fnv": "26F18F4F1E59358D",
    "pc_file": "SAKURA1/BG/BG1283.SPR",
    "pc_image_index": 0,
@@ -5077,11 +5073,11 @@
     944,
     320
    ],
-   "correlation": -0.115,
-   "rank": 515,
-   "best_other": "SAKURA1/BG/BG2120.SPR",
-   "best_other_correlation": 0.575,
-   "tier": "number"
+   "correlation": 0.95,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1257.SPR",
+   "best_other_correlation": 0.597,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG1284.BIN",
@@ -5112,7 +5108,7 @@
     512,
     144
    ],
-   "cells_sha256": "bade6cb0d8728775435ce9146619b384d5152f8a58d288037e6b97fd12486e0e",
+   "cells_sha256": "bf1e1d43afd78e7b222eb3caeea2ae9322303d349d3670e1e7ad174f4c272eec",
    "palette_fnv": "8B6362BE73FB2551",
    "pc_file": "SAKURA1/BG/BG1285.SPR",
    "pc_image_index": 0,
@@ -5121,11 +5117,11 @@
     1024,
     320
    ],
-   "correlation": -0.099,
-   "rank": 546,
-   "best_other": "SAKURA1/BG/BG2132.SPR",
-   "best_other_correlation": 0.466,
-   "tier": "number"
+   "correlation": 0.962,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2163.SPR",
+   "best_other_correlation": 0.38,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG1289.BIN",
@@ -5486,7 +5482,7 @@
     288,
     144
    ],
-   "cells_sha256": "b770f78ed9c3eca01fcfa91b06d582531069687f1310283b0e67e47e4b54ef32",
+   "cells_sha256": "bc94b7eb0d2e627bed6ca3e7d804336f933c0c44fd3c057fc128faa7692c7a65",
    "palette_fnv": "1848CC9D30088D80",
    "pc_file": "SAKURA1/BG/BG1306.SPR",
    "pc_image_index": 0,
@@ -5495,11 +5491,11 @@
     576,
     320
    ],
-   "correlation": 0.196,
-   "rank": 170,
-   "best_other": "SAKURA1/BG/BG2132.SPR",
-   "best_other_correlation": 0.652,
-   "tier": "number"
+   "correlation": 0.981,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1283.SPR",
+   "best_other_correlation": 0.397,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG1307.BIN",
@@ -5574,7 +5570,7 @@
     512,
     144
    ],
-   "cells_sha256": "9c9294be3cced5ac4f2ac15275d15a4b322b7e7b94da0825cdc2030ac4d48bef",
+   "cells_sha256": "bf07a93796cb4a4a9670d0b07a64ef130063eb6550031e1218b82823fae7417c",
    "palette_fnv": "AED8F5CB44782A19",
    "pc_file": "SAKURA1/BG/BG1310.SPR",
    "pc_image_index": 0,
@@ -5583,11 +5579,11 @@
     1024,
     320
    ],
-   "correlation": 0.016,
-   "rank": 315,
-   "best_other": "SAKURA1/BG/BG4370.SPR",
-   "best_other_correlation": 0.334,
-   "tier": "number"
+   "correlation": 0.884,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1323.SPR",
+   "best_other_correlation": 0.482,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG1311.BIN",
@@ -8280,7 +8276,7 @@
     440,
     144
    ],
-   "cells_sha256": "ad4e7b70d10898073f1307e6a9bbea3569dfe8f02e30fd8f9dce0655d4c503bb",
+   "cells_sha256": "b3d289f591b768a50bdfa0540cbceecf343730351d150251d460e38723ea58db",
    "palette_fnv": "C8472F16A1D8EDBF",
    "pc_file": "SAKURA1/BG/BG2077.SPR",
    "pc_image_index": 0,
@@ -8289,11 +8285,11 @@
     1024,
     320
    ],
-   "correlation": 0.186,
-   "rank": 80,
-   "best_other": "SAKURA1/BG/BG1144.SPR",
-   "best_other_correlation": 0.507,
-   "tier": "number"
+   "correlation": 0.987,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1220.SPR",
+   "best_other_correlation": 0.648,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2078.BIN",
@@ -8588,7 +8584,7 @@
     320,
     144
    ],
-   "cells_sha256": "063e96e6bdaef9e0073790456908590dac81fadfaf300c21eaab10f7f3bb461a",
+   "cells_sha256": "f0400af0d63a9ea5eb4c0d8770f422c9bac17d10e3bcb773c8072cb288a74f23",
    "palette_fnv": "65D40E5ACD068572",
    "pc_file": "SAKURA1/BG/BG2093.SPR",
    "pc_image_index": 0,
@@ -8597,11 +8593,11 @@
     592,
     320
    ],
-   "correlation": 0.158,
-   "rank": 219,
-   "best_other": "SAKURA1/BG/BG2011.SPR",
-   "best_other_correlation": 0.649,
-   "tier": "number"
+   "correlation": 0.927,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2031.SPR",
+   "best_other_correlation": 0.642,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2094.BIN",
@@ -9226,7 +9222,7 @@
     512,
     144
    ],
-   "cells_sha256": "5c9817c7828613b8105720ce62ea25717e7bba9f6dbec06b01490bcac3a40f87",
+   "cells_sha256": "3dec16a687eb82d22b24bf47359ab86a1d3af17fff902a102123bd9cf9bae2ef",
    "palette_fnv": "B23A4255D836A48A",
    "pc_file": "SAKURA1/BG/BG2130.SPR",
    "pc_image_index": 0,
@@ -9235,11 +9231,11 @@
     1024,
     320
    ],
-   "correlation": 0.113,
-   "rank": 236,
-   "best_other": "SAKURA1/BG/BG3084.SPR",
-   "best_other_correlation": 0.476,
-   "tier": "number"
+   "correlation": 0.997,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1119.SPR",
+   "best_other_correlation": 0.561,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2131.BIN",
@@ -10040,7 +10036,7 @@
     288,
     280
    ],
-   "cells_sha256": "c9ec9bd8ada085c8188812996c72fca4643d6a831bccf6adedfdb038b05eb83f",
+   "cells_sha256": "75dce090f4bf2ec55b906320a69be0c37cea711c15430e2e779b94a7ab55b02a",
    "palette_fnv": "C3DDD60B21EBD1A9",
    "pc_file": "SAKURA1/BG/BG2172.SPR",
    "pc_image_index": 0,
@@ -10049,11 +10045,11 @@
     576,
     592
    ],
-   "correlation": -0.017,
-   "rank": 481,
-   "best_other": "SAKURA1/BG/BG2092.SPR",
-   "best_other_correlation": 0.427,
-   "tier": "number"
+   "correlation": 0.942,
+   "rank": 1,
+   "best_other": "SAKURA2/BG/BBG243.SPR",
+   "best_other_correlation": 0.581,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2173.BIN",
@@ -10128,7 +10124,7 @@
     288,
     296
    ],
-   "cells_sha256": "966dc056fc99d4e126883b8f5c97344956ac36f49f92c8b70ca1789e26f392a3",
+   "cells_sha256": "5a8ceaa5aadee47eb9ed1fbca176f2965354c90fb5f4fae20b755e25df06769d",
    "palette_fnv": "2D7CB74664182158",
    "pc_file": "SAKURA1/BG/BG2176.SPR",
    "pc_image_index": 0,
@@ -10137,11 +10133,11 @@
     576,
     592
    ],
-   "correlation": -0.072,
-   "rank": 452,
-   "best_other": "SAKURA1/BG/BG1289.SPR",
-   "best_other_correlation": 0.447,
-   "tier": "number"
+   "correlation": 0.958,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1220.SPR",
+   "best_other_correlation": 0.455,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2177.BIN",
@@ -10370,7 +10366,7 @@
     288,
     296
    ],
-   "cells_sha256": "e3d74018ec5be09f4dfaf9a5a5482dc3569756e72ddeeae707cb206a3f56893f",
+   "cells_sha256": "339ed7b47ce0d68e643124adab751d93a811e9fdc9f9bd218dff41f0d4ab499b",
    "palette_fnv": "45D633A0744CE417",
    "pc_file": "SAKURA1/BG/BG2207.SPR",
    "pc_image_index": 0,
@@ -10379,10 +10375,10 @@
     576,
     592
    ],
-   "correlation": -0.081,
-   "rank": 494,
-   "best_other": "SAKURA1/BG/BG2137.SPR",
-   "best_other_correlation": 0.524,
+   "correlation": 0.947,
+   "rank": 3,
+   "best_other": "SAKURA1/BG/BG2265.SPR",
+   "best_other_correlation": 0.947,
    "tier": "number"
   },
   {
@@ -10986,7 +10982,7 @@
     320,
     144
    ],
-   "cells_sha256": "a9ad2cdfeecc577df956e6c7bcd2b8b7fd737afa2f2b82ea67fa5d2898327562",
+   "cells_sha256": "bab106c5d6545799e9f502b7009212737f03f33fa1e15fab7a18503cb839043e",
    "palette_fnv": "5DEDEF54BF2F059D",
    "pc_file": "SAKURA1/BG/BG2238.SPR",
    "pc_image_index": 0,
@@ -10995,10 +10991,10 @@
     592,
     320
    ],
-   "correlation": -0.148,
-   "rank": 623,
-   "best_other": "SAKURA1/BG/BG3253.SPR",
-   "best_other_correlation": 0.346,
+   "correlation": 0.797,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2095.SPR",
+   "best_other_correlation": 0.435,
    "tier": "number"
   },
   {
@@ -11184,7 +11180,7 @@
     288,
     296
    ],
-   "cells_sha256": "2bca867b0383eb7f31498bcd9c61c62783cb61867edf80c5311b9c5866894e7b",
+   "cells_sha256": "45c2cd9dcef7231c4b97d4e8166fbabf40cd5ae8b010bfdad0025ae7754ad41e",
    "palette_fnv": "524ED18124B313CB",
    "pc_file": "SAKURA1/BG/BG2247.SPR",
    "pc_image_index": 0,
@@ -11193,10 +11189,10 @@
     576,
     592
    ],
-   "correlation": 0.194,
-   "rank": 144,
-   "best_other": "SAKURA1/BG/BG2011.SPR",
-   "best_other_correlation": 0.493,
+   "correlation": 0.565,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG3076.SPR",
+   "best_other_correlation": 0.392,
    "tier": "number"
   },
   {
@@ -11206,7 +11202,7 @@
     288,
     296
    ],
-   "cells_sha256": "be1edfb88385f7004fd3ed1fb3c1c82691607ebb26acb5c64830ffb7356a34de",
+   "cells_sha256": "a2c75e7297aee573c91547df859aa14839004e6be1cb84f1ba3182f15e5d9b57",
    "palette_fnv": "F0AFCDD75EBA9DA2",
    "pc_file": "SAKURA1/BG/BG2248.SPR",
    "pc_image_index": 0,
@@ -11215,11 +11211,11 @@
     576,
     592
    ],
-   "correlation": 0.19,
-   "rank": 155,
-   "best_other": "SAKURA1/BG/BG2143.SPR",
-   "best_other_correlation": 0.459,
-   "tier": "number"
+   "correlation": 1.0,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG3026.SPR",
+   "best_other_correlation": 0.484,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2249.BIN",
@@ -11294,7 +11290,7 @@
     288,
     296
    ],
-   "cells_sha256": "8903e1a01ff6f131ca48e29a87aa27757ec53b78dcddf1aae54b593ca4522454",
+   "cells_sha256": "cb50ea1588479fbfd33af3dc144c48316d672c1d4b2bf0709fa0fe246267e16b",
    "palette_fnv": "524ED18124B313CB",
    "pc_file": "SAKURA1/BG/BG2252.SPR",
    "pc_image_index": 0,
@@ -11303,10 +11299,10 @@
     576,
     592
    ],
-   "correlation": 0.166,
-   "rank": 57,
-   "best_other": "SAKURA1/BG/BG3119.SPR",
-   "best_other_correlation": 0.372,
+   "correlation": 0.616,
+   "rank": 3,
+   "best_other": "SAKURA1/BG/BG2058.SPR",
+   "best_other_correlation": 0.688,
    "tier": "number"
   },
   {
@@ -11492,7 +11488,7 @@
     288,
     296
    ],
-   "cells_sha256": "1181d143f7dacb946e383c65e8d4d5973ae55e882dce7391cfe89a9fadbb904b",
+   "cells_sha256": "b644e717056c954eccc35c1a7b78d67929bd40350bc17e57b101d7ce5d2f536a",
    "palette_fnv": "DB8E755239A7A38D",
    "pc_file": "SAKURA1/BG/BG2265.SPR",
    "pc_image_index": 0,
@@ -11501,11 +11497,11 @@
     576,
     592
    ],
-   "correlation": -0.083,
-   "rank": 496,
-   "best_other": "SAKURA1/BG/BG2137.SPR",
-   "best_other_correlation": 0.526,
-   "tier": "number"
+   "correlation": 0.947,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2268.SPR",
+   "best_other_correlation": 0.947,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2266.BIN",
@@ -11514,7 +11510,7 @@
     288,
     296
    ],
-   "cells_sha256": "3265381ca5db6356aefdec25aa9e47398143275c6d241dfeb25106bae4b75eac",
+   "cells_sha256": "fe4331778238670dddc38b42c5ee1f52e5f8a80cff51c2c08039d939ff2413c7",
    "palette_fnv": "DC3B5A452E7BE06E",
    "pc_file": "SAKURA1/BG/BG2266.SPR",
    "pc_image_index": 0,
@@ -11523,10 +11519,10 @@
     576,
     592
    ],
-   "correlation": -0.097,
-   "rank": 563,
-   "best_other": "SAKURA1/BG/BG2137.SPR",
-   "best_other_correlation": 0.51,
+   "correlation": 0.947,
+   "rank": 2,
+   "best_other": "SAKURA1/BG/BG2269.SPR",
+   "best_other_correlation": 0.948,
    "tier": "number"
   },
   {
@@ -11536,7 +11532,7 @@
     288,
     296
    ],
-   "cells_sha256": "cbe1db4e14949eab10a9ef1593fd728d789579427712810c58eb01e9e9c81881",
+   "cells_sha256": "97be06dc776ee6bbec89da03874d75124ae289c2c6e102bc2359e6c314f41986",
    "palette_fnv": "06A6087696AA1A72",
    "pc_file": "SAKURA1/BG/BG2267.SPR",
    "pc_image_index": 0,
@@ -11545,10 +11541,10 @@
     576,
     592
    ],
-   "correlation": -0.093,
-   "rank": 517,
-   "best_other": "SAKURA1/BG/BG2137.SPR",
-   "best_other_correlation": 0.533,
+   "correlation": 0.947,
+   "rank": 2,
+   "best_other": "SAKURA1/BG/BG2269.SPR",
+   "best_other_correlation": 0.948,
    "tier": "number"
   },
   {
@@ -11558,7 +11554,7 @@
     288,
     296
    ],
-   "cells_sha256": "7b29495dd2f493949a2d2c6a348e0938f7bb4142444067e65f4839eabcd875a8",
+   "cells_sha256": "3a6f408bc2c578504485dc5762f3919a9ae81d767038b6cb3921235d25e36686",
    "palette_fnv": "6A7265C4FB3D58C9",
    "pc_file": "SAKURA1/BG/BG2268.SPR",
    "pc_image_index": 0,
@@ -11567,11 +11563,11 @@
     576,
     592
    ],
-   "correlation": -0.078,
-   "rank": 485,
-   "best_other": "SAKURA1/BG/BG2137.SPR",
-   "best_other_correlation": 0.521,
-   "tier": "number"
+   "correlation": 0.947,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2265.SPR",
+   "best_other_correlation": 0.947,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2269.BIN",
@@ -11580,7 +11576,7 @@
     288,
     296
    ],
-   "cells_sha256": "edcab10639b63f42d5db42acd8723ac9619e153eb3beb808d06bf2e8e521c9f7",
+   "cells_sha256": "ad9fd7dbc0cd8f903566f4faabbf2ddb1fcf03299c5ec73d56c88ac5842fe6dc",
    "palette_fnv": "09CE9EC2F1BB4A9D",
    "pc_file": "SAKURA1/BG/BG2269.SPR",
    "pc_image_index": 0,
@@ -11589,11 +11585,11 @@
     576,
     592
    ],
-   "correlation": -0.089,
-   "rank": 508,
-   "best_other": "SAKURA1/BG/BG2137.SPR",
-   "best_other_correlation": 0.531,
-   "tier": "number"
+   "correlation": 0.948,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2265.SPR",
+   "best_other_correlation": 0.947,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2270.BIN",
@@ -12014,6 +12010,28 @@
    "tier": "content"
   },
   {
+   "saturn_file": "SAKURA1/BG2290.BIN",
+   "decoded": true,
+   "size": [
+    432,
+    144
+   ],
+   "cells_sha256": "d78d82c6c3a7eeec5e49826a1ee70787b8945af724feadc86cb7fb97ed319d74",
+   "palette_fnv": "9215200C4EBC0C10",
+   "pc_file": "SAKURA1/BG/BG2290.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "4634d56c1eb92b164a057ce25826513e1407e4a066fbe69d7b7fa70d5d57a6e4",
+   "pc_size": [
+    864,
+    320
+   ],
+   "correlation": 0.833,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1039.SPR",
+   "best_other_correlation": 0.737,
+   "tier": "content"
+  },
+  {
    "saturn_file": "SAKURA1/BG2291.BIN",
    "decoded": true,
    "size": [
@@ -12108,7 +12126,7 @@
     288,
     208
    ],
-   "cells_sha256": "721d7e235221be1d899e9e32f6121c6d2ae4e2a27fc5cd830f00c370c6eaae8b",
+   "cells_sha256": "958302130b6cf085599013a829f8c1c4a6d8b18586eeaa103533246e2a46f858",
    "palette_fnv": "5B088DCCBE6E471B",
    "pc_file": "SAKURA1/BG/BG2295.SPR",
    "pc_image_index": 0,
@@ -12117,11 +12135,11 @@
     576,
     416
    ],
-   "correlation": 0.593,
+   "correlation": 1.0,
    "rank": 1,
-   "best_other": "SAKURA1/BG/BG2275.SPR",
-   "best_other_correlation": 0.548,
-   "tier": "number"
+   "best_other": "SAKURA1/BG/BG2288.SPR",
+   "best_other_correlation": 0.539,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2296.BIN",
@@ -12284,7 +12302,7 @@
     512,
     144
    ],
-   "cells_sha256": "da7beda6b097a05556c11f7802ff2f0643fd6bd12dfdcf436f800417b724394f",
+   "cells_sha256": "0ab87b0185978badd0c13777b594d81764955edf01b9632b86c39d04207b9968",
    "palette_fnv": "9D943456BFD21B9A",
    "pc_file": "SAKURA1/BG/BG2515.SPR",
    "pc_image_index": 0,
@@ -12293,11 +12311,11 @@
     1024,
     320
    ],
-   "correlation": 0.508,
-   "rank": 15,
-   "best_other": "SAKURA1/BG/BG2069.SPR",
-   "best_other_correlation": 0.641,
-   "tier": "number"
+   "correlation": 0.998,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2057.SPR",
+   "best_other_correlation": 0.58,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG2516.BIN",
@@ -12342,6 +12360,28 @@
    "best_other": "SAKURA1/BG/BG1335.SPR",
    "best_other_correlation": 0.36,
    "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/BG2518.BIN",
+   "decoded": true,
+   "size": [
+    288,
+    296
+   ],
+   "cells_sha256": "3826581a557203155948543af40c842977711e564de56290bd5a47666075d311",
+   "palette_fnv": "87B5B9962558B0C2",
+   "pc_file": "SAKURA1/BG/BG2518.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "086c00defc580238b489fa13b993e5a3e62c879cadb74a6abb406929447884f3",
+   "pc_size": [
+    576,
+    592
+   ],
+   "correlation": 0.673,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2058.SPR",
+   "best_other_correlation": 0.475,
+   "tier": "number"
   },
   {
    "saturn_file": "SAKURA1/BG2519.BIN",
@@ -12649,6 +12689,28 @@
    "rank": 1,
    "best_other": "SAKURA1/BG/BG2228.SPR",
    "best_other_correlation": 0.787,
+   "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/BG2533.BIN",
+   "decoded": true,
+   "size": [
+    512,
+    144
+   ],
+   "cells_sha256": "771cd4c3c287583ce440886b95bd9d6323dc61a78094f932950840c48b244f83",
+   "palette_fnv": "09884FF240CB5BF3",
+   "pc_file": "SAKURA1/BG/BG2533.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "3c43fdd7c693f214724526650ad0d4a6b6fd7c1fe8ebfb1546e619900c3a6b61",
+   "pc_size": [
+    1024,
+    320
+   ],
+   "correlation": 0.999,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG2050.SPR",
+   "best_other_correlation": 0.572,
    "tier": "content"
   },
   {
@@ -15331,7 +15393,7 @@
     288,
     296
    ],
-   "cells_sha256": "4f3a7ad7370af0f46166553f5f737a4b63d2b65d867057ec1b691f1f49092934",
+   "cells_sha256": "9708b175c4a38017a1ec975c336534bf78ca62db6d13416ed9e1c049272d2b6a",
    "palette_fnv": "D44DD8EED0AAEFF6",
    "pc_file": "SAKURA1/BG/BG4302.SPR",
    "pc_image_index": 0,
@@ -15340,11 +15402,11 @@
     576,
     592
    ],
-   "correlation": 0.361,
-   "rank": 2,
-   "best_other": "SAKURA1/BG/BG2055.SPR",
-   "best_other_correlation": 0.376,
-   "tier": "number"
+   "correlation": 1.0,
+   "rank": 1,
+   "best_other": "SAKURA1/BG/BG1316.SPR",
+   "best_other_correlation": 0.485,
+   "tier": "content"
   },
   {
    "saturn_file": "SAKURA1/BG4351.BIN",
@@ -15433,6 +15495,28 @@
    "best_other": "SAKURA1/BG/BG4204.SPR",
    "best_other_correlation": 0.618,
    "tier": "content"
+  },
+  {
+   "saturn_file": "SAKURA1/BG4372.BIN",
+   "decoded": true,
+   "size": [
+    512,
+    144
+   ],
+   "cells_sha256": "db3bd5d6c174ba0f6e9a0ba9e3c834fda3c98db4b1f86b7240f116e484b68c9e",
+   "palette_fnv": "EC27F86E7B6DEFC5",
+   "pc_file": "SAKURA1/BG/BG4372.SPR",
+   "pc_image_index": 0,
+   "pc_sha256": "3ffa844da279352b59875a94a44627084df8daf2479609506b603d317a8b8eee",
+   "pc_size": [
+    1024,
+    320
+   ],
+   "correlation": 0.12,
+   "rank": 121,
+   "best_other": "SAKURA1/BG/BG4284.SPR",
+   "best_other_correlation": 0.55,
+   "tier": "number"
   },
   {
    "saturn_file": "SAKURA1/BG4373.BIN",

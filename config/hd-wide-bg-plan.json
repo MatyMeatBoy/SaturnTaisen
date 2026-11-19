@@ -2,9 +2,9 @@
  "schema": 1,
  "scope": "non-288x144 decoded Saturn backgrounds (T105)",
  "counts": {
-  "wide_scroll/needs_review": 12,
+  "wide_scroll/needs_review": 15,
   "tall_scroll/needs_review": 1,
-  "tall_scroll/scale_match": 12,
+  "tall_scroll/scale_match": 13,
   "full_screen/needs_review": 7
  },
  "entries": [
@@ -15,13 +15,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG1207.SPR",
    "pc_size": [
     1024,
     320
    ],
-   "cells_sha256": "07ef2e429f067981b6131a2dbea77d52dcd4cd2a237ff5cfb46a97fa42406508",
+   "cells_sha256": "8f53920753b5a247056ef6d2a502dcc20a217a23b3768ea8834f96dce75a21a8",
    "scale": [
     2.0,
     2.222
@@ -35,13 +35,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG1257.SPR",
    "pc_size": [
     1181,
     320
    ],
-   "cells_sha256": "a96899b31ff6700fac5a275b95c3b1b389f99c221c9c3fd59209e7421c1288c7",
+   "cells_sha256": "a22702787ac95df27d03a427750871e79f82a8ecea937106d718772f966b0352",
    "scale": [
     2.59,
     2.222
@@ -61,7 +61,7 @@
     1241,
     320
    ],
-   "cells_sha256": "08439445110c72e6c7a3ccc6feed872aa67428789b341ef1d5089974c5c4a43b",
+   "cells_sha256": "01f42b3237b118e1e09bbe65e67e901f0884590b2acc89e09fcd94d59e0366a4",
    "scale": [
     2.424,
     2.222
@@ -75,13 +75,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG1282.SPR",
    "pc_size": [
     1024,
     320
    ],
-   "cells_sha256": "4f283b8bb3c970cb8483be7dcce39c55683474e1de227f940468211eeb56b316",
+   "cells_sha256": "ad3eac7f2862cd6c80f662f59c6e424dbe1ad09bb806c88f51de083f5368ba21",
    "scale": [
     2.0,
     2.222
@@ -95,13 +95,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG1283.SPR",
    "pc_size": [
     944,
     320
    ],
-   "cells_sha256": "fce408ea8773d08762452b6827fe47ad4f0a50c67e7b3bcb316e793141efd8ae",
+   "cells_sha256": "73a1f30cb397fddc80b89263d14ccdc8d95f3d0bc97fdd28830736df8f242457",
    "scale": [
     2.0,
     2.222
@@ -115,13 +115,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG1285.SPR",
    "pc_size": [
     1024,
     320
    ],
-   "cells_sha256": "bade6cb0d8728775435ce9146619b384d5152f8a58d288037e6b97fd12486e0e",
+   "cells_sha256": "bf1e1d43afd78e7b222eb3caeea2ae9322303d349d3670e1e7ad174f4c272eec",
    "scale": [
     2.0,
     2.222
@@ -135,13 +135,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG1310.SPR",
    "pc_size": [
     1024,
     320
    ],
-   "cells_sha256": "9c9294be3cced5ac4f2ac15275d15a4b322b7e7b94da0825cdc2030ac4d48bef",
+   "cells_sha256": "bf07a93796cb4a4a9670d0b07a64ef130063eb6550031e1218b82823fae7417c",
    "scale": [
     2.0,
     2.222
@@ -155,13 +155,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2077.SPR",
    "pc_size": [
     1024,
     320
    ],
-   "cells_sha256": "ad4e7b70d10898073f1307e6a9bbea3569dfe8f02e30fd8f9dce0655d4c503bb",
+   "cells_sha256": "b3d289f591b768a50bdfa0540cbceecf343730351d150251d460e38723ea58db",
    "scale": [
     2.327,
     2.222
@@ -175,13 +175,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2093.SPR",
    "pc_size": [
     592,
     320
    ],
-   "cells_sha256": "063e96e6bdaef9e0073790456908590dac81fadfaf300c21eaab10f7f3bb461a",
+   "cells_sha256": "f0400af0d63a9ea5eb4c0d8770f422c9bac17d10e3bcb773c8072cb288a74f23",
    "scale": [
     1.85,
     2.222
@@ -195,13 +195,13 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2130.SPR",
    "pc_size": [
     1024,
     320
    ],
-   "cells_sha256": "5c9817c7828613b8105720ce62ea25717e7bba9f6dbec06b01490bcac3a40f87",
+   "cells_sha256": "3dec16a687eb82d22b24bf47359ab86a1d3af17fff902a102123bd9cf9bae2ef",
    "scale": [
     2.0,
     2.222
@@ -215,13 +215,13 @@
     280
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2172.SPR",
    "pc_size": [
     576,
     592
    ],
-   "cells_sha256": "c9ec9bd8ada085c8188812996c72fca4643d6a831bccf6adedfdb038b05eb83f",
+   "cells_sha256": "75dce090f4bf2ec55b906320a69be0c37cea711c15430e2e779b94a7ab55b02a",
    "scale": [
     2.0,
     2.114
@@ -235,13 +235,13 @@
     296
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2176.SPR",
    "pc_size": [
     576,
     592
    ],
-   "cells_sha256": "966dc056fc99d4e126883b8f5c97344956ac36f49f92c8b70ca1789e26f392a3",
+   "cells_sha256": "5a8ceaa5aadee47eb9ed1fbca176f2965354c90fb5f4fae20b755e25df06769d",
    "scale": [
     2.0,
     2.0
@@ -261,7 +261,7 @@
     576,
     592
    ],
-   "cells_sha256": "e3d74018ec5be09f4dfaf9a5a5482dc3569756e72ddeeae707cb206a3f56893f",
+   "cells_sha256": "339ed7b47ce0d68e643124adab751d93a811e9fdc9f9bd218dff41f0d4ab499b",
    "scale": [
     2.0,
     2.0
@@ -281,7 +281,7 @@
     592,
     320
    ],
-   "cells_sha256": "a9ad2cdfeecc577df956e6c7bcd2b8b7fd737afa2f2b82ea67fa5d2898327562",
+   "cells_sha256": "bab106c5d6545799e9f502b7009212737f03f33fa1e15fab7a18503cb839043e",
    "scale": [
     1.85,
     2.222
@@ -301,7 +301,7 @@
     576,
     592
    ],
-   "cells_sha256": "2bca867b0383eb7f31498bcd9c61c62783cb61867edf80c5311b9c5866894e7b",
+   "cells_sha256": "45c2cd9dcef7231c4b97d4e8166fbabf40cd5ae8b010bfdad0025ae7754ad41e",
    "scale": [
     2.0,
     2.0
@@ -315,13 +315,13 @@
     296
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2248.SPR",
    "pc_size": [
     576,
     592
    ],
-   "cells_sha256": "be1edfb88385f7004fd3ed1fb3c1c82691607ebb26acb5c64830ffb7356a34de",
+   "cells_sha256": "a2c75e7297aee573c91547df859aa14839004e6be1cb84f1ba3182f15e5d9b57",
    "scale": [
     2.0,
     2.0
@@ -341,7 +341,7 @@
     576,
     592
    ],
-   "cells_sha256": "8903e1a01ff6f131ca48e29a87aa27757ec53b78dcddf1aae54b593ca4522454",
+   "cells_sha256": "cb50ea1588479fbfd33af3dc144c48316d672c1d4b2bf0709fa0fe246267e16b",
    "scale": [
     2.0,
     2.0
@@ -355,13 +355,13 @@
     296
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2265.SPR",
    "pc_size": [
     576,
     592
    ],
-   "cells_sha256": "1181d143f7dacb946e383c65e8d4d5973ae55e882dce7391cfe89a9fadbb904b",
+   "cells_sha256": "b644e717056c954eccc35c1a7b78d67929bd40350bc17e57b101d7ce5d2f536a",
    "scale": [
     2.0,
     2.0
@@ -381,7 +381,7 @@
     576,
     592
    ],
-   "cells_sha256": "3265381ca5db6356aefdec25aa9e47398143275c6d241dfeb25106bae4b75eac",
+   "cells_sha256": "fe4331778238670dddc38b42c5ee1f52e5f8a80cff51c2c08039d939ff2413c7",
    "scale": [
     2.0,
     2.0
@@ -401,7 +401,7 @@
     576,
     592
    ],
-   "cells_sha256": "cbe1db4e14949eab10a9ef1593fd728d789579427712810c58eb01e9e9c81881",
+   "cells_sha256": "97be06dc776ee6bbec89da03874d75124ae289c2c6e102bc2359e6c314f41986",
    "scale": [
     2.0,
     2.0
@@ -415,13 +415,13 @@
     296
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2268.SPR",
    "pc_size": [
     576,
     592
    ],
-   "cells_sha256": "7b29495dd2f493949a2d2c6a348e0938f7bb4142444067e65f4839eabcd875a8",
+   "cells_sha256": "3a6f408bc2c578504485dc5762f3919a9ae81d767038b6cb3921235d25e36686",
    "scale": [
     2.0,
     2.0
@@ -435,18 +435,38 @@
     296
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2269.SPR",
    "pc_size": [
     576,
     592
    ],
-   "cells_sha256": "edcab10639b63f42d5db42acd8723ac9619e153eb3beb808d06bf2e8e521c9f7",
+   "cells_sha256": "ad9fd7dbc0cd8f903566f4faabbf2ddb1fcf03299c5ec73d56c88ac5842fe6dc",
    "scale": [
     2.0,
     2.0
    ],
    "scale_match": true
+  },
+  {
+   "saturn_file": "SAKURA1/BG2290.BIN",
+   "size": [
+    432,
+    144
+   ],
+   "class": "wide_scroll",
+   "tier": "content",
+   "pc_file": "SAKURA1/BG/BG2290.SPR",
+   "pc_size": [
+    864,
+    320
+   ],
+   "cells_sha256": "d78d82c6c3a7eeec5e49826a1ee70787b8945af724feadc86cb7fb97ed319d74",
+   "scale": [
+    2.0,
+    2.222
+   ],
+   "scale_match": false
   },
   {
    "saturn_file": "SAKURA1/BG2295.BIN",
@@ -455,13 +475,13 @@
     208
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2295.SPR",
    "pc_size": [
     576,
     416
    ],
-   "cells_sha256": "721d7e235221be1d899e9e32f6121c6d2ae4e2a27fc5cd830f00c370c6eaae8b",
+   "cells_sha256": "958302130b6cf085599013a829f8c1c4a6d8b18586eeaa103533246e2a46f858",
    "scale": [
     2.0,
     2.0
@@ -475,13 +495,53 @@
     144
    ],
    "class": "wide_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG2515.SPR",
    "pc_size": [
     1024,
     320
    ],
-   "cells_sha256": "da7beda6b097a05556c11f7802ff2f0643fd6bd12dfdcf436f800417b724394f",
+   "cells_sha256": "0ab87b0185978badd0c13777b594d81764955edf01b9632b86c39d04207b9968",
+   "scale": [
+    2.0,
+    2.222
+   ],
+   "scale_match": false
+  },
+  {
+   "saturn_file": "SAKURA1/BG2518.BIN",
+   "size": [
+    288,
+    296
+   ],
+   "class": "tall_scroll",
+   "tier": "number",
+   "pc_file": "SAKURA1/BG/BG2518.SPR",
+   "pc_size": [
+    576,
+    592
+   ],
+   "cells_sha256": "3826581a557203155948543af40c842977711e564de56290bd5a47666075d311",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "scale_match": true
+  },
+  {
+   "saturn_file": "SAKURA1/BG2533.BIN",
+   "size": [
+    512,
+    144
+   ],
+   "class": "wide_scroll",
+   "tier": "content",
+   "pc_file": "SAKURA1/BG/BG2533.SPR",
+   "pc_size": [
+    1024,
+    320
+   ],
+   "cells_sha256": "771cd4c3c287583ce440886b95bd9d6323dc61a78094f932950840c48b244f83",
    "scale": [
     2.0,
     2.222
@@ -495,18 +555,38 @@
     296
    ],
    "class": "tall_scroll",
-   "tier": "number",
+   "tier": "content",
    "pc_file": "SAKURA1/BG/BG4302.SPR",
    "pc_size": [
     576,
     592
    ],
-   "cells_sha256": "4f3a7ad7370af0f46166553f5f737a4b63d2b65d867057ec1b691f1f49092934",
+   "cells_sha256": "9708b175c4a38017a1ec975c336534bf78ca62db6d13416ed9e1c049272d2b6a",
    "scale": [
     2.0,
     2.0
    ],
    "scale_match": true
+  },
+  {
+   "saturn_file": "SAKURA1/BG4372.BIN",
+   "size": [
+    512,
+    144
+   ],
+   "class": "wide_scroll",
+   "tier": "number",
+   "pc_file": "SAKURA1/BG/BG4372.SPR",
+   "pc_size": [
+    1024,
+    320
+   ],
+   "cells_sha256": "db3bd5d6c174ba0f6e9a0ba9e3c834fda3c98db4b1f86b7240f116e484b68c9e",
+   "scale": [
+    2.0,
+    2.222
+   ],
+   "scale_match": false
   },
   {
    "saturn_file": "SAKURA2/BBG238.BIN",

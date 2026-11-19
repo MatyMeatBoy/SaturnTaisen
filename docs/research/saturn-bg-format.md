@@ -13,7 +13,7 @@ Solved 2026-11-19 by looking at the data instead of tracing the loader: the earl
 
 687 of the 726 `BG*` files on disc 1 are exactly 45,120 bytes and decode this way (`tools/decode_saturn_bg.py`).
 
-**Variant B** (header `00 01 00 02`, 26 files such as BG1207 and BG2207, sizes 92,192 / 79,952 / ...): cells wide and cells high are the two big-endian u16 at 0x04 and 0x06 (BG1207 is 64x18 cells = 512x144, a wide scrolling scene), the palette comes first (256 words at 0x10) and the picture starts at 0x210. The decoder handles both, 713 of 726 files in total; the 13 left are the mini-game backgrounds (`BGHANA`, `BGSLOT`, ... start with a palette) and `BG2338`. `SAKURA1/BG1001.BIN` renders as the theatre lobby, matching the PC picture. `tests/test_saturn_bg_decode.py` covers the layout synthetically.
+**Variant B** (marker `00 01 00 02`, 30 files): the big-endian width and height in cells are at 0x04/0x06, count at 0x08 and RGB555 palette at 0x10. A two-word VDP2 pattern-name table begins at 0x610 and is followed by contiguous 64-byte 8 bpp tiles. See the T105d verification below for relocation, flips and BG4302. The original variant-A layout is unchanged.
 
 **Variant C** (disc 2 `SAKURA2/BBG*.BIN`, 23 battle backgrounds): a table of big-endian (offset, size) pairs at 0x00: the unique 8x8 tiles at 0x18, a map of 1296 bytes (36x18 cells) or 2240 bytes (40x28 cells) and a 512-byte palette. Each map word is 2 x the tile number (VDP2 pattern names for 8 bpp cells); tile 0 is unused. All 23 decode (BBG300 is a plain blue gradient). Disc 2's `SAKURA1/BG*` files are the same 726 files as disc 1's.
 
@@ -211,3 +211,36 @@ beats every fixed-size crop, and BG2093 and BG2238 cannot be handled by that cro
 Even among equal-width pairs, a fixed vertical crop can score below the resized whole scene.
 Use in-game scroll and stable landmarks to validate each transform before enabling it.
 No runtime, pack, release, or approved Zoom geometry was changed in this review.
+
+
+### Variant B decoder and catalog verification (T105d)
+
+The decoder reads the full map before the tile payload. The even 15-bit character number
+selects the offset in 32-byte units. The high bits flip the tile along the horizontal
+(bit 30) and vertical (bit 31) axes. The two-word reads in the SDK renderer
+(`video/layers.cpp`) use the same bits in the normal and line-rendering paths.
+
+A real BG2252 witness came from the local Spanish load-confirm state. Its whole 79,168-byte
+file tile payload is verbatim in VDP2 VRAM at 0x4A000. All 1,332 pattern names in the
+36 x 37 file map match the VRAM map at 0x44108 with 256-byte row strides, character-base
+addition 0x2500 and palette bits 0x00700000. The horizontal entry at column 1, row 10
+changes from 0x4000020C to 0x4070270C (VRAM 0x44B0C). The vertical entry at column 7,
+row 7 changes from 0x80000190 to 0x80702690 (VRAM 0x44824).
+
+BG4302's 88,352-byte ISO extent and treatment are identical on the prepared Japanese,
+English and Spanish discs 1 and 2. Its header declares 1,333 tiles (the map area plus
+one). The 36 x 37 map ends at 0x1AE0, and the remaining 81,472 bytes are exactly
+1,273 tiles. The largest referenced tile is index 1,272. The parser bounds all pattern
+references by the actual complete tile payload. The corrected BG4302 image visibly
+matches the same-number PC picture. It remains excluded from the scene table as BG4xxx.
+
+For variant B, `cells_sha256` now covers only the tile payload, starting immediately after
+the map. The palette fingerprint is unchanged. The BG2252 witness confirms this payload
+can match VRAM verbatim, but a payload hash does not include map arrangement or flips.
+The corrected map has 740 decoded files and 9 undecoded files. BG2290, BG2518 and BG2533
+were newly decoded and match the same PC artwork by eye. BG4372 is a cut-out against
+the PC full-scene image and stays excluded. The already cataloged BG1306 is a now-confirmed
+visual pair, held native until its in-game presentation is verified under T105c.
+
+The 459-entry T74 runtime header generated before and after the offline regeneration
+is byte-identical. The runtime and package were not rebuilt.
