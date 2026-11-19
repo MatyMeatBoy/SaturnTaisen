@@ -10,7 +10,7 @@ from PIL import Image
 
 ROOT=Path(__file__).resolve().parents[1]
 OWNER=Path(os.environ.get('SAKURA_OWNER_ROOT',ROOT))
-EXE=Path(os.environ.get('SAKURA_WHITE_TEST_EXE',OWNER/'local/build/visual-fixes-candidate/sakura.exe'))
+EXE=Path(os.environ.get('SAKURA_WHITE_TEST_EXE',OWNER/'local/build/sakura/sakura.exe'))
 STATE=OWNER/'local/work/sakura/morning-9000.state'
 PACK=OWNER/'local/work/v012-prepared-hd'
 ART=OWNER/'local/releases/SaturnTaisenFirst-v0.2.0-test.1-win64/art'
@@ -46,6 +46,12 @@ class PortraitWhiteRuntimeTests(unittest.TestCase):
                 hashes.append((folder/'frames.hash').read_bytes())
                 with Image.open(shot) as image:images.append(image.convert('RGB').tobytes())
             self.assertEqual(hashes[0],hashes[1])
-            # This accepted PC portrait yields the native colors for this fade;
-            # retain exact equality rather than inventing a quality difference.
-            self.assertEqual(images[0],images[1])
+            # Patch0057: the HD portrait now follows every step of the Saturn fade, so at this frame it is
+            # drawn instead of falling back to the native portrait. Only the portrait box may differ.
+            size=(2560,1440)
+            first=Image.frombytes('RGB',size,images[0]);second=Image.frombytes('RGB',size,images[1])
+            from PIL import ImageChops
+            box=ImageChops.difference(first,second).getbbox()
+            self.assertIsNotNone(box,'the HD portrait should be visible during the fade')
+            self.assertGreaterEqual(box[0],380);self.assertGreaterEqual(box[1],1070)
+            self.assertLessEqual(box[2],670);self.assertLessEqual(box[3],1400)
