@@ -83,7 +83,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Modo táctico | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | Sin dato | 6/147 (4%) |
+| Personajes grandes NC | Sin dato | 9/147 (6,1%) |
 
 | Área | Integrado | Verificado en juego |
 | --- | --- | --- |
@@ -94,7 +94,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Modo táctico | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 129/147 (87,7%) | 6/147 (4%) |
+| Personajes grandes NC | 129/147 (87,7%) | 9/147 (6,1%) |
 
 - **Integración global indicativa (media de 5/8 categorías con total): 83,1%.** Cada categoría pesa igual.
 - **Integración global ponderada por unidad: 1010/1787 (56,5%).** Mezcla unidades distintas; solo orienta.

@@ -54,3 +54,19 @@ The registered entry from `discover_registered_overlays.py` adds EVT06 only afte
 The previous binary fails the regression from state 6678 with code 4. The candidate passes 1,200 frames from that state, with all hashes and the final RGB matching the interpreter. It also preserves the episode 2 regression. The route from the original SRAM and `tests/chapter4-load.movie` completes **12,000 frames** with zero interpreted blocks, all hashes matching the interpreter, and identical final RGB. The first 6,678 hashes also match the pre-fix run. The last hash is `c8f0bd57666eb8e9`, and the capture shows the tactical field with the units.
 
 The [fix report](episode4-aot-fix.json) keeps hashes and bounds. The private verifier had a formatting error in the PNG name after comparing hashes; it was fixed and the existing image was verified under its real name, without altering or re-running the game's data. Both game processes ended with code 0. This result closes the observed load lock, not the victory nor the entire chapter. The published test.1 version is not modified.
+
+## Episode 4 second tactical overlay
+
+The disc-1 Episode 4 route starts from the same copied backup RAM and `tests/chapter4-load.movie` as the EVT06 proof. After frame 12,000, the trial pulses A for seven frames every 105 frames to advance the dialogue. The cold strict-native development runtime completes 15,859 frames and stops at master SH-2 PC `00204000`. Its final guest hash is `03e4768050826a51`. A relay from frame 14,000 reproduces the stop at relay frame 1,859, with the same guest hash.
+
+The disc trace reads `EVT21.BIN` at FAD 222176 and then loads MAP21, WKL21 and UNIT21. The interpreter boundary state contains all 75,364 bytes of EVT21 at low WRAM `00204000`. The file SHA-256 is `ee4180e542c543a6af6d68cea487f788695c757e72ee060a8c973017df104afc`. All 55 newly executed candidate variants recorded through relay frame 1,960 belong to the statically analysed EVT21 extension.
+
+On a private 674,182-block base, the registered overlay adds 21,488 distinct variants. To regenerate the database from the matching discs and a private base, run:
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc1/Track 01.iso" --module EVT21 --seed-blocks local/work/sakura/blocks.txt --output local/work/evt21
+```
+
+The isolated build linked all 21,488 additional native variants. It completed the 4,000-frame relay with zero interpreted blocks. All guest hashes and 13 RGB captures matched the interpreter run, including the new tactical field. The final guest hash was `4c2c58f80ad1ee27`. The runtime SHA-256 was `c28c9747b4af062fbb4661f8a45f32ab520b105e3c081efe37ae24d6c5036886`.
+
+Private recovery commands and test receipts are in `local/work/codex-tw2-later-eve`. This is the validated EVT21 entry and follow-up segment. Full chapter completion and inclusion in a package remain open.

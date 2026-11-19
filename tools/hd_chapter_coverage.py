@@ -19,6 +19,7 @@ PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
 STAGE01_MAP = (1, '/SAKURA2/MAP01.BIN')
+EVE002_REPORT = 'docs/research/eve002-tactical-inset.md'
 EVE0116_REPORT = 'docs/research/eve0116-tactical-inset.md'
 EVE0118_REPORT = 'docs/research/eve0118-tactical-inset.md'
 EVE_PAIRS = {
@@ -42,6 +43,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA2/EVE0116.BIN'): (1, EVE0116_REPORT),
     (1, '/SAKURA2/EVE0118.BIN'): (1, EVE0118_REPORT),
     (1, '/SAKURA2/EVE202.BIN'): (2, BODY_REPORT),
+    (1, '/SAKURA2/EVE002.BIN'): (2, EVE002_REPORT),
     STAGE01_MAP: (1, STAGE01_REPORT),
 }
 
@@ -210,6 +212,8 @@ def build(root, index_dir, portrait_audit):
                     row['runtime_evidence'] = BODY_REPORT
                 elif (disc, path) == (1, '/SAKURA2/EVE0116.BIN'):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE0116_REPORT)
+                elif (disc, path) == (1, '/SAKURA2/EVE002.BIN'):
+                    row.update(status='hd', verified_in_game=True, runtime_evidence=EVE002_REPORT)
                 elif (disc, path) == (1, '/SAKURA2/EVE0118.BIN'):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE0118_REPORT)
                 elif key not in bg_table:
