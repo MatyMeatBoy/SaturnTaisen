@@ -154,3 +154,10 @@ Shard workers do **not** verify every picture one by one in game. For a scene pi
 3. Add it to `config/hd-scene-bg-map.json` / the review file, regenerate `port/scene_bg_table.h` with `tools/gen_scene_bg_table.py`, record the patch.
 4. `tools/check_patch_stack.py`, compile, replay the opening film, hashes unchanged.
 5. Update the register (`tools/hd_chapter_coverage.py`) and the row in the same PR; send. Do not verify in game: one picture in ten is spot-checked later (TP9).
+
+## Working in parallel without stepping on each other
+
+- Several agents must never share one checkout: each does its git work in its own `git worktree` or clone (an agent once committed onto another's branch in the shared tree). Respect the limit of two worktrees in AGENTS.md; reuse the auxiliary one.
+- Build from a clean copy of the stack, not from the shared SDK tree (it may lag behind main). Link your own exe; never overwrite shared build outputs.
+- Take the next patch number only after `git fetch` and a look at the open PRs; if another PR lands first, renumber at rebase time. Two patches that touch the same function (for example the scroll pictures) are one shard: say so in the claim.
+- `tools/integrate_prs.py` with no arguments integrates every open PR in order and skips those that conflict; the PR author rebases the skipped ones.
