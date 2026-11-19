@@ -8,6 +8,9 @@ Format (verified on SAKURA1/BG1001.BIN, the theatre lobby):
   0xA250  palette, 256 big-endian RGB555 words (Saturn layout: bits 0-4 R, 5-9 G, 10-14 B)
   0xA450  trailing data (not needed to draw the picture; 45,120-byte files are zero padded)
 
+The 54,848-byte BG2338 shares the fixed-cell marker and has 40x20 cells
+(320x160). Its 512-byte palette starts at 0xC850, followed by zero padding.
+
 Variant B (marker `00 01 00 02`, 30 files) stores a two-word VDP2 pattern-name table:
 
   0x0000  marker, cells wide (u16 BE), cells high (u16 BE), declared tile count (u16 BE)
@@ -55,9 +58,18 @@ def decode(data):
     screen = _screen(data)
     if screen is not None:
         return screen
-    if len(data) != SIZE or data[:4] != b'\x00\x01\x00\x01':
+    layout = _fixed_cells(data)
+    return _cells(data, layout[2], HEADER, *layout[:2]) if layout else None
+
+
+def _fixed_cells(data):
+    if data[:4] != b'\x00\x01\x00\x01':
         return None
-    return _cells(data, PALETTE_AT, HEADER, CELLS_W, CELLS_H)
+    if len(data) == SIZE:
+        return CELLS_W, CELLS_H, PALETTE_AT
+    if len(data) == 0xD640 and not any(data[4:HEADER]) and not any(data[0xCA50:]):
+        return 40, 20, 0xC850
+    return None
 
 
 def _variant_b_layout(data):
@@ -154,9 +166,8 @@ def picture_bytes(data):
         return data[table[0]:table[0] + table[1]]
     if _screen_ok(data):
         return data[512 + 4480:]
-    if len(data) == SIZE and data[:4] == b'\x00\x01\x00\x01':
-        return data[HEADER:PALETTE_AT]
-    return None
+    layout = _fixed_cells(data)
+    return data[HEADER:layout[2]] if layout else None
 
 
 def _mapped(data, picture_at, picture_size, map_at, map_size, palette_at):
@@ -194,9 +205,8 @@ def palette_bytes(data):
         return data[table[4]:table[4] + 512]
     if _screen_ok(data):
         return data[:512]
-    if len(data) == SIZE and data[:4] == bytes([0, 1, 0, 1]):
-        return data[PALETTE_AT:PALETTE_AT + 512]
-    return None
+    layout = _fixed_cells(data)
+    return data[layout[2]:layout[2] + 512] if layout else None
 
 
 def palette_fingerprint(data):
