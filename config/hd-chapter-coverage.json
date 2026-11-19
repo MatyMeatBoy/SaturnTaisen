@@ -2419,6 +2419,14 @@
           }
         },
         "scene-pictures": {
+          "2:/SAKURA1/BG2238.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2238-still.md",
+            "pc": "SAKURA1/BG/BG2238.SPR",
+            "runtime_evidence": "docs/research/bg2238-still.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/TITLE9.BIN": {
             "association": "inferred",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
@@ -8799,8 +8807,7 @@
       "1:/SAKURA1/BG2238.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2238.SPR",
-        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "status": "hd"
       },
       "1:/SAKURA1/BG2239.BIN": {
         "association": "unknown",
@@ -12643,12 +12650,6 @@
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2237.SPR",
         "status": "hd"
-      },
-      "2:/SAKURA1/BG2238.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2238.SPR",
-        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2239.BIN": {
         "association": "unknown",

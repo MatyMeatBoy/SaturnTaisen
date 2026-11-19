@@ -63,6 +63,7 @@ SCENE_DRAWS = {
     (1, '/SAKURA1/BG1119.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (1, '/SAKURA1/BG1216.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
+    (2, '/SAKURA1/BG2238.BIN'): (9, 'docs/research/bg2238-still.md'),
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
@@ -280,6 +281,10 @@ def build(root, index_dir, portrait_audit):
                     row['status'] = 'hd'
                     if disc == 1:
                         row.update(verified_in_game=True, runtime_evidence=BG2248_REPORT)
+                elif path == '/SAKURA1/BG2238.BIN':
+                    row['status'] = 'hd'
+                    if (disc, path) in SCENE_DRAWS:
+                        row.update(verified_in_game=True, runtime_evidence=SCENE_DRAWS[(disc, path)][1])
                 elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
                     row['runtime_evidence'] = SCENE_DRAWS[(disc, path)][1]
