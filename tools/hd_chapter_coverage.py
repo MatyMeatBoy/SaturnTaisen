@@ -146,6 +146,22 @@ def runtime_bg_entries(root):
         return first, cells
 
 
+def fce_atlas_row(identities, recipes):
+    """TP6: attribute an FCE atlas file to the portrait identities it holds."""
+    uncovered = [i for i in identities if i not in recipes]
+    if not identities:
+        return {'status': 'excluded', 'identities': [],
+                'reason': 'empty atlas (160-byte zero header): no portrait identity to replace',
+                'evidence': PORTRAIT_REPORT}
+    row = {'status': 'hd' if not uncovered else 'unknown', 'identities': identities,
+           'evidence': 'config/hd-portrait-recipe.json'}
+    if uncovered:
+        row['uncovered'] = uncovered
+        row['reason'] = ('every other identity is in the runtime portrait table; the listed identities '
+                         'have no accepted PC pair (tracked as their own portrait rows, T52)')
+    return row
+
+
 def build(root, index_dir, portrait_audit):
     def config(name):
         return load(root / 'config' / (name + '.json'))
@@ -156,6 +172,7 @@ def build(root, index_dir, portrait_audit):
     if portrait_report.get('errors'):
         raise ValueError('The portrait audit reports errors')
     portraits = portrait_report['rows']
+    fce_atlases = portrait_report.get('fce_atlases', {})
     recipes = {r['id']: r['pc_index'] for r in config('hd-portrait-recipe')['portraits']}
     films = {(r['disc'], r['fad']): r for r in config('film-fad-map')['streams']}
     bg = pairs(config('hd-scene-bg-map'))
@@ -359,6 +376,8 @@ def build(root, index_dir, portrait_audit):
                 row = {'status': 'paired-not-wired', 'pc': pair['pc_file']}
             elif path in item_review:
                 row['status'] = 'unpaired'
+        if kind == 'portraits' and f'{disc}:{path}' in fce_atlases and row['status'] == 'unknown':
+            row.update(fce_atlas_row(fce_atlases[f'{disc}:{path}'], recipes))
         if path in cold_bg and disc == 1:
             row['cold_run_frame'] = cold_bg[path]
         if kind:
