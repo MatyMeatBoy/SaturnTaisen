@@ -1899,7 +1899,17 @@
             "status": "unknown"
           }
         },
-        "tactical-maps": {},
+        "tactical-maps": {
+          "1:/SAKURA2/MAP21.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/stage21-pc-ground.md",
+            "pc": "SAKURA2/MAP/MAP21/MAP21_A.SPR",
+            "runtime_evidence": "docs/research/stage21-pc-ground.md",
+            "scope": "source-4 ground only",
+            "status": "hd",
+            "verified_in_game": true
+          }
+        },
         "tactical-units": {}
       }
     },
@@ -14127,10 +14137,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/MAP11.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/MAP21.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
