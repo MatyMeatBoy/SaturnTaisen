@@ -244,3 +244,44 @@ visual pair, held native until its in-game presentation is verified under T105c.
 
 The 459-entry T74 runtime header generated before and after the offline regeneration
 is byte-identical. The runtime and package were not rebuilt.
+
+
+### NC face run inventory (T106d)
+
+Scanned the 129 usable pairs in `config/hd-body-map.json` after excluding all 15
+entries under `rejected` in `config/hd-body-review.json`. Counted consecutive
+equal-dimension PC images with `solve_nc_strips.runs`, omitting the largest
+body image and the 16x16 auxiliary entries as the two-run matcher does. A PC run
+counts a sequence of sizes in the SPR. It does not establish a Saturn run or an
+expression mapping.
+
+| PC runs | Files | Identities with three or more runs |
+|---:|---:|---|
+| 1 | 19 | |
+| 2 | 86 | |
+| 3-11 | 24 | NC20, NC21, NC22, NC23, NC3021, NC3040, NC3042, NC3045, NC3050, NC3056, NC3059, NC3516, NC3518, NC4182, NC4199, NC4281, NC4384, NC50, NC51, NC52, NC53, NC54, NC55, NC80 |
+
+Within that group of 24, five have three runs, seven have four runs, four have
+five runs, two have six runs and six have eleven runs.
+
+On the prepared disc 1, used file extent minus the body end
+(`0x610 + 144 * catalog_stride`) to test for a whole number of 3,840-byte
+periods. Each period holds three 32x16 eye frames and six 24x16 mouth frames.
+Decoded those fixed windows with the native palette and inspected all seven
+periods of the two accepted cases. For the other byte-count-compatible files,
+the first period (and the middle and last where applicable) exposed different
+strip geometry or boundaries. Testing alternative widths of the same 512- and
+384-byte frames did not produce another complete period.
+
+| Saturn raster result | Identities and arithmetic periods |
+|---|---|
+| Exact repeated layout | NC30 (6) |
+| Exact single period | NC35 (1) |
+| Same byte divisibility, incompatible raster | NC3014 (11), NC3015 (6), NC3017 (6), NC3027 (6), NC3032 (6), NC3043 (1), NC34 (1), NC3503 (2), NC36 (1), NC4344 (1), NC98 (9) |
+
+NC30 starts at byte 26,896, with its third eye group at 34,576 and third mouth
+group at 36,112, the offsets in the T19 VDP1 trace. Its 54 Saturn frames
+reconstruct as 18 eyes and 36 mouths. NC35 starts at 30,352 and has a single
+group of three eyes and six mouths. No file with three or more PC runs passes
+this exact Saturn repetition rule. The audit leaves other possible Saturn
+periods, PC subimage assignment, and runtime integration open.
