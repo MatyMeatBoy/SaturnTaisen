@@ -49,7 +49,7 @@ index 0000000..2d38603
 +inline constexpr unsigned kScrollBgCount=sizeof(kScrollBg)/sizeof(kScrollBg[0]);
 +}
 diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
-index d9e683b..628b945 100644
+index 726f6fa..86d974a 100644
 --- a/port/frontend_sdl.cpp
 +++ b/port/frontend_sdl.cpp
 @@ -22,6 +22,8 @@
@@ -61,18 +61,72 @@ index d9e683b..628b945 100644
  #include "body_table.h"
  #include "verified_body_faces.h"
  #include "film_clip_table.h"
-@@ -605,8 +607,9 @@ int RunWindowed(Port &port) {
+@@ -605,8 +607,10 @@ int RunWindowed(Port &port) {
      struct HeldZoom {bool valid=false;int x=0,width=0,lines=0,group=0,shadowRows=0;} heldZoom;
      // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
      struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
 -    struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
-+    struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;unsigned width=0,height=0;bool tried=false;std::future<SceneHdPixels> pending;};
++    struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;unsigned width=0,height=0;bool tried=false;std::future<SceneHdPixels> pending;
++                    std::vector<uint32_t> pixels;std::array<int16_t,3> offset{};};
      std::vector<SceneHd> sceneHd(kSceneBgCount);
 +    std::vector<SceneHd> eveHd(kEveBgCount);   // T105e: EVE pictures on layer 5
      std::vector<uint32_t> sceneHdForeground;
      // T113/S3: the PC clip (MOVIEnnn.MPG) that replaces a Saturn FILM in the picture. Armed by a CD play command whose start FAD is in
      // the table; the clip starts when the film plane fills the picture and follows the guest's frame count; the guest is untouched.
-@@ -1596,6 +1599,81 @@ int RunWindowed(Port &port) {
+@@ -953,7 +957,17 @@ int RunWindowed(Port &port) {
+                 }
+             }
+         }
+-        if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
++        // T105e: an EVE picture has no floral backdrop (layer 5 is the picture itself), so it asks to enter the presentation block on its own
++        // (and gets the zoom layout of any narrative scene; the flag below only keeps the PC picture out of it).
++        static const bool eveOff=std::getenv("SATRECOMP_NO_EVE_HD")!=nullptr;
++        bool eveScene=false;
++        if(!floral && port.videoRenderer && !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 &&
++           satrecomp::FeatureValue("presentation_mode")==1) {
++            const uint64_t eveFingerprint=port.videoRenderer->BackgroundPaletteFingerprint(5);
++            for(unsigned i=0;i<kEveBgCount;i++)if(kEveBg[i].palette==eveFingerprint)eveScene=true;
++            if(eveScene) {const auto& frame=port.videoRenderer->PresentationFrame();eveScene=AnalyzeEvePresentation(frame.source,frame.width,frame.height).recognized;}
++        }
++        if (texture && (floral || eveScene) && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(anchoredBackdrop && planes.width==320 && planes.height==224) {
+                 const auto bg=FitAnchoredBackdrop(wide,high),native=FitInteger(wide,high,320,224);
+@@ -984,7 +998,8 @@ int RunWindowed(Port &port) {
+                     if(fp!=last[layer]) {last[layer]=fp;fprintf(stderr,"layer %u palette %016llX at frame %llu",layer,static_cast<unsigned long long>(fp),static_cast<unsigned long long>(frames));fputc(10,stderr);}
+                 }
+             }
+-            const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height,planes.underSource);
++            auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height,planes.underSource);
++            if(eveScene && !scene.recognized)scene=AnalyzeEvePresentation(planes.source,planes.width,planes.height);
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
+                 if(!traced && planes.source.size()==320*224) {
+@@ -1001,11 +1016,11 @@ int RunWindowed(Port &port) {
+             const bool knownBackdrop=planes.width==320 && planes.height==224 && planes.source.size()==320*224 &&
+                 (std::count(planes.source.begin(),planes.source.end(),uint8_t(5))>=1000 || mixedFloralAvailable || mapFade.has_value());
+             if (!anchoredBackdrop && knownBackdrop && planes.width==texW && planes.height==texH) {
+-                float bgw=0,bgh=0; SDL_GetTextureSize(floral,&bgw,&bgh);
++                float bgw=1,bgh=1; if(floral)SDL_GetTextureSize(floral,&bgw,&bgh);
+                 const int canvasWidth=PresentationWidth(wide,high),canvasLeft=(wide-canvasWidth)/2;
+                 const auto cover=CoverInteger(canvasWidth,high,static_cast<int>(bgw),static_cast<int>(bgh));
+                 const SDL_FRect bg{static_cast<float>(canvasLeft+cover.x),static_cast<float>(cover.y),static_cast<float>(cover.w),static_cast<float>(cover.h)};
+-                SDL_RenderTexture(renderer,floral,nullptr,&bg);
++                if(floral)SDL_RenderTexture(renderer,floral,nullptr,&bg);
+                 if(selectedBackdrop && mapFade) {
+                     const auto native=FitInteger(wide,high,320,224);
+                     if(ResizePanelBuffer(fadeBackdropPixels,size_t(canvasWidth)*high)) {
+@@ -1210,7 +1225,8 @@ int RunWindowed(Port &port) {
+                 bool splitZoom=false;
+                 int zoomX=scene.x,zoomW=scene.w,zoomLines=scene.y+scene.h-153,zoomGroup=scene.h;
+                 bool zoomSafe=!scene.movieOnly && satrecomp::FeatureValue("scene_view")==1 && scene.y==8 && scene.y+scene.h>153;
+-                if(zoomSafe)for(int y=0;y<153 && zoomSafe;y++)for(int x=0;x<320;x++) {
++                // (an EVE scene is cropped to its inset by design: the sprites and the plane around it are not carried into the zoom)
++                if(zoomSafe && !eveScene)for(int y=0;y<153 && zoomSafe;y++)for(int x=0;x<320;x++) {
+                     if(planes.source[y*320+x]<3 && (x<16 || x>=304 || y<8 || y>=152)) {zoomSafe=false;break;}
+                 }
+                 if(!scene.movieOnly && zoomSafe && satrecomp::FeatureValue("scene_view")==1) {
+@@ -1596,6 +1612,86 @@ int RunWindowed(Port &port) {
                                      SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
                                      drewHd=true;
                                  }
@@ -93,7 +147,6 @@ index d9e683b..628b945 100644
 +                                    }
 +                                }
 +                                // T105e: an EVE picture (layer 5, fixed) drawn from the PC BBG inside the same 288x144 inset.
-+                                static const bool eveOff=std::getenv("SATRECOMP_NO_EVE_HD")!=nullptr;
 +                                if(!drewHd && !eveOff) {
 +                                    const uint32_t layer=5;
 +                                    const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
@@ -102,7 +155,7 @@ index d9e683b..628b945 100644
 +                                    const auto offset=port.videoRenderer->BackgroundColorOffset(layer);
 +                                    const auto motion=port.videoRenderer->BackgroundMotionState(layer);
 +                                    unsigned visible=0;
-+                                    if(slot!=kEveBgCount && !offset[0] && !offset[1] && !offset[2] &&
++                                    if(slot!=kEveBgCount &&
 +                                       LayerIsStatic({motion.x,motion.y,motion.incH,motion.incV,motion.lineEffects}))
 +                                        for(int y=8;y<152;y++)for(int x=16;x<304;x++)visible+=planes.source[size_t(y)*320+x]==layer;
 +                                    if(visible>=12000) {
@@ -127,11 +180,17 @@ index d9e683b..628b945 100644
 +                                            if(decoded.width && decoded.height) {
 +                                                if(auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,int(decoded.width),int(decoded.height))) {
 +                                                    if(SDL_UpdateTexture(texture,nullptr,decoded.pixels.data(),int(decoded.width*4))) {
-+                                                        SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_LINEAR);hd.texture=texture;hd.width=decoded.width;hd.height=decoded.height;
++                                                        SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_LINEAR);hd.texture=texture;hd.width=decoded.width;hd.height=decoded.height;hd.pixels=std::move(decoded.pixels);hd.offset={};
 +                                                    } else SDL_DestroyTexture(texture);
 +                                                }
 +                                            }
 +                                            if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"EVE picture: %s %s usable=%d\n",entry.name,entry.file,hd.texture!=nullptr);}
++                                        }
++                                        // The layer's colour offset (a constant dim in EVE0101) is applied to the PC picture too, re-uploaded only when it changes.
++                                        if(hd.texture && offset!=hd.offset) {
++                                            std::vector<uint32_t> shifted(hd.pixels.size());
++                                            std::transform(hd.pixels.begin(),hd.pixels.end(),shifted.begin(),[&](uint32_t pixel){return OffsetBackdropPixel(pixel,offset);});
++                                            if(SDL_UpdateTexture(hd.texture,nullptr,shifted.data(),int(hd.width*4)))hd.offset=offset;
 +                                        }
 +                                        const auto clip=hd.texture?ClipWindowToPicture(entry.window,hd.width,hd.height,{imageTarget.x,imageTarget.y,imageTarget.w,imageTarget.h}):WindowClip{};
 +                                        if(clip.valid) {
@@ -154,6 +213,29 @@ index d9e683b..628b945 100644
                              }
                              if(!drewHd && !drewClip)SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
                          }
+diff --git a/port/presentation_layout.h b/port/presentation_layout.h
+index cab6820..4d83c00 100644
+--- a/port/presentation_layout.h
++++ b/port/presentation_layout.h
+@@ -153,4 +153,18 @@ inline SceneLayout AnalyzePresentation(const std::vector<uint8_t>& source,int wi
+     if(movie>30000 && actor==0 && text==0) return {true,true,16,8,288,144};
+     return {true,false,left,top,right-left+1,bottom-top+1};
+ }
++// T105e: an EVE scene has its 288x144 picture on layer 5 (the PC picture replaces it), so the picture is not among layers 1, 2 and 4 and
++// AnalyzePresentation gives up. The inset must be layer 5 almost entirely; the box under it is layers 0 and 3 from y=153 (layers 2 and 4 are the plane around it), and the
++// group is reported from the top of the inset as in a narrative scene.
++inline SceneLayout AnalyzeEvePresentation(const std::vector<uint8_t>& source,int width,int height) {
++    if(width!=320 || height!=224 || source.size()!=320*224)return {};
++    int inset=0,frame=0,left=320,right=-1,bottom=-1;
++    for(int y=0;y<224;y++)for(int x=0;x<320;x++) {
++        const int layer=source[size_t(y)*320+x];
++        if(y>=8 && y<152 && x>=16 && x<304)inset+=layer==5;
++        if(y>=153 && y<220 && x>=9 && x<315 && (layer==0 || layer==3)) {left=std::min(left,x);right=std::max(right,x);bottom=std::max(bottom,y);frame+=layer==0;}
++    }
++    if(inset<12000 || frame<100 || right<left)return {};
++    return {true,false,left,8,right-left+1,bottom-8+1};
++}
+ }
 diff --git a/port/scroll_eve.h b/port/scroll_eve.h
 new file mode 100644
 index 0000000..c280406
