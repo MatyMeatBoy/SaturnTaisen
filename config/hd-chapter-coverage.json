@@ -12074,7 +12074,9 @@
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15620,7 +15622,9 @@
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15632,7 +15636,9 @@
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15644,7 +15650,9 @@
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15656,7 +15664,9 @@
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15668,7 +15678,9 @@
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15794,7 +15806,9 @@
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19500,7 +19514,9 @@
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19512,7 +19528,9 @@
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19524,7 +19542,9 @@
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19536,7 +19556,9 @@
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19548,7 +19570,9 @@
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",

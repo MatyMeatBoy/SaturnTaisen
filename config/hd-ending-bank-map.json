@@ -43,6 +43,42 @@
             640,
             320
           ]
+        },
+        {
+          "saturn_record": 8,
+          "pc_image_index": 8,
+          "correlation": 0.75095,
+          "offset": 238052,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "75EC2F87DD0C4C7E",
+          "cells_fnv": "8A8EBD912D8A4CF9",
+          "cells_sha256": "cf2b8c2ed4f356248d970041dd4a70844eca242a1326a2d4a2654746cd97803b",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 11,
+          "pc_image_index": 10,
+          "correlation": 0.86248,
+          "offset": 352932,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "2EE85BAA0D788D38",
+          "cells_fnv": "0332F56165D192DA",
+          "cells_sha256": "af79b3e6c047f04d7392c6a2db71f95a53ddea6cb3e59156d3c7f97e968b75ae",
+          "pc_size": [
+            640,
+            320
+          ]
         }
       ]
     },
@@ -167,6 +203,42 @@
             640,
             320
           ]
+        },
+        {
+          "saturn_record": 8,
+          "pc_image_index": 8,
+          "correlation": 0.81941,
+          "offset": 238052,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "508E45A11D1B644A",
+          "cells_fnv": "A3E88CA6BBE85933",
+          "cells_sha256": "1a98b5896f71d60a94002eef820c75f747d125acaa601e09dab2e98175e7caa7",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 11,
+          "pc_image_index": 10,
+          "correlation": 0.95049,
+          "offset": 352932,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "2AD1A8AD560E5299",
+          "cells_fnv": "06C42663D83F75F2",
+          "cells_sha256": "f7eff7cf503e84a561d1eb1584d57b5c7dcad5aa77c31513dde8f695e5ae5d59",
+          "pc_size": [
+            640,
+            320
+          ]
         }
       ]
     },
@@ -207,6 +279,42 @@
           "palette_fnv": "BD98B23C7D99D3DD",
           "cells_fnv": "F660240773226223",
           "cells_sha256": "da85a511343907ee2b6de315efc727538ffb30a837c7de28a4dbd78404193e49",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 8,
+          "pc_image_index": 8,
+          "correlation": 0.62202,
+          "offset": 238052,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "1E7B14062AE2A403",
+          "cells_fnv": "C5BF2DB8E2F0D818",
+          "cells_sha256": "2d79104abe814c307b120c76a5f17a4ee059e7c83424efafcc04d95c66f7e4d0",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 11,
+          "pc_image_index": 10,
+          "correlation": 0.7927,
+          "offset": 352932,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "BA60B51A422DA76E",
+          "cells_fnv": "E778099FD0E86AD6",
+          "cells_sha256": "b2bce1ade9cbe4728e68c76b0d4893f0af552e7bd6686db0d759f734f7a0be97",
           "pc_size": [
             640,
             320
@@ -255,6 +363,42 @@
             640,
             320
           ]
+        },
+        {
+          "saturn_record": 8,
+          "pc_image_index": 8,
+          "correlation": 0.61536,
+          "offset": 238052,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "8E132332AF86D74D",
+          "cells_fnv": "93DE56BEE8A934C5",
+          "cells_sha256": "d7febf349db3c2d5c9a7269cedd9a3beaa262b17a49e4ac2cad2e18ee1b4fac0",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 11,
+          "pc_image_index": 10,
+          "correlation": 0.90772,
+          "offset": 352932,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "21810A8264DDA955",
+          "cells_fnv": "EAA8192F22185622",
+          "cells_sha256": "014b8cca5dc5629e4bfd3628f968167c8d4d9dae6f569283111e9108e5e2c803",
+          "pc_size": [
+            640,
+            320
+          ]
         }
       ]
     },
@@ -299,6 +443,42 @@
             640,
             320
           ]
+        },
+        {
+          "saturn_record": 8,
+          "pc_image_index": 8,
+          "correlation": 0.75608,
+          "offset": 238052,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "F637BC44EA21EEEC",
+          "cells_fnv": "6F9B8095C618EE52",
+          "cells_sha256": "982b092975dbd011225067a6e20e84b9bbe61964462a501680a4b9901f386e65",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 11,
+          "pc_image_index": 10,
+          "correlation": 0.91034,
+          "offset": 352932,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "684B4B865EEF2580",
+          "cells_fnv": "A38B0C377E3DF85D",
+          "cells_sha256": "ae0e4dc6ea12ac853e9001ce4f3d859e0b40b0f87f2f396435a066e4835fd3e2",
+          "pc_size": [
+            640,
+            320
+          ]
         }
       ]
     },
@@ -339,6 +519,42 @@
           "palette_fnv": "BD98B23C7D99D3DD",
           "cells_fnv": "F660240773226223",
           "cells_sha256": "da85a511343907ee2b6de315efc727538ffb30a837c7de28a4dbd78404193e49",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 8,
+          "pc_image_index": 8,
+          "correlation": 0.60224,
+          "offset": 238052,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "1679DED0816C6A33",
+          "cells_fnv": "6E619ADD7A794EA2",
+          "cells_sha256": "222bc8ee27b36be0b42ef27ade54c7575f1c500cbb229d3b5dc5606d0511a5a2",
+          "pc_size": [
+            640,
+            320
+          ]
+        },
+        {
+          "saturn_record": 11,
+          "pc_image_index": 10,
+          "correlation": 0.96172,
+          "offset": 352932,
+          "length": 54976,
+          "size": [
+            320,
+            160
+          ],
+          "palette_fnv": "8AFCB0CCAE860E87",
+          "cells_fnv": "3D326C61BC6B22E2",
+          "cells_sha256": "53add1b8621e7a822e2b14fd0ff5b40c593e3fee0fe2dc3ed2e3c5567578da07",
           "pc_size": [
             640,
             320
