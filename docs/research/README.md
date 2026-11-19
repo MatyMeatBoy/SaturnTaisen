@@ -143,6 +143,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [th8-native-attribution.md](th8-native-attribution.md) — Exact disc-2 reads and native picture pixels.
 - [HD chapter 9 report](hd-chapter-9.md): what chapter 9 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 10 report](hd-chapter-10.md): what chapter 10 shows per resource class, its status, ranked next actions and what needs the owner's discs.
+- [th10-native-attribution.md](th10-native-attribution.md) — Exact disc-2 reads and native viewport pixels and exact portrait-atlas residency.
 - [HD package gate](hd-package-gate.md) records generated-art validation and clean-profile preparation with PC movies.
 
 - [clip-hook-design.md](clip-hook-design.md) — PC video hook design and the second clip and skip verification.
