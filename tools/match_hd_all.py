@@ -1,20 +1,20 @@
-"""Mass pairing of Saturn `BG*.BIN` backgrounds with PC `.SPR` pictures, all discs and both layouts (T76-T711).
+"""Mass pairing of Saturn `BG*.BIN`/`BBG*.BIN` backgrounds with PC `.SPR` pictures, all discs and layouts (T76-T711).
 
 One command replaces the screenshot-by-screenshot work: every Saturn picture the decoder understands
-(`tools/decode_saturn_bg.py`, both variants) is paired with the PC picture of the same file number and
-scored on content, in parallel, and the pairs are written as data (no pixels).
+(`tools/decode_saturn_bg.py`, three layouts) is paired with the PC picture of the same file number and the
+pair is checked against ALL PC pictures, in parallel. Output is data only (names, hashes, scores).
 
-  python tools/match_hd_all.py --pc ROOT_OF_EXTRACTED_PC --out config/hd-scene-bg-map-all.json \\
+  python tools/match_hd_all.py --pc ROOT_OF_EXTRACTED_PC --out config/hd-scene-bg-map.json \\
       --disc "local/prepared/disc1/Track 01.iso:SAKURA1" --disc "local/prepared/disc2/Track 01.iso:SAKURA2"
 
-`--disc ISO:FOLDER` can repeat. PC pictures are looked up as ROOT/FOLDER/BG/<name>.SPR, then
-ROOT/FOLDER/<name>.SPR. Comparison: both pictures are reduced to a 48x24 luminance signature; when the
-PC picture is taller than the Saturn aspect (the PC pictures carry 16 extra native rows) its top and bottom
-crops are both tried and the best score wins. Tiers:
-  content   score <= 0.10 (the same-number PC picture looks like the Saturn one)
-  number    same number but the content differs (other crop, lighting or palette): needs an eye check
+The PC picture is the whole scene (576x320), not a crop of it: it is stretched onto the Saturn picture
+rectangle (288x144 or the picture's own size). Colours differ between the two renderings, so the score is
+the normalised correlation of 32x16 grey signatures (brightness and contrast independent). Tiers:
+  content   the same-number PC picture is the best of all PC pictures and correlates >= 0.80
+  number    same number only (a lighting/palette variant, or another crop): needs an eye check
   missing   no PC picture with that number
-Never commit decoded pictures; the output only has names, hashes and scores.
+`rank` is the position of the same-number PC picture among all PC pictures (1 = best) and `best_other` the
+strongest different picture, so a reviewer can see how decisive the match is.
 """
 import argparse
 import hashlib
@@ -23,70 +23,57 @@ import sys
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageStat
+from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import decode_saturn_bg as saturn  # noqa: E402
 import decode_spred  # noqa: E402
 
-SIG = (48, 24)
+SIG = (32, 16)
 
 
 def signature(image):
-    return image.convert('L').resize(SIG, Image.BILINEAR)
+    grey = image.convert('L').resize(SIG, Image.BILINEAR)
+    values = list(grey.getdata())
+    mean = sum(values) / len(values)
+    centred = [v - mean for v in values]
+    norm = sum(v * v for v in centred) ** 0.5 or 1.0
+    return [v / norm for v in centred]
 
 
-def score(a, b):
-    return sum(ImageStat.Stat(ImageChops.difference(a, b)).mean) / 255.0
+def correlation(a, b):
+    return sum(x * y for x, y in zip(a, b))
 
 
-def pc_path(root, folder, name):
-    for candidate in (root / folder / 'BG' / name, root / folder / name):
-        if candidate.is_file():
-            return candidate
-    return None
-
-
-def best_score(sat_image, pc_image):
-    sat_sig = signature(sat_image)
-    aspect = sat_image.width / sat_image.height
-    rgb = pc_image.convert('RGB')
-    crop_h = round(rgb.width / aspect)
-    crops = [rgb] if crop_h >= rgb.height else [
-        rgb.crop((0, 0, rgb.width, crop_h)), rgb.crop((0, rgb.height - crop_h, rgb.width, rgb.height))]
-    return min(score(sat_sig, signature(c)) for c in crops)
-
-
-def work(task):
-    iso_path, folder, name, extent, pc_root = task
-    iso = saturn.Iso(iso_path)
-    data = iso.content(extent)
-    image = saturn.decode(data)
-    entry = {'saturn_file': f'{folder}/{name}', 'decoded': image is not None}
-    if image is None:
-        return entry
-    body = saturn.picture_bytes(data)
-    entry['cells_sha256'] = hashlib.sha256(body).hexdigest()
-    entry['size'] = [image.width, image.height]
-    spr = pc_path(Path(pc_root), folder, name[:-4] + '.SPR')
-    if spr is None:
-        entry['tier'] = 'missing'
-        return entry
-    raw = spr.read_bytes()
+def pc_signature(path):
+    raw = Path(path).read_bytes()
     try:
         pictures = decode_spred.decode(raw)
     except Exception:
-        entry['tier'] = 'missing'
-        return entry
+        return None
     if not pictures:
-        entry['tier'] = 'missing'
-        return entry
+        return None
     index, picture = max(pictures, key=lambda p: p[1].width * p[1].height)
-    value = best_score(image, picture)
-    entry.update({'pc_file': spr.relative_to(pc_root).as_posix(), 'pc_image_index': index,
-                  'pc_sha256': hashlib.sha256(raw).hexdigest(), 'pc_size': list(picture.size),
-                  'content_score': round(value, 4), 'tier': 'content' if value <= 0.10 else 'number'})
-    return entry
+    return {'name': Path(path).name, 'rel': None, 'index': index, 'size': list(picture.size),
+            'sha256': hashlib.sha256(raw).hexdigest(), 'sig': signature(picture.convert('RGB'))}
+
+
+def saturn_signature(task):
+    iso_path, folder, name, extent = task
+    data = saturn.Iso(iso_path).content(extent)
+    image = saturn.decode(data)
+    if image is None:
+        return {'saturn_file': f'{folder}/{name}', 'decoded': False}
+    return {'saturn_file': f'{folder}/{name}', 'decoded': True, 'size': list(image.size), 'folder': folder,
+            'cells_sha256': hashlib.sha256(saturn.picture_bytes(data)).hexdigest(),
+            'palette_fnv': '%016X' % saturn.palette_fingerprint(data), 'sig': signature(image)}
+
+
+def pc_files(root, folder):
+    for directory in (root / folder / 'BG', root / folder):
+        if directory.is_dir():
+            yield from sorted(directory.glob('*.SPR'))
+            return
 
 
 def main():
@@ -96,25 +83,56 @@ def main():
     parser.add_argument('--disc', action='append', required=True, help='ISO:FOLDER, repeatable')
     parser.add_argument('--workers', type=int, default=8)
     args = parser.parse_args()
-    tasks = []
+    tasks, folders = [], []
     for spec in args.disc:
         iso_path, _, folder = spec.rpartition(':')
-        iso = saturn.Iso(iso_path)
-        for name, extent in iso.files(folder):
+        folders.append(folder)
+        for name, extent in saturn.Iso(iso_path).files(folder):
             if name.startswith(('BG', 'BBG')) and name.endswith('.BIN'):
-                tasks.append((iso_path, folder, name, extent, str(args.pc)))
+                tasks.append((iso_path, folder, name, extent))
+    paths = [p for folder in folders for p in pc_files(args.pc, folder)]
     with ProcessPoolExecutor(args.workers) as pool:
-        entries = list(pool.map(work, tasks, chunksize=8))
-    pairs = [e for e in entries if e.get('decoded')]
-    summary = {t: sum(e.get('tier') == t for e in pairs) for t in ('content', 'number', 'missing')}
-    keys = [e['cells_sha256'] for e in pairs]
-    out = {'schema': 1,
-           'scope': 'Saturn BG*.BIN to PC .SPR by shared file number with a content score; data only (names, hashes, scores). '
-                    'cells_sha256 identifies the native picture at runtime. Tier `number` needs an eye check before drawing.',
+        pcs = [x for x in pool.map(pc_signature, paths, chunksize=8)]
+        sats = list(pool.map(saturn_signature, tasks, chunksize=8))
+    index = {}
+    for path, item in zip(paths, pcs):
+        if item:
+            item['rel'] = path.relative_to(args.pc).as_posix()
+            index.setdefault((path.parent.parent.name if path.parent.name == 'BG' else path.parent.name, path.name), item)
+    everything = list(index.values())
+    pairs = []
+    for sat in sats:
+        if not sat['decoded']:
+            pairs.append(sat)
+            continue
+        name = sat['saturn_file'].split('/')[-1][:-4] + '.SPR'
+        own = index.get((sat['folder'], name))
+        entry = {k: sat[k] for k in ('saturn_file', 'decoded', 'size', 'cells_sha256', 'palette_fnv')}
+        if own is None:
+            entry['tier'] = 'missing'
+            pairs.append(entry)
+            continue
+        scores = sorted(((correlation(sat['sig'], other['sig']), other['rel']) for other in everything), reverse=True)
+        value = correlation(sat['sig'], own['sig'])
+        rank = 1 + sum(1 for s, _ in scores if s > value)
+        other = next(s for s in scores if s[1] != own['rel'])
+        entry.update({'pc_file': own['rel'], 'pc_image_index': own['index'], 'pc_sha256': own['sha256'],
+                      'pc_size': own['size'], 'correlation': round(value, 3), 'rank': rank,
+                      'best_other': other[1], 'best_other_correlation': round(other[0], 3),
+                      'tier': 'content' if rank == 1 and value >= 0.80 else 'number'})
+        pairs.append(entry)
+    decoded = [p for p in pairs if p['decoded']]
+    summary = {t: sum(p.get('tier') == t for p in decoded) for t in ('content', 'number', 'missing')}
+    keys = [p['cells_sha256'] for p in decoded]
+    out = {'schema': 2,
+           'scope': 'Saturn BG*.BIN/BBG*.BIN to PC .SPR by shared file number, checked against every PC picture '
+                    '(normalised correlation of 32x16 grey signatures); data only. cells_sha256 identifies the native '
+                    'picture; tier `number` needs an eye check before drawing.',
            'summary': summary, 'duplicate_cell_hashes': len(keys) - len(set(keys)),
-           'undecoded': [e['saturn_file'] for e in entries if not e.get('decoded')], 'pairs': pairs}
+           'undecoded': [p['saturn_file'] for p in pairs if not p['decoded']],
+           'pairs': decoded}
     args.out.write_text(json.dumps(out, indent=1) + '\n', encoding='utf-8')
-    print(len(pairs), 'decoded', summary, 'undecoded', len(out['undecoded']), 'duplicate keys', out['duplicate_cell_hashes'])
+    print(len(decoded), 'decoded', summary, 'undecoded', len(out['undecoded']), 'duplicate keys', out['duplicate_cell_hashes'])
 
 
 if __name__ == '__main__':

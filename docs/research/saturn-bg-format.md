@@ -34,3 +34,7 @@ Decoder coverage: 736 pictures (713 on disc 1, 23 on disc 2). Undecoded: the 8 m
 - Visually confirmed pairs are still the 12 of `hd-scene-bg-pairs.json`; the rest is number + content evidence, not an eye check, and nothing is integrated: T74 (the runtime consumer) is open and needs a runtime build (see T95).
 - The 13 undecoded files are not in the pair map; the 256 `number`-tier pairs (other crop, lighting or palette variants, or wide variant-B pictures whose PC picture has a different size) have not been checked by eye.
 - `NC*.BIN` (T67's other half) is not decoded; this method (look at the data per hypothesis) is the next thing to try there.
+
+## Runtime use (T74, patch0059)
+
+The palette the game loads into colour RAM for a scene picture is the palette stored in its BIN (variant A: 256 words at 0xA250), so `Renderer::BackgroundPaletteFingerprint(layer)` (FNV-1a 64 over those words) identifies it: picture layer 2 or 4 of the presentation frame. 687 of the 740 palettes are unique. `tools/gen_scene_bg_table.py` turns the `content` pairs into `port/scene_bg_table.h` (447 entries) and the runtime draws the PC picture under the native overlays. The PC picture is the whole composition (576x320) stretched onto the 288x144 rectangle; an earlier crop-based comparison was wrong and gave misleadingly high scores.
