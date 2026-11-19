@@ -88,7 +88,9 @@
       "patches/0083-sakura-clip-av-offset-trace.patch",
       "patches/0084-sakura-sh2-wait-detector-in-place.patch",
       "patches/0085-sakura-episode-surround.patch",
-      "patches/0086-sakura-spanish-episode-lettering.patch"
+      "patches/0086-sakura-spanish-episode-lettering.patch",
+      "patches/0087-sakura-scene-picture-cells-key.patch",
+      "patches/0088-sakura-dialogue-text-one-pixel-lower.patch"
     ]
   }
 }

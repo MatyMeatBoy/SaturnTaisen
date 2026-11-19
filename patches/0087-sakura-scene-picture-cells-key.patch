@@ -1,0 +1,35 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 010d5ee..f932dbf 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1536,6 +1536,12 @@ int RunWindowed(Port &port) {
+                                             const uint64_t cells=port.videoRenderer->BackgroundCellFingerprint(layer,41472);
+                                             for(unsigned j=0;j<kSceneBgAmbiguousCount;j++)
+                                                 if(kSceneBgAmbiguous[j].palette==fingerprint && kSceneBgAmbiguous[j].cells==cells) {slot=kSceneBgCount+j;break;}
++                                            if(const char* dump=std::getenv("SATRECOMP_CELL_DUMP")) {
++                                                static bool dumped=false;
++                                                if(!dumped) {dumped=true;const uint32 page=port.videoRenderer->DumpBackgroundVram(layer,dump);
++                                                             fprintf(stderr,"cell dump: layer %u first name table at 0x%X
++",layer,page);}
++                                            }
+                                             if(std::getenv("SATRECOMP_BACKGROUND_STATS"))
+                                                 fprintf(stderr,"scene picture with a shared palette %016llX: cells %016llX -> %s\n",static_cast<unsigned long long>(fingerprint),
+                                                         static_cast<unsigned long long>(cells),slot==kNoSlot?"no match":kSceneBgAmbiguous[slot-kSceneBgCount].file);
+diff --git a/video/renderer.h b/video/renderer.h
+index 86dd10f..21fd65d 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -137,6 +137,13 @@ public:
+         for(uint32 i=0;i<bytes;i++)hash=(hash^m_mem.vram2[(address+i)&0x7FFFF])*1099511628211ull;
+         return hash;
+     }
++    // Debug aid (TW1): writes the whole VDP2 VRAM (512 KB) to a file and returns the address the layer's first character points at.
++    uint32 DumpBackgroundVram(uint32 layer,const char* path) const {
++        if(layer<1 || layer>5)return 0;
++        if(FILE* f=fopen(path,"wb")) {fwrite(m_mem.vram2,1,0x80000,f);fclose(f);}
++        const auto& bg=m_regs2.bgParams[layer-1];
++        return bg.pageBaseAddresses[0];
++    }
+     std::array<int16_t,3> BackgroundColorOffset(uint32 layer=5) const {
+         if(layer>6 || !m_regs2.colorOffsetEnable[layer])return {};
+         const auto& offset=m_regs2.colorOffset[m_regs2.colorOffsetSelect[layer]];
