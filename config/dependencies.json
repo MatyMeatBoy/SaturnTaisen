@@ -78,6 +78,8 @@
       "patches/0073-sakura-film-clip-hook.patch",
       "patches/0074-sakura-film-clip-audio.patch",
       "patches/0075-sakura-vdp-scroll-dot-colour.patch",
+      "patches/0076-sakura-card-wide-mirror.patch",
+      "patches/0077-sakura-sh2-dispatch-fast-chain.patch",
       "patches/0078-sakura-movie-decoder-independent-tracks.patch"
     ]
   }

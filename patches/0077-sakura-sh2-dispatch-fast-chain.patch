@@ -1,0 +1,85 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -98,6 +98,7 @@
+         uint16_t block;      // ... and which block (the function is entered there)
+         const Lift *lift;    // set if a hand-written routine replaces the code from here (lift.h)
+         Entry *next;         // other code seen at the same address
++        Entry *nextFree;     // the next of those a free-running dispatch asks (lifted routines and starts at instruction 0)
+         uint64_t runs;
+         uint64_t checked;    // the code epoch at which `matches` was worked out (see Matches)
+         bool matches;        // memory held this code then
+@@ -113,6 +114,7 @@
+         uint32_t size;
+         const uint8_t *mem;
+         std::vector<Entry *> table; // by (offset / 2)
++        std::vector<Entry *> fast;  // by (offset / 2): the entries of `table` that are lifted routines or start at instruction 0, same order
+     };
+ 
+     struct Runtime {
+@@ -494,6 +496,12 @@
+             e.next = *link;
+             *link = &e;
+             if (i == 0) {
++                Entry **fastLink = &r.fast[offset >> 1];
++                while (*fastLink && (*fastLink)->lift) {
++                    fastLink = &(*fastLink)->nextFree;
++                }
++                e.nextFree = *fastLink;
++                *fastLink = &e;
+                 first = &e;
+             }
+         }
+@@ -1012,7 +1020,7 @@
+             }
+             // (Free running, blocks are only entered at their first instruction: a branch into the middle of
+             // one starts a block of its own.)
+-            for (e = resumed ? nullptr : r->table[offset >> 1]; e; e = e->next) {
++            for (e = resumed ? nullptr : (freeRunning ? r->fast : r->table)[offset >> 1]; e; e = freeRunning ? e->nextFree : e->next) {
+                 if (e->lift) [[unlikely]] {
+                     // A lifted routine: the code here must be the routine it was written from. Its bytes
+                     // are not part of the build; they are taken from memory the first time the hash matches.
+@@ -1341,6 +1349,7 @@
+     rt.regions[2] = {0x00000000, memory.romSize, memory.rom, {}};
+     for (auto &r : rt.regions) {
+         r.table.assign(r.size / 2, nullptr);
++        r.fast.assign(r.size / 2, nullptr);
+     }
+ 
+     rt.hle = hle::Active();
+@@ -1459,6 +1468,8 @@
+                 }
+                 e.next = r->table[offset >> 1];
+                 r->table[offset >> 1] = &e;
++                e.nextFree = r->fast[offset >> 1];
++                r->fast[offset >> 1] = &e;
+                 rt.builtFunctions++;
+                 // The function can be entered at any of its blocks (not while recording: blocks are then
+                 // followed one by one)
+@@ -1477,6 +1488,8 @@
+                     m.block = static_cast<uint16_t>(b);
+                     m.next = r->table[at >> 1];
+                     r->table[at >> 1] = &m;
++                    m.nextFree = r->fast[at >> 1];
++                    r->fast[at >> 1] = &m;
+                 }
+             }
+         }
+@@ -1493,6 +1506,8 @@
+                 e.lift = &lift;
+                 e.next = r->table[offset >> 1];
+                 r->table[offset >> 1] = &e;
++                e.nextFree = r->fast[offset >> 1];
++                r->fast[offset >> 1] = &e;
+             }
+         }
+     }
+@@ -1560,7 +1575,7 @@
+     // where a hand-written routine or a sync point is: those are the dispatcher's business.
+     Entry *e;
+     unsigned block = 0;
+-    for (e = r->table[offset >> 1]; e; e = e->next) {
++    for (e = r->fast[offset >> 1]; e; e = e->nextFree) { // (the entries that start in the middle of a block are skipped below, so they are left out)
+         if (e->lift) {
+             return false;
+         }
