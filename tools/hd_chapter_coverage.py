@@ -247,6 +247,13 @@ def build(root, index_dir, portrait_audit):
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
                    'verified_in_game': True, 'runtime_evidence': BBG204_REPORT}
+        elif title := re.fullmatch(r'/SAKURA1/(TITLE[1-9])\.BIN', path):
+            row = {
+                'status': 'excluded',
+                'pc': f'SAKURA1/TITLE/{title[1]}.SPR',
+                'reason': 'Japanese lettering is baked into the PC image. The approved episode cards use localized centers.',
+                'decision_evidence': 'docs/research/episode-title-pc-pairings.md',
+            }
         elif path in bg:
             pair = bg[path]
             accepted = name not in bg_review['rejected'] and (
