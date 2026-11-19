@@ -1003,7 +1003,7 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
 
 # ---- profile -----------------------------------------------------------------------------------------
 
-DEFAULT_SETTINGS = ('[features]\npreset=custom\npresentation_mode=1\nscene_view=1\ntext_style=0\n'
+DEFAULT_SETTINGS = ('[features]\npreset=custom\nscene_view=1\ntext_style=0\n'
                     'pc_hd_backgrounds=0\npc_hd_portraits=0\nhd_preload=1\npad_profile=0\nrun_ahead=0\n')
 
 
@@ -1202,7 +1202,8 @@ def frontend(paths: Paths, args) -> None:
         write_default_settings(paths)
         set_values(paths.home / 'settings.ini',
                    {('features', 'preset'): 'custom',
-                    ('features', 'presentation_mode'): '0' if args.widescreen == 'off' else '1'})
+                    ('features', 'presentation_mode'): '0' if args.widescreen == 'off' else '1',
+                    ('features', 'presentation_chosen'): '1'})
     say(100, 'Configuración guardada.')
 
 
