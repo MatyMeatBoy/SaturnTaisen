@@ -110,12 +110,8 @@ received a visual check against the actual native and PC textures.
 
 The [offline review table](../../config/hd-system-hud-review.json) lists
 all candidates, their PC source identities, and the command and CRAM
-fingerprints used to distinguish the six observed textures. A saved
-command establishes the native payload and coordinates. Runtime acceptance
-still needs the presented-frame association and palette variation checked
-across state changes. In particular, the arrow keys above qualify only the
-recorded appearance. Before enabling them, T110a will verify the selected
-and disabled states and test placement in gameplay.
+fingerprints used to distinguish the six observed textures. The runtime
+acceptance for the confirmed inventory layout is documented below.
 
 Separately, `WALL1.BIN` at 320x224 matches the floral composition of
 `SAKURA1/WALL/KABE0100.SPR` subimage 0 at 640x480. The whole-image grey
@@ -124,3 +120,39 @@ The file hashes and native palette fingerprint 0x48291F6F1C8A4707 agree
 with the existing KABE00 and KABE0100 provenance. Width scales at 2x and
 height at 15/7, so keep the existing backdrop path and avoid a raw stretch.
 There is no new direct replacement for this backdrop in T110.
+
+
+## T110a inventory brackets in game
+
+Patch 0093 draws the two 16×32 PC FONT_CSL glyphs over the four 8×16 native
+brackets. It requires the complete group of scaled VDP1 commands at native
+x=64, 104, 128 and 168, y=108. The VDP1 texture fingerprints and inclusive
+corners identify the glyphs. VDP2 scanout supplies each bracket's mode-1 CRAM
+bank and indices 6 and 9. The idle bank is 0x5A0 and the hover and confirmation
+bank is 0x5E0. The inventory label and hand cursor use their native paths.
+
+The rasterizer follows actual framebuffer writes. A later opaque writer keeps
+its native pixels, even when it writes the same color as the bracket. The
+overlay covers only texels still owned by a bracket at scanout. Effects,
+incomplete or changed groups, other palette banks, and unavailable or
+unrecognized PC assets fall back to Saturn. The verified gray and pink shades
+are reused at twice the native density within the existing integer-scaled
+viewport. The verified states do not establish a disabled-button palette.
+
+| Disc 1 replay | Captured frames |
+| --- | --- |
+| English idle | 60 |
+| English Option and Return hover | 62 and 104 |
+| English Option confirm and exit | 68 and 92 |
+| English Return confirm and exit | 113 and 140 |
+| English hand over the left Option bracket | 76 |
+| Spanish idle after leaving Options | 115 |
+
+Seven private replays at 1920×1080 each compared the asset-present and
+asset-absent viewports in Original, Enhanced Set, and Enhanced
+Zoom. Each of the 656 guest frame hashes matched the other profiles for its
+input route, with zero interpreted blocks across all 43 runs including the
+altered-asset control. Every Original capture matched pixel for pixel. The
+Enhanced changes stayed inside the four verified glyph rectangles, including
+at hand overlap. Exit captures and the altered-asset control matched the
+asset-absent viewport pixel for pixel. No release package was made.
