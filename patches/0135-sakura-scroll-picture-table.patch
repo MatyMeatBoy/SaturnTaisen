@@ -1,0 +1,460 @@
+diff --git a/port/bg1207_verified_pan.h b/port/bg1207_verified_pan.h
+index cd68e28..dc4c9e4 100644
+--- a/port/bg1207_verified_pan.h
++++ b/port/bg1207_verified_pan.h
+@@ -12,17 +12,17 @@ inline constexpr uint64_t kBG1207Cells = 0x7F3401C09AF54AA3ull;
+ 
+ inline std::optional<unsigned> FindHorizontalPanOffset(
+     std::span<const uint32_t> picture, std::span<const uint32_t> frame,
+-    std::span<const uint8_t> top, bool opaqueActorLayer) {
+-    if (picture.size() != kHorizontalPanWidth * kHorizontalPanHeight || frame.size() != kPanFrameWidth * kPanFrameHeight ||
++    std::span<const uint8_t> top, bool opaqueActorLayer, unsigned pictureWidth = kHorizontalPanWidth) {
++    if (pictureWidth < kPanInsetWidth || picture.size() != size_t(pictureWidth) * kHorizontalPanHeight || frame.size() != kPanFrameWidth * kPanFrameHeight ||
+         top.size() != frame.size()) return {};
+     const auto agrees = [&](unsigned start, unsigned x, unsigned y) {
+         const auto at = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;
+-        const auto expected = picture[y * kHorizontalPanWidth + start + x];
++        const auto expected = picture[y * pictureWidth + start + x];
+         if (top[at] == 4) return (frame[at] & 0xFFFFFF) == expected;
+         return top[at] == 2 && opaqueActorLayer;
+     };
+     std::optional<unsigned> result;
+-    for (unsigned offset = 0; offset <= kHorizontalPanWidth - kPanInsetWidth; ++offset) {
++    for (unsigned offset = 0; offset <= pictureWidth - kPanInsetWidth; ++offset) {
+         if (!agrees(offset, 17, 13) || !agrees(offset, 139, 77) || !agrees(offset, 247, 114)) continue;
+         bool verified = true;
+         unsigned foreground = 0;
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index b1c7f2a..9a5b73a 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -23,8 +23,7 @@
+ #include "pc_backdrop.h"
+ #include "pc_spr.h"
+ #include "bg2533_verified_pan.h"
+-#include "bg2248_verified_pan.h"
+-#include "bg1207_verified_pan.h"
++#include "scroll_pictures.h"
+ #include "bg2238_verified_still.h"
+ #include "bg1306_viewport.h"
+ #include "scene_bg_table.h"
+@@ -676,44 +675,9 @@ int RunWindowed(Port &port) {
+     SceneHd bg1306;
+     std::vector<uint32_t> bg1306Native;
+     SceneHd bg2238;
+-    SceneHd bg1285;
+-    std::vector<uint32_t> bg1285Native;
+-    SceneHd bg1207;
+-    std::vector<uint32_t> bg1207Native;
+-    struct VerticalPan {
+-        const char* name;
+-        const char* nativeFile;
+-        unsigned height;
+-        size_t nativeBytes;
+-        uint64_t nativeFingerprint;
+-        uint64_t palette;
+-        uint64_t cells;
+-        const char* pcFile;
+-        size_t pcBytes;
+-        uint64_t pcFingerprint;
+-        SceneHd hd;
+-        std::vector<uint32_t> pixels;
+-    };
+-    VerticalPan verticalPans[] = {
+-        {"BG2248", "BG2248.BIN", 296, 91936, 0x484258326571AF9Cull, 0xF0AFCDD75EBA9DA2ull,
+-         0xD434BC45B629CEC4ull, "SAKURA1/BG/BG2248.SPR", 370887, 0x47D2A7B028841B72ull, {}, {}},
+-        {"BG2295", "BG2295.BIN", 208, 64688, 0x40CD716674C17E1Dull, 0x5B088DCCBE6E471Bull,
+-         0x019973A4BC85F784ull, "SAKURA1/BG/BG2295.SPR", 217667, 0x466721FE4E14023Cull, {}, {}},
+-        {"BG2207", "BG2207.BIN", 296, 92192, 0xB0B168DC305B09B4ull, 0x45D633A0744CE417ull,
+-         0x0ECCAE6C23A7A1F3ull, "SAKURA1/BG/BG2207.SPR", 223600, 0x59EAF7A1C5F715D7ull, {}, {}},
+-        {"BG2265", "BG2265.BIN", 296, 92192, 0xF92D9577530691ECull, 0xDB8E755239A7A38Dull,
+-         0x6361A5F2553BB750ull, "SAKURA1/BG/BG2265.SPR", 224533, 0x7828B3A1BE482E41ull, {}, {}},
+-        {"BG2266", "BG2266.BIN", 296, 92192, 0x689EA6344CDCB5AFull, 0xDC3B5A452E7BE06Eull,
+-         0x8A1D6A579A2E0D65ull, "SAKURA1/BG/BG2266.SPR", 221463, 0xDC9F068EF193C911ull, {}, {}},
+-        {"BG2267", "BG2267.BIN", 296, 92192, 0xCF1D121DC7E82565ull, 0x06A6087696AA1A72ull,
+-         0x0F94AD90DE5B35E0ull, "SAKURA1/BG/BG2267.SPR", 224718, 0x9414BE93AFC8DD83ull, {}, {}},
+-        {"BG2268", "BG2268.BIN", 296, 92192, 0xB2C04D3DD919EDADull, 0x6A7265C4FB3D58C9ull,
+-         0x0FB7E770C75EC8C1ull, "SAKURA1/BG/BG2268.SPR", 224854, 0xBA2A56B30657D296ull, {}, {}},
+-        {"BG2269", "BG2269.BIN", 296, 92192, 0x194B0C75D9E3A254ull, 0x09CE9EC2F1BB4A9Dull,
+-         0xE32B34078B89A94Aull, "SAKURA1/BG/BG2269.SPR", 221622, 0x41E1C10EC2F1A1FBull, {}, {}},
+-    };
+-    SceneHd bg2533;
+-    std::vector<uint32_t> bg2533Native;
++    // TP2: one slot per row of kScrollPictures (native pixels decoded once, PC texture loaded once).
++    struct ScrollState {SceneHd hd; std::vector<uint32_t> pixels;};
++    std::array<ScrollState, kScrollPictureCount> scrollState;
+     auto queuePinnedPan = [&](SceneHd& pan, const char* relativePath, size_t fileSize,
+                               uint64_t fingerprint, unsigned width, unsigned height) {
+         const auto file = std::filesystem::path(port.opt.pcAssetsPath) / relativePath;
+@@ -747,6 +711,17 @@ int RunWindowed(Port &port) {
+             pan.texture = picture;
+         } else if (picture) SDL_DestroyTexture(picture);
+     };
++    auto prepareScroll = [&](const ScrollPicture& row, ScrollState& state) {
++        if (!state.hd.tried) {
++            state.hd.tried = true;
++            std::vector<uint8_t> native;
++            if (port.discFiles.ReadBounded(std::string(row.name) + ".BIN", native, row.nativeBytes))
++                state.pixels = DecodeScrollPicture(row, native);
++            if (!state.pixels.empty())
++                queuePinnedPan(state.hd, row.pcFile, row.pcBytes, row.pcFnv, row.pcWidth, row.pcHeight);
++        }
++        finishPinnedPan(state.hd);
++    };
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
+     SceneHd ic01;
+@@ -2163,79 +2138,27 @@ int RunWindowed(Port &port) {
+                                 SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+                                 drewClip=true;
+                             }
+-                            VerticalPan* vertical = nullptr;
+-                            if (port.videoRenderer) {
+-                                const auto palette = port.videoRenderer->BackgroundPaletteFingerprint(4);
+-                                for (auto& pan : verticalPans) {
+-                                    if (pan.palette == palette &&
+-                                        port.videoRenderer->BackgroundCellFingerprint(4, 41472) == pan.cells) {
+-                                        vertical = &pan;
+-                                        break;
+-                                    }
+-                                }
+-                            }
+-                            if (!drewClip && vertical && !port.opt.pcAssetsPath.empty() &&
++                            const ScrollPicture* scroll = nullptr;
++                            if (port.videoRenderer)
++                                scroll = FindScrollPicture(port.videoRenderer->BackgroundPaletteFingerprint(4), [&] {
++                                    return port.videoRenderer->BackgroundCellFingerprint(4, 41472);
++                                });
++                            // TP2: every table row except the edge-ramped BG2533 draws through this one path.
++                            if (scroll && scroll->style != ScrollStyle::EdgeRamp &&
++                                (scroll->axis == ScrollAxis::Vertical ? !drewClip : (!drewHd && !drewClip)) &&
++                                !port.opt.pcAssetsPath.empty() &&
+                                 satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !choosing && !port.menu.IsOpen()) {
+-                                auto& pan = *vertical;
+-                                if (!pan.hd.tried) {
+-                                    pan.hd.tried = true;
+-                                    std::vector<uint8_t> native;
+-                                    if (port.discFiles.ReadBounded(pan.nativeFile, native, pan.nativeBytes)) {
+-                                        pan.pixels = DecodePinnedPan(native, kPanInsetWidth, pan.height,
+-                                                                     pan.nativeBytes, pan.nativeFingerprint);
+-                                    }
+-                                    if (!pan.pixels.empty())
+-                                        queuePinnedPan(pan.hd, pan.pcFile, pan.pcBytes, pan.pcFingerprint,
+-                                                       2 * kPanInsetWidth, 2 * pan.height);
+-                                }
+-                                finishPinnedPan(pan.hd);
+-                                if (pan.hd.texture) {
+-                                    const auto offset = FindVerticalPanOffset(pan.pixels, softwareShown, planes.topSource, pan.height);
++                                auto& state = scrollState[size_t(scroll - kScrollPictures)];
++                                prepareScroll(*scroll, state);
++                                if (state.hd.texture) {
++                                    const bool vertical = scroll->axis == ScrollAxis::Vertical;
++                                    const auto offset = FindScrollOffset(*scroll, state.pixels, softwareShown, planes.topSource,
++                                        scroll->style == ScrollStyle::ActorForeground && port.videoRenderer->BackgroundIsOpaque(2));
+                                     if (offset) {
+-                                        const SDL_FRect pcCrop{0.0f, float(*offset * 2), float(2 * kPanInsetWidth),
+-                                                               float(2 * kPanPictureHeight)};
+-                                        drewHd = SDL_RenderTexture(renderer, pan.hd.texture, &pcCrop, &imageTarget);
+-                                        if (drewHd && std::getenv("SATRECOMP_PAN_TRACE"))
+-                                            std::fprintf(stderr, "verified pan: %s y=%u\n", pan.name, *offset);
+-                                    }
+-                                }
+-                            }
+-                            const bool bg1207Layer = port.videoRenderer &&
+-                                port.videoRenderer->BackgroundPaletteFingerprint(4) == kBG1207Palette &&
+-                                port.videoRenderer->BackgroundCellFingerprint(4, 41472) == kBG1207Cells;
+-                            const bool bg1285Layer = port.videoRenderer &&
+-                                port.videoRenderer->BackgroundPaletteFingerprint(4) == 0x8B6362BE73FB2551ull &&
+-                                port.videoRenderer->BackgroundCellFingerprint(4, 41472) == 0xBE01460AC7277CC6ull;
+-                            if (!drewHd && !drewClip && (bg1207Layer || bg1285Layer) && !port.opt.pcAssetsPath.empty() &&
+-                                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !choosing && !port.menu.IsOpen()) {
+-                                auto& pan = bg1207Layer ? bg1207 : bg1285;
+-                                auto& nativePixels = bg1207Layer ? bg1207Native : bg1285Native;
+-                                const char* name = bg1207Layer ? "BG1207" : "BG1285";
+-                                if (!pan.tried) {
+-                                    pan.tried = true;
+-                                    std::vector<uint8_t> native;
+-                                    const size_t nativeSize = bg1207Layer ? kBG1207Bytes : 77648;
+-                                    const uint64_t nativeFingerprint = bg1207Layer ? 0xB348FED200EB5F33ull : 0x84BEAAAE2A751658ull;
+-                                    if (port.discFiles.ReadBounded(std::string(name) + ".BIN", native, nativeSize)) {
+-                                        nativePixels = DecodePinnedPan(native, kHorizontalPanWidth, kHorizontalPanHeight,
+-                                                                        nativeSize, nativeFingerprint);
+-                                    }
+-                                    if (!nativePixels.empty()) {
+-                                        const auto file = std::string("SAKURA1/BG/") + name + ".SPR";
+-                                        const size_t pcSize = bg1207Layer ? 430485 : 228628;
+-                                        const uint64_t pcFingerprint = bg1207Layer ? 0x79337C665113FFEAull : 0x6C426261DECC3F7Eull;
+-                                        queuePinnedPan(pan, file.c_str(), pcSize, pcFingerprint, 1024, 320);
+-                                    }
+-                                }
+-                                finishPinnedPan(pan);
+-                                if (pan.texture) {
+-                                    const auto offset = FindHorizontalPanOffset(nativePixels, softwareShown, planes.topSource,
+-                                        bg1207Layer && port.videoRenderer->BackgroundIsOpaque(2));
+-                                    if (offset) {
+-                                        const SDL_FRect pcCrop{float(*offset * 2), 16.0f, float(2 * kPanInsetWidth),
+-                                                               float(2 * kHorizontalPanHeight)};
+-                                        drewHd = SDL_RenderTexture(renderer, pan.texture, &pcCrop, &imageTarget);
+-                                        if (drewHd) {
++                                        const auto crop = ScrollPcCrop(*scroll, *offset);
++                                        const SDL_FRect pcCrop{float(crop.x), float(crop.y), float(crop.w), float(crop.h)};
++                                        drewHd = SDL_RenderTexture(renderer, state.hd.texture, &pcCrop, &imageTarget);
++                                        if (drewHd && !vertical) {
+                                             sceneHdForeground = zoomForeground;
+                                             for (int y = 8; y < 152; ++y)
+                                                 for (int x = 16; x < 304; ++x) {
+@@ -2245,9 +2168,9 @@ int RunWindowed(Port &port) {
+                                             SDL_UpdateTexture(content, nullptr, sceneHdForeground.data(), 320 * sizeof(uint32_t));
+                                             SDL_RenderTexture(renderer, content, &imageCrop, &imageTarget);
+                                             SDL_UpdateTexture(content, nullptr, zoomForeground.data(), 320 * sizeof(uint32_t));
+-                                            if (std::getenv("SATRECOMP_PAN_TRACE"))
+-                                                std::fprintf(stderr, "verified pan: %s x=%u\n", name, *offset);
+                                         }
++                                        if (drewHd && std::getenv("SATRECOMP_PAN_TRACE"))
++                                            std::fprintf(stderr, "verified pan: %s %c=%u\n", scroll->name, vertical ? 'y' : 'x', *offset);
+                                     }
+                                 }
+                             }
+@@ -2324,7 +2247,7 @@ int RunWindowed(Port &port) {
+                                planes.source.size()==320*224) {
+                                 for(const uint32_t layer:{2u,4u}) {
+                                     if(drewHd)break;
+-                                    if(layer==4 && (vertical || bg1207Layer || bg1285Layer))continue;
++                                    if(layer==4 && scroll && scroll->style!=ScrollStyle::EdgeRamp)continue;
+                                     const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
+                                     constexpr unsigned kNoSlot=kSceneBgCount+kSceneBgAmbiguousCount;
+                                     unsigned slot=kNoSlot;
+@@ -2395,66 +2318,24 @@ int RunWindowed(Port &port) {
+                                     drewHd=true;
+                                 }
+                             }
+-                            if (!drewHd && !drewClip && port.videoRenderer &&
+-                                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
+-                                port.videoRenderer->BackgroundPaletteFingerprint(4) == 0x09884FF240CB5BF3ull) {
+-                                if (!bg2533.tried) {
+-                                    bg2533.tried = true;
+-                                    std::vector<uint8_t> native;
+-                                    if (port.discFiles.ReadBounded("BG2533.BIN", native, 64016)) {
+-                                        bg2533Native = DecodePinnedBG2533(native);
+-                                    }
+-                                    if (!bg2533Native.empty()) {
+-                                        const auto file = std::filesystem::path(port.opt.pcAssetsPath) /
+-                                                          "SAKURA1/BG/BG2533.SPR";
+-                                        bg2533.pending = std::async(std::launch::async, [file] {
+-                                            SceneHdPixels decoded;
+-                                            std::vector<uint8_t> bytes;
+-                                            if (!ReadPcBackdropFile(file, bytes, 266190) ||
+-                                                AtlasFingerprint(bytes) != 0x006D2C402DBBFE05ull) return decoded;
+-                                            std::vector<PcSprite> images;
+-                                            std::string error;
+-                                            if (!DecodePcSprites(bytes, images, error)) return decoded;
+-                                            const auto part = std::find_if(images.begin(), images.end(), [](const auto& item) {
+-                                                return item.index == 0 && item.width == 1024 && item.height == 320;
+-                                            });
+-                                            if (part != images.end()) {
+-                                                decoded.width = part->width;
+-                                                decoded.height = part->height;
+-                                                decoded.pixels = std::move(part->pixels);
+-                                            }
+-                                            return decoded;
+-                                        });
+-                                    }
+-                                }
+-                                if (bg2533.pending.valid() &&
+-                                    bg2533.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+-                                    auto decoded = bg2533.pending.get();
+-                                    if (!decoded.pixels.empty()) {
+-                                        auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+-                                            SDL_TEXTUREACCESS_STATIC, int(decoded.width), int(decoded.height));
+-                                        if (picture && SDL_UpdateTexture(picture, nullptr, decoded.pixels.data(),
+-                                                                         int(decoded.width * 4))) {
+-                                            bg2533.texture = picture;
+-                                            SDL_SetTextureBlendMode(bg2533.texture, SDL_BLENDMODE_BLEND);
+-                                            SDL_SetTextureScaleMode(bg2533.texture, SDL_SCALEMODE_LINEAR);
+-                                        } else if (picture) {
+-                                            SDL_DestroyTexture(picture);
+-                                        }
+-                                    }
+-                                }
+-                                if (bg2533.texture) {
+-                                    const auto match = FindVerifiedPanPosition(bg2533Native, softwareShown, planes.topSource);
++                            if (!drewHd && !drewClip && port.videoRenderer && scroll && scroll->style == ScrollStyle::EdgeRamp &&
++                                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0) {
++                                auto& edge = scrollState[size_t(scroll - kScrollPictures)];
++                                prepareScroll(*scroll, edge);
++                                if (edge.hd.texture) {
++                                    SDL_SetTextureBlendMode(edge.hd.texture, SDL_BLENDMODE_BLEND);
++                                    const auto match = FindVerifiedPanPosition(edge.pixels, softwareShown, planes.topSource);
+                                     if (match) {
++                                        const auto base = ScrollPcCrop(*scroll, 0);
+                                         SDL_RenderTexture(renderer, content, &imageCrop, &imageTarget);
+                                         const float outputScale = imageTarget.w / kPanInsetWidth;
+                                         const auto drawRange = [&](unsigned first, unsigned count, uint8_t alpha) {
+-                                            const SDL_FRect pcCrop{float((match->offset + first) * 2), 16,
+-                                                                  float(count * 2), 288};
++                                            const SDL_FRect pcCrop{float((match->offset + first) * 2), float(base.y),
++                                                                  float(count * 2), float(base.h)};
+                                             const SDL_FRect target{imageTarget.x + first * outputScale, imageTarget.y,
+                                                                    count * outputScale, imageTarget.h};
+-                                            SDL_SetTextureAlphaMod(bg2533.texture, alpha);
+-                                            SDL_RenderTexture(renderer, bg2533.texture, &pcCrop, &target);
++                                            SDL_SetTextureAlphaMod(edge.hd.texture, alpha);
++                                            SDL_RenderTexture(renderer, edge.hd.texture, &pcCrop, &target);
+                                         };
+                                         // Ease into the two Saturn-only columns of tiles.
+                                         // Anchor the ramp to the picture so it moves with the camera.
+diff --git a/port/scroll_picture_rows.h b/port/scroll_picture_rows.h
+new file mode 100644
+index 0000000..2dd2c1e
+--- /dev/null
++++ b/port/scroll_picture_rows.h
+@@ -0,0 +1,47 @@
++// Generated by tools/gen_scroll_pictures.py from config/hd-scroll-pictures.json. Do not edit by hand.
++// name, axis, native w x h, native bytes/fnv, VDP2 palette key, first-cell key (0: palette only), PC file/bytes/fnv, PC w x h, style
++{"BG1207", ScrollAxis::Horizontal, 512, 144, 79952, 0xB348FED200EB5F33ull,
++ 0x6EE7138F39DF8CFEull, 0x7F3401C09AF54AA3ull, "SAKURA1/BG/BG1207.SPR", 430485, 0x79337C665113FFEAull, 1024, 320,
++ ScrollStyle::ActorForeground},
++{"BG1282", ScrollAxis::Horizontal, 512, 144, 79952, 0xEEE384A9F7CDC3F6ull,
++ 0x1D0FF907BAB974CBull, 0x945B20754058C1E9ull, "SAKURA1/BG/BG1282.SPR", 383580, 0x40B4D0460F220D3Bull, 1024, 320,
++ ScrollStyle::Plain},
++{"BG1285", ScrollAxis::Horizontal, 512, 144, 77648, 0x84BEAAAE2A751658ull,
++ 0x8B6362BE73FB2551ull, 0xBE01460AC7277CC6ull, "SAKURA1/BG/BG1285.SPR", 228628, 0x6C426261DECC3F7Eull, 1024, 320,
++ ScrollStyle::Plain},
++{"BG2130", ScrollAxis::Horizontal, 512, 144, 79952, 0xC7751BEE11E98229ull,
++ 0xB23A4255D836A48Aull, 0x3AFD3CC847F04D75ull, "SAKURA1/BG/BG2130.SPR", 325884, 0x832A6FCCD781FC55ull, 1024, 320,
++ ScrollStyle::Plain},
++{"BG2176", ScrollAxis::Vertical, 288, 296, 91168, 0x9AF2822587C0F342ull,
++ 0x2D7CB74664182158ull, 0x2D1213A77CB7485Full, "SAKURA1/BG/BG2176.SPR", 229338, 0xE6DD8D8BC1103F92ull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2207", ScrollAxis::Vertical, 288, 296, 92192, 0xB0B168DC305B09B4ull,
++ 0x45D633A0744CE417ull, 0x0ECCAE6C23A7A1F3ull, "SAKURA1/BG/BG2207.SPR", 223600, 0x59EAF7A1C5F715D7ull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2248", ScrollAxis::Vertical, 288, 296, 91936, 0x484258326571AF9Cull,
++ 0xF0AFCDD75EBA9DA2ull, 0xD434BC45B629CEC4ull, "SAKURA1/BG/BG2248.SPR", 370887, 0x47D2A7B028841B72ull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2265", ScrollAxis::Vertical, 288, 296, 92192, 0xF92D9577530691ECull,
++ 0xDB8E755239A7A38Dull, 0x6361A5F2553BB750ull, "SAKURA1/BG/BG2265.SPR", 224533, 0x7828B3A1BE482E41ull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2266", ScrollAxis::Vertical, 288, 296, 92192, 0x689EA6344CDCB5AFull,
++ 0xDC3B5A452E7BE06Eull, 0x8A1D6A579A2E0D65ull, "SAKURA1/BG/BG2266.SPR", 221463, 0xDC9F068EF193C911ull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2267", ScrollAxis::Vertical, 288, 296, 92192, 0xCF1D121DC7E82565ull,
++ 0x06A6087696AA1A72ull, 0x0F94AD90DE5B35E0ull, "SAKURA1/BG/BG2267.SPR", 224718, 0x9414BE93AFC8DD83ull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2268", ScrollAxis::Vertical, 288, 296, 92192, 0xB2C04D3DD919EDADull,
++ 0x6A7265C4FB3D58C9ull, 0x0FB7E770C75EC8C1ull, "SAKURA1/BG/BG2268.SPR", 224854, 0xBA2A56B30657D296ull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2269", ScrollAxis::Vertical, 288, 296, 92192, 0x194B0C75D9E3A254ull,
++ 0x09CE9EC2F1BB4A9Dull, 0xE32B34078B89A94Aull, "SAKURA1/BG/BG2269.SPR", 221622, 0x41E1C10EC2F1A1FBull, 576, 592,
++ ScrollStyle::Plain},
++{"BG2295", ScrollAxis::Vertical, 288, 208, 64688, 0x40CD716674C17E1Dull,
++ 0x5B088DCCBE6E471Bull, 0x019973A4BC85F784ull, "SAKURA1/BG/BG2295.SPR", 217667, 0x466721FE4E14023Cull, 576, 416,
++ ScrollStyle::Plain},
++{"BG2515", ScrollAxis::Horizontal, 512, 144, 75536, 0xAA77B77FAA462F81ull,
++ 0x9D943456BFD21B9Aull, 0xECD461679DC68BDDull, "SAKURA1/BG/BG2515.SPR", 238005, 0x0ED1B186B5EE536Aull, 1024, 320,
++ ScrollStyle::Plain},
++{"BG2533", ScrollAxis::Horizontal, 512, 144, 64016, 0x2DCA5B2CA73F65DDull,
++ 0x09884FF240CB5BF3ull, 0, "SAKURA1/BG/BG2533.SPR", 266190, 0x006D2C402DBBFE05ull, 1024, 320,
++ ScrollStyle::EdgeRamp},
+diff --git a/port/scroll_pictures.h b/port/scroll_pictures.h
+new file mode 100644
+index 0000000..08c1529
+--- /dev/null
++++ b/port/scroll_pictures.h
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++// TP2: one table for every scroll picture the Saturn shows through its 288x144 NBG2 window.
++//
++// Rule shared by all rows. The Saturn window (kPanInsetWidth x kPanPictureHeight, at 16,8 of the 320x224 frame) slides over a larger
++// native picture along ONE axis. The PC art is the same picture at 2x, so for a verified native offset n:
++//   scroll axis: PC start 2n, length 2 x window length
++//   cross axis : the PC art is larger than 2x the window by an even margin; the crop is centred in it
++//                (horizontal 1024x320 -> y 16, vertical 576xN -> x 0).
++// A row is therefore (picture, axis, native size, PC size) plus the pins that identify the files and the live layer. Adding a picture
++// is a data change (tools/gen_scroll_pictures.py derives every row from the Saturn BIN and the PC SPR).
++#include <cstddef>
++#include <cstdint>
++#include <optional>
++#include <span>
++
++#include "bg1207_verified_pan.h"
++#include "bg2248_verified_pan.h"
++
++namespace port {
++enum class ScrollAxis : uint8_t { Horizontal, Vertical };
++// Plain: the whole window is NBG2 (other layers keep the native composition).
++// ActorForeground: a small opaque NBG0 actor in front is kept (BG1207).
++// EdgeRamp: the last two tile columns of the native file are game-supplied edge, eased in with a ramp (BG2533, pinned by palette alone).
++enum class ScrollStyle : uint8_t { Plain, ActorForeground, EdgeRamp };
++
++struct ScrollPicture {
++    const char* name;
++    ScrollAxis axis;
++    unsigned width, height;       // native picture
++    size_t nativeBytes;
++    uint64_t nativeFnv;
++    uint64_t palette;             // BackgroundPaletteFingerprint(4)
++    uint64_t cells;               // BackgroundCellFingerprint(4, 41472); 0: identified by the palette alone
++    const char* pcFile;
++    size_t pcBytes;
++    uint64_t pcFnv;
++    unsigned pcWidth, pcHeight;   // subimage 0 of the PC file
++    ScrollStyle style;
++};
++
++inline constexpr ScrollPicture kScrollPictures[] = {
++#include "scroll_picture_rows.h"
++};
++inline constexpr size_t kScrollPictureCount = sizeof(kScrollPictures) / sizeof(kScrollPictures[0]);
++
++struct ScrollCrop {
++    unsigned x, y, w, h;
++};
++
++inline constexpr unsigned ScrollRange(const ScrollPicture& row) {
++    return row.axis == ScrollAxis::Horizontal ? row.width - kPanInsetWidth : row.height - kPanPictureHeight;
++}
++
++// PC rectangle for a native scroll offset (the rule above).
++inline constexpr ScrollCrop ScrollPcCrop(const ScrollPicture& row, unsigned offset) {
++    return row.axis == ScrollAxis::Horizontal
++        ? ScrollCrop{2 * offset, (row.pcHeight - 2 * kPanPictureHeight) / 2, 2 * kPanInsetWidth, 2 * kPanPictureHeight}
++        : ScrollCrop{(row.pcWidth - 2 * kPanInsetWidth) / 2, 2 * offset, 2 * kPanInsetWidth, 2 * kPanPictureHeight};
++}
++
++// The row obeys the rule: the window scrolls on one axis only, the PC art is 2x on it and leaves an even centred margin on the other.
++inline constexpr bool ScrollRowValid(const ScrollPicture& row) {
++    if (row.axis == ScrollAxis::Horizontal)
++        return row.height == kPanPictureHeight && row.width > kPanInsetWidth && row.pcWidth == 2 * row.width &&
++               row.pcHeight >= 2 * kPanPictureHeight && (row.pcHeight - 2 * kPanPictureHeight) % 2 == 0;
++    return row.width == kPanInsetWidth && row.height > kPanPictureHeight && row.pcHeight == 2 * row.height &&
++           row.pcWidth >= 2 * kPanInsetWidth && (row.pcWidth - 2 * kPanInsetWidth) % 2 == 0;
++}
++
++// The row whose live layer-4 keys match. `cellKey` is only called when a palette matches (it walks the map page).
++template <typename CellKey>
++inline const ScrollPicture* FindScrollPicture(uint64_t palette, CellKey&& cellKey) {
++    std::optional<uint64_t> cells;
++    for (const auto& row : kScrollPictures) {
++        if (row.palette != palette) continue;
++        if (!row.cells) return &row;
++        if (!cells) cells = cellKey();
++        if (*cells == row.cells) return &row;
++    }
++    return nullptr;
++}
++
++inline std::optional<unsigned> FindScrollOffset(const ScrollPicture& row, std::span<const uint32_t> picture,
++                                                std::span<const uint32_t> frame, std::span<const uint8_t> top,
++                                                bool opaqueActorLayer) {
++    return row.axis == ScrollAxis::Horizontal
++        ? FindHorizontalPanOffset(picture, frame, top, opaqueActorLayer, row.width)
++        : FindVerticalPanOffset(picture, frame, top, row.height);
++}
++
++inline std::vector<uint32_t> DecodeScrollPicture(const ScrollPicture& row, std::span<const uint8_t> bytes) {
++    return DecodePinnedPan(bytes, row.width, row.height, row.nativeBytes, row.nativeFnv);
++}
++}
