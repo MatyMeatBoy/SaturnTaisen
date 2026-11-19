@@ -66,7 +66,8 @@
       "patches/0061-sakura-scene-picture-async-decode.patch",
       "patches/0062-sakura-vdp1-texture-trace.patch",
       "patches/0063-sakura-vdp1-texture-trace-small.patch",
-      "patches/0064-sakura-hd-character-bodies.patch"
+      "patches/0064-sakura-hd-character-bodies.patch",
+      "patches/0065-sakura-body-skip-reasons.patch"
     ]
   }
 }
