@@ -180,3 +180,7 @@ Take in this order; each line is what gains the most per hour of work with what 
 4. **Large bodies without a decoded Saturn side (TP5, NC3125/3126/4138) and the 2 bad strides (NC3290/NC3517)**: decode work, no game needed.
 5. **Chapter attribution TH2-TH10**: needs chapter jumps/replays; slower, but it unlocks the chapter order.
 6. **Needs the owner's saves**: IC02-IC1006, the CD-2 emblem (SIS_ICON), window frames and tab panels, title/logo screens, karaoke/extra menu, 0169, 00a1.
+
+## Close the chapters in order (owner, 2026-11-19; goes first in the quick-win order)
+
+A chapter whose register has only a few open rows is closed before anything else. Chapter 1 today (register, `config/hd-chapter-coverage.json`): portrait `00a1` (the two PC eye strips must be swapped), portrait `0169` (the PC emblem changes artwork and framing; default decision: keep native, counted as closed by design unless the owner says otherwise), scene `EVE0101` (paired, not wired), and 6 FCE atlas rows that wait only on `00a1`/`0169`. Shard **TCH1** = close those three items. Then the same rule for chapter 2, 3 ...: list the open rows of the lowest chapter, close them, move on; attribution (TH2-TH10) feeds the next chapter.
