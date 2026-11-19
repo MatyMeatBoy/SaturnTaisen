@@ -93,9 +93,9 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Modo táctico | Sin dato |
 | HUD y menús PC/Saturn | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) |
-| Personajes grandes NC | 131/147 (89,1%) |
+| Personajes grandes NC | 137/147 (93,1%) |
 
-**HD total: 1038/1666 (62,3%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+**HD total: 1044/1666 (62,6%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico, HUD y menús PC/Saturn.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).

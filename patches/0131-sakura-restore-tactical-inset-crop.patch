@@ -1,0 +1,12 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -798,7 +798,7 @@
+                     if (!DecodePcSprites(bytes, images, error)) return result;
+                     for (auto& image : images) {
+                         if (image.index != port::kEve202PcImage ||
+-                            image.width != port::kEve202PcWidth || image.height != port::kEve202PcHeight) continue;
++                            !port::EveCropFits(crop, image.width, image.height)) continue;
+                         result.width = crop.width;
+                         result.height = crop.height;
+                         result.pixels.reserve(size_t(crop.width) * crop.height);

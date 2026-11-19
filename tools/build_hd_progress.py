@@ -140,21 +140,41 @@ REGISTER_COUNTS = {'scene-images': 'scene-pictures', 'large-characters': 'bodies
 
 
 def apply_register(data, register_path):
-    """The integrated count of scene pictures, large bodies and clips is the number of distinct PC files the coverage register marks `hd`, so it never lags behind what is connected."""
+    """Use the coverage register for distinct PC scene/film donors and complete Saturn body inventory."""
     if not register_path.is_file():
         return
     register = json.loads(register_path.read_text(encoding='utf-8'))
     files = {kind: set() for kind in REGISTER_COUNTS.values()}
+    body_inventory = set()
+    matched_bodies = set()
     excluded = set()
     groups = [register.get('unassigned', {})] + [chapter.get('resources', {}) for chapter in register.get('chapters', [])]
     for group in groups:
         for kind, rows in group.items():
             if kind in files and isinstance(rows, dict):
+                if kind == 'bodies':
+                    for key, resource in rows.items():
+                        # One Saturn body per path, even when both discs or PC donors coincide.
+                        native = key.partition(':')[2]
+                        if not native:
+                            continue
+                        body_inventory.add(native)
+                        status = resource.get('status')
+                        if resource.get('pc') and status in ('hd', 'paired-not-wired', 'wired-unverified'):
+                            matched_bodies.add(native)
+                            if status == 'hd':
+                                files[kind].add(native)
+                    continue
                 files[kind].update(row['pc'] for row in rows.values() if row.get('status') == 'hd' and row.get('pc'))
                 if kind == 'scene-pictures':
                     excluded.update(row['pc'] for row in rows.values() if row.get('status') == 'excluded' and row.get('pc'))
     for row in data['categories']:
         kind = REGISTER_COUNTS.get(row['id'])
+        if kind == 'bodies':
+            if row['total'] is not None and len(body_inventory) == row['total']:
+                row['matched'] = len(matched_bodies)
+                row['integrated'] = len(files[kind])
+            continue
         if kind and row['integrated'] is not None and len(files[kind]) >= row['integrated']:
             row['integrated'] = len(files[kind])
         if row['id'] == 'scene-images' and row['total'] is not None:
