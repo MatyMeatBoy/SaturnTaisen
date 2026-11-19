@@ -105,6 +105,7 @@ Open, each one a PR that arrives connected (see the rule above):
 - **W6 tactical mode (TS11)**: 542 UNIT/MAP/ITEM files, nothing paired yet; pair, table, recogniser, wide maps.
 - **W7 verification replays (TH1-TH10)**: 246 body entries are `wired-unverified` and most chapters have no replay; each replay needs the owner's discs and records which items drew, with hash parity. Attribute resources to chapters through `CHAPTER_WITNESSES` in `tools/hd_chapter_coverage.py`.
 - **W8 video leftovers**: the six alternate cuts (decision per clip), disc 2 clips, resume after a skip, listening to the audio (T112: MOVIE005/018/030/119 need special review), the release package.
+- **WRA RetroAchievements (TRA)**: the whole feature, see its row: rcheevos client, badge popups, sync and offline queue, launcher login and log; save states are never available to players.
 - **W9 packaging (TS12)**: gate and clean-machine run for everything generated or paired.
 
 Rows W1-W9 are in `docs/PENDIENTES.md`; take one, write your name in its status, and send the PR whole.
