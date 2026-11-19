@@ -134,6 +134,29 @@ class UnitTests(unittest.TestCase):
         self.assertEqual({r['status'] for r in result['pc_units']}, {'no-counterpart'})
 
 
+class ItemTests(unittest.TestCase):
+    def test_join_review_and_content_tier(self):
+        item_map = {'pairs': [
+            {'saturn_file': 'SAKURA1/ITEM01.BIN', 'pc_file': 'SAKURA1/ITEM/ITEM01.SPR', 'tier': 'content'},
+            {'saturn_file': 'SAKURA1/ITEM02.BIN', 'pc_file': 'SAKURA1/ITEM/ITEM02.SPR', 'tier': 'candidate'},
+            {'saturn_file': 'SAKURA1/ITEM03.BIN', 'pc_file': 'SAKURA1/ITEM/ITEM03.SPR', 'tier': 'candidate'},
+            {'saturn_file': 'SAKURA1/ITEM04.BIN', 'pc_file': 'SAKURA1/ITEM/ITEM03.SPR', 'tier': 'candidate'}]}
+        review = {'pairs': [
+            {'saturn_file': 'SAKURA1/ITEM02.BIN', 'pc_file': 'SAKURA1/ITEM/ITEM02.SPR', 'verdict': 'confirmed'},
+            {'saturn_file': 'SAKURA1/ITEM03.BIN', 'pc_file': 'SAKURA1/ITEM/ITEM03.SPR', 'verdict': 'rejected'},
+            {'saturn_file': 'SAKURA1/ITEM04.BIN', 'pc_file': 'SAKURA1/ITEM/ITEM03.SPR', 'verdict': 'icon_only'}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp) / 'SAKURA1' / 'ITEM'
+            folder.mkdir(parents=True)
+            for name in ('ITEM01', 'ITEM02', 'ITEM03', 'ITEM09'):
+                (folder / f'{name}.SPR').write_bytes(fake_spr([(224, 224)]))
+            result = tp.build_items(item_map, review, tmp)
+        status = {r['pc'].split('/')[-1]: r['status'] for r in result['pc_items']}
+        self.assertEqual(status, {'ITEM01.SPR': 'paired', 'ITEM02.SPR': 'paired',
+                                  'ITEM03.SPR': 'ambiguous', 'ITEM09.SPR': 'no-counterpart'})
+        self.assertEqual(result['summary']['saturn'], {'confirmed': 2, 'icon_only': 1, 'rejected': 1})
+
+
 class CommittedDataTests(unittest.TestCase):
     def test_committed_map_pairs_are_data_only(self):
         path = Path(__file__).resolve().parent.parent / 'config/hd-tactical-map-pairs.json'
@@ -153,6 +176,16 @@ class CommittedDataTests(unittest.TestCase):
         for row in data['saturn_units'] + data['pc_units']:
             self.assertRegex(row['sha256'], r'^[0-9a-f]{64}$')
             self.assertEqual(row['status'], 'no-counterpart')
+
+    def test_committed_item_inventory_matches_the_item_review(self):
+        root = Path(__file__).resolve().parent.parent / 'config'
+        data = json.loads((root / 'hd-tactical-item-inventory.json').read_text(encoding='utf-8'))
+        review = json.loads((root / 'hd-item-review.json').read_text(encoding='utf-8'))
+        self.assertEqual(len(data['pc_items']), 57)
+        self.assertEqual(sum(v['verdict'] == 'confirmed' for v in data['saturn_items']),
+                         data['summary']['saturn']['confirmed'])
+        rejected = {p['saturn_file'] for p in review['pairs'] if p['verdict'] == 'rejected'}
+        self.assertEqual(rejected, {v['saturn'] for v in data['saturn_items'] if v['verdict'] == 'rejected'})
 
 
 if __name__ == '__main__':
