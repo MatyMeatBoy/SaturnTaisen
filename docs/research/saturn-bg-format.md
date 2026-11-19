@@ -143,6 +143,33 @@ The ten title cards (`TITLE1..10.BIN`) are on **VDP2 layer 4** (a layer trace in
 
 Seen on `TITLE1` at 1920x1080 (frames 6050-6400): the sky continues to the left, the white blossoms to the right, the lettering stays inside the native picture. It is a plain extension, not painted art: the right side shows a faint vertical banding next to the picture's right edge where the native columns mix pink and white. The generative art the owner asked for (a painted 16:9 card) would replace it; the Spanish cards from `tools/es/portadas_es.py` use the same layer and fingerprints (the palette is not changed), so they widen too. Guest hashes identical to v0.2.2 over the 6,400 frames of that run, 0 interpreted.
 
+### Event pictures matched visually (T105b)
+
+Reviewed every decodable EVE image against the three strongest candidates among the
+48 PC SAKURA2/BG/BBG*.SPR files. The 12 disc observations represent nine unique files:
+EVE0101, EVE0116 and EVE0118 are byte-identical across the two prepared discs.
+For each PC SPR, the comparison uses its largest picture and the 32×16 luminance
+signature in match_hd_all.py. Used the score to rank candidates and checked the
+actual characters, props and scenery side by side.
+
+| Saturn | Disc | PC | Score | Common features |
+|---|---|---|---:|---|
+| EVE002 | 1 | BBG002 | 0.824 | Airship and daylight clouds |
+| EVE0101 | 1, 2 | BBG001 | 0.673 | Three figures and red band behind them |
+| EVE0116 | 1, 2 | BBG201 | 0.923 | Silver-haired face and green headdress |
+| EVE0118 | 1, 2 | BBG101 | 0.828 | Four characters against blossoms |
+| EVE102 | 1 | BBG102 | 0.807 | Five characters with green foliage |
+| EVE105 | 1 | BBG105 | 0.594 | Group pose against stone ruins |
+| EVE202 | 1 | BBG202 | 0.895 | Close-up with red forehead jewel |
+| EVE205 | 1 | BBG205 | 0.915 | Frontal close-up with hair ornaments |
+| EVE207 | 1 | BBG207 | 0.999 | Open-mouth portrait on purple |
+
+EVE0101 and EVE105 match the same artwork at different framing, which explains why
+their whole-frame scores are low. The nine candidate palette fingerprints are unique
+within the set and do not occur in the current scene map. Placement, fingerprints in
+the presented VDP2 layer and PC substitution in the two-disc runtime still require
+in-game evidence. Keep the approved Zoom framing and native fallback.
+
 ### Wide variant B visual review (T105a)
 
 The earlier offset 0x210 yields displaced tiles and coloured bands. In the 30 disc-1 BG files
