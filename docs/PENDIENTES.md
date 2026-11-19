@@ -113,7 +113,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 | TP2a | P0 | shard | open | Scroll scenes `unsupported-size`, BG1xxx/BG2xxx (26 distinct pictures, tall or wide): per-picture geometry like BG2533 (patch0098) or BG2251; one PR per picture or family. |
 | TP2b | P0 | shard | open | Scroll battle backgrounds `unsupported-size`, BBG1/BBG2/BBG3 (8 pictures): geometry per picture, as TP2a. |
 | TP3a | P0 | shard | open | `unknown` TITLE1-TITLE9 pictures (9): establish the pairing (palette, cell hash, PC set) and wire them. |
-| TP3b | P0 | shard | open | `unknown` BBG0/BBG1/BBG2 battle backgrounds (14): establish pairing and wire (EVE/BBG pairs are 576x320 PC on 288x144, patch0094/0104). |
+| TP3b | P0 | shard | open | `unknown` BBG0/BBG1/BBG2 battle backgrounds (14): establish pairing and wire (typical EVE/BBG pairs are 576x320 PC on 288x144, patch0094/0104). BBG004-007 decode at 112x112 and are visually paired with 224x224 PC items; runtime witnesses and wiring pending. |
 | TP3c | P0 | shard | open | `unknown` single pictures KO, MA, SU, AI, GE, KA, SA and BG2xxx (9): pairing then wiring. |
 | TP4a | P1 | shard | open | `unpaired` BG1xxx/BG0xxx (16): look for the PC counterpart again; record the reason where none exists. |
 | TP4b | P1 | shard | open | `unpaired` BG2xxx (15): same method. |
