@@ -1,0 +1,91 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1299,7 +1299,7 @@
+                 }
+             }
+         }
+-        SDL_Texture* stage21Composite = nullptr;
++        SDL_Texture* nativeGroundComposite = nullptr;
+         auto uploadTactical = [&](std::span<const uint32_t> pixels) {
+             if (!tacticalCanvas) {
+                 tacticalCanvas = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,398,224);
+@@ -1308,12 +1308,13 @@
+             return tacticalCanvas && SDL_UpdateTexture(tacticalCanvas,nullptr,pixels.data(),398*sizeof(uint32_t));
+         };
+         if (texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1 &&
+-            groundReady == tactical_ground::kStage21.mapSignature && !choosing && !port.menu.IsOpen() &&
++            tactical_ground::Find(groundReady) && groundReady != tactical_ground::kStage01.mapSignature &&
++            !choosing && !port.menu.IsOpen() &&
+             satrecomp::FeatureValue("pc_hd_backgrounds") == 0) {
+             const auto& shown = port.videoRenderer->PresentationFrame();
+             if (shown.mapSignature == groundReady && shown.scrollWidth == 398 &&
+                 shown.scrollPixels.size() == 398*224 && uploadTactical(shown.scrollPixels))
+-                stage21Composite = tacticalCanvas;
++                nativeGroundComposite = tacticalCanvas;
+         }
+         if(texture && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1 && tacticalPatch.size()==39*224) {
+             const auto& shown=port.videoRenderer->PresentationFrame();
+@@ -2555,8 +2556,9 @@
+                 SDL_RenderFillRect(renderer,&edge);
+             }
+             const SDL_FRect nativeCentre{39,0,320,224};
+-            if (stage21Composite && SDL_RenderTexture(renderer,stage21Composite,&nativeCentre,&where))
+-                presentationKind = "stage21-hd-ground";
++            if (nativeGroundComposite && SDL_RenderTexture(renderer,nativeGroundComposite,&nativeCentre,&where))
++                presentationKind = groundReady == tactical_ground::kStage02.mapSignature ?
++                    "stage02-hd-ground" : "stage21-hd-ground";
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
+             // Disc 2's opening film is presented in the native theatre without a
+diff --git a/port/tactical_ground.h b/port/tactical_ground.h
+--- a/port/tactical_ground.h
++++ b/port/tactical_ground.h
+@@ -21,6 +21,11 @@
+     0x1CAF3218B4B0F9F0ull, 0x40000, 704, 480, 656,
+ };
+ 
++inline constexpr Entry kStage02{
++    "SAKURA2/MAP/MAP02/MAP02_A.SPR", 5829484, 0x437AE98D69D62C17ull,
++    0x25FF56EB6965E424ull, 0x40000, 1024, 1024, 1024,
++};
++
+ inline constexpr Entry kStage21{
+     "SAKURA2/MAP/MAP21/MAP21_A.SPR", 1105672, 0x0006FEAF367A7203ull,
+     0x446FB372F79EDD04ull, 0x40000, 559, 455, 559,
+@@ -28,6 +33,7 @@
+ 
+ inline const Entry* Find(uint64_t signature) {
+     if (signature == kStage01.mapSignature) return &kStage01;
++    if (signature == kStage02.mapSignature) return &kStage02;
+     if (signature == kStage21.mapSignature) return &kStage21;
+     return nullptr;
+ }
+diff --git a/video/layers.cpp b/video/layers.cpp
+--- a/video/layers.cpp
++++ b/video/layers.cpp
+@@ -458,7 +458,7 @@
+         m_tacticalGround.size() == size_t(map->worldWidth) * map->worldHeight && bg.pageBaseAddresses[0] == map->groundPage &&
+         !bg.bitmap && !bg.mosaicEnable && !bg.vcellScrollEnable && m_scroll[2].incH == 256 &&
+         bg.scrollIncV == 256 && !bg.colorCalcEnable &&
+-        (map == &::port::tactical_ground::kStage21 || !m_regs2.colorOffsetEnable[4] ||
++        (map != &::port::tactical_ground::kStage01 || !m_regs2.colorOffsetEnable[4] ||
+          !m_regs2.colorOffset[m_regs2.colorOffsetSelect[4]].nonZero);
+ }
+ 
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -548,9 +548,9 @@
+             const uint32 base=m_regs2.bgParams[3].pageBaseAddresses[0];
+             for(uint32 i=0;i<8192;i++)hash=(hash^m_mem.vram2[(base+i)&0x7FFFF])*1099511628211ull;
+             m_presentation.mapSignature=hash;
+-            const bool stage21Ground = m_captureTacticalGround &&
+-                hash == ::port::tactical_ground::kStage21.mapSignature;
+-            if (m_captureScrollSignature && hash != m_captureScrollSignature && !stage21Ground)
++            const bool nativeGround = m_captureTacticalGround &&
++                hash != ::port::tactical_ground::kStage01.mapSignature && ::port::tactical_ground::Find(hash);
++            if (m_captureScrollSignature && hash != m_captureScrollSignature && !nativeGround)
+                 m_presentation.scrollWidth = 0;
+         }
+         m_presentation.scrollPixels.assign(size_t(m_presentation.scrollWidth)*m_height,0xFF000000);

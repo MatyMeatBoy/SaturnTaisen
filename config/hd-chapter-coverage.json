@@ -2672,8 +2672,10 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-2.md",
             "pc": "SAKURA2/MAP/MAP02/MAP02_A.SPR",
+            "runtime_evidence": "docs/research/map02-pc-ground.md",
             "scope": "source-4 ground only",
-            "status": "paired-not-wired"
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-units": {
