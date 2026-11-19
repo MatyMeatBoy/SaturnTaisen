@@ -644,6 +644,18 @@ hashes and seven capture frames with those same legacy files present.
 All three replays report zero interpreted blocks.
 
 
+### Identical PC donors for shared-cell pictures
+
+Three shared-palette and shared-cell groups have the same PC SPR bytes and subimage index 0 within each group. The generator emits one stable donor path for each exact collision.
+
+| Saturn resources | PC donor | Source SPR SHA-256 |
+| --- | --- | --- |
+| BG2001, BG2002, BG2003 | BG2001.SPR | `02f5e1d0d885c812feb8bb6867334edd8699bb6a6a59ae7bf3debeb9d9cd8a5c` |
+| BG2106, BG2107 | BG2106.SPR | `0d6567371d9a416be4b89634d02b77ba01b49c427570503058758b0105bce2a0` |
+| BG2237, BG2337 | BG2237.SPR | `4ae5e0a6f0d0f7ac635ee64a6ac301617a488d860dab264d09609bbf46a44faf` |
+
+The compiled shared-palette table grows from 33 to 36 rows. The loader still requires the original palette and cells. Different checksums, different subimage indices and absent checksums keep ambiguous entries out. Tests check stable generation under reordered input and both rejection cases. The seven affected resource names per disc are counted as implemented, with actual appearances in game still open. The existing BG1011 control still drew in HD at 2560×1440, with the expected native fallback and 120 matching guest hashes.
+
 ### Shared-palette HD scene witness (TW1)
 
 Patch0091 (PR #215) uses the palette FNV-1a fingerprint and the FNV-1a

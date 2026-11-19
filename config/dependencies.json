@@ -110,6 +110,7 @@
       "patches/0110-sakura-eve002-tactical-inset.patch",
       "patches/0112-sakura-hd-load-disc-icon.patch",
       "patches/0113-sakura-stage21-pc-ground.patch",
+      "patches/0115-sakura-identical-scene-donor-aliases.patch",
       "patches/0116-sakura-nc3250-native-underlay.patch"
     ]
   }

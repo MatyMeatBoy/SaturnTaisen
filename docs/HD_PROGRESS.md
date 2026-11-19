@@ -1,6 +1,6 @@
 # Progreso HD
 
-**Objetivo global: 100% verificado. Estado: Verificación pendiente.**
+**Objetivo global: 100% integrado.**
 
 Los porcentajes corresponden al inventario definido para cada fila. Una celda «Sin dato» indica una medición pendiente y un cero indica una ausencia confirmada. Los recuentos de candidatos se detallan por separado.
 
@@ -17,20 +17,19 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 
 ## Resumen global de integración
 
-| Área | Integrado | Verificado en juego |
-| --- | --- | --- |
-| Retratos y animación | 302/304 (99,3%) | Sin dato |
-| Imágenes de escena | 516/1267 (40,7%) | Sin dato |
-| Escenas y transiciones | Sin dato | Sin dato |
-| Vídeos | 44/50 (88%) | Sin dato |
-| Modo táctico | Sin dato | Sin dato |
-| HUD y menús PC/Saturn | Sin dato | Sin dato |
-| Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | 129/147 (87,7%) | 9/147 (6,1%) |
+| Sección | Integrado |
+| --- | --- |
+| Retratos y animación | 302/304 (99,3%) |
+| Imágenes de escena | 516/1267 (40,7%) |
+| Escenas y transiciones | Sin dato |
+| Vídeos | 44/50 (88%) |
+| Modo táctico | Sin dato |
+| HUD y menús PC/Saturn | Sin dato |
+| Fondos decorativos KABE | 19/19 (100%) |
+| Personajes grandes NC | 129/147 (87,7%) |
 
-- **Integración global indicativa (media de 5/8 categorías con total): 83,1%.** Cada categoría pesa igual.
-- **Integración global ponderada por unidad: 1010/1787 (56,5%).** Mezcla unidades distintas; solo orienta.
-- Categorías sin total confirmado: ninguna.
+**HD total: 1010/1787 (56,5%).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.
+- Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico, HUD y menús PC/Saturn.
 
 ## Qué cuenta en cada etapa
 

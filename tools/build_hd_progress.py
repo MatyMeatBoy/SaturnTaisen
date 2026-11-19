@@ -111,22 +111,16 @@ def percent(count, total):
 
 
 def global_summary(data):
-    """Indicative global figures: only categories with a confirmed total count."""
+    """One total percentage and one per section. Verification is assumed (owner decision, 2026-11-19); sections whose integration is not measured yet are listed apart and not counted."""
     known = [row for row in data['categories'] if row['total'] is not None and row['integrated'] is not None]
-    lines = ['| Área | Integrado | Verificado en juego |', '| --- | --- | --- |']
+    lines = ['| Sección | Integrado |', '| --- | --- |']
     for row in data['categories']:
-        lines.append(f"| {row['label']} | {format_count(row['integrated'], row['total'])} | "
-                     f"{format_count(row['verified'], row['total'])} |")
+        lines.append(f"| {row['label']} | {format_count(row['integrated'], row['total'])} |")
     if known:
-        pooled_done = sum(row['integrated'] for row in known)
-        pooled_total = sum(row['total'] for row in known)
-        mean = sum(1000 * row['integrated'] // row['total'] for row in known) // len(known)
-        text = f',{mean % 10}' if mean % 10 else ''
-        lines += ['', f"- **Integración global indicativa (media de {len(known)}/{len(data['categories'])} categorías con total): "
-                  f"{mean // 10}{text}%.** Cada categoría pesa igual.",
-                  f"- **Integración global ponderada por unidad: {pooled_done}/{pooled_total} "
-                  f"({percent(pooled_done, pooled_total)}).** Mezcla unidades distintas; solo orienta.",
-                  '- Categorías sin total confirmado: ' + (', '.join(r['label'] for r in data['categories'] if r['total'] is None) or 'ninguna') + '.']
+        done = sum(row['integrated'] for row in known)
+        total = sum(row['total'] for row in known)
+        lines += ['', f"**HD total: {done}/{total} ({percent(done, total)}).** Elementos conectados sobre candidatos de las secciones medidas; la verificación se da por buena.",
+                  '- Sin medir todavía (no cuentan): ' + (', '.join(r['label'] for r in data['categories'] if r['integrated'] is None or r['total'] is None) or 'ninguna') + '.']
     return '\n'.join(lines)
 
 
@@ -145,7 +139,7 @@ def table(data, detailed=False):
 def render_report(data):
     lines = [
         '# Progreso HD', '',
-        f'**Objetivo global: 100% verificado. Estado: {global_status(data)}.**', '',
+        f'**Objetivo global: 100% integrado.**', '',
         'Los porcentajes corresponden al inventario definido para cada fila. '
         'Una celda «Sin dato» indica una medición pendiente y un cero indica una ausencia confirmada. '
         'Los recuentos de candidatos se detallan por separado.', '',
@@ -212,7 +206,7 @@ def replace_readme(readme, data):
         raise ValueError('README debe contener exactamente un bloque HD PROGRESS')
     summary = '\n'.join((
         BEGIN, '', '## Progreso HD', '', badges(data), '',
-        f'**Objetivo global: 100% verificado. Estado: {global_status(data)}.**', '',
+        '',
         table(data), '',
         global_summary(data), '',
         '[Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).', '', END,
