@@ -84,6 +84,7 @@ NATIVE_ROUTE_PORTRAITS = {
     }, CHAPTER9_ROUTE_REPORT),
 }
 CHAPTER_FILE_RESIDENCIES = {
+    '2:/SAKURA1/1001FCE.BIN:fa55a01f09bc3a43956bf9507fae1b0ec08c002b9d36bdd16aac3486ca76ae49': (10, 'docs/research/th10-native-attribution.md'),
     '2:/SAKURA1/0901FCE.BIN:bad07425e09a84a31c5b578fda68f9b685d2380328f3a0e5991faa33647bb522':
         (9, CHAPTER9_ROUTE_REPORT),
     '1:/SAKURA2/UNIT10.BIN:0f44592f6e4323a8b977622fcb69f9d42da29e5f81e285d09f817a1bc4438496': (7, 'docs/research/th7-native-attribution.md'),
@@ -134,6 +135,9 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (2, '/SAKURA1/BG1213.BIN'): (10, 'docs/research/th10-native-attribution.md'),
+    (2, '/SAKURA1/BG1160.BIN'): (10, 'docs/research/th10-native-attribution.md'),
+    (2, '/SAKURA1/BG4055.BIN'): (10, 'docs/research/th10-native-attribution.md'),
     (2, '/SAKURA1/BG1050.BIN'): (8, 'docs/research/th8-native-attribution.md'),
     (2, '/SAKURA1/BG1212.BIN'): (8, 'docs/research/th8-native-attribution.md'),
     (2, '/SAKURA1/BG4187.BIN'): (8, 'docs/research/th8-native-attribution.md'),

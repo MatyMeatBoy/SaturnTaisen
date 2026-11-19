@@ -1,5 +1,9 @@
 # HD chapter 10 (Finale) coverage report (shard TH10)
 
+The [Chapter 10 native evidence](th10-native-attribution.md) adds observed scene pictures and one resident portrait atlas to the chapter register. It records display, residency, and disc reads separately. The complete replay and HD exit test are open.
+
+## Earlier catalog snapshot
+
 Source data only: `config/hd-chapter-coverage.json` (entry `chapters[9]`, `unassigned`, `association`), cross-checked with `config/hd-scene-bg-map.json`, `config/hd-scene-bg-review.json`, `config/hd-body-map.json`, `config/hd-item-map.json`, `config/film-fad-map.json`, `docs/research/chapter-sweep.md` and `docs/PENDIENTES.md`. This is an offline data report. It certifies no replay and no chapter completion. Names, hashes and counts only.
 
 ## 1. Scope

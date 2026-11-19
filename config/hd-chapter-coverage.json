@@ -5150,9 +5150,9 @@
         "menus-hud": {},
         "portraits": {
           "2:/SAKURA1/1001FCE.BIN": {
-            "association": "inferred",
+            "association": "resident",
             "decision_evidence": "docs/research/portrait-animation-coverage.md#residual-portraits-00a1-and-0169",
-            "evidence": "config/hd-portrait-recipe.json",
+            "evidence": "docs/research/th10-native-attribution.md",
             "identities": [
               "000a",
               "000b",
@@ -5295,6 +5295,17 @@
           }
         },
         "scene-pictures": {
+          "2:/SAKURA1/BG1160.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th10-native-attribution.md",
+            "pc": "SAKURA1/BG/BG1160.SPR",
+            "status": "hd"
+          },
+          "2:/SAKURA1/BG1213.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th10-native-attribution.md",
+            "status": "unpaired"
+          },
           "2:/SAKURA1/BG1285.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg1285-pan.md",
@@ -5302,6 +5313,11 @@
             "runtime_evidence": "docs/research/bg1285-pan.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "2:/SAKURA1/BG4055.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th10-native-attribution.md",
+            "status": "unpaired"
           },
           "2:/SAKURA1/TITLE10.BIN": {
             "association": "inferred",
@@ -16352,11 +16368,6 @@
         "pc": "SAKURA1/BG/BG1153.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1160.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1160.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1161.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1161.SPR",
@@ -16548,10 +16559,6 @@
         "status": "hd"
       },
       "2:/SAKURA1/BG1211.BIN": {
-        "association": "unknown",
-        "status": "unpaired"
-      },
-      "2:/SAKURA1/BG1213.BIN": {
         "association": "unknown",
         "status": "unpaired"
       },
@@ -18936,10 +18943,6 @@
         "status": "unpaired"
       },
       "2:/SAKURA1/BG4054.BIN": {
-        "association": "unknown",
-        "status": "unpaired"
-      },
-      "2:/SAKURA1/BG4055.BIN": {
         "association": "unknown",
         "status": "unpaired"
       },
