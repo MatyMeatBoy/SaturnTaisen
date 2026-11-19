@@ -611,3 +611,24 @@ offline; the gameplay captures cover the expressions reached in these
 runs. NC30 is now recorded as a Chapter 1 witness. No package was built.
 Project measured 48,329,341,192 logical bytes, above the cap. The existing
 development ZIP is 6,315,009,692 bytes.
+
+### Approved episode cards only (TCODEX)
+
+The approved surrounds and the two language-specific centers are the sole
+Enhanced path. The earlier strips, stretched edges, mirrored underlay
+and full-card override are removed from the renderer. The 20 older PNGs
+are removed from active art and rejected by the packaging allowlist.
+The package requires all ten surrounds and all ten Spanish lettering
+layers. Original mode uses the Saturn renderer.
+
+The English and Spanish Enhanced replay profiles at 1440p deliberately
+contain legacy files, including a bright magenta full-card override.
+All 6,670 guest hashes per replay and seven capture frames each match
+the approved controls. The expected transitions and language-specific
+centers continue to display. The runtime SHA-256 is
+`a63a77fb3eb0d1b6f00753f3635802574fc26e0b5d4ed24336fbe744f3006c7e`.
+No release ZIP was replaced.
+
+The Saturn Original control at 1080p also matches all 6,670 guest
+hashes and seven capture frames with those same legacy files present.
+All three replays report zero interpreted blocks.

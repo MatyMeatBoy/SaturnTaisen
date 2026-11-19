@@ -45,17 +45,15 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
     if sum((pc,screen,tactical))>1:raise RuntimeError('Conflicting generated-art classes')
     if tactical and (data.get('generated_only') is not True or data.get('original_map_context_included') is not False or data.get('world_origin')!=[656,24] or data.get('logical_size')!=[39,224]):raise RuntimeError('Unverified generated tactical band')
     result={}
-    episode_pairs = {}
     episode_surrounds = {}
     episode_lettering = set()
     for row in data['backgrounds']:
         name=row['file']
         if pc and screen:raise RuntimeError('Conflicting generated-art classes')
         pattern=r'STAGE01-right-v1\.png' if tactical else r'(?:OPENING|TITLE|STATUS|PAUSE01|LOADING)-v1\.png' if screen else r'KABE[0-9]{4}-v1\.png' if pc else r'KABE[0-9][01]\.png'
-        episode_side = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-(left|right)-v1\.png', name)
         episode_surround = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-surround-v2\.png', name)
         lettering = screen and re.fullmatch(r'(EPISODE(?:0[1-9]|10))-es-lettering-v1\.png', name)
-        if (not episode_side and not episode_surround and not lettering and not re.fullmatch(pattern, name)) or name in result:
+        if (not episode_surround and not lettering and not re.fullmatch(pattern, name)) or name in result:
             raise RuntimeError('Invalid/duplicate generated background identity')
         file=folder/name
         if file.is_symlink() or not file.is_file() or digest(file)!=row['sha256']:
@@ -65,19 +63,6 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
             raise RuntimeError('Generated background is not a PNG: '+name)
         if tactical and (len(header)<24 or header[12:16]!=b'IHDR' or struct.unpack('>II',header[16:24])!=(39,224)):
             raise RuntimeError('Unexpected generated tactical image extent')
-        if episode_side and (
-            data.get('source_pixels_included') is not False
-            or row.get('logical_grid') != [39, 224]
-            or not re.fullmatch(r'[0-9A-F]{16}', row.get('palette_fnv', ''))
-            or len(header) != 26
-            or header[12:16] != b'IHDR'
-            or struct.unpack('>II', header[16:24]) != (39, 224)
-            or header[24:26] != bytes((8, 6))
-        ):
-            raise RuntimeError('Unexpected generated episode side: ' + name)
-        if episode_side:
-            episode, side = episode_side.groups()
-            episode_pairs.setdefault(episode, {})[side] = row['palette_fnv']
         if episode_surround:
             if (
                 data.get('source_pixels_included') is not False
@@ -107,15 +92,9 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
                 raise RuntimeError('Unexpected Spanish episode lettering: ' + name)
             episode_lettering.add(lettering[1])
         result[name]=file
-    for episode, sides in episode_pairs.items():
-        if set(sides) != {'left', 'right'} or sides['left'] != sides['right']:
-            raise RuntimeError('Incomplete or mismatched generated episode side pair: ' + episode)
     if episode_surrounds:
         expected = {f'EPISODE{number:02}' for number in range(1, 11)}
-        if set(episode_surrounds) != expected or any(
-            episode_pairs.get(episode, {}).get('left') != fingerprint
-            for episode, fingerprint in episode_surrounds.items()
-        ):
+        if set(episode_surrounds) != expected or len(set(episode_surrounds.values())) != len(expected):
             raise RuntimeError('Incomplete or mismatched generated episode surrounds')
     if episode_lettering and episode_lettering != {f'EPISODE{n:02}' for n in range(1, 11)}:
         raise RuntimeError('Incomplete Spanish episode lettering set')
@@ -281,10 +260,11 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         source_folder = ROOT / 'assets/generated' / source_name
         images = generated_backgrounds(source_folder, **{art_class: True})
         if art_class == 'screen':
-            episode_sides = {f'EPISODE{episode:02d}-{side}-v1.png'
-                             for episode in range(1, 11) for side in ('left', 'right')}
-            if missing := episode_sides - images.keys():
-                raise RuntimeError(f'Missing generated episode sides: {", ".join(sorted(missing))}')
+            required_cards = {f'EPISODE{episode:02d}-{suffix}.png'
+                              for episode in range(1, 11)
+                              for suffix in ('surround-v2', 'es-lettering-v1')}
+            if missing := required_cards - images.keys():
+                raise RuntimeError(f'Missing approved episode art: {", ".join(sorted(missing))}')
         art_folder = app / 'art' / target_name
         art_folder.mkdir()
         for name, source in images.items():
@@ -294,6 +274,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
     # One profile however the game is started: the launcher's own portable folder (user/SaturnTaisen). A profile an
     # earlier release kept directly in user/ is still used, so its saves and settings are not left behind.
     (app/'portable.txt').write_text('',encoding='ascii')
+    # Save states, load states and the reset point are development tools: the runtime switches them off when this file sits beside it.
+    (app/'release.marker').write_text('Release build: save states, load states and the reset point are off (the game is played naturally).',encoding='ascii')
     version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
     (inputs/'LEEME.txt').write_text(f'''SaturnTaisen {version}
 

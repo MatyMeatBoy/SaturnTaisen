@@ -37,58 +37,18 @@ class PackageArtTests(unittest.TestCase):
                 (folder/'provenance.json').write_text(json.dumps(manifest))
             self.assertEqual(len(generated_backgrounds(folder,screen=True)),4)
             with self.assertRaises(RuntimeError):generated_backgrounds(folder)
-    def test_episode_side_requires_a_generated_only_native_strip(self):
+    def test_legacy_episode_strips_are_rejected(self):
         from PIL import Image
         with tempfile.TemporaryDirectory() as directory:
             folder = Path(directory)
             file = folder / 'EPISODE01-left-v1.png'
-            manifest = {'source_pixels_included': False, 'backgrounds': []}
-            report = folder / 'provenance.json'
-
-            def register(size):
-                Image.new('RGBA', size, (12, 30, 50, 255)).save(file)
-                right = folder / 'EPISODE01-right-v1.png'
-                Image.new('RGBA', (39, 224), (12, 30, 50, 255)).save(right)
-                manifest['backgrounds'] = [
-                    {'file': side.name, 'sha256': hashlib.sha256(side.read_bytes()).hexdigest(),
-                     'logical_grid': [39, 224], 'palette_fnv': 'F84F4FA528984E99'}
-                    for side in (file, right)
-                ]
-                report.write_text(json.dumps(manifest), encoding='utf8')
-
-            register((39, 224))
-            self.assertIn(file.name, generated_backgrounds(folder, screen=True))
-            register((398, 224))
-            with self.assertRaises(RuntimeError):
-                generated_backgrounds(folder, screen=True)
-            register((39, 224))
-            manifest['source_pixels_included'] = True
-            report.write_text(json.dumps(manifest), encoding='utf8')
-            with self.assertRaises(RuntimeError):
-                generated_backgrounds(folder, screen=True)
-
-    def test_episode_sides_require_both_strips_for_the_same_palette(self):
-        from PIL import Image
-        with tempfile.TemporaryDirectory() as directory:
-            folder = Path(directory)
-            report = folder / 'provenance.json'
-            manifest = {'source_pixels_included': False, 'backgrounds': []}
-            for side in ('left', 'right'):
-                file = folder / f'EPISODE01-{side}-v1.png'
-                Image.new('RGBA', (39, 224)).save(file)
-                manifest['backgrounds'].append({
-                    'file': file.name, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest(),
-                    'logical_grid': [39, 224], 'palette_fnv': 'F84F4FA528984E99',
-                })
-            report.write_text(json.dumps(manifest), encoding='utf-8')
-            self.assertEqual(len(generated_backgrounds(folder, screen=True)), 2)
-            manifest['backgrounds'][1]['palette_fnv'] = 'FA7EA6C32652FF94'
-            report.write_text(json.dumps(manifest), encoding='utf-8')
-            with self.assertRaisesRegex(RuntimeError, 'episode side pair'):
-                generated_backgrounds(folder, screen=True)
-            manifest['backgrounds'].pop()
-            report.write_text(json.dumps(manifest), encoding='utf-8')
-            with self.assertRaisesRegex(RuntimeError, 'episode side pair'):
+            Image.new('RGBA', (39, 224)).save(file)
+            manifest = {'source_pixels_included': False, 'backgrounds': [
+                {'file': file.name, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest(),
+                 'logical_grid': [39, 224], 'palette_fnv': 'F84F4FA528984E99'}
+            ]}
+            (folder / 'provenance.json').write_text(json.dumps(manifest), encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError, 'generated background identity'):
                 generated_backgrounds(folder, screen=True)
 
     def test_episode_surrounds_require_an_empty_center_and_complete_set(self):
@@ -102,18 +62,15 @@ class PackageArtTests(unittest.TestCase):
             def register(file, image, **fields):
                 image.save(folder / file)
                 entries.append(dict(file=file, sha256=hashlib.sha256((folder / file).read_bytes()).hexdigest(),
-                                    palette_fnv='F84F4FA528984E99', **fields))
+                                    palette_fnv=f'{number:016X}', **fields))
 
             for number in range(1, 11):
-                for side in ('left', 'right'):
-                    register(f'EPISODE{number:02}-{side}-v1.png', Image.new('RGBA', (39, 224)),
-                             logical_grid=[39, 224])
                 surround = Image.new('RGBA', (640, 360), 'pink')
                 surround.paste((0, 0, 0, 0), (160, 68, 480, 292))
                 register(f'EPISODE{number:02}-surround-v2.png', surround,
                          logical_grid=[640, 360], native_center=[160, 68, 320, 224])
             report.write_text(json.dumps(manifest), encoding='utf-8')
-            self.assertEqual(len(generated_backgrounds(folder, screen=True)), 30)
+            self.assertEqual(len(generated_backgrounds(folder, screen=True)), 10)
             entries.pop()
             report.write_text(json.dumps(manifest), encoding='utf-8')
             with self.assertRaisesRegex(RuntimeError, 'episode surrounds'):
@@ -178,7 +135,7 @@ class PackageArtTests(unittest.TestCase):
     def test_public_tree_rejects_original_movies_assets_and_misplaced_art(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            relative = 'art/screen-backgrounds/EPISODE01-left-v1.png'
+            relative = 'art/screen-backgrounds/EPISODE01-surround-v2.png'
             data = b'generated fixture'
             art = root / 'data' / relative
             art.parent.mkdir(parents=True)

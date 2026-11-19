@@ -1,0 +1,135 @@
+diff --git a/port/dev_states.h b/port/dev_states.h
+new file mode 100644
+index 0000000..169886b
+--- /dev/null
++++ b/port/dev_states.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// Save states, load states, quick states and the reset point are tools for testing the game (owner rule 2026-11-19: the game is played
++// naturally and these never reach the players). They work in development builds and are switched off whenever a `release.marker` file
++// sits beside the executable, which tools/package_release.py writes into every package.
++#pragma once
++#include <SDL3/SDL.h>
++#include <filesystem>
++namespace port {
++inline bool DevStatesAllowed() {
++    static const bool allowed = [] {
++        const char* folder = SDL_GetBasePath();
++        std::error_code error;
++        return !(folder && std::filesystem::exists(std::filesystem::u8path(folder) / "release.marker", error));
++    }();
++    return allowed;
++}
++}
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 363ae43..406f24a 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -25,6 +25,7 @@
+ #include "body_table.h"
+ #include "verified_body_faces.h"
+ #include "film_clip_table.h"
++#include "dev_states.h"
+ #define PL_MPEG_IMPLEMENTATION
+ #include "movie_decoder.h"
+ #include <unordered_map>
+@@ -2144,7 +2145,7 @@ int RunWindowed(Port &port) {
+         if (port.menu.IsOpen()) {
+             port.menu.Close();
+         } else if (port.MenuPicture(menuBase, menuWidth, menuHeight)) {
+-            port.menu.Open(true);
++            port.menu.Open(DevStatesAllowed());
+             menuDirty = true;
+         }
+     };
+@@ -2304,12 +2305,12 @@ int RunWindowed(Port &port) {
+             case SDL_EVENT_KEY_DOWN:
+                 if ((ev.key.scancode == SDL_SCANCODE_ESCAPE || ev.key.scancode == SDL_SCANCODE_F1) && !ev.key.repeat) {
+                     toggleMenu();
+-                } else if (ev.key.scancode == SDL_SCANCODE_F5 || ev.key.scancode == SDL_SCANCODE_F9) {
++                } else if (DevStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F5 || ev.key.scancode == SDL_SCANCODE_F9)) {
+                     // F5 keeps the game in the slot, F9 goes back to it; F6 / F7: the slot before, the next
+                     if (!port.menu.IsOpen()) {
+                         quickState(ev.key.scancode == SDL_SCANCODE_F5);
+                     }
+-                } else if (ev.key.scancode == SDL_SCANCODE_F2 || ev.key.scancode == SDL_SCANCODE_F3) {
++                } else if (DevStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F2 || ev.key.scancode == SDL_SCANCODE_F3)) {
+                     if (!port.menu.IsOpen()) {
+                         resetPoint(ev.key.scancode == SDL_SCANCODE_F2);
+                     }
+@@ -2321,7 +2322,7 @@ int RunWindowed(Port &port) {
+                 } else if (ev.key.scancode == SDL_SCANCODE_MINUS || ev.key.scancode == SDL_SCANCODE_EQUALS) {
+                     const int speed = port.menu.Speed();
+                     setSpeed(ev.key.scancode == SDL_SCANCODE_MINUS ? (speed == 100 ? 50 : 25) : (speed == 25 ? 50 : 100));
+-                } else if (ev.key.scancode == SDL_SCANCODE_F6 || ev.key.scancode == SDL_SCANCODE_F7) {
++                } else if (DevStatesAllowed() && (ev.key.scancode == SDL_SCANCODE_F6 || ev.key.scancode == SDL_SCANCODE_F7)) {
+                     port.menu.SetSlot(port.menu.Slot() + (ev.key.scancode == SDL_SCANCODE_F7 ? 1 : -1));
+                     menuDirty = true;
+                 } else if (ev.key.scancode == SDL_SCANCODE_F11 ||
+diff --git a/port/main.cpp b/port/main.cpp
+index 43fe1d2..bde1fa6 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -5,6 +5,7 @@
+ #include "hud.h"
+ #include "pictures.h"
+ #include "port.h"
++#include "dev_states.h"
+ #include "kabe.h"
+ #include "movie_phase.h"
+ #include "choice_text.h"
+@@ -859,7 +860,7 @@ void Port::RunFrame() {
+     if (!menuTest.empty() && strtoull(menuTest.c_str(), nullptr, 10) == frame) {
+         const size_t first = menuTest.find(':'), second = menuTest.find(':', first + 1);
+         const std::string keys = menuTest.substr(first + 1, second == std::string::npos ? std::string::npos : second - first - 1);
+-        menu.Open(true);
++        menu.Open(DevStatesAllowed());
+         for (const char key : keys) {
+             const uint16_t button = key == 'u' ? kPadUp : key == 'd' ? kPadDown : key == 'l' ? kPadLeft : key == 'r' ? kPadRight : key == 'a' ? kPadA : key == 's' ? kPadStart : 0;
+             MenuAct(menu.Buttons(button));
+@@ -1125,7 +1126,11 @@ void Port::SaveStateData(std::vector<uint8_t> &data) {
+     StateOf(*this, ar);
+ }
+ 
+-bool Port::SetResetPoint(std::string &) {
++bool Port::SetResetPoint(std::string &error) {
++    if (!DevStatesAllowed()) {
++        error = "The reset point is a development tool.";
++        return false;
++    }
+     SaveStateData(resetPoint);
+     return true;
+ }
+@@ -1137,6 +1142,10 @@ bool Port::ResetGame(std::string &error) {
+     return LoadStateData(powerOn, error);
+ }
+ bool Port::GoToResetPoint(std::string &error) {
++    if (!DevStatesAllowed()) {
++        error = "The reset point is a development tool.";
++        return false;
++    }
+     if (resetPoint.empty()) {
+         error = "No reset point has been set.";
+         return false;
+@@ -1145,6 +1154,10 @@ bool Port::GoToResetPoint(std::string &error) {
+ }
+ 
+ bool Port::SaveState(const std::string &path, std::string &error) {
++    if (!DevStatesAllowed()) {
++        error = "Save states are a development tool.";
++        return false;
++    }
+     std::vector<uint8_t> data;
+     SaveStateData(data);
+     std::ofstream file(path, std::ios::binary);
+@@ -1157,6 +1170,10 @@ bool Port::SaveState(const std::string &path, std::string &error) {
+ }
+ 
+ bool Port::LoadState(const std::string &path, std::string &error) {
++    if (!DevStatesAllowed()) {
++        error = "Load states are a development tool.";
++        return false;
++    }
+     std::vector<uint8_t> data;
+     if (!ReadFile(path, data)) {
+         error = "There is no state in this slot.";

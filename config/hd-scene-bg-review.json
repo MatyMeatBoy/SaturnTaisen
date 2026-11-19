@@ -187,7 +187,14 @@
     "BG4205",
     "BG4296",
     "BG4299",
-    "BG4376"
+    "BG4376",
+    "EVE002",
+    "EVE0116",
+    "EVE0118",
+    "EVE102",
+    "EVE202",
+    "EVE205",
+    "EVE207"
   ],
   "rejected": {
     "BG0000": "blank placeholder picture",
