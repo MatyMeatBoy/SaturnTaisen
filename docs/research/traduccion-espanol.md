@@ -112,6 +112,38 @@ The drafted Spanish episode cards (`tools/es/portadas_es.py`) and the "CARGANDO"
 
 They are program-made drafts (Arial Rounded Bold and Ink Free, not the hand-made lettering); the owner asked for generative art, which would replace them (rebuild the discs and the layers as above). `--portadas` stays an option of `construir_todo.py`; regenerate the layers whenever the cards change. The video layers (`videos-*.xdelta`, over 100 MB) were rebuilt unchanged and are release assets, not in Git.
 
+### Generated CARGANDO lettering in Enhanced mode
+
+Patch0117 uses an original ImageGen ink layer with eight vertically stacked
+letters. The distributable PNG contains only white RGB and transparency in a
+48×198 window at native (136,13). The source scroll, its red border and its
+background come from the active game. Asset provenance and SHA-256 are in
+`assets/generated/screen-backgrounds/provenance.json`.
+
+The compositor requires the exact Spanish disc 1 LOAD.BIN fingerprint
+`59883EB3F920F2FA`, the existing Enhanced loading backdrop and a matching
+layer-4 native image across the lettering window. The displayed frame can
+lag the live VDP color registers during the fade. The compositor derives the
+neutral offset from a known white pixel and applies it only after all 9,504
+pixels match the native bitmap at that offset. The sprite uses the active
+integer scale. The replacement falls back to the native display if its asset
+or the scene check fails.
+
+The 760-frame replay uses `intro-enhanced/title-final.state` and
+`tests/chapter1-title-new-game.movie` at 2560×1440. Runtime SHA-256
+`c41a0577b2580a9d99f43a80f5ecee7fde3ffbf8d4e238fe37daee63b719e154`.
+Each Enhanced and Original pair on prepared Spanish and English disc 1
+compares the same disc with the generated PNG available and missing.
+All guest hashes match within each pair, and all eight runs report zero
+interpreted blocks. Spanish Enhanced is the only pair with RGB changes.
+At frames 330, 400, 490, 585, 640, 642, 650 and 690 the window exactly matches the generated ink at 6× with the native fade. The red frame and the rest of the image are identical between profiles.
+The title and after-loading probes are pixel-identical in all four pairs.
+
+The patch and artwork are verified. No language layer or delivered package
+was rebuilt. The local workspace measured 53,189,404,856 logical bytes with
+hard links counted once and reparse points excluded, above the 20 GB cap.
+The delivered development ZIP measures 6,315,009,692 bytes.
+
 ### Spanish draft cards in game (T107a)
 
 The ten TITLE files in the prepared Spanish disc 1 are byte-identical to the

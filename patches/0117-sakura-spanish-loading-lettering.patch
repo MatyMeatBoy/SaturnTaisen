@@ -1,0 +1,110 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -291,6 +291,10 @@
+         bool pc=false,screen=false,anchored=false;unsigned layer=5;std::string id;
+     };
+     std::vector<Backdrop> backdrops;
++    constexpr SDL_Rect loadingInkArea{136, 13, 48, 198};
++    SDL_Texture* spanishLoadingInk = nullptr;
++    std::vector<uint32_t> spanishLoadingPixels;
++    std::array<int16_t, 3> spanishLoadingOffset{};
+     PortraitPack portraitPack;
+     BackgroundWorkers backgroundWorkers;
+     bool backgroundWarmupStarted=false;
+@@ -423,6 +427,43 @@
+             // These two startup backgrounds are prepared before the first guest frame.
+             item.attempted=true;
+             for(const auto& file:item.files)if((item.texture=item.anchored?LoadAnchoredBackdrop(renderer,file,item.nativePalette,original,&item.pixels):LoadBackdrop(renderer,file,item.nativePalette,item.cacheDir,&item.pixels)))break;
++            // The English and Spanish LOAD palettes match. The Spanish v0.1 disc has
++            // a distinct LOAD.BIN payload with the existing CARGANDO lettering.
++            if (item.texture && item.id == "LOADING" && AtlasFingerprint(source) == 0x59883EB3F920F2FAull) {
++                for (const auto& folder : {std::filesystem::path(port.opt.settingsPath).parent_path(),
++                                          std::filesystem::path(SDL_GetBasePath())}) {
++                    const auto file = folder / "art/screen-backgrounds/LOAD-es-lettering-v1.png";
++                    auto* image = SDL_LoadPNG(file.string().c_str());
++                    if (!image) continue;
++                    auto* rgba = SDL_ConvertSurface(image, SDL_PIXELFORMAT_ABGR8888);
++                    SDL_DestroySurface(image);
++                    if (!rgba) continue;
++                    if (rgba->w == loadingInkArea.w && rgba->h == loadingInkArea.h) {
++                        spanishLoadingPixels.reserve(size_t(rgba->w) * rgba->h);
++                        for (int y = 0; y < rgba->h; ++y) {
++                            const auto* row = reinterpret_cast<const uint32_t*>(
++                                static_cast<const uint8_t*>(rgba->pixels) + y * rgba->pitch);
++                            for (int x = 0; x < rgba->w; ++x) {
++                                // The source is white ink on alpha over the witnessed black backing.
++                                const uint32_t level = (row[x] >> 24) & 0xF8;
++                                spanishLoadingPixels.push_back(0xFF000000u | level * 0x010101u);
++                            }
++                        }
++                    }
++                    SDL_DestroySurface(rgba);
++                    if (!spanishLoadingPixels.empty()) break;
++                }
++                if (!spanishLoadingPixels.empty()) {
++                    spanishLoadingInk = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                        SDL_TEXTUREACCESS_STREAMING, loadingInkArea.w, loadingInkArea.h);
++                    if (spanishLoadingInk && !SDL_UpdateTexture(spanishLoadingInk, nullptr,
++                        spanishLoadingPixels.data(), loadingInkArea.w * sizeof(uint32_t))) {
++                        SDL_DestroyTexture(spanishLoadingInk);
++                        spanishLoadingInk = nullptr;
++                    }
++                    if (spanishLoadingInk) SDL_SetTextureScaleMode(spanishLoadingInk, SDL_SCALEMODE_NEAREST);
++                }
++            }
+             if(item.texture)backdrops.push_back(std::move(item));
+         }
+         if(!port.opt.settingsPath.empty() && !port.opt.pcAssetsPath.empty())
+@@ -475,6 +516,10 @@
+         sakuraUi.Close();
+         for(auto& backdrop:backdrops) SDL_DestroyTexture(backdrop.texture);
+         backdrops.clear();
++        if (spanishLoadingInk) SDL_DestroyTexture(spanishLoadingInk);
++        spanishLoadingInk = nullptr;
++        spanishLoadingPixels.clear();
++        spanishLoadingOffset = {};
+         if (foreground) SDL_DestroyTexture(foreground);
+         foreground=nullptr;
+         if(panelTexture)SDL_DestroyTexture(panelTexture);
+@@ -1282,6 +1327,40 @@
+                 const SDL_FRect bgTarget{float(bg.x),float(bg.y),float(bg.w),float(bg.h)},nativeTarget{float(native.x),float(native.y),float(native.w),float(native.h)};
+                 SDL_RenderTexture(renderer,floral,nullptr,&bgTarget);
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
++                if (screenBackdrop == "LOADING" && spanishLoadingInk && native.scale > 0 &&
++                    !choosing && !port.menu.IsOpen() && planes.topSource.size() == 320 * 224 &&
++                    softwareShown.size() == 320 * 224) {
++                    // The presented VDP frame can lag live colour registers by one frame.
++                    // Recover its neutral fade from a known white pixel, then verify the whole mask.
++                    const uint32_t sample = softwareShown[17 * 320 + 160];
++                    const auto shade = static_cast<int16_t>(int(sample & 255u) - 248);
++                    const std::array<int16_t, 3> offset{shade, shade, shade};
++                    bool exact = true;
++                    for (int y = loadingInkArea.y; y < loadingInkArea.y + loadingInkArea.h && exact; ++y) {
++                        for (int x = loadingInkArea.x; x < loadingInkArea.x + loadingInkArea.w; ++x) {
++                            const size_t at = size_t(y) * 320 + x;
++                            if (planes.topSource[at] != 4 ||
++                                softwareShown[at] != OffsetBackdropPixel(selectedBackdrop->nativeScreen[at], offset)) {
++                                exact = false;
++                                break;
++                            }
++                        }
++                    }
++                    if (exact && offset != spanishLoadingOffset) {
++                        std::vector<uint32_t> shadedInk(spanishLoadingPixels.size());
++                        std::transform(spanishLoadingPixels.begin(), spanishLoadingPixels.end(), shadedInk.begin(),
++                            [&](uint32_t pixel) { return OffsetBackdropPixel(pixel, offset); });
++                        exact = SDL_UpdateTexture(spanishLoadingInk, nullptr, shadedInk.data(),
++                            loadingInkArea.w * sizeof(uint32_t));
++                        if (exact) spanishLoadingOffset = offset;
++                    }
++                    if (exact) {
++                        const SDL_FRect target{float(native.x + loadingInkArea.x * native.scale),
++                            float(native.y + loadingInkArea.y * native.scale), float(loadingInkArea.w * native.scale),
++                            float(loadingInkArea.h * native.scale)};
++                        SDL_RenderTexture(renderer, spanishLoadingInk, nullptr, &target);
++                    }
++                }
+                 if(screenBackdrop=="PAUSE01" && native.scale>0 && !choosing && !port.menu.IsOpen() &&
+                    !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 &&
+                    planes.topSource.size()==320*224 && softwareShown.size()==320*224) {
