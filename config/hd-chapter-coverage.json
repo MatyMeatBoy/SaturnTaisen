@@ -1616,6 +1616,30 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1011.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1011.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1012.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1012.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1017.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/saturn-bg-format.md",
+            "pc": "SAKURA1/BG/BG1017.SPR",
+            "runtime_evidence": "docs/research/saturn-bg-format.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1119.BIN": {
             "association": "observed",
             "cold_run_frame": 118250,
@@ -1640,6 +1664,14 @@
             "evidence": "docs/research/saturn-bg-format.md",
             "pc": "SAKURA2/BG/BBG001.SPR",
             "status": "paired-not-wired"
+          },
+          "1:/SAKURA2/EVE0116.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/eve0116-tactical-inset.md",
+            "pc": "SAKURA2/BG/BBG201.SPR",
+            "runtime_evidence": "docs/research/eve0116-tactical-inset.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-maps": {
@@ -6180,16 +6212,6 @@
         "pc": "SAKURA1/BG/BG1010.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1011.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1011.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1012.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1012.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
@@ -6210,11 +6232,6 @@
         "pc": "SAKURA1/BG/BG1016.SPR",
         "reason": "palette shared with a picture that maps to another PC file (ambiguous)",
         "status": "paired-not-wired"
-      },
-      "1:/SAKURA1/BG1017.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1017.SPR",
-        "status": "hd"
       },
       "1:/SAKURA1/BG1018.BIN": {
         "association": "unknown",
@@ -9994,11 +10011,6 @@
       "1:/SAKURA2/EVE002.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG002.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA2/EVE0116.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA2/BG/BBG201.SPR",
         "status": "hd"
       },
       "1:/SAKURA2/EVE0118.BIN": {

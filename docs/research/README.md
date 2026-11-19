@@ -109,6 +109,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [hd-completion-handoff.md](hd-completion-handoff.md): Handoff to finish the HD mod from another PC: state per area, what travels through Git, order of work and rules.
 - [HD coverage by chapter](hd-chapter-coverage.md) reports resource evidence, replacement status, and regeneration steps.
 - [EVE202 tactical inset](eve202-tactical-inset.md)
+- [EVE0116 tactical inset](eve0116-tactical-inset.md): disc-1 episode-1 tactical close-up in HD with 1440p verification.
 - [IC01 HD intermission](ic01-hd-intermission.md): the verified EVE202 picture drawn in HD inside the tactical inset (patch 0099), evidence and limits.
 - [Jumping to a chapter or scene](scene-jump.md) (test tool only): Continue from a copied save, states along the way, random exploration; what is not done.
 - [HD chapter 1 report](hd-chapter-1.md): what chapter 1 shows per resource class, its status, ranked next actions and what needs the owner's discs.
