@@ -95,7 +95,8 @@
       "patches/0092-sakura-dialogue-text-one-pixel-lower.patch",
       "patches/0093-sakura-hd-system-brackets.patch",
       "patches/0094-sakura-scene-table-event-pictures.patch",
-      "patches/0095-sakura-approved-episode-cards-only.patch"
+      "patches/0095-sakura-approved-episode-cards-only.patch",
+      "patches/0098-sakura-bg2533-verified-pan.patch"
     ]
   }
 }

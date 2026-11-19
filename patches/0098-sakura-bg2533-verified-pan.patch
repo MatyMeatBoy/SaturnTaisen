@@ -1,0 +1,191 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -21,6 +21,7 @@
+ #include <set>
+ #include "pc_backdrop.h"
+ #include "pc_spr.h"
++#include "bg2533_verified_pan.h"
+ #include "scene_bg_table.h"
+ #include "body_table.h"
+ #include "verified_body_faces.h"
+@@ -606,6 +607,8 @@
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
++    SceneHd bg2533;
++    std::vector<uint32_t> bg2533Native;
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
+     // T113/S3: the PC clip (MOVIEnnn.MPG) that replaces a Saturn FILM in the picture. Armed by a CD play command whose start FAD is in
+@@ -1694,6 +1697,84 @@
+                                     drewHd=true;
+                                 }
+                             }
++                            if (!drewHd && !drewClip && port.videoRenderer &&
++                                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++                                port.videoRenderer->BackgroundPaletteFingerprint(4) == 0x09884FF240CB5BF3ull) {
++                                if (!bg2533.tried) {
++                                    bg2533.tried = true;
++                                    std::vector<uint8_t> native;
++                                    if (port.discFiles.ReadBounded("BG2533.BIN", native, 64016)) {
++                                        bg2533Native = DecodePinnedBG2533(native);
++                                    }
++                                    if (!bg2533Native.empty()) {
++                                        const auto file = std::filesystem::path(port.opt.pcAssetsPath) /
++                                                          "SAKURA1/BG/BG2533.SPR";
++                                        bg2533.pending = std::async(std::launch::async, [file] {
++                                            SceneHdPixels decoded;
++                                            std::vector<uint8_t> bytes;
++                                            if (!ReadPcBackdropFile(file, bytes, 266190) ||
++                                                AtlasFingerprint(bytes) != 0x006D2C402DBBFE05ull) return decoded;
++                                            std::vector<PcSprite> images;
++                                            std::string error;
++                                            if (!DecodePcSprites(bytes, images, error)) return decoded;
++                                            const auto part = std::find_if(images.begin(), images.end(), [](const auto& item) {
++                                                return item.index == 0 && item.width == 1024 && item.height == 320;
++                                            });
++                                            if (part != images.end()) {
++                                                decoded.width = part->width;
++                                                decoded.height = part->height;
++                                                decoded.pixels = std::move(part->pixels);
++                                            }
++                                            return decoded;
++                                        });
++                                    }
++                                }
++                                if (bg2533.pending.valid() &&
++                                    bg2533.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                                    auto decoded = bg2533.pending.get();
++                                    if (!decoded.pixels.empty()) {
++                                        auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                            SDL_TEXTUREACCESS_STATIC, int(decoded.width), int(decoded.height));
++                                        if (picture && SDL_UpdateTexture(picture, nullptr, decoded.pixels.data(),
++                                                                         int(decoded.width * 4))) {
++                                            bg2533.texture = picture;
++                                            SDL_SetTextureBlendMode(bg2533.texture, SDL_BLENDMODE_BLEND);
++                                            SDL_SetTextureScaleMode(bg2533.texture, SDL_SCALEMODE_LINEAR);
++                                        } else if (picture) {
++                                            SDL_DestroyTexture(picture);
++                                        }
++                                    }
++                                }
++                                if (bg2533.texture) {
++                                    const auto match = FindVerifiedPanPosition(bg2533Native, softwareShown, planes.topSource);
++                                    if (match) {
++                                        SDL_RenderTexture(renderer, content, &imageCrop, &imageTarget);
++                                        const float outputScale = imageTarget.w / kPanInsetWidth;
++                                        const auto drawRange = [&](unsigned first, unsigned count, uint8_t alpha) {
++                                            const SDL_FRect pcCrop{float((match->offset + first) * 2), 16,
++                                                                  float(count * 2), 288};
++                                            const SDL_FRect target{imageTarget.x + first * outputScale, imageTarget.y,
++                                                                   count * outputScale, imageTarget.h};
++                                            SDL_SetTextureAlphaMod(bg2533.texture, alpha);
++                                            SDL_RenderTexture(renderer, bg2533.texture, &pcCrop, &target);
++                                        };
++                                        // Ease into the two Saturn-only columns of tiles.
++                                        // Anchor the ramp to the picture so it moves with the camera.
++                                        constexpr unsigned seam = 8;
++                                        const unsigned solid = std::min(match->visibleWidth,
++                                            kPanReliableWidth - seam - match->offset);
++                                        if (solid) drawRange(0, solid, 255);
++                                        for (unsigned x = solid; x < match->visibleWidth; ++x) {
++                                            const unsigned remain = kPanReliableWidth - match->offset - x;
++                                            drawRange(x, 1, static_cast<uint8_t>(remain * 255 / (seam + 1)));
++                                        }
++                                        if (std::getenv("SATRECOMP_PAN_TRACE"))
++                                            std::fprintf(stderr, "verified pan: BG2533 x=%u width=%u\n",
++                                                         match->offset, match->visibleWidth);
++                                        drewHd = true;
++                                    }
++                                }
++                            }
+                             if(!drewHd && !drewClip)SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
+                         }
+                         if(bodyDraw.valid) {
+diff --git a/port/bg2533_verified_pan.h b/port/bg2533_verified_pan.h
+new file mode 100644
+--- /dev/null
++++ b/port/bg2533_verified_pan.h
+@@ -0,0 +1,81 @@
++#pragma once
++#include <algorithm>
++#include <cstdint>
++#include <optional>
++#include <span>
++#include <vector>
++
++namespace port {
++constexpr unsigned kPanPictureWidth = 512;
++constexpr unsigned kPanReliableWidth = 496;
++constexpr unsigned kPanPictureHeight = 144;
++constexpr unsigned kPanInsetWidth = 288;
++constexpr unsigned kPanPictureOffsetX = 16;
++constexpr unsigned kPanPictureOffsetY = 8;
++constexpr unsigned kPanFrameWidth = 320;
++constexpr unsigned kPanFrameHeight = 224;
++
++struct VerifiedPanPosition {
++    unsigned offset;
++    unsigned visibleWidth;
++};
++
++inline std::optional<VerifiedPanPosition> FindVerifiedPanPosition(
++    std::span<const uint32_t> picture, std::span<const uint32_t> frame,
++    std::span<const uint8_t> topSource) {
++    if (picture.size() != kPanPictureWidth * kPanPictureHeight ||
++        frame.size() != kPanFrameWidth * kPanFrameHeight ||
++        topSource.size() != frame.size()) return {};
++    auto agrees = [&](unsigned start, unsigned x, unsigned y) {
++        const auto pixel = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;
++        return topSource[pixel] == 4 &&
++            (frame[pixel] & 0xFFFFFF) == picture[y * kPanPictureWidth + start + x];
++    };
++    std::optional<VerifiedPanPosition> result;
++    for (unsigned offset = 0; offset <= kPanPictureWidth - kPanInsetWidth; ++offset) {
++        const unsigned width = std::min(kPanInsetWidth, kPanReliableWidth - offset);
++        if (!agrees(offset, 17, 13) || !agrees(offset, 139, 77) ||
++            !agrees(offset, 247, 114)) continue;
++        bool verified = true;
++        for (unsigned y = 0; y < kPanPictureHeight && verified; ++y) {
++            for (unsigned x = 0; x < width; ++x) {
++                if (!agrees(offset, x, y)) {
++                    verified = false;
++                    break;
++                }
++            }
++        }
++        if (!verified) continue;
++        if (result) return {};
++        result = VerifiedPanPosition{offset, width};
++    }
++    return result;
++}
++
++inline std::vector<uint32_t> DecodePinnedBG2533(std::span<const uint8_t> bytes) {
++    constexpr unsigned table = 0x610;
++    constexpr unsigned tiles = table + 64 * 18 * 4;
++    if (bytes.size() != 64016) return {};
++    uint64_t fingerprint = 14695981039346656037ull;
++    for (auto value : bytes) fingerprint = (fingerprint ^ value) * 1099511628211ull;
++    if (fingerprint != 0x2DCA5B2CA73F65DDull) return {};
++
++    std::vector<uint32_t> pixels(kPanPictureWidth * kPanPictureHeight);
++    for (unsigned y = 0; y < kPanPictureHeight; ++y) {
++        for (unsigned x = 0; x < kPanPictureWidth; ++x) {
++            const auto name = table + ((y / 8) * 64 + x / 8) * 4;
++            const unsigned pattern = unsigned(bytes[name]) << 24 |
++                unsigned(bytes[name + 1]) << 16 | unsigned(bytes[name + 2]) << 8 | bytes[name + 3];
++            const auto row = (pattern & 0x80000000u) ? 7 - y % 8 : y % 8;
++            const auto col = (pattern & 0x40000000u) ? 7 - x % 8 : x % 8;
++            const unsigned pos = tiles + (pattern & 0x7FFF) * 32 + row * 8 + col;
++            if (pos >= bytes.size()) return {};
++            const auto index = bytes[pos];
++            const unsigned rgb = unsigned(bytes[16 + index * 2]) << 8 | bytes[17 + index * 2];
++            pixels[y * kPanPictureWidth + x] =
++                ((rgb & 31) << 3) | ((rgb & 0x3E0) << 6) | ((rgb & 0x7C00) << 9);
++        }
++    }
++    return pixels;
++}
++}
