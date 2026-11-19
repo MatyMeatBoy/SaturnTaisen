@@ -88,7 +88,10 @@ class ChapterCoverageTest(unittest.TestCase):
             clip = chapter1['film'][f'1:/SAKURA4+{offset}']
             self.assertEqual((clip['association'], clip['pc']), ('observed', movie))
         self.assertIn('1:/SAKURA4+0', catalog['unassigned']['film'])
-        self.assertEqual(chapter1['portraits']['00a1']['status'], 'unpaired')
+        iris = chapter1['portraits']['00a1']
+        emblem = chapter1['portraits']['0169']
+        self.assertEqual((iris['status'], iris['pc_index']), ('paired-not-wired', 160))
+        self.assertEqual((emblem['status'], emblem['candidate_pc_indices']), ('unpaired', [348, 360]))
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
         self.assertEqual(len({row['pc'] for row in alternate_cuts}), 6)
         self.assertTrue(all(row['status'] == 'excluded' for row in alternate_cuts))
