@@ -18,6 +18,7 @@ CATEGORIES = (
 BODY_REPORT = 'docs/research/saturn-bg-format.md'
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
+MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
 
 RESIDUAL_PORTRAIT_REPORT = PORTRAIT_REPORT + '#residual-portraits-00a1-and-0169'
 NATIVE_PORTRAIT_DECISIONS = {
@@ -582,7 +583,10 @@ def build(root, index_dir, portrait_audit):
         if sources:
             row['atlases'] = sources
         if ident in CHAPTER1_ROUTE_PORTRAITS:
-            add('portraits', ident, row, 1, 'observed', CHAPTER1_ROUTE_REPORT)
+            chapter1_portrait = row
+            if ident == '0176':
+                chapter1_portrait = dict(row, verified_in_game=True, runtime_evidence=MARIA_STRIP_REPORT)
+            add('portraits', ident, chapter1_portrait, 1, 'observed', CHAPTER1_ROUTE_REPORT)
         elif sources or not any(ident in atlases for atlases, _ in NATIVE_ROUTE_PORTRAITS.values()):
             add('portraits', ident, row, 1 if sources else None,
                 'inferred' if sources else 'unknown', PORTRAIT_REPORT if sources else None)

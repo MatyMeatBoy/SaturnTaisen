@@ -96,6 +96,10 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(body['association'], 'observed')
         self.assertFalse(body.get('verified_in_game'))
         self.assertEqual(chapter1['portraits']['0001']['association'], 'observed')
+        maria = chapter1['portraits']['0176']
+        self.assertEqual((maria['association'], maria['status'], maria['pc_index']), ('observed', 'hd', 373))
+        self.assertTrue(maria['verified_in_game'])
+        self.assertTrue(maria['runtime_evidence'].endswith('#maria-0176-natural-strip-verification'))
         for offset, movie in ((45410304, 'MOVIE002'), (56039424, 'MOVIE003')):
             clip = chapter1['film'][f'1:/SAKURA4+{offset}']
             self.assertEqual((clip['association'], clip['pc']), ('observed', movie))
