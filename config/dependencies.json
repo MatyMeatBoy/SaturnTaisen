@@ -213,7 +213,8 @@
       "patches/0217-sakura-iris-route-foregrounds.patch",
       "patches/0219-sakura-chapter-one-cutout-followup.patch",
       "patches/0220-sakura-iris-other-cutouts.patch",
-      "patches/0221-sakura-wide-narrative-cutout.patch"
+      "patches/0221-sakura-wide-narrative-cutout.patch",
+      "patches/0222-sakura-nc3057-verified-faces.patch"
     ]
   }
 }
