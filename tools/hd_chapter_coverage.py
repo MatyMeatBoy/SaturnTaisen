@@ -97,6 +97,20 @@ CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
 CHAPTER5_PORTRAIT_DRAWS = ('010f', '016a')
 CHAPTER5_PORTRAIT_REPORT = 'docs/research/hd-chapter-5.md#verified-0501fce-portrait-bases'
 TH6_TRACE_REPORT = 'docs/research/hd-chapter-6.md#traced-attribution-th6'
+# Re-attribution with the isolated EVT overlay build (docs/research/evt-overlay-registry.md): files read by the chapter traces. The finale stopped early; see Chapter 10 evidence.
+REATTR_TRACE = {
+    7: (1, 'docs/research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build',
+        ('BG1178', 'BG1181', 'BG2014', 'BG2160', 'BG4017', 'NC3014', 'NC3126', 'NC70')),
+    8: (2, 'docs/research/hd-chapter-8.md#re-attribution-with-the-evt-overlay-build',
+        ('BG1001', 'BG1195', 'BG2004', 'BG2007', 'BG4053', 'ITEM72', 'NC10', 'NC11', 'NC30', 'NC3004', 'NC3007', 'NC42')),
+    9: (2, 'docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build',
+        ('BG1143', 'BG2017', 'BG2021', 'BG2031', 'BG2091', 'BG2092', 'BG2156', 'BG2160', 'BG2236', 'BG3091',
+         'NC12', 'NC20', 'NC21', 'NC3017', 'NC3021', 'NC3031', 'NC32', 'NC34', 'NC41', 'NC50', 'NC51')),
+    10: (2, 'docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build',
+         ('BG1284', 'BG1292', 'BG1293', 'BG2020', 'BG2023', 'BG2025', 'BG2026', 'BG2046', 'BG2057', 'BG2111',
+          'BG2163', 'BG2164', 'BG2165', 'BG2166', 'BG2167', 'BG2168', 'BG2248', 'BG2284', 'BG2285', 'BG2286',
+          'BG3020', 'BG3026', 'BG3046', 'BG3163', 'BG3164', 'BG3165', 'NC3023', 'NC3025', 'BBG218', 'UNIT19', 'WKL19')),
+}
 CHAPTER9_ROUTE_REPORT = 'docs/research/hd-chapter-9.md#native-route-observations'
 CHAPTER9_ROUTE_FILES = {'BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100', 'NC81', 'NC3018'}
 NATIVE_ROUTE_FILES = {
@@ -410,6 +424,12 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA2/UNIT06.BIN'): (4, 'docs/research/hd-chapter-4.md#cold-replay-trace'),
     (1, '/SAKURA2/UNIT21.BIN'): (4, 'docs/research/hd-chapter-4.md#cold-replay-trace'),
 }
+
+for chapter, (disc, report, names) in REATTR_TRACE.items():
+    for name in names:
+        directory = 'SAKURA2' if name.startswith(('BBG', 'UNIT', 'WKL')) else 'SAKURA1'
+        CHAPTER_WITNESSES.setdefault((disc, f'/{directory}/{name}.BIN'), (chapter, report))
+
 
 
 def load(path):

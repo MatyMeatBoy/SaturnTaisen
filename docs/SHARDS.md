@@ -150,6 +150,14 @@ After playback regressions, take scene pictures first (TP1 ambiguous, TP2a/b scr
 
 Shard workers do **not** verify every picture one by one in game. For a scene picture, body, portrait or clip it is enough to: match it to its PC counterpart with the method already used and proven on the pictures that were tried in game, connect it, make sure it compiles (`tools/check_patch_stack.py`, build) and that the opening-film replay hashes are unchanged. Assume the matching is right unless a witnessed case says otherwise. Do not spend time on per-picture screenshots, 1440p A/B captures or campaign runs; the integration desk and the later cleanup phase (TP8) look at what is visible. If you do see something wrong, say so in the PR. Send the PR as soon as it is connected.
 
+## Entrega de lotes HD y porcentajes
+
+1. Toma un lote de [la cola HD](PENDIENTES.md#hd-pendiente-por-recurso) con un punto de partida disponible y declara disco, episodio, IDs y modo de prueba. Reutiliza el checkpoint del PR anterior cuando esté en el PC del dueño. Si solo tienes la traza, usa sus entradas y hashes para reproducirla. Conserva el estado y los recursos originales en `local/`.
+2. Para conectar recursos nuevos, agrupa pares compatibles que usan el mismo compositor. Sigue el flujo de matching, compilación y paridad de apertura. Para auditar recursos ya conectados, registra varios dibujos en una misma ruta y guarda solo las capturas que prueban IDs distintos. El control habitual es una comparación HD con y sin el donante a 1440p.
+3. En el PR indica el commit y ejecutable probados, ruta o fixture, recurso Saturn y donante PC, resultado y tres deltas separados: **atribuidos**, **integrados nuevos**, **verificados nuevos**. Cuenta cada donante de escena una vez globalmente. Una lectura sube atribución; un enlace de runtime sube integración; una captura atribuida sube verificación.
+4. Regenera el registro con el índice y la auditoría canónicos. Ejecuta `python tools/build_hd_progress.py --check` y las pruebas del registro. La cobertura de la versión publicada se registra cuando se verifica el paquete.
+5. Para HUD español, indica la familia de recursos o pantalla y si el rótulo viene del juego, de una textura o del port. Conserva la navegación y comprueba que el idioma sale del perfil. Incluye dos capturas de la misma pantalla en español e inglés cuando puedas reproducir la pantalla.
+
 ## Fast path for a picture shard
 
 1. Take the row, claim the shard (`tools/shard_claims.py`).

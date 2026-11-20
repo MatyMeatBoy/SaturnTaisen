@@ -195,3 +195,15 @@ Two isolated PC-donor A/B pairs continue from field 1199 with the original confi
 The next 2,400-field strict continuation reads NC60 at FAD 165138. From its field 599 checkpoint, an isolated `NC60.SPR` A/B passes 56 strict fields with identical guest hashes and SRAM. Four 2560 × 1440 samples change 593,300–621,521 pixels within the body bounds (1000,29)–(1996,1037). NC60 already has a separate verified body witness.
 
 A subsequent 3,500-field strict exploration (`--auto 6:0`) reads NC50 at FAD 164735, NC60 at 165138, NC10 at 161671 and NC30 at 162269. It completes without interpreted blocks and does not reach the next file or combat. These later reads establish file residency. Captures and checkpoints stay under `local/work/codex-th6-current/NC60-0602-early`, `file0602-deeper` and `file0602-next`.
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 1 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-6-battle` | 0 | 45000 | yes | `6633cfb0` | `5bfe6029` | `e283cbd2` |
+
+The route reproduces the TH6 list (TITLE6, BG1199, BG4119, BG2156, BG1021, BG1025, BG4059, NC97), all already attributed. No row moved.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.

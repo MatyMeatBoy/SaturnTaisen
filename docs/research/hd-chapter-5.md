@@ -258,3 +258,16 @@ Attributed to chapter 5 in the register by this pass: scene pictures `BG1051`, `
 Not attributed on purpose: `LOAD.BIN`, `TMAP*`, `VDP1`, `NCOBJ`, `KABE40/41`, `ADV*`, `VCEADV` are chapter-neutral loader, dialogue-frame and sound data (not register categories, or read in every chapter). `TITLE5` appears at frame 7059 as expected.
 
 Not reached: after `NC4182` (frame 22245) neither the confirm cadence (22,500 more frames) nor random input (`--auto 1:0` from the 22499 state for 15,000 frames and `--auto 2:0` from the 21999 state for 12,000 frames, zero interpreted blocks) loaded another file. So this route draws no `EVE`, `EVT`, `MAP`, `UNIT`, no `IC0501` intermission, and no FILM clip after the opening reads (FAD 405 and 166362, which precede the chapter script and are not chapter 5). Tactical maps/units, the chapter's FILM clips and the later narrative phases need a route that wins the battle or a save made later in the chapter. Portraits: only the `0501FCE` atlas is loaded; `0502FCE`..`0504FCE` stay inferred. Not verified in game: any HD draw of the newly attributed rows.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 1 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-5-battle` | 0 | 45000 | yes | `a36908d7` | `5bfe6029` | `66286406` |
+
+The route reproduces the TH5 list (BG1198, NC90, NC92, NC91, BG2533, BG2156, BG1243, BG1031, NC60, BG2132/3132, BG2133/3133, BG2058, NC3058, BG2258, BG1051, NC4182), all already attributed. No row moved. `LOAD.BIN` is read by every chapter and stays `unassigned`.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.

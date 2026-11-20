@@ -200,3 +200,18 @@ with the canonical donor. The registry counts the one physical donor once.
 Local receipts and repro commands are under
 `local/work/codex-witness-441-review/hud/iris-background-plates/`.
 This work verifies the named appearances without an SDK or package change.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 2 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-9-battle-1` | 0 | 45000 | yes | `40277a3d` | `5bfe6029` | `26f69583` |
+| `bank-9-battle-2` | 0 | 45000 | yes | `2d348634` | `5bfe6029` | `616e0bdf` |
+| `public-9` | 0 | 45000 | yes | `1b3457dc` | `76bd1a24` | `01fd0005` |
+
+Chapter 9 (disc 2) routes `0900` (`bank-9-battle-1` and `public-9`, identical reads) and `0904` (`bank-9-battle-2`). Twenty-one `unassigned` rows are now chapter 9: BG1143, BG2017, BG2021, BG2031, BG2091, BG2092, BG2156, BG2160, BG2236, BG3091, NC12, NC20, NC21, NC3017, NC3021, NC3031, NC32, NC34, NC41, NC50, NC51. `LOAD.BIN` stays `unassigned`.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
