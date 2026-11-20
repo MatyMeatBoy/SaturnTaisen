@@ -188,8 +188,26 @@ def apply_register(data, register_path):
                 hud_images.add((resource['pc'], resource['pc_image_index']))
             elif resource.get('status') == 'excluded' and resource.get('images'):
                 hud_excluded += resource['images']
+    ground_rows = {
+        key: resource for group in groups for key, resource in group.get('tactical-maps', {}).items()
+        if resource.get('pc')
+    }
+    ground_files = {resource['pc'] for resource in ground_rows.values()}
+    linked_grounds = {
+        resource['pc'] for resource in ground_rows.values() if resource.get('status') == 'hd'
+    }
+    verified_grounds = {
+        resource['pc'] for resource in ground_rows.values()
+        if resource.get('status') == 'hd' and resource.get('verified_in_game') is True
+    }
     census = register.get('hud_census')
     for row in data['categories']:
+        if row['id'] == 'tactical' and ground_files:
+            total = len(ground_files)
+            row.setdefault('details', []).append(
+                f'Suelos por archivo PC único: {format_count(len(linked_grounds), total)} integrados y '
+                f'{format_count(len(verified_grounds), total)} verificados. '
+                f'Los {total} archivos emparejados cubren {len(ground_rows)} referencias Saturn.')
         if row['id'] == 'hud-menus' and census:
             # distinct PC menu/HUD pictures: SYSTEM census minus files counted in another category, plus the item cards
             row['total'] = census['system_images'] - hud_excluded + census['item_images']

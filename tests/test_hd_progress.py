@@ -130,6 +130,23 @@ class HdProgressTests(unittest.TestCase):
         self.assertEqual((scene['total'], scene['inventory']), (2, 2))
         self.assertEqual((scene['integrated'], scene['verified']), (1, 1))
 
+    def test_tactical_ground_reuse_counts_one_file_for_two_disc_references(self):
+        data = specimen()
+        tactical = next(row for row in data['categories'] if row['id'] == 'tactical')
+        tactical['integrated'] = None
+        donor = 'SAKURA2/MAP/MAP01/MAP01_A.SPR'
+        register = {'unassigned': {'tactical-maps': {
+            '1:/SAKURA2/MAP01.BIN': {'pc': donor, 'status': 'hd', 'verified_in_game': True},
+            '2:/SAKURA2/MAP01.BIN': {'pc': donor, 'status': 'paired-not-wired'},
+        }}}
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'coverage.json'
+            path.write_text(json.dumps(register), encoding='utf-8')
+            report.apply_register(data, path)
+        self.assertIn('1/1 (100%) integrados y 1/1 (100%) verificados', tactical['details'][-1])
+        self.assertIn('2 referencias Saturn', tactical['details'][-1])
+        self.assertIsNone(tactical['integrated'])
+
     def test_committed_report_and_readme_are_current(self):
         config = json.loads((ROOT / 'config/hd-progress.json').read_text(encoding='utf-8'))
         report.apply_register(config, ROOT / 'config/hd-chapter-coverage.json')
