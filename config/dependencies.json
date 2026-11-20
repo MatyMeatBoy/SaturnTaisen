@@ -190,7 +190,8 @@
       "patches/0192-sakura-kanna-ending-photos.patch",
       "patches/0193-sakura-map12-pc-ground.patch",
       "patches/0194-sakura-ending-theatre-insets.patch",
-      "patches/0195-sakura-bg2093-dream-blend.patch"
+      "patches/0195-sakura-bg2093-dream-blend.patch",
+        "patches/0196-sakura-map13-pc-ground.patch"
     ]
   }
 }
