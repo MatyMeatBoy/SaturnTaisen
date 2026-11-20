@@ -215,3 +215,7 @@ Shard TH-reattribution repeated the traced attribution with the isolated AOT bui
 Chapter 9 (disc 2) routes `0900` (`bank-9-battle-1` and `public-9`, identical reads) and `0904` (`bank-9-battle-2`). Twenty-one `unassigned` rows are now chapter 9: BG1143, BG2017, BG2021, BG2031, BG2091, BG2092, BG2156, BG2160, BG2236, BG3091, NC12, NC20, NC21, NC3017, NC3021, NC3031, NC32, NC34, NC41, NC50, NC51. `LOAD.BIN` stays `unassigned`.
 
 Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
+
+## BG2021 on the earned Iris route
+
+After Shika, the natural Iris route reads the Saturn BG2021 from FAD 123317. The state saved at field 480 of the post-film segment runs for 32 strict fields from the same initial SRAM in two 1440p profiles. The donor-only profile loads BG2021.SPR. The matched control reports the texture missing and uses the same floral backdrop. The 32 guest hashes and final SRAM match. The 546,597 changed pixels lie within the scene rectangle (272,29) to (2288,1037), leaving the dialogue and floral border identical. The tested executable is from v0.2.16.1-alpha. Private receipts: `local/work/codex-th1/thd01-probe/bg2021-ep9-proof`.
