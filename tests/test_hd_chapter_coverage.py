@@ -199,7 +199,10 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertTrue(nc81['native_face_fallback'])
         self.assertEqual(nc81['runtime_evidence'], 'docs/research/nc81-nc90-1440p.md')
         self.assertFalse(catalog['chapters'][0]['resources']['bodies']['1:/SAKURA1/NC81.BIN']['verified_in_game'])
-        self.assertFalse(catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC3018.BIN']['verified_in_game'])
+        nc3018 = catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC3018.BIN']
+        self.assertTrue(nc3018['verified_in_game'])
+        self.assertEqual(nc3018['runtime_evidence'], 'docs/research/nc3018-registered-faces.md')
+        self.assertFalse(catalog['unassigned']['bodies']['1:/SAKURA1/NC3018.BIN']['verified_in_game'])
 
     def test_eve202_only_attributes_the_witnessed_disc(self):
         root = Path(__file__).resolve().parents[1]
