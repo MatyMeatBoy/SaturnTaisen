@@ -1006,3 +1006,32 @@ map is resident in the module. A CD head position at the first sector of
 MINIMAIG.GCG alone does not prove a read because that sector immediately
 follows the previous BIN read. A winning branch is the next route to
 check for the illustration, its viewport and fades.
+
+### Vertical fit for the PC files
+
+For each donor, compared the decoded 640 × 448 Saturn picture with the
+entire PC frame and every 640 × 448 crop of that 640 × 480 frame.
+Full-frame resampling wins for all eight. Its minimum luminance
+correlation is 0.999702. The strongest crop in any of the eight reaches
+0.986901. For Maigo, the entire frame scores 0.999916 and the best crop,
+starting at row 19, scores 0.984308. This establishes how much of the
+donor to sample once the native layer bounds and transform are known.
+
+### Maigo and shooting-gallery route checks
+
+The manual Maigo route in episode 6 solves all nine names and retains
+all three hearts. An optimized input sequence earns the Perfect result
+at 49.48 seconds, then returns through the loading screen. The
+interpreter captures and CD trace provide a positive gameplay result.
+They show no read of MINIMAIG.GCG and no BGMAIGO illustration.
+The older strict executable stops 273 fields into the manual branch
+at 0x0021C682. Its existing block table contains an overlapping
+extent without an entry at that PC.
+
+An independent Long Day route on the Spanish second disc uses the
+Captain's Quarter rest choice and the nap option. It loads MINISHOT.BIN
+at FAD 260879 and reaches the shooting-gallery choice in the
+interpreter. The strict run stops at 0x0027BAF8 after 940 complete
+fields. All 940 guest hashes match the interpreter prefix. The
+1,800-field interpreter trace has no MINISHOT.GCG read and its
+Start/Practice artwork does not contain BGSYATE.
