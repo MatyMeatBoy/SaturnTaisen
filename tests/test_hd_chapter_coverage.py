@@ -224,7 +224,8 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 7)
-        for name, verified in (('BG1267', False), ('BG1268', True), ('BG2080', True)):
+        for name, verified in (('BG1266', True), ('BG1267', True), ('BG1268', True),
+                               ('BG2019', True), ('BG2080', True), ('BG2126', True)):
             with self.subTest(scene=name):
                 scene = chapter['scene-pictures'][f'1:/SAKURA1/{name}.BIN']
                 self.assertEqual(scene['association'], 'observed')

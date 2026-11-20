@@ -4469,11 +4469,21 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1266.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
+            "pc": "SAKURA1/BG/BG1266.SPR",
+            "runtime_evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1267.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th7-native-attribution.md",
+            "evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
             "pc": "SAKURA1/BG/BG1267.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1268.BIN": {
             "association": "observed",
@@ -4483,11 +4493,27 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG2019.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
+            "pc": "SAKURA1/BG/BG2019.SPR",
+            "runtime_evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG2080.BIN": {
             "association": "observed",
             "evidence": "docs/research/th7-native-attribution.md#hd-background-draws",
             "pc": "SAKURA1/BG/BG2080.SPR",
             "runtime_evidence": "docs/research/th7-native-attribution.md#hd-background-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2126.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
+            "pc": "SAKURA1/BG/BG2126.SPR",
+            "runtime_evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
             "status": "hd",
             "verified_in_game": true
           },
@@ -13190,11 +13216,6 @@
         "pc": "SAKURA1/BG/BG1263.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1266.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1266.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1275.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1275.SPR",
@@ -13660,11 +13681,6 @@
         "pc": "SAKURA1/BG/BG2018.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG2019.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2019.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG2020.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2020.SPR",
@@ -14118,11 +14134,6 @@
       "1:/SAKURA1/BG2125.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2125.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2126.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2126.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2128.BIN": {
