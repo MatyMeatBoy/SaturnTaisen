@@ -133,3 +133,33 @@ Host variation also appeared in the idle controls. The capture fixes
 and test rig remain the same across all four runs. Load on a separate
 GPU and audible WASAPI playback were outside this comparison. Private
 logs are in the park-contention-0275 staging directory.
+
+### Disc 2 tactical routes
+
+The patch 0272 and 0275 development runtimes ran 240 fields each
+at MAP12, MAP13, MAP14 and MAP16 in Enhanced mode at 1440p.
+All four routes selected their respective HD ground. All 960 guest
+hashes and the four SRAM files matched. Timing varied between pairs.
+
+MAP14 had a 319.28 ms outlier with 1.24 ms in presentation.
+Approximately 300 ms was outside the reported SH-2, VDP and
+audio buckets within RunFrame, which also included diagnostic
+state hashing. There were no CD commands in the route. The cause
+of the outlier remains unconfirmed.
+
+With guest hashing disabled, MAP14 p95 was 17.52 and 17.83 ms
+on 0272 and 20.09 and 22.94 ms on 0275. An intermediate 0273
+comparison measured 19.18 and 20.43 ms, with 16.80 and 17.03 ms
+in its 0272 controls. A build that retained the old tactical sampler
+with the 0275 frontend measured 16.67 and 20.16 ms, with 14.43
+and 21.30 ms in its controls. The sampler experiment stays out of
+the integrated stack pending repeatable isolation of the cause.
+
+The private 0.3.0-rc.1 package verified all 171 manifest files.
+Both English and both Spanish disc preparations rendered their
+first 240 fields at 1440p in strict native execution. The package
+remains local. Campaign, minimum hardware, and frame pacing
+verification remain open. At closure, local alone measured
+212,888,133,051 logical bytes excluding junctions, above the
+workspace budget. The RC ZIP was staged outside the repository
+and is 354,107,401 bytes.
