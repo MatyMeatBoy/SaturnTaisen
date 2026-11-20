@@ -320,6 +320,20 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertFalse(catalog['unassigned']['scene-pictures']['1:/SAKURA1/BG2093.BIN'].get('verified_in_game'))
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
 
+    def test_three_disc_two_scroll_witnesses(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        for name, number in (('BG1282', 9), ('BG2077', 8), ('BG2176', 8)):
+            with self.subTest(name=name):
+                chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == number)
+                row = chapter['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
+                self.assertEqual((row['association'], row['status']), ('observed', 'hd'))
+                self.assertTrue(row['verified_in_game'])
+                self.assertTrue(row['runtime_evidence'].endswith('#bg1282-bg2077-and-bg2176-on-english-disc-2'))
+                other_disc = f'1:/SAKURA1/{name}.BIN'
+                for category in [catalog['unassigned'], *(a['resources'] for a in catalog['chapters'])]:
+                    self.assertFalse(category['scene-pictures'].get(other_disc, {}).get('verified_in_game'))
+
     def test_bg2247_native_pan_preserves_framing(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
