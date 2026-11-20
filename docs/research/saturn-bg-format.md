@@ -953,6 +953,6 @@ The private fixtures place the original palettes and sprite textures into the sa
 
 Against the patch 0151 runtime, the existing NC4138 fixture matches both 1440p captures and all 12 guest hashes. The muted opening replay agrees on 900 guest hashes and three 1440p captures, with zero interpreted blocks. Its guest-log SHA-256 is `3e0d0f59d0344ea51c62fd2a3c15311d7f8929e2b59b01a66c65cc83474737dd`.
 
-The coverage register records fixture evidence for both disc entries. Natural scene draws, other animation phases and package validation remain open. NC3290 and NC3517 still await safe registration. Private fixtures and receipts are under `local/work/codex-tp3c/nc3125-subset/`.
+The coverage register records fixture evidence for both disc entries. Natural scene draws, other animation phases and package validation remain open. [NC3290 subsequently received natural stage-wing registration](nc3290-stage-wing.md). NC3517 still awaits safe registration. Private fixtures and receipts are under `local/work/codex-tp3c/nc3125-subset/`.
 
 At block close the project measured 68,423,377,348 logical bytes, above the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

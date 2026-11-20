@@ -1,0 +1,20 @@
+diff --git a/port/registered_body_overlay.h b/port/registered_body_overlay.h
+--- a/port/registered_body_overlay.h
++++ b/port/registered_body_overlay.h
+@@ -17,13 +17,15 @@
+     int scaleX, scaleY, originX, originY;
+     int feather;
+ };
+-inline constexpr std::array<Entry, 3> kEntries{{
++inline constexpr std::array<Entry, 4> kEntries{{
+     {"NC4138", "SAKURA1/NC/NC4138.SPR", 0x0CAB60660ABA6DD5ull, 0x7C07B11306D1DEA2ull,
+      0x5D01F8A13100D78Full, 71692, 112, 112, 230, 254, 2073, 2249, -3508, -4654, 0},
+     {"NC3125", "SAKURA1/NC/NC3125.SPR", 0xD490539B25905CE9ull, 0x8A6FB394C17EE70Cull,
+      0x1AC5E04E7DB219DCull, 55414, 200, 96, 398, 205, 2177, 2339, -60, -17403, 12},
+     {"NC3126", "SAKURA1/NC/NC3126.SPR", 0x15A1798B00413580ull, 0x9B408B83C410FE86ull,
+      0x705578D90A9E85A5ull, 69063, 192, 96, 385, 209, 2098, 2260, -5610, -5919, 12},
++    {"NC3290", "SAKURA1/NC/NC3290.SPR", 0xC28A1216FD90998Aull, 0x193F22096D889622ull,
++     0xBC08A5D35CF07629ull, 46934, 80, 96, 167, 210, 2180, 2257, -19522, -3028, 12},
+ }};
+ 
+ inline uint32_t NativeRgb(std::span<const uint8_t> palette, unsigned index) {
