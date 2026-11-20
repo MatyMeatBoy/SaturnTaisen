@@ -8673,6 +8673,15 @@
         "reason": "portrait atlas (394 faces): counted in the portraits category through the FCE recipe and portrait pack",
         "status": "excluded"
       },
+      "pc:SAKURA1/SYSTEM/OPTION.SPR#1": {
+        "association": "unknown",
+        "draw": "patch 0209, port/frontend_sdl.cpp: inventory panel rail strips",
+        "pc": "SAKURA1/SYSTEM/OPTION.SPR",
+        "pc_image_index": 1,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-controls-and-inventory-panel-rails",
+        "status": "hd",
+        "verified_in_game": true
+      },
       "pc:SAKURA1/SYSTEM/SISTEM.SPR#1": {
         "association": "unknown",
         "draw": "patch 0206, port/frontend_sdl.cpp: Load-menu title banner rails",
@@ -8688,6 +8697,15 @@
         "pc": "SAKURA1/SYSTEM/SISTEM.SPR",
         "pc_image_index": 11,
         "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-options-and-system-panel-rails",
+        "status": "hd",
+        "verified_in_game": true
+      },
+      "pc:SAKURA1/SYSTEM/SISTEM.SPR#12": {
+        "association": "unknown",
+        "draw": "patch 0209, port/frontend_sdl.cpp: controller-binding panel rails",
+        "pc": "SAKURA1/SYSTEM/SISTEM.SPR",
+        "pc_image_index": 12,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-controls-and-inventory-panel-rails",
         "status": "hd",
         "verified_in_game": true
       },

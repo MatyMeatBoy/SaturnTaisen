@@ -1,0 +1,79 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -965,7 +965,7 @@
+         SceneHd image;
+         std::vector<WindowRail> rails;
+     };
+-    std::array<WindowFrame, 5> windowFrames;
++    std::array<WindowFrame, 7> windowFrames;
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+@@ -3832,6 +3832,7 @@
+                     uint64_t alternateTexture = 0;
+                     uint16_t right = 0, bottom = 0;
+                     int footer = 0;
++                    bool inventory = false;
+                 };
+                 constexpr WindowVariant variants[] = {
+                     {0, 1, {24, 16, 273, 121}, 272, 120, 160, 76, 0x4ADC5FF69258EF85ull,
+@@ -3844,6 +3845,10 @@
+                      0x809F8438D9925B74ull, {}, 11, 0xD33908A56103E1C2ull, 0x008F, 0x002F, 120},
+                     {4, 1, {24, 16, 112, 88}, 112, 88, 24, 16, 0x1DF6267AC7E483C6ull,
+                      0x809F8438D9925B74ull, {}, 14, 0, 0xFFE7, 0xFFF7, 72},
++                    {5, 1, {192, 32, 112, 176}, 112, 176, 192, 32, 0x8D70DF237527E4F8ull,
++                     0x809F8438D9925B74ull, {}, 12, 0, 0x008F, 0x005F, 176},
++                    {6, 1, {48, 16, 224, 128}, 224, 128, 48, 16, 0x0716DAC7576234F9ull,
++                     0x809F8438D9925B74ull, {}, 1, 0, 0x006F, 0x001F, 112, true},
+                 };
+                 const auto& frame = port.videoRenderer->PresentationFrame();
+                 const auto rasterAxis = [](int source, int output) {
+@@ -3898,13 +3903,16 @@
+                                         // Keep the localized tab and the spaces used by cursor and labels.
+                                         if (sy >= variant.footer || (variant.systemImage == 11 &&
+                                             sx >= 8 && sx < 280 && sy % 24 >= 8)) continue;
++                                        if (variant.inventory && sy >= 8 && sx >= 8 && sx < 216) continue;
+                                         const unsigned ink = (sprite->pixels[source / 2] >> (source % 2 ? 0 : 4)) & 15;
+                                         if (!ink || ink == 9) continue;
+                                         const unsigned color = (unsigned(systemPalette[2 * ink]) << 8) |
+                                             systemPalette[2 * ink + 1];
+                                         const uint32_t rgb = ((color & 31) << 3) |
+                                             ((color & 0x3E0) << 6) | ((color & 0x7C00) << 9);
+-                                        window.rails.push_back({x, y, sx, sy, rgb});
++                                        // The OPTION donor has a narrower interior. Keep the two bevels at their original density.
++                                        const int artX = !variant.inventory ? sx : sx >= 216 ? sx - 24 : std::min(sx, 191);
++                                        window.rails.push_back({x, y, artX, sy, rgb});
+                                         continue;
+                                     }
+                                     const unsigned ink = sprite->pixels[source];
+@@ -3924,12 +3932,16 @@
+                             window.image.tried = true;
+                             window.image.pending = std::async(std::launch::async,
+                                 [file = std::filesystem::u8path(port.opt.pcAssetsPath) /
+-                                     (system ? "SAKURA1/SYSTEM/SISTEM.SPR" : "SAKURA1/SYSTEM/WINDOW.SPR"),
++                                     (variant.inventory ? "SAKURA1/SYSTEM/OPTION.SPR" :
++                                      system ? "SAKURA1/SYSTEM/SISTEM.SPR" : "SAKURA1/SYSTEM/WINDOW.SPR"),
+                                  rails = window.rails, variant, system]() {
+                                     SceneHdPixels result;
+                                     std::vector<uint8_t> bytes;
+-                                    const unsigned size = system ? 285236 : 93941;
+-                                    const uint64_t fingerprint = system ? 0x0DBC9A3C989D369Bull : 0xAF9AB06AB9D017A2ull;
++                                    const unsigned size = variant.inventory ? 162227 : system ? 285236 : 93941;
++                                    const uint64_t fingerprint = variant.inventory ? 0xBAE94D61A8ABA085ull :
++                                        system ? 0x0DBC9A3C989D369Bull : 0xAF9AB06AB9D017A2ull;
++                                    const int width = variant.inventory ? 400 : 2 * variant.width;
++                                    const int height = variant.inventory ? 290 : 2 * variant.height;
+                                     if (!ReadPcBackdropFile(file, bytes, size) || bytes.size() != size ||
+                                         PcBackdropHash(bytes) != fingerprint) return result;
+                                     std::vector<PcSprite> images;
+@@ -3937,8 +3949,7 @@
+                                     if (!DecodePcSprites(bytes, images, error)) return result;
+                                     for (const auto& image : images) {
+                                         if (image.index != (system ? variant.systemImage : variant.index) ||
+-                                            image.width != 2 * variant.width ||
+-                                            image.height != 2 * variant.height) continue;
++                                            image.width != width || image.height != height) continue;
+                                         result.width = 2 * variant.target.width;
+                                         result.height = 2 * variant.target.height;
+                                         result.pixels.resize(result.width * result.height);
