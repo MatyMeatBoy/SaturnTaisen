@@ -39,7 +39,7 @@ The example uses the 674,535-variant seed from the [ending AOT recipe](ending-ba
 
 The 94-variant sorted delta has SHA-256 `dde8a84b96b654777b5752187a3e9550e609d21326367d0f65c6ad501230f39e` in LF `ADDRESS UPPERCASE_HEX` form. Feeding that delta to the SDK generator emitted byte-identical sources to the private strict relink. All 180 guest hashes and SRAM matched the interpreter on the resulting 674,629-variant build, with zero interpreted blocks. This is camera-witness coverage for the retained checkpoint. Full battle coverage and package inclusion remain open. Opcode bytes, checkpoints, movies, and binaries stay local.
 
-## Bounded MAP15 movement on disc 2
+## Bounded MAP15 deployment and combat on disc 2
 
 The Chapter 9 theater-defense route reads EVT15 during setup, then
 EVT16 at FAD 203528. At the retained Sakura movement checkpoint, the
@@ -47,16 +47,24 @@ first 28,672 bytes of live code at `00204000` exactly match
 `/SAKURA2/EVT16.BIN`. The 77,764-byte module SHA-256 is
 `300a92c2cd5dd3ba8b6b57350684b47a1074142a8eb1a83d869bad0acf51ea7f`.
 
-The interpreter replay recorded 68 variants absent from the 674,629
-base. All 68 match their complete spans in EVT16, including the old
-strict miss at `00209E62`. The sorted delta SHA-256 is
-`2c9e32da88064c2050fc32190e85aad50d60a7cfcb5e4559bd9f690e0a19b109`.
-A private relink with 674,697 variants produced the same 540 guest hashes
-and final SRAM as the interpreter, with zero interpreted blocks.
+The first movement profile covered 68 EVT16 variants, including the old
+strict miss at `00209E62`. The wider theater route adds the deployment
+transition and six more recorded combat segments. A total of 591
+variants are absent from the 674,629 base, with 144 complete spans in
+EVT15 and 447 in EVT16. There are no unattributed variants. The combined
+sorted delta SHA-256 is
+`92f6185e4bb08df13843413cd48f4d72cfd165eac94ffc3831d0cb6d08474c23`.
+
+The 675,220-variant strict build matches all 18,900 guest hashes and final
+SRAM against the eight interpreter segments, with zero interpreted
+blocks. Segments start from retained states and include the EVT15→EVT16
+transition, deployment, movement, ordinary and special attacks, and
+enemy phases through entry into turn four.
 
 ```powershell
-python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT16_MAP15 --seed-blocks local/work/map04-aot/blocks.txt --output local/work/map15-aot
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT15_MAP15 --module EVT16_MAP15 --seed-blocks local/work/map04-aot/blocks.txt --output local/work/map15-aot
 ```
 
-The profile covers this movement replay. The full battle, cold entry
-through EVT15, and package inclusion remain open.
+The profile covers the eight tested segments. Cold entry before the
+retained deployment state, the rest of the battle, and package
+inclusion remain open.
