@@ -162,7 +162,7 @@
       "next": "Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.",
       "details": [
         "El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.",
-        "Se verificó el suelo de ocho mapas: MAP01, MAP02, MAP04, MAP05, MAP06, MAP12, MAP13 y MAP21. MAP05 se verificó con la cámara fija. La verificación cubre la capa de suelo. El inventario completo de sustituciones por archivo para mapas, unidades y objetos sigue pendiente. El marco táctico de SLGSYS03 se verificó en MAP02, MAP12 y MAP13 con una imagen HD compartida, fuera del censo de UNIT, MAP e ITEM."
+        "Suelos Saturn: 27/27 emparejados y 11/27 integrados y verificados en juego (MAP01, MAP02, MAP04, MAP05, MAP06, MAP12, MAP13, MAP14, MAP15, MAP16 y MAP21). Quedan 16 suelos por conectar. MAP05 se verificó con la cámara fija. Este recuento cubre la capa de suelo; el inventario de sustituciones por archivo para unidades, objetos y demás piezas del mapa sigue pendiente. El marco táctico de SLGSYS03 se verificó en MAP02, MAP12 y MAP13 con una imagen HD compartida, fuera del censo de UNIT, MAP e ITEM."
       ],
       "total": 542,
       "inventory": 542,
