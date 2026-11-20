@@ -1,0 +1,21 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -850,7 +850,7 @@
+         int disc, scaleX, scaleY, offsetX, offsetY;
+         int donorWidth = 576, donorHeight = 320;
+     };
+-    constexpr std::array<NarrativeCutout, 21> narrativeCutouts{{
++    constexpr std::array<NarrativeCutout, 22> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -893,6 +893,8 @@
+             "BG4084.BIN", "SAKURA1/BG/BG4084.SPR", 71798, 1, 2060, 2220, -7000, -2000},
+         {0x9B098C5C1D3DA924ull, 0x7D507EAC0A2FCC05ull, 0x9BA1BEE66745682Cull, 0x49E9AB871BD4940Eull,
+             "BG3034.BIN", "SAKURA1/BG/BG3034.SPR", 85496, 1, 2090, 2260, 22500, 0, 651, 326},
++        {0x94BD21B161800B97ull, 0x1F142C3EEA47ED6Eull, 0x5C37DD13B222E404ull, 0xB1569B2B7E7CAA06ull,
++            "BG4370.BIN", "SAKURA1/BG/BG4370.SPR", 70732, 1, 1940, 2270, -500, -6000},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
