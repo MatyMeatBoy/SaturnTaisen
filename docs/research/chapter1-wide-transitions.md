@@ -221,3 +221,27 @@ At 4K, 24 exit captures match with all 760 guest fields, SRAM and PCM.
 The Direct3D 12 entry comparison also matches its 11 RGB captures
 and guest trace. The 4K timing numbers above are Direct3D 11 without
 readback. Release packaging is pending.
+
+## Composing packed rows directly
+
+Patch 0275 determines the repeated row runs before blending eligible
+map fades. It blends one row per run and uses the same texture geometry
+as patch 0274. In two alternating 4K Direct3D 11 entry comparisons,
+field 406 went from 32.17 and 25.41 ms to 20.91 and 20.89 ms. Across
+fields 404–481, counts over 16.67 ms went from 11 and 8 to 4 and 3.
+Some frames still exceed the budget.
+
+All 11 sampled entry captures match RGB exactly. The guest hash log
+and SRAM are byte-identical. These timings are from the development
+PC. The 8 GB RAM and 2 GB VRAM configuration remains a minimum test
+target. Full campaign coverage and release packaging remain pending.
+
+The 4K exit replay matches 24 RGB captures, 760 guest fields, SRAM
+and PCM. The Direct3D 12 entry matches 11 RGB captures, guest hashes
+and SRAM. Screenshot runs are excluded from the timing comparison.
+
+A separate alternating memory run recorded peak process commit of
+1.053–1.054 GB before and 1.054–1.055 GB after (decimal units). In that
+run, counts over 16.67 ms were 2 and 6 before and 3 and 4 after.
+The two timing runs show that host timing still varies. Process
+commit is a host metric and does not measure video memory.
