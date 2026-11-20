@@ -1,0 +1,548 @@
+diff --git a/machine/machine.cpp b/machine/machine.cpp
+--- a/machine/machine.cpp
++++ b/machine/machine.cpp
+@@ -278,10 +278,19 @@
+             m_video->Vdp1FramebufferWritten();
+         }
+         return;
+-    case 0x5E: m_vram2[a & 0x7FFFF] = v; return;
++    case 0x5E:
++        if (m_vram2[a & 0x7FFFF] != v) {
++            m_vram2[a & 0x7FFFF] = v;
++            m_video->NoteVideoMemoryWrite();
++        }
++        return;
+     case 0x5F:
+         if (a < 0x05F80000) {
+-            m_cram[CramAddress(a, m_video->Regs2().vramControl.colorRAMMode >= 2)] = v;
++            uint8 &cell = m_cram[CramAddress(a, m_video->Regs2().vramControl.colorRAMMode >= 2)];
++            if (cell != v) {
++                cell = v;
++                m_video->NoteVideoMemoryWrite();
++            }
+             return;
+         }
+         break;
+@@ -327,10 +336,19 @@
+         }
+         return;
+     case 0x5D: Vdp1WriteRegister(a & 0x1E, v); return;
+-    case 0x5E: Put16(&m_vram2[a & 0x7FFFE], v); return;
++    case 0x5E:
++        if (Get16(&m_vram2[a & 0x7FFFE]) != v) {
++            Put16(&m_vram2[a & 0x7FFFE], v);
++            m_video->NoteVideoMemoryWrite();
++        }
++        return;
+     case 0x5F:
+         if (a < 0x05F80000) {
+-            Put16(&m_cram[CramAddress(a & ~1u, m_video->Regs2().vramControl.colorRAMMode >= 2)], v);
++            uint8 *cell = &m_cram[CramAddress(a & ~1u, m_video->Regs2().vramControl.colorRAMMode >= 2)];
++            if (Get16(cell) != v) {
++                Put16(cell, v);
++                m_video->NoteVideoMemoryWrite();
++            }
+         } else if (a < 0x05FE0000) {
+             Vdp2WriteRegister(a & 0x1FE, v);
+         } else {
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -29,6 +29,8 @@
+     : m_mem(memory) {}
+ 
+ void Renderer::Reset(bool hard) {
++    m_stateGen++;
++    m_reuse.valid = false;
+     if (hard) {
+         std::fill(m_framebuffer.begin(), m_framebuffer.end(), 0xFF000000);
+     }
+@@ -63,6 +65,8 @@
+ }
+ 
+ void Renderer::SetMode(Mode mode, FrameCallback onFrame, Reference *reference) {
++    ++m_stateGen;
++    m_reuse.valid = false;
+     m_compose = mode != Mode::Reference;
+     m_check = mode == Mode::Check;
+     m_gpu = mode == Mode::Gpu;
+@@ -91,6 +95,8 @@
+         ar.Pod(rot.KA);
+     }
+     if (!ar.Saving()) {
++        m_stateGen++;
++        m_reuse.valid = false;
+         // (a GPU backend's copy of the VDP1's framebuffers is of before: it starts them empty)
+         m_commands.clear();
+         for(auto& sprites:m_presentSprites)sprites.clear();
+@@ -132,13 +138,19 @@
+         m_drawnItemCard[m_captureDrawFB].reset();m_itemCaptureActive=false;
+         m_drawnBrackets[m_captureDrawFB]={};m_bracketCaptureActive=false;
+     }
++    alignas(Vdp1Regs) unsigned char before[sizeof(Vdp1Regs)];
++    std::memcpy(before, &m_regs1, sizeof before);
+     m_regs1.Write(address, value);
++    if (std::memcmp(before, &m_regs1, sizeof before) != 0) {
++        m_stateGen++;
++    }
+ }
+ 
+ void Renderer::WriteVdp2Reg(uint32 address, uint16 value) {
+     const uint32 index = (address & 0x1FE) >> 1;
+     const auto scrollX=m_regs2.bgParams[3].scrollAmountH,scrollY=m_regs2.bgParams[3].scrollAmountV;
+     const bool sprites=m_regs2.layerEnabled[0];
++    m_stateGen += m_raw2[index] != value;
+     m_raw2[index] = value;
+     m_regs2.Decode(m_raw2);
+     if(m_menuReplayStable && m_drawing) {
+@@ -160,10 +172,12 @@
+ }
+ 
+ void Renderer::SetField(bool odd) {
++    m_stateGen += m_regs2.TVSTAT.ODD != odd;
+     m_regs2.TVSTAT.ODD = odd;
+ }
+ 
+ void Renderer::LatchDisplayMode() {
++    m_stateGen += m_regs2.displayEnabledLatch != m_regs2.TVMD.DISP || m_regs2.borderColorModeLatch != m_regs2.TVMD.BDCLMD;
+     m_regs2.displayEnabledLatch = m_regs2.TVMD.DISP;
+     m_regs2.borderColorModeLatch = m_regs2.TVMD.BDCLMD;
+ }
+@@ -522,6 +536,7 @@
+ // --- VDP2 ---
+ 
+ void Renderer::SetResolution(uint32 h, uint32 v, bool exclusive) {
++    m_stateGen += m_width != h || m_height != v || m_exclusive != exclusive;
+     m_width = h;
+     m_height = v;
+     m_exclusive = exclusive;
+@@ -537,6 +552,8 @@
+ }
+ 
+ void Renderer::BeginFrame() {
++    m_reuse.pending = true;
++    m_reuse.mode = LineReuse::Off;
+     m_presentation.itemCard.reset();
+     m_itemFrameInvalid=false;
+     m_presentation.brackets.reset();
+@@ -581,10 +598,15 @@
+     if (!m_compose) {
+         return;
+     }
++    if (m_reuse.pending) {
++        ReuseFrameStart();
++    }
+     LayersBeforeLine();
+     LayersPrepareLine(y);
+     if (m_gpu) {
+         GpuLine(y);
++    } else if (m_reuse.mode != LineReuse::Off) {
++        ComposeLineReusing(y);
+     } else {
+         ComposeLine(y);
+     }
+@@ -840,6 +862,325 @@
+     SpriteLine(y,m_glyphScratch.data());
+     std::swap(m_sprite,m_glyphSprite);
+     return true;
++}
++
++// --- reuse of unchanged VDP2 lines (T116) ---
++
++bool Renderer::ReuseEligible() const {
++    // SATRECOMP_VDP2_LINE_REUSE: 0 turns the reuse off, "check" composes every line and compares it with the kept one
++    static const char *setting = getenv("SATRECOMP_VDP2_LINE_REUSE");
++    static const bool off = setting && setting[0] == '0';
++    static const bool probing = getenv("SATRECOMP_LAYER_PROBE") != nullptr;
++    return m_reuseOn && !off && !probing && m_compose && !m_gpu && !m_check && m_regs2.displayEnabledLatch &&
++           !(m_capturePresentation && m_presentation.scrollWidth) && !m_regs2.TVMD.IsInterlaced() &&
++           !m_regs2.bgEnabled[4] && !m_regs2.bgEnabled[5] && m_width <= 704 && m_height <= 512;
++}
++
++// Lines that follow an item card or a menu's arrows from line to line (state kept between lines, and a drawn capture that
++// changes every frame without the counter moving): always composed, never kept
++bool Renderer::ReuseVolatileLine(uint32 y) const {
++    if (m_captureBrackets && m_drawnBrackets[m_displayFB].serial != 0 && y + 1 > static_cast<uint32>(system_hud::kY) &&
++        y < static_cast<uint32>(system_hud::kY + system_hud::kHeight)) {
++        return true;
++    }
++    const auto &item = m_drawnItemCard[m_displayFB];
++    return m_captureItemCards && item && static_cast<sint32>(y) >= item->y &&
++           static_cast<sint32>(y) < item->y + std::max<sint32>(kItemCardSize, ::port::kLoadDiscIconSize);
++}
++
++// At the frame's first line (the VDP1 framebuffers have been swapped by now): decide what the frame's lines do
++void Renderer::ReuseFrameStart() {
++    LineReuse &R = m_reuse;
++    R.pending = false;
++    R.mode = LineReuse::Off;
++    R.frames++;
++    if (!ReuseEligible()) {
++        R.ineligible++;
++        R.valid = false;
++        R.lastFirstGen = 0;
++        return;
++    }
++    // What changes without a write the machine tells about: the displayed framebuffer and the VDP1 registers
++    // (neither changes while the picture's lines are made)
++    if (R.fbSnap.size() != 0x40000) {
++        R.fbSnap.assign(0x40000, 0);
++        R.valid = false;
++        m_stateGen++;
++    }
++    if (std::memcmp(R.fbSnap.data(), m_mem.fb[m_displayFB], 0x40000) != 0) {
++        std::memcpy(R.fbSnap.data(), m_mem.fb[m_displayFB], 0x40000);
++        m_stateGen++;
++    }
++    if (!R.regs1SnapValid || std::memcmp(R.regs1Snap, &m_regs1, sizeof R.regs1Snap) != 0) {
++        std::memcpy(R.regs1Snap, &m_regs1, sizeof R.regs1Snap);
++        R.regs1SnapValid = true;
++        m_stateGen++;
++    }
++    {
++        // (the host's glyph stamps of the displayed framebuffer feed PrepareGlyphLine)
++        const bool ready = m_glyphPlateReady[m_displayFB];
++        const auto &stamps = m_glyphStamps[m_displayFB];
++        const bool same = ready == R.glyphReadySnap &&
++                          (!ready || (stamps.size() == R.stampSnap.size() &&
++                                      (stamps.empty() || std::memcmp(stamps.data(), R.stampSnap.data(), stamps.size() * sizeof(GlyphPlateStamp)) == 0)));
++        if (!same) {
++            R.glyphReadySnap = ready;
++            if (ready) {
++                R.stampSnap = stamps;
++            }
++            m_stateGen++;
++        }
++    }
++    if (R.width != m_width || R.height != m_height || R.capture != m_capturePresentation ||
++        (R.capture && (R.glyph.size() != m_presentation.glyphPlate.size() ||
++                       R.white.size() != m_presentation.spriteWhiteWeight.size()))) {
++        R.valid = false;
++    }
++    R.frameGen = m_stateGen;
++    const bool stable = R.lastFirstGen == m_stateGen; // (nothing changed since the last frame's first line)
++    R.lastFirstGen = m_stateGen;
++    if (R.valid && R.cacheGen == m_stateGen) {
++        R.mode = LineReuse::Reuse;
++        R.reuseFrames++;
++        return;
++    }
++    R.valid = false;
++    if (!stable) {
++        R.unstable++;
++        return;
++    }
++    R.buildFrames++;
++    // A second frame in a row with nothing changed: keep its lines for the next
++    const size_t pixels = static_cast<size_t>(m_width) * m_height;
++    R.width = m_width;
++    R.height = m_height;
++    R.capture = m_capturePresentation;
++    R.cacheGen = m_stateGen;
++    R.lineOk.assign(m_height, 0);
++    R.layerMask.assign(m_height, 0);
++    R.panelRow.assign(m_height, 0);
++    R.pixels.resize(pixels);
++    if (R.capture) {
++        R.foreground.resize(m_presentation.foreground.size());
++        R.underSprites.resize(m_presentation.underSprites.size());
++        R.source.resize(m_presentation.source.size());
++        R.topSource.resize(m_presentation.topSource.size());
++        R.underSource.resize(m_presentation.underSource.size());
++        R.white.resize(m_presentation.spriteWhiteWeight.size());
++        R.panelMix.resize(m_presentation.panelMix.size());
++        R.underPanelMix.resize(m_presentation.underPanelMix.size());
++        R.floralCoverMix.resize(m_presentation.floralCoverMix.size());
++        R.mapFadeEdges.resize(m_presentation.mapFadeEdges.size());
++        R.glyph.resize(m_presentation.glyphPlate.size());
++        R.glyphRow.assign(m_height, 0);
++    }
++    R.mode = LineReuse::Build;
++}
++
++void Renderer::ReuseFrameEnd() {
++    LineReuse &R = m_reuse;
++    if (R.mode == LineReuse::Build && m_stateGen == R.frameGen) {
++        R.valid = true;
++    } else if (R.mode == LineReuse::Off) {
++        R.valid = R.valid && R.cacheGen == m_stateGen;
++    }
++}
++
++namespace {
++    bool IsDefaultMix(const ::port::PanelMix &m) {
++        return m.topRgb == 0 && m.lowerWeight == 0 && m.postMixOffset[0] == 0 && m.postMixOffset[1] == 0 && m.postMixOffset[2] == 0;
++    }
++    bool SameMix(const ::port::PanelMix &a, const ::port::PanelMix &b) {
++        return a.topRgb == b.topRgb && a.lowerWeight == b.lowerWeight && a.postMixOffset == b.postMixOffset;
++    }
++}
++
++void Renderer::ComposeLineReusing(uint32 y) {
++    LineReuse &R = m_reuse;
++    if (m_stateGen != R.frameGen || y >= m_height) {
++        // Something changed in the middle of the frame: this frame goes on without the reuse and keeps nothing
++        R.mode = LineReuse::Off;
++        R.valid = false;
++        R.midChange++;
++        ComposeLine(y);
++        return;
++    }
++    static const char *setting = getenv("SATRECOMP_VDP2_LINE_REUSE");
++    static const bool check = setting && std::strcmp(setting, "check") == 0;
++    if (ReuseVolatileLine(y)) {
++        ComposeLine(y);
++        return;
++    }
++    if (R.mode == LineReuse::Reuse) {
++        R.lines++;
++        if (R.lineOk[y]) {
++            if (!check) {
++                ReuseReplayLine(y);
++                R.replayed++;
++                return;
++            }
++            ComposeLine(y);
++            if (!ReuseCompareLine(y)) {
++                R.mismatches++;
++            }
++            R.replayed++;
++            return;
++        }
++        ComposeLine(y);
++        return;
++    }
++    // Build: compose, and keep the line if nothing in it depends on what the frame did before
++    uint64_t statsBefore = m_linesLeftToReference + m_spriteLinesLeftToReference;
++    for (uint32 i = 0; i < 7; i++) {
++        statsBefore += m_approximateLines[i];
++    }
++    uint64_t layerBefore[6];
++    for (uint32 i = 0; i < 6; i++) {
++        layerBefore[i] = m_layerLines[i];
++        statsBefore += m_layerLinesLeftToReference[i];
++    }
++    const uint32 samplesBefore = m_presentation.episodeBlendSamples;
++    ComposeLine(y);
++    uint64_t statsAfter = m_linesLeftToReference + m_spriteLinesLeftToReference;
++    for (uint32 i = 0; i < 7; i++) {
++        statsAfter += m_approximateLines[i];
++    }
++    uint8 mask = 0;
++    for (uint32 i = 0; i < 6; i++) {
++        statsAfter += m_layerLinesLeftToReference[i];
++        mask |= static_cast<uint8>((m_layerLines[i] != layerBefore[i]) << i);
++    }
++    ReuseStoreLine(y, statsAfter == statsBefore && m_presentation.episodeBlendSamples == samplesBefore, mask);
++}
++
++void Renderer::ReuseStoreLine(uint32 y, bool cacheable, uint8 layerMask) {
++    LineReuse &R = m_reuse;
++    if (!cacheable) {
++        return;
++    }
++    const size_t width = m_width, at = static_cast<size_t>(y) * width;
++    if (R.capture) {
++        const Presentation &p = m_presentation;
++        if (p.source.size() != R.source.size() || p.foreground.size() != R.foreground.size()) {
++            return; // (the planes are not what this frame's start saw: keep nothing of the line)
++        }
++        std::memcpy(&R.foreground[at], &p.foreground[at], width * 4);
++        std::memcpy(&R.underSprites[at], &p.underSprites[at], width * 4);
++        std::memcpy(&R.source[at], &p.source[at], width);
++        std::memcpy(&R.topSource[at], &p.topSource[at], width);
++        std::memcpy(&R.underSource[at], &p.underSource[at], width);
++        if (!R.white.empty()) {
++            std::memcpy(&R.white[at], &p.spriteWhiteWeight[at], width);
++        }
++        if (!R.panelMix.empty()) {
++            bool any = false;
++            for (size_t x = 0; x < width && !any; x++) {
++                any = !IsDefaultMix(p.panelMix[at + x]) || !IsDefaultMix(p.underPanelMix[at + x]) || !IsDefaultMix(p.floralCoverMix[at + x]);
++            }
++            R.panelRow[y] = any;
++            if (any) {
++                std::copy_n(&p.panelMix[at], width, &R.panelMix[at]);
++                std::copy_n(&p.underPanelMix[at], width, &R.underPanelMix[at]);
++                std::copy_n(&p.floralCoverMix[at], width, &R.floralCoverMix[at]);
++            }
++        }
++        if (!R.mapFadeEdges.empty()) {
++            std::copy_n(&p.mapFadeEdges[static_cast<size_t>(y) * 32], 32, &R.mapFadeEdges[static_cast<size_t>(y) * 32]);
++        }
++        if (!R.glyph.empty()) {
++            bool any = false;
++            for (size_t x = 0; x < width && !any; x++) {
++                any = p.glyphPlate[at + x].owner != 0;
++            }
++            R.glyphRow[y] = any;
++            if (any) {
++                std::copy_n(&p.glyphPlate[at], width, &R.glyph[at]);
++            }
++        }
++    }
++    std::memcpy(&R.pixels[at], &m_framebuffer[at], width * 4);
++    R.layerMask[y] = layerMask;
++    R.lineOk[y] = 1;
++    R.built++;
++}
++
++void Renderer::ReuseReplayLine(uint32 y) {
++    LineReuse &R = m_reuse;
++    const size_t width = m_width, at = static_cast<size_t>(y) * width;
++    m_lines++;
++    for (uint32 i = 0; i < 6; i++) {
++        m_layerLines[i] += (R.layerMask[y] >> i) & 1;
++    }
++    std::memcpy(&m_framebuffer[at], &R.pixels[at], width * 4);
++    if (R.capture) {
++        Presentation &p = m_presentation;
++        std::memcpy(&p.foreground[at], &R.foreground[at], width * 4);
++        std::memcpy(&p.underSprites[at], &R.underSprites[at], width * 4);
++        std::memcpy(&p.source[at], &R.source[at], width);
++        std::memcpy(&p.topSource[at], &R.topSource[at], width);
++        std::memcpy(&p.underSource[at], &R.underSource[at], width);
++        if (!R.white.empty()) {
++            std::memcpy(&p.spriteWhiteWeight[at], &R.white[at], width);
++        }
++        if (R.panelRow[y]) {
++            std::copy_n(&R.panelMix[at], width, &p.panelMix[at]);
++            std::copy_n(&R.underPanelMix[at], width, &p.underPanelMix[at]);
++            std::copy_n(&R.floralCoverMix[at], width, &p.floralCoverMix[at]);
++        }
++        if (!R.mapFadeEdges.empty()) {
++            std::copy_n(&R.mapFadeEdges[static_cast<size_t>(y) * 32], 32, &p.mapFadeEdges[static_cast<size_t>(y) * 32]);
++        }
++        if (!R.glyph.empty() && R.glyphRow[y]) {
++            std::copy_n(&R.glyph[at], width, &p.glyphPlate[at]);
++        }
++    }
++}
++
++// (the check: the line just composed against the kept one)
++bool Renderer::ReuseCompareLine(uint32 y) {
++    LineReuse &R = m_reuse;
++    const size_t width = m_width, at = static_cast<size_t>(y) * width;
++    bool same = std::memcmp(&m_framebuffer[at], &R.pixels[at], width * 4) == 0;
++    if (R.capture) {
++        const Presentation &p = m_presentation;
++        same = same && std::memcmp(&p.foreground[at], &R.foreground[at], width * 4) == 0 &&
++               std::memcmp(&p.underSprites[at], &R.underSprites[at], width * 4) == 0 &&
++               std::memcmp(&p.source[at], &R.source[at], width) == 0 && std::memcmp(&p.topSource[at], &R.topSource[at], width) == 0 &&
++               std::memcmp(&p.underSource[at], &R.underSource[at], width) == 0;
++        if (!R.white.empty()) {
++            same = same && std::memcmp(&p.spriteWhiteWeight[at], &R.white[at], width) == 0;
++        }
++        if (!R.panelMix.empty()) {
++            const bool kept = R.panelRow[y];
++            const ::port::PanelMix none{};
++            for (size_t x = 0; x < width && same; x++) {
++                same = SameMix(p.panelMix[at + x], kept ? R.panelMix[at + x] : none) &&
++                       SameMix(p.underPanelMix[at + x], kept ? R.underPanelMix[at + x] : none) &&
++                       SameMix(p.floralCoverMix[at + x], kept ? R.floralCoverMix[at + x] : none);
++            }
++        }
++    }
++    if (R.capture && !R.glyph.empty()) {
++        const Presentation &p = m_presentation;
++        const GlyphPlatePixel none{};
++        const bool kept = R.glyphRow[y];
++        for (size_t x = 0; x < width && same; x++) {
++            const GlyphPlatePixel &a = p.glyphPlate[at + x], &b = kept ? R.glyph[at + x] : none;
++            same = a.nativeRgb == b.nativeRgb && a.foregroundRgba == b.foregroundRgba && a.owner == b.owner &&
++                   a.underOwner == b.underOwner && SameMix(a.panelMix, b.panelMix);
++        }
++    }
++    if (same && R.capture && !R.mapFadeEdges.empty()) {
++        const size_t start = static_cast<size_t>(y) * 32;
++        for (size_t x = start; x < start + 32 && same; ++x) {
++            const auto &current = m_presentation.mapFadeEdges[x], &kept = R.mapFadeEdges[x];
++            same = current.mapRgb == kept.mapRgb && current.mix == kept.mix;
++        }
++    }
++    if (!same) {
++        fprintf(stderr, "video: reuse check: line %u differs from the kept one\n", y);
++    }
++    return same;
+ }
+ 
+ void Renderer::ComposeLine(uint32 y) {
+@@ -1211,6 +1552,7 @@
+         GpuEndFrame();
+         return;
+     }
++    ReuseFrameEnd();
+     const uint32 width = m_width, height = m_height;
+     if(m_capturePresentation) {
+         m_presentation.sprites=m_presentSprites[m_displayFB];
+@@ -1262,6 +1604,14 @@
+ void Renderer::Report() const {
+     if (!m_compose) {
+         return;
++    }
++    if (m_reuse.frames) {
++        fprintf(stderr, "video: line reuse frames %llu: ineligible %llu, unstable %llu, built %llu, replayed %llu, mid-frame changes %llu\n", (unsigned long long)m_reuse.frames, (unsigned long long)m_reuse.ineligible, (unsigned long long)m_reuse.unstable, (unsigned long long)m_reuse.buildFrames, (unsigned long long)m_reuse.reuseFrames, (unsigned long long)m_reuse.midChange);
++    }
++    if (m_reuse.lines) {
++        fprintf(stderr, "video: line reuse: %llu of %llu lines of reuse frames replayed, %llu lines kept, %llu mismatches checked\n",
++                static_cast<unsigned long long>(m_reuse.replayed), static_cast<unsigned long long>(m_reuse.lines),
++                static_cast<unsigned long long>(m_reuse.built), static_cast<unsigned long long>(m_reuse.mismatches));
+     }
+     if (!m_check) {
+         fprintf(stderr, "video: %llu frames, the VDP1 drew %llu times\n", static_cast<unsigned long long>(m_frames),
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -197,6 +197,11 @@
+     void SetTacticalGround(std::vector<uint32> pixels) { m_tacticalGround = std::move(pixels); }
+     void CaptureTacticalGround(bool enabled) { m_captureTacticalGround = enabled; }
+     void Vdp1FramebufferWritten() {InvalidateGlyphPlate(m_displayFB^1u);}
++    // The machine calls this when a write changes VDP2 VRAM or colour RAM (T116: the reuse of unchanged lines)
++    void NoteVideoMemoryWrite() { m_stateGen++; }
++    // The reuse of unchanged lines (SATRECOMP_VDP2_LINE_REUSE=0 turns it off by default; tests switch it per renderer)
++    void SetLineReuse(bool on) { m_reuseOn = on; m_reuse.valid = false; }
++    uint64 ReusedLines() const { return m_reuse.replayed; }
+     void CaptureScrollExtension(uint32 extra,uint64 signature=0) {
+         m_captureScrollExtra=extra>64?64:extra;m_captureScrollSignature=signature;
+     }
+@@ -298,6 +303,40 @@
+ 
+ private:
+     Presentation m_presentation;
++    // --- reuse of unchanged VDP2 lines (T116) ---
++    // m_stateGen counts every change of what a composed line is made from (VDP2 VRAM and colour RAM, the VDP2
++    // and VDP1 registers, the picture size, the field, the latched display mode, the displayed VDP1 framebuffer).
++    // A frame computed while it did not move is kept line by line; the next frame starting at the same count
++    // replays those lines instead of composing them. A change at any moment of a frame ends the reuse for it.
++    struct LineReuse {
++        enum Mode : uint8 { Off, Build, Reuse };
++        Mode mode = Off;
++        bool pending = false, valid = false, capture = false;
++        uint64 frameGen = 0, cacheGen = 0, lastFirstGen = 0;
++        uint32 width = 0, height = 0;
++        std::vector<uint8> lineOk, layerMask, panelRow;
++        std::vector<uint32> pixels, foreground, underSprites;
++        std::vector<uint8> source, topSource, underSource, white;
++        std::vector<::port::PanelMix> panelMix, underPanelMix, floralCoverMix;
++        std::vector<::port::MapFadeEdge> mapFadeEdges;
++        std::vector<uint8> fbSnap, glyphRow;
++        std::vector<GlyphPlatePixel> glyph;
++        std::vector<GlyphPlateStamp> stampSnap;
++        bool glyphReadySnap = false;
++        alignas(Vdp1Regs) unsigned char regs1Snap[sizeof(Vdp1Regs)] = {};
++        bool regs1SnapValid = false;
++        uint64 lines = 0, replayed = 0, built = 0, mismatches = 0, frames = 0, ineligible = 0, unstable = 0, reuseFrames = 0, buildFrames = 0, midChange = 0;
++    } m_reuse;
++    uint64 m_stateGen = 1;
++    bool m_reuseOn = true;
++    void ReuseFrameStart();
++    void ReuseFrameEnd();
++    bool ReuseEligible() const;
++    bool ReuseVolatileLine(uint32 y) const;
++    void ComposeLineReusing(uint32 y);
++    void ReuseStoreLine(uint32 y, bool cacheable, uint8 layerMask);
++    void ReuseReplayLine(uint32 y);
++    bool ReuseCompareLine(uint32 y);
+     bool m_capturePresentation=false,m_captureGlyphPlate=false;
+     std::array<std::vector<GlyphPlateStamp>,2> m_glyphStamps;
+     std::array<bool,2> m_glyphPlateReady{};

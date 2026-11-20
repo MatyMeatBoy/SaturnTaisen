@@ -169,3 +169,6 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Full-frame battle pictures](bbg-full-frame.md)
 
 - [Constrained scroll fits and scenario references](tp2a-remaining-scroll.md)
+
+- [Offline crop measurements for size mismatches](size-candidates.md)
+- [VDP2 line reuse](vdp2-line-reuse-design.md)

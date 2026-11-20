@@ -1,13 +1,16 @@
 """Synthetic tests for tools/measure_size_candidates.py (TP2a-size). No game pixels."""
 import sys, unittest
+from importlib.util import find_spec
 from pathlib import Path
 
-import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
-import measure_size_candidates as m  # noqa: E402
+HAS_NUMPY = find_spec("numpy") is not None
+if HAS_NUMPY:
+    import numpy as np
+    import measure_size_candidates as m
 
 
 def texture(w, h, seed=1):
@@ -16,6 +19,7 @@ def texture(w, h, seed=1):
     return Image.fromarray(base).resize((w, h), Image.BICUBIC)
 
 
+@unittest.skipUnless(HAS_NUMPY, "offline crop audit requires NumPy")
 class SizeCandidates(unittest.TestCase):
     def test_free_box_recovers_a_scaled_crop(self):
         pc = texture(800, 320)
