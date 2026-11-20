@@ -6493,9 +6493,11 @@
           },
           "2:/SAKURA1/BG2092.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-9.md#bg2092-mist-transition",
             "pc": "SAKURA1/BG/BG2092.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#bg2092-mist-transition",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2093.BIN": {
             "association": "observed",

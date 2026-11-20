@@ -1,0 +1,15 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3711,8 +3711,9 @@
+                                     if(drewHd)break;
+                                     if(layer==4 && scroll && scroll->style!=ScrollStyle::EdgeRamp)continue;
+                                     const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
+-                                    // The Chapter 9 dream blends its figure through this plate.
+-                                    if (fingerprint == 0xCBC4C20C2E46BEE0ull &&
++                                    // The Chapter 9 dream uses color calculation both for the figure
++                                    // in BG2236 and for the mist over BG2092 as it dissolves.
++                                    if ((fingerprint == 0xCBC4C20C2E46BEE0ull || fingerprint == 0x5C1B62E6FD68183Full) &&
+                                         !port.videoRenderer->BackgroundIsOpaque(layer))
+                                         continue;
+                                     constexpr unsigned kNoSlot=kSceneBgCount+kSceneBgAmbiguousCount;
