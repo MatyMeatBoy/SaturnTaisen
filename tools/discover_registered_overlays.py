@@ -14,6 +14,10 @@ else:
     from discover_battle_overlays import ROOT,MAX_BLOCK,read_seed,merge_candidates,analyze_with_sdk
 
 REGISTRY={
+    'GATTAI_SD2_IRIS': dict(file='/SAKURA2/GATTAI.BIN', base=0x060F0000, bytes=38908,
+                            sha256='fb2d079ce72b58d0981841bfa26c6cccb1dcd8076e34423f671b38b5fdcb39a5',
+                            observed_ranges='gattai-iris-aot-ranges.json',
+                            evidence='Natural disc 2 MAP13 Iris and Ogami combo, exact full live module match'),
     'ENDING_DISC2_EN': dict(file='/SAKURA1/ENDING.BIN', base=0x06080000, bytes=178968,
                             sha256='f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553',
                             observed_ranges='ending-aot-ranges.json',

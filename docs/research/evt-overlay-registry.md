@@ -128,3 +128,13 @@ The two interpreter recordings match all 4,380 reference guest fields and final 
 ```powershell
 python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT13_MAP13 --seed-blocks local/work/sakura/blocks.txt --output local/work/evt13-map13-aot
 ```
+
+## Iris and Ogami combo during the MAP13 rematch
+
+The English disc 2 replay loads `/SAKURA2/GATTAI.BIN` at FAD 212474. All 38,908 bytes match High WRAM at `060F0000` in six retained states around the combo. The strict miss at `060F0490` is inside that module. The interpreter trace contributes 472 new complete GATTAI spans and one six-byte return span at `00205BC8`, independently pinned to EVT13. The combined strict build reproduces all 1,800 guest fields and final SRAM with zero interpreted blocks.
+
+This covers the witnessed Iris combo and return to the MAP13 battlefield. The full battle and other heroine combos remain open. No public package contains the new variants yet.
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT13_MAP13 --module GATTAI_SD2_IRIS --seed-blocks local/work/sakura/blocks.txt --output local/work/map13-combo-aot
+```
