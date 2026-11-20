@@ -1093,4 +1093,15 @@ still changes 2,223,687 pixels within the same destination against
 its own control on the Spanish disc 2 checkpoint.
 
 The patch and observed AOT extents are verified on the Spanish disc 2
-winning route. Patch 0253 ships in [v0.2.22-alpha](../releases/v0.2.22-alpha.md). A disc 1 witness remains pending.
+winning route. Patch 0253 ships in [v0.2.22-alpha](../releases/v0.2.22-alpha.md).
+
+The English disc 1 route reaches the shooting gallery from the captain's
+quarters using the nap choice. The same 5,260-field controller replay
+scores 95 in strict native mode with no interpreted blocks and
+requests MINISHOT.GCG from FAD 268816. Both discs use one PC file.
+
+Four 490-field donor/control runs from before the reward transition
+match guest hashes and final SRAM at 2560 × 1440. All samples in
+Original match. Enhanced matches before the reward and changes
+2,428,371 pixels within (320,48)–(2240,1392) at each of the three
+stable reward samples. No additional AOT extents were needed.
