@@ -1,0 +1,7937 @@
+{
+ "schema": 1,
+ "scope": "THD21 Saturn menu textures (VDP1, saved menu states) to PC SYSTEM images by content; data only, no pixels.",
+ "thresholds": {
+  "firm": 0.9,
+  "margin": 0.05,
+  "floor": 0.75,
+  "aspect": 0.3
+ },
+ "summary": {
+  "saturn_textures": 165,
+  "saturn": {
+   "paired": 5,
+   "ambiguous": 2,
+   "no-counterpart": 158,
+   "undecodable": 0
+  },
+  "pc_images": 287,
+  "pc": {
+   "paired": 5,
+   "ambiguous": 2,
+   "no-counterpart": 280,
+   "undecodable": 0
+  }
+ },
+ "saturn": [
+  {
+   "texture_fnv": "B22B9B9708089A65",
+   "palette_fnv": "EB0E8FBCD10F6A6A",
+   "size": [
+    208,
+    152
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/OP_WIN.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    416,
+    304
+   ],
+   "pc_sha256": "7eeafa10b1a7398d210445b44dddcdba24e5c7dec0d487dde103304fa2e25f93",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.809,
+   "runner_up_score": 0.209,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#14",
+   "tier": "ambiguous"
+  },
+  {
+   "texture_fnv": "7440EA80F153A830",
+   "palette_fnv": "52C0DBB1EA90290A",
+   "size": [
+    40,
+    40
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.777,
+   "runner_up_score": 0.272,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "ambiguous"
+  },
+  {
+   "texture_fnv": "9AF2CC56D5CAEB11",
+   "palette_fnv": "52C0DBB1EA90290A",
+   "size": [
+    40,
+    40
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 3,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.736,
+   "runner_up_score": 0.73,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#6",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E2E4156ADAB1517F",
+   "palette_fnv": "52C0DBB1EA90290A",
+   "size": [
+    40,
+    40
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 6,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 2,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.728,
+   "runner_up_score": 0.723,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#3",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "FF02AF0F7DEB043C",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    8,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 9,
+   "pc_size": [
+    16,
+    32
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.712,
+   "runner_up_score": 0.084,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#2",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "D8731754E21634ED",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    8,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 6,
+   "pc_file": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    16,
+    32
+   ],
+   "pc_sha256": "b2859bb85ed4ecc319d53bae88556e1b255be4c3ce3b4018aad838882bf0613b",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.698,
+   "runner_up_score": -0.035,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#9",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "EF39DE9F9400A5AD",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    8,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 6,
+   "pc_file": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    32
+   ],
+   "pc_sha256": "b2859bb85ed4ecc319d53bae88556e1b255be4c3ce3b4018aad838882bf0613b",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.693,
+   "runner_up_score": 0.151,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#2",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C22BF33F44463864",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    8,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    16,
+    32
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.681,
+   "runner_up_score": 0.176,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#2",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "22938CC575A4203F",
+   "palette_fnv": "DC1F1B06C3693D3E",
+   "size": [
+    112,
+    136
+   ],
+   "states": [
+    "title"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 13,
+   "pc_size": [
+    384,
+    400
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    3.429,
+    2.941
+   ],
+   "score": 0.405,
+   "runner_up_score": 0.231,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#40",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E65456E2116B5EE5",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/MINISAKU.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "c857aa638bfb5f5cfe609ab912bbd2e57a417b7c16d3a0946dd3af8a4fd2d35d",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.398,
+   "runner_up_score": 0.274,
+   "runner_up": "SAKURA1/SYSTEM/SEGALOGO.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E65456E2116B5EE5",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/MINISAKU.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "c857aa638bfb5f5cfe609ab912bbd2e57a417b7c16d3a0946dd3af8a4fd2d35d",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.391,
+   "runner_up_score": 0.272,
+   "runner_up": "SAKURA1/SYSTEM/SEGALOGO.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E265C6838A40A983",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/TL_ROGO0.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "efdef8d6f8b3c3433da188d77ba57175dc7198693c9147a6841e39955db6bbfd",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.318,
+   "runner_up_score": 0.149,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#29",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "97A87CF219F582CC",
+   "palette_fnv": "DC1F1B06C3693D3E",
+   "size": [
+    24,
+    24
+   ],
+   "states": [
+    "title"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 2,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    3.333,
+    3.333
+   ],
+   "score": 0.315,
+   "runner_up_score": 0.307,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "0EA9A62E6A047102",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 7,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.303,
+   "runner_up_score": 0.287,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "599F522D4C2B3059",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.294,
+   "runner_up_score": 0.264,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#7",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C63587492694EE90",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.291,
+   "runner_up_score": 0.258,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B624B0B0E570F651",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 50,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.276,
+   "runner_up_score": 0.218,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#51",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "274881BE86281F45",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.27,
+   "runner_up_score": 0.263,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#7",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B97A49721B4D9F95",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load",
+    "load2"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.269,
+   "runner_up_score": 0.266,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LIPSBARY.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "17596581A25EFAF8",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.266,
+   "runner_up_score": 0.188,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#8",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "210DEE57F1CB99C5",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 43,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.265,
+   "runner_up_score": 0.193,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "61A017D2DFB2201F",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.258,
+   "runner_up_score": 0.182,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#18",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C9710B9E567D7BA6",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 5,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.258,
+   "runner_up_score": 0.199,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "FCB8B905F31594AF",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 7,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.257,
+   "runner_up_score": 0.239,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#18",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "8FF52D5E0158FC64",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 7,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.255,
+   "runner_up_score": 0.228,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "5A553682BB7D1FA8",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 7,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.254,
+   "runner_up_score": 0.253,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#18",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "3C0F75E0EA6DBD8F",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.248,
+   "runner_up_score": 0.224,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "98A6DCB114368F4B",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.242,
+   "runner_up_score": 0.221,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "F4AA8F38D3C5DD5E",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.242,
+   "runner_up_score": 0.228,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "80CA994B2E12C445",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.239,
+   "runner_up_score": 0.191,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#12",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "9D23E1B9C994A1FD",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/TL_ROGO0.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "efdef8d6f8b3c3433da188d77ba57175dc7198693c9147a6841e39955db6bbfd",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.237,
+   "runner_up_score": 0.154,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E9726332A6DF5D77",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    2.0,
+    2.75
+   ],
+   "score": 0.236,
+   "runner_up_score": 0.213,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#83",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C7D1D32DDC2C2628",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.234,
+   "runner_up_score": 0.166,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "967D0FCA49DE1143",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 7,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.231,
+   "runner_up_score": 0.227,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#9",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "92C1D920F512BD49",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.228,
+   "runner_up_score": 0.227,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "0EA9A62E6A047102",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 18,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.224,
+   "runner_up_score": 0.215,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#19",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "04D7C3F1B7427D10",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.222,
+   "runner_up_score": 0.2,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "F15550BF9B96375A",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 6,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.222,
+   "runner_up_score": 0.191,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#7",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "6C98EDF622494F64",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.221,
+   "runner_up_score": 0.199,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#10",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "2F8AB7BB11D65EDF",
+   "palette_fnv": "C2EF3818B85A08C6",
+   "size": [
+    168,
+    24
+   ],
+   "states": [
+    "title"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    352,
+    48
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.095,
+    2.0
+   ],
+   "score": 0.219,
+   "runner_up_score": 0.21,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#12",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "A16C5F6C95ECA5B3",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/TL_ROGO0.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "efdef8d6f8b3c3433da188d77ba57175dc7198693c9147a6841e39955db6bbfd",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.219,
+   "runner_up_score": 0.154,
+   "runner_up": "SAKURA1/SYSTEM/CAUTION.SPR#6",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E200F56F280AC6C3",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.219,
+   "runner_up_score": 0.214,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "44C1AF2F6BB91D65",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 7,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.217,
+   "runner_up_score": 0.202,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "910B8F14710B0E79",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 43,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.217,
+   "runner_up_score": 0.203,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#44",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "D287E7E9161A1296",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 12,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.217,
+   "runner_up_score": 0.188,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#1",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "3DD4E7CDA90D08CE",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 44,
+   "pc_size": [
+    32,
+    32
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.215,
+   "runner_up_score": 0.186,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B2DC14A34681A0D8",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    2.0,
+    2.75
+   ],
+   "score": 0.213,
+   "runner_up_score": 0.186,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#49",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B48669DC4408CCC6",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.213,
+   "runner_up_score": 0.196,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "210DEE57F1CB99C5",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.211,
+   "runner_up_score": 0.206,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LIPSBARY.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "04D7C3F1B7427D10",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.21,
+   "runner_up_score": 0.209,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "3E93712715148C01",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 32,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.21,
+   "runner_up_score": 0.198,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#29",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "9E61AB7E9EFA5325",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/OPTION.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    512,
+    386
+   ],
+   "pc_sha256": "4509f8e1697cae2070e7973b1eefd5f0665291e7365b22fe1045923fe0d169f2",
+   "scale": [
+    32.0,
+    24.125
+   ],
+   "score": 0.208,
+   "runner_up_score": 0.189,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "A1765F020DE546CC",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.208,
+   "runner_up_score": 0.199,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "5C2898C38918D9D7",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "pc_index": 10,
+   "pc_size": [
+    134,
+    158
+   ],
+   "pc_sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "scale": [
+    8.375,
+    9.875
+   ],
+   "score": 0.207,
+   "runner_up_score": 0.163,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "D2A5FA467D8EDEE9",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 18,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.203,
+   "runner_up_score": 0.181,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#9",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E69311B77F5705F1",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 10,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.203,
+   "runner_up_score": 0.192,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#9",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "A6847C9D64368D68",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 17,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.202,
+   "runner_up_score": 0.135,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#9",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "8BDBDFF5B82278FE",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 17,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.2,
+   "runner_up_score": 0.133,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#6",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "32769A3A84B30582",
+   "palette_fnv": "DC1F1B06C3693D3E",
+   "size": [
+    96,
+    96
+   ],
+   "states": [
+    "title"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 37,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    0.5,
+    0.5
+   ],
+   "score": 0.199,
+   "runner_up_score": 0.194,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "55F5D582B89AD61D",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "pc_index": 9,
+   "pc_size": [
+    134,
+    158
+   ],
+   "pc_sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "scale": [
+    8.375,
+    9.875
+   ],
+   "score": 0.199,
+   "runner_up_score": 0.181,
+   "runner_up": "SAKURA1/SYSTEM/SIS_BG3.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "12E68B0175A9EA02",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 42,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.198,
+   "runner_up_score": 0.195,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "8BDBDFF5B82278FE",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.198,
+   "runner_up_score": 0.179,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E200F56F280AC6C3",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.198,
+   "runner_up_score": 0.153,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "379E80E6B46B8B32",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 43,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.196,
+   "runner_up_score": 0.177,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "BA31BE5BD0B7E7A5",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 5,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.196,
+   "runner_up_score": 0.149,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#50",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "6CFC0D91B3E08C65",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "11ce1c4d370d8cac5c82ab1272418f8a0485daf239cf9130411b49796b687d1e",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.194,
+   "runner_up_score": 0.192,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C95EAFDF3AE5B592",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    2.0,
+    2.75
+   ],
+   "score": 0.194,
+   "runner_up_score": 0.122,
+   "runner_up": "SAKURA1/SYSTEM/SEGALOGO.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "F1EAEA0586288E97",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "pc_index": 10,
+   "pc_size": [
+    134,
+    158
+   ],
+   "pc_sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "scale": [
+    8.375,
+    9.875
+   ],
+   "score": 0.193,
+   "runner_up_score": 0.065,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#85",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "A1765F020DE546CC",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.191,
+   "runner_up_score": 0.189,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E3218C3BDE65CC1E",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 43,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.191,
+   "runner_up_score": 0.148,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#16",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "1C09AE403FA84CB8",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 6,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.19,
+   "runner_up_score": 0.177,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "03F367843E440CE4",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 6,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    2.0,
+    2.75
+   ],
+   "score": 0.189,
+   "runner_up_score": 0.155,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#14",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "3E93712715148C01",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.188,
+   "runner_up_score": 0.169,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#7",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "D9A1CAF9181741E6",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 82,
+   "pc_size": [
+    32,
+    32
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.186,
+   "runner_up_score": 0.186,
+   "runner_up": "SAKURA1/SYSTEM/ICON/POINT.SPR#6",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "02852CD6C1F51E1A",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "pc_index": 10,
+   "pc_size": [
+    134,
+    158
+   ],
+   "pc_sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "scale": [
+    8.375,
+    9.875
+   ],
+   "score": 0.185,
+   "runner_up_score": 0.134,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "2E255DAC74D67F63",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.185,
+   "runner_up_score": 0.167,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "54B817F8AE1D0831",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.185,
+   "runner_up_score": 0.182,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LIPSBARY.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "6CFC0D91B3E08C65",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 32,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.185,
+   "runner_up_score": 0.184,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#10",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "CA40C2997C6F79B4",
+   "palette_fnv": "DC1F1B06C3693D3E",
+   "size": [
+    64,
+    80
+   ],
+   "states": [
+    "title"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 2,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    0.5,
+    0.55
+   ],
+   "score": 0.184,
+   "runner_up_score": 0.184,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#44",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "FCD732D070CE4417",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.184,
+   "runner_up_score": 0.181,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E5AA3042708A5889",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 5,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.18,
+   "runner_up_score": 0.164,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B2DC14A34681A0D8",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "11ce1c4d370d8cac5c82ab1272418f8a0485daf239cf9130411b49796b687d1e",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.176,
+   "runner_up_score": 0.174,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "6C98EDF622494F64",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 18,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.173,
+   "runner_up_score": 0.168,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#19",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "04D70E595DB9BC6D",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 2,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.172,
+   "runner_up_score": 0.17,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#7",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "F30DC226D0E67D2D",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 7,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.172,
+   "runner_up_score": 0.162,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "92F8CC036F27E3C0",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.171,
+   "runner_up_score": 0.167,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "55F5D582B89AD61D",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 6,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.17,
+   "runner_up_score": 0.162,
+   "runner_up": "SAKURA1/SYSTEM/SIS_BG3.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "8261FE499132BDAE",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 5,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 31,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.17,
+   "runner_up_score": 0.16,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "AA84EEFA3BE5093E",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 3,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    2.0,
+    2.75
+   ],
+   "score": 0.17,
+   "runner_up_score": 0.167,
+   "runner_up": "SAKURA1/SYSTEM/R_HARI.SPR#2",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "D287E7E9161A1296",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 22,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.17,
+   "runner_up_score": 0.163,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#21",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "FF22F1304BE5AA9E",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/TL_ROGO0.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "efdef8d6f8b3c3433da188d77ba57175dc7198693c9147a6841e39955db6bbfd",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.169,
+   "runner_up_score": 0.146,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C38AFFDC95EFCB61",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 42,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.167,
+   "runner_up_score": 0.148,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#41",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "FFCD7458203CB1A9",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    2.0,
+    2.75
+   ],
+   "score": 0.167,
+   "runner_up_score": 0.157,
+   "runner_up": "SAKURA1/SYSTEM/R_HARI.SPR#2",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B84EDE977416B6D1",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.166,
+   "runner_up_score": 0.165,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "FEB57155E20253C3",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 44,
+   "pc_size": [
+    32,
+    32
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.166,
+   "runner_up_score": 0.165,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#51",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "80CA994B2E12C445",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/TL_ROGO0.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "efdef8d6f8b3c3433da188d77ba57175dc7198693c9147a6841e39955db6bbfd",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.164,
+   "runner_up_score": 0.142,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#43",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "99C75B4AB01B7921",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.163,
+   "runner_up_score": 0.156,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "701974BD539D0D89",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW/LIPSBARY.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "a2128d45447486d3ebeb903d6270f0d2518184c5435d877fff467146f8f8be21",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.162,
+   "runner_up_score": 0.158,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#57",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "9B8FFB6F803EDFE0",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 17,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.162,
+   "runner_up_score": 0.136,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#6",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "DC7522BC74075A34",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 37,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.161,
+   "runner_up_score": 0.153,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "DC7522BC74075A34",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 39,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.16,
+   "runner_up_score": 0.15,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "9B8FFB6F803EDFE0",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 17,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.158,
+   "runner_up_score": 0.152,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#22",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "7635F97BB38BA1B5",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 47,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.157,
+   "runner_up_score": 0.154,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#10",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "A9E27720173E38A4",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 33,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.157,
+   "runner_up_score": 0.154,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#37",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "45E03D5E2E82CE01",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 43,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.156,
+   "runner_up_score": 0.15,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#25",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "4A1FAB1E44DE0A7D",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load",
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.154,
+   "runner_up_score": 0.153,
+   "runner_up": "SAKURA1/SYSTEM/MINISAKU.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "0C3196F5D42690DE",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load",
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/MINISAKU.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "c857aa638bfb5f5cfe609ab912bbd2e57a417b7c16d3a0946dd3af8a4fd2d35d",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.152,
+   "runner_up_score": 0.134,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#49",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "205138EAEC7657F5",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.152,
+   "runner_up_score": 0.111,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#5",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "3354FB1CF768006D",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 35,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.152,
+   "runner_up_score": 0.145,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#45",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B48669DC4408CCC6",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.151,
+   "runner_up_score": 0.121,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#43",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "7635F97BB38BA1B5",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.15,
+   "runner_up_score": 0.15,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#18",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "2E255DAC74D67F63",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 49,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.149,
+   "runner_up_score": 0.149,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#51",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "F3A5AF7A1B4E8F82",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 39,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.149,
+   "runner_up_score": 0.144,
+   "runner_up": "SAKURA1/SYSTEM/REDLOGO.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "61A017D2DFB2201F",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    32,
+    44
+   ],
+   "pc_sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "scale": [
+    2.0,
+    2.75
+   ],
+   "score": 0.146,
+   "runner_up_score": 0.145,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#82",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "752BADA66F92B333",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/MINISAKU.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "c857aa638bfb5f5cfe609ab912bbd2e57a417b7c16d3a0946dd3af8a4fd2d35d",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.144,
+   "runner_up_score": 0.125,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#37",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "5C2898C38918D9D7",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 18,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.142,
+   "runner_up_score": 0.125,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C95EAFDF3AE5B592",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "11ce1c4d370d8cac5c82ab1272418f8a0485daf239cf9130411b49796b687d1e",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.142,
+   "runner_up_score": 0.139,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "3C0F75E0EA6DBD8F",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 45,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.141,
+   "runner_up_score": 0.137,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#49",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B5FE71E652DEF706",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "pc_index": 9,
+   "pc_size": [
+    134,
+    158
+   ],
+   "pc_sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "scale": [
+    8.375,
+    9.875
+   ],
+   "score": 0.141,
+   "runner_up_score": 0.14,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "205138EAEC7657F5",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.14,
+   "runner_up_score": 0.104,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#44",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "54B817F8AE1D0831",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 22,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.14,
+   "runner_up_score": 0.136,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#17",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "7E2767E048C5FAE9",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 10,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.14,
+   "runner_up_score": 0.093,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#15",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "9CC67677BF952D66",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "11ce1c4d370d8cac5c82ab1272418f8a0485daf239cf9130411b49796b687d1e",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.14,
+   "runner_up_score": 0.14,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "5EBF0E90CE58E455",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.137,
+   "runner_up_score": 0.136,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#43",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B0A7B0B851558571",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 43,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.137,
+   "runner_up_score": 0.131,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#15",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "356233C3B5475F8D",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.136,
+   "runner_up_score": 0.136,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "37C52FF40238D90A",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 56,
+   "pc_size": [
+    32,
+    32
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.136,
+   "runner_up_score": 0.119,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#51",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "2DAAB8F3A08D8B91",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 5,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.135,
+   "runner_up_score": 0.121,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#1",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "7E2767E048C5FAE9",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 4,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 15,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.135,
+   "runner_up_score": 0.115,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#47",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "F1EAEA0586288E97",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.135,
+   "runner_up_score": 0.125,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B12F341106CFFA54",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.133,
+   "runner_up_score": 0.13,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B12F341106CFFA54",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 8,
+   "pc_size": [
+    64,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    4.0
+   ],
+   "score": 0.132,
+   "runner_up_score": 0.127,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "A9498AA010874730",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.129,
+   "runner_up_score": 0.099,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#14",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "4E392A0412EF92C3",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 5,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.128,
+   "runner_up_score": 0.127,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#9",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "D2A5FA467D8EDEE9",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 6,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.127,
+   "runner_up_score": 0.123,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#1",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "9D23E1B9C994A1FD",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "11ce1c4d370d8cac5c82ab1272418f8a0485daf239cf9130411b49796b687d1e",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.125,
+   "runner_up_score": 0.123,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "17017CCB3A4AB416",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 59,
+   "pc_size": [
+    32,
+    32
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.124,
+   "runner_up_score": 0.124,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#57",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "9CC67677BF952D66",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    64,
+    48
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    4.0,
+    3.0
+   ],
+   "score": 0.124,
+   "runner_up_score": 0.12,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "8C8AA26F4A6EBB1C",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/REDLOGO.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "6deb879fec22a7d841fc665058db28cf47086216a02cf2deb7cd6303494bd731",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.123,
+   "runner_up_score": 0.11,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#59",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "C63587492694EE90",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 75,
+   "pc_size": [
+    32,
+    32
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.123,
+   "runner_up_score": 0.12,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#44",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "50AF0F6C946474F5",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    16,
+    16
+   ],
+   "pc_sha256": "11ce1c4d370d8cac5c82ab1272418f8a0485daf239cf9130411b49796b687d1e",
+   "scale": [
+    1.0,
+    1.0
+   ],
+   "score": 0.122,
+   "runner_up_score": 0.121,
+   "runner_up": "SAKURA1/SYSTEM/WINDOW.SPR#4",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "17017CCB3A4AB416",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.12,
+   "runner_up_score": 0.103,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#9",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "6D7633E7078FA1F1",
+   "palette_fnv": "DC1F1B06C3693D3E",
+   "size": [
+    152,
+    56
+   ],
+   "states": [
+    "title"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 3,
+   "pc_size": [
+    64,
+    32
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    0.421,
+    0.571
+   ],
+   "score": 0.119,
+   "runner_up_score": 0.056,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#1",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "17596581A25EFAF8",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "load"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.118,
+   "runner_up_score": 0.107,
+   "runner_up": "SAKURA1/SYSTEM/ICON/ICON2.SPR#82",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "12E68B0175A9EA02",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 42,
+   "pc_size": [
+    32,
+    32
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.117,
+   "runner_up_score": 0.089,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#38",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "A9498AA010874730",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.117,
+   "runner_up_score": 0.097,
+   "runner_up": "SAKURA1/SYSTEM/JYOUKI.SPR#14",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "49E64EF69CBB8D71",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load",
+    "load2"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "pc_index": 10,
+   "pc_size": [
+    134,
+    158
+   ],
+   "pc_sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "scale": [
+    8.375,
+    9.875
+   ],
+   "score": 0.111,
+   "runner_up_score": 0.096,
+   "runner_up": "SAKURA1/SYSTEM/R_HARI.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "438B85A16FB1A1A9",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "pc_index": 2,
+   "pc_size": [
+    80,
+    80
+   ],
+   "pc_sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "scale": [
+    5.0,
+    5.0
+   ],
+   "score": 0.11,
+   "runner_up_score": 0.109,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#7",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B7542211E35CBC34",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.11,
+   "runner_up_score": 0.066,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "621BD33F6CF0DACA",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    288,
+    184
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/OPTION.SPR",
+   "pc_index": 2,
+   "pc_size": [
+    536,
+    314
+   ],
+   "pc_sha256": "4509f8e1697cae2070e7973b1eefd5f0665291e7365b22fe1045923fe0d169f2",
+   "scale": [
+    1.861,
+    1.707
+   ],
+   "score": 0.109,
+   "runner_up_score": 0.106,
+   "runner_up": "SAKURA1/SYSTEM/OPTION.SPR#3",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "E69311B77F5705F1",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "options"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.105,
+   "runner_up_score": 0.086,
+   "runner_up": "SAKURA1/SYSTEM/R_HARI.SPR#2",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "EF39DE9F9400A5AD",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    8,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 12,
+   "pc_size": [
+    224,
+    352
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    28.0,
+    22.0
+   ],
+   "score": 0.102,
+   "runner_up_score": 0.016,
+   "runner_up": "SAKURA1/SYSTEM/BURO_W.SPR#1",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "D8731754E21634ED",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    8,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 12,
+   "pc_size": [
+    224,
+    352
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    28.0,
+    22.0
+   ],
+   "score": 0.101,
+   "runner_up_score": 0.054,
+   "runner_up": "SAKURA1/SYSTEM/BURO_W.SPR#1",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "645FAA5409DB7F2A",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 6,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.1,
+   "runner_up_score": 0.1,
+   "runner_up": "SAKURA1/SYSTEM/TITLE.SPR#6",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B5FE71E652DEF706",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "pc_index": 17,
+   "pc_size": [
+    48,
+    64
+   ],
+   "pc_sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "scale": [
+    3.0,
+    4.0
+   ],
+   "score": 0.1,
+   "runner_up_score": 0.086,
+   "runner_up": "SAKURA1/SYSTEM/SIS_BG3.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "B97A49721B4D9F95",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "load2"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "pc_index": 16,
+   "pc_size": [
+    48,
+    48
+   ],
+   "pc_sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "scale": [
+    3.0,
+    3.0
+   ],
+   "score": 0.092,
+   "runner_up_score": 0.083,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#2",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "75DD8369E570E8E5",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.09,
+   "runner_up_score": 0.07,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "EEF61DDD50242085",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "program"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "pc_index": 0,
+   "pc_size": [
+    640,
+    480
+   ],
+   "pc_sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "scale": [
+    40.0,
+    30.0
+   ],
+   "score": 0.082,
+   "runner_up_score": 0.046,
+   "runner_up": "SAKURA1/SYSTEM/SIS_ICON.SPR#0",
+   "tier": "no-counterpart",
+   "reason": "best score below 0.75 (new PC art, baked Japanese text or a tile of a composite)"
+  },
+  {
+   "texture_fnv": "8421AE126C7CED25",
+   "palette_fnv": "D5E6859F7CCE70F2",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "controls",
+    "load",
+    "load2",
+    "options",
+    "program"
+   ],
+   "commands": 15,
+   "tier": "no-counterpart",
+   "reason": "fully transparent texture"
+  },
+  {
+   "texture_fnv": "8421AE126C7CED25",
+   "palette_fnv": "A34A4A3675D9F164",
+   "size": [
+    16,
+    16
+   ],
+   "states": [
+    "confirm",
+    "controls",
+    "load",
+    "load2",
+    "options",
+    "program"
+   ],
+   "commands": 35,
+   "tier": "no-counterpart",
+   "reason": "fully transparent texture"
+  },
+  {
+   "texture_fnv": "7EB44FE1D8684661",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    176,
+    24
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 1,
+   "pc_size": [
+    352,
+    48
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.999,
+   "runner_up_score": 0.787,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#2",
+   "tier": "paired"
+  },
+  {
+   "texture_fnv": "8D70DF237527E4F8",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    112,
+    176
+   ],
+   "states": [
+    "controls"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 12,
+   "pc_size": [
+    224,
+    352
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.995,
+   "runner_up_score": 0.432,
+   "runner_up": "SAKURA1/SYSTEM/BURO_W.SPR#1",
+   "tier": "paired"
+  },
+  {
+   "texture_fnv": "AF0B0D45608D9D9D",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    144,
+    24
+   ],
+   "states": [
+    "confirm"
+   ],
+   "commands": 1,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 2,
+   "pc_size": [
+    288,
+    48
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.976,
+   "runner_up_score": 0.837,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#1",
+   "tier": "paired"
+  },
+  {
+   "texture_fnv": "E60BBF3F6AFC4E4A",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    144,
+    32
+   ],
+   "states": [
+    "confirm",
+    "load",
+    "load2"
+   ],
+   "commands": 3,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 4,
+   "pc_size": [
+    288,
+    64
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.957,
+   "runner_up_score": 0.829,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#5",
+   "tier": "paired"
+  },
+  {
+   "texture_fnv": "3B1D76464A70DBA4",
+   "palette_fnv": "809F8438D9925B74",
+   "size": [
+    288,
+    144
+   ],
+   "states": [
+    "controls",
+    "options"
+   ],
+   "commands": 2,
+   "pc_file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "pc_index": 11,
+   "pc_size": [
+    576,
+    288
+   ],
+   "pc_sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "scale": [
+    2.0,
+    2.0
+   ],
+   "score": 0.953,
+   "runner_up_score": 0.315,
+   "runner_up": "SAKURA1/SYSTEM/SISTEM.SPR#15",
+   "tier": "paired"
+  }
+ ],
+ "pc": [
+  {
+   "file": "SAKURA1/SYSTEM/BURO_W.SPR",
+   "index": 0,
+   "size": [
+    208,
+    384
+   ],
+   "sha256": "a94a35689344d3a032b364c54b7e0219063fa9039d9294acd15b081aa30ee43c",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/BURO_W.SPR",
+   "index": 1,
+   "size": [
+    208,
+    384
+   ],
+   "sha256": "a94a35689344d3a032b364c54b7e0219063fa9039d9294acd15b081aa30ee43c",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 1,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 2,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 3,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 4,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 5,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 6,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/CAUTION.SPR",
+   "index": 7,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "811a9a2a5a6ecd44b4830df7e32b9f9a8469f5c34b763653b27f019afd46cfd3",
+   "tier": "no-counterpart",
+   "reason": "PC warning screen with baked Japanese text; no Saturn counterpart in the boot"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/EXIT_W.SPR",
+   "index": 0,
+   "size": [
+    512,
+    48
+   ],
+   "sha256": "e4090cadfc04495cd71a3abd50af8d1b840b69ff0b9dadd4d77baafe27c64833",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+   "index": 0,
+   "size": [
+    16,
+    32
+   ],
+   "sha256": "b2859bb85ed4ecc319d53bae88556e1b255be4c3ce3b4018aad838882bf0613b",
+   "integrated_by": "0093",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/FONT_CSL.SPR",
+   "index": 1,
+   "size": [
+    16,
+    32
+   ],
+   "sha256": "b2859bb85ed4ecc319d53bae88556e1b255be4c3ce3b4018aad838882bf0613b",
+   "integrated_by": "0093",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 0,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 1,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 2,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 3,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 4,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 5,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 6,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 7,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 8,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 9,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 10,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 11,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 12,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 13,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 14,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 15,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 16,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 17,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 18,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 19,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 20,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 21,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 22,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 23,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 24,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 25,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 26,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 27,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 28,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 29,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 30,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 31,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 32,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 33,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 34,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 35,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 36,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 37,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 38,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 39,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 40,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 41,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 42,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 43,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 44,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 45,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 46,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 47,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 48,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 49,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 50,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 51,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 52,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 53,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 54,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 55,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 56,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 57,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 58,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 59,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 60,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 61,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 62,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 63,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 64,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 65,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 66,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 67,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 68,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 69,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 70,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 71,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 72,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 73,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 74,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 75,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 76,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 77,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 78,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 79,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 80,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 81,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 82,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 83,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 84,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 85,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 86,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/ICON2.SPR",
+   "index": 87,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "01ccb27cae8b2a034f3bcae9827c482436197b6d243feb12b512a1595543cf04",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 0,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 1,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 2,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 3,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 4,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 5,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 6,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 7,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 8,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 9,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 10,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/ICON/POINT.SPR",
+   "index": 11,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "cbb0223aa473c0ac60bc618bf361b7941294b5a669a2dbb1be1bfce2bde883ba",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 0,
+   "size": [
+    64,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 1,
+   "size": [
+    80,
+    32
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 2,
+   "size": [
+    32,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 3,
+   "size": [
+    64,
+    32
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 4,
+   "size": [
+    64,
+    48
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 5,
+   "size": [
+    48,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 6,
+   "size": [
+    48,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 7,
+   "size": [
+    64,
+    48
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 8,
+   "size": [
+    64,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 9,
+   "size": [
+    64,
+    16
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 10,
+   "size": [
+    64,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 11,
+   "size": [
+    48,
+    16
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 12,
+   "size": [
+    64,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 13,
+   "size": [
+    48,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 14,
+   "size": [
+    48,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 15,
+   "size": [
+    48,
+    32
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 16,
+   "size": [
+    80,
+    32
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 17,
+   "size": [
+    48,
+    64
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/JYOUKI.SPR",
+   "index": 18,
+   "size": [
+    48,
+    48
+   ],
+   "sha256": "d9e1836a5f03493d971a4dce471ea92476f980fb406455b17ddd2998c0ddae58",
+   "tier": "no-counterpart",
+   "reason": "steam effect, not reached in a menu state"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 0,
+   "size": [
+    320,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 1,
+   "size": [
+    224,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 2,
+   "size": [
+    256,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 3,
+   "size": [
+    288,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 4,
+   "size": [
+    224,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 5,
+   "size": [
+    224,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 6,
+   "size": [
+    256,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 7,
+   "size": [
+    288,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 8,
+   "size": [
+    352,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 9,
+   "size": [
+    192,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 10,
+   "size": [
+    288,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 11,
+   "size": [
+    320,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 12,
+   "size": [
+    224,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 13,
+   "size": [
+    288,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 14,
+   "size": [
+    224,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 15,
+   "size": [
+    256,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/KARAOKE.SPR",
+   "index": 16,
+   "size": [
+    224,
+    32
+   ],
+   "sha256": "01416207966a3ec0d0c4555eaef750d6508ed85a6a09f3cf0cb457af704cbb25",
+   "tier": "no-counterpart",
+   "reason": "extra menu, not reachable without the unlocked backup"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/MINISAKU.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "c857aa638bfb5f5cfe609ab912bbd2e57a417b7c16d3a0946dd3af8a4fd2d35d",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/MSTAFF.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "0b3075ddc8b854a60b9adaccf0939c6e76e64e4600d545f0a98ab966a4b084ed",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/NOWLOAD.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "cfc29796343420e45f95c1b91e5cfd140a2db7adb2723b19e9ffd012f6b9e446",
+   "tier": "no-counterpart",
+   "reason": "Saturn LOADING screen is VDP2-only: no VDP1 texture to key"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+   "index": 0,
+   "size": [
+    500,
+    376
+   ],
+   "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+   "index": 1,
+   "size": [
+    500,
+    376
+   ],
+   "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+   "index": 2,
+   "size": [
+    500,
+    376
+   ],
+   "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+   "index": 3,
+   "size": [
+    500,
+    376
+   ],
+   "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+   "index": 4,
+   "size": [
+    500,
+    376
+   ],
+   "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+   "index": 5,
+   "size": [
+    500,
+    376
+   ],
+   "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKMOV_W.SPR",
+   "index": 6,
+   "size": [
+    500,
+    376
+   ],
+   "sha256": "a29fccf49f8895d092501fa40c819d38cb8d64edcc567dcd77f8b2ce31ee0b72",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKSND_W.SPR",
+   "index": 7,
+   "size": [
+    480,
+    376
+   ],
+   "sha256": "3b84fdd1a7cc6c6b5bf11026ee5ebca2f9c5470df15653f29264b2ce1fc00402",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKSND_W.SPR",
+   "index": 8,
+   "size": [
+    480,
+    376
+   ],
+   "sha256": "3b84fdd1a7cc6c6b5bf11026ee5ebca2f9c5470df15653f29264b2ce1fc00402",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKSND_W.SPR",
+   "index": 9,
+   "size": [
+    480,
+    376
+   ],
+   "sha256": "3b84fdd1a7cc6c6b5bf11026ee5ebca2f9c5470df15653f29264b2ce1fc00402",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKSND_W.SPR",
+   "index": 10,
+   "size": [
+    480,
+    376
+   ],
+   "sha256": "3b84fdd1a7cc6c6b5bf11026ee5ebca2f9c5470df15653f29264b2ce1fc00402",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OMKSND_W.SPR",
+   "index": 11,
+   "size": [
+    480,
+    376
+   ],
+   "sha256": "3b84fdd1a7cc6c6b5bf11026ee5ebca2f9c5470df15653f29264b2ce1fc00402",
+   "tier": "no-counterpart",
+   "reason": "extra menu, same"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OP_WIN.SPR",
+   "index": 0,
+   "size": [
+    416,
+    304
+   ],
+   "sha256": "7eeafa10b1a7398d210445b44dddcdba24e5c7dec0d487dde103304fa2e25f93",
+   "tier": "ambiguous"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OPTION.SPR",
+   "index": 0,
+   "size": [
+    512,
+    386
+   ],
+   "sha256": "4509f8e1697cae2070e7973b1eefd5f0665291e7365b22fe1045923fe0d169f2",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OPTION.SPR",
+   "index": 1,
+   "size": [
+    400,
+    290
+   ],
+   "sha256": "4509f8e1697cae2070e7973b1eefd5f0665291e7365b22fe1045923fe0d169f2",
+   "integrated_by": "0209",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OPTION.SPR",
+   "index": 2,
+   "size": [
+    536,
+    314
+   ],
+   "sha256": "4509f8e1697cae2070e7973b1eefd5f0665291e7365b22fe1045923fe0d169f2",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/OPTION.SPR",
+   "index": 3,
+   "size": [
+    536,
+    314
+   ],
+   "sha256": "4509f8e1697cae2070e7973b1eefd5f0665291e7365b22fe1045923fe0d169f2",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "index": 0,
+   "size": [
+    32,
+    44
+   ],
+   "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "index": 1,
+   "size": [
+    32,
+    44
+   ],
+   "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "index": 2,
+   "size": [
+    32,
+    44
+   ],
+   "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "index": 3,
+   "size": [
+    32,
+    44
+   ],
+   "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "index": 4,
+   "size": [
+    32,
+    44
+   ],
+   "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "index": 5,
+   "size": [
+    32,
+    44
+   ],
+   "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/R_HARI.SPR",
+   "index": 6,
+   "size": [
+    32,
+    44
+   ],
+   "sha256": "acfc2352ed0c420ede7687834c0e3490371e64da7c54e0b8dc0f7aff526acbc2",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/REDLOGO.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "6deb879fec22a7d841fc665058db28cf47086216a02cf2deb7cd6303494bd731",
+   "tier": "no-counterpart",
+   "reason": "PC boot logo; the Saturn cold boot of this disc never draws it"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SEGALOGO.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "1432786a60a6817ac82154e255d6a4fc05bb62d983840d386ea8c8c423fd5b87",
+   "tier": "no-counterpart",
+   "reason": "PC boot logo; the Saturn cold boot of this disc never draws it"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SHADE_WA.SPR",
+   "index": 0,
+   "size": [
+    576,
+    320
+   ],
+   "sha256": "5832cbc76a7afdd004ff6ab60d79f2ba761fb5160f08c4fe4abc063f4094dbdd",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SHADE_WB.SPR",
+   "index": 0,
+   "size": [
+    608,
+    128
+   ],
+   "sha256": "9ef57aa32f0f4c0760e4a54852f52e5fee8fbbf66c1b3d81cc77585c5b43dddf",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_BG.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "254648b5e7287d1d44fc42690e171416d084cfe430814877a11c089c24235579",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_BG2.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "97ebacc5fff64583c36e69c86832c98e80434aa92914e842d239f20915aedd0c",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_BG3.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "26498c11f6a5828e672734abcbef504ccb40dad7a9b1f4ac4b47c351b2a7eb50",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 0,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 1,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "ambiguous"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 2,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 3,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 4,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 5,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 6,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 7,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 8,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+   "index": 9,
+   "size": [
+    80,
+    80
+   ],
+   "sha256": "d2ae4ba92f4c44ccf96fd7935b274093541f51958a1a2177203ec6aba180c1d9",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 0,
+   "size": [
+    592,
+    336
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 1,
+   "size": [
+    352,
+    48
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0206",
+   "tier": "paired"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 2,
+   "size": [
+    288,
+    48
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0213",
+   "tier": "paired"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 3,
+   "size": [
+    512,
+    48
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 4,
+   "size": [
+    288,
+    64
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0206",
+   "tier": "paired"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 5,
+   "size": [
+    384,
+    64
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0213",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 6,
+   "size": [
+    224,
+    48
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 7,
+   "size": [
+    224,
+    48
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 8,
+   "size": [
+    16,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0150",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 9,
+   "size": [
+    16,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0150",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 10,
+   "size": [
+    112,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 11,
+   "size": [
+    576,
+    288
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0205",
+   "tier": "paired"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 12,
+   "size": [
+    224,
+    352
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0209",
+   "tier": "paired"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 13,
+   "size": [
+    384,
+    400
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 14,
+   "size": [
+    224,
+    176
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "integrated_by": "0205",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 15,
+   "size": [
+    544,
+    272
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 17,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 18,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 19,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 20,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 21,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 22,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 23,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 24,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 25,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 26,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 27,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 28,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 29,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 30,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 31,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 32,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 33,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 34,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 35,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 36,
+   "size": [
+    176,
+    40
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 37,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 38,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 39,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 40,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 41,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 42,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 43,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 44,
+   "size": [
+    32,
+    32
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/SISTEM.SPR",
+   "index": 45,
+   "size": [
+    160,
+    64
+   ],
+   "sha256": "aa7d3f471b2b7f5f23f22c24d128585613c6599cceaf04f1a48cdf9cb1bd4c70",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 0,
+   "size": [
+    257,
+    298
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 2,
+   "size": [
+    116,
+    340
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 3,
+   "size": [
+    116,
+    340
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 4,
+   "size": [
+    116,
+    340
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 5,
+   "size": [
+    134,
+    156
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 6,
+   "size": [
+    134,
+    156
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 7,
+   "size": [
+    134,
+    156
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 8,
+   "size": [
+    134,
+    158
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 9,
+   "size": [
+    134,
+    158
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 10,
+   "size": [
+    134,
+    158
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 11,
+   "size": [
+    36,
+    38
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 12,
+   "size": [
+    376,
+    46
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 13,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 14,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 15,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 16,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 17,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 18,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 19,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 20,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 21,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 22,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 23,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 24,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 25,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 26,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 27,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 28,
+   "size": [
+    366,
+    36
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TITLE.SPR",
+   "index": 29,
+   "size": [
+    16,
+    16
+   ],
+   "sha256": "93636d502b96e5a1792817f0bcf30c11ef8891b5d6c450e31576aec688662f2f",
+   "tier": "no-counterpart",
+   "reason": "PC title with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TL_BG0.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "332733c050bd109b159882bc545c170471a92ee5274649729b03e9d309a01ecd",
+   "tier": "no-counterpart",
+   "reason": "PC title art; the Saturn title is VDP2 NBG3 plus logo sprites"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TL_ROGO0.SPR",
+   "index": 0,
+   "size": [
+    640,
+    480
+   ],
+   "sha256": "efdef8d6f8b3c3433da188d77ba57175dc7198693c9147a6841e39955db6bbfd",
+   "tier": "no-counterpart",
+   "reason": "PC title logo with baked Japanese lettering"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TUIKA_W.SPR",
+   "index": 0,
+   "size": [
+    576,
+    48
+   ],
+   "sha256": "09ae84738c3dafff43db3817ecdc1f59602a0c150161805448c5a56c7e474e90",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TUIKA_W.SPR",
+   "index": 1,
+   "size": [
+    576,
+    80
+   ],
+   "sha256": "09ae84738c3dafff43db3817ecdc1f59602a0c150161805448c5a56c7e474e90",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/TUIKA_W.SPR",
+   "index": 2,
+   "size": [
+    384,
+    80
+   ],
+   "sha256": "09ae84738c3dafff43db3817ecdc1f59602a0c150161805448c5a56c7e474e90",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/HARI.SPR",
+   "index": 0,
+   "size": [
+    16,
+    32
+   ],
+   "sha256": "fcd7d51532e19a224a46450d1d856b467e9e2da1fa3196f2a67695d00ec9d385",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110), same family as R_HARI"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/LIPSBARY.SPR",
+   "index": 0,
+   "size": [
+    16,
+    16
+   ],
+   "sha256": "a2128d45447486d3ebeb903d6270f0d2518184c5435d877fff467146f8f8be21",
+   "tier": "no-counterpart",
+   "reason": "cursor strip of the shared window family; keep native with the frame"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/LIPSCUR.SPR",
+   "index": 0,
+   "size": [
+    480,
+    32
+   ],
+   "sha256": "66eac3704a44aae7c6f663ae9c757599e7ad14e34802bead9ff344d86614dabb",
+   "tier": "no-counterpart",
+   "reason": "cursor of the shared window family; keep native with the frame"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/LISPBARX.SPR",
+   "index": 0,
+   "size": [
+    16,
+    16
+   ],
+   "sha256": "11ce1c4d370d8cac5c82ab1272418f8a0485daf239cf9130411b49796b687d1e",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/SHADE_WA.SPR",
+   "index": 0,
+   "size": [
+    576,
+    320
+   ],
+   "sha256": "795088589c9383c33c0ce822b9c0ab1b3d64ae6e0d7759331b3d52953287758d",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/SHADE_WB.SPR",
+   "index": 0,
+   "size": [
+    608,
+    128
+   ],
+   "sha256": "e19abdc7aa49bc6cf9835d73003d565a8c04a9a0f4352b5a46dbf0c2456f8512",
+   "tier": "no-counterpart",
+   "reason": "keep native by decision (T110)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/WINDOW_A.SPR",
+   "index": 0,
+   "size": [
+    544,
+    240
+   ],
+   "sha256": "e7aff4c05d8112c82e93207e958cc20c56952549c4a92e738a1d14b05bfccbbd",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/WINDOW_B.SPR",
+   "index": 0,
+   "size": [
+    608,
+    128
+   ],
+   "sha256": "9b4f0f53eb0686517509be7bbb8e97368385124d55da477236fd8d045423c94f",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW/WINDOW_C.SPR",
+   "index": 0,
+   "size": [
+    512,
+    176
+   ],
+   "sha256": "e28beb136a91644c4c7831e2f48a10f09d087b1a50eee9e2ea583e86ba1d9f38",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "index": 0,
+   "size": [
+    544,
+    240
+   ],
+   "sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "index": 1,
+   "size": [
+    608,
+    128
+   ],
+   "sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "index": 2,
+   "size": [
+    512,
+    176
+   ],
+   "sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "index": 3,
+   "size": [
+    16,
+    32
+   ],
+   "sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "index": 4,
+   "size": [
+    16,
+    16
+   ],
+   "sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  },
+  {
+   "file": "SAKURA1/SYSTEM/WINDOW.SPR",
+   "index": 5,
+   "size": [
+    16,
+    16
+   ],
+   "sha256": "bce03225ea46d345a5b53f249bd8d4a86187a559a0f2c530efe4fa8ada12d372",
+   "tier": "no-counterpart",
+   "reason": "no Saturn texture of the reached menu states matches (new PC art, baked Japanese text, or screen not reached)"
+  }
+ ],
+ "groups": {
+  "SAKURA1/SYSTEM/SISTEM.SPR": {
+   "rows": [
+    {
+     "texture_fnv": "3B1D76464A70DBA4",
+     "palette_fnv": "809F8438D9925B74",
+     "size": [
+      288,
+      144
+     ],
+     "pc_index": 11,
+     "score": 0.953,
+     "already_integrated_by": "0205"
+    },
+    {
+     "texture_fnv": "8D70DF237527E4F8",
+     "palette_fnv": "809F8438D9925B74",
+     "size": [
+      112,
+      176
+     ],
+     "pc_index": 12,
+     "score": 0.995,
+     "already_integrated_by": "0209"
+    },
+    {
+     "texture_fnv": "7EB44FE1D8684661",
+     "palette_fnv": "809F8438D9925B74",
+     "size": [
+      176,
+      24
+     ],
+     "pc_index": 1,
+     "score": 0.999,
+     "already_integrated_by": "0206"
+    },
+    {
+     "texture_fnv": "E60BBF3F6AFC4E4A",
+     "palette_fnv": "809F8438D9925B74",
+     "size": [
+      144,
+      32
+     ],
+     "pc_index": 4,
+     "score": 0.957,
+     "already_integrated_by": "0206"
+    },
+    {
+     "texture_fnv": "AF0B0D45608D9D9D",
+     "palette_fnv": "809F8438D9925B74",
+     "size": [
+      144,
+      24
+     ],
+     "pc_index": 2,
+     "score": 0.976,
+     "already_integrated_by": "0213"
+    }
+   ],
+   "connectable_by_table": false,
+   "new_rows": 0
+  }
+ }
+}

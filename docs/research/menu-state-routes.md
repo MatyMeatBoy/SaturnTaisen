@@ -54,9 +54,26 @@ FONT_CSL and the object cards.
   screens have no native counterpart in a cold boot. NOWLOAD corresponds to the LOADING screen above (VDP2 only).
 * JYOUKI (steam) and the save-slot screen with game data written from inside a chapter (Save): not reached here.
 
+## Pairing against the PC SYSTEM files (follow-up, offline)
+
+The PC `SAKURA1/SYSTEM/**/*.SPR` files (SISTEM, OPTION, WINDOW, SIS_ICON, ICON, ... 287 images without KAO) are now extracted from the
+private MDF into `local/work/pc-cab/out-system` (read-only, never committed). `python tools/hd_system_menu_pairs.py` decodes them with
+`tools/decode_spred.py`, decodes the 165 distinct VDP1 textures of the eight saved menu states (title, program, options, controls, load,
+confirm, load disc 2, loading) with their CRAM bank, and pairs by 32x32 luminance plus gradient signature (lower of the two
+correlations, firm at 0.90 with a 0.05 margin and a compatible aspect). Data: `config/hd-system-menu-pairs.json` (names, sizes, hashes,
+scores; no pixels).
+
+Result: 5 firm pairs, all exactly 2x and all already wired by shipped patches (SISTEM 11 = 0205, 12 = 0209, 1 and 4 = 0206, 2 = 0213),
+so the measurement independently confirms those patches and yields **no new group connectable by a table row**. 2 ambiguous: the 208x152
+Program frame against OP_WIN 0 (0.81, kept native by decision) and one 40x40 console/disc icon against SIS_ICON 1 (0.78; the other
+three 40x40 icons score 0.73-0.74 against a runner-up within 0.01-0.02: SIS_ICON is a family of near-identical emblems, they need the
+palette of each disc slot, not content). 158 Saturn textures have no counterpart: the 288x184 load body and the title logo pieces
+(new PC art or baked Japanese lettering), and the 16x16 and 8x16 text tiles (the translated text is drawn from tiles, no PC picture). Of
+the PC side, 280 images have no Saturn witness in these states: reasons per file are in the JSON (keep native R_HARI, SHADE_WA/WB, OP_WIN,
+HARI/LIPS; no Saturn draw for SEGALOGO, REDLOGO, CAUTION, TITLE, TL_*, NOWLOAD (VDP2 only), the extra menu and JYOUKI).
+
 ## Not done in this PR
 
-No runtime patch. The PC `SAKURA1/SYSTEM/*.SPR` files are not extracted on this machine (only `KAO.SPR` is under `local/work/pc-cab/out`),
-so no pair could be decoded, no texture was compared with a PC image, and the DRAWN/not measurement with `--pc-assets` was not run. The
-data above is what a table needs (texture hash plus palette fingerprint per frame piece); the pairing and the text decision for the
-baked Japanese text remain open. The three coverage deltas are therefore zero.
+No runtime patch: nothing firm and unwired was found, so nothing was built or replayed. Missing states, owner of the saves: the extra
+menu (needs an unlocked backup), a save-slot screen with game data, and the discs 3 and 4 slot emblems. The three coverage deltas are
+zero (attributed 0, integrated 0, verified 0).
