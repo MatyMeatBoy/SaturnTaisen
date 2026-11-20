@@ -21,7 +21,7 @@ Two ground layouts matter for the runtime:
 - single image (2048x2048, 2048x1280, 1392x960 ...): the Stage01/Stage02 sampler design applies;
 - mosaic of equal tiles (MAP03 626 tiles of 64x64, MAP04 629 tiles, MAP05 46 tiles of 256x256, MAP20 96 tiles of 128x128; MAP23 holds four 1392x1232 images): an assembler is needed first. MAP04 is already `hd`; its assembler is in the patch that draws it.
 
-What was not verified: no map beyond the five was drawn or compared in game; the pattern-name fingerprint of each unwired map is not recorded (it needs the disc and a run to the map); the ground cell alignment of the unwired maps is not checked. Wiring one map at a time is the open row TW6b.
+What was not verified: no PC ground beyond the five has a verified game draw. The remaining comparisons need live pattern-name fingerprints and ground registration. The two below now have a live disposition. Wiring one map at a time is the open row TW6b.
 
 ## Units (block 2)
 
@@ -42,3 +42,21 @@ The Saturn side was paired before this work: `tools/match_hd_items.py` (32x32 lu
 Result for the 57 PC pictures: 38 paired, 4 ambiguous (`BUROICON`, `ITEMICON`, `ITEM03`, `ITEM09`), 15 no counterpart (`BURO01`-`BURO13`, `ITEM12`, `ITEM27`). Saturn side, 80 files: 38 confirmed (26 reviewed plus 12 content tier), 3 icon-only, 39 rejected. These agree with the register, which already marks the confirmed items `hd`/`paired-not-wired` and the rejected ones `unpaired` (the item draw itself is row T109/W5): no status changes, so `config/hd-chapter-coverage.json` and `docs/HD_PROGRESS.md` are not regenerated.
 
 Not verified here: the review itself was not redone (no pictures were looked at); the 15 unmatched PC pictures were not searched against other Saturn banks; the runtime draw of item cards is untouched.
+
+## Live MAP10 and MAP19 ground review
+
+The two maps retain their native ground. Each Saturn and PC MAP BIN pair is byte-identical. The different ground compositions in the respective PC SPRs prevent use of the current single-image world sampler.
+
+| Live map | Disc and route | Native source | PC ground |
+| --- | --- | --- | --- |
+| MAP10 | English disc 1 Episode 7 public File 1. FAD 233232. The retained checkpoint continues into the EVT10 team briefing over the tactical field. | Source 4, page `0x40000`, pattern-name FNV-1a `E364F3D731C3D6DE`, sampled scroll (372,80). | `MAP10_A.SPR` 1442×928, FNV-1a `8D4C253FC359E36E`. |
+| MAP19 | English disc 2 Finale. FAD 220633. The retained route shows the native field and units under the Ayame choice and the ensuing fight. | Source 4, page `0x40000`, pattern-name FNV-1a `FA30687F240C0BEB`, sampled scroll (90,399). | `MAP19_A.SPR` 2048×1664, FNV-1a `811AA9E5539CD040`. |
+
+For MAP10, the upper facades align near a −6-pixel horizontal shift when sampling the PC ground at half resolution. The lower terrace has a different local fit near −2, and the lower-right roof has a wide cyan-keyed span with a different boundary from the Saturn composition. A global shift would misplace part of the foreground and is unsafe at the transitions to native pixels. The changing pixels in the sampled left-edge strip belong to native source 3, while source 4 stays unchanged.
+
+For MAP19, the right-hand terrain has an approximate one-pixel vertical fit, but the PC lamps and central rails have different positions from the Saturn drawing. The raw source 4 samples stay identical at the fixed camera through the sampled battle dialogue and effects. The native final color can also change through the VDP2 offset during the dialogue, independently of that raw draw.
+
+The private probes use the natural English Saturn checkpoints, ordinary controller input and muted runs. They retain source-layer captures with samples at 20, 50, 95 and 119 frames and a separate 900-frame continuation sampled at 200, 420, 630 and 899. These are interpreter evidence for the native compositions. The stable world signatures, placement comparison, and opaque and keyed regions are recorded under `local/work/codex-map-batch/`. Both catalog rows are observed on their witnessed disc and remain paired-not-wired. There is no HD runtime or package change for these two maps.
+
+
+At closure the workspace measured 64,223,046,686 logical bytes. The development ZIP remained 6,315,009,692 bytes. The private evidence retains the source captures, final states and the SHA-256 receipt for intermediate states removed after verification.
