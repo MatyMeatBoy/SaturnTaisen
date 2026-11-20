@@ -17,9 +17,11 @@ Status: built and verified (2026-11-20). Executable `local/build/sakura-full/sak
 
 ```powershell
 $env:PATH = 'D:\01Claude\TaisenFirst\toolkit\msys64\clang64\bin;' + $env:PATH
-# SDK copy with the whole stack
-copy local/deps/satrecomp -> local/deps/satrecomp-full ; git -C local/deps/satrecomp-full reset --hard 67a5fd456609f702817c08164e77e1420dc91138 ; git clean -fd
-# apply config/dependencies.json patches in order: git -C local/deps/satrecomp-full apply --whitespace=nowarn <patch>
+# Fresh SDK checkout from the pinned commit. Use the recorded project commit 72ab4b8 for the patch list.
+if (Test-Path -LiteralPath 'local/deps/satrecomp-full') { throw 'Use an unused SDK directory; preserve the existing checkout.' }
+git clone --no-local --no-checkout local/deps/satrecomp local/deps/satrecomp-full
+git -C local/deps/satrecomp-full checkout --detach 67a5fd456609f702817c08164e77e1420dc91138
+# Apply the recorded config/dependencies.json patches in their original order to satrecomp-full.
 # block list (disc 1, then disc 2 on top of it, plus the ending module)
 python tools/discover_registered_overlays.py --image "local/prepared/disc1/Track 01.iso" --module EVT01 --module EVT03 --module EVT04 --module EVT05 --module EVT07 --module EVT08 --module EVT09 --module EVT10 --module EVT11 --module EVT21 --module EVT22 --module EVT27 --seed-blocks handoff/current-aot/blocks.txt --sdk-root local/deps/satrecomp-full --output local/work/fullstack/d1
 python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT12 --module EVT13 --module EVT14 --module EVT15 --module EVT16 --module EVT17 --module EVT18 --module EVT19 --module EVT20 --module EVT23 --module EVT24 --module EVT25 --module EVT26 --module ENDING_DISC2_EN_FULL --seed-blocks local/work/fullstack/d1/blocks.txt --sdk-root local/deps/satrecomp-full --output local/work/fullstack/d2
