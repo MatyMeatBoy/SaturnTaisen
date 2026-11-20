@@ -192,3 +192,26 @@ patch 0224, including 110 strict fields, SRAM and ten 1440p captures.
 The replay and private build evidence are under
 `local/work/codex-th1/map14-boss-aot`. Later turns and package inclusion
 are pending.
+
+### MAP14 healing, special attack and victory
+
+Three clips from the natural English disc 2 Iris route cover Iris's
+healing result on turn 15, Kanna's special attack and the turn-19
+victory through the IC08 intermission. Controller input produced each
+clip from the retained state on that route.
+
+| Clip | Exact strict guest fields |
+| --- | ---: |
+| Iris heals Kanna | 1,800 |
+| Kanna's special attack | 3,900 |
+| Victory into IC08 | 6,300 |
+
+The 180 new code variants match the pinned EVT14 bytes and bring the
+observed profile to 1,188. The linked candidate contains exactly
+677,641 variants (the prior 677,461 plus these 180). All 12,000 strict
+guest fields and the three final SRAM files match the archived route.
+The candidate SHA-256 is `4203fdae37f196f09db13a098fc8e87b95319596f933f10a6ca75b09fbfe73fc`. The inputs and verification are kept
+under `local/work/codex-th1/map14-victory-aot`.
+
+The evidence covers these three clips. The complete battle through
+all intervening turns and package inclusion remain open.
