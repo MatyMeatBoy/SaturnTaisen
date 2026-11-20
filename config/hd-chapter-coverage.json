@@ -2098,9 +2098,11 @@
           "1:/SAKURA1/BG1002.BIN": {
             "association": "observed",
             "cold_run_frame": 74500,
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
             "pc": "SAKURA1/BG/BG1002.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1006.BIN": {
             "association": "observed",
@@ -2194,9 +2196,11 @@
           "1:/SAKURA1/BG1116.BIN": {
             "association": "observed",
             "cold_run_frame": 135500,
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
             "pc": "SAKURA1/BG/BG1116.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1119.BIN": {
             "association": "observed",
