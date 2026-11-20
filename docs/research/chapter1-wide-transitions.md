@@ -202,3 +202,22 @@ These are host process measurements and do not measure total VRAM.
 The target hardware reference is 8 GB system RAM and a GPU with
 2 GB of video memory. The replays were run on the development PC.
 A physical test on the minimum configuration remains open.
+
+## Packing repeated rows in the 4K map fade
+
+The interior layer at field 406 occupies the full 2880 × 2016 target,
+so cropping cannot reduce the upload. Patch 0274 uploads one row
+per run of equal native and backdrop row indices and draws it at the
+same integer height. The ordinary path handles geometry that packs
+poorly and specialized intermission and scene fades.
+
+In two alternating 4K entry pairs, mixed-layer uploads fell from
+931,841,280 to 436,250,880 bytes over 550 fields, with the same 107
+updates and 153 cache hits. Field 406 measured 55.93 and 31.94 ms
+before and 22.08 and 33.51 ms after. It still exceeds 16.67 ms.
+The eleven sampled entry captures, guest hashes and SRAM match.
+
+At 4K, 24 exit captures match with all 760 guest fields, SRAM and PCM.
+The Direct3D 12 entry comparison also matches its 11 RGB captures
+and guest trace. The 4K timing numbers above are Direct3D 11 without
+readback. Release packaging is pending.
