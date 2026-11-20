@@ -1,0 +1,135 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1901,48 +1901,89 @@
+                 const auto cover=CoverInteger(canvasWidth,high,static_cast<int>(bgw),static_cast<int>(bgh));
+                 const SDL_FRect bg{static_cast<float>(canvasLeft+cover.x),static_cast<float>(cover.y),static_cast<float>(cover.w),static_cast<float>(cover.h)};
+                 SDL_RenderTexture(renderer,floral,nullptr,&bg);
+-                if(selectedBackdrop && mapFade) {
+-                    const auto native=FitInteger(wide,high,320,224);
+-                    if(ResizePanelBuffer(fadeBackdropPixels,size_t(canvasWidth)*high)) {
+-                        std::fill(fadeBackdropPixels.begin(),fadeBackdropPixels.end(),0);
+-                        // Only outside the native picture: inside it SampleMapCrossfade gives nothing and the pixel
+-                        // stays clear, so those columns are skipped (the same pixels, without the per-pixel work
+-                        // over most of a large window).
+-                        const int skipFrom=std::clamp(native.x-canvasLeft,0,canvasWidth),skipTo=std::clamp(native.x+native.w-canvasLeft,0,canvasWidth);
+-                        // (a row equal to the one above in its backdrop row, its native gradient row and whether
+-                        // it crosses the native picture is a copy of it)
+-                        const auto fadeKey=[&](int py) {
+-                            const int64_t dy=int64_t(py)-int64_t(bg.y),backRow=dy<0 || cover.scale<=0 || dy>=int64_t(bgh)*cover.scale?-1:dy/cover.scale;
+-                            const int64_t nativeRow=native.scale>0?std::clamp<int64_t>(int64_t(py)-native.y,0,int64_t(native.h)-1)/native.scale:-1;
+-                            const bool inside=py>=native.y && py<native.y+native.h;
+-                            return std::tuple<int64_t,int64_t,bool>{backRow,nativeRow,inside};
+-                        };
+-                        for(int py=0;py<high;py++) {
+-                            if(py>0 && fadeKey(py)==fadeKey(py-1)) {
+-                                std::copy_n(fadeBackdropPixels.begin()+size_t(py-1)*canvasWidth,canvasWidth,fadeBackdropPixels.begin()+size_t(py)*canvasWidth);
+-                                continue;
+-                            }
+-                            const bool insideRows=py>=native.y && py<native.y+native.h;
+-                            for(int px=0;px<canvasWidth;px++) {
+-                                if(insideRows && px>=skipFrom && px<skipTo) {px=skipTo-1;continue;}
+-                                const int screenX=canvasLeft+px;
+-                                if(const auto floralPixel=SamplePanelBackdrop(selectedBackdrop->pixels,int(bgw),int(bgh),int(bg.x),int(bg.y),cover.scale,screenX,py))
+-                                    if(const auto mixed=SampleMapCrossfade(*mapFade,mapFadeRows,native,screenX,py,*floralPixel))
+-                                        fadeBackdropPixels[size_t(py)*canvasWidth+px]=*mixed;
+-                            }
+-                        }
+-                        if(fadeBackdropWidth!=canvasWidth || fadeBackdropHeight!=high) {
+-                            if(fadeBackdropTexture)SDL_DestroyTexture(fadeBackdropTexture);
+-                            fadeBackdropTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,canvasWidth,high);
+-                            fadeBackdropWidth=fadeBackdropTexture?canvasWidth:0;fadeBackdropHeight=fadeBackdropTexture?high:0;
+-                            if(fadeBackdropTexture && (!SDL_SetTextureBlendMode(fadeBackdropTexture,SDL_BLENDMODE_BLEND) ||
+-                                    !SDL_SetTextureScaleMode(fadeBackdropTexture,SDL_SCALEMODE_NEAREST))) {
+-                                SDL_DestroyTexture(fadeBackdropTexture);fadeBackdropTexture=nullptr;fadeBackdropWidth=fadeBackdropHeight=0;
+-                            }
+-                        }
+-                        const SDL_FRect exterior{float(canvasLeft),0,float(canvasWidth),float(high)};
+-                        if(fadeBackdropTexture && SDL_UpdateTexture(fadeBackdropTexture,nullptr,fadeBackdropPixels.data(),canvasWidth*sizeof(uint32_t)))
+-                            SDL_RenderTexture(renderer,fadeBackdropTexture,nullptr,&exterior);
++                if (selectedBackdrop && mapFade && cover.scale > 0 &&
++                    selectedBackdrop->pixels.size() == size_t(int(bgw)) * int(bgh)) {
++                    const auto native = FitInteger(wide, high, 320, 224);
++                    const int left = std::clamp(native.x - canvasLeft, 0, canvasWidth);
++                    const int right = std::clamp(native.x + native.w - canvasLeft, left, canvasWidth);
++                    const int top = std::clamp(native.y, 0, high);
++                    const int bottom = std::clamp(native.y + native.h, top, high);
++                    const std::array<SDL_Rect, 4> exterior{{
++                        {0, 0, left, high}, {right, 0, canvasWidth - right, high},
++                        {left, 0, right - left, top}, {left, bottom, right - left, high - bottom}
++                    }};
++                    if (fadeBackdropWidth != canvasWidth || fadeBackdropHeight != high) {
++                        if (fadeBackdropTexture) SDL_DestroyTexture(fadeBackdropTexture);
++                        fadeBackdropTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                            SDL_TEXTUREACCESS_STREAMING, canvasWidth, high);
++                        fadeBackdropWidth = fadeBackdropTexture ? canvasWidth : 0;
++                        fadeBackdropHeight = fadeBackdropTexture ? high : 0;
++                        if (fadeBackdropTexture && (!SDL_SetTextureBlendMode(fadeBackdropTexture, SDL_BLENDMODE_BLEND) ||
++                                !SDL_SetTextureScaleMode(fadeBackdropTexture, SDL_SCALEMODE_NEAREST))) {
++                            SDL_DestroyTexture(fadeBackdropTexture);
++                            fadeBackdropTexture = nullptr;
++                            fadeBackdropWidth = fadeBackdropHeight = 0;
++                        }
++                    }
++                    if (fadeBackdropTexture && native.scale > 0) {
++                        struct ColumnRun { int start, size, floralX, mapX; };
++                        std::vector<ColumnRun> runs;
++                        bool uploaded = true;
++                        for (const auto& area : exterior) {
++                            if (!area.w || !area.h) continue;
++                            if (!ResizePanelBuffer(fadeBackdropPixels, size_t(area.w) * area.h)) {
++                                uploaded = false;
++                                break;
++                            }
++                            runs.clear();
++                            for (int x = 0; x < area.w; ++x) {
++                                const int dx = canvasLeft + area.x + x - native.x;
++                                const int period = 8 * native.scale;
++                                const int phase = ((dx % period) + period) % period / native.scale;
++                                const int mapX = phase + (dx >= native.w ? 8 : 0);
++                                const int sample = canvasLeft + area.x + x - int(bg.x);
++                                const int floralX = sample >= 0 && sample < cover.w ? sample / cover.scale : -1;
++                                if (!runs.empty() && runs.back().floralX == floralX && runs.back().mapX == mapX) {
++                                    ++runs.back().size;
++                                } else {
++                                    runs.push_back({x, 1, floralX, mapX});
++                                }
++                            }
++                            int previousFloral = -2, previousMap = -2;
++                            for (int y = 0; y < area.h; ++y) {
++                                const int screenY = area.y + y;
++                                const int sample = screenY - int(bg.y);
++                                const int floralY = sample >= 0 && sample < cover.h ? sample / cover.scale : -1;
++                                const int mapY = std::clamp(screenY - native.y, 0, native.h - 1) / native.scale;
++                                auto* row = fadeBackdropPixels.data() + size_t(y) * area.w;
++                                if (floralY == previousFloral && mapY == previousMap) {
++                                    std::copy_n(row - area.w, area.w, row);
++                                    continue;
++                                }
++                                previousFloral = floralY;
++                                previousMap = mapY;
++                                for (const auto& run : runs) {
++                                    uint32_t color = 0;
++                                    if (floralY >= 0 && run.floralX >= 0) {
++                                        const auto floralRgb = selectedBackdrop->pixels[size_t(floralY) * int(bgw) + run.floralX];
++                                        const auto mapRgb = mapFadeRows[mapY * 16 + run.mapX];
++                                        color = CompositePanelPixel({floralRgb, mapFade->mapWeight, mapFade->postMixOffset},
++                                            mapRgb, mapRgb | 0xff000000u);
++                                    }
++                                    std::fill_n(row + run.start, run.size, color);
++                                }
++                            }
++                            if (!SDL_UpdateTexture(fadeBackdropTexture, &area, fadeBackdropPixels.data(), area.w * sizeof(uint32_t))) {
++                                uploaded = false;
++                                break;
++                            }
++                        }
++                        if (uploaded) for (const auto& area : exterior) {
++                            if (!area.w || !area.h) continue;
++                            const SDL_FRect source{float(area.x), float(area.y), float(area.w), float(area.h)};
++                            const SDL_FRect dest{float(canvasLeft + area.x), float(area.y), float(area.w), float(area.h)};
++                            SDL_RenderTexture(renderer, fadeBackdropTexture, &source, &dest);
++                        }
+                     }
+                 }
+                 const bool firstMovieBlank=FirstMovieBlankFrame(shownFirstMoviePhase,planes.source,
