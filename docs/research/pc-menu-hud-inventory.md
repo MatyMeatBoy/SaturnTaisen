@@ -207,7 +207,7 @@ Private inputs, states and controls remain under `local/work/codex-th1/load-arro
 
 The register (`config/hd-chapter-coverage.json`, category `menus-hud`) now carries the runtime-drawn menu/HUD pictures, and `tools/build_hd_progress.py` takes the `hud-menus` integrated count from it. The map is explicit in `tools/hd_chapter_coverage.py` (`SYSTEM_HUD_DRAWS`, `SYSTEM_HUD_EXCLUDED`; item cards come from the same selection as `tools/gen_item_table.py`). A picture counts once per PC image, whatever the disc.
 
-Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 51 distinct PC item pictures of `config/hd-item-map.json` = 229. Integrated: 51.
+Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 51 distinct PC item pictures of `config/hd-item-map.json` = 229. Integrated: 53.
 
 | Piece | PC images | Patch / table | State |
 | --- | --- | --- | --- |
@@ -216,11 +216,12 @@ Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted
 | CD-1 and CD-2 load emblems | SIS_ICON 2 of 10 (subimages 2 and 3) | 0112 and 0146, `load_disc_icon.h` | verified for the top load slot; subimage 1 (System RAM icon) kept native |
 | Load menu selection arrows | SISTEM subimages 8 and 9 (of 45) | 0150, `system_brackets.h` | verified in the English load menu on both discs |
 | Save confirmation frame | TUIKA_W subimage 0 | 0197, border strips | verified in the English disc 1 save confirmation |
+| Options and System frames | SISTEM subimages 11 and 14 | 0205, rail masks | English and Spanish disc 1 Options and English System |
 | Timed LIPS and dialogue frames | WINDOW subimages 0 and 1 | 0202, rail masks | English disc 1 Sakura choice and dialogue |
 | Long Day choice frame | WINDOW subimage 2 | 0198, rail mask | English disc 2 room choice |
 | KAO | 394, excluded here | portrait pack | counted in portraits |
 
-Open (178 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 43, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 2 (needs layout), WINDOW 3; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
+Open (176 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 41, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 2 (needs layout), WINDOW 3; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
 
 ## TW5 wiring audit: which open families the existing mechanisms can reach
 
@@ -295,3 +296,13 @@ The exact command, indexed source, active palette, winning sprite layer and comp
 The English disc 1 replay ran 75 strict fields for each of seven profiles. Guest hashes and final SRAM matched. Independent RGB reconstruction matched every pixel in six 1440p captures. Both donors were visible at fields 8, 12 and 16, and dialogue alone at 24, 40 and 60 after the timed choice closed. Original with and without the donor matched. The missing, corrupt and disabled donor profiles matched stock Enhanced. The separate English disc 2 Long Day route matched stock guest hashes, final SRAM and all three sampled captures with WINDOW image 2 active.
 
 Local proof and commands are in `local/work/codex-witness-441-review/hud/window01-ab/receipt.json`, `local/work/codex-witness-441-review/replay-window01.py`, and `local/work/codex-witness-441-review/verify-window01.py`. Package inclusion remains open.
+
+## HD Options and System panel rails
+
+Patch 0205 uses SISTEM images 11 and 14 on the disc 1 Options and System panels. The PC images register at exactly 2× to the verified 288 × 144 and 112 × 88 VDP1 frames. The two localized Options textures share an identical mask. The exact source, palette, command placement, winning layer and composed native colors guard each draw.
+
+The Options mask keeps the right-side arrows and the white option wells native. System keeps the interior native. Both panels retain the whole footer containing the localized label. The overlays use the native 320 × 224 placement and existing integer scale.
+
+Strict 1440p A/B replays on English Options, Spanish Options and English System matched all guest hashes and final SRAM for 56 fields per route. Independent PC decode and native color reconstruction matched every pixel of twelve captures, including Options navigation. Original, missing, damaged and disabled donors matched their native controls. Another 760-field replay preserved the restored Iris/Ogami HD poses and matched seven RGB captures.
+
+Local receipts are `local/work/codex-witness-441-review/hud/system-ab/receipt.json` and `local/work/codex-witness-441-review/hud/system-combo-regression/receipt.json`. Package inclusion remains open.
