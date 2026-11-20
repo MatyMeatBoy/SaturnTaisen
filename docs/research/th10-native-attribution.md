@@ -31,3 +31,42 @@ decoded PC background. All 284,935 uniquely identified Saturn BG4055
 foreground pixels remain pixel-exact. The seven preceding sampled
 captures match in full. This verifies BG1160 on disc 2 for this occurrence.
 The private repro is under `local/work/codex-th1/bg1160-live/`.
+
+## Verified scene draws on the archived ending route
+
+The English disc-2 ending route starts with the public Mednafen
+`GameCompleted.bkr` seed and the archived `ending-cold-native/input.movie`.
+A fresh strict-native replay matched all 20,164 archived guest hashes.
+The checkpoints used below come from the same route.
+
+| Disc 2 Saturn scene | FAD | Checkpoint field | PC donor | A/B capture offsets | RGB changes per capture |
+| --- | ---: | ---: | --- | --- | --- |
+| `/SAKURA1/BG2287.BIN` | 128721 | 10799 | `SAKURA1/BG/BG2287.SPR` | 520, 535, 548, 575 | 2,031,091 each |
+| `/SAKURA1/BG2288.BIN` | 128744 | 11399 | `SAKURA1/BG/BG2288.SPR` | 8, 16, 30, 50 | 0 / 0 / 2,028,748 / 2,028,748 |
+| `/SAKURA1/BG2162.BIN` | 126314 | 18599 | `SAKURA1/BG/BG2162.SPR` | 8, 16, 30, 50 | 1,958,477 each |
+
+Each A/B replay used D3D11 at 2560×1440 and the original route input suffix
+for its checkpoint. Only the named PC donor differed between arms. A/B
+and the archive match across all 694 guest fields, terminal SRAM matches
+within each pair, and all runs report zero interpreted blocks. Runtime
+SHA-256 was
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`
+(cumulative 0213).
+
+All changed pixels fell within the existing Zoom rectangle at (272, 29) to
+(2288, 1037). Each changed control pixel matched the independently decoded
+Saturn plate after RGB555 quantization and nearest scaling. Each corresponding
+donor pixel matched the independently decoded bilinear PC plate within two
+levels per channel. The first two BG2288 captures were pixel-identical to the
+control. The BG2287 proof uses stable samples before the dissolve. A separate
+test during the dissolve failed the source pixel comparison and is excluded
+from the verification.
+
+Late route captures from fields 19,920 through 20,160 had matches for the
+closely related BG2257 and BG2258 plates in portions of the native image.
+Independent A/B runs beginning at field 20,039 and supplying only one donor
+at a time yielded no changed pixels at fields 8, 16, 30 or 50. These
+two entries remain unverified. Local receipts and exact restart state hashes
+are under `local/work/codex-witness-441-review/hud/chapter10-plates/`.
+The verification covers the three named scene draws. The chapter exit and
+release package gates remain open.
