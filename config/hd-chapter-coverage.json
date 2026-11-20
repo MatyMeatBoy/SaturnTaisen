@@ -6906,9 +6906,11 @@
           },
           "2:/SAKURA1/BG2025.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-10.md#bg2025-in-the-ending-route",
             "pc": "SAKURA1/BG/BG2025.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bg2025-in-the-ending-route",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2026.BIN": {
             "association": "observed",

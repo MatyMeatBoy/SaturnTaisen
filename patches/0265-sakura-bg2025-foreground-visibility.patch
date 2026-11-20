@@ -1,0 +1,59 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3763,21 +3763,28 @@
+                                     }
+                                     const bool bg2014 = layer == 2 && fingerprint == 0x64FFEF3B3722EFB9ull &&
+                                         slot >= kSceneBgCount && kSceneBgAmbiguous[slot-kSceneBgCount].cells == 0xF9044D5647376C35ull;
+-                                    bool underNc3014 = visible >= 11000 && visible < 12000 && bg2014 &&
+-                                        shownDisc == 1 && nativeBg2014Actor && !choosing && !port.menu.IsOpen() &&
+-                                        planes.topSource.size() == planes.source.size() && port.videoRenderer->BackgroundIsOpaque(2);
+-                                    if (underNc3014) {
+-                                        // The large opaque character covers most of this plate. Only use the
+-                                        // PC pixels where the actual top layer is the recognized background.
+-                                        for (int y=8;y<152 && underNc3014;++y) for (int x=16;x<304;++x) {
+-                                            const auto at = size_t(y)*320+x;
+-                                            if ((planes.source[at] == layer) != (planes.topSource[at] == layer)) {
+-                                                underNc3014=false;
+-                                                break;
++                                    const bool bg2025 = fingerprint == 0x9661EF296D9080A4ull;
++                                    const bool underNc3014 = bg2014 && shownDisc == 1 && nativeBg2014Actor && visible >= 11000;
++                                    const bool finaleRays = bg2025 && shownDisc == 2 && visible >= 8800;
++                                    bool guardedPartial = visible < 12000 && (underNc3014 || finaleRays) &&
++                                        !choosing && !port.menu.IsOpen() && planes.topSource.size() == planes.source.size() &&
++                                        port.videoRenderer->BackgroundIsOpaque(layer);
++                                    if (guardedPartial && finaleRays)
++                                        guardedPartial = port.videoRenderer->BackgroundCellFingerprint(layer, 41472) == 0x89ACC5088441EE80ull;
++                                    if (guardedPartial) {
++                                        // These registered plates are mostly hidden behind a character.
++                                        // Replace only pixels where the actual top layer is the background.
++                                        for (int y = 8; y < 152 && guardedPartial; ++y) {
++                                            for (int x = 16; x < 304; ++x) {
++                                                const auto at = size_t(y) * 320 + x;
++                                                if ((planes.source[at] == layer) != (planes.topSource[at] == layer)) {
++                                                    guardedPartial = false;
++                                                    break;
++                                                }
+                                             }
+                                         }
+                                     }
+-                                    if (visible < 12000 && !underNc3014) {
++                                    if (visible < 12000 && !guardedPartial) {
+                                         if (layer != 2 || shownDisc != 2 || visible < 9500 || choosing || port.menu.IsOpen())
+                                             continue;
+                                         uint64_t lowerCells = 0, upperPalette = 0, upperCells = 0;
+@@ -3812,11 +3819,12 @@
+                                         // Decode the PC picture on a worker thread: doing it here cost about 20 ms
+                                         // the first time a picture appeared. Until it is ready the native one shows.
+                                         hd.tried=true;
+-                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex,nightCorridor,offset,bg2014]() {
++                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex,nightCorridor,offset,bg2014,bg2025]() {
+                                             SceneHdPixels result;
+                                             std::vector<uint8_t> bytes;
+                                             if(!ReadPcBackdropFile(file,bytes,64u<<20))return result;
+-                                            if (bg2014 && (bytes.size() != 53146 || AtlasFingerprint(bytes) != 0x8B72773A31DA24ADull))
++                                            if ((bg2014 && (bytes.size() != 53146 || AtlasFingerprint(bytes) != 0x8B72773A31DA24ADull)) ||
++                                                (bg2025 && (bytes.size() != 69881 || AtlasFingerprint(bytes) != 0xCE345BCF53B20D22ull)))
+                                                 return result;
+                                             std::vector<PcSprite> images;std::string error;
+                                             if(!DecodePcSprites(bytes,images,error))return result;

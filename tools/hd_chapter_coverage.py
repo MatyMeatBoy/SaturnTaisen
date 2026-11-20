@@ -222,6 +222,7 @@ NARRATIVE_CUTOUT_DRAWS = {
 SCENE_DRAWS = {
     (2, '/SAKURA1/BG1284.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (2, '/SAKURA1/BG2020.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2025.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2025-in-the-ending-route'),
     (1, '/SAKURA1/BG1181.BIN'): (7, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (1, '/SAKURA1/BG1178.BIN'): (7, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (1, '/SAKURA1/BG2160.BIN'): (7, 'docs/research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route'),
