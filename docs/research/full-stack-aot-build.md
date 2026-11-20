@@ -52,3 +52,24 @@ Verification (strict native, no `SATRECOMP_NO_BLOCKS`, at most two executables a
 - Not verified: frames past 45,000, other endings, 40,000-frame sweeps of the 17 EVT entries with this build, package inclusion.
 - `chapter_loads.py` and `check_patch_stack.py` resolve `local/` from the checkout; in a worktree link `local/prepared` (a junction) or pass paths under the checkout.
 
+
+## Second build: main plus the tactical ground table (`sakura-full2`, T55-fullstack-with-grounds)
+
+The `sakura-full` executable above lacks the generated tactical ground table of PR #440 (patch 0188 on its branch), so the signatures of MAP03, 07, 08, 09, 11, 17, 18, 20, 22, 24, 25 and 26 are not in it and those grounds cannot be probed. Status of the table on `origin/main` `0ffde69`: **not merged**. Number 0188 is taken on main by `0188-sakura-scroll-row-minimum-offset` (and PR #442 also asks for 0188), so the table patch is renumbered to the next free number, `0253-sakura-tactical-ground-table`, listed last in `config/dependencies.json`.
+
+What changed against the #440 branch (it predates MAP12 to MAP16 and the 0214/0240/0242 grounds):
+
+- `kStage12` to `kStage16` are now hand-written entries on main. In `tools/gen_tactical_ground_table.py` they join `HAND` (status `hd`, signatures equal to the derived ones), so the generated `.inc` lists the other 12 maps only: MAP03, 07, 08, 09, 11, 17, 18, 20, 22, 24, 25, 26. Table counts: `hd` 11, `wired-unverified` 12, `native` 2 (MAP10, MAP19), `needs-assembler` 1 (MAP23).
+- The patch was regenerated against the stack (a hand-written `kGenerated[]` include plus a loop in `tactical_ground::Find`, after `kStage21`), not re-anchored by script; the `.inc` is the output of `gen_tactical_ground_table.py --derive` from the owner's discs and PC files.
+- `config/dependencies.json` also lists `0252-sakura-bg1120-night-corridor`, whose file is on main but was missing from the list (`check_patch_stack.py` refuses unlisted files).
+- `tools/hd_chapter_coverage.py` and `config/hd-chapter-coverage.json` of #440 are **not** taken: the branch predates the main versions and would revert them. Moving a map to `hd` there stays for its witness.
+
+| Item | Value |
+| --- | --- |
+| Patches | the 239 of `config/dependencies.json` (238 of main up to `0252`, plus `0253`) |
+| Stack check | `python tools/check_patch_stack.py`: `patch stack ok: 239 patches, last patches/0253-sakura-tactical-ground-table.patch`; `gen_tactical_ground_table.py --check` ok; `python -m unittest tests.test_gen_tactical_ground_table` 22 tests ok |
+| SDK tree | `local/deps/satrecomp-full2`: copy of `-full`, `git reset --hard 67a5fd45...`, `git clean -fd`, the 239 patches in order (`git apply`, `core.autocrlf=false`); `dependency()` not bypassed; the shared `local/deps/satrecomp` untouched |
+| Block list | the same 1,411,614 blocks, `local/work/fullstack/blocks.txt` copied to `local/work/rebuild-full2`, SHA-256 `461933eb...` (byte-identical to #600 and #621) |
+| Build | `local/work/rebuild-full2/run.py` (same wrapper as above, `-full2` paths), `local/build/rebuild-full2`, 16 threads, one process |
+
+RESULTS_PLACEHOLDER
