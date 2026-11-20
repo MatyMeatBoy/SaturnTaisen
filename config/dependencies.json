@@ -181,7 +181,9 @@
       "patches/0183-sakura-ic06-hd-intermission.patch",
       "patches/0184-sakura-registered-nc12-faces.patch",
       "patches/0185-sakura-ic-intermission-table.patch",
-      "patches/0186-sakura-full-frame-battle-pictures.patch"
+      "patches/0186-sakura-reuse-map-fade-exterior.patch",
+      "patches/0187-sakura-bounded-film-video-spans.patch",
+      "patches/0188-sakura-full-frame-battle-pictures.patch"
     ]
   }
 }

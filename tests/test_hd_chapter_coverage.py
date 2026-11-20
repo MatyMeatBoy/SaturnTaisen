@@ -177,9 +177,15 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertIn('0169', atlas['identities'])
         self.assertNotIn('native_by_design', atlas)
         self.assertNotIn('uncovered', atlas)
-        alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
+        films = dict(catalog['unassigned']['film'])
+        for chapter in catalog['chapters']:
+            films.update(chapter['resources']['film'])
+        alternate_cuts = [row for row in films.values() if row.get('alternate_cut')]
         self.assertEqual(len({row['pc'] for row in alternate_cuts}), 6)
-        self.assertTrue(all(row['status'] == 'excluded' for row in alternate_cuts))
+        self.assertTrue(all(row['status'] == 'bounded' and row['audio'] == 'saturn'
+                            and row['pc_video_spans'] for row in alternate_cuts))
+        self.assertEqual({row['pc'] for row in alternate_cuts if row.get('verified_in_game')},
+                         {'MOVIE004', 'MOVIE011'})
         for disc in (1, 2):
             transition = catalog['unassigned']['film'][f'{disc}:/SAKURA1/OPSAKURA.CPK+0']
             self.assertEqual(transition['status'], 'excluded')

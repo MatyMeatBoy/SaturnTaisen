@@ -350,6 +350,8 @@ def build(root, index_dir, portrait_audit):
     fce_atlases = portrait_report.get('fce_atlases', {})
     recipes = {r['id']: r['pc_index'] for r in config('hd-portrait-recipe')['portraits']}
     films = {(r['disc'], r['fad']): r for r in config('film-fad-map')['streams']}
+    bounded_films = {(edit['disc'], edit['movie']): edit['spans']
+                     for edit in config('film-video-spans')['edits']}
     bg = pairs(config('hd-scene-bg-map'))
     bg_review = config('hd-scene-bg-review')
     native_bg_aliases = {}
@@ -579,11 +581,11 @@ def build(root, index_dir, portrait_audit):
                     row['status'] = 'hd'
                     row.setdefault('runtime_evidence', SCROLL_REPORT)
                 elif disc == 2 and path == f'/SAKURA2/{name}.BIN' and name in FULL_FRAME_ROWS:
-                    # TP2b (patch 0186): full-frame row. In the runtime table with an exact native-frame guard and a native
+                    # TP2b (patch 0188): full-frame row. In the runtime table with an exact native-frame guard and a native
                     # fallback; no frame of it exists in any saved state yet, so it is never `hd` here.
                     row.update(status='wired-unverified', verified_in_game=False, pc=FULL_FRAME_ROWS[name]['pc_file'],
                                runtime_table='config/hd-full-frames.json', runtime_evidence=FULL_FRAME_REPORT,
-                               reason=('in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, '
+                               reason=('in the runtime full-frame table (patch 0188, measured PC crop, exact native-frame guard, '
                                        'native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture'))
                 elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
@@ -742,9 +744,12 @@ def build(root, index_dir, portrait_audit):
             if film and film['file'] == path:
                 row['status'] = 'unpaired'
                 if movie := film.get('movie'):
-                    row.update(status='excluded' if film['alternate_cut'] else 'hd',
+                    spans = bounded_films.get((disc, movie))
+                    row.update(status='bounded' if spans else 'excluded' if film['alternate_cut'] else 'hd',
                                pc=movie, alternate_cut=film['alternate_cut'])
-                    if film['alternate_cut']:
+                    if spans:
+                        row.update(pc_video_spans=spans, audio='saturn')
+                    elif film['alternate_cut']:
                         row['reason'] = 'alternate PC edit stays native to preserve the Saturn timing'
                 elif path == '/SAKURA1/OPSAKURA.CPK' and 0 < film.get('duration', 0) < 0.5:
                     row.update(status='excluded', reason='short native transition without a PC clip')
@@ -754,6 +759,13 @@ def build(root, index_dir, portrait_audit):
                 chapter, report = 1, CHAPTER1_ROUTE_REPORT
             if (disc, path, fad, row.get('pc')) == (1, '/SAKURA4', 80874, 'MOVIE019'):
                 chapter, report = 7, 'docs/research/th7-native-attribution.md'
+            if path == '/SAKURA4' and row['status'] == 'bounded':
+                if (disc, row['pc']) == (1, 'MOVIE004'):
+                    chapter, report = 1, 'docs/research/bounded-film-video-spans.md#movie004'
+                elif (disc, row['pc']) == (1, 'MOVIE011'):
+                    chapter, report = 3, 'docs/research/bounded-film-video-spans.md#movie011'
+                if row['pc'] in ('MOVIE004', 'MOVIE011') and report:
+                    row.update(verified_in_game=True, runtime_evidence=report)
             add('film', f'{disc}:{path}+{offset}', row, chapter,
                 'observed' if chapter else 'unknown', report)
     census = load(root / MENU_CENSUS)
@@ -821,6 +833,7 @@ def build(root, index_dir, portrait_audit):
             'hd': 'Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.',
             'wired-unverified': 'In the runtime table and tried whenever it appears, but nobody has recorded seeing it in game. The work is verification, not wiring.',
             'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette). Check `reason` first.',
+            'bounded': 'Aligned PC picture spans on the Saturn timing, with native picture in their gaps and Saturn audio throughout.',
             'excluded': 'Native by design (key-colour cut-outs, blank pictures, alternate film edits or native transitions).',
             'unsupported-size': 'Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).',
             'unpaired': 'The catalog records a rejected or absent counterpart.',

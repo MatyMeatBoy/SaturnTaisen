@@ -169,7 +169,9 @@ def apply_register(data, register_path):
                                 if resource.get('verified_in_game') is True:
                                     verified_bodies.add(native)
                     continue
-                files[kind].update(row['pc'] for row in rows.values() if row.get('status') == 'hd' and row.get('pc'))
+                integrated_statuses = ('hd', 'bounded') if kind == 'film' else ('hd',)
+                files[kind].update(row['pc'] for row in rows.values()
+                                   if row.get('status') in integrated_statuses and row.get('pc'))
                 if kind == 'scene-pictures':
                     verified_scenes.update(row['pc'] for row in rows.values()
                                            if row.get('status') == 'hd' and row.get('pc')
