@@ -161,3 +161,13 @@ Patch 0208 routes the pinned SLGSYS03 decode through the existing background loa
 In three paired 1440p Direct3D 11 measurements on the stable MAP12 checkpoint, the earlier synchronous candidate used 6.33–8.84 ms of presentation on field 2 with the donor. The async prototype used 2.69–3.72 ms on that field and drew its first HD rails on field 3. These local cold-entry measurements vary with host load.
 
 The exact combined patch 0208 build reproduced all 110 fields and final SRAM in seven profiles, with 28 sampled RGB buffers matching the existing 1440p controls. The load-menu rails, both combo poses and cards, and LIPS, dialogue and room-choice rails also matched their prior positive witnesses. A separate CLI test of a non-ASCII PC asset path hit the same locale error in the baseline and the candidate. Package inclusion is pending.
+
+## Live MAP14 PC ground
+
+The disc-2 Chapter 8 Iris route reaches MAP14 through the in-game File 1 save and resume. It loads EVT14 at FAD 203452 (38 sectors) and MAP14 at FAD 219751 (158 sectors). The settled movement, enemy and targeting checkpoints use the source-4 page at 0x40000 with first-8192-byte FNV-1a 6CA2B0FED140A513. The Saturn and PC map files match. The pinned MAP14_A.SPR is one 2048x2048 image, 5,656,390 bytes with FNV-1a D97BF02A6A2990C2. Patch 0214 uses the existing 2x ground sampler at 1024x1024 world units.
+
+The Windows candidate passed 4,800 paired strict-native fields: 2,400 entering from the between-battle save, 900 of Iris movement, 1,200 of enemy camera and 300 of attack targeting. All guest hashes match the archived portable run, and final SRAM matches across profiles. In all 19 uninstrumented 2560x1440 captures the HD changes are confined to the tactical viewport (320,48)-(2240,1392). Streets and building edges follow the native camera. The sampled boss illustration remains pixel-identical. At all six motion checkpoints, missing, damaged and disabled donors match the native ground and Original matches with and without the donor. These checks cover the sampled paths. Package inclusion is pending.
+
+The exact executable and the four input segments, profiles and receipt are under `local/work/codex-th1/map14-ground`. Original Saturn discs and PC art remain private. See also [EVT14 native coverage](evt-overlay-registry.md#chapter-8-map14-deployment-and-combat).
+
+The combined runtime (`c44443f6491b062695393e7a2fd05aeb0e4d749d25b4513ce5353e5e35afe860`, SDK tree `69c4fa3b6faea1749526dac946d05cf331a1fa5b`) reproduced all 4,800 guest fields, 19 positive captures and final SRAM from the isolated MAP14 trial. It also matched the four new narrative foregrounds and the existing combo, dialogue, LIPS and room-selection release gate.

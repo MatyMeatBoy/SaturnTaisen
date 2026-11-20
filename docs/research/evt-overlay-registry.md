@@ -138,3 +138,13 @@ This covers the witnessed Iris combo and return to the MAP13 battlefield. The fu
 ```powershell
 python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT13_MAP13 --module GATTAI_SD2_IRIS --seed-blocks local/work/sakura/blocks.txt --output local/work/map13-combo-aot
 ```
+
+## Chapter 8 MAP14 deployment and combat
+
+Three retained MAP14 states contain 71,692 byte-identical leading bytes of the pinned EVT14 module at 00204000. A stock build reproduces a strict-native miss at 0020A4C4. The four reference segments recorded 426 unique new complete code spans, all matching the pinned 77,656-byte EVT14 and none from another module. The exact linked executable contains 676,795 variants. The new observed range profile rebuilds the linked row set byte-for-byte from the owner's disc and the previous 676,369-variant seed.
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT14_MAP14 --seed-blocks local/work/sakura/blocks.txt --output local/work/map14-aot
+```
+
+The sample covers 2,400 strict fields from deployment via File 1, 900 of motion, 1,200 of enemy camera and 300 of targeting, with zero interpreted blocks, exact portable guest hashes and matching SRAM. Further battles and alternate branches are outside this receipt.
