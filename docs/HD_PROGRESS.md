@@ -104,7 +104,7 @@ Clips Saturn únicos con sustitución PC completa o con tramos de imagen PC alin
 Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y combate Saturn, pegados al mundo y al scroll.
 
 - El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.
-- Se verificó el suelo de MAP01, MAP02, MAP04, MAP05, MAP06 y MAP21. MAP05 se verificó con la cámara fija. La verificación cubre la capa de suelo. El inventario completo de sustituciones por archivo para mapas, unidades y objetos sigue pendiente. El marco táctico de SLGSYS03 se verificó en MAP02, MAP12 y MAP13 con una imagen HD compartida, fuera del censo de UNIT, MAP e ITEM.
+- Se verificó el suelo de ocho mapas: MAP01, MAP02, MAP04, MAP05, MAP06, MAP12, MAP13 y MAP21. MAP05 se verificó con la cámara fija. La verificación cubre la capa de suelo. El inventario completo de sustituciones por archivo para mapas, unidades y objetos sigue pendiente. El marco táctico de SLGSYS03 se verificó en MAP02, MAP12 y MAP13 con una imagen HD compartida, fuera del censo de UNIT, MAP e ITEM.
 - **Siguiente paso**. Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
