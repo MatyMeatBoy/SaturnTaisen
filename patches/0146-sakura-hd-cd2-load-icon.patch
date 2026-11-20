@@ -1,0 +1,99 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -323,9 +323,14 @@
+     if((command[0]&0x8FFF)==1 && command[2]==0x00A0 && command[3]==0x0600 &&
+        command[5]==0x0528 && sprite.x==24 && sprite.y==64 &&
+        bit::sign_extend<13>(command[10])+m_ctx.localCoordX==63 &&
+-       bit::sign_extend<13>(command[11])+m_ctx.localCoordY==103 &&
+-       ItemFingerprint(sprite.pixels)==::port::kLoadDiscIcon.texture) {
+-        entry=&::port::kLoadDiscIcon;
++       bit::sign_extend<13>(command[11])+m_ctx.localCoordY==103) {
++        const auto hash=ItemFingerprint(sprite.pixels);
++        for(const auto& icon : ::port::kLoadDiscIcons) {
++            if(icon.texture==hash) {
++                entry=&icon;
++                break;
++            }
++        }
+     } else if((command[0]&0x3F)==0 && command[2]==0x00A0 && command[3]==0xC600 &&
+               command[5]==0x0E70 && sprite.x>=0 && sprite.x<=320-kItemCardSize &&
+               sprite.y>=0 && sprite.y<=224-kItemCardSize) {
+@@ -770,7 +775,7 @@
+     const auto& drawn=m_drawnItemCard[m_displayFB];
+     auto& presented=m_presentation.itemCard;
+     const auto spriteSize=[](const auto& capture) {
+-        return capture->entry==&::port::kLoadDiscIcon ? ::port::kLoadDiscIconSize : kItemCardSize;
++        return ::port::IsLoadDiscIcon(capture->entry) ? ::port::kLoadDiscIconSize : kItemCardSize;
+     };
+     const bool current=drawn && line>=uint32(drawn->y) && line<uint32(drawn->y+spriteSize(drawn));
+     if(!current && (!presented || line>=uint32(presented->y+spriteSize(presented))))return false;
+@@ -781,7 +786,7 @@
+        (m_drawing && m_displayFB==m_captureDrawFB) ||
+        m_width!=320 || m_height!=224 || m_regs2.TVMD.IsInterlaced() || m_regs1.pixel8Bits ||
+        m_regs1.fbRotEnable || m_regs1.dblInterlaceEnable || m_regs1.hdtvEnable ||
+-       sprite.type!=(drawn->entry==&::port::kLoadDiscIcon ? 0 : 1) || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
++       sprite.type!=(::port::IsLoadDiscIcon(drawn->entry) ? 0 : 1) || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
+        m_regs2.vramControl.colorRAMMode!=1 ||
+        ItemFingerprint(ColorBytes(0xC00,512))!=drawn->entry->palette) {
+         m_itemFrameInvalid=true;presented.reset();
+@@ -1087,7 +1092,7 @@
+                 break;
+             }
+         }
+-        const bool discIcon=drawnItem && drawnItem->entry==&::port::kLoadDiscIcon;
++        const bool discIcon=drawnItem && ::port::IsLoadDiscIcon(drawnItem->entry);
+         if(drawnItem && !discIcon && !m_itemFrameInvalid && x>=uint32(drawnItem->x) &&
+            x<uint32(drawnItem->x+kItemCardSize)) {
+             const size_t at=size_t(y-drawnItem->y)*kItemCardSize+(x-drawnItem->x);
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -949,7 +949,7 @@
+         std::vector<uint32_t> rgba;
+     };
+     std::array<ItemHdImage,std::size(kItemCards)> itemImages{};
+-    ItemHdImage loadDiscImage;
++    std::array<ItemHdImage,std::size(kLoadDiscIcons)> loadDiscImages{};
+     SDL_Texture* itemOverlay=nullptr;
+     std::array<uint32_t,hdItemSize*hdItemSize> itemOverlayPixels{};
+     auto captureItems=[&]() {
+@@ -1068,7 +1068,7 @@
+            satrecomp::FeatureValue("pc_hd_backgrounds")!=0 || port.opt.pcAssetsPath.empty())
+             return;
+         const auto& card=*capture;
+-        const bool discIcon=card.entry==&kLoadDiscIcon;
++        const bool discIcon=IsLoadDiscIcon(card.entry);
+         const int size=discIcon ? kLoadDiscIconSize : nativeItemSize;
+         const int hdSize=2*size;
+         if(discIcon && (planes.width!=320 || planes.height!=224 || planes.underSprites.size()!=320*224))
+@@ -1078,7 +1078,7 @@
+             return;
+         if(std::none_of(card.pixels.begin(),card.pixels.end(),[](uint8_t visible){return visible!=0;}))
+             return;
+-        auto& image=discIcon ? loadDiscImage : itemImages[card.entry-kItemCards];
++        auto& image=discIcon ? loadDiscImages[card.entry-kLoadDiscIcons] : itemImages[card.entry-kItemCards];
+         if(!image.tried) {
+             image.tried=true;
+             std::vector<uint8_t> bytes;
+diff --git a/port/load_disc_icon.h b/port/load_disc_icon.h
+--- a/port/load_disc_icon.h
++++ b/port/load_disc_icon.h
+@@ -5,8 +5,15 @@
+ 
+ namespace port {
+ // The load-menu disc icon shares VDP1 ownership tracking with the item cards.
+-inline constexpr ItemCardEntry kLoadDiscIcon{
+-    0xE2E4156ADAB1517Full,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",2
++inline constexpr ItemCardEntry kLoadDiscIcons[]{
++    {0xE2E4156ADAB1517Full,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",2},
++    {0x9AF2CC56D5CAEB11ull,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",3},
+ };
++
++inline bool IsLoadDiscIcon(const ItemCardEntry* entry) {
++    for(const auto& icon : kLoadDiscIcons)
++        if(entry==&icon)return true;
++    return false;
++}
+ inline constexpr int kLoadDiscIconSize=40;
+ }

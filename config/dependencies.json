@@ -140,7 +140,8 @@
       "patches/0142-sakura-body-cutout-clip.patch",
       "patches/0143-sakura-calibrated-scroll-pictures.patch",
       "patches/0144-sakura-ic0501-hd-compositor.patch",
-      "patches/0145-sakura-two-calibrated-scroll-rows.patch"
+      "patches/0145-sakura-two-calibrated-scroll-rows.patch",
+      "patches/0146-sakura-hd-cd2-load-icon.patch"
     ]
   }
 }

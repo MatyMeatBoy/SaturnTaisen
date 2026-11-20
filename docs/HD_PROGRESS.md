@@ -11,7 +11,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
-| HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 228/228 (100%) | Sin dato | Sin dato | 41/228 (17,9%) | Sin dato |
+| HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 228/228 (100%) | Sin dato | Sin dato | 42/228 (18,4%) | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 147/147 (100%) | Sin dato | 142/147 (96,5%) | 11/147 (7,4%) |
 
@@ -24,11 +24,11 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Escenas y transiciones | Sin dato |
 | Vídeos | 44/50 (88%) |
 | Modo táctico | Sin dato |
-| HUD y menús PC/Saturn | 41/228 (17,9%) |
+| HUD y menús PC/Saturn | 42/228 (18,4%) |
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 142/147 (96,5%) |
 
-**HD total: 1113/1894 (58,7%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1114/1894 (58,8%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 ## Qué cuenta en cada etapa
@@ -119,7 +119,7 @@ Inventario conjunto por pantalla o pieza equivalente, incluidos elementos de map
 
 - Las pruebas de presentación de Saturn cubrieron menús tácticos. Las sustituciones de recursos se verifican por pieza y por pantalla.
 - El censo PC reúne 29 archivos y 572 entradas de imagen con cabeceras validadas.
-- El censo PC reúne 572 imágenes SYSTEM; las 394 de KAO cuentan como retratos y se suman las 50 imágenes de objeto candidatas: 228. Integradas 41 (38 tarjetas de objeto, 2 marcos FONT_CSL, 1 emblema CD-1), medidas desde el registro.
+- El censo PC reúne 572 imágenes SYSTEM; las 394 de KAO cuentan como retratos y se suman las 50 imágenes de objeto candidatas: 228. La tabla calcula las integraciones desde el registro. Incluye tarjetas de objeto, los dos marcos FONT_CSL y los emblemas CD-1 y CD-2.
 - **Siguiente paso**. Completar el cruce por imagen del censo, registrar las sustituciones HD y verificar cada menú en juego.
 
 - [tactical-menu-independent-reference.md](research/tactical-menu-independent-reference.md).
