@@ -4521,9 +4521,11 @@
         "scene-pictures": {
           "1:/SAKURA1/BG1003.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "evidence": "docs/research/hd-chapter-6.md#verified-bg1003-draw",
             "pc": "SAKURA1/BG/BG1003.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-bg1003-draw",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1008.BIN": {
             "association": "observed",
