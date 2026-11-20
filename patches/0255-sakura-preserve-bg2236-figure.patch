@@ -1,0 +1,14 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3650,6 +3650,10 @@
+                                     if(drewHd)break;
+                                     if(layer==4 && scroll && scroll->style!=ScrollStyle::EdgeRamp)continue;
+                                     const uint64_t fingerprint=port.videoRenderer->BackgroundPaletteFingerprint(layer);
++                                    // The Chapter 9 dream blends its figure through this plate.
++                                    if (fingerprint == 0xCBC4C20C2E46BEE0ull &&
++                                        !port.videoRenderer->BackgroundIsOpaque(layer))
++                                        continue;
+                                     constexpr unsigned kNoSlot=kSceneBgCount+kSceneBgAmbiguousCount;
+                                     unsigned slot=kNoSlot;
+                                     for(unsigned i=0;i<kSceneBgCount;i++)if(kSceneBg[i].palette==fingerprint) {slot=i;break;}

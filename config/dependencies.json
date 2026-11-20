@@ -243,7 +243,8 @@
       "patches/0251-sakura-maigo-reward-picture.patch",
       "patches/0252-sakura-bg1120-night-corridor.patch",
       "patches/0253-sakura-shooting-gallery-reward.patch",
-      "patches/0254-sakura-bg1016-floral-blend.patch"
+      "patches/0254-sakura-bg1016-floral-blend.patch",
+      "patches/0255-sakura-preserve-bg2236-figure.patch"
     ]
   }
 }
