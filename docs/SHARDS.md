@@ -4,13 +4,13 @@ Each shard is independent, has its own files and its own "done" test. Rules for 
 
 "Needs assets" means the shard cannot be finished without the owner's own Saturn discs and PC edition; a bot without them can still do the **code and tests** half (use the synthetic tests) and leave the data half to the owner.
 
-## Priority: finish HD mode first (owner, 2026-11-19)
+## Priority: playback performance and HD
 
-Bots take shards in this order; anything that does not move HD mode toward done waits. Conflicts in shared files (`docs/PENDIENTES.md`, `docs/research/bg-matching-progress.md`, `config/hd-scene-bg-review.json`): rebase on `origin/main` and keep both sides (lists and keys are unions); the coordinator does the same when integrating.
+Playback regressions with slowdown, audio breakup or flicker have priority. Use the reported scene and settings for a before-and-after replay and verify the shared renderer or runtime paths before releasing. Independent HD work continues in parallel. Conflicts in shared files (`docs/PENDIENTES.md`, `docs/research/bg-matching-progress.md`, `config/hd-scene-bg-review.json`): rebase on `origin/main` and keep both sides (lists and keys are unions); the coordinator does the same when integrating.
 
-1. **Runtime, visible in game:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106).
-2. **Data that feeds the runtime:** the background review shards (T76-T711), item and body maps.
-3. **Performance:** S6 VDP (T103), S7 SH-2 (T104), only after a visible item is blocked on someone else.
+1. **Playback performance:** T86a and T86 for scene composition, S6 VDP (T103) and S7 SH-2 (T104) for measured emulation bottlenecks.
+2. **Runtime, visible in game:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106).
+3. **Data that feeds the runtime:** the background review shards (T76-T711), item and body maps.
 4. **Owner-only:** painted art (T87).
 
 | Shard | Queue | Needs assets | Files it owns | Done when |

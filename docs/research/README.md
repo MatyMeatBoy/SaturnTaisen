@@ -124,6 +124,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [bg-matching-progress.md](bg-matching-progress.md): Running log of the PC BG scene-image matching by screenshot; counts only.
 - [NC3058 cut-out at 1440p](nc3058-cutout-1440p.md) records the natural scene, native mask and facial fallback.
 - [NC81 neck underlay and NC90 at 1440p](nc81-nc90-1440p.md)
+- [Chapter 1 park speech performance](park-speech-performance.md)
 - [NC3018 face placement at 1440p](nc3018-registered-faces.md)
 - [saturn-bg-format.md](saturn-bg-format.md): Saturn BG*.BIN/BBG*.BIN layouts (three variants) and the mass BG pairing by file number (`config/hd-scene-bg-map.json`).
 - [bg-matching-shards.md](bg-matching-shards.md): Split of the 766 PC BG images into shards so the matching can run in parallel.

@@ -1,0 +1,9 @@
+# Chapter 1 park speech performance
+
+The owner reported slow sound and a flashing background as Sakura begins speaking on another PC with v0.2.7-alpha. The local replay reaches the same park conversation from a recorded Chapter 1 checkpoint. The shipped executable was tested separately. It predates the BG1207 HD substitution and showed several slow frames while the new mouth poses were first matched. The three late matching frames took 27–28 ms each. The emulator's sound work on those frames took about 1.2 ms.
+
+Patch 0154 reuses a mixed floral texture when native input pixels, effective blend recipes, backdrop and placement match. Resize and renderer resets invalidate the relevant entries. Patch 0155 samples each candidate mouth or eye mask once and scores the same 49 shifted windows with bit counts for narrow strips. Both patches run through the shared Enhanced presentation path.
+
+The combined Direct3D11 2560×1440 A/B used 400 frames, a hidden window and a dummy SDL audio device. It compared the candidate with the same scene and settings on the unoptimized patch 0152 executable. Average backdrop and composition time fell from 3.631 to 1.833 ms. Frames over 16.666 ms fell from seven to three in that run. The three late mouth frames fell below the threshold. The first new-pose frame fell from 41.27 to 24.20 ms. The cache reused 743 draws and uploaded 159 textures. All guest hashes, seven face-match decisions and eight screenshots matched exactly. Strict execution reported zero interpreted blocks. A separate cache A/B verified exact 1440p and 1080p resize captures.
+
+Both runs loaded the floral asset once and recorded the same layout changes. The reported flicker and audio behavior on the other PC still need confirmation. The capture and replay inputs are private under `local/work/codex-perf-park`.
