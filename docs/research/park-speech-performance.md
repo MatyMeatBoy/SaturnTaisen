@@ -10,6 +10,8 @@ The follow-up held dialogue record 50003 from `0100TBL`, the line where Sakura n
 
 Both runs loaded the floral asset once and recorded the same layout changes. The reported flicker and audio behavior on the other PC still need confirmation. The capture and replay inputs are private under `local/work/codex-perf-park`.
 
+In the 240-frame exact-line timing replay, the sum of the measured emulation and presentation averages fell from 16.531 to 13.781 ms. The count of whole-frame measurements above 16.666 ms fell from 70 to 8. Four of the candidate's eight were in its first four measured frames, where initialization remained expensive. These figures come from one unthrottled local A/B with the dummy device. They measure emulation and presentation work and do not include guest pacing waits or measure audio underruns.
+
 ## Guest audio startup
 
 The frontend schedules NTSC guest fields at 59.8261 Hz and submits 44.1 kHz stereo PCM after each guest frame. The original startup resumed the SDL device while its stream was empty. The first guest batch reached the stream 55–96 ms after opening in two muted WASAPI park trials, and the interval to the second was 78–109 ms. The device requested 6 and 10 wholly empty buffers before the first batch. A separate dummy-device injection delayed one producer pass by 50 ms after startup and caused an empty pull. The injection exercises ongoing starvation independently of device startup.
