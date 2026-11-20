@@ -32,3 +32,24 @@ interpreted blocks. At 2560x1440 the two samples changed 1,854,972 and
 1,854,792 centre pixels respectively, with zero changes outside the centre.
 The probe creates a separate trial directory for each invocation so earlier
 captures and shared assets are preserved.
+
+## v0.2.23-alpha disc 2 cross-check
+
+Four 90-field donor/control pairs used the v0.2.23-alpha runtime
+(SHA-256 `0c194ffe6393ad975a6ad2051db878887f61ac2d8e57130c5b07309d0435388b`)
+at 2560 × 1440. Each pair matched guest hashes and final SRAM with zero
+interpreted blocks. Both samples for each map changed only the centre
+rectangle (320,48)–(2240,1392).
+
+| Map | Retained route checkpoint | Changed centre pixels, fields 27 / 87 |
+| --- | --- | ---: |
+| MAP12 | iris-map12-enemy1, terminal | 1,412,316 / 1,412,604 |
+| MAP13 | iris-map13-combo-aim2, terminal | 1,117,224 / 1,110,672 |
+| MAP15 | iris-map15-earned-deploy, field 2700 | 1,910,160 / 1,504,692 |
+| MAP16 | iris-map16-t9-kanna, terminal | 1,675,116 / 1,673,100 |
+
+Each probe supplied the map ground alone. A cross-map control that
+supplied MAP15 from `iris-map15-earned-start/terminal.state`, already
+in MAP16, changed zero pixels. These results verify the release
+runtime for these existing grounds. The newer table in PR #691
+still needs same-map runtime witnesses before new grounds are counted.
