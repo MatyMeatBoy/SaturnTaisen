@@ -1,7 +1,7 @@
 <h1 align="center">🌸 SaturnTaisen</h1>
 <p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Static SH-2 recompilation · Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.23-alpha"><img alt="v0.2.23-alpha" src="https://img.shields.io/badge/release-v0.2.23--alpha-9a4564?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.24-alpha"><img alt="v0.2.24-alpha" src="https://img.shields.io/badge/release-v0.2.24--alpha-9a4564?style=flat-square"></a>
   <img alt="Windows x64 portable" src="https://img.shields.io/badge/Windows-x64_portable-77445b?style=flat-square">
   <a href="docs/research/chapter1-battle-progress.md"><img alt="Static SH-2 AOT" src="https://img.shields.io/badge/SH--2-static_AOT-bf914d?style=flat-square"></a>
   <a href="docs/releases/v0.2.0-test.3.md"><img alt="Local validation documented" src="https://img.shields.io/badge/testing-local_report-5d755d?style=flat-square"></a>
@@ -13,7 +13,7 @@ A return to the Imperial Theater with recompiled SH-2 code, integer-scaled pixel
 
 <a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
 
-**Download the current Windows alpha, v0.2.23-alpha.** The launcher prepares the English or Spanish game and the optional HD mod from your own Saturn discs and PC edition. Campaign verification is ongoing. [Download v0.2.23-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.23-alpha) · [Release notes](docs/releases/v0.2.23-alpha.md).
+**Download the current Windows alpha, v0.2.24-alpha.** The launcher prepares the English or Spanish game and the optional HD mod from your own Saturn discs and PC edition. Campaign verification is ongoing. [Download v0.2.24-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.24-alpha) · [Release notes](docs/releases/v0.2.24-alpha.md).
 
 ## Play
 
