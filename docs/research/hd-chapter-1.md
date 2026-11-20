@@ -88,6 +88,10 @@ An offline substitution at 7× used the PC NC11 body wherever the native body co
 
 A private SDL runtime trial enabled the replacement only on the witnessed NC11 body, palette, and 11/32 transfer. In the timed-choice replay at 1440p it changed 202,645 subpixels in each of frames 20 and 35, all inside native body-owned tiles. The post-choice frame 120 was RGB-identical, and all 240 guest hashes matched with zero interpreted blocks. The trial still uses diagnostic capture and requires a renderer-owned lifetime, bounded capture and additional route controls before it can ship. Logs and paired PNGs are private under `local/work/codex-ch1-body-triage/lips-runtime-*`.
 
+Patch 0172 replaces the captured NC11 body in the confirmed timed choice, including both uncovered body pixels and the 11/32 panel transfer. Its per-buffer VDP1 ownership is confined to the native 168×144 body rectangle and discarded on a state restore or invalidated framebuffer. A prepared texture is cached by blend data and integer viewport scale. Native face parts, UI writes, and any unwitnessed blend modes stay in their normal composition. The draw requires the confirmed Saturn body hash and PC donor fingerprint.
+
+At 1440p, frames 20 and 35 changed 417,252 subpixels each, all traced to the native body writer. The 1080p pair also changed only the body area. Frame 120 after the choice matched at both sizes. All 240 guest hashes matched within each pair, including Original, missing, and altered donor controls. The three controls also matched their nine complete sampled RGB frames. This verifies the English Chapter 1 hallway choice. Other LIPS layouts and eye and mouth replacement during the overlay remain open. The build and controls are private under `local/work/codex-ch1-body-triage/lips-owned/`.
+
 
 The trace also named 62 portrait IDs after successful replacement texture upload. Each row preserves its first appearance bracket and the trace line. The separately observed viewport and blend traces can be used for renderer review.
 
