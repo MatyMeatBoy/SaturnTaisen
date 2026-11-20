@@ -78,7 +78,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 303/304 (99,6%) | Sin dato |
-| Imágenes de escena | Sin dato | 27/1145 (2,3%) |
+| Imágenes de escena | Sin dato | 30/1145 (2,6%) |
 | Escenas y transiciones | Sin dato | Sin dato |
 | Vídeos | Sin dato | Sin dato |
 | Modo táctico | Sin dato | Sin dato |

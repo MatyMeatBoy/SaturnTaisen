@@ -128,3 +128,31 @@ is 0.137/0.129/0.127 with the donor and 46.951/45.679/40.204 without it
 at each of those three fields. The comparison is confined to this
 English disc 1 witness. Private samples and replay commands are under
 `local/work/codex-th1/bg2034-live/`.
+
+## BG1007, BG1046 and BG1058 on disc 1
+
+Three independent English Chapter 1 Enhanced A/B replays at 2560×1440
+use the same 0176 runtime, bundled floral art, and the exact saved-state
+anchor for each scene. The PC directory contains only the named donor
+in the enabled run and is empty in the control. The donors' full SHA-256
+values match the scene catalog. Guest hashes and final SRAM match within
+each pair, and all six runs report zero interpreted blocks. BG1007 and
+BG1046 also match all 800 fields of their respective uninterrupted
+Chapter 1 slices. For BG1058, the resumed continuation matches the cold
+route through field 473 of 2,600 and then diverges while both A/B runs
+remain identical to one another.
+
+Each visible replacement changes only the picture rectangle
+(272,29)–(2288,1037), with matching full-frame controls before the draw.
+The BG1007 after-scene capture at field 740 also matches. The assay below
+compares (1840,100)–(2220,350) to the independent 576×320 PC subimage 0
+decode resampled bilinearly to 2016×1008. Each selected field gives the
+same per-channel mean absolute RGB errors.
+
+| Scene | Anchor field | Comparison fields | Donor RGB error | Missing donor RGB error |
+| --- | ---: | --- | --- | --- |
+| BG1007 | 77160 | 350, 450, 530 | 0.134/0.140/0.136 | 18.220/18.984/18.280 |
+| BG1046 | 94380 | 260, 310, 380 | 0.117/0.123/0.119 | 10.071/10.699/10.405 |
+| BG1058 | 103215 | 2140, 2220, 2280 | 0.090/0.080/0.076 | 12.477/11.604/9.791 |
+
+Private commands and captures are under `local/work/codex-th1/ch1-scene-draws/`.
