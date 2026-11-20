@@ -58,6 +58,10 @@ Patch 0164 composes and uploads only the strips outside the native viewport. Wit
 
 Two alternating real-time runs per executable at 1440p reduced median whole-frame work on the first transition frame from 42.45 to 38.38 ms. The fade had 61 frames above 16.67 ms in each baseline run and 22 and 55 in the candidate runs. Among subsequent frames captured by the slow-frame logger, median composition was 11.22 versus 3.68 ms. The first-frame spike is still present. Separate strict runs at 1440p and 1080p matched 1,100 guest hashes and 18 sampled RGB pairs, including fade boundaries, with zero interpreted blocks.
 
+Patch 0165 keeps the CPU-only logical surfaces prepared by existing background workers within a 40 MiB allowance. The render thread claims a prepared surface when the game first shows that background and creates the GPU texture on demand. It keeps synchronous loading when workers are disabled, their result is late, or setup failed. It uses the existing normalized source grid and adds no display-size copies. Measurements of smaller GPU allocations for the fade alone did not establish a clear first-frame gain.
+
+Three alternating real-time runs at 1440p reduced the median first entry frame from 35.81 to 29.61 ms relative to 0164 on the same profile. The backdrop operation on that frame dropped from 8.94 to 2.31 ms median. Separate 1440p and 1080p comparisons matched all 1,100 strict guest hashes and 18 sampled RGB pairs. Presentation still exceeded the frame budget on the first fade frame. Raw timings and the rejected compact-texture experiment remain local.
+
 ## Held empty dialogue position
 
 During Chapter 1, the Enhance Zoom dialogue box rose briefly when a picture
