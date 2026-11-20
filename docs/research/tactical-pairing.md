@@ -58,3 +58,27 @@ The private probes use the natural English Saturn checkpoints, ordinary controll
 
 
 At closure the workspace measured 64,223,046,686 logical bytes. The development ZIP remained 6,315,009,692 bytes. The private evidence retains the source captures, final states and the SHA-256 receipt for intermediate states removed after verification.
+
+## Live MAP15 ground review
+
+The English disc 2 Chapter 9 generator-defense route loads 176 sectors at
+FAD 219909 for MAP15 and 38 sectors at FAD 203490 for EVT15. Four retained
+battle checkpoints have the source 4 page `0x40000` fingerprint
+`388594B7DBCB32C6`. The formula proposed in PR #440 gives
+`4EF5A9A4BBA061C9` for that MAP BIN and does not reproduce the live page.
+
+A private pilot uses the observed key in the PR table and rebuilds the
+frontend, renderer and layer consumers. Two 240-field Enhanced replays of
+the same battle checkpoint at 2560×1440 differ only in whether the
+profile contains the official `MAP15_A.SPR`, fingerprint
+`67000D2031CCBEA3`. Installing it selects `stage15-hd-ground` and changes
+only the tactical viewport, (320,48)–(2240,1392), in five sampled frames.
+The two Original runs match at all five RGB captures. Each pair has
+identical guest hashes and final SRAM. These are portable replays because
+the available strict runtime is missing part of EVT15.
+
+The PC ground darkens the exposed snow and changes the street treatment.
+At field 164, a visible street region (380,1044)–(650,1160) changes from
+mean RGB (110.0,121.4,144.1) to (16.1,16.6,15.0). The map retains the
+Saturn ground pending a snow-matched replacement. The pilot and captures
+are private under `local/work/codex-map15-0188/`.
