@@ -7096,6 +7096,22 @@
       "SAKURA1/BG/BG1000.SPR"
     ],
     [
+      "SAKURA1/BG/BG1011.SPR",
+      "SAKURA1/BG/BG1013.SPR",
+      "SAKURA1/BG/BG1358.SPR",
+      "SAKURA1/BG/BG1360.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1012.SPR",
+      "SAKURA1/BG/BG1014.SPR",
+      "SAKURA1/BG/BG1359.SPR",
+      "SAKURA1/BG/BG1361.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1027.SPR",
+      "SAKURA1/BG/BG1028.SPR"
+    ],
+    [
       "SAKURA1/BG/BG1037.SPR",
       "SAKURA1/BG/BG1039.SPR"
     ],
@@ -7104,14 +7120,75 @@
       "SAKURA1/BG/BG1040.SPR"
     ],
     [
+      "SAKURA1/BG/BG1078.SPR",
+      "SAKURA1/BG/BG1091.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1079.SPR",
+      "SAKURA1/BG/BG1092.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1080.SPR",
+      "SAKURA1/BG/BG1093.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1081.SPR",
+      "SAKURA1/BG/BG1094.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1082.SPR",
+      "SAKURA1/BG/BG1095.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1083.SPR",
+      "SAKURA1/BG/BG1096.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1084.SPR",
+      "SAKURA1/BG/BG1097.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1085.SPR",
+      "SAKURA1/BG/BG1098.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1086.SPR",
+      "SAKURA1/BG/BG1099.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1087.SPR",
+      "SAKURA1/BG/BG1100.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1088.SPR",
+      "SAKURA1/BG/BG1101.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1089.SPR",
+      "SAKURA1/BG/BG1102.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1090.SPR",
+      "SAKURA1/BG/BG1103.SPR"
+    ],
+    [
       "SAKURA1/BG/BG1127.SPR",
       "SAKURA1/BG/BG1128.SPR",
       "SAKURA1/BG/BG1129.SPR"
     ],
     [
+      "SAKURA1/BG/BG1132.SPR",
       "SAKURA1/BG/BG1134.SPR",
       "SAKURA1/BG/BG1135.SPR",
       "SAKURA1/BG/BG1136.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1143.SPR",
+      "SAKURA1/BG/BG1144.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG1240.SPR",
+      "SAKURA1/BG/BG2155.SPR"
     ],
     [
       "SAKURA1/BG/BG1344.SPR",
@@ -7163,6 +7240,10 @@
       "SAKURA1/BG/BG4018.SPR"
     ],
     [
+      "SAKURA1/BG/BG4059.SPR",
+      "SAKURA1/BG/BG4060.SPR"
+    ],
+    [
       "SAKURA1/BG/BG4063.SPR",
       "SAKURA1/BG/BG4064.SPR"
     ],
@@ -7173,6 +7254,10 @@
     [
       "SAKURA1/BG/BG4092.SPR",
       "SAKURA1/BG/BG4093.SPR"
+    ],
+    [
+      "SAKURA1/BG/BG4096.SPR",
+      "SAKURA1/BG/BG4097.SPR"
     ],
     [
       "SAKURA2/EVENT/MAP00/EV00S01.SPR",
@@ -7235,7 +7320,12 @@
     ],
     [
       "SAKURA2/EVENT/MAP03/M03S08.SPR",
+      "SAKURA2/EVENT/MAP04/EV00S52.SPR",
       "SAKURA2/EVENT/MAP04/M03S08.SPR"
+    ],
+    [
+      "SAKURA2/EVENT/MAP17/EV17S05.SPR",
+      "SAKURA2/EVENT/MAP19/M19S05.SPR"
     ],
     [
       "SAKURA2/EVENT/MAP18/EV18S03.SPR",

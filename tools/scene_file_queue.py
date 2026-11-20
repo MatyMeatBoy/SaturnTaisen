@@ -68,7 +68,7 @@ def main():
         parser.error(str(error))
     with args.output.open('w', encoding='utf-8-sig', newline='') as stream:
         writer = csv.writer(stream)
-        writer.writerow(('archivo_pc', 'estado', 'referencias_saturn', 'archivos_pc_identicos', 'claves_saturn'))
+        writer.writerow(('archivo_pc', 'estado', 'referencias_saturn', 'archivos_pc_equivalentes', 'claves_saturn'))
         writer.writerows(items)
     linked = sum(state == 'hd' for _, state, *_ in items)
     print(f'{linked}/{len(items)} enlazados; {len(items) - linked} pendientes')
