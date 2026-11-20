@@ -84,3 +84,29 @@ pinned stack through the later 0161 also applied with the 0163 patch.
 The separate reported black flash did not occur in the local 2,200-frame
 English letter-to-park trace or the 1,600-frame Spanish Sakura-entrance
 trace. The floral plane remained selected throughout those replays.
+
+## Inspection hand at the viewport edges
+
+The owner showed a closed Chapter 1 doorway in Enhanced Zoom. The background
+matches BG1011. The same doorway and white hand are visible in the archived
+María inspection, with María drawn over the door. The actor-free doorway route
+confirmed the art, and its sampled checkpoints did not contain the cursor.
+
+The native hand is a 24×24 normal sprite with mode 0080, bank C520 and texture
+fingerprint EE0629C4601E9F26. Its actual ink previously counted as a scene or
+dialogue edge. Near the top and sides the fit dropped back to a grouped crop.
+At the bottom the dialogue bounds reduced the picture's integer scale.
+
+Patch 0167 uses the hand's exact command, texture, source layer and live ink
+colour to exclude its visible pixels from the framing analysis. The current
+picture and dialogue draw the in-crop hand pixels. The renderer draws the
+verified overhang in each corresponding viewport, clipped at the window edge.
+
+At 2560×1440 the 940-frame replay reached x=0, x=296, y=0 and y=200 in native
+coordinates. All 939 samples after the automated resize kept picture bounds
+(272,29,2016,1008) and dialogue bounds (362,1048,1836,402), given as x, y,
+width, height. Both center captures, all 11 Original capture pairs, and the
+940 guest hashes per mode matched. All runs reported zero interpreted blocks.
+Five Enhanced edge captures matched every predicted visible cursor texel.
+The window clipped four texels at the extreme top and 40 at the bottom.
+The pinned SDK stack through 0165 plus the candidate applied cleanly.
