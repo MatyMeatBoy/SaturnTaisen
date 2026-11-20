@@ -293,3 +293,23 @@ Every changed pixel falls on unoccluded Saturn picture content before
 replacement, so the native foreground remains exact.
 
 Disc 2 and package inclusion remain open.
+
+## BG1031 and BG1076 on English disc 1
+
+The natural Chapter 3 continuation after the stage-wing pan requests BG1031
+at FAD 139732 and BG1076 at FAD 140767, each for 23 sectors. Start from
+wing-story/end.state with matching SRAM and use after-stage-wing/input.movie.
+Both inputs are retained under local/work/codex-th1/bg2290-live.
+
+The exact runtime through patch 0188 matches all 7,200 strict guest hashes
+and SRAM with the two PC donors present or absent. Both comparisons report
+zero interpreted blocks. Five 1440p captures show BG1031 between fields
+1500 and 4500. Four show BG1076 between fields 5500 and 7000. RGB changes
+stay inside the image viewport (272,29) to (2288,1037). Every changed pixel
+falls on visible stock background before replacement and matches the
+independent bilinear decode of the corresponding PC subimage within two
+RGB levels. The Saturn foreground stays exact.
+
+BG1031 also has a separate native Chapter 5 occurrence, and BG1076 has a
+native English disc 2 Chapter 9 occurrence. Their HD draws on those
+routes and package inclusion remain open.
