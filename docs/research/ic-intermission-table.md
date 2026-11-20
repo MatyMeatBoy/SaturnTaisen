@@ -21,7 +21,7 @@ The IC0501 row reproduces the in-game measurement of patch 0144 exactly (`A5E349
 
 ## Coverage
 
-Since this work started, main gained witnessed IC03 (patch 0162) and disc-2 IC06 (patch 0183) in the same compositor. The generated table now supplies the disc-1 rows: IC0501 and IC03 reproduce their in-game hashes exactly (an independent check of the derivation), and the other 13 are offline-derived. Of those, IC06 on disc 1, IC02, IC04, IC0502, IC07-IC09 and IC1001-IC1006 (13 pictures, 13 coverage entries) have no witness and move from `paired-not-wired` to `wired-unverified`. IC01 is unchanged.
+Since this work started, main gained witnessed IC03 (patch 0162) and disc-2 IC06 (patch 0183) in the same compositor. The generated table now supplies the disc-1 rows: IC0501 and IC03 reproduce their in-game hashes exactly (an independent check of the derivation), and the other 13 are offline-derived. Of those, IC06 on disc 1, IC02, IC04, IC0502, IC07-IC09 and IC1001-IC1006 (13 pictures, 13 coverage entries) initially moved from `paired-not-wired` to `wired-unverified`. Their [controlled runtime verification](#controlled-disc-1-runtime-verification) now certifies integration. Their natural occurrences remain unverified. IC01 continues to use its own path.
 
 **Disc 2 is not covered.** The witnessed disc-2 IC06 shows the picture with its own palette (`FEBAEA7B6E7CAC67`) and a different RGB hash (`0F85EDA8CE4B247D`) than the ICLOGO derivation gives (`0D87B2D1DABE4DFD`), so the disc-2 pictures cannot be derived from the files alone; they need witnesses, and disc-2 rows stay `paired-not-wired`. The hand-kept disc-2 IC06 row stays in the runtime.
 
@@ -44,10 +44,9 @@ guest hashes, final SRAM and 43 full-window RGB pairs. All runs
 report zero interpreted blocks. Private captures and build inputs
 are in `local/work/codex-th1/ic-table-integration/`.
 
-Each new row is recorded as `wired-unverified` until a natural
-intermission replay confirms the matching PC pixels on screen.
-The 13 offline-derived rows are outside the three runtime witnesses.
-Package inclusion remains pending.
+The 13 derived rows were outside these three runtime witnesses.
+The controlled disc-1 tests below exercise the same loader and compositor
+with those plates. Package inclusion remains pending.
 
 ## Disc 2: why it is not derivable offline (TP1 follow-up)
 
@@ -57,8 +56,61 @@ Compared offline, read-only, with `tools/gen_ic_table.py build`:
 - Own-palette plate of disc-2 IC06 = `0F85EDA8CE4B247D` and own palette key = `FEBAEA7B6E7CAC67`: both equal the patch 0183 in-game witness. The ICLOGO derivation gives `0D87B2D1DABE4DFD`, which was not seen.
 - Disc-1 IC0501 and IC03 equal their witnesses only with the ICLOGO palette (own palette: `C997599B21F685B5`, `7240B16ECBB05835`, not seen). Disc-1 IC01 (patch 0107) is witnessed with its own palette.
 - The samples exhibit both palette routes (own palette: IC01 d1 and IC06 d2; ICLOGO: IC0501 d1 and IC03 d1). Which one an appearance takes is decided by code: `LOGO.SH2` carries the IC name table and differs between discs (only 1,514 bytes, mostly relocated pointers, so no disc-specific palette table is evident). Strings in all of SAKURA1 show no other module naming ICLOGO/IC files.
-- Consequence: the disc-1 IC06 row in the table (ICLOGO route) is itself unwitnessed, and the same file shows the own palette on disc 2. It stays `wired-unverified`; a disc-1 IC06 witness could be a mismatch.
+- Consequence: the disc-1 IC06 row in the table (ICLOGO route) is itself unwitnessed, and the same file shows the own palette on disc 2. Controlled disc-1 QA confirms the ICLOGO route. A natural disc-1 appearance could select a different route.
 
 `config/hd-ic-table.json` now also lists `disc2_own_palette_candidates` (own-palette `plate`, `plate_dark`, palette key per file; IC06 `reproduces-witness`, the rest `candidate-unverified`). They are not entries, not in the generated header, not wired and not counted in coverage.
 
-**Missing datum:** per IC (at least disc-2 IC02-IC09, IC1001-IC1006, and disc-1 IC06), a layer-4 palette fingerprint (`E9107F892185CCC8` = ICLOGO route, or the file palette key in the candidates list) and the RGB hash from one real intermission, or a trace/disassembly of the SH-2 routine in `LOGO.SH2` that loads the IC file and decides whether ICLOGO.BIN is read afterwards (IC0501 doc: IC file then ICLOGO.BIN). The layer-4 palette is observable with `SATRECOMP_LAYER_PROBE` at the matching checkpoint. A runtime replay of each candidate remains pending.
+**Missing datum:** per IC (at least disc-2 IC02-IC09, IC1001-IC1006, and disc-1 IC06), a layer-4 palette fingerprint (`E9107F892185CCC8` = ICLOGO route, or the file palette key in the candidates list) and the RGB hash from one real intermission, or a trace/disassembly of the SH-2 routine in `LOGO.SH2` that loads the IC file and decides whether ICLOGO.BIN is read afterwards (IC0501 doc: IC file then ICLOGO.BIN). The layer-4 palette is observable with `SATRECOMP_LAYER_PROBE` at the matching checkpoint. A natural replay of each candidate remains pending.
+
+
+## Controlled disc 1 runtime verification
+
+The 0188 runtime (SHA-256
+`fce7584605deda7351ae628f3568169436d890228aaaa5e135054ab11904ebf3`)
+replayed the English disc-1 IC03 entrance from its retained pre-reveal
+checkpoint. Twelve controlled seeds change the one guest filename
+pointer at `0601E328` from the IC03 literal to another existing literal
+in the same loader. The IC0502 seed uses the resident ISO directory
+filename at `060798A4` because the loader branch lacks that file as
+a literal. The guest reads and renders the actual Saturn discs through
+the normal loader. A separate IC02 control changes only the stock
+chapter selector byte at `00200000` from 3 to 2 and exercises the
+loader's own branch. The chapter-10 variants use the heroine selector
+at `002003A6` in the stock dispatch.
+
+All donor-only and empty-folder pairs use the same redirected seed.
+The 13 primary pairs match 9,620 strict guest fields and final SRAM.
+The independent stock-selector IC02 pair matches its own 740 guest
+fields and final SRAM. The IC02 changed-byte donor and Original
+donor/empty controls reproduce their corresponding stock captures.
+Each trace shows 38 sectors from its exact plate, followed by 7 sectors
+from ICLOGO at FAD 158639. The opaque source-4 capture uses page
+`0x44000` and palette `E9107F892185CCC8` in every case.
+
+At 2560×1440 the oracle compares 2,064,384 screen pixels per plate
+outside the protected menu and emblem. The missing-donor capture
+matches the independently probed native plane and the donor capture
+matches the independently decoded PC projection pixel for pixel.
+The protected rectangle and every pixel outside the viewport match
+the empty-folder control at each sampled stage, including the entrance.
+
+| Disc-1 plate | CD FAD | Native protected-area RGB fingerprint |
+| --- | ---: | --- |
+| IC02 | 158013 | `B00342FB671360A5` |
+| IC04 | 158089 | `8507572743127B95` |
+| IC0502 | 158165 | `0341D4C965A38F4D` |
+| IC06 | 158203 | `0D87B2D1DABE4DFD` |
+| IC07 | 158241 | `DFB47C7189EF3775` |
+| IC08 | 158279 | `5B5040D9F19D66FD` |
+| IC09 | 158317 | `226870CCA7FAE12D` |
+| IC1001 | 158355 | `5440011E910F333D` |
+| IC1002 | 158393 | `5677298DFCA35465` |
+| IC1003 | 158431 | `4060D5CB2F3D9B55` |
+| IC1004 | 158469 | `3948B2A516BA9255` |
+| IC1005 | 158507 | `C15518EF24CCF9D5` |
+| IC1006 | 158545 | `EC09407C43883AC5` |
+
+These checks establish controlled runtime integration. The chapter
+coverage register records fixture evidence and keeps the natural
+occurrence field unverified. Private commands, captures and receipts
+are under `local/work/codex-th1/ic-disc1-witness/controlled-batch/`.
