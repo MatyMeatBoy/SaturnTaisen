@@ -47,3 +47,27 @@ match the Saturn control exactly.
 
 These witnesses cover the two retained occurrences on disc 1. The private
 commands and captures are under `local/work/codex-th1/ch6-hd-plates/`.
+
+## BG2156 HD continuation draw
+
+The archived Chapter 6 continuation on English disc 1 has a stable
+BG2156 plate at FAD 149345. A 56-field strict-native A/B at 2560×1440
+started from `tp9-bg1021/chapter6-anchor/late.state` with matching SRAM
+and neutral input. The second arm added only `BG2156.SPR`. All guest
+hashes and terminal SRAM matched. At fields 8, 16, 30 and 50, all
+2,025,560 RGB pixels changed in each pair were within the existing Zoom
+rectangle at (272, 29) to (2288, 1037). Every changed control pixel
+matches the independently decoded RGB555 Saturn plate. Every changed
+donor pixel matches the independent bilinear PC plate within two RGB
+levels per channel.
+
+Both arms used the cumulative 0213 executable SHA-256
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`
+and reported zero interpreted blocks. A separate 7,200-field
+strict continuation from the same checkpoint used recorded forward input
+and sampled the route every 300 fields. It reached the already verified
+BG1021 and BG1025 scenes without another newly verified donor in the
+sampled windows. Separate Chapter 5 mansion and medicine checkpoints
+yielded no visible donor change in the sampled A/B comparisons and remain
+outside this update. The BG2156 captures and receipt are under
+`local/work/codex-witness-441-review/hud/chapter56-plates/`.
