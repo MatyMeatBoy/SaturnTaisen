@@ -8,6 +8,7 @@ import sys
 from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
+IC_TABLE_IDS = {row['id'] for row in json.loads((ROOT / 'config/hd-ic-table.json').read_text(encoding='utf-8'))['entries']}
 sys.path.insert(0, str(ROOT / 'tools'))
 import gen_item_table  # noqa: E402
 CHAPTERS = range(1, 11)
@@ -587,6 +588,12 @@ def build(root, index_dir, portrait_audit):
                            runtime_evidence='docs/research/ic0501-intermission-witness.md#enhanced-presentation')
             elif (disc, path) == (2, '/SAKURA1/IC06.BIN'):
                 row.update(status='hd', verified_in_game=True, runtime_evidence='docs/research/ic06-intermission-witness.md')
+            elif disc == 1 and path.rsplit('/', 1)[-1][:-4] in IC_TABLE_IDS:
+                # Patch 0185: disc-1 plates of the generated IC table. No in-game witness for these pictures yet.
+                row.update(status='wired-unverified', verified_in_game=False,
+                           runtime_table='config/hd-ic-table.json',
+                           reason=('in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); '
+                                   'not seen drawn in game; see docs/research/ic-intermission-table.md'))
             else:
                 row['reason'] = ('no saved state or route reaches this intermission, so its palette key, '
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')
@@ -773,7 +780,7 @@ def build(root, index_dir, portrait_audit):
         'schema': 1,
         'status': {
             'hd': 'Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.',
-            'wired-unverified': 'Reserved: in a table but not drawn by the runtime. Bodies in the runtime table are `hd` now; `verified_in_game` says whether a draw was observed.',
+            'wired-unverified': 'In the runtime table and tried whenever it appears, but nobody has recorded seeing it in game. The work is verification, not wiring.',
             'paired-not-wired': 'Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette). Check `reason` first.',
             'excluded': 'Native by design (key-colour cut-outs, blank pictures, alternate film edits or native transitions).',
             'unsupported-size': 'Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).',
