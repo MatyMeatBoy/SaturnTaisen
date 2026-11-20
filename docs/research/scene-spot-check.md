@@ -73,3 +73,39 @@ Five muted 2560×1440 replays per scene used Enhanced with donor present, Enhanc
 Both changes were confined to the inset at `(272,29)`, 2016×1008 pixels. All 2,032,128 pixels in the Chapter 6 inset matched the bilinearly resized PC image within two RGB levels per channel, with mean RGB errors of 0.116, 0.114 and 0.108. A 310×290 interior sample of Iris and her teddy bear in Chapter 1 matched the disabled capture pixel for pixel. The disabled and missing-donor Enhanced captures were identical, and each Original pair was identical. SRAM matched across all five replays in each scene. The Chapter 1 cold replay also matched the earlier earned route for all 60,500 guest frames.
 
 Private states, profiles, captures and hash logs are under `local/work/codex-th1/tp9-bg1021/`. This result covers the two English disc 1 appearances. The disc 2 listing still has no render witness. Package inclusion was outside this check.
+
+## Offline audit of five pictures from an earlier Chapter-attributed snapshot
+
+One in ten of the connected scene pictures, checked by eye. Names, status and verdicts only; no pixels are committed.
+
+### Selection rule (reproducible)
+
+The archived attributed subset had 58 distinct disc-qualified scene rows. The audit sorted their names and selected positions 10, 20, 30, 40 and 50. These five explicit selected names are recorded below.
+
+### Verdicts
+
+Two levels were tried. "In game" means the runtime drew the PC picture and a capture of it was compared with the native Saturn capture of the same scene. "Pair" means the decoded Saturn picture (`tools/decode_saturn_bg.py`) was compared by eye, side by side, with the decoded PC picture the table maps it to (`tools/decode_spred.py`); this checks the pairing data, not the runtime draw.
+
+| # | Picture | Chapter | In game | Pair (offline, contact sheet) |
+|---|---|---|---|---|
+| 10 | `1:/SAKURA1/BG1022.BIN` | 3 | no comparable capture in this audit | OK |
+| 20 | `1:/SAKURA1/BG1193.BIN` | 1 | no comparable capture in this audit | OK |
+| 30 | `1:/SAKURA1/BG2039.BIN` | 1 | no comparable capture in this audit | OK |
+| 40 | `1:/SAKURA1/BG2533.BIN` | 5 | no comparable capture in this audit | OK (same scene, the PC picture is the cropped pan) |
+| 50 | `2:/SAKURA1/BG1072.BIN` | 9 | no comparable capture in this audit | OK (same room; the PC tint is lighter than the Saturn palette) |
+
+Wrong pictures: 0, so no neighbour review was triggered.
+
+### Numbers
+
+- PC-versus-native captures for this audit: 0 of 5. [BG2533 has separate verified 1440p gameplay evidence](bg2533-pan.md).
+- Error rate of what was reached in game: undefined (nothing reached).
+- Pair level: five catalog matches and zero mismatches in the selected examples.
+
+### Why the in-game check failed
+
+BG2039 (frames 143,040-143,100) and BG1193 (253,260-253,320) lie on the chapter 1 cold route, which the input movie `local/work/rb-full/input.movie` (297,107 frames) reaches from a cold start. Headless runs with a copy of an existing build at `local/build/sakura-tp9run/` and `--pc-assets local/work/pc-cab/out-bg` with `pc_hd_backgrounds=0` did not draw any PC scene picture: no `scene picture:` trace line appeared and a PC capture was pixel-identical to the native one, in a state saved at frame 143,070 and in the cold route at frame 8,850 (BG1209, which the coverage report records as drawn). The build of 2026-11-18 predates the PC scene draw; the later builds tried either crashed at startup (t118) or ran no recompiled blocks (t116, t120). The frame 143,070 capture also shows a bedroom, not a group photo, so the guest-frame bracket in `hd-chapter-1.md` is the callback frame, a separate displayed-frame witness requires additional replay. The attempted builds provided no positive HD draw control, so these runs provide no runtime verdict for these two backgrounds.
+
+### Not verified
+
+The earlier audit adds only these five offline comparisons. The remaining spot checks stay open.
