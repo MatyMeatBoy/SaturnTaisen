@@ -144,6 +144,43 @@ was rebuilt. The local workspace measured 53,189,404,856 logical bytes with
 hard links counted once and reparse points excluded, above the 20 GB cap.
 The delivered development ZIP measures 6,315,009,692 bytes.
 
+### Published disc 1 and Spanish disc 2 Continue
+
+A cold run of the unmodified v0.2.8-alpha package on Spanish disc 1
+shows the generated ink at 2560×1440. The package's loading PNG is
+byte-identical to the repository asset. The visible 48×198 native
+window at 6× matches the generated image exactly at frames 2440, 2520,
+2600 and 2680, and at frame 2760 with the native −152 fade. The
+4,100-frame run reports zero interpreted blocks.
+
+The same package on Spanish disc 2 reads LOAD.BIN at FAD 137700 on the
+normal Continue route. Its LOAD.BIN matches English byte for byte
+(FNV-1a `25EBC7EF81D177B3`). Frames 6300, 6420 and 6540 match all 9,504
+native lettering-window pixels with the expected fade. That release
+therefore displays LOADING on disc 2 even when the Spanish patch is
+applied. The disc-1 Spanish LOAD.BIN remains distinct.
+
+Patch 0160 recognizes Spanish disc 2 by the already-read 392,024-byte
+`/SAKURA` program (FNV-1a `9784A80FEE884E93`) together with the exact
+LOAD.BIN fingerprint. Both known LOAD images contain a white sample
+at native (157,20). The compositor uses that sample to recover the
+neutral fade, then checks the source layer and all pixels in the
+lettering window before drawing.
+
+The 6,600-frame cold Continue comparisons on disc 2 match guest hashes
+and SRAM within each Spanish or English pair. The candidate renders
+the exact generated ink on Spanish Enhanced at frames 6300, 6420 and
+6540 with offsets −207, 0 and 0. The RGB changes lie inside (1136,126)–
+(1424,1314), and the earlier samples match. Spanish Original, Spanish
+Enhanced without the PNG, and English Enhanced match their respective
+controls. The 760-frame Spanish and English Enhanced disc-1
+regressions match their controls in RGB, guest hashes and SRAM. All
+runs were muted and reported zero interpreted blocks. The runtime was
+rebuilt for these comparisons. Release packaging remains separate.
+
+Private replays and captures are in
+`local/work/codex-th1/package-loading-v028/`.
+
 ### Spanish draft cards in game (T107a)
 
 The ten TITLE files in the prepared Spanish disc 1 are byte-identical to the
