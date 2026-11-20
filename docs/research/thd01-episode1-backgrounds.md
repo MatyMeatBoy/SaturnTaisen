@@ -158,3 +158,25 @@ donante coincidieron. Las pruebas fueron estrictas, con cero bloques
 interpretados. El candidato tiene SHA-256
 `8446a95bb0485a77f0d58589d64b1c034d8d41d3ab7424ff01708bf6b4660b19`.
 El parche se distribuye en [v0.2.21-alpha](../releases/v0.2.21-alpha.md).
+
+### Capas de BG1016 en la entrada a la escalera
+
+El estado 8851 de la continuación `bg1116-route-relay` del disco 1
+contiene dos copias completas de las celdas BG1016 en los
+desplazamientos serializados `0x3B48A4` y `0x3CA0A4`. Los dibujos
+aislados de NBG0 y NBG2 son idénticos dentro de (16,8)–(304,152)
+y ambos usan la paleta `07B8E8D0D41C119F`. Aunque BG1017 comparte
+esa paleta, sus celdas exactas no aparecen en el estado.
+
+El estado 9011 conserva BG1016 en `0x3B48A4` y cambia la segunda
+copia por BG1116. En el primer dibujo de ese estado, la capa
+superior de la escena muestra NBG2 y el actor, con 26.176 píxeles
+atribuidos a NBG2 y ninguno atribuido a NBG0.
+
+En la comparación Enhanced de 72 cuadros desde 8851, el candidato
+0252 produjo capturas a 2560×1440 idénticas con y sin BG1016 y los
+72 hashes del juego coincidieron. Las pruebas aisladas de ambas
+capas terminaron en AOT estricto, con cero bloques interpretados.
+Esta secuencia permite investigar la transición con dos capas a
+partir del fondo exacto. La verificación HD del disco 1 sigue
+pendiente.
