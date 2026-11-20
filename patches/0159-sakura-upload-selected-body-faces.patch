@@ -1,0 +1,161 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -956,17 +956,50 @@
+     // the face is small sprites whose bytes are frames that follow the bitmap, in the same order as the parts of
+     // the PC picture. Both are redrawn from the PC picture; anything else inside the body rectangle means native.
+     struct BodyPixels {uint64_t pcAsset=0;std::vector<unsigned> originalIndex;unsigned bodyW=0,bodyH=0;std::vector<uint32_t> body;std::vector<unsigned> partW,partH;std::vector<std::vector<uint32_t>> parts;std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;};
++    struct BodyTexture {
++        SDL_Texture* texture = nullptr;
++        bool tried = false;
++    };
+     struct BodyHd {
+-        bool tried=false;SDL_Texture* body=nullptr;unsigned bodyW=0,bodyH=0;
++        bool tried=false;BodyTexture body;unsigned bodyW=0,bodyH=0;
+         bool cutout=false;SDL_Texture* maskTexture=nullptr;std::optional<uint64_t> maskHash;
+         std::vector<std::array<int,3>> maskRuns;
+         VerifiedBodyFaces verified;bool verifiedAssets=false, nc81NeckUnderlay=false;std::vector<unsigned> originalIndex;
+-        std::future<BodyPixels> pending;std::vector<SDL_Texture*> parts;std::vector<unsigned> partW,partH,runCount;
++        std::future<BodyPixels> pending;std::vector<BodyTexture> parts;std::vector<unsigned> partW,partH,runCount;
+         std::vector<uint8_t> nc;std::unordered_map<uint64_t,long> offsets;
+         std::vector<uint32_t> bodyPixels;std::vector<std::vector<uint32_t>> partPixels;
+         std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;std::unordered_map<uint64_t,int> matches;std::unordered_map<unsigned,std::array<float,2>> refinedPos;
+     };
+     std::vector<BodyHd> bodyHd(kBodyCount);
++    auto prepareBodyTexture = [&](BodyTexture& image, const std::vector<uint32_t>& pixels, unsigned w, unsigned h) {
++        if (image.tried) return image.texture;
++        image.tried = true;
++        if (!w || !h || pixels.size() != size_t(w)*h) return image.texture;
++        auto* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, int(w), int(h));
++        if (!texture) return image.texture;
++        if (!SDL_UpdateTexture(texture, nullptr, pixels.data(), int(w*4))) {
++            SDL_DestroyTexture(texture);
++            return image.texture;
++        }
++        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
++        SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_LINEAR);
++        image.texture = texture;
++        return image.texture;
++    };
++    auto resetBodyTextures = [&] {
++        auto reset = [](BodyTexture& image) {
++            if (image.texture) SDL_DestroyTexture(image.texture);
++            image = {};
++        };
++        for (auto& body : bodyHd) {
++            reset(body.body);
++            for (auto& part : body.parts) reset(part);
++            if (body.maskTexture) SDL_DestroyTexture(body.maskTexture);
++            body.maskTexture = nullptr;
++            body.maskHash.reset();
++            body.maskRuns.clear();
++        }
++    };
+     struct RegisteredBodyTexture { SDL_Texture* texture = nullptr; bool tried = false; };
+     std::array<RegisteredBodyTexture, registered_body::kEntries.size()> registeredTextures{};
+     auto resetRegisteredBodies = [&] {
+@@ -2196,14 +2229,6 @@
+                                         AtlasFingerprint(st.nc)==0x8127C7DF8AA7D6EAull &&
+                                         decoded.pcAsset==0xD518AFE0D9E5D944ull &&
+                                         decoded.bodyW==416 && decoded.bodyH==320;
+-                                    auto make=[&](const std::vector<uint32_t>& pixels,unsigned w,unsigned h)->SDL_Texture* {
+-                                        if(!w || !h || pixels.size()!=size_t(w)*h)return nullptr;
+-                                        auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,int(w),int(h));
+-                                        if(!texture)return nullptr;
+-                                        if(!SDL_UpdateTexture(texture,nullptr,pixels.data(),int(w*4))) {SDL_DestroyTexture(texture);return nullptr;}
+-                                        SDL_SetTextureBlendMode(texture,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_LINEAR);
+-                                        return texture;
+-                                    };
+                                     // Verified face recipes may also pin a position in the PC body atlas.
+                                     if (st.verifiedAssets) for (const auto& frame:st.verified.frames) {
+                                         if (frame.pcX<0 || frame.pcY<0) continue;
+@@ -2214,24 +2239,30 @@
+                                             unsigned(frame.pcY)+decoded.partH[index]<=decoded.bodyH)
+                                             st.refinedPos.try_emplace(index,std::array{float(frame.pcX),float(frame.pcY)});
+                                     }
+-                                    st.body=make(decoded.body,decoded.bodyW,decoded.bodyH);st.bodyW=decoded.bodyW;st.bodyH=decoded.bodyH;
+-                                    st.bodyPixels=decoded.body;st.partPixels=decoded.parts;st.partSig=std::move(decoded.partSig);st.partOpaque=std::move(decoded.partOpaque);
+-                                    for(size_t i=0;i<decoded.parts.size();i++) {
+-                                        st.parts.push_back(make(decoded.parts[i],decoded.partW[i],decoded.partH[i]));
++                                    st.bodyW=decoded.bodyW;st.bodyH=decoded.bodyH;
++                                    st.bodyPixels=std::move(decoded.body);st.partPixels=std::move(decoded.parts);
++                                    st.partSig=std::move(decoded.partSig);st.partOpaque=std::move(decoded.partOpaque);
++                                    st.parts.resize(st.partPixels.size());
++                                    for(size_t i=0;i<st.partPixels.size();i++) {
+                                         st.partW.push_back(decoded.partW[i]);st.partH.push_back(decoded.partH[i]);
+                                         if(i>0 && decoded.partW[i]==decoded.partW[i-1] && decoded.partH[i]==decoded.partH[i-1])st.runCount.back()++;
+                                         else st.runCount.push_back(1);
+                                     }
+-                                    if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body: %s usable=%d parts=%zu runs=%zu",entry.disc,st.body!=nullptr,st.parts.size(),st.runCount.size());fputc(10,stderr);}
++                                    if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body: %s parts=%zu runs=%zu",entry.disc,st.parts.size(),st.runCount.size());fputc(10,stderr);}
+                                 }
++                                if (!st.bodyPixels.empty()) prepareBodyTexture(st.body, st.bodyPixels, st.bodyW, st.bodyH);
++                                const auto preparePart = [&](size_t index) {
++                                    return index < st.parts.size() &&
++                                        prepareBodyTexture(st.parts[index], st.partPixels[index], st.partW[index], st.partH[index]);
++                                };
+                                 const int bx=bodySprite->x,by=bodySprite->y,bw=spriteWidth(*bodySprite),bh=spriteHeight(*bodySprite);
+                                 const size_t bodyEnd=0x610+size_t(entry.stride)*144;
+-                                bool ok=st.body && !st.nc.empty() && st.nc.size()>bodyEnd && bw>0 && bh>0 && !st.parts.empty();
++                                bool ok=st.body.texture && !st.nc.empty() && st.nc.size()>bodyEnd && bw>0 && bh>0 && !st.parts.empty();
+                                 std::vector<std::pair<long,const PresentationSprite*>> found;
+                                 std::vector<std::array<int,4>> keep;
+                                 std::optional<std::array<int,4>> nativeNc81Neck;
+                                 const char* why=nullptr;
+-                                if(!ok)why=st.body?"no PC parts":"PC picture not ready";
++                                if(!ok)why=st.body.texture?"no PC parts":"PC picture not ready";
+                                 if(ok)for(const auto& sp:planes.sprites) {
+                                     if(&sp==bodySprite || (sp.command.words[0]&15)>7 || sp.pixels.empty())continue;
+                                     const int sw=spriteWidth(sp),sh=spriteHeight(sp);
+@@ -2277,7 +2308,7 @@
+                                                 if((offset-secondStart)%size) {layoutOk=false;break;}
+                                                 ordinal=long(st.runCount[0])+(offset-secondStart)/size;
+                                             }
+-                                            if(ordinal>=long(st.parts.size()) || !st.parts[size_t(ordinal)]) {layoutOk=false;break;}
++                                            if(!preparePart(size_t(ordinal))) {layoutOk=false;break;}
+                                             layoutPart[n]=int(ordinal);
+                                         }
+                                     }
+@@ -2402,7 +2433,7 @@
+                                             if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body frame %ux%u -> PC part %d (best %.2f, second %.2f)",fw,fh,part,rawBest,rawSecond);fputc(10,stderr);}
+                                         }
+                                         frameIndex++;
+-                                        if(part<0 || !st.parts[size_t(part)]) {
++                                        if(part<0 || !preparePart(size_t(part))) {
+                                             // No clear PC part: this frame stays as the native sprite over the HD body (its expression is
+                                             // right, only its sharpness is not). The body is drawn if at least one frame was matched.
+                                             keep.push_back({sp->x,sp->y,spriteWidth(*sp),spriteHeight(*sp)});
+@@ -2807,7 +2838,7 @@
+                             const auto& st=bodyHd[size_t(bodyDraw.slot)];
+                             const float scale=imageTarget.w/288.0f;
+                             const SDL_FRect bodyTarget{imageTarget.x+(bodyDraw.x-16)*scale,imageTarget.y+(bodyDraw.y-8)*scale,bodyDraw.w*scale,bodyDraw.h*scale};
+-                            SDL_Texture* bodyTexture=bodyDraw.mask.empty()?st.body:nullptr;
++                            SDL_Texture* bodyTexture=bodyDraw.mask.empty()?st.body.texture:nullptr;
+                             if(!bodyDraw.mask.empty() && st.bodyPixels.size()==size_t(st.bodyW)*st.bodyH) {
+                                 auto& ms=bodyHd[size_t(bodyDraw.slot)];
+                                 if(!ms.maskTexture) {
+@@ -2921,7 +2952,7 @@
+                                 if(refined!=mutableState.refinedPos.end()) {
+                                     partTarget.x=bodyTarget.x+refined->second[0]*kx;partTarget.y=bodyTarget.y+refined->second[1]*ky;
+                                 }
+-                                if(!drawBodyTexture(st.parts[face.ordinal],partTarget) && !bodyDraw.mask.empty())
++                                if(!drawBodyTexture(st.parts[face.ordinal].texture,partTarget) && !bodyDraw.mask.empty())
+                                     restoreNativeBody(face.x,face.y,face.w,face.h);
+                             }
+                             // Face frames with no clear PC part stay as the native sprite, drawn again over the HD body.
+@@ -3576,6 +3607,7 @@
+                         texture = nullptr;
+                     }
+                     resetRegisteredBodies();
++                    resetBodyTextures();
+                     closeWindow();
+                     preset = wanted;
+                     if (!openWindow(wide, high, full)) {
+@@ -3659,6 +3691,7 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                resetBodyTextures();
+                 panelWidth=pictureMixWidth=shadowMixWidth=0;
+                 [[fallthrough]];
+             case SDL_EVENT_RENDER_TARGETS_RESET:
