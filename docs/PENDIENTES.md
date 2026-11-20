@@ -8,7 +8,7 @@ Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can 
 
 ## How to take a pending item
 
-1. `git fetch` and read this list on `origin/main`, plus open PRs (`gh pr list`). Treat an actively worked branch or PR as taken. Historical PRs listed in the HD queue are retained as evidence for the available lots.
+1. Run `git fetch origin` and use the queue from current `origin/main`. Run `python tools/shard_claims.py --available-hd` to list open HD work by priority, excluding reservations in the queue and IDs identified in open PRs. Check active worker branches before taking a lot. Historical PRs listed in the HD queue are retained as evidence for available lots.
 2. Choose the first `free` row (those marked `after Txx` wait for that row) by priority (P0 before P1…) whose **Type** can be resolved with what is available:
    - `agent`: code, synthetic tests, or documentation, with no private data.
    - `local`: requires the owner's `local/` (states, prepared discs); only on their PC and without uploading anything from `local/`.
@@ -16,10 +16,10 @@ Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can 
    - `decision`: needs a response from the owner before touching code.
 3. If the row does not fit in ~15 minutes, do the minimum verifiable part and split the rest into new rows.
 4. Work from `origin/main`, branch `pendientes/<id>-<topic>`, reusing the single auxiliary copy allowed by `AGENTS.md`. If it is busy, coordinate and wait; do not create more worktrees. Never mix uncommitted work from another copy.
-5. Open a draft PR as soon as the change is reviewable. Name the shard, mark outstanding checks and keep test results in that PR as they arrive. Workers can pick independent shards across the project. Record the final status when the change is verified.
+5. Name the shard ID in the branch and PR title. Reserve it on the queue branch with `python tools/shard_claims.py --claim THD38 --who <worker> --branch <branch>` and share the reservation with the coordinator. Submit the PR when the lot and its closure checks are complete. Run `python tools/shard_claims.py --release-stale --dry-run` to preview queue reservations idle for more than 30 minutes. Check active workers and open PRs before reassigning released work.
 6. Priority above all: blockers or progress loss > chapter 1 validation > presentation > decoration.
 
-Integration rules confirmed by the user on 2026-11-18: Claude and the workers send PRs early; coordinator Codex reviews, corrects, verifies and integrates them. A draft can be reviewed while tests or another independent shard are in progress. Do not ask for authorization again for each routine integration. An open PR claims the row; check its branch before duplicating work.
+Workers can pick independent lots across the project. The coordinator reviews, corrects, verifies and integrates complete PRs and records whether the result is implemented, tested and packaged. An open PR claims its lot; check its branch before duplicating work.
 
 Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, original PC assets, `local/`, or the personal ZIP; v0.1.0, v0.1.5, and v0.1.2 are immutable; Saturn has priority over PC; no partial test is presented as a complete chapter or campaign.
 
