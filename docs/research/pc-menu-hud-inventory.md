@@ -207,7 +207,7 @@ Private inputs, states and controls remain under `local/work/codex-th1/load-arro
 
 The register (`config/hd-chapter-coverage.json`, category `menus-hud`) now carries the runtime-drawn menu/HUD pictures, and `tools/build_hd_progress.py` takes the `hud-menus` integrated count from it. The map is explicit in `tools/hd_chapter_coverage.py` (`SYSTEM_HUD_DRAWS`, `SYSTEM_HUD_EXCLUDED`; item cards come from the same selection as `tools/gen_item_table.py`). A picture counts once per PC image, whatever the disc.
 
-Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 51 distinct PC item pictures of `config/hd-item-map.json` = 229. Integrated: 57.
+Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 51 distinct PC item pictures of `config/hd-item-map.json` = 229. Integrated: 59.
 
 | Piece | PC images | Patch / table | State |
 | --- | --- | --- | --- |
@@ -217,13 +217,14 @@ Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted
 | Load menu selection arrows | SISTEM subimages 8 and 9 (of 45) | 0150, `system_brackets.h` | verified in the English load menu on both discs |
 | Save confirmation frame | TUIKA_W subimage 0 | 0197, border strips | verified in the English disc 1 save confirmation |
 | Load-menu banner and control | SISTEM subimages 1 and 4 | 0206, rail masks | English discs 1 and 2 and Spanish disc 1 load menu |
+| Save confirmation and management | SISTEM subimages 2 and 5 | 0213, rail masks | English save and Spanish load confirmation |
 | Controller bindings and inventory | SISTEM subimage 12 and OPTION subimage 1 | 0209, rail masks | English controls and English/Spanish inventory |
 | Options and System frames | SISTEM subimages 11 and 14 | 0205, rail masks | English and Spanish disc 1 Options and English System |
 | Timed LIPS and dialogue frames | WINDOW subimages 0 and 1 | 0202, rail masks | English disc 1 Sakura choice and dialogue |
 | Long Day choice frame | WINDOW subimage 2 | 0198, rail mask | English disc 2 room choice |
 | KAO | 394, excluded here | portrait pack | counted in portraits |
 
-Open (172 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 3, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 38, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 2 (needs layout), WINDOW 3; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
+Open (170 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 3, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 36, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 2 (needs layout), WINDOW 3; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
 
 ## TW5 wiring audit: which open families the existing mechanisms can reach
 
@@ -337,3 +338,13 @@ Both overlays require the exact command, source texture, palette, winning layer 
 Strict 1440p A/B on English controls, English inventory and Spanish inventory matched all 168 guest fields and final SRAM. Independent reconstruction matched all twelve RGB captures. Original and missing, corrupted and disabled donor profiles matched. Positive load, Options, System, WINDOW and Iris/Ogami crosschecks also matched.
 
 Local receipts are in `local/work/codex-witness-441-review/hud/controls-inventory-ab/receipt.json`, `local/work/codex-witness-441-review/hud/controls-inventory-menu-regression/receipt.json` and `local/work/codex-witness-441-review/hud/controls-inventory-release-gate/receipt.json`. Package inclusion remains open.
+
+## HD save and load confirmation controls
+
+Patch 0213 uses SISTEM image 2 for the narrow confirmation banner and image 5 for the three-button save management panel. The PC donors are 288 × 48 and 384 × 64 and register at 2× to native commands at (16,184) and (112,178), respectively. The masks preserve the confirmation text, the Copy, Del and Back labels, button wells, arrows, file rows and disc icons.
+
+The English Save screens blend at 31:1, then use a native −16 RGB offset. The Spanish load confirmation uses the same blend at neutral offset. The renderer matches the exact native command, the save plate and palette, the winning layer, the lower layer and each composed rail color. It recovers the darkened lower input only where there was no clipping, and applies the native offset to the HD composite.
+
+Natural uninstrumented 1440p A/B passed 56 strict guest fields per case and exact final SRAM on the English confirmation and management screens and Spanish load confirmation. Independent reconstruction matched all twelve captures. Original and missing, corrupt and disabled donor controls matched. The prior Load, Options and System regressions and the standard release gate also matched. The final composition additionally matched 504 guest fields and 26 RGB captures across these three menu routes and both natural Chapter 5 cut-outs (BG3132 and BG3133).
+
+Local receipts are in `local/work/codex-witness-441-review/hud/save-compact-ab/receipt.json`, `local/work/codex-witness-441-review/hud/save-compact-menu-regression/receipt.json` and `local/work/codex-witness-441-review/hud/save-compact-release-gate/receipt.json`. Package inclusion remains open.
