@@ -91,7 +91,7 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 | --- | --- | --- | --- | --- | --- |
 | THD26 | P1 | local | open | **Vídeos de montaje alternativo.** MOVIE004/009/011/020/102/105, ambos discos donde corresponda. | Validar ruta natural, puntos de corte y partes Saturn; conservar audio y montaje nativos. |
 | THD27 | P1 | local | open | **Vídeos con sustitución completa.** 44 clips, lotes por capítulo y disco. Preparación con la edición PC del jugador. | Validar inicio, skip, salida, audio, subtítulos cuando correspondan y fallback. |
-| THD28 | P0 | local | open · TH2 #558 activo | **Rutas y transiciones del disco 1.** Episodios 1–5, victoria de episodio 2 primero. Concordar cada aparición con el índice, sin contar de nuevo archivos. | Registro de apariciones por ruta reproducible, mapa/novela, combates, fundidos y salida natural. |
+| THD28 | P0 | local | open · TW7 #566 activo | **Rutas y transiciones del disco 1.** Episodios 1–5, victoria de episodio 2 primero. Concordar cada aparición con el índice, sin contar de nuevo archivos. | Registro de apariciones por ruta reproducible, mapa/novela, combates, fundidos y salida natural. |
 | THD29 | P1 | local | open · ruta Iris activa | **Rutas y transiciones del disco 2.** Episodios 6–10, seguimiento Iris hasta 0904, variantes de final y escenas de vuelta. | Registro de apariciones por ruta reproducible y evidencia por etapa, sin duplicar activos. |
 | THD30 | P0 | local | open · MAP14 replay activo | **Bloqueos de ejecución y rendimiento.** EVT15 00209C7A, replay continuo de MAP14, tirones al hablar/entrar al mapa o escena, carga de HD ajustada a resolución. | Regresión estricta y medición antes/después por ruta y clase de carga, priorizar picos y audio. |
 | THD31 | P1 | local | open | **Paquete y preparación limpia.** Instalación previa, programa de preparación, RecompLauncher, discos/idiomas propios, HD opcional y manifiesto. | Reproducir desde un perfil limpio, sin recursos originales en el ZIP, con SHA, fuente y notas comprobadas. |
@@ -101,7 +101,7 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 
 Antes de asignar un lote, actualizar referencias y ejecutar `python tools/shard_claims.py --release-stale --minutes 30 --dry-run`. Contrastar con PR, commits y pruebas que estén corriendo. Si no hay actividad durante más de 30 minutos, devolver el lote a la cola con `--release-stale --minutes 30` y conservar rama, PR y evidencia. Una tarea grande puede tener lotes libres y otros ocupados.
 
-El barrido de esta actualización no encontró tokens `CLAIM` vencidos. Los PR históricos #440, #441, #442, #447, #457, #460 y #464 llevan más de 30 minutos sin actividad y quedan como evidencia de la cola anterior. Sus lotes pendientes quedan disponibles en THD06, THD07, THD15–17 y THD28. El PR #558 de TH2 tiene actividad reciente y su lote sigue ocupado.
+El barrido de esta actualización no encontró tokens `CLAIM` vencidos. Los PR históricos #440, #441, #442, #447, #457, #460 y #464 llevan más de 30 minutos sin actividad y quedan como evidencia de la cola anterior. Sus lotes pendientes quedan disponibles en THD06, THD07, THD15–17 y THD28. El PR #558 de TH2 quedó integrado en #560. El PR #566 reactivó la ruta TW7 de la batalla del episodio 2 en THD28 y usa #464 como base. Se reserva solo esa ruta mientras tenga actividad. El resto de THD28 queda disponible. Las ramas y los PR previos conservan sus pruebas parciales.
 
 ## List
 
