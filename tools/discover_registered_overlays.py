@@ -160,6 +160,13 @@ REGISTRY['MINISHOT_LONG_DAY'] = dict(
     evidence='Spanish disc 2 Long Day: shooting gallery entry, practice and 95-point reward replays')
 
 
+REGISTRY['MINICOOK_LONG_DAY'] = dict(
+    file='/SAKURA3/MINICOOK.BIN', base=0x00204000, bytes=735624,
+    sha256='ab7e2ab5db0ebcb4394776a18e9572a2ab4b3f9d5708772e3ba0defcd8381e36',
+    observed_ranges='minicook-long-day-aot-ranges.json',
+    evidence='English disc 1 Long Day: cooking gallery start menu replay')
+
+
 def registered_module(name,raw,profile,registry=REGISTRY):
     spec=registry.get(name)
     if spec is None:raise ValueError('Overlay has no verified registry entry: '+name)
