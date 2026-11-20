@@ -14,3 +14,14 @@ For the two-layer room view, frame 11999 contains the exact BG1050 cells at VDP2
 The scene evidence distinguishes disc reads, VRAM and CRAM residency, and display. The cold boot's black viewport shares the BG1341 image fingerprint before the chapter is selected and is outside the chapter scope. The existing `0801FCE.BIN` entry remains resident. Later chapter routes, tactical display and the complete HD exit test remain open.
 
 The archived English checkpoint is under `local/work/later-chapter-audit/chapter-sweep/bank-8-battle-1-strict/`. Spanish evidence is under `local/work/guion-es/pruebas/es-all/d2-ep8-continue` and `d2-ep8-largo`. The muted English replay and the comparisons are retained under `local/work/codex-th8-attribution/`.
+
+## HD room draw
+
+The English disc 2 frame-11999 checkpoint supports a 180-field Enhanced
+A/B on 0188 at 2560×1440. Installing the PC BG1050 background preserves
+all guest hashes and final SRAM, with zero interpreted blocks. All four
+sampled images change only inside the Zoom rectangle (272,29)–(2288,1037).
+The 960,719 changed pixels per sample agree with the independent PC
+decode within two RGB levels. The 1,052,226 inset pixels that differ
+from the standalone native background remain exact. The private repro
+is under `local/work/codex-th1/ch7-ch8-hd-plates/`.

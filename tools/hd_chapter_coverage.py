@@ -174,6 +174,9 @@ SCENE_DRAWS = {
     (2, '/SAKURA1/BG1160.BIN'): (10, 'docs/research/th10-native-attribution.md#bg1160-hd-draw'),
     **{(1, f'/SAKURA1/{name}.BIN'): (6, 'docs/research/th6-native-attribution.md#hd-background-draws')
        for name in ('BG1199', 'BG1025')},
+    **{(1, f'/SAKURA1/{name}.BIN'): (7, 'docs/research/th7-native-attribution.md#hd-background-draws')
+       for name in ('BG1268', 'BG2080')},
+    (2, '/SAKURA1/BG1050.BIN'): (8, 'docs/research/th8-native-attribution.md#hd-room-draw'),
     (2, '/SAKURA1/BG2238.BIN'): (9, 'docs/research/bg2238-still.md'),
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and

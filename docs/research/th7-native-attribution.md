@@ -31,3 +31,16 @@ Selecting File 1 from the original `save7.bkr` labels the save Episode 7 at fram
 `WKL10.BIN` and `UNIT10.BIN` enter the catalog as resident. The trace also reads `MAP10.BIN` at FAD 233232. No full copy was found in either WRAM bank and this strict replay stops before display. The separate [live ground review](tactical-pairing.md#live-map10-and-map19-ground-review) shows MAP10 and records why it retains the native ground. `FACE10.BIN` residence establishes a loaded bank with no individual portrait attribution in this test.
 
 The strict chapter exit, displayed tactical map and units, and the proposed later EVT22/EVE207 route remain open. The archived relay, cold save, screenshots and memory state are local under `local/work/codex-eve207/`; the disc comparison receipt is under `local/work/codex-th7-attribution/`.
+
+## HD background draws
+
+BG1268 starts from field 7,500 of a relay that matches all 7,800
+archived guest hashes. BG2080 starts from the retained medical dialogue
+state. English disc 1 Enhanced A/Bs on 0188 at 2560×1440 match 180 guest
+hashes and final SRAM per scene, with zero interpreted blocks.
+
+The four frames sampled in each case changed only inside
+(272,29)–(2288,1037). All 1,966,267 changed BG1268 pixels and 1,984,551
+changed BG2080 pixels per sample match the independently decoded PC
+background within two RGB levels. The private captures are under
+`local/work/codex-th1/ch7-ch8-hd-plates/`.
