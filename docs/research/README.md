@@ -187,3 +187,6 @@ One line per document. The JSON files are the machine-readable evidence for thei
 
 - [Offline crop measurements for size mismatches](size-candidates.md)
 - [VDP2 line reuse](vdp2-line-reuse-design.md)
+
+- [Bounded film video spans](bounded-film-video-spans.md)
+- [VDP presentation planes: lazy clearing result](vdp-presentation-planes.md)
