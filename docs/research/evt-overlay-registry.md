@@ -174,3 +174,21 @@ All 10,380 strict fields and final SRAM matched the portable references
 with zero interpreted blocks. The local replays and build recipe are in
 `local/work/codex-th1/map14-late-aot`. This verifies the five listed
 segments. The updated profile shipped in [v0.2.15-alpha](../releases/v0.2.15-alpha.md). The remainder of the battle is open.
+
+### MAP14 turn-ten Boar attack and Cover
+
+The natural English disc 2 replay from the Kanna targeting checkpoint
+includes the enemy approach, Boar's fire attack and Iris covered by
+Ogami. The previous strict runtime stopped at 00204708.
+
+The expanded profile adds 511 complete variants whose bytes match the
+pinned EVT14 module. All 3,600 strict guest fields and final SRAM match
+the retained portable recording. The regenerated 1,008 EVT14 variants
+and the 676,369-variant seed match the 677,377 linked variants exactly.
+The executable SHA-256 is `0303ee0f7a29c66c18afeae24ef70848120ebe56cfa9aa0ae3a3de6b4325df36`.
+
+The same executable reproduced the NC3285 and NC3286 controls from
+patch 0224, including 110 strict fields, SRAM and ten 1440p captures.
+The replay and private build evidence are under
+`local/work/codex-th1/map14-boss-aot`. Later turns and package inclusion
+are pending.
