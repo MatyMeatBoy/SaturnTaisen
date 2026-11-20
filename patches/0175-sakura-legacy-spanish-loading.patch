@@ -1,0 +1,36 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -497,14 +497,18 @@
+             }
+             if(!backdrop.files.empty())backdrops.push_back(std::move(backdrop));
+         }
+-        bool spanishDisc2 = false;
++        bool spanishOpening = false;
+         for(const auto& spec:kScreenBackdrops) {
+             std::vector<uint8_t> source;
+             if(!port.discFiles.Read(spec.resource,source))continue;
+-            // The opening backdrop already reads /SAKURA, whose Spanish disc-2 bytes
+-            // distinguish the locale even though its LOAD.BIN is shared with English.
+-            if (source.size() == 392024 && std::string_view(spec.id) == "OPENING")
+-                spanishDisc2 = AtlasFingerprint(source) == 0x9784A80FEE884E93ull;
++            // Older Spanish disc 1 and Spanish disc 2 share the English LOAD.BIN.
++            // Identify those Spanish releases by the opening program already read here.
++            if (std::string_view(spec.id) == "OPENING" &&
++                (source.size() == 391712 || source.size() == 392024)) {
++                const uint64_t openingFingerprint = AtlasFingerprint(source);
++                spanishOpening = (source.size() == 391712 && openingFingerprint == 0xE65F2131FA510155ull) ||
++                                 (source.size() == 392024 && openingFingerprint == 0x9784A80FEE884E93ull);
++            }
+             const auto palette=ScreenPalette(source,spec);if(palette.empty())continue;
+             Backdrop item;item.screen=true;item.id=spec.id;item.palette=spec.paletteHash;
+             item.layer=spec.layer;item.anchored=spec.anchored;
+@@ -523,7 +527,7 @@
+             const uint64_t loadingFingerprint =
+                 item.texture && item.id == "LOADING" ? AtlasFingerprint(source) : 0;
+             if (loadingFingerprint == 0x59883EB3F920F2FAull ||
+-                (spanishDisc2 && loadingFingerprint == 0x25EBC7EF81D177B3ull)) {
++                (spanishOpening && loadingFingerprint == 0x25EBC7EF81D177B3ull)) {
+                 for (const auto& folder : {std::filesystem::path(port.opt.settingsPath).parent_path(),
+                                           std::filesystem::path(SDL_GetBasePath())}) {
+                     const auto file = folder / "art/screen-backgrounds/LOAD-es-lettering-v1.png";
