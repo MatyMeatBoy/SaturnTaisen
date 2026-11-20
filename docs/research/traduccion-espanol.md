@@ -323,3 +323,12 @@ Yuri opens the music gallery from the second-floor hall in the unlocked Día lar
 A natural Spanish disc-2 route reaches Yuri's localized invitation and then the soundtrack menu. A 750-field strict replay checks all five tabs, moves the selection and exits. At 1440p the 16 paired captures change only the label regions. Three samples after exit match RGB and final SRAM matches. A separate two-track selection issues the same six ordered CD reads. Its PCM has the same duration but differs in sample timing after an initial matching segment.
 
 The published v0.2.18-alpha runtime also booted the rebuilt Spanish disc 2 from the completed save. It reached the translated gallery, navigated all five tabs, moved the highlight and exited over 14,190 strict fields. Both disc layers round-trip through xdelta and match the recorded digests. Package inclusion is pending.
+
+
+## Repairing prepared installations
+
+The portable launcher reviews its prepared-file receipt once on startup. The receipt records the release version and the relative names and sizes of prepared disc files, generated Spanish title centers, saved presentation previews, the HD indices, derived backgrounds and portraits, and the player's retained PC donors. Healthy launches do not run the preparation helper or hash the prepared discs.
+
+Updates and missing or truncated files trigger preparation. The helper can restore a missing CUE or receipt after verifying the cached track checksum and can recover audio from an intact sibling language track. It uses the paired English track to rebuild Spanish or a prepared Japanese track to recover English. When necessary it looks in the remembered source and the installation's roms folder. Spanish Enhanced title centers are regenerated from their exact disc pairs. Previously recorded presentation previews are recreated when missing.
+
+HD derivations can be rebuilt from the complete retained PC inventory. If the donor inventory itself is incomplete, the helper needs the original PC edition and verifies that the replacement includes all previously recorded donor paths before publishing it. The repair retains saves, language, and settings. When source data is unavailable, the launcher reports which source is needed under Options. A damaged or missing file shipped by the release may require extracting a clean package over the installation. A same-size alteration is outside the startup metadata check.

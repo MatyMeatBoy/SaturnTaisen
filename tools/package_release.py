@@ -428,7 +428,7 @@ Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Tai
 
 Esta versión no certifica toda la campaña ni todos los mandos; el cambio automático de disco y RetroAchievements siguen pendientes. Consulta las notas de versión.
 
-En la carpeta solo verás `SaturnTaisen.exe`, `roms` y `data`. Dentro de `data`, `user/` contiene tus partidas, ajustes y `logs/`, y `game/` y `hd-resources/` lo ya preparado. Al descomprimir una versión nueva encima, el lanzador revisa lo que ya tienes y regenera las traducciones, tarjetas y retratos que necesiten actualizarse. Conserva esas carpetas para mantener tus partidas, ajustes y archivos preparados.
+En la carpeta solo verás `SaturnTaisen.exe`, `roms` y `data`. Dentro de `data`, `user/` contiene tus partidas, ajustes y `logs/`, y `game/` y `hd-resources/` lo ya preparado. El lanzador revisa los archivos preparados al abrirse y vuelve a preparar lo necesario tras una actualización o si faltan archivos. Si necesita alguno de tus discos, indica cuál en Opciones. Conserva esas carpetas al descomprimir una versión nueva encima.
 ''',encoding='utf-8',newline='\n')
     files=release_file_manifest(destination,allowed_art,allowed_patches,required_data)
     manifest={'version':(ROOT/'VERSION').read_text().strip(),
