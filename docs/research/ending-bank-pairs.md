@@ -192,3 +192,18 @@ records are in `local/work/codex-ending-0183`. This evidence covers the
 specified 0183 candidate, these English checkpoints and the opening check.
 Other heroine endings, a complete campaign and package inclusion remain
 open.
+
+## Composition model and wiring status per bank (TP3c pattern audit)
+
+How the game composes an ending, from the documented captures: the backdrop is a VDP2 bitmap layer fed from one `*_CG.BIN` record (palette in CRAM, 8-bit cells in VRAM). The sepia and color group photographs use two different layers and palette banks (CRAM `0x200` and `0x400`) at the same `(0,16,320,176)` rectangle. Credit text, character insets and the localized `Fin` are separate layers drawn over or around that rectangle. The theatre strip records (0, 1, 9) occupy `(0,24,320,144)` or a black-surround aperture and are shared with moving insets. So only the record that fills an opaque, unobstructed rectangle can be replaced; patch 0137 already does that with the recogniser pattern of the scene pictures (palette fingerprint, layer ownership, native RGB signature, native fallback).
+
+Measured from `config/hd-ending-bank-map.json` and patch 0137: the seven banks hold 76 records (4 GE + 6 x 12). Records 6 and 7 are byte-identical in the six heroine banks (same palette and cell fingerprints `A19A0B84409A3AB8`/`FCAFB7040FA7C5ED` and `BD98B23C7D99D3DD`/`F660240773226223`), so the single table of patch 0137 already covers 12 of the 72 heroine records with two keys and one donor (`END_SA.SPR`, subimages 6 and 7, donors decode identically in all six `END_*.SPR`). Records 8 and 11 (route-specific) stay native by decision (the PC redraws the mullions and the Sakura mouth). Records 0-5, 9 and 10 are strips, insets, petals and the Fin mark with different PC geometry. The four GE records are whole-screen variants with no composition witness.
+
+The register now reflects this instead of a blanket `paired-not-wired`: disc 2 SA is `hd` (records 6 and 7 verified), disc 2 AI/KA/KO/MA/SU are `wired-unverified` (same keys, no replay of that route), disc 1 banks and GE stay `paired-not-wired` with a specific reason. The generator derives the keys from patch 0137, so the status cannot drift from the runtime.
+
+No state, input movie or save on this machine reaches any ending (the private `local/work/codex-th1` evidence is not present here; only the Sakura and Sumire backup RAMs exist, and the ending blocks need the 353-variant AOT build of patch 0183's candidate). Nothing was built or replayed in this shard; no runtime patch was added, because a table-only refactor would add no coverage.
+
+What is missing and who does it:
+- Owner (discs, natural play): continuation replays of the Kaede, Sumire (Sumire backup RAM exists), Maria, Iris and Kohran endings through the group photos with the 0183 candidate, to move five `wired-unverified` entries to `hd`.
+- Owner or integration desk: a GE (theatre) ending witness with viewport and fade evidence; then a generated GE table keyed by the four palette fingerprints.
+- Integration desk: a disc-1 decision (distinct ENDING module, no witness) and package inclusion.

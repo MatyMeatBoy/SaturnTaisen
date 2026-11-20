@@ -2098,9 +2098,11 @@
           "1:/SAKURA1/BG1002.BIN": {
             "association": "observed",
             "cold_run_frame": 74500,
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
             "pc": "SAKURA1/BG/BG1002.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1006.BIN": {
             "association": "observed",
@@ -2194,9 +2196,11 @@
           "1:/SAKURA1/BG1116.BIN": {
             "association": "observed",
             "cold_run_frame": 135500,
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
             "pc": "SAKURA1/BG/BG1116.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1119.BIN": {
             "association": "observed",
@@ -5141,6 +5145,14 @@
             "pc": "SAKURA1/BG/BG1176.SPR",
             "status": "hd"
           },
+          "2:/SAKURA1/BG2053.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#bg2053-on-disc-2",
+            "pc": "SAKURA1/BG/BG2053.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg2053-on-disc-2",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2093.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2093-dream-transition.md",
@@ -5388,7 +5400,7 @@
     "unknown": "Pairing or integration is not established by the input catalogs.",
     "unpaired": "The catalog records a rejected or absent counterpart.",
     "unsupported-size": "Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).",
-    "wired-unverified": "Reserved: in a table but not drawn by the runtime. Bodies in the runtime table are `hd` now; `verified_in_game` says whether a draw was observed."
+    "wired-unverified": "In the runtime table and tried whenever it appears, but nobody has recorded seeing it in game. The work is verification, not wiring."
   },
   "unassigned": {
     "bodies": {
@@ -11849,11 +11861,9 @@
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15280,87 +15290,113 @@
           2,
           3
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The four GE pictures are whole-screen theatre variants; the ending viewport, fade and overlay layers have no live witness, so no replacement is selected.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
       "1:/SAKURA1/IC02.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0200.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC04.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0400.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC0502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0502.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC06.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0600.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC07.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0700.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC08.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0800.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC09.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0900.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1001.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1002.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1003.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1004.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1005.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1006.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/KA_CG.BIN": {
         "association": "unknown",
@@ -15368,11 +15404,9 @@
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15382,11 +15416,9 @@
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15396,11 +15428,9 @@
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15410,11 +15440,9 @@
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15424,11 +15452,9 @@
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15552,16 +15578,20 @@
       "2:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/BG0000.BIN": {
         "association": "unknown",
@@ -17274,11 +17304,6 @@
       "2:/SAKURA1/BG2052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2052.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2053.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2053.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2054.BIN": {
@@ -19161,7 +19186,7 @@
           2,
           3
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The four GE pictures are whole-screen theatre variants; the ending viewport, fade and overlay layers have no live witness, so no replacement is selected.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -19258,72 +19283,93 @@
       "2:/SAKURA1/KA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/KO_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/MA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/SA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "runtime_evidence": "docs/research/ending-bank-pairs.md",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/SU_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/TITLE1.BIN": {
         "association": "unknown",
