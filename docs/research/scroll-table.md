@@ -85,3 +85,26 @@ record the draw and the native timing.
 
 - BG2338 (320x160, PC `BG2238.SPR` subimage 17, 0.943 whole-picture): **stays native for now, not in this table.** It shares palette `5DEDEF54BF2F059D` with the BG2238 still but has its own cell key `9E591B2DBD322D38`, a fixed-cell (not variant-B) layout and a different PC subimage and box than the BG2238 crop (8,28,544,272 of subimage 0). It is not a pan, so it would need its own still path like patch 0123 (own palette, cell hash, viewport check and crop). Nothing records where, on which layer or how long the Saturn shows it: the replays that read BG2338 do not exist (FAD 128990 was never read in the archived continuations and 1,062 native screenshots do not contain it). Wiring it blind would guess the viewport, so the first step is a replay that reaches it; the keys above are what that still path needs.
 - BG1257 (456x144), BG1280 (512x144) and BG2247 (288x296) stay native. The default 2x rule fails by size (PC 1181x320, 1241x320) and a free per-window crop does not align: BG1257 scores 0.863 minimum and 0.879 mean, BG1280 0.796 and 0.852 (the first about 110 native pixels correlate 0.81 to 0.82), BG2247 0.376 and 0.549. The PC compositions differ from the Saturn ones, and the [witnessed theatre pan of BG2247](bg2247-native-pan.md) shows the PC perspective moves the architectural landmarks. The generator prints the reason for each in the `skipped` map of `config/hd-scroll-pictures.json`.
+
+## BG2172 on English disc 1
+
+The natural Chapter 3 continuation after the stage-wing pan requests the
+native BG2172 picture at FAD 149644 for 42 sectors. The active 0309.BIN
+script asks for it at file offset 0x0c7c. Start with the retained
+wing-story/end.state and its matching backup. Play the archived
+after-stage-wing/input.movie from local/work/codex-th1/bg2290-live.
+
+At 2560 × 1440, the exact runtime through patch 0188 draws the PC crop
+inside the existing viewport (272,29) to (2288,1037). Thirteen frames
+from 800 to 1200 match all 41,472 native viewport pixels to the
+independent Saturn decode, tracking the pan from y=136 to y=0.
+For each offset an independent bilinear decode of BG2172.SPR
+subimage 0 matches all 2,032,128 displayed pixels within two RGB
+levels per channel. At frame 1000, native y=46 maps to PC y=97.
+The six surrounding captures at 500–750 and 1300–1450 match
+exactly with the donor absent or present.
+
+The two current-runtime replays match all 1,500 strict guest hashes
+and SRAM with zero interpreted blocks. The first 1,446 fields also
+match the older archived guest log, covering the full picture witness.
+Disc 2 and package inclusion remain open.
