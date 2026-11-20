@@ -308,6 +308,7 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 EXACT_BODY_DRAWS = {
+    (1, '/SAKURA1/NC26.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc26-body-in-0602'),
     (1, '/SAKURA1/NC95.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc95-upstairs-body'),
     (1, '/SAKURA1/NC3173.BIN'): (1, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
     (2, '/SAKURA1/NC3285.BIN'): (10, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
@@ -335,6 +336,8 @@ EXACT_BODY_DRAWS = {
 
 CHAPTER_WITNESSES = {
     **EXACT_BODY_DRAWS,
+    **{(1, f'/SAKURA1/{name}.BIN'): (6, 'docs/research/hd-chapter-6.md#west-staircase-and-file-0602')
+       for name in ('BG4351', 'NC24', 'NC42')},
     (2, '/SAKURA1/IC08.BIN'): (8, 'docs/research/ic-intermission-table.md#ic08-on-english-disc-2'),
     (2, '/SAKURA1/NC3018.BIN'): (9, CHAPTER9_ROUTE_REPORT),
     (1, '/SAKURA1/NC90.BIN'): (5, CHAPTER5_ROUTE_REPORT),
