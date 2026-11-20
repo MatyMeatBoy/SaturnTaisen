@@ -1,0 +1,54 @@
+diff --git a/port/tactical_ground.h b/port/tactical_ground.h
+--- a/port/tactical_ground.h
++++ b/port/tactical_ground.h
+@@ -14,7 +14,7 @@
+     uint32_t groundPage;
+     unsigned worldWidth, worldHeight, mapEndX;
+     const char* centreLayout;
+-    bool usesPlacements = false;
++    unsigned placementTileSize = 0;
+ };
+ 
+ // MAP01_A, ordinal zero, uses two source pixels per world unit.
+@@ -30,7 +30,12 @@
+ 
+ inline constexpr Entry kStage04{
+     "SAKURA2/MAP/MAP04/MAP04_A.SPR", 1839340, 0xB9A138FDA90D0DEFull,
+-    0x451ACDDB5522070Eull, 0x40000, 1024, 1024, 1024, "stage04-hd-ground", true,
++    0x451ACDDB5522070Eull, 0x40000, 1024, 1024, 1024, "stage04-hd-ground", 64,
++};
++
++inline constexpr Entry kStage05{
++    "SAKURA2/MAP/MAP05/MAP05_A.SPR", 2361801, 0xF3F7198CA32391D8ull,
++    0xA18A5122F7C18729ull, 0x40000, 1024, 1024, 1024, "stage05-hd-ground", 256,
+ };
+ 
+ inline constexpr Entry kStage06{
+@@ -47,6 +52,7 @@
+     if (signature == kStage01.mapSignature) return &kStage01;
+     if (signature == kStage02.mapSignature) return &kStage02;
+     if (signature == kStage04.mapSignature) return &kStage04;
++    if (signature == kStage05.mapSignature) return &kStage05;
+     if (signature == kStage06.mapSignature) return &kStage06;
+     if (signature == kStage21.mapSignature) return &kStage21;
+     return nullptr;
+@@ -61,8 +67,8 @@
+ inline std::vector<uint32_t> AssembleGroundTiles(std::span<const uint8_t> bytes,
+                                                   std::span<const PcSprite> images,
+                                                   const Entry& entry) {
+-    constexpr unsigned kTile = 64, kWorldTile = kTile / 2;
+-    if (bytes.size() < 32 || !entry.worldWidth || !entry.worldHeight ||
++    const unsigned kTile = entry.placementTileSize, kWorldTile = kTile / 2;
++    if (bytes.size() < 32 || !kWorldTile || kTile % 2 || !entry.worldWidth || !entry.worldHeight ||
+         entry.worldWidth % kWorldTile || entry.worldHeight % kWorldTile)
+         return {};
+     const auto word = [&](size_t at) { return uint32_t(bytes[at]) << 8 | bytes[at + 1]; };
+@@ -124,7 +130,7 @@
+     std::vector<PcSprite> images;
+     std::string error;
+     if (!DecodePcSprites(bytes, images, error)) return {};
+-    if (entry.usesPlacements) return AssembleGroundTiles(bytes, images, entry);
++    if (entry.placementTileSize) return AssembleGroundTiles(bytes, images, entry);
+     if (images.size() != 1 || images.front().index != 0 || images.front().width != entry.worldWidth * 2 ||
+         images.front().height != entry.worldHeight * 2)
+         return {};

@@ -3183,6 +3183,15 @@
             "scope": "source-4 ground only",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA2/MAP05.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/map05-pc-ground.md",
+            "pc": "SAKURA2/MAP/MAP05/MAP05_A.SPR",
+            "runtime_evidence": "docs/research/map05-pc-ground.md",
+            "scope": "source-4 ground only",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-units": {
@@ -19852,13 +19861,6 @@
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP03/MAP03_A.SPR",
         "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 626 images (tiles or frames) and needs an assembler",
-        "status": "paired-not-wired"
-      },
-      "1:/SAKURA2/MAP05.BIN": {
-        "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
-        "pc": "SAKURA2/MAP/MAP05/MAP05_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 46 images (tiles or frames) and needs an assembler",
         "status": "paired-not-wired"
       },
       "1:/SAKURA2/MAP07.BIN": {
