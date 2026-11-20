@@ -187,6 +187,9 @@ NARRATIVE_CUTOUT_DRAWS = {
 } | {
     (1, f'/SAKURA1/{name}.BIN'): (chapter, 'docs/research/chapter-one-cutout-followup.md')
     for chapter, name in ((1, 'BG4088'), (1, 'BG4165'), (1, 'BG4171'), (3, 'BG4114'))
+} | {
+    (disc, f'/SAKURA1/{name}.BIN'): (chapter, 'docs/research/iris-other-cutouts.md')
+    for disc, chapter, name in ((2, 9, 'BG3036'), (2, 9, 'BG4093'), (2, 8, 'BG3139'), (1, 5, 'BG4084'))
 }
 
 SCENE_DRAWS = {
