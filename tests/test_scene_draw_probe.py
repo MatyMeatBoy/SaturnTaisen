@@ -39,26 +39,27 @@ class ParseTests(unittest.TestCase):
         )
         self.assertEqual(trace['shared'], ['SAKURA1/BG/BG1016.SPR'])
         self.assertEqual(probe.drawn_files(trace), [])
-        self.assertFalse(probe.verdict(trace, 0, True)[0])
+        self.assertFalse(probe.verdict(trace, 0)[0])
 
     def test_native_run(self):
         trace = probe.parse_trace(NATIVE)
         self.assertFalse(trace['zoom'])
         self.assertEqual(probe.drawn_files(trace), [])
-        drew, message = probe.verdict(trace, 0, True)
+        drew, message = probe.verdict(trace, 0)
         self.assertFalse(drew)
         self.assertIn('Zoom scene path never ran', message)
         self.assertIn('native', message)
 
     def test_verdicts(self):
         trace = probe.parse_trace(DRAWN)
-        self.assertTrue(probe.verdict(trace, 1000, False)[0])
-        self.assertIn('trace only', probe.verdict(trace, 0, True)[1])
-        drew, message = probe.verdict(probe.parse_trace(NATIVE), 5, False)
+        self.assertTrue(probe.verdict(trace, 1000)[0])
+        self.assertEqual(probe.verdict(trace, 0)[0], False)
+        self.assertIn('trace only', probe.verdict(trace, 0)[1])
+        drew, message = probe.verdict(probe.parse_trace(NATIVE), 5)
         self.assertFalse(drew)
         self.assertIn('no scene picture trace line', message)
         unusable = probe.parse_trace('scene picture: SAKURA1/BG/BG1.SPR usable=0\nscene zoom: x\n')
-        self.assertIn('did not load', probe.verdict(unusable, 0, True)[1])
+        self.assertIn('did not load', probe.verdict(unusable, 0)[1])
 
     def test_count_changed(self):
         try:
