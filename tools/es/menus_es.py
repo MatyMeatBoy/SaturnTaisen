@@ -210,6 +210,31 @@ def in_place(rows, words, face, size, base, gamma=1.3):
         print(f'    {text!r}: {w}px en {n} tiles, compresión {sq:.2f}')
 
 
+def inventario(files: Files, preview):
+    """Localize the two 32px prompts and keep the final bracket tile."""
+    import hashlib
+    import fuente
+
+    prog = files['/SAKURA']
+    offset, limit = 0x59700, 0x59878
+    native = decompress(bytes(prog[offset:limit]))
+    if hashlib.sha256(native).hexdigest() != '20d1665dbd57c9e2c41f39a4aeeeb16c3fef36aed389093b951f69ce3773f4ed':
+        raise SystemExit('Inventario: tira de botones inesperada')
+
+    rows = strip_from(native, 0, 5)
+    previous_levels = fuente.LEVELS
+    try:
+        fuente.LEVELS = [1, 6, 9]
+        for first, label in ((0, 'Opc.'), (2, 'Volver')):
+            draw_word(rows, first, 2, label, 'CENTURY.TTF', 12, 12, align='center')
+    finally:
+        fuente.LEVELS = previous_levels
+    localized = bytearray(native)
+    strip_into(localized, 0, rows)
+    put_stream(prog, offset, limit, bytes(localized), 'Inventario')
+    preview.append(('Inventario: Opc. / Volver', rows, 5))
+
+
 def opciones(files: Files, preview):
     """Options and controller screens (SAKURA streams). Part tables untouched: same tiles per word."""
     prog = files['/SAKURA']
@@ -706,6 +731,7 @@ def main():
     preview = []
     intermedio(files, preview)
     titulo(files, preview)
+    inventario(files, preview)
     opciones(files, preview)
     carga(files, preview)
     estado(files, preview)

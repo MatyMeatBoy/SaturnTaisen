@@ -348,3 +348,9 @@ The English Save screens blend at 31:1, then use a native −16 RGB offset. The 
 Natural uninstrumented 1440p A/B passed 56 strict guest fields per case and exact final SRAM on the English confirmation and management screens and Spanish load confirmation. Independent reconstruction matched all twelve captures. Original and missing, corrupt and disabled donor controls matched. The prior Load, Options and System regressions and the standard release gate also matched. The final composition additionally matched 504 guest fields and 26 RGB captures across these three menu routes and both natural Chapter 5 cut-outs (BG3132 and BG3133).
 
 Local receipts are in `local/work/codex-witness-441-review/hud/save-compact-ab/receipt.json`, `local/work/codex-witness-441-review/hud/save-compact-menu-regression/receipt.json` and `local/work/codex-witness-441-review/hud/save-compact-release-gate/receipt.json`. Package inclusion remains open.
+
+## Spanish inventory buttons
+
+The Spanish Chapter 1 inventory showed the English Option and Return prompts. The four native 16 × 16 text tiles match the decompressed /SAKURA stream at `0x59700` on disc 1 and `0x59838` on disc 2. The fifth tile contains the brackets. The new recipe redraws the prompts as Opc. and Volver with the native indices 1, 6 and 9. The compressed result fits the existing 376-byte span. Disc 2 relocation resolves one range for this isolated change. Both outputs preserve every byte outside the stream and the complete bracket tile.
+
+A controlled Spanish inventory state with the new strip renders both prompts at 2560 × 1440 in the current strict runtime. The four RGB samples change only the prompt area. The separate Item footer comes from the 224 × 128 panel at disc 1 /SAKURA stream `0x5940C` and still needs localization. Cold disc and package verification remain open.
