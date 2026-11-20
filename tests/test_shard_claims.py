@@ -11,7 +11,7 @@ ROWS = ['| ID | P | Type | Status | Pending |', '| --- | --- | --- | --- | --- |
 class ShardClaims(unittest.TestCase):
     def test_claim_goes_into_the_status_cell(self):
         lines = sc.add_claim(ROWS, 'TW1', 'ana', 'pendientes/tw1', T0)
-        self.assertEqual(lines[2], '| TW1 | P1 | shard | CLAIM[ana|pendientes/tw1|2026-11-19T12:00:00Z] open | first job |')
+        self.assertEqual(lines[2], r'| TW1 | P1 | shard | CLAIM[ana\|pendientes/tw1\|2026-11-19T12:00:00Z] open | first job |')
         self.assertEqual(lines[3], ROWS[3])
 
     def test_a_claimed_row_cannot_be_claimed_again(self):
@@ -32,8 +32,24 @@ class ShardClaims(unittest.TestCase):
         lines = sc.add_claim(ROWS, 'TW1', 'ana', 'b', T0)
         out, released = sc.release_stale(lines, T0 + datetime.timedelta(minutes=31), 30, lambda b: None)
         self.assertEqual(released, [('TW1', 'ana', 'b', 31)])
-        self.assertIn('open · released (stale claim of ana, 2026-11-19T12:00:00Z)', out[2])
-        self.assertNotIn('CLAIM[', out[2])
+        self.assertEqual(out, ROWS)
+
+    def test_compact_hd_rows_restore_the_original_status(self):
+        rows = ['| THD38 | open | BG2057 | trace |']
+        claimed = sc.add_claim(rows, 'THD38', 'ana', 'codex/thd38', T0)
+        self.assertEqual(claimed, [r'| THD38 | CLAIM[ana\|codex/thd38\|2026-11-19T12:00:00Z] open | BG2057 | trace |'])
+        self.assertEqual(sc.release_stale(claimed, T0 + datetime.timedelta(minutes=31), 30, lambda b: None)[0], rows)
+
+    def test_available_hd_filters_completed_and_reserved_rows(self):
+        rows = ['| THD38 | open | BG2057 | trace |',
+                '| THD10 | P0 | local | implemented | NC3517 | route |',
+                '| THD01 | P0 | local | open | Episode 1 | trace |',
+                '| THD40 | open | tactical HUD | capture |',
+                '| THD41 | CLAIM[ana|codex/thd41|2026-11-19T12:00:00Z] open | inventory | capture |']
+        self.assertEqual(sc.available_hd(rows, {'THD40'}),
+                         [(0, 'THD01', 'Episode 1'), (1, 'THD38', 'BG2057')])
+        with self.assertRaises(ValueError):
+            sc.add_claim(rows, 'THD10', 'ana', 'codex/thd10', T0)
 
     def test_recent_commit_keeps_an_old_claim(self):
         lines = sc.add_claim(ROWS, 'TW1', 'ana', 'b', T0)
