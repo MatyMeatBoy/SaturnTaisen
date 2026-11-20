@@ -113,6 +113,9 @@ REGISTRY={
 REGISTRY['EVT04_MAP04'] = dict(
     REGISTRY['EVT04'], observed_ranges='evt04-map04-aot-ranges.json',
     evidence='Disc 1 Chapter 3 second battle, the 180-frame MAP04 camera witness')
+REGISTRY['EVT16_MAP15'] = dict(
+    REGISTRY['EVT16'], observed_ranges='evt16-map15-aot-ranges.json',
+    evidence='Disc 2 Chapter 9 theater defense, the 540-field MAP15 movement witness')
 
 
 def registered_module(name,raw,profile,registry=REGISTRY):

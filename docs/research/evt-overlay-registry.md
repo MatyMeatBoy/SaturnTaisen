@@ -38,3 +38,25 @@ python tools/discover_registered_overlays.py --image "local/prepared/disc1/Track
 The example uses the 674,535-variant seed from the [ending AOT recipe](ending-bank-pairs.md#rebuild-the-observed-aot-coverage). The narrow profile checks the complete module before extracting the offset and byte-count pairs in `config/evt04-map04-aot-ranges.json`. The regular `EVT04` selection still performs eager analysis. Both selections can share a single ISO file read and output database.
 
 The 94-variant sorted delta has SHA-256 `dde8a84b96b654777b5752187a3e9550e609d21326367d0f65c6ad501230f39e` in LF `ADDRESS UPPERCASE_HEX` form. Feeding that delta to the SDK generator emitted byte-identical sources to the private strict relink. All 180 guest hashes and SRAM matched the interpreter on the resulting 674,629-variant build, with zero interpreted blocks. This is camera-witness coverage for the retained checkpoint. Full battle coverage and package inclusion remain open. Opcode bytes, checkpoints, movies, and binaries stay local.
+
+## Bounded MAP15 movement on disc 2
+
+The Chapter 9 theater-defense route reads EVT15 during setup, then
+EVT16 at FAD 203528. At the retained Sakura movement checkpoint, the
+first 28,672 bytes of live code at `00204000` exactly match
+`/SAKURA2/EVT16.BIN`. The 77,764-byte module SHA-256 is
+`300a92c2cd5dd3ba8b6b57350684b47a1074142a8eb1a83d869bad0acf51ea7f`.
+
+The interpreter replay recorded 68 variants absent from the 674,629
+base. All 68 match their complete spans in EVT16, including the old
+strict miss at `00209E62`. The sorted delta SHA-256 is
+`2c9e32da88064c2050fc32190e85aad50d60a7cfcb5e4559bd9f690e0a19b109`.
+A private relink with 674,697 variants produced the same 540 guest hashes
+and final SRAM as the interpreter, with zero interpreted blocks.
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT16_MAP15 --seed-blocks local/work/map04-aot/blocks.txt --output local/work/map15-aot
+```
+
+The profile covers this movement replay. The full battle, cold entry
+through EVT15, and package inclusion remain open.
