@@ -26,7 +26,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 
 ## HD pendiente por recurso
 
-Base publicada [v0.2.16-alpha](releases/v0.2.16-alpha.md). El [progreso generado](HD_PROGRESS.md) sigue siendo el registro de cifras. Esta cola separa el trabajo por recurso y prueba; las filas históricas conservan sus referencias y evidencias. Cada shard admite lotes pequeños nombrados por donante físico, ruta o capa. Antes de tomarlo, buscar PR y ejecuciones activas en ese mismo lote.
+Base de runtime publicada [v0.2.16-alpha](releases/v0.2.16-alpha.md). La actualización [v0.2.16.1-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.16.1-alpha) distribuye los rótulos españoles del panel táctico y el inventario. El [progreso generado](HD_PROGRESS.md) sigue siendo el registro de cifras. Esta cola separa el trabajo por recurso y prueba; las filas históricas conservan sus referencias y evidencias. Cada shard admite lotes pequeños nombrados por donante físico, ruta o capa. Antes de tomarlo, buscar PR y ejecuciones activas en ese mismo lote.
 
 | Área | Pendiente en esta base |
 | --- | --- |
@@ -105,8 +105,8 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 
 | Shard | Estado | Lote | Cierre comprobable |
 | --- | --- | --- | --- |
-| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. |
-| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Incluir estos rótulos y el scroll CARGANDO en la regresión del paquete. |
+| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. Ocho rótulos de la ficha de unidad distribuidos en v0.2.16.1-alpha. Quedan los nombres de ataques y las otras pantallas. |
+| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Los tres rótulos se distribuyen en v0.2.16.1-alpha. LOAD.BIN conserva su SHA-256 en ambos discos. La regresión visual del scroll CARGANDO en la nueva versión sigue pendiente. |
 
 Mantener el idioma español según el perfil. Registrar la fuente de cada rótulo (texto del juego, textura o interfaz del port) y dejar un PR por familia de activos o pantalla. La traducción sola no suma al porcentaje de integración HD.
 

@@ -255,10 +255,10 @@ pixel for pixel. The two Info samples differ by 61,740 pixels each,
 confined to the eight label boxes. The visible bars, values, units,
 names and terrain compare exactly.
 
-Spanish patch distribution remains pending. Other WKL panels, attack
+A natural 16,000-field Spanish disc 1 run followed by 280 strict fields of ordinary inputs also opens the translated panel at 1440p. Other WKL panels, attack
 names and live disc-2 coverage stay open. Local receipts are under
 `local/work/codex-th1/thd22-es-audit`.
 
 ## Installer patches for tactical status and inventory
 
-The two Spanish installer deltas include the eight tactical status labels in all 27 WKL banks and the three inventory labels from /SAKURA on both discs. The normal installer updated both prepared English v2.1 discs with subtitled video in an isolated install. The resulting Spanish images matched the candidate SHA-256 hashes. The regenerated manifest changes only the Spanish records, and LOAD.BIN compares byte for byte against the previous Spanish source on both discs. The full package and runtime regression remain pending.
+The two Spanish installer deltas include the eight tactical status labels in all 27 WKL banks and the three inventory labels from /SAKURA on both discs. The normal installer updated both prepared English v2.1 discs with subtitled video in an isolated install. The resulting Spanish images matched the candidate SHA-256 hashes. The regenerated manifest changes only the Spanish records, and LOAD.BIN compares byte for byte against the previous Spanish source on both discs. The validated deltas are distributed in [v0.2.16.1-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.16.1-alpha). The release uses the v0.2.16-alpha executable. The ZIP passed CRC and SHA-256 checks for the 158 manifested files.
