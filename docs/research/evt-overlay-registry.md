@@ -66,5 +66,9 @@ python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track
 ```
 
 The profile covers the eight tested segments. Cold entry before the
-retained deployment state, the rest of the battle, and package
-inclusion remain open.
+retained deployment state and the rest of the battle remain open.
+
+The [Windows v0.2.11-alpha release](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.11-alpha)
+includes these 591 variants. Its combined 675,229-block build with patch
+0193 matched all 18,900 reference guest fields and final SRAM again.
+The distributed executable also passed a 120-field strict Spanish boot.
