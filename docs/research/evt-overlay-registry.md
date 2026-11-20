@@ -148,3 +148,29 @@ python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track
 ```
 
 The sample covers 2,400 strict fields from deployment via File 1, 900 of motion, 1,200 of enemy camera and 300 of targeting, with zero interpreted blocks, exact portable guest hashes and matching SRAM. Further battles and alternate branches are outside this receipt.
+
+### MAP14 enemy turns and attacks through turn five
+
+The initial EVT14 profile stopped strict-native execution in five later
+natural English disc 2 replays. The first misses were at 0020A38E,
+00204968, 002049A0, 00204914 and 00204DDC. The portable recordings
+matched the retained guest hashes and final SRAM.
+
+| Segment | Strict-native fields after the update |
+| --- | ---: |
+| Enemy approach and turn | 4,500 |
+| Iris attack and following movement | 1,800 |
+| Kohran attack in turn two | 1,080 |
+| Sakura attack in turn four | 1,500 |
+| Kohran attack in turn five | 1,500 |
+
+The five segments record 71 additional complete spans. Every byte
+matches the pinned English disc 2 EVT14 module. The updated registry
+reproduces all 497 observed EVT14 variants from the previous
+676,369-variant seed. The linked executable (53c5576f017e9dada21499677f36d6435e845b0c6c3e337849d8257b14eea33c)
+contains exactly the regenerated 676,866 address-and-byte variants.
+
+All 10,380 strict fields and final SRAM matched the portable references
+with zero interpreted blocks. The local replays and build recipe are in
+`local/work/codex-th1/map14-late-aot`. This verifies the five listed
+segments. The remainder of the battle and package inclusion are pending.
