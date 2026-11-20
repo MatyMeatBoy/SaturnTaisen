@@ -70,7 +70,7 @@ La reatribución de #592 da 38 filas de imagen HD conectadas para buscar en capt
 | THD34 | open | Episodio 8: BG1001, BG1195, BG2004, BG2007 | [Trazas de salto](research/hd-chapter-8.md#re-attribution-with-the-evt-overlay-build). |
 | THD35 | open | Episodio 9: BG1143, BG2017, BG2031, BG2091 | [Trazas de salto](research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build). [BG2021 verificado](research/hd-chapter-9.md#bg2021-on-the-earned-iris-route). |
 | THD36 | partial | Episodio 9: BG2092, BG2156, BG2160, BG2236 | [BG2092 con niebla y fundido verificados a 1440p](research/hd-chapter-9.md#bg2092-mist-transition). BG2156 ya suma globalmente por su aparición en el episodio 6. |
-| THD37 | open | Episodio 10: BG1284, BG1292, BG1293, BG2020, BG2023, BG2025, BG2026 | [Trazas de salto](research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build). [BG2026 verificado a 1440p](research/hd-chapter-10.md#bg2026-under-bg3026). Empaquetado pendiente. |
+| THD37 | done | Episodio 10: BG1284, BG1292, BG1293, BG2020, BG2023, BG2025, BG2026 | [Trazas de salto](research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build). [BG2026 verificado a 1440p](research/hd-chapter-10.md#bg2026-under-bg3026). Los siete donantes del disco 2 están integrados y verificados en juego. BG2023 y BG2026 quedan pendientes de empaquetar. |
 | THD38 | open | Episodio 10: BG2111, BG2163–BG2166 | [BG2046](research/hd-chapter-10.md#bg2046-ending-scene) y [BG2057](research/hd-chapter-10.md#bg2057-behind-nc3057) verificados. |
 | THD39 | open | Episodio 10: BG2167, BG2168, BG2248, BG2284–BG2286, BBG218 | Mismas trazas. Si BBG218 requiere otra composición, continúa en THD06. |
 
