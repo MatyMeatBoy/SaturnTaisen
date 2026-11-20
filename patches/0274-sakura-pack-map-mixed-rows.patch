@@ -1,0 +1,87 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -417,6 +417,7 @@
+         const Backdrop* backdrop = nullptr;
+         std::array<int, 10> geometry{};
+         std::vector<MixedPixel> pixels;
++        std::vector<SDL_Vertex> packedRows;
+     };
+     MixedLayerCache panelMixCache, pictureMixCache, shadowMixCache;
+     const auto invalidateMixedLayers=[&] {
+@@ -2834,6 +2835,11 @@
+                         const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr,
+                         bool replaceIntermission=false, const SceneHdPixels* sceneFade=nullptr) -> bool {
+                     const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
++                    const auto drawLayer=[&]() {
++                        if(cache.packedRows.empty())return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
++                        return SDL_RenderGeometry(renderer,cachedTexture,cache.packedRows.data(),
++                            static_cast<int>(cache.packedRows.size()),nullptr,0);
++                    };
+                 if(selectedBackdrop && planes.panelMix.size()==320*224 &&
+                    planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+                    size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
+@@ -2876,7 +2882,7 @@
+                             }
+                             if (same) {
+                                 ++mixHits;
+-                                return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
++                                return drawLayer();
+                             }
+                         }
+                         bool mayMix=replaceIntermission || sceneFade;
+@@ -2974,11 +2980,44 @@
+                                     ? std::gcd(std::gcd(scale,backScale),std::gcd(offset,size)) : 1;
+                             };
+                             const int stepX=step(fit.x-backX,fit.w), stepY=step(fit.y-backY,fit.h);
+-                            const int uploadW=fit.w/stepX, uploadH=fit.h/stepY;
++                            const int uploadW=fit.w/stepX;
++                            int uploadH=fit.h/stepY;
++                            cache.packedRows.clear();
+                             if (stepX!=1 || stepY!=1) {
+                                 for (int y=0;y<uploadH;++y)
+                                     for (int x=0;x<uploadW;++x)
+                                         pixels[size_t(y)*uploadW+x]=pixels[size_t(y*stepY)*fit.w+x*stepX];
++                            }
++                            if(mapFade && backOk && !replaceIntermission && !sceneFade && stepY==1 &&
++                               size_t(fit.w)*fit.h >= 4*1024*1024) {
++                                // Native row and backdrop row together determine the entire mixed row.
++                                // Keep one sample per run, then draw each run at its exact integer height.
++                                struct RowRun { int first, last; };
++                                std::vector<RowRun> rows;
++                                try {
++                                    for(int y=0;y<fit.h;) {
++                                        const int start=y++;
++                                        const auto lower=backRow(fit.y+start);
++                                        while(y<fit.h && y/scale==start/scale && backRow(fit.y+y)==lower)++y;
++                                        rows.push_back({start,y});
++                                    }
++                                    cache.packedRows.reserve(rows.size()*6);
++                                } catch(const std::bad_alloc&) {rows.clear();}
++                                if(!rows.empty() && rows.size()*2<=size_t(fit.h)) {
++                                    const SDL_FColor white{1,1,1,1};
++                                    uploadH=static_cast<int>(rows.size());
++                                    for(int i=0;i<uploadH;++i) {
++                                        const auto [start,end]=rows[i];
++                                        if(i!=start)std::copy_n(pixels.data()+size_t(start)*uploadW,uploadW,
++                                            pixels.data()+size_t(i)*uploadW);
++                                        const float u=(float(i)+0.5f)/float(uploadH);
++                                        const float x0=target.x,x1=target.x+target.w;
++                                        const float y0=target.y+start,y1=target.y+end;
++                                        const SDL_Vertex tl{{x0,y0},white,{0,u}}, tr{{x1,y0},white,{1,u}};
++                                        const SDL_Vertex bl{{x0,y1},white,{0,u}}, br{{x1,y1},white,{1,u}};
++                                        cache.packedRows.insert(cache.packedRows.end(),{tl,tr,br,tl,br,bl});
++                                    }
++                                }
+                             }
+                             if(cachedWidth!=uploadW || cachedHeight!=uploadH) {
+                                 if(cachedTexture)SDL_DestroyTexture(cachedTexture);
+@@ -3006,7 +3045,7 @@
+                                         // The texture is already ready to draw.
+                                     }
+                                 }
+-                                return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
++                                return drawLayer();
+                             }
+                         }
+                     }
