@@ -17,6 +17,7 @@ CATEGORIES = (
 )
 BODY_REPORT = 'docs/research/saturn-bg-format.md'
 BODY_FACE_EVIDENCE = {
+    (1, '/SAKURA1/NC25.BIN'): 'docs/research/nc25-baked-eyes.md',
     (1, '/SAKURA1/NC50.BIN'): 'docs/research/nc50-registered-faces.md',
     (1, '/SAKURA1/NC55.BIN'): 'docs/research/nc55-registered-faces.md',
 }
