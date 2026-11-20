@@ -209,7 +209,8 @@
       "patches/0212-sakura-windows-unicode-pc-assets.patch",
       "patches/0213-sakura-hd-save-compact-rails.patch",
       "patches/0214-sakura-map14-pc-ground.patch",
-      "patches/0215-sakura-narrative-cutout-followup.patch"
+      "patches/0215-sakura-narrative-cutout-followup.patch",
+      "patches/0217-sakura-iris-route-foregrounds.patch"
     ]
   }
 }
