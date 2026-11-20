@@ -218,3 +218,32 @@ the reference crop at (1840,100)–(2220,350) after bilinear scaling.
 | BG1116 | 210, 260, 310 | 0.123/0.132/0.129 | 42.887/33.038/33.662 |
 
 Private replay evidence is under `local/work/codex-th1/ch1-scene-draws/`.
+
+## Late Chapter 1 backgrounds on disc 1
+
+A muted, strict English disc 1 relay from the retained Chapter 1 field
+143,150 checkpoint recorded four new checkpoints with the unchanged archived
+input movie. Its first 961 guest hashes match the older uninterrupted run.
+The rest of the comparison uses the new relay as its reference. The
+renderer build includes patch 0187 and has SHA-256
+`c216065dc774f1087cdd6aaf1aeee5fbe77a58ae474fc8ff7a668bb0fd82b805`.
+
+Each 2560×1440 Enhanced replay has a donor-only PC folder and an empty-folder
+control. All eight runs report zero interpreted blocks. Each pair matches
+the relay on every guest field and has identical final backup RAM. Early
+samples match in full RGB. When the donor draws, changes stay within the
+Zoom picture at (272,29)–(2288,1037). At replay field 260, a 192×84 patch
+clear of foreground sprites matches the independently decoded PC subimage
+0 resized bilinearly to 2016×1008. The errors are mean absolute differences
+in R, G and B.
+
+| Scene | Relay checkpoint | Matching guest fields | Changed captures | With donor | Empty folder |
+| --- | ---: | ---: | ---: | --- | --- |
+| BG1030 | 228,420 | 620 | 6 | 0.058/0.068/0.047 | 30.070/28.119/27.665 |
+| BG2535 | 232,800 | 620 | 6 | 0.087/0.076/0.083 | 51.403/45.726/42.637 |
+| BG2173 | 239,080 | 620 | 6 | 0.081/0.079/0.057 | 7.117/5.810/3.398 |
+| BG1193 | 253,100 | 660 | 5 | 0.113/0.115/0.124 | 33.032/33.172/33.970 |
+
+BG1193 now has the live draw missing from the earlier offline audit.
+Private replay commands, states, hashes and captures are under
+`local/work/codex-th1/ch1-scene-draws/final-film-late/`.

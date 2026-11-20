@@ -2176,9 +2176,11 @@
           },
           "1:/SAKURA1/BG1030.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
             "pc": "SAKURA1/BG/BG1030.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1045.BIN": {
             "association": "observed",
@@ -2232,9 +2234,11 @@
           },
           "1:/SAKURA1/BG1193.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
             "pc": "SAKURA1/BG/BG1193.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1207.BIN": {
             "association": "observed",
@@ -2288,9 +2292,11 @@
           },
           "1:/SAKURA1/BG2173.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
             "pc": "SAKURA1/BG/BG2173.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG2248.BIN": {
             "association": "observed",
@@ -2319,9 +2325,11 @@
           },
           "1:/SAKURA1/BG2535.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
             "pc": "SAKURA1/BG/BG2535.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/IC01.BIN": {
             "association": "observed",
