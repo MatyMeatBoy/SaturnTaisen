@@ -160,3 +160,44 @@ nearest scaling. Every replacement matches the corresponding bilinear
 PC sample within two levels per channel. The rest of each capture is
 pixel-identical. Receipts and captures are under
 `local/work/codex-witness-441-review/hud/chapter8-ambush-plate/`.
+
+## Covered 0801 and 0802 backgrounds
+
+Patch 0231 allows two exact English disc-2 scene layer pairs to enter the
+existing Enhanced lower-background draw. The default 12,000-pixel threshold
+still applies elsewhere. For these pairs, source 2 must own at least 9,500
+viewport pixels, both palette and cell fingerprints must match, and the
+registered source-4 foreground must be opaque. Both layer color offsets must
+be neutral. The lower donor uses the existing picture viewport and compositor.
+
+| Lower donor | Native upper layer | Natural checkpoint | Source-2 pixels at entry | Changed RGB pixels per positive capture |
+| --- | --- | --- | ---: | ---: |
+| `BG2140.SPR` | BG3140 | `iris-0802-deploy/f2880.state` | 10,514 | 505,778 |
+| `BG2523.SPR` | BG3523 | `iris-0801-ask/f2880.state` | 9,549 | 450,169 |
+
+The D3D11 tests replay the recorded controller suffix for 104 fields per
+checkpoint at 2560×1440. Eight profiles per checkpoint cover the cumulative
+0230 runtime and patch 0231, both donors, individual donors, an empty
+folder and Original. All 208 guest fields per profile match the archived
+logs, every terminal SRAM pair matches and no interpreted blocks run.
+The cumulative 0231 executable SHA-256 is
+`4793D1737C84885E366F6DB16130E617F19ABB7EFE20B23819030A212A96187B`.
+
+With only the lower donor available and again with both donors available,
+every changed control pixel matches the independently decoded Saturn
+lower plate. Every changed candidate pixel matches the independently
+decoded PC plate within two RGB levels per channel after bilinear scaling.
+The counts are identical at sampled offsets 8, 30, 50 and 90. In both
+modes the changes stay within the existing Zoom rectangle
+(272, 29)–(2288, 1037). The upper-only captures match the earlier build
+with both files, and the upper replacement remains visible. With both
+files missing, the candidate matches earlier Enhanced RGB. The Original
+donor/empty pairs match exactly.
+
+Receipts, paired captures and the exact overlay build inputs are
+retained under
+`local/work/codex-witness-441-review/hud/chapter8-covered-0231/final/`.
+
+The existing release crosscheck also matches 1,950 guest fields, SRAM
+and all 11 RGB samples across the Iris combination, the timed LIPS
+window, and the Long Day room selection.
