@@ -78,6 +78,8 @@ A priority trace on the same checkpoint recorded 6,341 pixels with the panel abo
 
 An isolated VDP1 write-owner probe then distinguished the NC11 body, eye, and mouth commands from the later UI. On both newly drawn frames after restore, those three commands own exactly 6,341 samples in the panel rectangle. The other 1,495 samples belong to UI commands. Reconstructing the owned body pixels with the 11/32 sprite weight and preserving the UI pixels verbatim reproduces all 7,836 samples. The restored framebuffer initially has no owner history, so a replacement must wait for new draws or preserve the native first frame. All three diagnostic frames matched the uninstrumented RGB exactly. The probe and raw owner maps are private at `local/work/codex-ch1-body-triage/layer-priority-probe/`.
 
+An offline substitution at 7× used the PC NC11 body wherever the native body command owned the pixel and the donor was fully opaque. It reapplied the witnessed panel color ratio independently for every subpixel. The proof changed 207,766 body subpixels and preserved all 1,495 UI-owned tiles exactly. Eyes, mouth, silhouette edges, and the normal runtime path remain separate validation work. The private output is `nc11-panel-body-ownership-proof.png` in the same probe folder.
+
 
 The trace also named 62 portrait IDs after successful replacement texture upload. Each row preserves its first appearance bracket and the trace line. The separately observed viewport and blend traces can be used for renderer review.
 
