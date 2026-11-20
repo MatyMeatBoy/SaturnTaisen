@@ -328,6 +328,7 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 EXACT_BODY_DRAWS = {
+    (2, '/SAKURA1/NC3021.BIN'): (9, 'docs/research/hd-chapter-9.md#nc3021-face-registration-witness'),
     (1, '/SAKURA1/NC24.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602'),
     (1, '/SAKURA1/NC42.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602'),
     (1, '/SAKURA1/NC26.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc26-body-in-0602'),

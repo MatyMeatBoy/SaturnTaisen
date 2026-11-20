@@ -5783,10 +5783,11 @@
           },
           "2:/SAKURA1/NC3021.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-9.md#nc3021-face-registration-witness",
             "pc": "SAKURA1/NC/NC3021.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#nc3021-face-registration-witness",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "2:/SAKURA1/NC3031.BIN": {
             "association": "observed",
