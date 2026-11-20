@@ -220,6 +220,7 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG2057.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2057-behind-nc3057'),
     (2, '/SAKURA1/BG2517.BIN'): (9, 'docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene'),
     (2, '/SAKURA1/BG2046.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2046-ending-scene'),
     (2, '/SAKURA1/BG1174.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias'),

@@ -90,4 +90,14 @@ Association is `observed`: a disc read shows the game asked for the file, not th
 
 Two strict 32-field replays from the Episode 10 ending-bank checkpoint at 2560 x 1440 isolate the PC BG2046 donor. Both profiles use the same floral backdrop. Guest hashes and final SRAM match, and the 1,357,034 changed pixels fall entirely inside the scene at (272,29) to (2288,1037). The screenshot shows the seated figure and curtains, with the dialogue frame preserving its original pixels. The executable is from v0.2.16.1-alpha. Private evidence: `local/work/codex-th1/thd01-probe/ep10-second-BG2046`.
 
-A scan for resident palette and cell data covered 2,456 private states across three archives. The BG2025, BG2057, BG2284, BG2285 and BG2286 checkpoints checked so far have no matching RGB difference. BG2284 logs a loaded texture in one of them. These occurrences still require a visible draw.
+A scan for resident palette and cell data covered 2,456 private states across three archives. The BG2025, BG2284, BG2285 and BG2286 checkpoints checked so far have no matching RGB difference. BG2284 logs a loaded texture in one of them. These occurrences still require a visible draw.
+
+## BG2057 behind NC3057
+
+The English disc 2 ending shows BG2057 underneath NC3057. In the retained field 13,799 checkpoint the opaque source-2 plate owns 11,530 of the 41,472 native scene pixels. The existing draw gate requires 12,000 pixels for a generic plate. Patch 0248 admits the opaque disc-2 source-2 plate using palette FNV-1a `F89327B5A73389BC` and renderer cell FNV-1a `5D5555C72F6D98B1`. The existing low-visibility floor, unshifted color, menu guards, and source mask continue to apply.
+
+The donor and missing-donor profiles from that checkpoint ran 48 strict fields at each resolution. At 2560 × 1440, 564,964 pixels changed, all inside the independently scaled 564,970-pixel source-2 ownership mask. The new samples match the decoded PC donor within one RGB level per channel. No change escapes the mask, which includes neither the character sprites nor the dialogue scene surround. At 1920 × 1080, 288,246 pixels changed inside the scene viewport. Original, a truncated donor, and a neighboring checkpoint on a different plate each matched control RGB. All five pairs matched guest hashes and final SRAM with zero interpreted blocks.
+
+The two previous covered-plate cases still match their recorded 1440p RGB difference counts on the new executable. BG2140 changes 505,778 pixels and BG2523 changes 450,169. Both 48-field pairs match guest hashes and SRAM with zero interpreted blocks.
+
+Private evidence: `local/work/codex-th1/thd38-ep10/bg2057-final-*` and `bg2057-regression-*`. Release packaging is pending.

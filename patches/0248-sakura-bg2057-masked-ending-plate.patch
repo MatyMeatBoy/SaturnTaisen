@@ -1,0 +1,41 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3601,7 +3601,11 @@
+                                         if (layer != 2 || shownDisc != 2 || visible < 9500 || choosing || port.menu.IsOpen())
+                                             continue;
+                                         uint64_t lowerCells = 0, upperPalette = 0, upperCells = 0;
+-                                        if (fingerprint == 0x8DD60A4DCE621D74ull) { // BG2140 under BG3140
++                                        if (fingerprint == 0xF89327B5A73389BCull) { // BG2057 behind NC3057
++                                            if (!port.videoRenderer->BackgroundIsOpaque(2) ||
++                                                port.videoRenderer->BackgroundCellFingerprint(2, 41472) != 0x5D5555C72F6D98B1ull)
++                                                continue;
++                                        } else if (fingerprint == 0x8DD60A4DCE621D74ull) { // BG2140 under BG3140
+                                             lowerCells = 0x71E61544537E152Bull;
+                                             upperPalette = 0xB0065B5C935114C4ull;
+                                             upperCells = 0x8D8A0C5474F43E9Cull;
+@@ -3612,14 +3616,16 @@
+                                         } else {
+                                             continue;
+                                         }
+-                                        // The registered foreground hides most of this otherwise aligned plate.
+-                                        if (port.videoRenderer->BackgroundPaletteFingerprint(4) != upperPalette ||
+-                                            !port.videoRenderer->BackgroundIsOpaque(4) ||
+-                                            port.videoRenderer->BackgroundCellFingerprint(2, 41472) != lowerCells ||
+-                                            port.videoRenderer->BackgroundCellFingerprint(4, 41472) != upperCells)
+-                                            continue;
+-                                        const auto foregroundOffset = port.videoRenderer->BackgroundColorOffset(4);
+-                                        if (foregroundOffset[0] || foregroundOffset[1] || foregroundOffset[2]) continue;
++                                        if (upperPalette) {
++                                            // The registered foreground hides most of this otherwise aligned plate.
++                                            if (port.videoRenderer->BackgroundPaletteFingerprint(4) != upperPalette ||
++                                                !port.videoRenderer->BackgroundIsOpaque(4) ||
++                                                port.videoRenderer->BackgroundCellFingerprint(2, 41472) != lowerCells ||
++                                                port.videoRenderer->BackgroundCellFingerprint(4, 41472) != upperCells)
++                                                continue;
++                                            const auto foregroundOffset = port.videoRenderer->BackgroundColorOffset(4);
++                                            if (foregroundOffset[0] || foregroundOffset[1] || foregroundOffset[2]) continue;
++                                        }
+                                     }
+                                     auto& hd=sceneHd[slot];
+                                     if(!hd.tried) {
