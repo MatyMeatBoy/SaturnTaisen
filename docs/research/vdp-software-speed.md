@@ -102,6 +102,30 @@ unrelated phases. These trials support the Yoneda improvement and leave the
 size and direction of the first-attack timing change unresolved. These
 incremental builds cover the two replays only. Release packaging remains pending.
 
+## T119 VDP2 background priority
+
+Patch 0174 ranks the enabled backgrounds once inside the pixel compositor and
+then inserts a visible sprite at its original priority. A nonzero sprite
+priority wins ties. The two ranked backgrounds supply the colors beneath
+sprite pixels using the existing blend and capture rules.
+
+Strict A/B on the stack through 0171 matched every guest hash and every measured
+presentation-plane hash over 435 Ogami map-to-dining frames, 240 held Spanish
+Yoneda frames, and 240 first-attack frames. Fourteen 1440p window captures also
+matched. The probes exercised nonempty map edges in 32 Ogami frames, glyph
+ownership in 239 Yoneda frames, and up to 34,867 sprite-top pixels per first-attack
+frame. After rebasing onto 0173, all three traces matched again. A fourth strict
+240-frame LIPS replay matched the cover plane on every frame and four additional
+1440p captures. Its cover contained up to 12,976 pixels and was active in 239
+frames. Native glyph plate, VDP2 color, and VDP2 line reuse tests passed.
+
+Four timing runs per binary were interleaved on the same logical core. Ogami
+VDP work measured 4.340 to 4.190 ms at the first transition frame and 4.900 to
+4.645 ms across frames 405–430. The first-attack median moved from 8.489 to
+8.330 ms. The Yoneda median moved from 4.089 to 3.365 ms while SH-2 and sound
+also sped up. The post-transition Ogami span gives the clearest measured
+improvement. Release packaging remains pending.
+
 ## Not verified
 
 Three scenarios of 1,200 frames only; the GPU video path (`NormalLine` is shared) and other resolutions, interlace and
