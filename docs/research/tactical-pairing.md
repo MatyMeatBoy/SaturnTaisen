@@ -268,6 +268,8 @@ The owner PC assets now have independent placement references. MAP03 has 626 64 
 
 The placement directory in `MAP23_A.SPR` names four 1392 × 1232 images and places them at (0,0), (1392,0), (0,1232) and (1392,1232). This is a rectangular 2784 × 2464 assembly. The square tile assumption in the earlier proposal cannot reproduce this table. Use the full assembly as the reference when finding the Saturn viewport and playable scroll bounds. The live sampler dimensions and crop still require a natural MAP23 camera.
 
+A subsequent independent decode of the Saturn disc 2 slot 5 map confirms a 128 × 128 name plane, with all names aligned to two 32-byte units and valid within slot 4. The nonzero cells occupy columns 0–86 and rows 0–59. A half-resolution PC assembly from the top-left origin visually aligns the broad corridor footprint with the Saturn plane. In the offline comparison, the right edge at rows 280, 320, 360 and 400 is within seven pixels after a six-pixel luminance blur. The two palettes and fine details differ. This gives a candidate origin and scale for the live comparison, while final clipping, tint and source ownership remain open. The native decode and comparison are private under the same reference folder.
+
 This offline check leaves the live ground total unchanged. References stay in `local/work/codex-th1/tactical-multipart`. For MAP03 and MAP20 the next required evidence is an actual camera and source-layer match. For MAP23 preserve its placement order and compare at two camera positions before registering a runtime mapping.
 
 ### Published File 1 entrance
