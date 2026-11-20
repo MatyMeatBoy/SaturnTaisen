@@ -3229,15 +3229,19 @@
         "scene-pictures": {
           "1:/SAKURA1/BG1008.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th3-native-attribution.md",
+            "evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
             "pc": "SAKURA1/BG/BG1008.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1022.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th3-native-attribution.md",
+            "evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
             "pc": "SAKURA1/BG/BG1022.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1031.BIN": {
             "association": "observed",
@@ -3252,6 +3256,22 @@
             "evidence": "docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1",
             "pc": "SAKURA1/BG/BG1076.SPR",
             "runtime_evidence": "docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1132.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
+            "pc": "SAKURA1/BG/BG1132.SPR",
+            "runtime_evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1160.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
+            "pc": "SAKURA1/BG/BG1160.SPR",
+            "runtime_evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
             "status": "hd",
             "verified_in_game": true
           },
@@ -3294,6 +3314,14 @@
             "evidence": "docs/research/bg2290-native-pan.md",
             "pc": "SAKURA1/BG/BG2290.SPR",
             "runtime_evidence": "docs/research/bg2290-native-pan.md#enhanced-donor-fade",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2381.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
+            "pc": "SAKURA1/BG/BG2381.SPR",
+            "runtime_evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
             "status": "hd",
             "verified_in_game": true
           },
@@ -13133,11 +13161,6 @@
         "pc": "SAKURA1/BG/BG1135.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1132.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1132.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1134.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1134.SPR",
@@ -13171,11 +13194,6 @@
       "1:/SAKURA1/BG1153.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1153.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1160.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1160.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1161.BIN": {
@@ -15098,11 +15116,6 @@
         "pc": "SAKURA1/BG/BG2238.SPR",
         "reason": "size [320, 160], the runtime draws 288x144 pictures only",
         "status": "unsupported-size"
-      },
-      "1:/SAKURA1/BG2381.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2381.SPR",
-        "status": "hd"
       },
       "1:/SAKURA1/BG2500.BIN": {
         "association": "unknown",

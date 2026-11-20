@@ -108,3 +108,43 @@ the 1440p pairs are under `local/work/codex-tp3c/th3-portraits-extra`.
 After this follow-up and cache cleanup, the project measured
 64,945,697,743 logical bytes. The delivered development ZIP remains
 6,315,009,692 bytes.
+
+## Verified Chapter 3 scene draws
+
+Five English disc-1 checkpoints provide positive PC scene picture draws
+at 2560×1440. BG1008, BG1022, BG1132 and BG2381 are newly verified physical
+donors. BG1160 adds a disc-1 occurrence of the PC asset already verified
+on [disc 2](th10-native-attribution.md#bg1160-hd-draw).
+
+| Saturn scene and PC donor basename | Saturn source FAD | Archived input group | Checkpoint field | Changed RGB pixels per capture |
+| --- | ---: | --- | ---: | ---: |
+| BG1022 | 139525 | `strict-0301` | 11959 | 1,947,944 |
+| BG1008 | 139203 | `strict-0301` | 13959 | 1,304,178 |
+| BG1132 | 141986 | `after-kanna-training` | 4160 | 2,026,519 |
+| BG2381 | 152186 | `chapter3-resume-after-kanna` | 2810 | 1,877,515 at offsets 8/16/30, 1,516,389 at 50 |
+| BG1160 | 142193 | `chapter3-resume-after-kanna` | 3860 | 1,323,469 |
+
+The 0301 checkpoints were reproduced from archived fields 10900 and 13000.
+The Kanna training checkpoint uses the archived stage wing state, and
+both post-training checkpoints use the retained Kanna training terminal
+state. Each preceding relay matched the original route hashes. The
+training CD trace reads BG1132 at FAD 141986, identifying the observed
+file among the shared BG1132/BG1136 scene entries.
+
+Each A/B pair replayed the original input suffix for 56 fields with D3D11
+and strict native on the cumulative 0213 runtime, SHA-256
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`.
+All 280 replay fields matched the archives and both A/B arms. Terminal SRAM
+matched within each pair and every run reported zero interpreted blocks.
+
+For all 20 pairs at offsets 8, 16, 30 and 50, the only asset difference was
+the named PC donor. All changed pixels fell within the existing Zoom
+rectangle at (272, 29) to (2288, 1037). The control at each changed
+position matched the independently decoded native plate with RGB555
+quantization and nearest scaling. The replacement matched the independent
+bilinear PC sample within two levels per channel.
+
+BG1050, BG1034 and BG2289 produced no RGB difference at the sampled
+checkpoints and remain outside this verification. Private evidence is
+under `local/work/codex-witness-441-review/hud/chapter3-plates/`. The
+continuous chapter and package gates remain open.
