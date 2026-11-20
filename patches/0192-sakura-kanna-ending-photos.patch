@@ -1,0 +1,14 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -962,6 +962,10 @@
+          "SAKURA1/ENDING/END_SU.SPR", 3036866, 0x3E6246A0BE590222ull, {10, 0, 616, 320}},
+         {8, 3, 0x400, 0x1679DED0816C6A33ull, 0x60A00FAE594966DDull,
+          "SAKURA1/ENDING/END_SU.SPR", 3036866, 0x3E6246A0BE590222ull, {68, 28, 522, 282}},
++        {10, 2, 0x200, 0x2AD1A8AD560E5299ull, 0xD19821364DA598E5ull,
++         "SAKURA1/ENDING/END_KA.SPR", 3020591, 0x792053C5B4B6E028ull, {16, 0, 620, 320}},
++        {8, 3, 0x400, 0x508E45A11D1B644Aull, 0x1D88349FEC00B925ull,
++         "SAKURA1/ENDING/END_KA.SPR", 3020591, 0x792053C5B4B6E028ull, {34, 0, 584, 300}},
+     };
+     std::array<SceneHd, std::size(endingPhotos)> endingPhotoImages;
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};

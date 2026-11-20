@@ -186,7 +186,8 @@
       "patches/0188-sakura-scroll-row-minimum-offset.patch",
       "patches/0189-sakura-sumire-ending-photos.patch",
       "patches/0190-sakura-registered-eve-insets.patch",
-      "patches/0191-sakura-ic08-disc2-intermission.patch"
+      "patches/0191-sakura-ic08-disc2-intermission.patch",
+      "patches/0192-sakura-kanna-ending-photos.patch"
     ]
   }
 }
