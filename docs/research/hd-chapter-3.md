@@ -64,3 +64,17 @@ Also: `config/hd-scene-bg-map.json`, `config/hd-scene-bg-review.json` and `docs/
 - Chapter 3 translation progress (3 of 7 batches, per `docs/research/traduccion-espanol.md`) is unrelated to HD but shares the chapter exit test timing.
 
 Nothing here is tested in a replay; status is catalog-level only.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 1 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-3-battle-2` | 0 | 45000 | yes | `a0bd2a1b` | `5bfe6029` | `a645a734` |
+| `bank-3-battle-3` | 0 | 45000 | yes | `1aca4bed` | `5bfe6029` | `cf606ed0` |
+
+Both cases (stage 04 and stage 05 tactical saves) now run the 45,000 frames to exit 0 where the sweep stopped at `00204000`; they read `EVT04`/`EVT05`, `MAP04`/`MAP05`, `WKL04`/`WKL05`, `UNIT04`/`UNIT05`, `FACE`, `FIX` and `M0nMES` (stage data). Every register row they read is already attributed to chapter 3 by TH3, so no row moved. EVT, FACE, FIX and MES files are not register classes.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.

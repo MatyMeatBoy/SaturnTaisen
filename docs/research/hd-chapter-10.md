@@ -67,3 +67,21 @@ Ordered by number of items closed. Chapter-10 items are few because attribution 
 - Why do the same 5 names exist both as disc-2 chapter-10 entries and disc-1 `unassigned` entries? Possibly the shared `/SAKURA1` content on both discs; unconfirmed.
 - Is the empty bodies/film/menus-hud/tactical result a data gap or a real absence? The chapter-coverage doc says empty lists flag gaps in evidence.
 - Does the bg-map contain `TITLE10` at all (519 content + 216 number + 5 missing pairs)? Not confirmed in this pass.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 2 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-10-battle-1` | 0 | 45000 | yes | `5f288f8b` | `5bfe6029` | `9e7f1f5e` |
+| `bank-10-battle-2` | 0 | 45000 | yes | `c5b90e8b` | `5bfe6029` | `04a2e43b` |
+| `bank-10-final-battle` | 0 | 45000 | yes | `c7c2fde7` | `5bfe6029` | `ecdc1bb4` |
+| `public-finale` | 4 | 41684 | no | `efe16833` | `e0cdea12` | `9e3ddbe5` |
+
+Chapter 10 (disc 2) routes `1001` (`bank-10-battle-1`), tactical stage 19 (`bank-10-battle-2` and `bank-10-final-battle`, identical reads) and the ending (`public-finale`, `1004`, ends reading `ENDING.BIN`). Thirty-one `unassigned` rows are now chapter 10: BG1284, BG1292, BG1293, BG2020, BG2023, BG2025, BG2026, BG2046, BG2057, BG2111, BG2163-BG2168, BG2248, BG2284-BG2286, BG3020, BG3026, BG3046, BG3163-BG3165, NC3023, NC3025, BBG218, UNIT19, WKL19. `LIPS_CG` and `LOAD.BIN` stay `unassigned`.
+
+Exit 4 on `public-finale`: the strict AOT stops at 41,684 frames with `untranslated master SH-2 block at 06080000` (an ending-side overlay at a different address, not `00204000`). The loads recorded before it (up to `ENDING.BIN`) are valid; the remaining ending frames need that overlay translated by the overlay-registry owner.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.

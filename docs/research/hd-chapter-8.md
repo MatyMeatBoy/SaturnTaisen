@@ -63,3 +63,17 @@ Counts closed per action are upper bounds from the data; none is verified.
 - Do chapters 8-10 share atlases or scenes with earlier chapters? No data.
 - The chapter-8 bodies and menus/HUD lists are empty: gap in evidence or truly none? No data.
 - Which replay route (save state, inputs) reproduces the `0801` start for the strict-native exit test? Not stated in the files read.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 2 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-8-battle-1` | 0 | 45000 | yes | `6ab1f5ab` | `5bfe6029` | `91af038b` |
+| `bank-8-battle-2` | 0 | 45000 | yes | `5862dc14` | `5bfe6029` | `94abf9df` |
+
+Chapter 8 (disc 2) routes `0801` (`bank-8-battle-1`) and `0805`/`0806` through `IC08` (`bank-8-battle-2`). Twelve `unassigned` rows are now chapter 8: BG1001, BG1195, BG2004, BG2007, BG4053, ITEM72, NC10, NC11, NC30, NC3004, NC3007, NC42. NC30 is also read by the Chapter 9 route; it is left with the lower chapter. `LOAD.BIN` and `LIPS_CG` stay `unassigned`.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.

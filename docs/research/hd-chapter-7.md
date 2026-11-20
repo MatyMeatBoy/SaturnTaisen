@@ -76,3 +76,17 @@ Actions 1-2 dominate: items 3-5 close 5 at most unless action 1 first exposes mo
 - Is a chapter 7 tactical map required? Only stage 01 is documented as the extended map (chapter 1).
 - Can the global film streams be bound to chapters by FAD range, or must each come from a replay? `film-fad-map.json` formula: FAD = 150 + LBA + byte_offset / 2048; no chapter data.
 - Who owns the `CHAPTER_WITNESSES` edits in `tools/hd_chapter_coverage.py` while TH0 is marked implemented? Check `docs/PENDIENTES.md` rows TH0 and TH7 before editing.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 1 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-7-battle` | 0 | 45000 | yes | `f93949f0` | `5bfe6029` | `9c1a288e` |
+| `public-7` | 0 | 45000 | yes | `efe16833` | `76bd1a24` | `dc2c96e0` |
+
+The `0700` cold route (both `bank-7-battle` and `public-7`, identical reads) loads `TITLE7`, BG2019, BG1266, BG2014, NC3014, BG2126, NC3126, BG1267, BG1268, BG2160, BG1181, NC70, BG1178, BG4017 and BG2080. Eight of them were `unassigned` and are now chapter 7 (disc 1): BG1178, BG1181, BG2014, BG2160, BG4017, NC3014, NC3126, NC70. `LOAD.BIN` stays `unassigned` (read by chapters 5 to 10).
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
