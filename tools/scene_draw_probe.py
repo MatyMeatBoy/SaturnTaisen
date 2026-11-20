@@ -2,8 +2,7 @@
 
 A development runtime (no release.marker) is started hidden and unthrottled twice from the same state: once with
 `--pc-assets DONOR` (the PC picture can be drawn) and once without it (control). The picture is "drawn" when the donor run prints
-a `scene picture: FILE usable=1` line (or `scene picture with a shared palette ... -> FILE`) and/or its capture differs from the
-control capture. Both signals are reported; the exit code is 0 when the draw happened and 1 when it did not.
+a `scene picture: FILE usable=1` line (or `scene picture with a shared palette ... -> FILE`) and the capture comparison is reported separately. An unexplained capture difference alone does not identify a scene.
 
     python tools/scene_draw_probe.py --exe local/build/sakura-probe/sakura-probe.exe \
         --state local/work/probe-cold/b1209.state --pc-assets local/work/pc-cab/out-bg --size 2560x1440
@@ -82,9 +81,10 @@ def count_changed(path_a, path_b):
     with Image.open(path_a) as a, Image.open(path_b) as b:
         a, b = a.convert('RGB'), b.convert('RGB')
         if a.size != b.size:
-            return a.size[0] * a.size[1]
-        diff = ImageChops.difference(a, b).convert('L').point(lambda v: 255 if v else 0)
-        return diff.histogram()[255]
+            return None
+        channels = ImageChops.difference(a, b).split()
+        diff = ImageChops.lighter(ImageChops.lighter(channels[0], channels[1]), channels[2])
+        return a.width * a.height - diff.histogram()[0]
 
 
 def verdict(trace, changed, identical_bytes):
@@ -98,7 +98,7 @@ def verdict(trace, changed, identical_bytes):
     if by_trace:
         return True, 'DRAWN by trace only: %s (the capture equals the control; the picture may be under an overlay)' % ', '.join(files)
     if by_capture:
-        return True, 'capture differs from the control (%s pixels) but no scene picture trace line: something else changed' % changed
+        return False, 'capture differs from the control (%s pixels) but no scene picture trace line identifies the cause' % changed
     why = []
     if not trace['zoom']:
         why.append('the Zoom scene path never ran (layouts seen: %s)' % (', '.join(trace['layouts']) or 'none'))
@@ -186,6 +186,9 @@ def main(argv=None):
         results[label] = (parse_trace(text), shot)
     trace, donor_shot = results['donor']
     control_shot = results['control'][1]
+    if not donor_shot.is_file() or not control_shot.is_file():
+        print('Missing donor or control capture', file=sys.stderr)
+        return 2
     changed = count_changed(donor_shot, control_shot)
     identical = donor_shot.is_file() and control_shot.is_file() and donor_shot.read_bytes() == control_shot.read_bytes()
     drew, message = verdict(trace, changed, identical)

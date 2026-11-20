@@ -45,7 +45,9 @@ class ParseTests(unittest.TestCase):
         trace = probe.parse_trace(DRAWN)
         self.assertTrue(probe.verdict(trace, 1000, False)[0])
         self.assertIn('trace only', probe.verdict(trace, 0, True)[1])
-        self.assertIn('no scene picture trace line', probe.verdict(probe.parse_trace(NATIVE), 5, False)[1])
+        drew, message = probe.verdict(probe.parse_trace(NATIVE), 5, False)
+        self.assertFalse(drew)
+        self.assertIn('no scene picture trace line', message)
         unusable = probe.parse_trace('scene picture: SAKURA1/BG/BG1.SPR usable=0\nscene zoom: x\n')
         self.assertIn('did not load', probe.verdict(unusable, 0, True)[1])
 
