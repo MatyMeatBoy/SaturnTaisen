@@ -1,0 +1,162 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -403,6 +403,7 @@
+     SDL_Texture *tacticalCanvas=nullptr;
+     SDL_Texture *mapBackdropTexture=nullptr;
+     SDL_Texture* irisComboTexture = nullptr;
++    SDL_Texture* comboCardTexture = nullptr;
+     SDL_Texture* bg2093Composite = nullptr;
+     std::vector<uint32_t> tacticalPatch,tacticalPixels;
+     SakuraUi sakuraUi;
+@@ -678,6 +679,8 @@
+         mapBackdropTexture=nullptr;
+         if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
+         irisComboTexture = nullptr;
++        if (comboCardTexture) SDL_DestroyTexture(comboCardTexture);
++        comboCardTexture = nullptr;
+         if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
+         bg2093Composite = nullptr;
+         if (shaded) {
+@@ -829,6 +832,9 @@
+     std::array<SceneHd, 2> irisCombo;
+     std::array<std::vector<uint32_t>, 2> irisComboNative, irisComboDonor;
+     std::vector<uint32_t> irisComboPixels;
++    std::array<SceneHd, 2> comboCards;
++    std::array<std::vector<uint32_t>, 2> comboCardArt;
++    std::vector<uint32_t> comboCardPixels;
+     // TP2: one slot per row of kScrollPictures (native pixels decoded once, PC texture loaded once).
+     struct ScrollState {SceneHd hd; std::vector<uint32_t> pixels;};
+     std::array<ScrollState, kScrollPictureCount> scrollState;
+@@ -3867,6 +3873,122 @@
+                         std::fprintf(stderr, "verified combo pose: GTB_IRS %d\n", pose);
+                 }
+             }
++            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 2 &&
++                satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
++                texW == 320 && texH == 224 && baseFit.scale >= 2 && softwareShown.size() == 320 * 224) {
++                const auto& frame = port.videoRenderer->PresentationFrame();
++                using Sprite = satrecomp::video::Renderer::PresentationSprite;
++                const Sprite* ogami = nullptr;
++                const Sprite* iris = nullptr;
++                // Only the two black letterbox polygons follow these cards in the witnessed intro.
++                const auto isCard = [](const Sprite& draw, int x, int y, const std::array<uint16_t, 8>& rect,
++                                       uint64_t fingerprint) {
++                    const auto* cmd = draw.command.words;
++                    return (cmd[0] & 63) == 2 && cmd[2] == 0xA0 && cmd[3] == 0x300 && cmd[5] == 0x1090 &&
++                        draw.x == x && draw.y == y && std::equal(rect.begin(), rect.end(), cmd + 6) &&
++                        draw.pixels.size() == 128 * 144 && AtlasFingerprint(draw.pixels) == fingerprint;
++                };
++                for (auto it = frame.sprites.rbegin(); it != frame.sprites.rend(); ++it) {
++                    const auto& draw = *it;
++                    const auto control = draw.command.words[0];
++                    if ((control & 0x8000) || (control & 15) >= 8) continue;
++                    const auto* cmd = draw.command.words;
++                    if ((control & 63) == 4 && cmd[2] == 0x00C0 && cmd[3] == 0x8000 && draw.x == 0) {
++                        constexpr std::array<uint16_t, 8> upper{0xFF60,0xFF90,159,0xFF90,159,0xFFB0,0xFF60,0xFFB0};
++                        constexpr std::array<uint16_t, 8> lower{0xFF60,112,159,112,159,80,0xFF60,80};
++                        if ((draw.y == 0 && std::equal(upper.begin(), upper.end(), cmd + 6)) ||
++                            (draw.y == 224 && std::equal(lower.begin(), lower.end(), cmd + 6))) continue;
++                    }
++                    if (!ogami) {
++                        if (!isCard(draw, 41, 7, {0xFF89,0xFF97,9,0xFF97,9,39,0xFF89,39}, 0x05D7085BDE35A8F5ull)) break;
++                        ogami = &draw;
++                    } else {
++                        if (isCard(draw, 147, 47, {0xFFF3,0xFFBF,115,0xFFBF,115,79,0xFFF3,79}, 0x15573C8CB6483AC2ull))
++                            iris = &draw;
++                        break;
++                    }
++                }
++                const auto palette = std::span{frame.palette}.subspan(0x600, 512);
++                if (iris && frame.source.size() == softwareShown.size() && frame.topSource.size() == softwareShown.size() &&
++                    AtlasFingerprint(palette) == 0xF6B278DAC83BC233ull) {
++                    constexpr int w = 129, h = 145, highPitch = 640;
++                    constexpr std::array<double, 2> scaleX{1.99, 1.985}, scaleY{2.005, 1.99};
++                    constexpr std::array<double, 2> shiftX{1.50, 2.25}, shiftY{-6.375, -5.25};
++                    for (unsigned index = 0; index < comboCards.size(); ++index) {
++                        auto& image = comboCards[index];
++                        if (!image.tried) {
++                            image.tried = true;
++                            queuePinnedPan(image, "SAKURA2/UNIT/GATTAI/IRISU/GTE_IRS.SPR", 141258,
++                                0xCAD24FE34F684BB3ull, 259, 285, index);
++                        }
++                        if (image.pending.valid() && image.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                            const auto imageArt = image.pending.get();
++                            if (imageArt.pixels.empty()) continue;
++                            auto& target = comboCardArt[index];
++                            target.resize(w * h * 4);
++                            for (int y = 0; y < 2 * h; ++y) for (int x = 0; x < 2 * w; ++x) {
++                                const int sx = int(std::floor((x + 0.5) * 64 / w * scaleX[index] + shiftX[index]));
++                                const int sy = int(std::floor((y + 0.5) * 72 / h * scaleY[index] + shiftY[index]));
++                                if (sx < 0 || sx >= 259 || sy < 0 || sy >= 285) continue;
++                                const uint32_t pixel = imageArt.pixels[size_t(sy) * 259 + sx];
++                                if ((pixel & 0xFFFFFF) != 0xFFFF00)
++                                    target[size_t(y) * 2 * w + x] = pixel | 0xFF000000;
++                            }
++                        }
++                    }
++                    if (!comboCardArt[0].empty() && !comboCardArt[1].empty()) {
++                        const auto nativeDot = [](const Sprite& draw, int x, int y) {
++                            const int sx = (254 * x + 127) / 256, sy = (286 * y + 143) / 288;
++                            return draw.pixels[size_t(sy) * 128 + sx];
++                        };
++                        const auto inOgami = [&](int x, int y) {
++                            x -= ogami->x;
++                            y -= ogami->y;
++                            return x >= 0 && x < w && y >= 0 && y < h && nativeDot(*ogami, x, y) != 0;
++                        };
++                        const std::array<const Sprite*, 2> cards{ogami, iris};
++                        comboCardPixels.assign(highPitch * 448, 0);
++                        bool visible = false;
++                        for (size_t slot = 0; slot < cards.size(); ++slot) {
++                            const auto& card = *cards[slot];
++                            const auto& art = comboCardArt[slot];
++                            for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
++                                const int screenX = card.x + x, screenY = card.y + y;
++                                if (screenY <= 32 || screenY >= 192) continue;
++                                const size_t at = size_t(screenY) * 320 + screenX;
++                                if (frame.topSource[at] != 0 || frame.source[at] != 0 || (slot == 1 && inOgami(screenX, screenY)))
++                                    continue;
++                                const uint8_t dot = nativeDot(card, x, y);
++                                if (!dot) continue;
++                                const uint16_t word = uint16_t(palette[dot * 2]) << 8 | palette[dot * 2 + 1];
++                                const uint32_t color = uint32_t(word & 31) << 3 |
++                                    uint32_t(word & 0x3E0) << 6 | uint32_t(word & 0x7C00) << 9;
++                                if ((softwareShown[at] & 0xFFFFFF) != color) continue;
++                                for (int dy = 0; dy < 2; ++dy) for (int dx = 0; dx < 2; ++dx) {
++                                    const uint32_t pixel = art[size_t(y * 2 + dy) * 2 * w + x * 2 + dx];
++                                    if (!pixel) continue;
++                                    comboCardPixels[size_t(screenY * 2 + dy) * highPitch + screenX * 2 + dx] = pixel;
++                                    visible = true;
++                                }
++                            }
++                        }
++                        if (visible && !comboCardTexture) {
++                            comboCardTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                SDL_TEXTUREACCESS_STREAMING, highPitch, 448);
++                            if (comboCardTexture) {
++                                SDL_SetTextureScaleMode(comboCardTexture, SDL_SCALEMODE_NEAREST);
++                                SDL_SetTextureBlendMode(comboCardTexture, SDL_BLENDMODE_BLEND);
++                            }
++                        }
++                        if (visible && comboCardTexture &&
++                            SDL_UpdateTexture(comboCardTexture, nullptr, comboCardPixels.data(), highPitch * sizeof(uint32_t)) &&
++                            SDL_RenderTexture(renderer, comboCardTexture, nullptr, &where) &&
++                            std::getenv("SATRECOMP_COMBO_TRACE"))
++                            std::fprintf(stderr, "verified combo cards: GTE_IRS\n");
++                    }
++                }
++            }
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 1 &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_portraits") == 0 && !port.opt.pcAssetsPath.empty() &&
+@@ -4545,6 +4667,8 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                if (comboCardTexture) SDL_DestroyTexture(comboCardTexture);
++                comboCardTexture = nullptr;
+                 if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
+                 irisComboTexture = nullptr;
+                 if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);

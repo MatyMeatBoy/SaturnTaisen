@@ -199,6 +199,7 @@
       "patches/0201-sakura-iris-ogami-combo-blend.patch",
       "patches/0202-sakura-hd-lips-dialogue-window-rails.patch",
       "patches/0203-sakura-restore-iris-ogami-combo.patch",
+      "patches/0204-sakura-iris-ogami-combo-cards.patch",
       "patches/0205-sakura-hd-options-system-rails.patch"
     ]
   }
