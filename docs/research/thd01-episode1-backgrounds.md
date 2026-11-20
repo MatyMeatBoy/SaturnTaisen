@@ -1,58 +1,59 @@
-# THD01: fondos del episodio 1 (una fila por SPR fisico de la ruta fria y variantes)
+# THD01: fondos del episodio 1 (donantes PC de la ruta fría y variantes)
 
 Generado con `python tools/thd01_ep1_backgrounds.py docs/research/thd01-episode1-backgrounds.md`. Solo nombres y estados; sin pixeles.
 Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria de `hd-chapter-1.md`, y BG1120 (iluminacion nocturna). IC/EVE/BBG/TITLE se tratan aparte.
 
 | Saturn BG | PC SPR | Estado | Motivo | Evidencia |
 |---|---|---|---|---|
-| BG1001 | BG1001.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
-| BG1002 | BG1002.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1 |
-| BG1006 | BG1006.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
-| BG1007 | BG1007.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1 |
-| BG1010 | BG1010.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
-| BG1011 | BG1011.SPR | conectado y atribuido |  | docs/research/saturn-bg-format.md |
-| BG1012 | BG1012.SPR | conectado y atribuido |  | docs/research/saturn-bg-format.md |
-| BG1016 | BG1016.SPR | conectado sin atribuir |  | - |
-| BG1017 | BG1017.SPR | conectado y atribuido |  | docs/research/saturn-bg-format.md |
-| BG1021 | BG1021.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1021-on-disc-1 |
-| BG1030 | BG1030.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
-| BG1036 | BG1036.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#additional-night-patrol-doors |
-| BG1043 | BG1043.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
-| BG1045 | BG1045.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
-| BG1046 | BG1046.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1 |
-| BG1055 | BG1055.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#additional-night-patrol-doors |
-| BG1057 | BG1057.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
-| BG1058 | BG1058.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1 |
-| BG1059 | BG1059.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#additional-night-patrol-doors |
-| BG1070 | BG1070.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1070-and-bg2039-on-disc-1 |
-| BG1101 | BG1101.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening |
-| BG1116 | BG1116.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1 |
-| BG1119 | BG1119.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#observations-from-the-full-cold-route |
-| BG1120 | BG1120.SPR | conectado sin atribuir | (variante de iluminacion de BG1119) | - |
-| BG1143 | BG1143.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1 |
-| BG1193 | BG1193.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
-| BG1207 | BG1207.SPR | conectado por ruta propia (scroll/recorte), atribuido | tamano [512, 144] fuera de la tabla 288x144 (dibujo de scroll propio) | docs/research/bg1207-pan.md |
-| BG1209 | BG1209.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
-| BG1216 | BG1216.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#observations-from-the-full-cold-route |
-| BG2004 | BG2004.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1 |
-| BG2010 | BG2010.SPR | no conectado | la clave selecciona BG2004.SPR, imagen 0 | - |
-| BG2034 | BG2034.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg2034-on-disc-1 |
-| BG2039 | BG2039.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1070-and-bg2039-on-disc-1 |
-| BG2159 | BG2159.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
-| BG2173 | BG2173.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
-| BG2248 | BG2248.SPR | conectado por ruta propia (scroll/recorte), atribuido | tamano [288, 296] fuera de la tabla 288x144 (dibujo de scroll propio) | docs/research/bg2248-pan.md |
-| BG2250 | BG2250.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
-| BG2251 | BG2251.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
-| BG2535 | BG2535.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
-| BG3034 | BG3034.SPR | conectado por ruta propia (scroll/recorte), atribuido | recorte con clave de color (fuera de la tabla 288x144; dibujo propio documentado) | docs/research/bg3034-wide-cutout.md |
-| BG4088 | BG4088.SPR | conectado por ruta propia (scroll/recorte), atribuido | recorte con clave de color (fuera de la tabla 288x144; dibujo propio documentado) | docs/research/chapter-one-cutout-followup.md |
-| BG4165 | BG4165.SPR | conectado por ruta propia (scroll/recorte), atribuido | recorte con clave de color (fuera de la tabla 288x144; dibujo propio documentado) | docs/research/chapter-one-cutout-followup.md |
-| BG4171 | BG4171.SPR | conectado por ruta propia (scroll/recorte), atribuido | recorte con clave de color (fuera de la tabla 288x144; dibujo propio documentado) | docs/research/chapter-one-cutout-followup.md |
-| BG4370 | BG4370.SPR | conectado por ruta propia (scroll/recorte), atribuido | recorte con clave de color (fuera de la tabla 288x144; dibujo propio documentado) | docs/research/chapter-one-cutout-followup.md#bg4370-sortie-foreground |
+| BG1001 | BG1001.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
+| BG1002 | BG1002.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1 |
+| BG1006 | BG1006.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
+| BG1007 | BG1007.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1 |
+| BG1010 | BG1010.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
+| BG1011 | BG1011.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
+| BG1012 | BG1012.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
+| BG1016 | BG1016.SPR | conectado sin verificar |  | - |
+| BG1017 | BG1017.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
+| BG1021 | BG1021.SPR | conectado sin verificar |  | - |
+| BG1030 | BG1030.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
+| BG1036 | BG1036.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#additional-night-patrol-doors |
+| BG1043 | BG1043.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
+| BG1045 | BG1045.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
+| BG1046 | BG1046.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1 |
+| BG1055 | BG1055.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#additional-night-patrol-doors |
+| BG1057 | BG1057.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
+| BG1058 | BG1058.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1 |
+| BG1059 | BG1059.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#additional-night-patrol-doors |
+| BG1070 | BG1070.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1070-and-bg2039-on-disc-1 |
+| BG1101 | BG1101.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening |
+| BG1116 | BG1116.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1 |
+| BG1119 | BG1119.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#observations-from-the-full-cold-route |
+| BG1120 | BG1120.SPR | conectado sin verificar | variante de iluminación de BG1119 | - |
+| BG1143 | BG1143.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1 |
+| BG1193 | BG1193.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
+| BG1207 | BG1207.SPR | conectado y verificado |  | docs/research/bg1207-pan.md |
+| BG1209 | BG1209.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
+| BG1216 | BG1216.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#observations-from-the-full-cold-route |
+| BG2004 | BG2004.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1 |
+| BG2010 | BG2004.SPR | conectado sin verificar | reutiliza BG2004.SPR | - |
+| BG2034 | BG2034.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg2034-on-disc-1 |
+| BG2039 | BG2039.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1070-and-bg2039-on-disc-1 |
+| BG2159 | BG2159.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
+| BG2173 | BG2173.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
+| BG2248 | BG2248.SPR | conectado y verificado |  | docs/research/bg2248-pan.md |
+| BG2250 | BG2250.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
+| BG2251 | BG2251.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
+| BG2535 | BG2535.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
+| BG3034 | BG3034.SPR | conectado y verificado |  | docs/research/bg3034-wide-cutout.md |
+| BG4088 | BG4088.SPR | conectado y verificado |  | docs/research/chapter-one-cutout-followup.md |
+| BG4165 | BG4165.SPR | conectado y verificado |  | docs/research/chapter-one-cutout-followup.md |
+| BG4171 | BG4171.SPR | conectado y verificado |  | docs/research/chapter-one-cutout-followup.md |
+| BG4370 | BG4370.SPR | conectado y verificado |  | docs/research/chapter-one-cutout-followup.md#bg4370-sortie-foreground |
 
-SPR fisicos compartidos por varios BG Saturn: ninguno.
+Donantes PC distintos: 43.
+- `BG2004.SPR` se reutiliza en BG2004, BG2010.
 
-Resumen: conectado y atribuido: 34, conectado sin atribuir: 2, conectado por ruta propia (scroll/recorte), atribuido: 7, no conectado: 1
+Apariciones Saturn: conectado y verificado: 40, conectado sin verificar: 4
 
 ## Verificacion en juego a 2560x1440 (2026-11-20, con `art/` junto al exe)
 
@@ -86,16 +87,16 @@ Sustituye al intento anterior: no dibujaba porque la copia del exe no tenia la c
 
 Cobertura: 23 de las 34 conectadas y atribuidas dibujan en la ruta fria. BG1143 y BG1216 (atribuidas, ruta fria) no dibujaron en ningun tramo de la ruta fria (NOT DRAWN; no se probo un estado de continuacion distinto). No se probaron, por falta de estado o pelicula en este PC (`codex-witness-441-review`): BG1010, BG1011, BG1012, BG1036, BG1043, BG1055, BG1057, BG1059 (patrulla nocturna y extras), BG1101 (capitulo 9) y las 7 de ruta propia (scroll/recorte).
 
-### Atribucion de las tres sin atribuir
+### Resultado del barrido para las tres apariciones pendientes
 
 - BG1016: ningun `scene picture:` en los 49 tramos de la ruta fria. La aparición del disco 1 sigue sin atribuir. El mismo donante físico ya está verificado en [la ruta de Iris del disco 2](th8-native-attribution.md#verified-scene-draws-on-0801-and-early-0802).
 - BG1120: el registro da el cuadro frio 189.250; desde el estado del cuadro 186.000 (SHA-256 `b9802efd05286dd2...`), 3.400 cuadros: NOT DRAWN (hashes identicos, 0 interpretados). Sigue sin atribuir.
-- BG2010: no conectado (la clave selecciona BG2004.SPR); no dibuja por si mismo en la ruta fria (BG2004 si, cuadro 256.031). Sigue sin atribuir.
+- BG2010 usa el archivo HD compartido BG2004.SPR. La muestra del cuadro 256.031 verificó BG2004; queda por comprobar la aparición de BG2010 por separado.
 
 ### Deltas
 
 Atribuidos 0, integrados nuevos 0, verificados nuevos 0: las 23 ya constan `verified_in_game` en `config/hd-chapter-coverage.json`, que no cambia (`docs/HD_PROGRESS.md` tampoco). Esto las reproduce con la herramienta correcta.
 
-No verificado: las 11 conectadas sin estado en este PC y las 7 de ruta propia; la lectura visual de cada captura (solo diferencia y rectangulo; BG2039 leido en #651); las tres sin atribuir, que necesitan una ruta que las dibuje.
+No verificado: las 11 conectadas sin estado en este PC y las 7 de ruta propia; la lectura visual de cada captura (solo diferencia y rectangulo; BG2039 leido en #651); las tres apariciones de la subsección anterior, que necesitan una ruta específica.
 
 La regeneración de la tabla conserva esta sección de evidencia.
