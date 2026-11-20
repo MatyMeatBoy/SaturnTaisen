@@ -1,0 +1,51 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -606,11 +606,18 @@
+         SDL_OpenURL(url.c_str());
+     };
+     bool silent = false;
++    bool audioStartPending = true;
++    auto startAudio = [&] {
++        if (!audio.stream || !audioStartPending) return;
++        audioStartPending = false;
++        if (!SDL_ResumeAudioStreamDevice(audio.stream))
++            std::fprintf(stderr, "Audio resume: %s\n", SDL_GetError());
++    };
+     {
+         const SDL_AudioSpec spec{SDL_AUDIO_S16, 2, 44100};
+         audio.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, nullptr, nullptr);
+         if (audio.stream) {
+-            SDL_ResumeAudioStreamDevice(audio.stream);
++            if (port.opt.unthrottled) startAudio();
+             port.audioCtx = &audio;
+             port.audioSink = [](int16_t l, int16_t r, void *ctx) {
+                 auto &a = *static_cast<Audio *>(ctx);
+@@ -3842,6 +3849,10 @@
+         if (port.achievements && (choosing || paused || port.menu.IsOpen()))
+             port.achievements->Idle();
+ #endif
++        // Priming is only for the initial normal-speed guest transport. Keep existing
++        // device handling when the chooser, menu, stepping or slow motion intervenes.
++        if (audioStartPending && (choosing || port.menu.IsOpen() || paused || port.menu.Speed() != 100))
++            startAudio();
+         if(choosing) {
+             showSoftware(); SDL_Delay(8); nextFrame=SDL_GetTicksNS(); continue;
+         }
+@@ -3935,11 +3946,16 @@
+                 if(std::getenv("SATRECOMP_CLIP_TRACE")) {static uint64_t calls=0,short_=0;calls++;short_+=got<size_t(wantFloats);if(calls%600==0)std::fprintf(stderr,"clip audio: %llu top-ups, %llu short\n",(unsigned long long)calls,(unsigned long long)short_);}
+             }
+         }
++        if (audioClip >= 0 && audioStartPending) startAudio();
+         if (audio.stream && !audio.pending.empty()) {
+             // Drop audio rather than fall behind when running unthrottled
+             if (!port.opt.unthrottled || SDL_GetAudioStreamQueued(audio.stream) < 44100 * 4 / 5) {
+                 SDL_PutAudioStreamData(audio.stream, audio.pending.data(),
+                                        static_cast<int>(audio.pending.size() * sizeof(int16_t)));
++                // About two guest fields of 44.1 kHz S16 stereo.
++                constexpr int guestStartBytes = 5880;
++                if (audioStartPending && SDL_GetAudioStreamQueued(audio.stream) >= guestStartBytes)
++                    startAudio();
+             }
+         }
+         audio.pending.clear();

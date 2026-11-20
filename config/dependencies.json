@@ -151,7 +151,8 @@
       "patches/0153-sakura-map05-tiled-ground.patch",
       "patches/0154-sakura-reuse-floral-composites.patch",
       "patches/0155-sakura-fast-body-frame-matching.patch",
-      "patches/0156-sakura-vdp2-line-reuse.patch"
+      "patches/0156-sakura-vdp2-line-reuse.patch",
+      "patches/0157-sakura-prime-guest-audio-at-startup.patch"
     ]
   }
 }
