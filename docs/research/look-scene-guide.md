@@ -22,6 +22,21 @@ What is shown: two characters (Sumire left, Kanna right) with an eyes icon near 
 
 Not yet found: the entry that leaves the page. Hypotheses to test: look at Sumire the full number of times (the line cycles), or look at both with a specific order, or the hand at the edge needs B/Start. The second phase of the 5x5 test moved the cursor too short a distance (stayed on Kanna), so Sumire was not looked at five times; redo with LEFT ~55 after the Kanna dialog is closed.
 
+## Attempts log, bank-5 page 1 (frames count from state 39999; none left the page)
+
+Each segment started from the state; "hold" = direction held N frames. Presses: A 0400, B 0200, C 0100, Start 0800.
+
+| # | Entry | Result |
+| --- | --- | --- |
+| 1 | LEFT hold 70 (on Sumire), then 8 looks (A, A+90, A+170 every 250 frames) | Cursor drifts to the edge after the first dialogs; only the "where are you going / stop those two / You make it sound so easy" loop (2100 frames) |
+| 2 | RIGHT 40, 3 looks at Kanna (250 frames each); LEFT 55; 3 looks at Sumire | Kanna and Sumire lines appear in order (no new page) after 1800 frames |
+| 3 | LEFT hold 120 (edge hand), then B x2, Start x2, C x2, B | B has no effect (loop line). Start opens a command menu (see below); C closes it |
+| 4 | Start at frame 20, A at 80..300 | Menu with Item, Option, Return; A on empty space does nothing |
+| 5 | Start 20, UP hold 10 (cursor lands on card 3), A | Item cards: 1 Sakura, 2 Kanna, 3 Maria, 4 Iris (RIGHT/LEFT hold 10 moves one card). A opens a two-choice box: first = look (description line: "It's a photo of ..."), second (RIGHT then A) = hold the card over the scene as a cursor |
+| 6 | Held card, move LEFT 40 / RIGHT 25, A at 230 and 330 | Card stays held over the scene or returns to the menu; no reaction recorded; the cursor target while holding a card was not verified |
+
+Findings: the page has a Start command menu (Item cards with a "use on the scene" mode, Option, Return) besides the gaze cursor. Using a card on a character is the most likely way to leave the page ("You've got to stop those two!" asks for an action). Untested: each card (1-4) held over Kanna and over Sumire with A pressed while the card is shown (pass the hold with short taps of 5-10 frames), Option/Return effect, and Item use after the edge-hand line.
+
 ## Not done
 
 bank-6, bank-7, public-7, the ground probe (`tools/tactical_ground_probe.py`) and the `hd` promotion were not attempted. No input script is committed because no state advanced past page 1.
