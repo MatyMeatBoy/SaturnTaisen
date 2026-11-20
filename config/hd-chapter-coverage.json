@@ -4745,6 +4745,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/NC80.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc80-nc81-registered-faces.md",
+            "pc": "SAKURA1/NC/NC80.SPR",
+            "runtime_evidence": "docs/research/nc80-nc81-registered-faces.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/NC91.BIN": {
             "association": "observed",
             "evidence": "docs/research/nc99-nc91-registered-faces.md",
@@ -7791,12 +7799,6 @@
       "2:/SAKURA1/NC76.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC76.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "2:/SAKURA1/NC80.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC80.SPR",
         "status": "hd",
         "verified_in_game": false
       },
