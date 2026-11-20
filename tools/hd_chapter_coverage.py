@@ -131,6 +131,8 @@ EVE_PAIRS = {
     'EVE0118': 'BBG101', 'EVE102': 'BBG102', 'EVE105': 'BBG105',
     'EVE202': 'BBG202', 'EVE205': 'BBG205', 'EVE207': 'BBG207',
 }
+EVE_CONTROLLED_INSETS = {'EVE102', 'EVE105', 'EVE205', 'EVE207'}
+EVE_CONTROLLED_REPORT = 'docs/research/disc1-battle-insets.md#controlled-eve-plate-replays'
 # Menu/HUD pictures the runtime draws from the SYSTEM census (docs/research/pc-menu-hud-inventory.json), as
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
@@ -554,6 +556,9 @@ def build(root, index_dir, portrait_audit):
             }
         elif disc == 1 and name in BBG_INSET_PAIRS and path == f'/SAKURA2/{name}.BIN':
             row = {'status': 'hd', 'pc': f'SAKURA2/BG/{name}.SPR', 'pairing_evidence': BBG_INSET_REPORT}
+        elif disc == 1 and name in EVE_CONTROLLED_INSETS and path == f'/SAKURA2/{name}.BIN':
+            row = {'status': 'hd', 'pc': f'SAKURA2/BG/{EVE_PAIRS[name]}.SPR',
+                   'verified_in_game': False, 'fixture_evidence': EVE_CONTROLLED_REPORT}
         elif path in endings:
             bank = endings[path]
             row = ending_bank_row(bank, disc, ending_photo_keys, ending_verified)

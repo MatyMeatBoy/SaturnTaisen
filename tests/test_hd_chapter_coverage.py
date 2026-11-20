@@ -106,7 +106,15 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(airship.get('status'), 'hd')
         self.assertIs(airship.get('verified_in_game'), True)
         self.assertNotIn('1:/SAKURA2/EVE002.BIN', catalog['unassigned']['scene-pictures'])
-        self.assertFalse(catalog['unassigned']['scene-pictures']['1:/SAKURA2/EVE102.BIN'].get('verified_in_game'))
+        controlled_eve = {'EVE102', 'EVE105', 'EVE205', 'EVE207'}
+        self.assertEqual(coverage.EVE_CONTROLLED_INSETS, controlled_eve)
+        for name in controlled_eve:
+            plate = catalog['unassigned']['scene-pictures'][f'1:/SAKURA2/{name}.BIN']
+            self.assertEqual((plate['status'], plate['association']), ('hd', 'unknown'))
+            self.assertFalse(plate['verified_in_game'])
+            self.assertEqual(plate['fixture_evidence'],
+                             'docs/research/disc1-battle-insets.md#controlled-eve-plate-replays')
+            self.assertNotIn('runtime_evidence', plate)
         for name in ('BG1001', 'BG1006', 'BG1209', 'BG2159', 'BG2250', 'BG2251'):
             with self.subTest(campaign_scene=name):
                 scene = chapter1['scene-pictures'][f'1:/SAKURA1/{name}.BIN']

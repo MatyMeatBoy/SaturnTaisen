@@ -1,0 +1,26 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -879,6 +879,8 @@ int RunWindowed(Port &port) {
+     constexpr port::EveRect itemNative{104, 40, 112, 112};
+     SceneHd eve0101;
+     bool eve0101Traced = false;
++    std::array<SceneHd, 3> additionalEveImages;
++    std::array<bool, 3> additionalEveTraces{};
+     struct NativeEveInset {
+         const char* name;
+         uint64_t palette;
+@@ -922,6 +924,13 @@ int RunWindowed(Port &port) {
+          0x701D49A9BAB9C368ull, {0, 0, 224, 224}, bbgItemImages[2], bbgItemTraces[2], itemNative},
+         {"BBG007", 0xEF9307D85B802E5Bull, 0xE7C5EE547670B065ull, "SAKURA2/BG/BBG007.SPR", 30742,
+          0x2320C6D66870B316ull, {0, 0, 224, 224}, bbgItemImages[3], bbgItemTraces[3], itemNative},
++        {"EVE102", 0x4308595E86AF5A10ull, 0x22B9B9008C33A8D1ull, "SAKURA2/BG/BBG102.SPR", 201516,
++         0xD20C3B73D4B01041ull, {0, 12, 560, 280}, additionalEveImages[0], additionalEveTraces[0]},
++        {"EVE105", 0x87AEDEC945E0F9C3ull, 0x36E30A75B96D379Dull, "SAKURA2/BG/BBG105.SPR", 200196,
++         0x7D3B38F69AA30624ull, {25, 19, 551, 299}, additionalEveImages[1], additionalEveTraces[1],
++         port::kEve202NativeRect, port::EveRect{16, 8, 287, 144}, 6},
++        {"EVE207", 0x3816EDE30024F930ull, 0x02366C77791ABD9Dull, "SAKURA2/BG/BBG207.SPR", 136069,
++         0x0458EF0F801B6E2Full, {0, 16, 576, 288}, additionalEveImages[2], additionalEveTraces[2]},
+         {"EVE0101", 0xD3C319A0279AEDB3ull, 0xBB29706F138712A9ull, "SAKURA2/BG/BBG001.SPR", 109669,
+          0x5542041CD4EA4363ull, {2, 1, 574, 319}, eve0101, eve0101Traced, port::kEve202NativeRect,
+          port::EveRect{24, 16, 255, 132}, 24},

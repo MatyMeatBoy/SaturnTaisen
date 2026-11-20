@@ -23,3 +23,46 @@ BBG235 uses a 576 × 288 donor. Patch 0127 checks the declared crop against the 
 BBG004 is referenced by EVT04 at offset 0x1588. On event stage 6, after loading the tile and palette data, the map helper at 0020E470 receives tile column 13, row 5 and 14 × 14 dimensions. The row stride is 128 bytes for the 64-column map, with a 2-byte cell name. This gives the fixed rectangle (104, 40, 112, 112) on the native 320 × 224 canvas. BBG004–BBG007 use identical 14 × 14 cell-map layouts and their matching PC file has one 224 × 224 image.
 
 The shared inset renderer requires the exact palette, rectangle of top-layer ownership and every native RGB pixel before drawing. The target keeps the original integer scale. A card at a different position, a blend or an interrupted transition will use the Saturn frame. No individual square-card appearance has been verified in a replay. The BBG002 regression retains its 1440p 1728 × 864 inset, with 60 identical guest hashes across the main, missing-donor and Original cases.
+
+
+## Controlled EVE plate replays
+
+Patch 0190 adds EVE102, EVE105 and EVE207 to the exact source-5
+288×144 inset path. The matcher requires the captured palette, the full
+native pixel rectangle and the opaque RGB fingerprint. The visible
+native RGB is the Saturn disc decode with the scene's signed −4
+offset. The EVE105 crop follows the independent landmark registration
+(462 inliers from 529 matches) and feathers six donor pixels along
+its edges. The remaining pixels come from the Saturn frame.
+
+| Disc-1 plate | CD FAD / sectors | Palette FNV-1a | Native RGB FNV-1a | PC donor crop (x, y, w, h) |
+| --- | --- | --- | --- | --- |
+| EVE102 | 221105 / 21 | `4308595E86AF5A10` | `22B9B9008C33A8D1` | (0,12,560,280) |
+| EVE105 | 221126 / 22 | `87AEDEC945E0F9C3` | `36E30A75B96D379D` | (25,19,551,299) |
+| EVE205 | 221168 / 19 | `C37A14C8F1D98E80` | `C8578462D33514F9` | (0,32,576,288) |
+| EVE207 | 221187 / 22 | `3816EDE30024F930` | `02366C77791ABD9D` | (0,16,576,288) |
+
+Each private QA seed changes only the active filename in a retained
+English disc-1 EVT02 checkpoint. The real guest reader loads the plate
+from the named CD extent. The pre-draw captures match in full RGB. The
+donor-only and empty-folder pairs match all 2,932 guest fields and
+final SRAM, with zero interpreted blocks. Same-length corrupt donors
+preserve the Enhanced stock captures, and Original donor/empty pairs
+match for all three added rows.
+
+At 2560×1440, EVE102 and EVE207 change only the existing inset
+(416,96)–(2144,960). Each of two sampled opaque frames matches
+1,492,992 independently decoded donor pixels at the approved scale.
+Their empty-folder captures match the 0188 runtime. The EVE205
+regression matches 0188 with the donor present and with the folder
+empty. EVE105 changes only (419,99)–(2135,957) inside the inset.
+Each of four opaque EVE105 captures has 1,397,720 interior pixels within
+two RGB levels per channel of the independent donor projection.
+
+The tested build combines 0189, this patch and the independent IC08
+table row (SHA-256
+`b40e1081646c76ea343f5ab18e724783626cef59ee00ce1007cca5959624d87b`).
+The controlled results certify the draw and fallback for those plate
+identities. Their natural chapter occurrences remain open. Private
+evidence is under `local/work/codex-tw5-next/refresh-audit/eve-0190/`
+and `local/work/codex-th1/eve105-controlled/`.
