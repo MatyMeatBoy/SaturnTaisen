@@ -3477,8 +3477,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
             "pc": "SAKURA1/NC/NC90.SPR",
+            "runtime_evidence": "docs/research/nc81-nc90-1440p.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           }
         },
         "film": {},
@@ -4825,9 +4826,11 @@
           "2:/SAKURA1/NC81.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
+            "native_face_fallback": true,
             "pc": "SAKURA1/NC/NC81.SPR",
+            "runtime_evidence": "docs/research/nc81-nc90-1440p.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           }
         },
         "film": {},
@@ -6007,10 +6010,10 @@
       },
       "1:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc4138-registered-silhouette",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC4138.SPR",
-        "reason": "The PC edition bakes the flower box and background into the native body opening.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
@@ -6834,10 +6837,10 @@
       },
       "2:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc4138-registered-silhouette",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC4138.SPR",
-        "reason": "The PC edition bakes the flower box and background into the native body opening.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
@@ -8537,6 +8540,24 @@
         "pc": "SAKURA1/SYSTEM/KAO.SPR",
         "reason": "portrait atlas (394 faces): counted in the portraits category through the FCE recipe and portrait pack",
         "status": "excluded"
+      },
+      "pc:SAKURA1/SYSTEM/SISTEM.SPR#8": {
+        "association": "unknown",
+        "draw": "patch 0150, port/system_brackets.h: left load selector arrow",
+        "pc": "SAKURA1/SYSTEM/SISTEM.SPR",
+        "pc_image_index": 8,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#load-menu-selection-arrows",
+        "status": "hd",
+        "verified_in_game": true
+      },
+      "pc:SAKURA1/SYSTEM/SISTEM.SPR#9": {
+        "association": "unknown",
+        "draw": "patch 0150, port/system_brackets.h: right load selector arrow",
+        "pc": "SAKURA1/SYSTEM/SISTEM.SPR",
+        "pc_image_index": 9,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#load-menu-selection-arrows",
+        "status": "hd",
+        "verified_in_game": true
       },
       "pc:SAKURA1/SYSTEM/SIS_ICON.SPR#2": {
         "association": "unknown",

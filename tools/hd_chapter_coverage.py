@@ -128,6 +128,8 @@ EVE_PAIRS = {
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
+    ('SAKURA1/SYSTEM/SISTEM.SPR', 8): ('patch 0150, port/system_brackets.h: left load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),
+    ('SAKURA1/SYSTEM/SISTEM.SPR', 9): ('patch 0150, port/system_brackets.h: right load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),
     ('SAKURA1/SYSTEM/FONT_CSL.SPR', 0): ('patch 0093, port/system_brackets.h: left inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
     ('SAKURA1/SYSTEM/FONT_CSL.SPR', 1): ('patch 0093, port/system_brackets.h: right inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
     ('SAKURA1/SYSTEM/SIS_ICON.SPR', 2): ('patch 0112, port/load_disc_icon.h: CD-1 load emblem', MENU_REPORT + '#t110b-cd-1-emblem-in-the-load-menu'),
@@ -154,6 +156,8 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA1/NC90.BIN'): (5, CHAPTER5_ROUTE_REPORT),
+    (2, '/SAKURA1/NC81.BIN'): (9, CHAPTER9_ROUTE_REPORT),
     (1, '/SAKURA2/MAP10.BIN'): (7, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
     (2, '/SAKURA2/MAP19.BIN'): (10, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
     (1, '/SAKURA1/IC0501.BIN'): (5, 'docs/research/ic0501-intermission-witness.md'),
@@ -558,6 +562,13 @@ def build(root, index_dir, portrait_audit):
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')
         elif name in EVE_PAIRS:
             row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/' + EVE_PAIRS[name] + '.SPR'}
+        elif kind == 'bodies' and name in body_review.get('registered_silhouettes', {}):
+            row = {
+                'status': 'hd',
+                'pc': f'SAKURA1/NC/{name}.SPR',
+                'native_face_fallback': True,
+                'fixture_evidence': body_review['registered_silhouettes'][name],
+            }
         elif kind == 'bodies' and name in body_review.get('paired_not_wired', {}):
             row = {
                 'status': 'paired-not-wired',
@@ -575,6 +586,10 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/NC3058.BIN'):
                     row.update(verified_in_game=True, native_face_fallback=True,
                                runtime_evidence='docs/research/nc3058-cutout-1440p.md')
+                elif (disc, path) == (2, '/SAKURA1/NC81.BIN'):
+                    row.update(verified_in_game=True, native_face_fallback=True, runtime_evidence='docs/research/nc81-nc90-1440p.md')
+                elif (disc, path) == (1, '/SAKURA1/NC90.BIN'):
+                    row.update(verified_in_game=True, runtime_evidence='docs/research/nc81-nc90-1440p.md')
                 else:
                     row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:
@@ -656,9 +671,12 @@ def build(root, index_dir, portrait_audit):
         for image in file['images']:
             if (name, image['index']) in SYSTEM_HUD_DRAWS:
                 note, evidence = SYSTEM_HUD_DRAWS[(name, image['index'])]
-                unassigned['menus-hud'][f"pc:{name}#{image['index']}"] = {
+                row = {
                     'status': 'hd', 'pc': name, 'pc_image_index': image['index'], 'association': 'unknown',
                     'draw': note, 'runtime_evidence': evidence}
+                if (name, image['index']) in {('SAKURA1/SYSTEM/SISTEM.SPR', 8), ('SAKURA1/SYSTEM/SISTEM.SPR', 9)}:
+                    row['verified_in_game'] = True
+                unassigned['menus-hud'][f"pc:{name}#{image['index']}"] = row
     hud_census = {
         'system_images': sum(len(file['images']) for file in census['menus']),
         'item_images': len({(p['pc_file'], p['pc_image_index']) for p in config('hd-item-map')['pairs']}),

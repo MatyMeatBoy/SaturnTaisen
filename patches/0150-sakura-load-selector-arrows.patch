@@ -1,0 +1,382 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -988,7 +988,6 @@
+             return tactical_ground::Load(root, *map);
+         });
+     };
+-    using BracketCapture=satrecomp::video::Renderer::BracketCapture;
+     constexpr int bracketStart=system_hud::kAnchors.front();
+     constexpr int bracketWidth=system_hud::kAnchors.back()+system_hud::kWidth-bracketStart;
+     constexpr int bracketHeight=system_hud::kHeight;
+@@ -1006,17 +1005,38 @@
+     std::future<TacticalPortraitArt> pendingTacticalPortraitArt;
+     bool tacticalPortraitArchiveTried = false;
+     SDL_Texture* bracketOverlay=nullptr;
+-    bool bracketLoadTried=false;
++    SDL_Texture* loadArrowOverlay=nullptr;
++    bool bracketLoadTried=false,loadArrowLoadTried=false;
+     std::array<std::vector<uint32_t>,2> bracketArt;
+-    auto drawBrackets=[&](const std::optional<BracketCapture>& capture,const SDL_FRect& crop,
++    std::array<std::vector<uint32_t>,2> loadArrowArt;
++    auto drawBrackets=[&](const satrecomp::video::Renderer::Presentation& planes,const SDL_FRect& crop,
+                           const SDL_FRect& target,int scale) {
++        const auto& capture=planes.brackets;
+         if(!capture || capture->rows!=bracketHeight || scale<2 || choosing || port.menu.IsOpen() ||
+            satrecomp::FeatureValue("presentation_mode")!=1 ||
+-           satrecomp::FeatureValue("pc_hd_backgrounds")!=0 || port.opt.pcAssetsPath.empty() ||
+-           bracketStart<crop.x || bracketStart+bracketWidth>crop.x+crop.w ||
+-           system_hud::kY<crop.y || system_hud::kY+bracketHeight>crop.y+crop.h)
++           satrecomp::FeatureValue("pc_hd_backgrounds")!=0 || port.opt.pcAssetsPath.empty())
+             return;
+-        if(!bracketLoadTried) {
++        const bool load=capture->arrows[0].y==system_hud::kLoadY;
++        const int left=load ? system_hud::kLoadAnchors.front() : bracketStart;
++        const int width=load ? system_hud::kLoadAnchors.back()+system_hud::kWidth-left : bracketWidth;
++        const int top=load ? system_hud::kLoadY : system_hud::kY;
++        if(left<crop.x || left+width>crop.x+crop.w || top<crop.y || top+bracketHeight>crop.y+crop.h ||
++           (load && planes.underSprites.size()!=320*224))return;
++        if(load && !loadArrowLoadTried) {
++            loadArrowLoadTried=true;
++            const auto file=std::filesystem::u8path(port.opt.pcAssetsPath)/"SAKURA1/SYSTEM/SISTEM.SPR";
++            std::vector<uint8_t> bytes;
++            if(ReadPcBackdropFile(file,bytes,285236) && bytes.size()==285236 &&
++               system_hud::Fingerprint(bytes)==0x0DBC9A3C989D369Bull) {
++                std::vector<PcSprite> sprites;
++                std::string error;
++                if(DecodePcSprites(bytes,sprites,error))for(auto& sprite:sprites)
++                    if(sprite.index>=8 && sprite.index<=9 && sprite.width==16 && sprite.height==32 &&
++                       sprite.pixels.size()==512)
++                        loadArrowArt[sprite.index-8]=std::move(sprite.pixels);
++            }
++        }
++        if(!load && !bracketLoadTried) {
+             bracketLoadTried=true;
+             const auto file=std::filesystem::u8path(port.opt.pcAssetsPath)/"SAKURA1/SYSTEM/FONT_CSL.SPR";
+             std::vector<uint8_t> bytes;
+@@ -1029,40 +1049,54 @@
+                         bracketArt[sprite.index]=std::move(sprite.pixels);
+             }
+         }
+-        if(bracketArt[0].empty() || bracketArt[1].empty())return;
++        const auto& art=load ? loadArrowArt : bracketArt;
++        if(art[0].empty() || art[1].empty())return;
+ 
+-        constexpr int stride=bracketWidth*2;
+-        std::array<uint32_t,stride*bracketHeight*2> pixels{};
++        const int stride=width*2;
++        std::array<uint32_t,bracketWidth*2*bracketHeight*2> pixels{};
+         bool visible=false;
+         for(size_t slot=0;slot<capture->arrows.size();++slot) {
+             const auto& owners=capture->owners[slot];
+             if(std::ranges::none_of(owners,[](uint8_t owner){return owner!=0;}))continue;
+             std::array<uint32_t,512> arrow{};
+             const auto& colors=capture->colors[slot];
+-            if(!system_hud::MaskArrow(std::span<const uint32_t,512>(bracketArt[slot%2].data(),512),
+-                                      owners,colors[0],colors[1],arrow))
++            const auto& asset=art[slot%2];
++            if(load) {
++                for(int y=0;y<16;++y)for(int x=0;x<8;++x) {
++                    if(!owners[y*8+x])continue;
++                    const auto under=planes.underSprites[(top+y)*320+capture->arrows[slot].x+x];
++                    const int at=2*y*16+2*x;
++                    for(int sample:{at,at+1,at+16,at+17}) {
++                        if(asset[sample]==0xFFFFFF00u || (asset[sample]>>24)!=255)return;
++                        arrow[sample]=system_hud::LoadBlend(asset[sample],under);
++                    }
++                }
++            } else if(!system_hud::MaskArrow(std::span<const uint32_t,512>(asset.data(),512),
++                                             owners,colors[0],colors[1],arrow)) {
+                 return;
+-            const int x=(capture->arrows[slot].x-bracketStart)*2;
++            }
++            const int x=(capture->arrows[slot].x-left)*2;
+             for(int row=0;row<bracketHeight*2;++row)
+                 std::copy_n(arrow.begin()+16*row,16,pixels.begin()+row*stride+x);
+             visible=true;
+         }
+         if(!visible)return;
+-        if(!bracketOverlay) {
+-            bracketOverlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
++        auto& overlay=load ? loadArrowOverlay : bracketOverlay;
++        if(!overlay) {
++            overlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
+                                             stride,bracketHeight*2);
+-            if(!bracketOverlay)return;
+-            if(!SDL_SetTextureScaleMode(bracketOverlay,SDL_SCALEMODE_NEAREST) ||
+-               !SDL_SetTextureBlendMode(bracketOverlay,SDL_BLENDMODE_BLEND)) {
+-                SDL_DestroyTexture(bracketOverlay);
+-                bracketOverlay=nullptr;
++            if(!overlay)return;
++            if(!SDL_SetTextureScaleMode(overlay,SDL_SCALEMODE_NEAREST) ||
++               !SDL_SetTextureBlendMode(overlay,SDL_BLENDMODE_BLEND)) {
++                SDL_DestroyTexture(overlay);
++                overlay=nullptr;
+                 return;
+             }
+         }
+-        if(!SDL_UpdateTexture(bracketOverlay,nullptr,pixels.data(),stride*sizeof(uint32_t)))return;
+-        const SDL_FRect dest{target.x+(bracketStart-crop.x)*scale,target.y+(system_hud::kY-crop.y)*scale,
+-                             float(bracketWidth*scale),float(bracketHeight*scale)};
+-        SDL_RenderTexture(renderer,bracketOverlay,nullptr,&dest);
++        if(!SDL_UpdateTexture(overlay,nullptr,pixels.data(),stride*sizeof(uint32_t)))return;
++        const SDL_FRect dest{target.x+(left-crop.x)*scale,target.y+(top-crop.y)*scale,
++                             float(width*scale),float(bracketHeight*scale)};
++        SDL_RenderTexture(renderer,overlay,nullptr,&dest);
+     };
+     auto drawItem=[&](const satrecomp::video::Renderer::Presentation& planes,const SDL_FRect& crop,
+                       const SDL_FRect& target,int scale) {
+@@ -1112,15 +1146,7 @@
+                 under=planes.underSprites[(card.y+y)*320+card.x+x];
+             for(const size_t sample:{at,at+1,at+hdSize,at+hdSize+1}) {
+                 uint32_t color=visible?image.rgba[sample]:0;
+-                if(discIcon && visible) {
+-                    uint32_t mixed=0xFF000000;
+-                    for(unsigned shift:{0u,8u,16u}) {
+-                        const auto high=(color>>shift)&255u;
+-                        const auto low=(under>>shift)&255u;
+-                        mixed|=((31*high+low)>>5)<<shift;
+-                    }
+-                    color=mixed;
+-                }
++                if(discIcon && visible)color=system_hud::LoadBlend(color,under);
+                 itemOverlayPixels[sample]=color;
+             }
+         }
+@@ -2772,7 +2798,7 @@
+                             }
+                         }
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
+-                        drawBrackets(planes.brackets,imageCrop,imageTarget,zoom.picture.scale);
++                        drawBrackets(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                             static bool logged=false;if(!logged) {logged=true;fprintf(stderr,"scene zoom: image=%dx%d scale=%d dialogue=%dx%d scale=%d y=%d shadow=%d\n",zoom.picture.w,zoom.picture.h,zoom.picture.scale,fit.w,fit.h,fit.scale,fit.y,zoom.shadow);}
+@@ -2829,7 +2855,7 @@
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 if(!scene.movieOnly && !splitZoom) {
+                     drawItem(planes,crop,target,fit.scale);
+-                    drawBrackets(planes.brackets,crop,target,fit.scale);
++                    drawBrackets(planes,crop,target,fit.scale);
+                 }
+                 portraitViewport=!scene.movieOnly;
+                 }
+@@ -3052,7 +3078,7 @@
+             if(port.videoRenderer && texW==320 && texH==224) {
+                 const int scale=static_cast<int>(where.h/224);
+                 if(where.w==320*scale && where.h==224*scale)
+-                    drawBrackets(port.videoRenderer->PresentationFrame().brackets,{0,0,320,224},where,scale);
++                    drawBrackets(port.videoRenderer->PresentationFrame(),{0,0,320,224},where,scale);
+             }
+         }
+         }
+@@ -3883,6 +3909,7 @@
+     for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);
+     if (nc4138Texture) SDL_DestroyTexture(nc4138Texture);
+     if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);
++    if(loadArrowOverlay)SDL_DestroyTexture(loadArrowOverlay);
+     if (texture) {
+         SDL_DestroyTexture(texture);
+     }
+diff --git a/port/system_brackets.h b/port/system_brackets.h
+--- a/port/system_brackets.h
++++ b/port/system_brackets.h
+@@ -22,6 +22,31 @@
+     uint16_t control,mode,color,size;
+     uint64_t texture,palette;
+ };
++
++inline constexpr std::array kLoadAnchors{224, 280};
++inline constexpr int kLoadY=62;
++inline constexpr uint16_t kLoadColor=0x02C0;
++inline constexpr uint64_t kLoadPalette=0x809F8438D9925B74ull;
++inline constexpr std::array<uint64_t,2> kLoadTexture{0xC22BF33F44463864ull,0xFF02AF0F7DEB043Cull};
++
++inline bool EligibleLoadArrows(std::span<const Arrow,4> arrows) {
++    for(size_t i=0;i<kLoadAnchors.size();++i) {
++        const auto& arrow=arrows[i];
++        if(arrow.x!=kLoadAnchors[i] || arrow.y!=kLoadY || arrow.right!=arrow.x+kWidth-1 ||
++           arrow.bottom!=arrow.y+kHeight-1 || (arrow.control&0x8FFF)!=1 || arrow.mode!=0x0080 ||
++           arrow.size!=0x0110 || arrow.color!=kLoadColor || arrow.texture!=kLoadTexture[i] ||
++           arrow.palette!=kLoadPalette)
++            return false;
++    }
++    return arrows[2].texture==0 && arrows[3].texture==0;
++}
++
++inline uint32_t LoadBlend(uint32_t upper,uint32_t under) {
++    uint32_t result=0xFF000000;
++    for(unsigned shift:{0u,8u,16u})
++        result|=((31*((upper>>shift)&255u)+((under>>shift)&255u))>>5)<<shift;
++    return result;
++}
+ 
+ // The four verified inventory marks form one stable layout. The corners are inclusive.
+ // Matching just one familiar texture is insufficient because other screens use the glyph.
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -294,19 +294,26 @@
+ void Renderer::TrackBracketCommand(const PresentationSprite& sprite) {
+     using namespace system_hud;
+     const auto& cmd=sprite.command.words;
+-    if((cmd[0]&0x8FFF)!=1 || cmd[2]!=0x0080 || cmd[5]!=0x0110 || sprite.y!=kY ||
+-       sprite.pixels.size()!=64)
++    if((cmd[0]&0x8FFF)!=1 || cmd[2]!=0x0080 || cmd[5]!=0x0110 || sprite.pixels.size()!=64)
+         return;
+-    const auto anchor=std::ranges::find(kAnchors,sprite.x);
+-    if(anchor==kAnchors.end())return;
+-    const auto slot=anchor-kAnchors.begin();
++    const bool load=sprite.y==kLoadY;
++    if(!load && sprite.y!=kY)return;
++    const std::span<const int> anchors=load ? std::span<const int>{kLoadAnchors} : std::span<const int>{kAnchors};
++    const auto anchor=std::ranges::find(anchors,sprite.x);
++    if(anchor==anchors.end())return;
++    const size_t slot=anchor-anchors.begin();
+     const int right=bit::sign_extend<13>(cmd[10])+m_ctx.localCoordX;
+     const int bottom=bit::sign_extend<13>(cmd[11])+m_ctx.localCoordY;
+     const auto texture=Fingerprint(sprite.pixels);
+-    if(right!=sprite.x+kWidth-1 || bottom!=sprite.y+kHeight-1 || texture!=kTexture[slot%2] ||
+-       std::ranges::find(kColor,cmd[3])==kColor.end())
++    const bool identity=load ? texture==kLoadTexture[slot] && cmd[3]==kLoadColor :
++        texture==kTexture[slot%2] && std::ranges::find(kColor,cmd[3])!=kColor.end();
++    if(right!=sprite.x+kWidth-1 || bottom!=sprite.y+kHeight-1 || !identity)return;
++    auto& drawn=m_drawnBrackets[m_captureDrawFB];
++    if(std::ranges::any_of(drawn.arrows,[&](const auto& arrow) {return arrow.texture && arrow.y!=sprite.y;})) {
++        drawn={};
++        m_bracketCaptureActive=false;
+         return;
+-    auto& drawn=m_drawnBrackets[m_captureDrawFB];
++    }
+     auto& arrow=drawn.arrows[slot];
+     if(arrow.texture) {
+         drawn={};
+@@ -727,17 +734,19 @@
+ // Special/extended and line-screen calculations still require the reference.
+ bool Renderer::BeginBracketLine(uint32 line) {
+     using namespace system_hud;
+-    if(!m_captureBrackets || !m_capturePresentation || line<kY || line>=kY+kHeight)
+-        return false;
++    if(!m_captureBrackets || !m_capturePresentation)return false;
+     auto& presented=m_presentation.brackets;
+     const auto& drawn=m_drawnBrackets[m_displayFB];
++    const bool load=drawn.arrows[0].y==kLoadY;
++    const uint32 start=load ? kLoadY : kY;
++    if(line<start || line>=start+kHeight)return false;
+     const auto& sprite=m_regs2.spriteParams;
+     if(!drawn.serial || (m_drawing && m_displayFB==m_captureDrawFB) ||
+        m_width!=320 || m_height!=224 || m_regs2.TVMD.IsInterlaced() || m_regs1.pixel8Bits ||
+        m_regs1.fbRotEnable || m_regs1.dblInterlaceEnable || m_regs1.hdtvEnable ||
+-       sprite.type!=1 || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
++       sprite.type!=(load ? 0 : 1) || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
+        m_regs2.vramControl.colorRAMMode!=1 ||
+-       (line!=kY && (!presented || presented->serial!=drawn.serial || presented->rows!=line-kY))) {
++       (line!=start && (!presented || presented->serial!=drawn.serial || presented->rows!=line-start))) {
+         presented.reset();
+         return false;
+     }
+@@ -745,17 +754,18 @@
+     std::array<std::array<uint32,2>,4> colors{};
+     for(size_t slot=0;slot<arrows.size();++slot) {
+         auto& arrow=arrows[slot];
++        if(!arrow.texture)continue;
+         const uint32 bank=(arrow.color&0x7FF)*2;
+         arrow.palette=Fingerprint(ColorBytes(bank,32));
+         colors[slot]={
+             ConvertRGB555to888(Color555{CramWord(bank+6*2)}).u32|0xFF000000,
+             ConvertRGB555to888(Color555{CramWord(bank+9*2)}).u32|0xFF000000};
+     }
+-    if(!Eligible(arrows)) {
++    if(!(load ? EligibleLoadArrows(arrows) : Eligible(arrows))) {
+         presented.reset();
+         return false;
+     }
+-    if(line==kY) {
++    if(line==start) {
+         presented.emplace();
+         presented->serial=drawn.serial;
+         presented->arrows=arrows;
+@@ -1064,6 +1074,8 @@
+     const bool glyphLine=supported && PrepareGlyphLine(line);
+     const bool itemLine=supported && y==line && BeginItemCardLine(y);
+     const bool bracketLine=supported && y==line && BeginBracketLine(y);
++    const auto& drawnBrackets=m_drawnBrackets[m_displayFB];
++    const bool loadArrows=bracketLine && drawnBrackets.arrows[0].y==system_hud::kLoadY;
+     const auto* drawnItem=itemLine?&*m_drawnItemCard[m_displayFB]:nullptr;
+     for (uint32 x = 0; x < width; x++) {
+         const auto [color,top,presentationSource,whiteWeight,panel,floralCover,floralRgb,mapWeight,episodeWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
+@@ -1075,7 +1087,7 @@
+                 {rgba,restored.source<5?rgba:0,m_glyphLineOwners[x],m_glyphStamps[m_displayFB][at].underOwner,
+                  restored.unshadowedPanel?(restored.top==5?restored.floralCover:restored.panel) : ::port::PanelMix{}};
+         }
+-        if(bracketLine && m_presentation.brackets && x>=64 && x<176) {
++        if(bracketLine && !loadArrows && m_presentation.brackets && x>=64 && x<176) {
+             const auto& drawn=m_drawnBrackets[m_displayFB];
+             for(size_t slot=0;slot<drawn.arrows.size();++slot) {
+                 const uint32 column=x-drawn.arrows[slot].x;
+@@ -1155,17 +1167,32 @@
+                     under.u32=mix(under.r,below.r)|(mix(under.g,below.g)<<8)|(mix(under.b,below.b)<<16);
+                 }
+                 under=applyOffset(under,a);
+-                // The load-menu disc icon uses a ratio-zero VDP2 interpolation.
+-                // Only expose owners whose lower input is reproduced by underSprites.
+-                if(discIcon && x>=uint32(drawnItem->x) && x<uint32(drawnItem->x+::port::kLoadDiscIconSize) &&
+-                   state2.layerEnabled[kSprites] && m_sprite.colorCalcEnable[x] && m_sprite.colorCalcRatio[x]==0 &&
+-                   !regs2.spriteParams.lineColorScreenEnable && !regs2.colorCalcExtended && !regs2.colorCalcAdd &&
+-                   !regs2.colorCalcUseSecondRatio && !m_colorCalcWindow[x] && capturesUnshadowedPanel &&
+-                   !(regs2.colorOffsetEnable[kSprites] && regs2.colorOffset[regs2.colorOffsetSelect[kSprites]].nonZero) &&
+-                   (under.u32&0xFFFFFF)==rawUnder) {
++                // Load-menu overlays need the exact lower input from the native ratio-zero blend.
++                const bool loadBlend=(discIcon || loadArrows) && state2.layerEnabled[kSprites] &&
++                    m_sprite.colorCalcEnable[x] && m_sprite.colorCalcRatio[x]==0 &&
++                    !regs2.spriteParams.lineColorScreenEnable && !regs2.colorCalcExtended && !regs2.colorCalcAdd &&
++                    !regs2.colorCalcUseSecondRatio && !m_colorCalcWindow[x] && capturesUnshadowedPanel &&
++                    !(regs2.colorOffsetEnable[kSprites] && regs2.colorOffset[regs2.colorOffsetSelect[kSprites]].nonZero) &&
++                    (under.u32&0xFFFFFF)==rawUnder;
++                if(discIcon && loadBlend && x>=uint32(drawnItem->x) && x<uint32(drawnItem->x+::port::kLoadDiscIconSize)) {
+                     const size_t texel=size_t(y-drawnItem->y)*kItemCardSize+(x-drawnItem->x);
+                     if(drawnItem->pixels[texel]==1)
+                         m_presentation.itemCard->pixels[texel]=1;
++                }
++                if(loadArrows && m_presentation.brackets) {
++                    for(size_t slot=0;slot<system_hud::kLoadAnchors.size();++slot) {
++                        const uint32 column=x-drawnBrackets.arrows[slot].x;
++                        if(column>=system_hud::kWidth)continue;
++                        const size_t texel=(y-system_hud::kLoadY)*system_hud::kWidth+column;
++                        const auto owner=drawnBrackets.owners[slot][texel];
++                        const auto expected=system_hud::LoadBlend(m_sprite.color[x],under.u32);
++                        if(owner==2 || (owner==1 && !(loadBlend && a==5 && ((expected^color.u32)&0xFFFFFF)==0))) {
++                            m_presentation.brackets.reset();
++                        } else if(owner==1) {
++                            m_presentation.brackets->owners[slot][texel]=1;
++                        }
++                        break;
++                    }
+                 }
+             }
+             m_presentation.underSprites[at]=under.u32|0xFF000000;
+diff --git a/video/raster.cpp b/video/raster.cpp
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -85,12 +85,17 @@
+     if(m_bracketCaptureActive && !m_presentRasterTarget) {
+         // Use the physical destination, including framebuffer wrap and wide commands.
+         const uint32 pixel=offset/2;
+-        const uint32 row=pixel/regs1.fbSizeH-system_hud::kY;
+-        if(row<system_hud::kHeight) {
++        const uint32 destY=pixel/regs1.fbSizeH;
++        const bool loadLine=destY-system_hud::kLoadY<system_hud::kHeight;
++        if(loadLine || destY-system_hud::kY<system_hud::kHeight) {
+             const uint32 destX=pixel%regs1.fbSizeH;
++            const int start=loadLine ? system_hud::kLoadY : system_hud::kY;
++            const uint32 row=destY-start;
+             auto& group=m_drawnBrackets[m_captureDrawFB];
+-            for(size_t slot=0;slot<system_hud::kAnchors.size();++slot) {
+-                const uint32 column=destX-system_hud::kAnchors[slot];
++            for(size_t slot=0;slot<group.arrows.size();++slot) {
++                const auto& arrow=group.arrows[slot];
++                if(!arrow.texture || arrow.y!=start)continue;
++                const uint32 column=destX-arrow.x;
+                 if(column>=system_hud::kWidth)continue;
+                 auto& owner=group.owners[slot][row*system_hud::kWidth+column];
+                 if(m_bracketWriting==static_cast<int>(slot))owner=1;

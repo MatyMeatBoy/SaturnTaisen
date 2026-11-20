@@ -107,7 +107,7 @@ NC60 matches 11,273 opaque pixels at (120,8) in continuation frame 4200,
 following its read at FAD 165138. NC3058 has an exact 288×144 body
 command in the terminal state and all 27,544 opaque pixels match
 the frame-7200 capture. These are native body observations. The
-coverage register retains their HD integration status. The separate [NC3058 cut-out replay](nc3058-cutout-1440p.md) verifies the HD draw and the native face fallback for this appearance.
+coverage register retains their HD integration status. [NC90 now has a separate 1440p HD draw](nc81-nc90-1440p.md). The separate [NC3058 cut-out replay](nc3058-cutout-1440p.md) verifies the HD draw and the native face fallback for this appearance.
 
 | State / image | Portrait | Base FNV-1a | Native RGB comparison |
 | --- | --- | --- | --- |

@@ -105,6 +105,7 @@ class RealBankTests(unittest.TestCase):
         import decode_saturn_bg as saturn
         path = ISO1 if ISO1.exists() else MAIN_ROOT / 'local/prepared/disc1/Track 01.iso'
         iso = saturn.Iso(path)
+        self.addCleanup(iso.file.close)
         self.data = iso.content(dict(iso.files('SAKURA2'))['UNIT04.BIN'])
 
     def test_layout_sizes(self):

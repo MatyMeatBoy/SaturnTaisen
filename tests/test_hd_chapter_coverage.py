@@ -189,6 +189,18 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertFalse(ground.get('verified_in_game'))
         self.assertNotIn('runtime_evidence', ground)
 
+    def test_body_witness_batch_remains_disc_scoped(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        nc90 = catalog['chapters'][4]['resources']['bodies']['1:/SAKURA1/NC90.BIN']
+        nc81 = catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC81.BIN']
+        self.assertTrue(nc90['verified_in_game'])
+        self.assertTrue(nc81['verified_in_game'])
+        self.assertTrue(nc81['native_face_fallback'])
+        self.assertEqual(nc81['runtime_evidence'], 'docs/research/nc81-nc90-1440p.md')
+        self.assertFalse(catalog['chapters'][0]['resources']['bodies']['1:/SAKURA1/NC81.BIN']['verified_in_game'])
+        self.assertFalse(catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC3018.BIN']['verified_in_game'])
+
     def test_eve202_only_attributes_the_witnessed_disc(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
@@ -247,9 +259,10 @@ class ChapterCoverageTest(unittest.TestCase):
         groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
         rows = [row for group in groups for row in group['menus-hud'].values()]
         drawn = {(row['pc'], row['pc_image_index']) for row in rows if row['status'] == 'hd'}
-        self.assertEqual(len(drawn), 45)
-        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 4)
+        self.assertEqual(len(drawn), 47)
+        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 6)
         self.assertIn(('SAKURA1/SYSTEM/SIS_ICON.SPR', 3), drawn)
+        self.assertEqual({index for pc, index in drawn if pc == 'SAKURA1/SYSTEM/SISTEM.SPR'}, {8, 9})
         items = catalog['unassigned']['menus-hud']
         for disc in (1, 2):
             for name in ('ITEM03', 'ITEM12', 'ITEM27'):
@@ -312,7 +325,7 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         for disc in (1, 2):
-            for name in ('NC3125', 'NC3126', 'NC3290', 'NC3517', 'NC4138'):
+            for name in ('NC3125', 'NC3126', 'NC3290', 'NC3517'):
                 with self.subTest(disc=disc, body=name):
                     row = catalog['unassigned']['bodies'][f'{disc}:/SAKURA1/{name}.BIN']
                     self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
@@ -391,6 +404,21 @@ class ChapterCoverageTest(unittest.TestCase):
         for identity in ('0001', '00e9'):
             self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
             self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')
+
+    def test_nc4138_registered_body_has_fixture_scope_only(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        rows = dict(catalog['unassigned']['bodies'])
+        for chapter in catalog['chapters']:
+            rows.update(chapter['resources']['bodies'])
+        for disc in (1, 2):
+            body = rows[f'{disc}:/SAKURA1/NC4138.BIN']
+            self.assertEqual((body['status'], body['pc']), ('hd', 'SAKURA1/NC/NC4138.SPR'))
+            self.assertTrue(body['native_face_fallback'])
+            self.assertFalse(body.get('verified_in_game'))
+            self.assertTrue(body['fixture_evidence'].endswith('#nc4138-registered-silhouette'))
+            for other in ('NC3125', 'NC3126', 'NC3290', 'NC3517'):
+                self.assertEqual(rows[f'{disc}:/SAKURA1/{other}.BIN']['status'], 'paired-not-wired')
 
     def test_scene_corridor_aliases_use_existing_runtime_keys(self):
         root = Path(__file__).resolve().parents[1]
