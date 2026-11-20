@@ -54,3 +54,7 @@ A successful scene verdict now requires a usable donor trace, changed RGB pixels
 For queues built from disc reads or resident memory, add `--expect SAKURA1/BG/BG2057.SPR` with the corresponding donor name. The first run checks the strict hashes and trace. If the expected file was unused in that window, the command exits 1 without running the control. A positive still runs the full control and rejects comparisons where another donor is newly active. A skipped window establishes only that this checkpoint failed to draw the requested resource.
 
 The first five-checkpoint benchmark on the release candidate found two active donors, BG2517 and BG2057, and three negatives. It used five donor runs and needed two controls instead of five. That saves three of ten runs while preserving the same positive verification checks. Start with a short settled replay window and advance inputs for checkpoints with an active fade or a loaded plate hidden by the foreground.
+
+## Panning scenes
+
+The probe enables the renderer's pan trace and resolves confirmed draw names through the checked-in scroll donor table. The same strict A/B checks apply. A 205-field 1440p test from the known BG2248 disc 1 pan changes 2,030,491 RGB pixels and matches guest hashes and final SRAM. The Episode 10 checkpoint inspected separately reaches only a movie and transition, so it remains pending.
