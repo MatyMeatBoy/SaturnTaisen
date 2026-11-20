@@ -196,6 +196,13 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG1071.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
+    (2, '/SAKURA1/BG1125.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
+    (2, '/SAKURA1/BG1013.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
+    (2, '/SAKURA1/BG1019.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
+    (2, '/SAKURA1/BG2084.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
+    (2, '/SAKURA1/BG1278.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
+    (2, '/SAKURA1/BG2086.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
     (2, '/SAKURA1/BG2162.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-scene-draws-on-the-archived-ending-route'),
     (2, '/SAKURA1/BG2288.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-scene-draws-on-the-archived-ending-route'),
     (2, '/SAKURA1/BG2287.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-scene-draws-on-the-archived-ending-route'),
