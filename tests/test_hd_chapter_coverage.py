@@ -669,7 +669,7 @@ class ChapterCoverageTest(unittest.TestCase):
         for name in ('BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100'):
             row = chapter9['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
             self.assertEqual(row['association'], 'observed')
-            self.assertEqual(bool(row.get('verified_in_game')), name != 'BG1072')
+            self.assertTrue(row['verified_in_game'])
         self.assertTrue(chapter9['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
         self.assertEqual(chapter9['portraits']['2:/SAKURA1/0901FCE.BIN']['association'], 'resident')
         yoneda = chapter9['portraits']['00e9']
@@ -724,7 +724,7 @@ class ChapterCoverageTest(unittest.TestCase):
                 row = scenes[f'{disc}:/SAKURA1/{alias}.BIN']
                 self.assertEqual(row['status'], 'hd')
                 self.assertEqual(row['native_alias_of'], canonical)
-                self.assertEqual(row['pc'], f'SAKURA1/BG/{canonical}.SPR')
+                self.assertEqual(row['pc'], 'SAKURA1/BG/BG1134.SPR')
                 self.assertFalse(row.get('verified_in_game'))
         self.assertEqual(scenes['1:/SAKURA1/BG4049.BIN']['status'], 'unpaired')
 

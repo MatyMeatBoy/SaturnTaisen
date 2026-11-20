@@ -220,6 +220,7 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG1072.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-bg1072-before-0901'),
     (2, '/SAKURA1/BG2057.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2057-behind-nc3057'),
     (2, '/SAKURA1/BG2517.BIN'): (9, 'docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene'),
     (2, '/SAKURA1/BG2046.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2046-ending-scene'),
@@ -500,7 +501,8 @@ def runtime_bg_entries(root):
             str(root / 'config/hd-scene-bg-map.json'), str(header),
         ], check=True, capture_output=True, text=True)
         text = header.read_text(encoding='utf-8')
-        first = set(re.findall(r'\{0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text))
+        first = {palette: (file, index) for palette, file, index in re.findall(
+            r'\{0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text)}
         cells = {(palette, fnv): (file, index) for palette, fnv, file, index in re.findall(
             r'\{0x([0-9A-F]+)ull,0x([0-9A-F]+)ull,"([^"]+)",(\d+)\}', text)}
         return first, cells
@@ -613,6 +615,7 @@ def build(root, index_dir, portrait_audit):
         native_bg_aliases[alias_path] = (canonical, target)
     scroll_rows = {row['name'] for row in config('hd-scroll-pictures')['rows']}
     bg_table, bg_cell_table = runtime_bg_entries(root)
+    scene_alias_candidates = {}
     donor_hashes = {
         (row['pc_file'], str(row['pc_image_index'])): row.get('pc_sha256')
         for row in bg.values() if row.get('pc_file') and 'pc_image_index' in row
@@ -811,14 +814,17 @@ def build(root, index_dir, portrait_audit):
             )
             if accepted:
                 key = (pair['palette_fnv'], pair['pc_file'], str(pair['pc_image_index']))
-                donor = bg_cell_table.get((pair['palette_fnv'], pair.get('cells_fnv')))
+                donor = bg_table.get(key[0]) or bg_cell_table.get((key[0], pair.get('cells_fnv')))
                 same_image = donor == key[1:] or (
                     donor is not None and pair.get('pc_sha256') and donor[1] == key[2] and
                     donor_hashes.get(donor) == pair['pc_sha256'] and pair['size'] == [288, 144] and
                     path.startswith(('/SAKURA1/', '/SAKURA2/EVE', '/SAKURA2/BBG')) and name[2:3] not in '34') or (
                     donor is not None and name in bg_review.get('shared_cell_choice', {}) and pair['size'] == [288, 144])
-                row = {'status': 'hd' if key in bg_table or same_image else 'paired-not-wired',
+                row = {'status': 'hd' if same_image else 'paired-not-wired',
                        'pc': donor[0] if same_image else pair['pc_file']}
+                if (same_image and donor[0] != pair['pc_file'] and pair.get('pc_sha256')
+                        and donor_hashes.get(donor) == pair['pc_sha256'] and donor[1] == key[2]):
+                    scene_alias_candidates.setdefault(pair['pc_file'], set()).add(donor[0])
                 if alias:
                     row['native_alias_of'] = alias
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
@@ -1122,6 +1128,14 @@ def build(root, index_dir, portrait_audit):
                     occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
                 add('portraits', ident, occurrence, episode, 'observed', evidence)
 
+    scene_files = {
+        row['pc']
+        for group in [unassigned, *(chapter['resources'] for chapter in chapters.values())]
+        for row in group['scene-pictures'].values() if row.get('pc')
+    }
+    scene_aliases = {source: next(iter(targets))
+                     for source, targets in scene_alias_candidates.items()
+                     if source not in scene_files and len(targets) == 1}
     return {
         'schema': 1,
         'status': {
@@ -1141,6 +1155,7 @@ def build(root, index_dir, portrait_audit):
             'unknown': 'No chapter attribution in the inputs.',
         },
         'hud_census': hud_census,
+        'scene_file_aliases': scene_aliases,
         'chapters': list(chapters.values()),
         'unassigned': unassigned,
     }

@@ -46,7 +46,7 @@
     {
       "id": "scene-images",
       "label": "Imágenes de escena",
-      "unit": "archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH)",
+      "unit": "recursos SPR PC únicos (BG, EVENT, CG, ENDING, TITLE, ICATCH)",
       "scope": "Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.",
       "sources": [
         {
@@ -62,7 +62,7 @@
       "next": "Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.",
       "details": [
         "El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.",
-        "El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El total integrado de la tabla se calcula desde el registro por capítulo y cuenta una vez los archivos PC compartidos por ambos discos.",
+        "El cruce TH0 registra 712 archivos PC con correspondencia aceptada antes de agrupar duplicados. El informe cuenta cada archivo enlazado una sola vez, aunque aparezca en ambos discos o varias claves Saturn lo utilicen.",
         "La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. La columna de verificación en juego cuenta un archivo PC por cada imagen con al menos una aparición HD observada. Es un mínimo documentado. El recuento de recursos preparados y la auditoría de todas las apariciones siguen pendientes."
       ],
       "total": 1267,
