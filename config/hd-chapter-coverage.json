@@ -3141,8 +3141,8 @@
             "association": "observed",
             "evidence": "docs/research/bg2290-native-pan.md",
             "pc": "SAKURA1/BG/BG2290.SPR",
-            "reason": "The live pan holds at x=0, where the tested PC crop misses the native composition before the aligned portion.",
-            "status": "unsupported-size"
+            "runtime_evidence": "docs/research/scroll-table.md",
+            "status": "wired-unverified"
           },
           "1:/SAKURA1/BG3123.BIN": {
             "association": "observed",
