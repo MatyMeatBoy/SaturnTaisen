@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Episode 1 opening, verified records only.",
+  "scope": "Episode 1 opening and post-lobby, plus selected Episode 2 introduction and item records. Verified records only.",
   "evidence": "Reconstructed Japanese compared by aligned native record ID with both hash-identified Spanish/English prepared discs. Japanese source text is not included.",
   "entries": [
     {
@@ -217,6 +217,222 @@
       "confidence": "high",
       "spanish_current": "El teniente general Yoneda me\nha encomendado la misión de\nvenir a buscarlo.",
       "spanish_suggested": "El teniente general Yoneda me encomendó la misión de escoltarlo, alférez Ogami.",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0485",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 485,
+      "record_id": 50051,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Gracias. Por cierto, dejando de lado a quien es la primera estrella de este teatro, yo, Sumire Kanzaki…",
+      "english_current": "Thank you. Oh, by the way. \nWhat do you think about how\nthat Maria just came out of\nnowhere…",
+      "english_issue": "El inglés adelanta a Maria y omite que Sumire se describe en este tramo como la estrella del teatro. Su continuación inventa una sustitución.",
+      "english_suggested": "Thank you. Incidentally, leaving aside this theater’s leading star, Sumire Kanzaki…",
+      "confidence": "high",
+      "spanish_current": "Gracias. Ah, por cierto. ¿Qué\nopina de que esa Maria,\ndejándome de lado a mí…",
+      "spanish_suggested": "Gracias. Por cierto, dejando de lado a la gran estrella de este teatro, Sumire Kanzaki…",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0486",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 486,
+      "record_id": 50052,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Casi sin darme cuenta, Maria se ha puesto al frente de la compañía de ópera. ¿Qué piensa de eso?",
+      "english_current": "…and replaced me, top star\nSumire Kanzaki, as the leader\nof the troop?",
+      "english_issue": "La traducción inglesa dice que Maria reemplazó como jefa a Sumire, cuando Sumire reprocha que la hayan pasado por alto. Se pierde además la distinción de la compañía de ópera.",
+      "english_suggested": "…Maria has somehow ended up leading the opera troupe. What do you think of that?",
+      "confidence": "high",
+      "spanish_current": "…la gran estrella Sumire\nKanzaki, se haya convertido de\nbuenas a primeras en líder de\nla compañía?",
+      "spanish_suggested": "…resulta que Maria acabó al frente de la compañía de ópera. ¿Qué le parece?",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0487",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 487,
+      "record_id": 50053,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Ese viejo despreciable de Yoneda. No tiene ojo para juzgar a las personas.",
+      "english_current": "That old geezer Yoneda… He\ncouldn't spot a star if you \nhit him over the head with it.",
+      "english_issue": "Se añade un chiste sobre golpear al director con una estrella. El reclamo de Sumire es por su criterio al juzgar a la gente.",
+      "english_suggested": "Damn that old geezer Yoneda! He’s a terrible judge of people.",
+      "confidence": "high",
+      "spanish_current": "¡Ese vejestorio de Yoneda! ¡No\nsabe reconocer el talento ni\naunque le caiga en la cabeza!",
+      "spanish_suggested": "¡Ese viejo desgraciado de Yoneda! ¡No sabe juzgar a la gente!",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0495",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 495,
+      "record_id": 50061,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "¿Usted es el alférez Ogami, destinado a la Compañía de Asalto?",
+      "english_current": "So you're Ichiro Ogami, newly\ntransferred to the Troop.",
+      "english_issue": "El inglés usa el nombre de pila en lugar del rango militar con el que Maria se dirige a Ogami.",
+      "english_suggested": "So you’re Ensign Ogami, the new transfer to the Assault Troop?",
+      "confidence": "high",
+      "spanish_current": "Así que usted es el alférez\nOgami, el recién destinado a\nla compañía.",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0100-0498",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 498,
+      "record_id": 50064,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "El teniente general Yoneda está en el despacho del director. Tengo ensayo, así que me retiro.",
+      "english_current": "Lt. General Yoneda is in the\nmanager's office. I have\ntraining, so I must leave you…",
+      "english_issue": "Maria menciona un ensayo y el inglés lo deja como entrenamiento.",
+      "english_suggested": "Lieutenant General Yoneda is in the manager’s office. I have rehearsal, so please excuse me.",
+      "confidence": "high",
+      "spanish_current": "El teniente general Yoneda\nestá en el despacho del\ndirector. Yo tengo ensayo, así\nque, si me disculpa…",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0102-0003",
+      "table": "/SAKURA1/0102TBL.BIN",
+      "index": 3,
+      "record_id": 40004,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Una foto de Kanna. Se la ve robusta y fuerte. Tengo ganas de conocerla.",
+      "english_current": "It's a photo of Kanna. She\nlooks energetic and confident.\nI can't wait to meet her.",
+      "english_issue": "Misma descripción japonesa que en 0201-0003 y misma pérdida de la referencia a la fuerza física.",
+      "english_suggested": "A photo of Kanna. She looks sturdy and strong. I hope to meet her soon.",
+      "confidence": "high",
+      "spanish_current": "Una foto de Kanna. Se ve\nenérgica y segura de sí misma.\nTengo ganas de conocerla.",
+      "spanish_suggested": "Una foto de Kanna. Se la ve fuerte y robusta. Tengo ganas de conocerla.",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0108-0300",
+      "table": "/SAKURA1/0108TBL.BIN",
+      "index": 300,
+      "record_id": 50052,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Casi sin darme cuenta, Maria se ha puesto al frente de la compañía de ópera. ¿Qué piensa de eso?",
+      "english_current": "Although somehow or other,\nMaria ended up as the leader \nof our opera troupe. What do\nyou think of that?",
+      "english_issue": "Esta versión inglesa alternativa sí conserva el sentido y la referencia a la ópera. Sirve como control para el mismo diálogo de 0100-0486.",
+      "english_suggested": null,
+      "confidence": "high",
+      "spanish_current": "Aunque, no sé cómo, Maria\nacabó siendo la líder de\nnuestra compañía. ¿Qué le\nparece?",
+      "spanish_suggested": "Aunque, no sé cómo, Maria acabó al frente de la compañía de ópera. ¿Qué le parece?",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0201-0003",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 3,
+      "record_id": 40004,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Una foto de Kanna. Se la ve robusta y fuerte. Tengo ganas de conocerla.",
+      "english_current": "It's a photo of Kanna. She\nlooks energetic and confident.\nI can't wait to meet her.",
+      "english_issue": "Interpreta una descripción de robustez física y fuerza como energía y confianza.",
+      "english_suggested": "A photo of Kanna. She looks sturdy and strong. I hope to meet her soon.",
+      "confidence": "high",
+      "spanish_current": "Es una foto de Kanna. Se la ve\nenérgica y segura. Tengo ganas\nde conocerla.",
+      "spanish_suggested": "Es una foto de Kanna. Se la ve fuerte y robusta. Tengo ganas de conocerla.",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0201-0010",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 10,
+      "record_id": 40011,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Una horquilla kanzashi. Le irían bien la ropa japonesa y un peinado marumage o takashimada.",
+      "english_current": "A hairpin that looks best with\ntraditional Japanese clothing\nand hairstyles.",
+      "english_issue": "Omite los dos peinados nombrados. La descripción japonesa se repite en numerosas tablas con varias traducciones inglesas.",
+      "english_suggested": "A kanzashi hairpin. It would suit a kimono and a marumage or takashimada hairstyle.",
+      "confidence": "high",
+      "spanish_current": "Una horquilla que queda mejor\ncon ropa y peinados\ntradicionales japoneses.",
+      "spanish_suggested": "Es una horquilla kanzashi. Va bien con un kimono y un moño marumage o takashimada.",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0016",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 16,
+      "record_id": 40018,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Una espada y un escudo falsos usados en escena, con el trabajo de utilería cuidado hasta el último detalle.",
+      "english_current": "It's a prop sword and shield\nused in stage plays. Looks\nhandmade.",
+      "english_issue": "Describe el material como artesanal sin la observación sobre los detalles. El mismo original tiene otras traducciones en registros reflejados.",
+      "english_suggested": "A stage-prop sword and shield. They’ve been crafted with care, down to the last detail.",
+      "confidence": "high",
+      "spanish_current": "Una espada y un escudo de\natrezzo para las obras.\nParecen hechos a mano.",
+      "spanish_suggested": "Una espada y un escudo de utilería teatral. Cuidaron hasta el último detalle.",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0019",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 19,
+      "record_id": 40021,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sakura en traje de baño. También hay fotos así. Esta no se la cedería a nadie.",
+      "english_current": "A photo of Sakura in a\nswimsuit? Whoa, this is pretty\nrisque… I can't let anyone \nelse see it.",
+      "english_issue": "Introduce que la foto resulte atrevida y que nadie más deba verla. La línea japonesa solo dice que Ogami se queda con la foto.",
+      "english_suggested": "Sakura in a swimsuit? So they have photos like this too… I wouldn’t give this one to anyone.",
+      "confidence": "high",
+      "spanish_current": "¿Una foto de Sakura en\nbañador? Vaya, esto es\nbastante atrevido… No puedo\ndejar que nadie más la vea.",
+      "spanish_suggested": "¿Sakura en traje de baño? Así que también hay fotos así… Esta no se la cedo a nadie.",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0201-0042",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 42,
+      "record_id": 10015,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Hablaba un dialecto de Kansai peculiar. Por lo visto se le daban bien los inventos y trastear con máquinas.",
+      "english_current": "She speaks with an unusual\nKansai accent, and apparently\nshe has a knack for tinkering\nwith machines.",
+      "english_issue": "Omite la habilidad de Kohran para inventar, que el japonés menciona por separado.",
+      "english_suggested": "She speaks with an unusual Kansai dialect. Apparently she has a knack for inventing things and tinkering with machines.",
+      "confidence": "high",
+      "spanish_current": "Habla con un acento de Osaka\npeculiar y, por lo visto,\ntiene mano para los artilugios\nmecánicos.",
+      "spanish_suggested": "Habla con un curioso acento de Osaka. Parece que se le da bien inventar y trabajar con máquinas.",
       "spanish_status": "integrate-spanish"
     }
   ]
