@@ -5430,9 +5430,11 @@
         "scene-pictures": {
           "2:/SAKURA1/BG1160.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th10-native-attribution.md",
+            "evidence": "docs/research/th10-native-attribution.md#bg1160-hd-draw",
             "pc": "SAKURA1/BG/BG1160.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/th10-native-attribution.md#bg1160-hd-draw",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG1213.BIN": {
             "association": "observed",
