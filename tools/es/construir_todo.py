@@ -88,6 +88,7 @@ def main():
     from decodificar import Disc
     from slg_options import traducir_opciones_slg
     from omall_movie import traducir_peliculas
+    from omall_sound import traducir_musica
 
     original = Disc(source / 'Track 01.iso')
     programa = (merged / 'SAKURA').read_bytes()
@@ -98,7 +99,9 @@ def main():
         destination = merged / resource
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(overlay)
-    gallery, translated_program = traducir_peliculas(original.read('/SAKURA1/OMALL.DAT'), programa, args.disc)
+    gallery_source = original.read('/SAKURA1/OMALL.DAT')
+    gallery, translated_program = traducir_peliculas(gallery_source, programa, args.disc)
+    gallery, translated_program = traducir_musica(gallery_source, gallery, translated_program, args.disc)
     gallery_path = merged / 'SAKURA1/OMALL.DAT'
     gallery_path.parent.mkdir(parents=True, exist_ok=True)
     gallery_path.write_bytes(gallery)
