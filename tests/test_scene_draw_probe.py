@@ -41,6 +41,12 @@ class ParseTests(unittest.TestCase):
         self.assertEqual(probe.drawn_files(trace), [])
         self.assertFalse(probe.verdict(trace, 0)[0])
 
+    def test_pan_trace_resolves_only_registered_donors(self):
+        trace = probe.parse_trace('verified pan: BG2248 y=63\nverified pan: OTHER y=1\n')
+        self.assertEqual(probe.drawn_files(trace), ['SAKURA1/BG/BG2248.SPR'])
+        self.assertFalse(probe.verdict(trace, 0)[0])
+        self.assertTrue(probe.verdict(trace, 200)[0])
+
     def test_native_run(self):
         trace = probe.parse_trace(NATIVE)
         self.assertFalse(trace['zoom'])

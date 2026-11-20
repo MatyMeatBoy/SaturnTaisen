@@ -1,8 +1,8 @@
 """Does the runtime draw the PC scene picture in a headless run? Runs a state with and without the PC donor and says.
 
 A development runtime (no release.marker) is started hidden and unthrottled twice from the same state: once with
-`--pc-assets DONOR` (the PC picture can be drawn) and once without it (control). The picture is "drawn" when the donor run prints
-a `scene picture: FILE usable=1` line and the capture comparison is reported separately. An unexplained capture difference alone does not identify a scene.
+`--pc-assets DONOR` (the PC picture can be drawn) and once without it (control). The trace identifies the available
+scene texture or the drawn pan. A successful comparison also needs a visible RGB difference.
 
     python tools/scene_draw_probe.py --exe local/build/sakura-probe/sakura-probe.exe \
         --state local/work/probe-cold/b1209.state --pc-assets local/work/pc-cab/out-bg --size 2560x1440
@@ -12,6 +12,7 @@ executable never draws any scene picture (no floral backdrop, so the enhanced pr
 in that case. Never commit the captures or states it writes (they stay under --out, normally in local/).
 """
 import argparse
+import json
 import os
 import pathlib
 import re
@@ -34,6 +35,11 @@ TOOLCHAIN = ROOT.parent / 'toolkit' / 'msys64' / 'clang64' / 'bin'
 
 PICTURE = re.compile(r'^scene picture: (\S+) usable=(\d)\s*$')
 SHARED = re.compile(r'^scene picture with a shared palette (\S+): cells (\S+) -> (\S+\.SPR)\s*$')
+PAN = re.compile(r'^verified pan: (\S+) [xy]=\d+\s*$')
+PAN_DONORS = {
+    row['name']: row['pc_file']
+    for row in json.loads((ROOT / 'config/hd-scroll-pictures.json').read_text(encoding='utf-8'))['rows']
+}
 LAYOUT = re.compile(r'^presentation layout: (\S+)\s*$')
 ZOOM = re.compile(r'^scene zoom: ')
 
@@ -50,6 +56,10 @@ def parse_trace(text):
         match = PICTURE.match(line)
         if match:
             result['pictures'][match.group(1)] = max(result['pictures'].get(match.group(1), 0), int(match.group(2)))
+            continue
+        match = PAN.match(line)
+        if match and match[1] in PAN_DONORS:
+            result['pictures'][PAN_DONORS[match[1]]] = 1
             continue
         match = SHARED.match(line)
         if match:
@@ -147,7 +157,7 @@ def run_once(args, run, donor):
     env['PATH'] = os.pathsep.join(extra + [env.get('PATH', '')])
     env.update(SATRECOMP_WINDOW_HIDDEN='1', SATRECOMP_SKIP_CHOOSER='1', SATRECOMP_BACKGROUND_WORKERS='0',
                SATRECOMP_BACKGROUND_STATS='1', SATRECOMP_PRESENTATION_TRACE='1', SATRECOMP_HD_STATS='1',
-               SATRECOMP_STRICT_NATIVE='1',
+               SATRECOMP_STRICT_NATIVE='1', SATRECOMP_PAN_TRACE='1',
                SATRECOMP_WINDOW_KEYS='2:SIZE=%s,%d:WINDOWSHOT=%s,%d:QUIT' % (args.size, args.frames - 3, shot.as_posix(), args.frames))
     command = [str(args.exe), '--disc', str(args.disc), '--settings', str(settings), '--backup', str(backup),
                '--state-load', '0:' + str(args.state), '--mute', '--unthrottled', '--hash-log', str(guest_hash), '--stats']
