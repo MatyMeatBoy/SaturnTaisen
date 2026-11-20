@@ -1,0 +1,85 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -21,6 +21,7 @@
+ #include "lift.h"
+ #include "state.h"
+ #include "blocks.h"
++#include "game.h"
+ 
+ #ifdef SATRECOMP_OWN_MACHINE
+ #include "../machine/machine.h"
+@@ -961,6 +962,62 @@
+     }
+ #endif
+ 
++#ifdef SATRECOMP_OWN_MACHINE
++    bool EnhancedDialogueVoice(SH2 &cpu, uint32_t pc) {
++        const bool first = pc == 0x06014B60, waiting = pc == 0x06014F5E;
++        if ((!first && !waiting) || !cpu.IsMaster() || !g_ramHigh) return false;
++        if (RunningAhead() || FeatureValue("presentation_mode") != 1) return false;
++        if (Access::R(cpu)[9] != 0x06068408 || g_ramHigh[0x68419] != (first ? 6 : 7)) return false;
++        auto word = [](uint32_t offset) {
++            return uint32_t(g_ramHigh[offset]) << 8 | g_ramHigh[offset+1];
++        };
++        auto longword = [&](uint32_t offset) {
++            return word(offset) << 16 | word(offset+2);
++        };
++        // The high half of the pad transition word is the new-press lane.
++        // The low half records releases, so holding the reveal never advances.
++        constexpr uint32_t reveal = 0x0100, cancel = 0x0200;
++        const uint32_t input = word(0x67FE4);
++        if (!(input & (reveal | cancel))) return false;
++        const uint32_t voice = longword(0x65CCC);
++        if (longword(0x68408) != 0x06014894 || (voice & 3) || voice < 0x06000000 || voice > 0x060FFFB0)
++            return false;
++        const uint32_t node = voice - 0x06000000;
++        // The task owns a live voice node. Its callback and inline stream
++        // descriptor distinguish different valid pool slots from stale tasks.
++        if (longword(node) != 0x0600B268 || longword(node + 0x18) != voice + 0x44)
++            return false;
++        // All entry points and the existing stop routine must match the
++        // witnessed disc-resident task before redirecting native dispatch.
++        struct Signature { uint32_t offset, length; uint64_t hash; };
++        constexpr Signature signatures[] = {
++            {0x14B60, 18, 0xF1E469B359C587F9ull},
++            {0x14F5E, 18, 0x09C41B0DAB387427ull},
++            {0x14F70, 20, 0xDA3E8CB4974EB696ull},
++            {0x0B214, 44, 0x9FACBF6100C6909Cull}
++        };
++        for (const auto& signature : signatures) {
++            uint64_t hash = 14695981039346656037ull;
++            for (uint32_t i = 0; i < signature.length; ++i)
++                hash = (hash ^ g_ramHigh[signature.offset + i]) * 1099511628211ull;
++            if (hash != signature.hash) return false;
++        }
++        if (first) {
++            if (input & reveal) return false;
++            // Native A/C completion path. It leaves the active voice alone.
++            Access::SetPC(cpu, 0x06014B6C);
++        } else {
++            // Reuse the guest voice teardown, then continue at the native advance gate.
++            Access::R(cpu)[4] = voice;
++            Access::SetPR(cpu, 0x06014F70);
++            Access::SetPC(cpu, 0x0600B214);
++        }
++        if (std::getenv("SATRECOMP_DIALOGUE_VOICE_TRACE"))
++            std::fprintf(stderr, "dialogue voice: %s\n", first ? "reveal" : "advance");
++        return true;
++    }
++#endif
++
+     // Runs blocks until the CPU has used up its time slice (`target` cycles). Returns false if it ran nothing
+     // and the interpreter must execute the next instruction itself.
+     bool Dispatch(SH2 &cpu, uint64_t target, void *ctx) {
+@@ -981,6 +1038,10 @@
+             if (Access::InterruptReady(cpu) || (pc & 1) || !(r = RegionFor(rt, pc, offset))) {
+                 break;
+             }
++#ifdef SATRECOMP_OWN_MACHINE
++            if (native && (pc == 0x06014B60 || pc == 0x06014F5E) && EnhancedDialogueVoice(cpu, pc))
++                continue;
++#endif
+             // An address in the ROM area that stands for a native BIOS routine (hle_bios.h)
+             if (r == &rt.regions[2] && rt.hle && hle::Run(cpu, offset)) {
+                 ran = true;
