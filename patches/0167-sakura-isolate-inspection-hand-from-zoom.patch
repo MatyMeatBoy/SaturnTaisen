@@ -1,0 +1,96 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1909,7 +1909,41 @@
+                     if(fp!=last[layer]) {last[layer]=fp;fprintf(stderr,"layer %u palette %016llX at frame %llu",layer,static_cast<unsigned long long>(fp),static_cast<unsigned long long>(frames));fputc(10,stderr);}
+                 }
+             }
+-            const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(planes.source,planes.width,planes.height,planes.underSource);
++            // The native inspection hand is a movable overlay, not a scene or panel edge.
++            constexpr int handSide = 24;
++            const PresentationSprite* inspectionHand = nullptr;
++            std::array<bool, handSide * handSide> inspectionInk{};
++            std::vector<uint8_t> layoutWithoutHand;
++            if (satrecomp::FeatureValue("scene_view") == 1 && planes.width == 320 && planes.height == 224 &&
++                planes.source.size() == 320*224 && planes.topSource.size() == planes.source.size() &&
++                planes.underSource.size() == planes.source.size() && softwareShown.size() == planes.source.size()) {
++                for (const auto& sprite : planes.sprites) {
++                    const auto& words = sprite.command.words;
++                    if ((words[0]&0x3F) || words[2]!=0x80 || words[3]!=0xC520 || words[5]!=0x318 ||
++                        sprite.pixels.size()!=handSide*handSide/2 ||
++                        AtlasFingerprint(sprite.pixels)!=0xEE0629C4601E9F26ull) continue;
++                    if (inspectionHand) { inspectionHand = nullptr; break; }
++                    inspectionHand = &sprite;
++                }
++                if (inspectionHand) {
++                    constexpr std::array<uint8_t,8> levels{0,248,200,160,120,80,40,0};
++                    for (int py=0;py<handSide;++py) for (int px=0;px<handSide;++px) {
++                        const int x=inspectionHand->x+px, y=inspectionHand->y+py;
++                        if (x<0 || x>=320 || y<0 || y>=224) continue;
++                        const uint8_t packed=inspectionHand->pixels[py*handSide/2+px/2];
++                        const unsigned ink=px&1 ? packed&15 : packed>>4;
++                        if (!ink || ink>=levels.size()) continue;
++                        const size_t at=size_t(y)*320+x;
++                        const uint32_t rgb=uint32_t(levels[ink])*0x010101u;
++                        if (planes.source[at]!=0 || planes.topSource[at]!=0 || (softwareShown[at]&0xFFFFFFu)!=rgb) continue;
++                        inspectionInk[py*handSide+px]=true;
++                        if (layoutWithoutHand.empty()) layoutWithoutHand=planes.source;
++                        layoutWithoutHand[at]=planes.underSource[at];
++                    }
++                }
++            }
++            const auto& layoutSource = layoutWithoutHand.empty() ? planes.source : layoutWithoutHand;
++            const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(layoutSource,planes.width,planes.height,planes.underSource);
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
+                 if(!traced && planes.source.size()==320*224) {
+@@ -2252,14 +2286,14 @@
+                 int zoomX=scene.x,zoomW=scene.w,zoomLines=scene.y+scene.h-153,zoomGroup=scene.h;
+                 bool zoomSafe=!scene.movieOnly && satrecomp::FeatureValue("scene_view")==1 && scene.y==8 && scene.y+scene.h>153;
+                 if(zoomSafe)for(int y=0;y<153 && zoomSafe;y++)for(int x=0;x<320;x++) {
+-                    if(planes.source[y*320+x]<3 && (x<16 || x>=304 || y<8 || y>=152)) {zoomSafe=false;break;}
++                    if(layoutSource[y*320+x]<3 && (x<16 || x>=304 || y<8 || y>=152)) {zoomSafe=false;break;}
+                 }
+                 if(!scene.movieOnly && zoomSafe && satrecomp::FeatureValue("scene_view")==1) {
+                     int shadowRows=0;
+                     for(int row=1;row<=2;row++) {
+                         bool shadowOnly=true;
+                         for(int x=scene.x;x<scene.x+scene.w;x++) {
+-                            const auto layer=planes.source[(scene.y+scene.h-row)*320+x];
++                            const auto layer=layoutSource[(scene.y+scene.h-row)*320+x];
+                             if(layer!=3 && layer<5) {shadowOnly=false;break;}
+                         }
+                         if(!shadowOnly)break;
+@@ -3145,6 +3179,32 @@
+                     nullptr, icReady && !splitZoom && crop.x == 0 && crop.y == 0 && crop.w == 320 && crop.h == 224 &&
+                     fit.x == baseFit.x && fit.y == baseFit.y && fit.w == baseFit.w && fit.h == baseFit.h))
+                     SDL_RenderTexture(renderer,content,&crop,&target);
++                if (splitZoom && scene.recognized && inspectionHand) {
++                    // The existing picture and panel draw their in-crop cursor pixels.
++                    // Draw only the proven visible parts that extend past either crop.
++                    for (int py=0;py<handSide;++py) {
++                        const int y=inspectionHand->y+py;
++                        const bool picture=y<153;
++                        const int originX=picture?16:int(crop.x), originY=picture?8:int(crop.y);
++                        const int cols=picture?288:int(crop.w), rows=picture?144:int(crop.h);
++                        const auto& place=picture?choiceTextFit:fit;
++                        for (int px=0;px<handSide;) {
++                            const auto outside=[&](int column) {
++                                const int x=inspectionHand->x+column;
++                                return inspectionInk[py*handSide+column] &&
++                                    (x<originX || x>=originX+cols || y<originY || y>=originY+rows);
++                            };
++                            if (!outside(px)) {++px;continue;}
++                            const int start=px++;
++                            while (px<handSide && outside(px)) ++px;
++                            const int x=inspectionHand->x+start;
++                            const SDL_FRect source{float(x),float(y),float(px-start),1};
++                            const SDL_FRect dest{float(place.x+(x-originX)*place.scale),
++                                float(place.y+(y-originY)*place.scale),float((px-start)*place.scale),float(place.scale)};
++                            SDL_RenderTexture(renderer,texture,&source,&dest);
++                        }
++                    }
++                }
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 if(!scene.movieOnly && !splitZoom) {
