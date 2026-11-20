@@ -57,3 +57,43 @@ within two levels per channel. Interface and actor pixels outside the replaced
 picture samples were exact. The BG1238 terminal checkpoint produced no positive
 draw and is excluded. This batch verifies six scene pictures in the existing
 runtime. The continuous chapter exit and package status remain open.
+
+## Verified scene draws on the 0804 Iris route
+
+Seven distinct physical PC backgrounds were verified in Enhanced Zoom on the
+natural English disc-2 Iris route, after the festival sequence. The archived
+checkpoint groups below are under `nc3517-live/`.
+
+| Physical PC donor | Saturn source FAD | Checkpoint group | Local checkpoint field | Changed RGB pixels per positive capture |
+| --- | ---: | --- | ---: | ---: |
+| `BG1071.SPR` | 117483 | `iris-0804-night` | 3600 | 1,452,235 |
+| `BG1125.SPR` | 118679 | `iris-0804-night` | 5960 | 1,440,871 |
+| `BG1013.SPR` | 116149 | `iris-0804-night` | 7200 | 2,032,122 |
+| `BG1019.SPR` | 116287 | `iris-0804-night` | 8360 | 1,355,344 |
+| `BG2084.SPR` | 124777 | `iris-0804-planning` | 6680 | 1,294,945 |
+| `BG2086.SPR` | 124823 | `iris-0804-planning` | 7679 | 1,358,437 |
+| `BG1278.SPR` | 121054 | `iris-0804-warroom` | 8360 | 1,032,041 |
+
+Fields 5960, 8360 in both groups, and 6680 were reproduced from their nearest
+prior archived checkpoints with the original input suffix. All four relays
+match the archived guest hashes. Every A/B test started at the listed field
+and replayed 56 fields with the original input suffix on the same cumulative
+0213 runtime, SHA-256
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`.
+All 392 guest fields and the seven terminal SRAM pairs match. The 337
+fields that overlap the archived input logs also match the archived guest
+hashes. Both arms reported zero interpreted execution.
+
+The only A/B asset difference was the named PC donor. Captures at offsets
+8, 16, 30 and 50 used D3D11 at 2560×1440. All changed RGB samples were
+within the existing Zoom viewport at (272, 29) to (2288, 1037). Each changed
+control pixel matched the independently decoded Saturn picture, RGB555
+quantized and nearest scaled. Each replacement matched the independently
+decoded PC picture within two levels per channel after bilinear scaling.
+BG2086 had a positive draw at offset 8 and all later samples matched the
+control after the scene advanced. The other six donors were positive at
+all four sampled offsets.
+
+Local receipts and captures are under
+`local/work/codex-witness-441-review/hud/chapter8-late-plates/`.
+This scene test leaves the continuous chapter and package gates open.
