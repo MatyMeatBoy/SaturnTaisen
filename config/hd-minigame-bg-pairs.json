@@ -7,7 +7,15 @@
       "pc_file": "SAKURA3/CG/HANA/BG_HANA.SPR",
       "pc_image_index": 0,
       "pc_sha256": "76b0ebff84da697dc31d57c4b870ca907563faba2615c2d2dda03bd4db69e82f",
-      "correlation": 0.999931
+      "correlation": 0.999931,
+      "native_dependencies": {
+        "module": "SAKURA3/MINIHANA.BIN",
+        "module_sha256": "a3972b834e24126c97b466b50801af048d55c8e9446cd1a068293ffb51cde555",
+        "name_map_offset": 701644,
+        "adjacent_palette_matches": false,
+        "tile_archive": "SAKURA3/MINIHANA.GCG",
+        "tile_sha256": "d65144975d2100036fd39618663312ffbc5d88dd5d15c9b2a06c26e9780e6dbd"
+      }
     },
     {
       "saturn_file": "SAKURA1/BGKOIKOI.BIN",
@@ -15,7 +23,15 @@
       "pc_file": "SAKURA3/CG/KOIKOI/BG_KOI.SPR",
       "pc_image_index": 0,
       "pc_sha256": "dd34f85b9c94b215bb813bfad713494e89f15fbe52743172ce090cde189d6914",
-      "correlation": 0.999903
+      "correlation": 0.999903,
+      "native_dependencies": {
+        "module": "SAKURA3/HANAMAIN.BIN",
+        "module_sha256": "b6f5e09d46cb6ebf6f9db1d11f2d4fe7e642576b7824c1695c27f64846239f0f",
+        "name_map_offset": 404976,
+        "adjacent_palette_matches": false,
+        "tile_archive": "SAKURA3/HANAFUDA.GCG",
+        "tile_sha256": "e8a0ffd5185b919fb40286566a4a72b1800f81d55de179a4cdcafaec82755c88"
+      }
     },
     {
       "saturn_file": "SAKURA1/BGMAIGO.BIN",
@@ -23,7 +39,15 @@
       "pc_file": "SAKURA3/CG/MAIGO/BG_MAIGO.SPR",
       "pc_image_index": 0,
       "pc_sha256": "7ff176e50142280ed0588dbb009f9689d929e5d5f441381e1957df8aa7c7fe53",
-      "correlation": 0.999916
+      "correlation": 0.999916,
+      "native_dependencies": {
+        "module": "SAKURA3/MINIMAIG.BIN",
+        "module_sha256": "7f9b353111f3f80a7256dcc573afb9fb8ed5dd595f7aae3333b8398dca2727d5",
+        "name_map_offset": 456648,
+        "adjacent_palette_matches": true,
+        "tile_archive": "SAKURA3/MINIMAIG.GCG",
+        "tile_sha256": "ad6a3868a3233cefd64dd3438680b4f646b6eadd9d79fb818d2c872a54a3f882"
+      }
     },
     {
       "saturn_file": "SAKURA1/BGRYORI.BIN",
@@ -31,7 +55,15 @@
       "pc_file": "SAKURA3/CG/COOK/BG_RYORI.SPR",
       "pc_image_index": 0,
       "pc_sha256": "1beb1669d2f8ca02e17701994f34187b92a2f00b2f726fbab43d46c8d8653e8d",
-      "correlation": 0.999702
+      "correlation": 0.999702,
+      "native_dependencies": {
+        "module": "SAKURA3/MINICOOK.BIN",
+        "module_sha256": "ab7e2ab5db0ebcb4394776a18e9572a2ab4b3f9d5708772e3ba0defcd8381e36",
+        "name_map_offset": 716680,
+        "adjacent_palette_matches": true,
+        "tile_archive": "SAKURA3/MINICOOK.GCG",
+        "tile_sha256": "df07c11bd01d8f4c87088520258254ffcf2c6e3db46ff4d7bc8457a4d8040474"
+      }
     },
     {
       "saturn_file": "SAKURA1/BGSLOT.BIN",
@@ -39,7 +71,15 @@
       "pc_file": "SAKURA3/CG/SLOT/BG_SLOT.SPR",
       "pc_image_index": 0,
       "pc_sha256": "71f94e13ea27e746218f8cccb3f4aa5636a5f9465eb07f5e07c97add66d2c3dc",
-      "correlation": 0.999789
+      "correlation": 0.999789,
+      "native_dependencies": {
+        "module": "SAKURA3/MINISLOT.BIN",
+        "module_sha256": "321fa884544e8590e6e3d40b789cb29b6d4c8204ceec798e03676fc180d00669",
+        "name_map_offset": 518500,
+        "adjacent_palette_matches": true,
+        "tile_archive": "SAKURA3/MINISLOT.GCG",
+        "tile_sha256": "6e2987a933dacf85731cc750c872465644bc01b5d9101795755b97d5a4c7c09d"
+      }
     },
     {
       "saturn_file": "SAKURA1/BGSOUJI.BIN",
@@ -47,7 +87,15 @@
       "pc_file": "SAKURA3/CG/SOUJI/BG_SOUJI.SPR",
       "pc_image_index": 0,
       "pc_sha256": "8c475d70ba4099b3de9c085a02f1d82c74d0bb2a2a5442d32e92f82a0ea5be9e",
-      "correlation": 0.999908
+      "correlation": 0.999908,
+      "native_dependencies": {
+        "module": "SAKURA3/MINISOJI.BIN",
+        "module_sha256": "6e02a0d4fc34b8055e055392ca45fffaa00c5784ce674adbf256e0a217b6fb93",
+        "name_map_offset": 479024,
+        "adjacent_palette_matches": true,
+        "tile_archive": "SAKURA3/MINISOJI.GCG",
+        "tile_sha256": "3cae007441cfdeea35fac6c5675c97aecf3e63519a4a34f0a620a9b4c1b630fd"
+      }
     },
     {
       "saturn_file": "SAKURA1/BGSWIM.BIN",
@@ -55,7 +103,15 @@
       "pc_file": "SAKURA3/CG/SWIM/BG_SWIM.SPR",
       "pc_image_index": 0,
       "pc_sha256": "dabcf0835d970d5f0450d92cdb4951f6c2ebbbc1eb69b838298e3e0fe926cee8",
-      "correlation": 0.999869
+      "correlation": 0.999869,
+      "native_dependencies": {
+        "module": "SAKURA3/MINISWIM.BIN",
+        "module_sha256": "23432f3cbcd715bed5312b1164d4ced53b2beda18e4ecd6423f17d16210d7f40",
+        "name_map_offset": 355904,
+        "adjacent_palette_matches": true,
+        "tile_archive": "SAKURA3/MINISWIM.GCG",
+        "tile_sha256": "0237d1b55a64be1be5e97f69398f010ccc8f50dff4aea23c04264d72fc115f2c"
+      }
     },
     {
       "saturn_file": "SAKURA1/BGSYATE.BIN",
@@ -63,7 +119,15 @@
       "pc_file": "SAKURA3/CG/SHOT/BG_SYATE.SPR",
       "pc_image_index": 0,
       "pc_sha256": "0b7f3afc76f92b4e874b47c23903313de96b00f0a4b904a32afd040eda47e698",
-      "correlation": 0.999949
+      "correlation": 0.999949,
+      "native_dependencies": {
+        "module": "SAKURA3/MINISHOT.BIN",
+        "module_sha256": "f605be0ecffa3e25d82e0ee362bd3754405e53f2d217b14e219fdaf736c6a9ca",
+        "name_map_offset": 528452,
+        "adjacent_palette_matches": true,
+        "tile_archive": "SAKURA3/MINISHOT.GCG",
+        "tile_sha256": "ca86e38f9eb54802528cafab34caaa6fcb05ffb10317db976a80b903126be7c6"
+      }
     }
   ]
 }
