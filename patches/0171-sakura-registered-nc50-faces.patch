@@ -1,0 +1,28 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -170,8 +170,24 @@
+     {0x2C8E1A58BD112380ull, 16, 16, 46, 84, 116},
+ };
+ 
++// NC50.SPR groups 0 and 2 supply the witnessed Chapter 1 expressions.
++inline constexpr VerifiedBodyFace kNC50[] = {
++    {0x117D7BCA82BB3E1Cull,56,32,7,80,89},
++    {0x23DF161157704693ull,56,32,8,80,89},
++    {0xDCB0A14C0185DBD0ull,56,32,9,80,89},
++    {0x30D17E5BC01A64CEull,24,24,41,112,121},
++    {0xA18C1AF869758A89ull,56,32,13,80,81},
++    {0x355E93DC98BD7F0Full,24,24,53,112,121},
++    {0x37E2AB5184DD6B14ull,24,24,54,112,121},
++    {0x2588C055C830901Eull,24,24,55,112,121},
++    {0x53049E36BD03F1DAull,24,24,56,112,121},
++    {0x4A45AD2569B96862ull,24,24,57,112,121},
++    {0x3B1824A64529257Cull,24,24,58,112,121},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
+     if (name == "NC10.BIN") return {0xFAF25875698D3053ull, 0xCBD86983994FF9C4ull, kNC10, true};
++    if (name == "NC50.BIN") return {0x2713B2FC1E22BEC7ull, 0xE7290E1124DB4414ull, kNC50, true};
+     if (name == "NC55.BIN") return {0x71438806B6CC7698ull, 0x57B26C77E879C89Full, kNC55, true};
+     if (name == "NC3018.BIN") return {0x246B7B9A3865FE6Aull, 0x0770708C73A587ADull, kNC3018};
+     if (name == "NC20.BIN") return {0x6D5853C18EC0B141ull, 0x6509F77B3891DF92ull, kNC20};

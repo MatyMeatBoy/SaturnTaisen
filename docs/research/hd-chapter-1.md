@@ -72,6 +72,8 @@ Two follow-up 240-field Enhanced runs at 1440p separated body availability from 
 
 Patch 0168 [registers five NC55 face textures](nc55-registered-faces.md) from the Iris-room replay to the authored PC eye and mouth positions. The 600-field A/B verified both observed closed mouths and three eye textures. Other expressions retain the existing fallback.
 
+Patch 0171 [registers eleven NC50 face textures](nc50-registered-faces.md) from the lobby staircase replay, including three blink frames and the full six-part mouth cycle of the second expression. The native overlap remains visible in both builds.
+
 Patch 0169 [registers Sakura’s ten NC10 park face textures](nc10-park-faces.md) at their authored PC positions. The English Yoneda replay exercised the full four-eye and six-mouth set. The Spanish park replay verified the same four eyes and three of those mouths.
 
 The NC11 overlap is the timed LIPS choice display over Sakura, rather than a missing face part. The first rejected command is at nominal (160,76), size 272×120, mode `00A0`, color `C500`, and texture fingerprint `4ADC5FF69258EF85`. It appears after the body in VDP1 draw order. The 1440p capture shows the translucent panel, timer, and ink over her face and shoulders. Any replacement must preserve the native overlay and its ordering, including the visible body through the panel. Simply accepting the intersecting sprite would erase or cover part of that display.

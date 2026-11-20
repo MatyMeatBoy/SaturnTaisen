@@ -16,6 +16,10 @@ CATEGORIES = (
     'tactical-maps', 'tactical-units', 'menus-hud',
 )
 BODY_REPORT = 'docs/research/saturn-bg-format.md'
+BODY_FACE_EVIDENCE = {
+    (1, '/SAKURA1/NC50.BIN'): 'docs/research/nc50-registered-faces.md',
+    (1, '/SAKURA1/NC55.BIN'): 'docs/research/nc55-registered-faces.md',
+}
 CAMPAIGN_REPORT = 'docs/research/coverage-campaign-v026.md'
 PORTRAIT_REPORT = 'docs/research/portrait-animation-coverage.md'
 CHAPTER2_FACE_REPORT = 'docs/research/hd-chapter-2.md#stage-02-tactical-portraits'
@@ -615,10 +619,7 @@ def build(root, index_dir, portrait_audit):
                     row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:
                     row['native_face_fallback'] = True
-                    row['runtime_evidence'] = (
-                        'docs/research/nc55-registered-faces.md'
-                        if (disc, path) == (1, '/SAKURA1/NC55.BIN') else BODY_REPORT
-                    )
+                    row['runtime_evidence'] = BODY_FACE_EVIDENCE.get((disc, path), BODY_REPORT)
         elif path in items:
             pair = items[path]
             if pair['tier'] == 'content' or item_review.get(path, {}).get('verdict') == 'confirmed':
