@@ -86,3 +86,23 @@ All RGB changes stay in the viewport.
 The baseline, hard-switch and ramp runs preserve all 4,700 archived guest
 hashes and SRAM, with zero interpreted blocks. Disc 2 occurrence and
 package inclusion remain open.
+
+### v0.2.23-alpha replay
+
+The English disc 1 route passes two 4,700-field strict replays
+at 2560 × 1440 with the v0.2.23-alpha executable. Only BG2290
+is supplied to the donor profile. The guest hashes match the
+archived run and both profiles produce the same SRAM with zero
+interpreted blocks.
+
+Fields 4000, 4200 and 4300 are identical with and without the
+donor. Fields 4400, 4500 and 4550 respectively change 1,769,297,
+1,846,367 and 1,864,265 pixels inside (272,29)–(2288,1037).
+At field 4600 the final foreground composite matches the native
+control. This verifies the shipped panorama and its native return.
+
+The prepared disc inventory gives BG2290 the same full-file SHA-256
+on both discs. A scan of the four-digit script files for the
+`0033 8000 08F2` background operand finds only 0301 at offset
+0x694E on both discs. The disc 2 copy therefore stays a shared
+resource with a separate live witness pending.
