@@ -35,7 +35,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 | BG1209 | BG1209.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
 | BG1216 | BG1216.SPR | conectado y atribuido |  | docs/research/hd-chapter-1.md#observations-from-the-full-cold-route |
 | BG2004 | BG2004.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1 |
-| BG2010 | BG2010.SPR | conectado sin atribuir |  | - |
+| BG2010 | BG2010.SPR | no conectado | la clave selecciona BG2004.SPR, imagen 0 | - |
 | BG2034 | BG2034.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg2034-on-disc-1 |
 | BG2039 | BG2039.SPR | conectado y atribuido |  | docs/research/scene-spot-check.md#bg1070-and-bg2039-on-disc-1 |
 | BG2159 | BG2159.SPR | conectado y atribuido |  | docs/research/coverage-campaign-v026.md |
@@ -52,8 +52,4 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 
 SPR fisicos compartidos por varios BG Saturn: ninguno.
 
-Resumen: conectado y atribuido: 34, conectado sin atribuir: 3, conectado por ruta propia (scroll/recorte), atribuido: 7
-
-## Capturas a 1440p (no verificadas)
-
-Intento: copia propia del exe (`sakura-th56`, `sakura-thd30/sakura-evt`, `sakura-th34`; la base de `sakura-thd30` no contiene el dibujo de escena PC), estado `rb-full/a.state` (cuadro 119.780, pasillo BG1119) y `chapter1-continuous-119780.state`, 2560x1440, `presentation_mode=1`, `scene_view=1`, `pc_hd_backgrounds=0`, `--pc-assets local/work/pc-cab/out-bg`, 600 campos. Resultado: hashes por cuadro iguales con y sin donante (interpretados 0), pero ninguna linea `scene picture:` y la captura con donante es identica byte a byte a la de control sin donante: el dibujo PC no se activo en este arnes headless. Por tanto no hay veredicto de caja de dialogo ni primer plano; queda como trabajo (necesita un estado con el dibujo ya testigo, p. ej. `d1-frio-dialogo`, o depurar el arnes). Delta de verificacion: 0.
+Resumen: conectado y atribuido: 34, conectado sin atribuir: 2, conectado por ruta propia (scroll/recorte), atribuido: 7, no conectado: 1
