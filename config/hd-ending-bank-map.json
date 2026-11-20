@@ -649,6 +649,15 @@
         "runtime_patch": "patches/0194-sakura-ending-theatre-insets.patch",
         "evidence": "docs/research/ending-bank-pairs.md#controlled-iris-and-kohran-theatre-insets",
         "controlled": true
+      },
+      "SAKURA1/MA_CG.BIN": {
+        "records": [
+          8,
+          11
+        ],
+        "runtime_patch": "patches/0239-sakura-maria-ending-photos.patch",
+        "evidence": "docs/research/ending-bank-pairs.md#controlled-maria-ending-photographs",
+        "controlled": true
       }
     },
     "general_ending": {

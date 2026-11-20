@@ -540,9 +540,15 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertFalse(inset['verified_in_game'])
             self.assertEqual(inset['native_records'], [8, 11])
             self.assertEqual(inset['shared_runtime_donor'], 'SAKURA1/ENDING/END_SA.SPR')
+        maria = catalog['2:/SAKURA1/MA_CG.BIN']
+        self.assertEqual((maria['status'], maria['pc_image_indices']), ('hd', [8, 10]))
+        self.assertFalse(maria['verified_in_game'])
+        self.assertEqual(maria['fixture_evidence'],
+                         'docs/research/ending-bank-pairs.md#controlled-maria-ending-photographs')
+        self.assertEqual(maria['shared_runtime_donor'], 'SAKURA1/ENDING/END_SA.SPR')
         for disc in (1, 2):
             for name in ('AI', 'GE', 'KA', 'KO', 'MA', 'SA', 'SU'):
-                if disc == 2 and name in ('AI', 'KA', 'KO', 'SU'):
+                if disc == 2 and name in ('AI', 'KA', 'KO', 'MA', 'SU'):
                     continue
                 with self.subTest(disc=disc, ending=name):
                     row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']
