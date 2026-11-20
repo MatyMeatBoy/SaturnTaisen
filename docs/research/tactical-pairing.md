@@ -61,28 +61,46 @@ At closure the workspace measured 64,223,046,686 logical bytes. The development 
 
 ## Live MAP15 ground review
 
-The English disc 2 Chapter 9 generator-defense route loads 176 sectors at
-FAD 219909 for MAP15 and 38 sectors at FAD 203490 for EVT15. Four retained
-battle checkpoints have the source 4 page `0x40000` fingerprint
-`388594B7DBCB32C6`. The formula proposed in PR #440 gives
-`4EF5A9A4BBA061C9` for that MAP BIN and does not reproduce the live page.
+The English disc 2 Chapter 9 prologue reads EVT15 at FAD 203490 for
+38 sectors and MAP15 at FAD 219909 for 176. A retained natural checkpoint
+before the next battle has the source-4 fingerprint
+`4EF5A9A4BBA061C9`, which agrees with the MAP15 row derived in PR #440.
 
-A private pilot uses the observed key in the PR table and rebuilds the
-frontend, renderer and layer consumers. Two 240-field Enhanced replays of
-the same battle checkpoint at 2560×1440 differ only in whether the
-profile contains the official `MAP15_A.SPR`, fingerprint
-`67000D2031CCBEA3`. Installing it selects `stage15-hd-ground` and changes
-only the tactical viewport, (320,48)–(2240,1392), in five sampled frames.
-The two Original runs match at all five RGB captures. Each pair has
-identical guest hashes and final SRAM. These are portable replays because
-the available strict runtime is missing part of EVT15.
+The earlier 1440p pilot applied MAP15_A.SPR to a later snow battlefield
+using key `388594B7DBCB32C6`. That key is now tied to MAP16 by a separate
+CD trace and camera witness. The pilot's dark street was the MAP15 art
+over the MAP16 snow composition. MAP15 keeps its native prologue ground
+until its own art and camera are compared. The earlier pilot remains
+under `local/work/codex-map15-0188`.
 
-The PC ground darkens the exposed snow and changes the street treatment.
-At field 164, a visible street region (380,1044)–(650,1160) changes from
-mean RGB (110.0,121.4,144.1) to (16.1,16.6,15.0). The map retains the
-Saturn ground pending a snow-matched replacement. The pilot and captures
-are private under `local/work/codex-map15-0188/`.
+## Live MAP16 PC ground
 
+Chapter 9's English disc 2 Iris route reaches the MAP15 prologue before
+the snow battle. The next 3,600-field ordinary-input replay reads
+EVT16 at FAD 203528 for 38 sectors and MAP16 at FAD 220085 for 187.
+The resulting checkpoint shows Sakura on the movement grid. Its
+source-4 page at `0x40000` has fingerprint `388594B7DBCB32C6`.
+The PC `SAKURA2/MAP/MAP16/MAP16_A.SPR` donor from PR #440 is
+6,641,198 bytes with fingerprint `A27A32D43AD77CCB`. Its 2048 × 2048
+image is sampled in the 1024 × 1024 native world grid. At the first
+camera (464,356), the exposed rails and buildings align. The PC snow
+is brighter and has more texture.
+
+Patch 0240 draws this ground in Enhanced. At 2560 × 1440, the starting
+80-field replay and the 1,200-field natural movement replay have
+identical guest hashes and final SRAM across their respective profiles.
+The movement guest hashes also match the archived input run. All ten
+sampled changes stay inside the tactical viewport (320,48)–(2240,1392).
+In the first camera, 607 changed world-grid samples match the independently
+decoded donor exactly. Sampled portrait, label, grid and unit regions
+remain pixel-identical. The missing, corrupted and disabled donors
+match the previous Enhanced output. Original with and without the donor
+matches exactly. The MAP15 prologue control also matches the previous
+output at four samples over 80 guest fields with the MAP16 donor present.
+
+The replays use the portable interpreter and the uninstrumented Direct3D
+11 frontend. Strict EVT16 coverage and package inclusion remain open.
+Evidence and commands are retained in `local/work/codex-th1/map16-0240`.
 
 ## Live MAP12 PC ground
 
@@ -131,9 +149,9 @@ A read-only scan checks the 8,192 pattern-name bytes at VRAM page
 `0x40000` in 1,672 retained states against all 17 derived #440 keys.
 The MAP12 key occurs in 42 states. The proposed MAP15 key occurs in
 six early MAP15 states. The proposed MAP16 key occurs in 107 states
-from the later MAP15 battle. The page bytes identify a cached pattern
-layout and can change during that same battle. Route and layer evidence
-are required before assigning a donor to another key. No other proposed
+from later in the route. The earlier scan grouped them with MAP15. The
+separate MAP16 entrance now attributes that key to the snow battlefield.
+Page bytes alone cannot identify a route transition. No other proposed
 key occurs in this archive.
 
 ## Live MAP13 PC ground
@@ -175,23 +193,23 @@ The combined runtime (`c44443f6491b062695393e7a2fd05aeb0e4d749d25b4513ce5353e5e3
 ## Current tactical witness queue
 
 The chapter register contains 27 disc-and-path map entries.
-Nine draw the PC ground and 18 retain the Saturn ground. Of the latter,
-MAP10, MAP15 and MAP19 already have live composition comparisons and
-their current PC donors change the visible composition. The other
-15 need a natural entry and camera witness.
+Ten draw the PC ground and 17 retain the Saturn ground. MAP10 and MAP19
+have live composition comparisons and retain their native art. MAP15
+has a natural prologue checkpoint and still needs its own donor
+comparison. Fourteen other maps need a natural entry and camera witness.
 
 | Disc | Next natural camera targets |
 | --- | --- |
 | 1 | MAP03, MAP07, MAP08, MAP09, MAP11, MAP22 |
-| 2 | MAP01, MAP16, MAP17, MAP18, MAP20, MAP23, MAP24, MAP25, MAP26 |
+| 2 | MAP01, MAP17, MAP18, MAP20, MAP23, MAP24, MAP25, MAP26 |
 
 The refreshed retained-state scan checked 2,021 state files against
 17 derived page keys. It found 70 MAP12 matches, 96 MAP13 matches and
 123 MAP14 matches. These three already have live verification.
-The six MAP15-key and 107 MAP16-key matches still come from the
-documented MAP15 battle. MAP16 needs a separate native entrance with
-its own disc read and camera composition. The other derived keys
-gave no hits in this retained set.
+The scan found six MAP15-key and 107 MAP16-key matches in the retained
+Chapter 9 route. The later unbroken entry trace distinguishes the MAP15
+prologue from the MAP16 snow battle. The other derived keys gave no hits
+in this retained set.
 
 For each prospective map, preserve the in-game entry read, an early
 stable camera, movement or targeting, and a later camera before
