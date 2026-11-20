@@ -196,6 +196,9 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG2162.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-scene-draws-on-the-archived-ending-route'),
+    (2, '/SAKURA1/BG2288.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-scene-draws-on-the-archived-ending-route'),
+    (2, '/SAKURA1/BG2287.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-scene-draws-on-the-archived-ending-route'),
     (2, '/SAKURA1/BG1236.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
     (2, '/SAKURA1/BG1237.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
     (2, '/SAKURA1/BG2033.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
