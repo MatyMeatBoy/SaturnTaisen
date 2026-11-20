@@ -1,0 +1,131 @@
+{
+ "frame": [
+  320,
+  224
+ ],
+ "rows": [
+  {
+   "name": "BBG238",
+   "disc": 2,
+   "native_bytes": 44568,
+   "native_fnv": "D3948F8DF80B41F2",
+   "palette": "54112A93240A6C81",
+   "rgb": "AE6B906ECE52C285",
+   "pc_file": "SAKURA2/BG/BBG238.SPR",
+   "pc_bytes": 148884,
+   "pc_fnv": "68A06E99659F6F97",
+   "pc_width": 640,
+   "pc_height": 480,
+   "crop": {
+    "x": 74,
+    "y": 33,
+    "w": 541,
+    "h": 392
+   },
+   "min_crop_correlation": 0.9873
+  },
+  {
+   "name": "BBG240",
+   "disc": 2,
+   "native_bytes": 39512,
+   "native_fnv": "DCA25FD8A1669981",
+   "palette": "4B20A700DE7BB3E7",
+   "rgb": "C340C70D7261810D",
+   "pc_file": "SAKURA2/BG/BBG240.SPR",
+   "pc_bytes": 135413,
+   "pc_fnv": "D5093AFE8358DF66",
+   "pc_width": 640,
+   "pc_height": 480,
+   "crop": {
+    "x": 66,
+    "y": 40,
+    "w": 573,
+    "h": 431
+   },
+   "min_crop_correlation": 0.9848
+  },
+  {
+   "name": "BBG241",
+   "disc": 2,
+   "native_bytes": 43096,
+   "native_fnv": "EFE208EED19F27B9",
+   "palette": "960BA779FBFB1309",
+   "rgb": "592E5E49E970E25D",
+   "pc_file": "SAKURA2/BG/BBG241.SPR",
+   "pc_bytes": 149678,
+   "pc_fnv": "69CC1B7C66F15714",
+   "pc_width": 640,
+   "pc_height": 480,
+   "crop": {
+    "x": 64,
+    "y": 20,
+    "w": 527,
+    "h": 459
+   },
+   "min_crop_correlation": 0.9261
+  },
+  {
+   "name": "BBG242",
+   "disc": 2,
+   "native_bytes": 44632,
+   "native_fnv": "B50B4D385C87EAC8",
+   "palette": "F0DF4F83FA59596B",
+   "rgb": "98EF82E976ABD72D",
+   "pc_file": "SAKURA2/BG/BBG242.SPR",
+   "pc_bytes": 148244,
+   "pc_fnv": "43F0E87E226A185C",
+   "pc_width": 640,
+   "pc_height": 480,
+   "crop": {
+    "x": 0,
+    "y": 79,
+    "w": 610,
+    "h": 375
+   },
+   "min_crop_correlation": 0.9146
+  },
+  {
+   "name": "BBG243",
+   "disc": 2,
+   "native_bytes": 49176,
+   "native_fnv": "E584CBB2952B9215",
+   "palette": "7FA9DDE01A4D9075",
+   "rgb": "1CD78F56E5A9A7E5",
+   "pc_file": "SAKURA2/BG/BBG243.SPR",
+   "pc_bytes": 158243,
+   "pc_fnv": "521776E590DE6083",
+   "pc_width": 640,
+   "pc_height": 480,
+   "crop": {
+    "x": 44,
+    "y": 37,
+    "w": 544,
+    "h": 416
+   },
+   "min_crop_correlation": 0.9885
+  },
+  {
+   "name": "BBG300",
+   "disc": 2,
+   "native_bytes": 67672,
+   "native_fnv": "0FA4D55C5FED1725",
+   "palette": "95F20FCD5DF102D9",
+   "rgb": "CA53031E623832BD",
+   "pc_file": "SAKURA2/BG/BBG300.SPR",
+   "pc_bytes": 79720,
+   "pc_fnv": "B58CD597DB48EE08",
+   "pc_width": 640,
+   "pc_height": 480,
+   "crop": {
+    "x": 8,
+    "y": 0,
+    "w": 632,
+    "h": 473
+   },
+   "min_crop_correlation": 0.9999
+  }
+ ],
+ "skipped": {
+  "BBG239": "measured crop correlation 0.8475 is below the 0.9 floor"
+ }
+}

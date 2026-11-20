@@ -1,0 +1,134 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index 388359a..bb530e1 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -28,6 +28,7 @@
+ #include "bg1306_viewport.h"
+ #include "scene_bg_table.h"
+ #include "eve_inset.h"
++#include "full_frame.h"
+ #include "body_table.h"
+ #include "registered_body_overlay.h"
+ #include "verified_body_faces.h"
+@@ -881,6 +882,7 @@ int RunWindowed(Port &port) {
+         port::EveRect rect = port::kEve202NativeRect;
+         std::optional<port::EveRect> drawRect;
+         unsigned feather = 0;
++        bool fullFrame = false; // TP2b: the picture is the whole frame, any single winning layer
+     };
+     const NativeEveInset nativeEveInsets[]{
+         {"EVE202", port::kEve202Palette, 0x9B31BCF15EF165E9ull, port::kEve202PcFile, 97616,
+@@ -915,6 +917,21 @@ int RunWindowed(Port &port) {
+          0x5542041CD4EA4363ull, {2, 1, 574, 319}, eve0101, eve0101Traced, port::kEve202NativeRect,
+          port::EveRect{24, 16, 255, 132}, 24},
+     };
++    // TP2b: the full-frame rows (port/full_frame_rows.h, tools/gen_full_frame_rows.py) take the same path: an exact native frame
++    // match, then the PC crop stretched over the whole 320x224 frame. A frame that is not exactly the picture stays native.
++    std::array<SceneHd, port::kFullFrameCount> fullFrameImages;
++    std::array<bool, port::kFullFrameCount> fullFrameTraces{};
++    std::vector<const NativeEveInset*> insetCandidates;
++    std::vector<NativeEveInset> fullFrameInsets;
++    fullFrameInsets.reserve(port::kFullFrameCount);
++    for (size_t i = 0; i < port::kFullFrameCount; ++i) {
++        const auto& row = port::kFullFrameRows[i];
++        if (!port::FullFrameRowValid(row)) continue;
++        fullFrameInsets.push_back({row.name, row.palette, row.rgb, row.pcFile, row.pcBytes, row.pcFnv, row.crop,
++                                   fullFrameImages[i], fullFrameTraces[i], port::kFullFrameRect, std::nullopt, 0, true});
++    }
++    for (const auto& entry : nativeEveInsets) insetCandidates.push_back(&entry);
++    for (const auto& entry : fullFrameInsets) insetCandidates.push_back(&entry);
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+@@ -3510,7 +3527,8 @@ int RunWindowed(Port &port) {
+                 const NativeEveInset* inset = nullptr;
+                 bool knownInset = false;
+                 uint64_t nativeRgb = 0;
+-                for (const auto& entry : nativeEveInsets) {
++                for (const NativeEveInset* candidate : insetCandidates) {
++                    const auto& entry = *candidate;
+                     bool matchesPalette = false;
+                     for (size_t bank = 0; bank + 512 <= planes.palette.size(); bank += 512) {
+                         if (PcBackdropHash(std::span{planes.palette}.subspan(bank, 512)) == entry.palette) {
+@@ -3521,8 +3539,10 @@ int RunWindowed(Port &port) {
+                     if (!matchesPalette) continue;
+                     if (!inset) {
+                         inset = &entry;
+-                        knownInset = port::IsEveInset(
+-                            {planes.topSource, entry.palette, int(planes.width), int(planes.height), true}, entry.palette, entry.rect);
++                        knownInset = entry.fullFrame
++                            ? port::IsFullFrame(planes.topSource, int(planes.width), int(planes.height))
++                            : port::IsEveInset(
++                                {planes.topSource, entry.palette, int(planes.width), int(planes.height), true}, entry.palette, entry.rect);
+                         if (!knownInset) break;
+                         // Exact RGB rejects fades, blending, scrolling and colour adjustments.
+                         nativeRgb = insetRgb(softwareShown, entry.rect);
+diff --git a/port/full_frame.h b/port/full_frame.h
+new file mode 100644
+index 0000000..595cca4
+--- /dev/null
++++ b/port/full_frame.h
+@@ -0,0 +1,49 @@
++#pragma once
++
++// TP2b: full-frame battle pictures. The Saturn shows a 320x224 picture as the whole frame; the PC art is the same picture
++// drawn wider, so a row carries the measured PC crop that is stretched over the whole native frame. The table is generated
++// (tools/gen_full_frame_rows.py -> full_frame_rows.h). The runtime draws a row only when the presented frame is exactly the
++// Saturn picture (palette, one winning layer over every pixel, RGB hash of the whole frame) and keeps the native frame otherwise.
++
++#include "eve_inset.h"
++
++#include <cstddef>
++#include <cstdint>
++#include <span>
++
++namespace port {
++
++struct FullFrameRow {
++    const char* name;
++    std::uint64_t palette;  // FNV-1a of the 512-byte VDP2 palette bank
++    std::uint64_t rgb;      // FNV-1a of R, G, B of the 320x224 native frame
++    const char* pcFile;
++    std::size_t pcBytes;
++    std::uint64_t pcFnv;
++    unsigned pcWidth;
++    unsigned pcHeight;
++    EveRect crop;
++};
++
++inline constexpr FullFrameRow kFullFrameRows[] = {
++#include "full_frame_rows.h"
++};
++inline constexpr std::size_t kFullFrameCount = sizeof(kFullFrameRows) / sizeof(kFullFrameRows[0]);
++inline constexpr EveRect kFullFrameRect{0, 0, 320, 224};
++
++constexpr bool FullFrameRowValid(const FullFrameRow& row) {
++    return row.name && row.pcFile && row.pcBytes > 0 && row.palette && row.rgb &&
++           EveCropFits(row.crop, row.pcWidth, row.pcHeight);
++}
++
++// One layer wins every pixel of the 320x224 frame (value 6 is "no layer"): no sprite, text or second plane over the picture.
++inline bool IsFullFrame(std::span<const std::uint8_t> topSource, int width, int height) {
++    if (width != 320 || height != 224 || topSource.size() != std::size_t{320} * 224) return false;
++    const std::uint8_t layer = topSource[0];
++    if (layer >= 6) return false;
++    for (const std::uint8_t value : topSource)
++        if (value != layer) return false;
++    return true;
++}
++
++}  // namespace port
+diff --git a/port/full_frame_rows.h b/port/full_frame_rows.h
+new file mode 100644
+index 0000000..20710eb
+--- /dev/null
++++ b/port/full_frame_rows.h
+@@ -0,0 +1,8 @@
++// Generated by tools/gen_full_frame_rows.py from config/hd-full-frames.json. Do not edit by hand.
++// name, VDP2 palette key, RGB hash of the whole native 320x224 frame, PC file/bytes/fnv, PC w x h, PC crop x, y, w, h
++{"BBG238", 0x54112A93240A6C81ull, 0xAE6B906ECE52C285ull, "SAKURA2/BG/BBG238.SPR", 148884, 0x68A06E99659F6F97ull, 640, 480, {74, 33, 541, 392}},
++{"BBG240", 0x4B20A700DE7BB3E7ull, 0xC340C70D7261810Dull, "SAKURA2/BG/BBG240.SPR", 135413, 0xD5093AFE8358DF66ull, 640, 480, {66, 40, 573, 431}},
++{"BBG241", 0x960BA779FBFB1309ull, 0x592E5E49E970E25Dull, "SAKURA2/BG/BBG241.SPR", 149678, 0x69CC1B7C66F15714ull, 640, 480, {64, 20, 527, 459}},
++{"BBG242", 0xF0DF4F83FA59596Bull, 0x98EF82E976ABD72Dull, "SAKURA2/BG/BBG242.SPR", 148244, 0x43F0E87E226A185Cull, 640, 480, {0, 79, 610, 375}},
++{"BBG243", 0x7FA9DDE01A4D9075ull, 0x1CD78F56E5A9A7E5ull, "SAKURA2/BG/BBG243.SPR", 158243, 0x521776E590DE6083ull, 640, 480, {44, 37, 544, 416}},
++{"BBG300", 0x95F20FCD5DF102D9ull, 0xCA53031E623832BDull, "SAKURA2/BG/BBG300.SPR", 79720, 0xB58CD597DB48EE08ull, 640, 480, {8, 0, 632, 473}},
