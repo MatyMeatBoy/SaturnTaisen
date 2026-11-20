@@ -351,6 +351,7 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
                 raise RuntimeError('Language patch missing or different from parches.json: '+entry['patch'])
             shutil.copy2(source,patch_target/entry['patch']);allowed_patches['parches/'+entry['patch']]=entry['patch_sha256']
     shutil.copy2(ROOT/'recomp-launcher.json',destination/'recomp-launcher.json')
+    shutil.copy2(ROOT/'recomplauncher.json',destination/'recomplauncher.json')
     inputs=destination/'roms';inputs.mkdir()
     # What the programs read at run time (the HD recipe, the game's configuration). The sources, patches, tests and
     # notes are not copied: CODIGO-FUENTE.txt names the repository and the exact commit this package was built from
@@ -423,7 +424,7 @@ Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Tai
 
 **Partidas.** Importa desde la sección Tus partidas: se crea una copia separada y los originales no se modifican.
 
-**Otros frontends.** `recomp-launcher.json` describe la entrada única (`SaturnTaisen.exe`, el único programa a la vista) y la preparación por línea de comandos (`data/preparar-juego.exe`).
+**Otros frontends.** `recomplauncher.json` configura RecompLauncher. `recomp-launcher.json` documenta la interfaz de línea de comandos para otros frontends.
 
 Esta versión no certifica toda la campaña ni todos los mandos; el cambio automático de disco y RetroAchievements siguen pendientes. Consulta las notas de versión.
 

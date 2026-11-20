@@ -1,0 +1,83 @@
+{
+  "$schema": "https://recomplauncher.com/schema/recomplauncher.json",
+  "format": 1,
+  "name": "SaturnTaisen",
+  "repo": "MatyMeatBoy/SaturnTaisen",
+  "game": {
+    "kind": "folder",
+    "label": "Folder containing both Japanese Sakura Taisen Saturn discs (GS-9037 V1.005), original or with the English v2.1 patch. Keep each CUE with its tracks. You can include the PC edition for the optional HD mod."
+  },
+  "start": {
+    "program": ["SaturnTaisen.exe"],
+    "args": ["--no-launcher"]
+  },
+  "prepare": {
+    "program": ["data/preparar-juego.exe"],
+    "args": ["prepare", "--folder", "{game}", "--recomplauncher-progress"],
+    "label": "Preparing the two Saturn discs and optional PC assets",
+    "timeout": 1800,
+    "done": [
+      "{install}/data/game/disc1/game.cue",
+      "{install}/data/game/disc2/game.cue",
+      "{install}/data/game/disc1-es/game.cue",
+      "{install}/data/game/disc2-es/game.cue"
+    ]
+  },
+  "config": [
+    {
+      "id": "presentation",
+      "format": "ini",
+      "file": [
+        { "path": "{install}/data/user/settings.ini", "if": "{install}/data/user/launcher.ini" },
+        { "path": "{install}/data/user/SaturnTaisen/settings.ini" }
+      ]
+    },
+    {
+      "id": "launcher",
+      "format": "ini",
+      "file": [
+        { "path": "{install}/data/user/launcher.ini", "if": "{install}/data/user/launcher.ini" },
+        { "path": "{install}/data/user/SaturnTaisen/launcher.ini" }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "language",
+      "label": "Language",
+      "in": "args",
+      "choices": [
+        { "label": "Saved language", "args": [] },
+        { "label": "Español", "args": ["--language", "es"] },
+        { "label": "English", "args": ["--language", "en"] }
+      ]
+    },
+    {
+      "id": "presentation",
+      "label": "Presentation",
+      "in": "presentation",
+      "help": "Original keeps the Saturn framing. Enhanced adds widescreen and optional HD assets.",
+      "defaults": { "features/presentation_mode": "1" },
+      "choices": [
+        { "label": "Enhanced", "set": { "features/presentation_mode": "1", "features/presentation_chosen": "1" } },
+        { "label": "Original", "set": { "features/presentation_mode": "0", "features/presentation_chosen": "1" } }
+      ]
+    },
+    {
+      "id": "window",
+      "label": "Window mode",
+      "in": "launcher",
+      "defaults": { "video/fullscreen": "0" },
+      "choices": [
+        { "label": "Windowed", "set": { "video/fullscreen": "0" } },
+        { "label": "Fullscreen", "set": { "video/fullscreen": "1" } }
+      ]
+    }
+  ],
+  "saves": [
+    "{install}/data/user/SaturnTaisen/saves/backup.bin",
+    "{install}/data/user/SaturnTaisen/imports/*.bin",
+    "{install}/data/user/saves/backup.bin",
+    "{install}/data/user/imports/*.bin"
+  ]
+}

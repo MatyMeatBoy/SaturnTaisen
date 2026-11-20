@@ -11,6 +11,8 @@
 
 A return to the Imperial Theater with recompiled SH-2 code, integer-scaled pixels, and optional presentation upgrades. Public project by **MatyMeatBoy**.
 
+<a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
+
 **v0.2.3.1-alpha is a public alpha, not the certified complete game.** You bring only your own files — the two Sakura Taisen Saturn discs and, optionally, the PC edition — and the launcher prepares everything else on your PC: English or Spanish, and the HD mod. Chapter 1 end-to-end and the full campaign are not yet verified. [Scope of this release](docs/releases/v0.2.3.1-alpha.md). Earlier packages are kept intact.
 
 ## Play
@@ -26,7 +28,7 @@ A return to the Imperial Theater with recompiled SH-2 code, integer-scaled pixel
 
 Every disc is recognized by the SHA-256 of its data track and each step is checked; your files are only read. What is already prepared is recognized and kept, so extracting a newer release over the folder rebuilds only what changed. The language layers are differences that are useless without your own discs: **no discs, BIOS, save files or original game assets are distributed.** Credits of the English translation team and the layer details: [parches/CREDITOS.md](parches/CREDITOS.md).
 
-Frontends (RecompLauncher / Easy Setup) can drive the same setup from the single entry point: `SaturnTaisen.exe --rom "<file or folder>" --language es --no-launcher`; see [recomp-launcher.json](recomp-launcher.json) and `SaturnTaisen.exe --help`.
+For RecompLauncher, select the folder containing both discs, then choose your language, presentation and window mode from the game's settings. The profile is in [recomplauncher.json](recomplauncher.json). Other frontends can use `SaturnTaisen.exe --rom "<file or folder>" --language es --no-launcher`. See [the command-line integration](recomp-launcher.json) and `SaturnTaisen.exe --help`.
 
 The final game is planned as a unified release with both discs; automatic disc changes during play are still pending.
 
