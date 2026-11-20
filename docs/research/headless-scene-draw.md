@@ -46,3 +46,5 @@ Only BG1119 and BG1209 were drawn here. The other builds named in the reports we
 ## Matched control packs
 
 For attributing pixel changes, give both runs a PC asset root. Construct two small roots with the same layout. Place the scene SPR under test in the donor root only and pass the other with `--control-pc-assets`. Both runs then select the same floral backdrop. With the packaged v0.2.16-alpha runtime and the Episode 1 corridor checkpoint, the 56-field 1440p comparison traced BG1119 only in the donor run. The matched comparison changed 2,032,062 pixels; the no-pack comparison also changed the floral backdrop and gave 3,558,000. BG1119 already had a verified row.
+
+A successful scene verdict now requires a usable donor trace, changed RGB pixels, the requested number of strict guest hashes and equal donor/control guest hashes and final SRAM. Pillow is required for RGB comparison. A trace-only match remains diagnostic and exits with code 1. An incomplete or divergent replay exits with code 2.

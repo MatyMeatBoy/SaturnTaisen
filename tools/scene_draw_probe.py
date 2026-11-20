@@ -87,16 +87,16 @@ def count_changed(path_a, path_b):
         return a.width * a.height - diff.histogram()[0]
 
 
-def verdict(trace, changed, identical_bytes):
+def verdict(trace, changed):
     """One line: whether the draw happened and which evidence says so."""
     files = drawn_files(trace)
     by_trace = bool(files)
-    by_capture = bool(changed) if changed is not None else (not identical_bytes)
+    by_capture = bool(changed)
     if by_trace and by_capture:
         return True, 'DRAWN: %s (trace and capture agree; %s)' % (
             ', '.join(files), '%d pixels differ from the control' % changed if changed is not None else 'the captures differ')
     if by_trace:
-        return True, 'DRAWN by trace only: %s (the capture equals the control; the picture may be under an overlay)' % ', '.join(files)
+        return False, 'trace only: %s (no changed RGB pixels were verified)' % ', '.join(files)
     if by_capture:
         return False, 'capture differs from the control (%s pixels) but no scene picture trace line identifies the cause' % changed
     why = []
@@ -140,6 +140,8 @@ def run_once(args, run, donor):
         backup.unlink(missing_ok=True)  # the runtime creates a fresh one; an empty file is rejected
     shot = run / 'shot.png'
     shot.unlink(missing_ok=True)
+    guest_hash = run / 'guest.hash'
+    guest_hash.unlink(missing_ok=True)
     env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
     extra = [str(args.exe.parent)] + [str(p) for p in (TOOLCHAIN, pathlib.Path('C:/msys64/clang64/bin')) if p.is_dir()]
     env['PATH'] = os.pathsep.join(extra + [env.get('PATH', '')])
@@ -148,7 +150,7 @@ def run_once(args, run, donor):
                SATRECOMP_STRICT_NATIVE='1',
                SATRECOMP_WINDOW_KEYS='2:SIZE=%s,%d:WINDOWSHOT=%s,%d:QUIT' % (args.size, args.frames - 3, shot.as_posix(), args.frames))
     command = [str(args.exe), '--disc', str(args.disc), '--settings', str(settings), '--backup', str(backup),
-               '--state-load', '0:' + str(args.state), '--mute', '--unthrottled']
+               '--state-load', '0:' + str(args.state), '--mute', '--unthrottled', '--hash-log', str(guest_hash), '--stats']
     if args.movie:
         command += ['--movie', str(args.movie)]
     assets = args.pc_assets if donor else args.control_pc_assets
@@ -178,6 +180,8 @@ def main(argv=None):
         value = getattr(args, name)
         if value is not None:
             setattr(args, name, value.resolve())
+    if args.frames < 6:
+        ap.error('--frames must be at least 6')
     problems = preflight(args)
     if problems:
         print('\n'.join('preflight: ' + p for p in problems), file=sys.stderr)
@@ -188,15 +192,26 @@ def main(argv=None):
         if code != 0:
             print('%s run exited with %d, see %s' % (label, code, args.out / label / 'stderr.log'), file=sys.stderr)
             return 2
-        results[label] = (parse_trace(text), shot)
-    trace, donor_shot = results['donor']
-    control_shot = results['control'][1]
+        evidence = args.out / label
+        hashes = (evidence / 'guest.hash').read_bytes() if (evidence / 'guest.hash').is_file() else b''
+        if len(hashes.splitlines()) != args.frames or not re.search(r'interpreted 0 \(', text):
+            print(f'{label}: incomplete strict guest evidence', file=sys.stderr)
+            return 2
+        backup = evidence / 'backup.bin'
+        results[label] = (parse_trace(text), shot, hashes, backup.read_bytes() if backup.is_file() else None)
+    trace, donor_shot, donor_hashes, donor_backup = results['donor']
+    _, control_shot, control_hashes, control_backup = results['control']
+    if donor_hashes != control_hashes or donor_backup != control_backup:
+        print('Donor and control guest evidence differs', file=sys.stderr)
+        return 2
     if not donor_shot.is_file() or not control_shot.is_file():
         print('Missing donor or control capture', file=sys.stderr)
         return 2
     changed = count_changed(donor_shot, control_shot)
-    identical = donor_shot.is_file() and control_shot.is_file() and donor_shot.read_bytes() == control_shot.read_bytes()
-    drew, message = verdict(trace, changed, identical)
+    if changed is None:
+        print('Cannot compare RGB captures. Check Pillow and the capture dimensions.', file=sys.stderr)
+        return 2
+    drew, message = verdict(trace, changed)
     print(message)
     print('layouts: %s; zoom path: %s; control trace lines: %d' % (', '.join(trace['layouts']) or 'none', trace['zoom'],
                                                                    len(drawn_files(results['control'][0]))))
