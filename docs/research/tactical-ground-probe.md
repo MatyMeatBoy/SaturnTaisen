@@ -53,3 +53,17 @@ supplied MAP15 from `iris-map15-earned-start/terminal.state`, already
 in MAP16, changed zero pixels. These results verify the release
 runtime for these existing grounds. The newer table in PR #691
 still needs same-map runtime witnesses before new grounds are counted.
+
+## Historical THD15 reach attempt
+
+This note records the state of the candidate and table at the time of PR #687.
+
+
+No new map was reached and nothing was promoted. Facts measured (names, frames and hashes only; states and movies stay in `local/work/reach`):
+
+1. **The probe executable cannot draw the 12 maps.** The PR #621 build (`sakura-full.exe`) contains the hand-written signatures (MAP01, 02, 04, 05, 06, 21) and MAP12 to 16, but not the generated rows of PR #440 (patch 0188 table) for MAP03, 07, 08, 09, 11, 17, 18, 20, 22, 24, 25, 26 (the 8-byte signatures of `config/hd-tactical-ground-table.json` are absent from the binary; present in `local/build/rebuild-maps/sakura.exe`, the #440 build on an older stack). Even with a saved state at one of these battles, the probe would report "not drawn" on `sakura-full.exe`. A witness needs a full stack build that includes the #440 table (rebuild after #440 merges), or the older `rebuild-maps` build if the state loads there (not tested).
+2. **The chapter jumps do not stop at a battle but in interactive look-at scenes.** Continuing the 17 sweep states with a confirm every 120 frames (`tools/chapter_loads.py --state run2-CASE/state-39999.bin`, 40,000 more frames, about 5 min each, `interpreted 0`; bank-8-battle-1, 9-battle-1 and 10-battle-1 for 100,000 frames) produced no `MAP`, `BBG`, `IC` or `EVT` load. bank-5, bank-6 and bank-7 (and public-7) sit in a scene where Ogami's gaze cursor (eyes icon, or a hand icon in the bank-7 capsule scene) is shown and A on it repeats the same dialogue ("What's wrong, Ogami? You were staring at me a little...") forever. bank-3-battle-1 ends in a free-roam map of the theatre. These need real directed input, not a confirm press.
+3. **The cursor is steerable.** In bank-5 (state 39999 of the sweep) moving the cursor LEFT or RIGHT with three presses 30 frames apart and then A leaves the loop (Sakura says "Ogami, where are you going!?"). A blind periodic pattern (A, A, LEFT x3, A, A, RIGHT x3, A every 480 frames) did not escape in 40,000 frames, because the cursor target changes per page. A route needs per-page decisions (read the pointer, as battle_driver does for the map pointer).
+4. The T55 sweep note's lists (chapter 3 battles load MAP04/MAP05, chapter 4 MAP06/MAP21, chapter 8 battle 2 MAP14, chapter 10 battles 2/final MAP19) are unchanged; no state loads MAP03, 07, 08, 09, 11, 17, 18, 20, 22, 24, 25, 26. No battle was won; the IC after a battle is not reached (the #566 driver was not run: it needs the Chapter 2 state and loses Sakura before the victory).
+
+Next: (a) steer the look-at scenes per page for bank-5, 6, 7 (they lead to the battle of their chapter); (b) rebuild with the #440 table before probing; (c) unchanged owner of IC route: desk.
