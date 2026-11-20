@@ -1,0 +1,1310 @@
+{
+  "schema": 1,
+  "scope": "Verified Japanese item descriptions mirrored across the prepared Spanish and English dialogue tables.",
+  "source": {
+    "spanish": {
+      "1": "dd0503cad53a6d2c39e348271f732950c3e4d1a6f7fd55b97c194c1f186949ad",
+      "2": "c2921dddaef132cdf0204da698157a37816f7eaf8fa07bb7b600833a7a7147f5"
+    },
+    "native": "Exact semantic members from the reconstructed original Japanese records, verified by native TBL index and numeric ID in both prepared language variants."
+  },
+  "groups": [
+    {
+      "anchor": "0201-0010",
+      "confidence": "high",
+      "count_canonical_both_discs": 56,
+      "count_source_markers": 0,
+      "status": "integrate-spanish",
+      "topic": "kanzashi",
+      "source_gloss_es": "Horquilla kanzashi. Le iría bien la ropa japonesa y un peinado marumage o takashimada.",
+      "english_issue": "Las variantes omiten uno o los dos nombres de peinados. La ropa japonesa se generaliza en algunas entradas como atuendo formal.",
+      "english_suggested": "A kanzashi hairpin. It would suit Japanese dress with a marumage or takashimada hairstyle.",
+      "spanish_suggested": "Es una horquilla kanzashi. Iría bien con ropa japonesa y un peinado marumage o takashimada.",
+      "spanish_wrapped": "Es una horquilla kanzashi.\nIría bien con ropa japonesa y\nun peinado marumage o\ntakashimada.",
+      "variants": [
+        {
+          "english_current": "A hairpin for use in a\ntraditional bun hairstyle. It\nwould complement a formal\noutfit well.",
+          "spanish_current": "Es un kanzashi. Iría bien con\nun kimono y un peinado de moño\ntradicional.",
+          "members": [
+            {
+              "key": "0301-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0301TBL.BIN"
+            },
+            {
+              "key": "0302-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0302TBL.BIN"
+            },
+            {
+              "key": "0303-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0303TBL.BIN"
+            },
+            {
+              "key": "0304-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0304TBL.BIN"
+            },
+            {
+              "key": "0305-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0305TBL.BIN"
+            },
+            {
+              "key": "0306-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0306TBL.BIN"
+            },
+            {
+              "key": "0307-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0307TBL.BIN"
+            },
+            {
+              "key": "0308-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0308TBL.BIN"
+            },
+            {
+              "key": "0309-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0309TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin for use in a\ntraditional bun hairstyle. It\nwould complement a formal\noutfit well.",
+          "spanish_current": "Una horquilla kanzashi. Iría\nbien con un kimono y un moño\ntradicional.",
+          "members": [
+            {
+              "key": "0100-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0100TBL.BIN"
+            },
+            {
+              "key": "0101-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0101TBL.BIN"
+            },
+            {
+              "key": "0108-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0108TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin for use in a\ntraditional bun hairstyle. It\nwould complement a formal\noutfit well.",
+          "spanish_current": "Una horquilla para\nmoño tradicional.\nIría bien con un\ntraje formal.",
+          "members": [
+            {
+              "key": "0900-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0900TBL.BIN"
+            },
+            {
+              "key": "0901-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0901TBL.BIN"
+            },
+            {
+              "key": "0902-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0902TBL.BIN"
+            },
+            {
+              "key": "0903-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0903TBL.BIN"
+            },
+            {
+              "key": "0905-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0905TBL.BIN"
+            },
+            {
+              "key": "1001-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/1001TBL.BIN"
+            },
+            {
+              "key": "1002-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/1002TBL.BIN"
+            },
+            {
+              "key": "1003-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/1003TBL.BIN"
+            },
+            {
+              "key": "1004-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/1004TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin for use in a\ntraditional bun hairstyle. It\nwould complement a formal\noutfit well.",
+          "spanish_current": "Una horquilla para un\nrecogido tradicional.\nQuedaría bien con un\natuendo formal.",
+          "members": [
+            {
+              "key": "0801-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0801TBL.BIN"
+            },
+            {
+              "key": "0802-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0802TBL.BIN"
+            },
+            {
+              "key": "0803-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0803TBL.BIN"
+            },
+            {
+              "key": "0804-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0804TBL.BIN"
+            },
+            {
+              "key": "0805-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0805TBL.BIN"
+            },
+            {
+              "key": "0806-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0806TBL.BIN"
+            },
+            {
+              "key": "0807-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0807TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin for use in a\ntraditional bun hairstyle. It\nwould complement a formal\noutfit well.",
+          "spanish_current": "Una horquilla para un moño\ntradicional. Combinaría bien\ncon un atuendo formal.",
+          "members": [
+            {
+              "key": "0202-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0202TBL.BIN"
+            },
+            {
+              "key": "0203-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0203TBL.BIN"
+            },
+            {
+              "key": "0204-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0204TBL.BIN"
+            },
+            {
+              "key": "0205-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0205TBL.BIN"
+            },
+            {
+              "key": "0206-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0206TBL.BIN"
+            },
+            {
+              "key": "0400-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0400TBL.BIN"
+            },
+            {
+              "key": "0401-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0401TBL.BIN"
+            },
+            {
+              "key": "0402-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0402TBL.BIN"
+            },
+            {
+              "key": "0403-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0403TBL.BIN"
+            },
+            {
+              "key": "0501-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0501TBL.BIN"
+            },
+            {
+              "key": "0502-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0502TBL.BIN"
+            },
+            {
+              "key": "0503-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0503TBL.BIN"
+            },
+            {
+              "key": "0504-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0504TBL.BIN"
+            },
+            {
+              "key": "0601-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0601TBL.BIN"
+            },
+            {
+              "key": "0602-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0602TBL.BIN"
+            },
+            {
+              "key": "0603-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0603TBL.BIN"
+            },
+            {
+              "key": "0604-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0604TBL.BIN"
+            },
+            {
+              "key": "0605-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0605TBL.BIN"
+            },
+            {
+              "key": "0606-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0606TBL.BIN"
+            },
+            {
+              "key": "0607-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0607TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin for use in a\ntraditional bun hairstyle. It\nwould complement a formal\noutfit well.",
+          "spanish_current": "Una kanzashi. Quedaría bien\ncon un kimono y peinados\ncomo el maruge o el\ntakashimada.",
+          "members": [
+            {
+              "key": "0700-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0700TBL.BIN"
+            },
+            {
+              "key": "0701-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0701TBL.BIN"
+            },
+            {
+              "key": "0702-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0702TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin for use in a\ntraditional bun hairstyle. It\nwould compliment a formal\noutfit well.",
+          "spanish_current": "Una horquilla para moño\ntradicional. Iría bien con\nun traje formal.",
+          "members": [
+            {
+              "key": "0904-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0904TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin that looks best with\ntraditional Japanese clothing\nand hairstyles.",
+          "spanish_current": "Un adorno para el pelo que\nluce mejor con ropa y peinados\ntradicionales japoneses.",
+          "members": [
+            {
+              "key": "0102-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0102TBL.BIN"
+            },
+            {
+              "key": "0109-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0109TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A hairpin that looks best with\ntraditional Japanese clothing\nand hairstyles.",
+          "spanish_current": "Una horquilla que queda mejor\ncon ropa y peinados\ntradicionales japoneses.",
+          "members": [
+            {
+              "key": "0201-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0201TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "It's a hairpin. This would \nlook best with Japanese \nclothes and a married woman's\nhairstyle.",
+          "spanish_current": "Es una horquilla. Luciría\nmejor con kimono y un peinado\nde mujer casada.",
+          "members": [
+            {
+              "key": "0103-0010",
+              "index": 10,
+              "record_id": 40011,
+              "table": "/SAKURA1/0103TBL.BIN"
+            }
+          ],
+          "changed": true
+        }
+      ],
+      "source_markers": [],
+      "native_glyph_sequences_verified": 112
+    },
+    {
+      "anchor": "0201-0016",
+      "confidence": "high",
+      "count_canonical_both_discs": 56,
+      "count_source_markers": 0,
+      "status": "integrate-spanish",
+      "topic": "espada y escudo de utilería",
+      "source_gloss_es": "Espada y escudo de utilería usados en escena. Los accesorios están trabajados con esmero en los detalles.",
+      "english_issue": "Varias entradas interpolan que parecen reales o que son artesanales y omiten el cuidado hasta el último detalle.",
+      "english_suggested": "A stage-prop sword and shield. They were crafted with care, down to the last detail.",
+      "spanish_suggested": "Una espada y un escudo de utilería teatral. Los hicieron con esmero hasta el último detalle.",
+      "spanish_wrapped": "Una espada y un escudo de\nutilería teatral. Los hicieron\ncon esmero hasta el último\ndetalle.",
+      "variants": [
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\natrezzo usados en escena.\nEstán bien hechos y parecen de\nverdad.",
+          "members": [
+            {
+              "key": "0202-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0202TBL.BIN"
+            },
+            {
+              "key": "0203-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0203TBL.BIN"
+            },
+            {
+              "key": "0204-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0204TBL.BIN"
+            },
+            {
+              "key": "0205-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0205TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\nutilería usados en escena.\nEstán bien hechos y se ven\ncomo los de verdad.",
+          "members": [
+            {
+              "key": "0400-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0400TBL.BIN"
+            },
+            {
+              "key": "0403-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0403TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\nutilería. Están bien hechos y\nparecen de verdad.",
+          "members": [
+            {
+              "key": "0100-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0100TBL.BIN"
+            },
+            {
+              "key": "0108-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0108TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well-made and\nlook just like the real thing.",
+          "spanish_current": "Espada y escudo de\nutilería. Bien hechos,\nparecen reales.",
+          "members": [
+            {
+              "key": "0900-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0900TBL.BIN"
+            },
+            {
+              "key": "0901-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0901TBL.BIN"
+            },
+            {
+              "key": "0902-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0902TBL.BIN"
+            },
+            {
+              "key": "0903-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0903TBL.BIN"
+            },
+            {
+              "key": "0904-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0904TBL.BIN"
+            },
+            {
+              "key": "0905-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0905TBL.BIN"
+            },
+            {
+              "key": "1001-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/1001TBL.BIN"
+            },
+            {
+              "key": "1002-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/1002TBL.BIN"
+            },
+            {
+              "key": "1003-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/1003TBL.BIN"
+            },
+            {
+              "key": "1004-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/1004TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well-made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\natrezzo usados en escena.\nEstán bien hechos y parecen de\nverdad.",
+          "members": [
+            {
+              "key": "0206-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0206TBL.BIN"
+            },
+            {
+              "key": "0301-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0301TBL.BIN"
+            },
+            {
+              "key": "0302-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0302TBL.BIN"
+            },
+            {
+              "key": "0303-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0303TBL.BIN"
+            },
+            {
+              "key": "0304-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0304TBL.BIN"
+            },
+            {
+              "key": "0305-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0305TBL.BIN"
+            },
+            {
+              "key": "0306-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0306TBL.BIN"
+            },
+            {
+              "key": "0307-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0307TBL.BIN"
+            },
+            {
+              "key": "0308-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0308TBL.BIN"
+            },
+            {
+              "key": "0309-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0309TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well-made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\nutilería del escenario. Están\ntan bien hechos que parecen\nde verdad.",
+          "members": [
+            {
+              "key": "0801-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0801TBL.BIN"
+            },
+            {
+              "key": "0802-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0802TBL.BIN"
+            },
+            {
+              "key": "0803-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0803TBL.BIN"
+            },
+            {
+              "key": "0804-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0804TBL.BIN"
+            },
+            {
+              "key": "0805-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0805TBL.BIN"
+            },
+            {
+              "key": "0806-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0806TBL.BIN"
+            },
+            {
+              "key": "0807-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0807TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well-made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\nutilería usados en escena.\nEstán bien hechos y parecen\nreales.",
+          "members": [
+            {
+              "key": "0700-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0700TBL.BIN"
+            },
+            {
+              "key": "0701-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0701TBL.BIN"
+            },
+            {
+              "key": "0702-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0702TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well-made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\nutilería usados en escena.\nEstán bien hechos y se ven\ncomo los de verdad.",
+          "members": [
+            {
+              "key": "0401-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0401TBL.BIN"
+            },
+            {
+              "key": "0402-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0402TBL.BIN"
+            },
+            {
+              "key": "0501-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0501TBL.BIN"
+            },
+            {
+              "key": "0502-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0502TBL.BIN"
+            },
+            {
+              "key": "0503-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0503TBL.BIN"
+            },
+            {
+              "key": "0504-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0504TBL.BIN"
+            },
+            {
+              "key": "0601-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0601TBL.BIN"
+            },
+            {
+              "key": "0602-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0602TBL.BIN"
+            },
+            {
+              "key": "0603-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0603TBL.BIN"
+            },
+            {
+              "key": "0604-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0604TBL.BIN"
+            },
+            {
+              "key": "0605-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0605TBL.BIN"
+            },
+            {
+              "key": "0606-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0606TBL.BIN"
+            },
+            {
+              "key": "0607-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0607TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "A prop sword and shield used\nonstage. They're well-made and\nlook just like the real thing.",
+          "spanish_current": "Una espada y un escudo de\nutilería. Están cuidados hasta\nel último detalle.",
+          "members": [
+            {
+              "key": "0101-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0101TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "It's a prop sword and shield\nused in stage plays. Looks\nhandmade.",
+          "spanish_current": "Una espada y un escudo de\natrezzo para las obras.\nParecen hechos a mano.",
+          "members": [
+            {
+              "key": "0201-0016",
+              "index": 16,
+              "record_id": 40018,
+              "table": "/SAKURA1/0201TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "It's a prop sword and shield\nused in stage plays. Looks\nhandmade.",
+          "spanish_current": "Una espada y un escudo de\nutilería para obras de teatro.\nParecen hechos a mano.",
+          "members": [
+            {
+              "key": "0102-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0102TBL.BIN"
+            },
+            {
+              "key": "0109-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0109TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "This fake sword and shield \nwere used in plays. The props\nhave been made with care down\nto the last detail.",
+          "spanish_current": "Esta espada y este escudo\nfalsos se usaron en obras.\nEstán hechos con esmero hasta\nel último detalle.",
+          "members": [
+            {
+              "key": "0103-0017",
+              "index": 17,
+              "record_id": 40018,
+              "table": "/SAKURA1/0103TBL.BIN"
+            }
+          ],
+          "changed": true
+        }
+      ],
+      "source_markers": [],
+      "native_glyph_sequences_verified": 112
+    },
+    {
+      "anchor": "0201-0015",
+      "confidence": "high",
+      "count_canonical_both_discs": 56,
+      "count_source_markers": 0,
+      "status": "integrate-spanish",
+      "topic": "cuchillo de mesa de Iris",
+      "source_gloss_es": "El cuchillo que Iris me pidió que trajera. Es un cuchillo de mesa de lo más común.",
+      "english_issue": "Algunas variantes lo llaman genéricamente cubierto, aunque el japonés identifica un cuchillo normal de mesa.",
+      "english_suggested": "The knife Iris asked me to bring. It’s just an ordinary table knife.",
+      "spanish_suggested": "El cuchillo que me pidió Iris. Uno de mesa, de lo más corriente.",
+      "spanish_wrapped": "El cuchillo que me pidió Iris.\nUno de mesa, de lo más\ncorriente.",
+      "variants": [
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "Cuchillos que pidió\nIris. Simples utensilios\nde mesa.",
+          "members": [
+            {
+              "key": "0900-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0900TBL.BIN"
+            },
+            {
+              "key": "0901-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0901TBL.BIN"
+            },
+            {
+              "key": "0902-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0902TBL.BIN"
+            },
+            {
+              "key": "0903-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0903TBL.BIN"
+            },
+            {
+              "key": "0904-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0904TBL.BIN"
+            },
+            {
+              "key": "0905-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0905TBL.BIN"
+            },
+            {
+              "key": "1001-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/1001TBL.BIN"
+            },
+            {
+              "key": "1002-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/1002TBL.BIN"
+            },
+            {
+              "key": "1003-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/1003TBL.BIN"
+            },
+            {
+              "key": "1004-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/1004TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "El cuchillo que Iris me pidió\nque le trajera. Es un cubierto\nde lo más normal.",
+          "members": [
+            {
+              "key": "0202-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0202TBL.BIN"
+            },
+            {
+              "key": "0203-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0203TBL.BIN"
+            },
+            {
+              "key": "0204-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0204TBL.BIN"
+            },
+            {
+              "key": "0205-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0205TBL.BIN"
+            },
+            {
+              "key": "0206-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0206TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "El cuchillo que Iris me pidió\nque le trajera. Es un cuchillo\nde mesa de lo más corriente.",
+          "members": [
+            {
+              "key": "0501-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0501TBL.BIN"
+            },
+            {
+              "key": "0502-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0502TBL.BIN"
+            },
+            {
+              "key": "0503-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0503TBL.BIN"
+            },
+            {
+              "key": "0504-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0504TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "Es el cuchillo que me pidió\nIris que le trajera. Un\ncuchillo de mesa de lo más\ncorriente.",
+          "members": [
+            {
+              "key": "0301-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0301TBL.BIN"
+            },
+            {
+              "key": "0302-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0302TBL.BIN"
+            },
+            {
+              "key": "0303-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0303TBL.BIN"
+            },
+            {
+              "key": "0304-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0304TBL.BIN"
+            },
+            {
+              "key": "0305-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0305TBL.BIN"
+            },
+            {
+              "key": "0306-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0306TBL.BIN"
+            },
+            {
+              "key": "0307-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0307TBL.BIN"
+            },
+            {
+              "key": "0308-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0308TBL.BIN"
+            },
+            {
+              "key": "0309-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0309TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "Un cuchillo que Iris me\npidió traer. Es uno común\nde los que se usan para\ncomer.",
+          "members": [
+            {
+              "key": "0700-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0700TBL.BIN"
+            },
+            {
+              "key": "0701-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0701TBL.BIN"
+            },
+            {
+              "key": "0702-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0702TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "Un cuchillo que Iris me\npidió traerle. Es de los\ncorrientes, de usar en la\nmesa.",
+          "members": [
+            {
+              "key": "0801-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0801TBL.BIN"
+            },
+            {
+              "key": "0802-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0802TBL.BIN"
+            },
+            {
+              "key": "0803-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0803TBL.BIN"
+            },
+            {
+              "key": "0804-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0804TBL.BIN"
+            },
+            {
+              "key": "0805-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0805TBL.BIN"
+            },
+            {
+              "key": "0806-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0806TBL.BIN"
+            },
+            {
+              "key": "0807-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0807TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "Un cuchillo que Iris me pidió\nque le trajera. Es uno de\nmesa, de lo más corriente.",
+          "members": [
+            {
+              "key": "0400-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0400TBL.BIN"
+            },
+            {
+              "key": "0401-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0401TBL.BIN"
+            },
+            {
+              "key": "0402-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0402TBL.BIN"
+            },
+            {
+              "key": "0403-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0403TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "Un cuchillo que Iris me pidió\nque le trajera. Es uno de los\ncomunes, para comer.",
+          "members": [
+            {
+              "key": "0601-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0601TBL.BIN"
+            },
+            {
+              "key": "0602-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0602TBL.BIN"
+            },
+            {
+              "key": "0603-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0603TBL.BIN"
+            },
+            {
+              "key": "0604-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0604TBL.BIN"
+            },
+            {
+              "key": "0605-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0605TBL.BIN"
+            },
+            {
+              "key": "0606-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0606TBL.BIN"
+            },
+            {
+              "key": "0607-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0607TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "Some knives Iris asked me to\nget for her. Just a normal\nutensil you'd use during a\nmeal.",
+          "spanish_current": "Unos cuchillos que Iris me\npidió que le consiguiera. Son\ncubiertos de mesa corrientes.",
+          "members": [
+            {
+              "key": "0100-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0100TBL.BIN"
+            },
+            {
+              "key": "0101-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0101TBL.BIN"
+            },
+            {
+              "key": "0108-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0108TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "This is the knife Iris asked\nfor. It's just an ordinary\npiece of silverware.",
+          "spanish_current": "Es el cuchillo que me pidió\nIris. Solo es cubertería\ncorriente.",
+          "members": [
+            {
+              "key": "0201-0015",
+              "index": 15,
+              "record_id": 40017,
+              "table": "/SAKURA1/0201TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "This is the knife Iris asked\nfor. It's just an ordinary\npiece of silverware.",
+          "spanish_current": "Es el cuchillo que pidió Iris.\nNo es más que un cubierto\ncorriente.",
+          "members": [
+            {
+              "key": "0102-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0102TBL.BIN"
+            },
+            {
+              "key": "0109-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0109TBL.BIN"
+            }
+          ],
+          "changed": true
+        },
+        {
+          "english_current": "This is the knife Iris asked \nme to bring. It's a perfectly\nnormal table knife.",
+          "spanish_current": "Es el cuchillo que Iris me\npidió que le llevara. Es un\ncuchillo de mesa de lo más\nnormal.",
+          "members": [
+            {
+              "key": "0103-0016",
+              "index": 16,
+              "record_id": 40017,
+              "table": "/SAKURA1/0103TBL.BIN"
+            }
+          ],
+          "changed": true
+        }
+      ],
+      "source_markers": [],
+      "native_glyph_sequences_verified": 112
+    }
+  ]
+}

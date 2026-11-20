@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Episode 1 opening and post-lobby, plus selected Episode 2 introduction and item records. Verified records only.",
+  "scope": "Episodes 1 and 2, verified dialogue records and pending editorial proposals.",
   "evidence": "Reconstructed Japanese compared by aligned native record ID with both hash-identified Spanish/English prepared discs. Japanese source text is not included.",
   "entries": [
     {
@@ -434,6 +434,233 @@
       "spanish_current": "Habla con un acento de Osaka\npeculiar y, por lo visto,\ntiene mano para los artilugios\nmecánicos.",
       "spanish_suggested": "Habla con un curioso acento de Osaka. Parece que se le da bien inventar y trabajar con máquinas.",
       "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0201-0074",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 74,
+      "record_id": 10047,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Así que se incorpora alguien a esta Compañía Imperial de Asalto.",
+      "english_current": "So I guess we're getting a new\nmember.",
+      "english_issue": "El inglés y el español reducen el nombre de la organización al pronombre nosotros.",
+      "english_suggested": "So someone new is joining the Imperial Assault Troop.",
+      "spanish_current": "Así que tendremos una nueva\nintegrante.",
+      "spanish_suggested": "Así que se incorpora alguien a la Compañía Imperial de Asalto.",
+      "spanish_lines": [
+        "Así que se incorpora alguien a",
+        "la Compañía Imperial de",
+        "Asalto."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0085",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 85,
+      "record_id": 10058,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Explotó con un estampido y me dio un susto.",
+      "english_current": "…when suddenly it went KABOOM!",
+      "english_issue": "El inglés y el español conservan solo el estampido. Se pierde la reacción de Iris.",
+      "english_suggested": "It went KABOOM and exploded! It gave me such a fright!",
+      "spanish_current": "…¡y de repente hizo PUM!",
+      "spanish_suggested": "…¡y explotó de golpe! ¡Qué susto me dio!",
+      "spanish_lines": [
+        "…¡y explotó de golpe! ¡Qué",
+        "susto me dio!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0086",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 86,
+      "record_id": 10059,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "¿Una explosión?",
+      "english_current": "Kaboom?",
+      "english_issue": "En respuesta a la anécdota, Ogami se sorprende por la explosión. El inglés y el español lo hacen repetir solo el sonido.",
+      "english_suggested": "It exploded?",
+      "spanish_current": "¿Pum?",
+      "spanish_suggested": "¿Explotó?",
+      "spanish_lines": [
+        "¿Explotó?"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0102",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 102,
+      "record_id": 10075,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Así que se incorpora alguien a esta Compañía Imperial de Asalto.",
+      "english_current": "So I guess we're getting a new\nmember.",
+      "english_issue": "El inglés y el español reducen el nombre de la organización al pronombre nosotros.",
+      "english_suggested": "So someone new is joining the Imperial Assault Troop.",
+      "spanish_current": "Así que tendremos una nueva\nintegrante.",
+      "spanish_suggested": "Así que se incorpora alguien a la Compañía Imperial de Asalto.",
+      "spanish_lines": [
+        "Así que se incorpora alguien a",
+        "la Compañía Imperial de",
+        "Asalto."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0122",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 122,
+      "record_id": 10095,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "No está bien. Tienes que guiar bien a Kohran, pues seguro que se pierde.",
+      "english_current": "You mustn't let Kohran run off\nby herself! She's sure to get\nlost.",
+      "english_issue": "El inglés y el español conservan el riesgo de perderse, pero cambian la indicación activa de guiarla por no dejarla marcharse sola.",
+      "english_suggested": "You must show Kohran the way. If you don’t, she’s sure to get lost.",
+      "spanish_current": "No puede dejar que Kohran se\nvaya sola. Seguro que se\npierde.",
+      "spanish_suggested": "Tiene que acompañar a Kohran y guiarla. Si no, seguro que se pierde.",
+      "spanish_lines": [
+        "Tiene que acompañar a Kohran y",
+        "guiarla. Si no, seguro que se",
+        "pierde."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0129",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 129,
+      "record_id": 10102,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "No está bien. Tienes que guiar bien a Kohran, pues seguro que se pierde.",
+      "english_current": "You mustn't let Kohran run off\nby herself! She's sure to get\nlost.",
+      "english_issue": "El inglés y el español conservan el riesgo de perderse, pero cambian la indicación activa de guiarla por no dejarla marcharse sola.",
+      "english_suggested": "You must show Kohran the way. If you don’t, she’s sure to get lost.",
+      "spanish_current": "No puede dejar que Kohran se\nvaya sola. Seguro que se\npierde.",
+      "spanish_suggested": "Tiene que acompañar a Kohran y guiarla. Si no, seguro que se pierde.",
+      "spanish_lines": [
+        "Tiene que acompañar a Kohran y",
+        "guiarla. Si no, seguro que se",
+        "pierde."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0132",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 132,
+      "record_id": 50001,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Acudan, Cuatro Señores de la Muerte de la Colmena de la Oscuridad.",
+      "english_current": "Come forth, Four Lords of\nDeath…!",
+      "english_issue": "El nombre que emplea Tenkai vincula a los Cuatro Señores con la Colmena. Ambas localizaciones omiten la afiliación.",
+      "english_suggested": "Come forth, Four Lords of Death of the Hive of Darkness!",
+      "spanish_current": "¡Vengan, Cuatro Señores de la\nMuerte…!",
+      "spanish_suggested": "¡Acudan, Cuatro Señores de la Muerte de la Colmena de la Oscuridad…!",
+      "spanish_lines": [
+        "¡Acudan, Cuatro Señores de la",
+        "Muerte de la Colmena de la",
+        "Oscuridad…!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0133",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 133,
+      "record_id": 50002,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Los Cuatro Señores de la Muerte están reunidos aquí.",
+      "english_current": "We are gathered here before\nyou…",
+      "english_issue": "El inglés y el español omiten la identificación de quien habla por el grupo.",
+      "english_suggested": "The Four Lords of Death are gathered before you…",
+      "spanish_current": "Nos hemos reunido aquí ante\nusted…",
+      "spanish_suggested": "Los Cuatro Señores de la Muerte estamos reunidos ante usted…",
+      "spanish_lines": [
+        "Los Cuatro Señores de la",
+        "Muerte estamos reunidos ante",
+        "usted…"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0147",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 147,
+      "record_id": 50016,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Bah, ese viejo decrépito que no acaba de morirse.",
+      "english_current": "Hmph! Your days are numbered,\nyou old fool…",
+      "english_issue": "El inglés y el español sustituyen la burla de que el viejo sigue vivo por una amenaza nueva.",
+      "english_suggested": "Hmph… That decrepit old geezer just won’t die…",
+      "spanish_current": "¡Hum! Tus días están contados,\nviejo necio…",
+      "spanish_suggested": "¡Hum! Ese vejestorio se resiste a morir…",
+      "spanish_lines": [
+        "¡Hum! Ese vejestorio se",
+        "resiste a morir…"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0201-0151",
+      "table": "/SAKURA1/0201TBL.BIN",
+      "index": 151,
+      "record_id": 50020,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Me llamo Kohran Li. Desde hoy estoy trasladada de la sucursal de Hanayashiki a la sede de Ginza.",
+      "english_current": "The name's Kohran Li. I've \nbeen transferred here from the\nHanayashiki Branch.",
+      "english_issue": "El inglés y el español omiten que el traslado es efectivo hoy y que su destino es la sede de Ginza.",
+      "english_suggested": "I’m Kohran Li. As of today I’ve transferred from the Hanayashiki Branch to Ginza Headquarters.",
+      "spanish_current": "Me llamo Kohran Li. Me han\ntrasladado aquí desde la\nsucursal de Hanayashiki.",
+      "spanish_suggested": "Me llamo Kohran Li. Hoy me han trasladado de la sucursal de Hanayashiki a la sede de Ginza.",
+      "spanish_lines": [
+        "Me llamo Kohran Li. Hoy me han",
+        "trasladado de la sucursal de",
+        "Hanayashiki a la sede de",
+        "Ginza."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
     }
   ]
 }

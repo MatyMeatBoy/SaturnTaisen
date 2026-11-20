@@ -26,7 +26,7 @@ The same review corrected the existing quiz options to «Dama demonio» and «Ch
 
 ### Japanese-to-English divergence catalog
 
-The [divergence catalog](../../config/es-japanese-bridge.json) records 24
+The [divergence catalog](../../config/es-japanese-bridge.json) records 34
 findings by ISO path, table index and native record ID. Each entry carries
 a Spanish gloss of the Japanese meaning, the issue in English, proposed
 English wording, and the status of the Spanish correction. It contains
@@ -43,6 +43,15 @@ Both Spanish deltas were decoded and checked against their recorded digests.
 The changed records retain their identifiers and fit in four lines
 of thirty CP1252 characters. The English suggestions remain queued for
 a future revision of that edition.
+
+The [item groups](../../config/es-japanese-item-groups.json) preserve
+the equivalent record IDs and old wording variants for the kanzashi,
+the theatrical props and Iris's table knife. For each item, all 56
+records on each disc have the same ordered Japanese glyph and line-break
+sequence as the anchor. The source overlay checks each record's English
+wording and native ID before applying the group's Spanish description.
+The ten additional Episode 2 proposals in the divergence catalog remain
+pending editorial integration.
 
 ## Menus
 
