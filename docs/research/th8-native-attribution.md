@@ -97,3 +97,42 @@ all four sampled offsets.
 Local receipts and captures are under
 `local/work/codex-witness-441-review/hud/chapter8-late-plates/`.
 This scene test leaves the continuous chapter and package gates open.
+
+## Verified scene draws on 0801 and early 0802
+
+Five physical PC scene pictures render in Enhanced Zoom on the natural
+English disc-2 Iris route before the festival stalls. The source groups
+are under `nc3517-live/`.
+
+| Physical PC donor | Saturn source FAD | Archived input group | Checkpoint field | Changed RGB pixels per capture |
+| --- | ---: | --- | ---: | ---: |
+| `BG1016.SPR` | 116218 | `iris-0801-clear-party` | 3890 | 2,031,394 |
+| `BG1087.SPR` | 117851 | `iris-0801-room-enter` | 870 | 2,032,128 |
+| `BG1112.SPR` | 118426 | `iris-0801-room-enter` | 1760 | 1,259,729 |
+| `BG1276.SPR` | 121031 | `iris-0802-date` | 3570 | 2,014,907 |
+| `BG1238.SPR` | 120513 | `iris-0802-date` | 6270 | 1,241,652 |
+
+Three checkpoint relays run from the archived Yoneda, Iris room label
+and Iris ask terminal states respectively. All 11,923 replay fields
+match their archived guest hashes with zero interpreted blocks. These
+relays produce the exact checkpoint fields rather than substituting
+the groups' terminal saves.
+
+Each A/B runs 56 fields on the original input suffix in D3D11 at
+2560×1440 with the same strict runtime. Only the listed PC donor
+differs between arms. All 280 A/B guest hashes match, as do terminal
+SRAM pairs. Of these fields, 264 overlap the archived guest logs and
+match exactly. The last 16 fields of BG1112 extend past the archive
+with neutral input. The cumulative 0213 executable SHA-256 is
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`.
+
+All captures at offsets 8, 16, 30 and 50 were positive. For every
+changed pixel, the control matches the independently decoded Saturn
+picture after RGB555 quantization and nearest scaling. Its PC
+replacement matches the independently decoded bilinear sample within
+two levels per channel. All changes stay within the established Zoom
+rectangle (272, 29) to (2288, 1037). BG1090 did not produce visible A/B
+changes at the tested checkpoint and remains pending. Receipts and
+capture pairs are under
+`local/work/codex-witness-441-review/hud/chapter8-early-plates/`.
+The continuous chapter and package gates remain open.
