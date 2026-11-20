@@ -223,3 +223,9 @@ After Shika, the natural Iris route reads the Saturn BG2021 from FAD 123317. The
 ## Iris warehouse backgrounds
 
 The natural 0903 route after Shika reads BG2101 and BG2102 at FAD 125124 and 125147. From the revelation segment at field 2160 and its terminal state, separate donor-only Enhanced 1440p runs draw BG2101 and BG2102. The corresponding controls keep the same floral backdrop with the individual donor absent. Each 32-field strict pair has identical guest hashes and SRAM. BG2101 changes 1,003,073 pixels within (272,29) to (2288,1032). BG2102 changes 360,855 within (309,29) to (2288,944). The dialogue and outer border compare exactly. The receipts are in `local/work/codex-th1/thd01-probe/iris-BG2101-f2160` and `iris-BG2102-terminal`. BG2103 shares a donor mapping and requires separate native attribution.
+
+## Iris 0903 street and warehouse alias
+
+The natural 0903 resume reads BG1180 at FAD 119484 and BG1174 at FAD 119346. The states at fields 1920 and 2400 respectively draw the corresponding PC donor at 1440p. The 0903 ending relay also reads BG2103 at FAD 125170. Its native disc bytes have the same SHA-256 as BG2102, and the field-1680 state has their exact resident cells and palette. The matched donor/profile comparison uses the existing BG2102 SPR for that second native file occurrence.
+
+All three comparisons have matching 32-field strict guest hashes and SRAM, with RGB changes confined to the scene. BG1174 changes 1,357,463 pixels, BG1180 changes 2,032,121, and the BG2103 occurrence changes 323,079. The BG2103 occurrence uses an already counted physical donor. Private receipts are under `local/work/codex-th1/thd01-probe` in `iris-BG1174-f2400`, `iris-BG1180-f1920` and `iris-BG2103-f1680`.
