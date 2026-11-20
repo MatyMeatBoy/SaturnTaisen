@@ -196,6 +196,9 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG2244.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-1001-monitor-draws'),
+    (2, '/SAKURA1/BG2245.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-1001-monitor-draws'),
+    (2, '/SAKURA1/BG2246.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-1001-monitor-draws'),
     (1, '/SAKURA1/BG1055.BIN'): (1, 'docs/research/hd-chapter-1.md#additional-night-patrol-doors'),
     (1, '/SAKURA1/BG1036.BIN'): (1, 'docs/research/hd-chapter-1.md#additional-night-patrol-doors'),
     (1, '/SAKURA1/BG1059.BIN'): (1, 'docs/research/hd-chapter-1.md#additional-night-patrol-doors'),

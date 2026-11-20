@@ -70,3 +70,43 @@ two entries remain unverified. Local receipts and exact restart state hashes
 are under `local/work/codex-witness-441-review/hud/chapter10-plates/`.
 The verification covers the three named scene draws. The chapter exit and
 release package gates remain open.
+
+## Verified 1001 monitor draws
+
+The English disc-2 Finale File 1 route loads the 1001 narrative.
+The archived `strict-1001/f11999.state` checkpoint and its SRAM
+supply the starting state. A strict continuation with ordinary confirm
+inputs reaches the briefing monitor and the meeting that follows.
+A short replay matches the first 2,420 guest fields of the 15,000-field
+continuation and preserves field 1459 for the paired runs below.
+
+| Physical PC donor | Saturn FAD | Replay fields | Positive capture offsets | Changed RGB pixels per positive capture |
+| --- | ---: | ---: | --- | ---: |
+| `BG2244.SPR` | 127668 | 56 | 8, 16, 30 | 1,911,152 |
+| `BG2245.SPR` | 127691 | 230 | 74, 92, 116, 148, 184 | 1,959,065 |
+| `BG2246.SPR` | 127714 | 390 | 240, 260, 280, 300, 320, 350, 375 | 2,006,665 |
+
+The paired tests replay the original inputs after field 1459 at 2560×1440
+with D3D11. Each pair differs only by the listed PC donor. The cumulative
+0213 executable SHA-256 is
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`.
+All 676 strict guest fields match both arms and the continuous reference.
+Each terminal SRAM pair matches. No interpreted blocks run.
+
+All 15 stable positive samples change only pixels inside the existing
+Zoom rectangle (272, 29)–(2288, 1037). The control at each changed pixel
+matches the independent Saturn decode after RGB555 quantization and
+nearest scaling. The PC replacement matches the independently decoded
+bilinear sample within two RGB levels per channel. Five samples outside
+the selected donor phases match the native control in full. BG2245
+offsets 52 and 60 include the mixed native image while the display
+transitions from BG2244. The PC donor changes those samples, and the
+mixed controls fail the single-source Saturn oracle. Those two samples
+remain outside the verified stable windows.
+
+The runtime identifies the three distinct cell keys under their shared
+palette. Private receipts and captures are under
+`local/work/codex-witness-441-review/hud/finale-monitor-plates/`,
+`finale-monitor-trim/` and `finale-monitor-late/`. These witnesses
+cover the stable monitor draws. The mixed transition, chapter exit
+and package gates remain open.
