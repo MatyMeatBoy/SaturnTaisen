@@ -44,7 +44,7 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
-| THD01 | P0 | local | open | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | Separar faltantes, conexiones y muestras a 1440p con caja y primer plano nativos. **Headless draw unblocked (2026-11-20):** a runtime copied without the `art/` folder beside the original executable never draws a scene picture; see [headless-scene-draw](research/headless-scene-draw.md) and `tools/scene_draw_probe.py`. |
+| THD01 | P0 | local | open | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | [Inventario de fondos](research/thd01-episode1-backgrounds.md) por donante. Quedan las muestras a 1440p con caja y primer plano nativos. La [prueba headless](research/headless-scene-draw.md) usa un control con el mismo fondo floral. |
 | THD02 | P1 | local | open | **Fondos normales del disco 1.** BG de episodios 2–5, lotes por ruta, excluyendo animaciones, panoramas y recortes. | Captura natural por donante nuevo y decisión explícita para los que no coinciden. |
 | THD03 | P1 | local | open | **Fondos normales del disco 2.** BG de episodios 6–10, mismos límites que THD02. | Mismo encuadre y capas en una prueba A/B por donante. |
 | THD04 | P1 | local | open | **Panoramas y escenas grandes.** BG1257, BG1280, BG2247 y variantes animadas de tamaño no estándar; apariciones restantes de BG2290. | Medir trayectoria, escala, límites y fundidos o justificar conservar Saturn. |
