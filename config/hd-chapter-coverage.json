@@ -16948,8 +16948,9 @@
         "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
         "pc": "SAKURA3/CG/SHOT/BG_SYATE.SPR",
         "pc_image_index": 0,
-        "reason": "The minigame layer viewport and transform still need an in-game witness.",
-        "status": "paired-not-wired"
+        "runtime_evidence": "docs/research/saturn-bg-format.md#shooting-gallery-95-point-reward",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",
@@ -20416,8 +20417,9 @@
         "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
         "pc": "SAKURA3/CG/SHOT/BG_SYATE.SPR",
         "pc_image_index": 0,
-        "reason": "The minigame layer viewport and transform still need an in-game witness.",
-        "status": "paired-not-wired"
+        "runtime_evidence": "docs/research/saturn-bg-format.md#shooting-gallery-95-point-reward",
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",

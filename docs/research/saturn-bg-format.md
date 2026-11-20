@@ -1068,3 +1068,29 @@ A 32-field comparison at 2560 × 1440 on the published runtime changes
 2,223,687 pixels in the same rectangle, and all guest hashes and final
 SRAM match. Only the donor profile logs `minigame picture: BGMAIGO drew`.
 Both verified disc occurrences use one PC file.
+
+### Shooting gallery 95-point reward
+
+The Spanish disc 2 Long Day route enters the captain's quarters, takes
+the nap option and starts the timed shooting gallery. Controller input
+scores 95 across the three stages. A continuous 5,260-field replay
+requests the 119 sectors of MINISHOT.GCG from FAD 261147 (LBA 260997).
+The 201 additional exact MINISHOT extents reproduce every interpreter
+guest hash and final SRAM in strict native mode.
+
+The stable reward is 640 × 448. Patch 0253 uses its entire RGB
+fingerprint to select the 640 × 480 PC image with the same viewport
+as the native frame. The file loads asynchronously and the original
+frame continues to supply transitions and any other composition.
+
+Five 32-field captures at 2560 × 1440 compare the valid, missing and
+corrupt donors in Enhanced and compare donor and control in Original.
+Guest hashes and final SRAM agree for all profiles with zero interpreted
+blocks. The valid Enhanced donor changes 2,428,371 pixels within the
+native destination (320,48)–(2240,1392). The corrupt and missing
+Enhanced captures match, and both Original captures match. Maigo
+still changes 2,223,687 pixels within the same destination against
+its own control on the Spanish disc 2 checkpoint.
+
+The patch and observed AOT extents are verified on the Spanish disc 2
+winning route. A disc 1 witness and public package remain pending.

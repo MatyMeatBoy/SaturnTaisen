@@ -122,6 +122,8 @@
       "pc_image_index": 0,
       "pc_sha256": "0b7f3afc76f92b4e874b47c23903313de96b00f0a4b904a32afd040eda47e698",
       "correlation": 0.999949,
+      "runtime_evidence": "docs/research/saturn-bg-format.md#shooting-gallery-95-point-reward",
+      "verified_discs": [2],
       "native_dependencies": {
         "module": "SAKURA3/MINISHOT.BIN",
         "module_sha256": "f605be0ecffa3e25d82e0ee362bd3754405e53f2d217b14e219fdaf736c6a9ca",
