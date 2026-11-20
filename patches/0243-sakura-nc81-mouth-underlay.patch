@@ -1,0 +1,35 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -518,6 +518,7 @@
+     {0x046C70F127834B74ull, 56, 24, 15, 138, 74},
+     {0xC29E8242A0ACA67Eull, 56, 24, 16, 138, 74},
+     {0xC9EC0647CBCEA2DEull, 56, 24, 17, 138, 74},
++    {0xDF6C28F40A21C707ull, 64, 40, 54, 143, 119},
+ };
+ 
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3280,14 +3280,16 @@
+                                             if(std::getenv("SATRECOMP_BACKGROUND_STATS")) {fprintf(stderr,"body frame %ux%u -> PC part %d (best %.2f, second %.2f)",fw,fh,part,rawBest,rawSecond);fputc(10,stderr);}
+                                         }
+                                         frameIndex++;
++                                        // Keep the native support where the PC body is keyed around this face.
++                                        // The same support is needed when the exact mouth is redrawn in HD.
++                                        if(st.nc81NeckUnderlay && bw==208 && bh==144 &&
++                                            hash==0xDF6C28F40A21C707ull && spriteWidth(*sp)==64 &&
++                                            spriteHeight(*sp)==40 && sp->x==bx+64 && sp->y==by+48)
++                                            nativeNc81Neck=std::array{bx,sp->y,bw,56};
+                                         if(part<0 || !preparePart(size_t(part))) {
+                                             // No clear PC part: this frame stays as the native sprite over the HD body (its expression is
+                                             // right, only its sharpness is not). The body is drawn if at least one frame was matched.
+                                             keep.push_back({sp->x,sp->y,spriteWidth(*sp),spriteHeight(*sp)});
+-                                            if(st.nc81NeckUnderlay && bw==208 && bh==144 &&
+-                                                hash==0xDF6C28F40A21C707ull && spriteWidth(*sp)==64 &&
+-                                                spriteHeight(*sp)==40 && sp->x==bx+64 && sp->y==by+48)
+-                                                nativeNc81Neck=std::array{bx,sp->y,bw,56};
+                                             continue;
+                                         }
+                                         const unsigned ordinal=unsigned(part);
