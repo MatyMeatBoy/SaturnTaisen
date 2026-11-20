@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "scope": "Episode 1 opening, verified records only.",
+  "evidence": "Reconstructed Japanese compared by aligned native record ID with both hash-identified Spanish/English prepared discs. Japanese source text is not included.",
+  "entries": [
+    {
+      "key": "0100-0040",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 40,
+      "record_id": 10013,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Ogami da el sí militar e identifica por su nombre a quien promete entregarse por entero.",
+      "english_current": "Yes, sir! I am going to give \nit my absolute best!",
+      "english_issue": "La promesa sigue en primera persona y omite que Ogami se identifica en voz alta.",
+      "english_suggested": "Yes, sir! Ichiro Ogami will give it his all!",
+      "confidence": "high",
+      "spanish_current": "¡Sí, señor! ¡Me entregaré a\nello en cuerpo y alma!",
+      "spanish_suggested": "¡Sí, señor! ¡Ichiro Ogami se entregará en cuerpo y alma!",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0044",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 44,
+      "record_id": 10017,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Ve al parque Ueno. Yo te recomendé para el mando. Responde a mis expectativas.",
+      "english_current": "Now, go to Ueno Park. Don't\nmake me regret recommending \nyou for this position!",
+      "english_issue": "Cambia la expectativa del conde por una advertencia de que podría arrepentirse y omite el cargo.",
+      "english_suggested": "Go to Ueno Park. I recommended you as captain. Live up to my expectations.",
+      "confidence": "high",
+      "spanish_current": "Diríjase ahora al parque Ueno.\n¡No me haga arrepentirme de\nhaberlo recomendado como\ncapitán!",
+      "spanish_suggested": "Diríjase al parque Ueno. Lo recomendé como capitán. Confío en que estará a la altura.",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0046",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 46,
+      "record_id": 10019,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "La paz de la capital está en tus manos. Haz cuanto puedas.",
+      "english_current": "The safety of the capital lies\nin your hands. Good Luck!",
+      "english_issue": "Sustituye la paz por la seguridad de la capital.",
+      "english_suggested": "The capital's peace is in your hands. Do your best.",
+      "confidence": "high",
+      "spanish_current": "La paz de la capital está en\nsus manos. ¡Cuento con usted!",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0100-0048",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 48,
+      "record_id": 10021,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Qué buen tiempo. Los cerezos de Ueno están en plena flor.",
+      "english_current": "Ahh, what a wonderful day. The\ncherry blossoms are in full\nbloom.",
+      "english_issue": "Omite que los cerezos son los de Ueno.",
+      "english_suggested": "Ah, what a lovely day! Ueno's cherry blossoms are in full bloom.",
+      "confidence": "high",
+      "spanish_current": "¡Ah, qué día tan espléndido!\nLos cerezos de Ueno están en\nplena flor.",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0100-0051",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 51,
+      "record_id": 10024,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Por lo visto, una muchacha abatió a ese monstruo de un solo tajo.",
+      "english_current": "I heard a young girl got rid \nof the monster with only a\nsword…",
+      "english_issue": "Convierte un único tajo en el hecho de usar solo una espada.",
+      "english_suggested": "I heard a young girl cut the monster down in a single stroke.",
+      "confidence": "high",
+      "spanish_current": "Dicen que quien abatió al\nmonstruo de un solo tajo fue\nuna muchacha…",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0100-0053",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 53,
+      "record_id": 10026,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Dijeron que vendría alguien de la Compañía Imperial de Asalto. Me pregunto cuándo aparecerá.",
+      "english_current": "I was told someone from the\nImperial Assault Troop would\nmeet me here. I wonder how \nlong he'll keep me waiting?",
+      "english_issue": "El pronombre he adelanta un sexo que Ogami todavía no conoce.",
+      "english_suggested": "Someone from the Imperial Assault Troop is coming to meet me. I wonder when they'll get here.",
+      "confidence": "high",
+      "spanish_current": "Me dijeron que alguien de la\nCompañía Imperial de Asalto\nvendría a buscarme. ¿Cuándo\naparecerá?",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0100-0373",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 373,
+      "record_id": 10336,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Hoy Sumire protagoniza La velada de las camelias. ¡Dese prisa, por favor!",
+      "english_current": "Today Sumire is starring in\n\"The Eve of Lady Camellia.\" I\ncan't wait!",
+      "english_issue": "Cambia una petición directa de que el revisor se apresure por una declaración de impaciencia.",
+      "english_suggested": "Sumire stars in The Eve of Lady Camellia today. Hurry up, please!",
+      "confidence": "high",
+      "spanish_current": "Hoy Sumire protagoniza «La\nvelada de las camelias». ¡Dese\nprisa, por favor!",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0100-0437",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 437,
+      "record_id": 50003,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "El teniente general Yoneda me ha encargado escoltar al alférez Ogami.",
+      "english_current": "I received orders from\nLieutenant General Yoneda to\npick you up.",
+      "english_issue": "El encargo queda en venir a buscarlo y omite el nombre y el rango de Ogami.",
+      "english_suggested": "Lieutenant General Yoneda has ordered me to escort you, Ensign Ogami.",
+      "confidence": "high",
+      "spanish_current": "El teniente general Yoneda me\nencomendó la misión de venir a\nbuscarlo.",
+      "spanish_suggested": "El teniente general Yoneda me encomendó la misión de escoltarlo, alférez Ogami.",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0455",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 455,
+      "record_id": 50021,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Risa de Iris. Onii-chan, ¿eres el novio de Sakura?",
+      "english_current": "He he…! Hey Mon Frère, are you\nSakura's lover?",
+      "english_issue": "Cambia el apelativo familiar japonés de Iris por una locución francesa.",
+      "english_suggested": "Hee-hee! Onii-chan, are you Sakura's boyfriend?",
+      "confidence": "high",
+      "spanish_current": "¡Jiji…! Oye, Onii-chan, ¿eres\nel novio de Sakura?",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0100-0462",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 462,
+      "record_id": 50028,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Este Onii-chan también tiene poder espiritual. Así que luchará pilotando un Koubu.",
+      "english_current": "He has Spirit Power too… Does\nthat mean he's going to fight\nin a \"Koubu\" as well?",
+      "english_issue": "Sustituye el apelativo infantil de Iris por un pronombre.",
+      "english_suggested": "Onii-chan has spiritual power too… So he's going to fight in a Koubu, isn't he?",
+      "confidence": "high",
+      "spanish_current": "Él también tiene poder\nespiritual… Así que también\nluchará a bordo de un «Koubu».",
+      "spanish_suggested": "Onii-chan también tiene poder espiritual… Entonces luchará en un «Koubu».",
+      "spanish_status": "integrate-spanish"
+    },
+    {
+      "key": "0100-0464",
+      "table": "/SAKURA1/0100TBL.BIN",
+      "index": 464,
+      "record_id": 50030,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A Iris no le gusta la guerra.",
+      "english_current": "I… hate fighting.",
+      "english_issue": "Generaliza la guerra a pelear y reemplaza la autorreferencia de Iris por primera persona.",
+      "english_suggested": "Iris… hates war…",
+      "confidence": "high",
+      "spanish_current": "A Iris… no le gusta la guerra…",
+      "spanish_suggested": null,
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0108-0251",
+      "table": "/SAKURA1/0108TBL.BIN",
+      "index": 251,
+      "record_id": 50003,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "El teniente general Yoneda me ha encargado escoltar al alférez Ogami.",
+      "english_current": "Lieutenant General Yoneda has\ntasked me with being your\nescort.",
+      "english_issue": "Conserva el encargo de escoltar y omite la mención explícita del nombre y rango de Ogami.",
+      "english_suggested": "Lieutenant General Yoneda has ordered me to escort you, Ensign Ogami.",
+      "confidence": "high",
+      "spanish_current": "El teniente general Yoneda me\nha encomendado la misión de\nvenir a buscarlo.",
+      "spanish_suggested": "El teniente general Yoneda me encomendó la misión de escoltarlo, alférez Ogami.",
+      "spanish_status": "integrate-spanish"
+    }
+  ]
+}

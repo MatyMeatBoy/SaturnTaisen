@@ -24,6 +24,23 @@ The Spanish script now keeps «Onii-chan» when Iris addresses Ogami. The openin
 
 The same review corrected the existing quiz options to «Dama demonio» and «Chico Fiesta», the terms used elsewhere in the Spanish dialogue. Kohran’s line after her invention breaks now starts with «¡Yo estoy bien!». Both discs retain the same option order and text limits.
 
+### Japanese-to-English divergence catalog
+
+The [opening catalog](../../config/es-japanese-bridge.json) records twelve
+findings by ISO path, table index and native record ID. Each entry carries
+a Spanish gloss of the Japanese meaning, the issue in English, proposed
+English wording, and the status of the Spanish correction. It contains
+no transcribed Japanese. This catalog is also the source for five Spanish
+overrides applied to both discs. These restore Ogami's formal
+self-identification, Fukurokoji's encouragement, Sakura's escort orders
+in both copies of the line, and Iris's form of address. The builder checks
+the English text and native ID before applying each override.
+
+Both Spanish deltas were decoded and checked against their recorded digests.
+The five changed records retain their identifiers and fit in four lines
+of thirty CP1252 characters. The English suggestions remain queued for
+a future revision of that edition.
+
 ## Menus
 
 Custom LZ compression (SH-2 routine `0x0600A164`), implemented in `tools/es/red_lz.py` and verified against all known streams. When reinserting, a stream can only occupy its original length plus the zero padding that already followed it: palettes or tables usually sit behind it.
