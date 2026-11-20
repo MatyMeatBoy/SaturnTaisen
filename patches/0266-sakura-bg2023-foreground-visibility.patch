@@ -1,0 +1,40 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3766,13 +3766,19 @@
+                                     const bool bg2014 = layer == 2 && fingerprint == 0x64FFEF3B3722EFB9ull &&
+                                         slot >= kSceneBgCount && kSceneBgAmbiguous[slot-kSceneBgCount].cells == 0xF9044D5647376C35ull;
+                                     const bool bg2025 = fingerprint == 0x9661EF296D9080A4ull;
++                                    const bool bg2023 = layer == 2 && fingerprint == 0x7339520B7A9CCFC2ull &&
++                                        slot >= kSceneBgCount && kSceneBgAmbiguous[slot-kSceneBgCount].cells == 0x06F11DB756C670BCull;
+                                     const bool underNc3014 = bg2014 && shownDisc == 1 && nativeBg2014Actor && visible >= 11000;
+                                     const bool finaleRays = bg2025 && shownDisc == 2 && visible >= 8800;
+-                                    bool guardedPartial = visible < 12000 && (underNc3014 || finaleRays) &&
++                                    const bool underBg3020 = bg2023 && shownDisc == 2 && visible >= 3600 &&
++                                        port.videoRenderer->BackgroundPaletteFingerprint(4) == 0x0B1C026EE8464465ull;
++                                    bool guardedPartial = visible < 12000 && (underNc3014 || finaleRays || underBg3020) &&
+                                         !choosing && !port.menu.IsOpen() && planes.topSource.size() == planes.source.size() &&
+                                         port.videoRenderer->BackgroundIsOpaque(layer);
+                                     if (guardedPartial && finaleRays)
+                                         guardedPartial = port.videoRenderer->BackgroundCellFingerprint(layer, 41472) == 0x89ACC5088441EE80ull;
++                                    if (guardedPartial && underBg3020)
++                                        guardedPartial = port.videoRenderer->BackgroundCellFingerprint(4, 41472) == 0x0A741AA715FA3557ull;
+                                     if (guardedPartial) {
+                                         // These registered plates are mostly hidden behind a character.
+                                         // Replace only pixels where the actual top layer is the background.
+@@ -3821,12 +3827,13 @@
+                                         // Decode the PC picture on a worker thread: doing it here cost about 20 ms
+                                         // the first time a picture appeared. Until it is ready the native one shows.
+                                         hd.tried=true;
+-                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex,nightCorridor,offset,bg2014,bg2025]() {
++                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex,nightCorridor,offset,bg2014,bg2025,bg2023]() {
+                                             SceneHdPixels result;
+                                             std::vector<uint8_t> bytes;
+                                             if(!ReadPcBackdropFile(file,bytes,64u<<20))return result;
+                                             if ((bg2014 && (bytes.size() != 53146 || AtlasFingerprint(bytes) != 0x8B72773A31DA24ADull)) ||
+-                                                (bg2025 && (bytes.size() != 69881 || AtlasFingerprint(bytes) != 0xCE345BCF53B20D22ull)))
++                                                (bg2025 && (bytes.size() != 69881 || AtlasFingerprint(bytes) != 0xCE345BCF53B20D22ull)) ||
++                                                (bg2023 && (bytes.size() != 74222 || AtlasFingerprint(bytes) != 0x9BABBB08BFBDADDDull)))
+                                                 return result;
+                                             std::vector<PcSprite> images;std::string error;
+                                             if(!DecodePcSprites(bytes,images,error))return result;

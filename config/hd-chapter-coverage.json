@@ -6902,9 +6902,11 @@
           },
           "2:/SAKURA1/BG2023.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-10.md#bg2023-under-bg3020",
             "pc": "SAKURA1/BG/BG2023.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bg2023-under-bg3020",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2025.BIN": {
             "association": "observed",

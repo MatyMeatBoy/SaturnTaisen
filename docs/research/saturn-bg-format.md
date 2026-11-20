@@ -1138,8 +1138,10 @@ matched the stock interpreter's guest hashes and final SRAM.
 At each of four sampled fields exactly 2,579,481 pixels changed inside
 (320,48)–(2240,1392). Missing and same-size corrupt donor controls
 matched the stock Enhanced captures. Both Original profiles matched.
-All candidate profiles ran with zero interpreted blocks. The disc 2
-occurrence and public package remain pending.
+All candidate profiles ran with zero interpreted blocks. Patch 0264
+and the observed ranges ship in
+[v0.2.28-alpha](../releases/v0.2.28-alpha.md). The disc 2 occurrence
+remains pending.
 
 A separate strict replay followed all 15,634 fields from Maria's Room
 to the 95-point reward. It matched the entire archived interpreter

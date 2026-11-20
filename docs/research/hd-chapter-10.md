@@ -117,7 +117,7 @@ The invalid donor and Original controls also match. After rebasing
 onto patch 0263, 60 captures across BG2025, BG2014 and their controls
 match the independent results, with identical guest hashes and final
 SRAM and zero interpreted blocks. BG2025 adds one unique verification.
-Package inclusion is pending.
+Patch 0265 ships in [v0.2.28-alpha](../releases/v0.2.28-alpha.md).
 
 ## BG1292 on the 1001 route
 
@@ -129,3 +129,19 @@ pixel matched the independently decoded native image before and the
 BG1292 PC donor within two channel levels after. Samples at fields
 8, 16, 132, 180 and 204 matched between the profiles. This confirms a
 unique donor already integrated in the published runtime.
+
+## BG2023 under BG3020
+
+The native foreground leaves 3,728 pixels of BG2023 visible in the
+two retained 1001 checkpoints. Patch 0266 checks the exact lower and
+upper palette and cell identities, the visible layer ownership and
+the donor's byte fingerprint before replacing that region.
+
+Each of sixteen compared 1440p samples changed 119,946 pixels. Those
+pixels matched independently decoded Saturn RGB before and PC RGB
+within two channel levels after. The actor, foreground and dialogue
+matched outside that region. Invalid donor and Original controls
+matched. Each pair ran 220 strict fields with identical guest hashes
+and save memory. The byte-identical BG2022 alias shares the donor
+identity. Verification applies to the witnessed disc 2 BG2023 entry.
+Package inclusion is pending.
