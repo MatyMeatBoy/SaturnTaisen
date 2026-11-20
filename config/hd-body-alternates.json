@@ -1,0 +1,690 @@
+{
+  "alternate_files": [
+    {
+      "alternate_pc": "SAKURA3/NC/NC10.SPR",
+      "container_sha256": [
+        "982651b5ffd39b8fa93d4a946c165960115432f3e36659dae16ff4f62c9f4a31",
+        "583163bd25b3e86f9ec01d15d570e37e8a81c18673b230042c12b0094c1b0d00"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          326,
+          320
+        ],
+        [
+          411,
+          480
+        ]
+      ],
+      "image_count": 94,
+      "pc": "SAKURA1/NC/NC10.SPR",
+      "saturn": "/SAKURA1/NC10.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC16.SPR",
+      "container_sha256": [
+        "81062b1e4a9059c8fb9db749b43513b97ec6ec1cad0b9b1b2c71cf75eef4e2d8",
+        "77f9e3324978a085a45cd4d22f4abe9d304df6319dd4d8eac5a480e25cc3fafe"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          504,
+          320
+        ],
+        [
+          640,
+          480
+        ]
+      ],
+      "image_count": 8,
+      "pc": "SAKURA1/NC/NC16.SPR",
+      "saturn": "/SAKURA1/NC16.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC20.SPR",
+      "container_sha256": [
+        "4f09fa3e7aa10a284160713e4df4f8499c2de1fcd355249b592873049eb25723",
+        "02499b357e3e720907b9cd9cd95c8c71507c348fc8227ca01a435475900d72c0"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          296,
+          320
+        ],
+        [
+          361,
+          480
+        ]
+      ],
+      "image_count": 64,
+      "pc": "SAKURA1/NC/NC20.SPR",
+      "saturn": "/SAKURA1/NC20.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC25.SPR",
+      "container_sha256": [
+        "7d306654c3808520fe3dc927c9806ee3e449610014f9eb542f6b51a16bc00e26",
+        "3dc19132b3c3b85e20b8fef400900b3bc5b203b1c23c6d13cfebd4d6b7ee1726"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          440,
+          320
+        ],
+        [
+          563,
+          480
+        ]
+      ],
+      "image_count": 8,
+      "pc": "SAKURA1/NC/NC25.SPR",
+      "saturn": "/SAKURA1/NC25.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC27.SPR",
+      "container_sha256": [
+        "f1b39ab449c84a1c60d0961a1b210d45da7bc19c735178761533291f4abc2581",
+        "6f842cbca3f4de5cff25eea2103f240df9b919772214cc14ebbc2aa6a816a39d"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          392,
+          320
+        ],
+        [
+          521,
+          477
+        ]
+      ],
+      "image_count": 10,
+      "pc": "SAKURA1/NC/NC27.SPR",
+      "saturn": "/SAKURA1/NC27.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC30.SPR",
+      "container_sha256": [
+        "65f65d640970fe5c76634379375342c876268a854fd7f0fa3f84df6c25768150",
+        "5f2f757d55e35da02c3132f84c0bdd7d914cc377f8ddd956193e1cb758d80599"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          368,
+          320
+        ],
+        [
+          478,
+          480
+        ]
+      ],
+      "image_count": 55,
+      "pc": "SAKURA1/NC/NC30.SPR",
+      "saturn": "/SAKURA1/NC30.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC34.SPR",
+      "container_sha256": [
+        "8bdba9b42b266b181655c50dad49fb1229152e58719f4bd13270a51585556179",
+        "67c104e0e61b0f5294f5a623b13c45aa68f26243e55483dbb1cd934911070e87"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          320,
+          320
+        ],
+        [
+          416,
+          480
+        ]
+      ],
+      "image_count": 10,
+      "pc": "SAKURA1/NC/NC34.SPR",
+      "saturn": "/SAKURA1/NC34.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC35.SPR",
+      "container_sha256": [
+        "73fcb7569be77e48744a923e24036ebac19863f5c8bc1d323b9868b3d1e6b9db",
+        "f6112bace6d1f02707cd9eab98531ecbb9805879d776935bc0ac6e39b9978c6b"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          400,
+          320
+        ],
+        [
+          520,
+          480
+        ]
+      ],
+      "image_count": 10,
+      "pc": "SAKURA1/NC/NC35.SPR",
+      "saturn": "/SAKURA1/NC35.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC40.SPR",
+      "container_sha256": [
+        "d2db922033c17835d2aba87ea52571c0c0b6a8368f2b5b075582e665f6985aa0",
+        "00413563179de083310a02b3442438d8c4f326379c3e19d6f2cffb738277b941"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          320,
+          320
+        ],
+        [
+          426,
+          480
+        ]
+      ],
+      "image_count": 74,
+      "pc": "SAKURA1/NC/NC40.SPR",
+      "saturn": "/SAKURA1/NC40.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC43.SPR",
+      "container_sha256": [
+        "632b4ed26010204d1f7be1ded17afbfed2ec09a556909939b20bac479370189f",
+        "13296ff4ce83a43f6cc99eba34f70756129b02206bf5c957a7de41d047d6af8d"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          384,
+          320
+        ],
+        [
+          492,
+          480
+        ]
+      ],
+      "image_count": 8,
+      "pc": "SAKURA1/NC/NC43.SPR",
+      "saturn": "/SAKURA1/NC43.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC44.SPR",
+      "container_sha256": [
+        "6d3beec04f282567af347309a1c1618b5d16dcc0aee6f62d09ca92f58ef7d8f5",
+        "758a18450c3564e4e536eb3d43b88068348f8dbc438edf93ee6216ea308a31db"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          424,
+          320
+        ],
+        [
+          530,
+          480
+        ]
+      ],
+      "image_count": 8,
+      "pc": "SAKURA1/NC/NC44.SPR",
+      "saturn": "/SAKURA1/NC44.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC50.SPR",
+      "container_sha256": [
+        "5b2a4bf5ace9bb1be8218ff9a6b0979f310029e43dd0cb6ec98c547e8bcd2adf",
+        "51758dc95d61fcc518f49643710b5aab442012cf7996d859ef5d408efcd895cd"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          288,
+          320
+        ],
+        [
+          374,
+          480
+        ]
+      ],
+      "image_count": 98,
+      "pc": "SAKURA1/NC/NC50.SPR",
+      "saturn": "/SAKURA1/NC50.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC56.SPR",
+      "container_sha256": [
+        "154573e276551a4b195ecf80359ca91465e28fbfea79004e6664cb3537ecfe0d",
+        "c9b2d5af04e453b2915f532965b0922cb1ca2e0c5616fceef110d98379db1c17"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          288,
+          320
+        ],
+        [
+          374,
+          480
+        ]
+      ],
+      "image_count": 10,
+      "pc": "SAKURA1/NC/NC56.SPR",
+      "saturn": "/SAKURA1/NC56.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC60.SPR",
+      "container_sha256": [
+        "a4a3bad1899f5fb43d7add18df0a3051ef5cb8e002d985812af25a7d4c66f335",
+        "2c7abffc9bca6a82646e549514861a752c65cbdf31d9a0d64c3f3379ab8c2b3c"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          288,
+          320
+        ],
+        [
+          392,
+          480
+        ]
+      ],
+      "image_count": 81,
+      "pc": "SAKURA1/NC/NC60.SPR",
+      "saturn": "/SAKURA1/NC60.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC64.SPR",
+      "container_sha256": [
+        "46064f609fa1ebfdea506e67a7259014f82428fae1ce2e847bd6a5dcb4af3a88",
+        "10100a704b2b7ba35415ca2aaf2d7a473217b8bdfccde2dedb173ef03ed92e52"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          440,
+          320
+        ],
+        [
+          563,
+          480
+        ]
+      ],
+      "image_count": 10,
+      "pc": "SAKURA1/NC/NC64.SPR",
+      "saturn": "/SAKURA1/NC64.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC65.SPR",
+      "container_sha256": [
+        "5d2801dfad3dcf1c25910c143716e29450dbea1c45de7200d93c7ce38df7b291",
+        "7dd361e29ce0c8a0f61adf06558536111db0c81f43813b73d1ba2d8dc79d5a86"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          344,
+          320
+        ],
+        [
+          430,
+          480
+        ]
+      ],
+      "image_count": 8,
+      "pc": "SAKURA1/NC/NC65.SPR",
+      "saturn": "/SAKURA1/NC65.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC70.SPR",
+      "container_sha256": [
+        "150bc0fb5ef7152437782dc556f2aca8344b7ac50ba2387764333ee1ebf495ed",
+        "dbf489430a2c0b7a6830491183c497d0eb4b95e45d9f5cb38568ee4c09452990"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          264,
+          320
+        ],
+        [
+          338,
+          480
+        ]
+      ],
+      "image_count": 59,
+      "pc": "SAKURA1/NC/NC70.SPR",
+      "saturn": "/SAKURA1/NC70.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC72.SPR",
+      "container_sha256": [
+        "e57099d5dc498cca623c4c97a7f012a1ce6c93a38be2fa145af9f28848d7c2a0",
+        "e57771eeb0f307c0d26f2852c0482810e16784f0e2a977f3ae94bd4bcbcb45a1"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          264,
+          320
+        ],
+        [
+          351,
+          480
+        ]
+      ],
+      "image_count": 11,
+      "pc": "SAKURA1/NC/NC72.SPR",
+      "saturn": "/SAKURA1/NC72.BIN"
+    },
+    {
+      "alternate_pc": "SAKURA3/NC/NC75.SPR",
+      "container_sha256": [
+        "1bd6aa0a4ebb6b51206dee8e9a3038128c45445fcf1b9b0e52355b930347e73f",
+        "7e7aca95cbf76ca3b5f7b355febc2463f130f5aae840d0d8ef9cb16f8fc92d68"
+      ],
+      "corner_rgb": [
+        [
+          0,
+          255,
+          255
+        ],
+        [
+          0,
+          255,
+          255
+        ]
+      ],
+      "discs": [
+        1,
+        2
+      ],
+      "first_body_sizes": [
+        [
+          490,
+          320
+        ],
+        [
+          640,
+          480
+        ]
+      ],
+      "image_count": 10,
+      "pc": "SAKURA1/NC/NC75.SPR",
+      "saturn": "/SAKURA1/NC75.BIN"
+    }
+  ],
+  "classification": "Alternative PC donors for existing Saturn identities; no runtime substitution is established.",
+  "schema": 1
+}

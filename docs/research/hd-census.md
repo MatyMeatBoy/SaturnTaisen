@@ -30,7 +30,7 @@ python -m unittest tests.test_hd_census
 | Finales (SAKURA1/ENDING) | 13 | 0 | 13 | 7 | 0 | 0 | 6 | 53,8% | 2 | 15,3% |
 | IC / eyecatch (ICATCH) | 21 | 0 | 21 | 16 | 0 | 0 | 5 | 76,1% | 5 | 23,8% |
 | TITLE (tarjetas de episodio PC) | 10 | 10 | 0 | 0 | 0 | 0 | 0 | - | 0 | - |
-| Mapas tácticos: suelos | 26 | 0 | 26 | 11 | 0 | 15 | 0 | 42,3% | 11 | 42,3% |
+| Mapas tácticos: suelos | 26 | 0 | 26 | 12 | 0 | 14 | 0 | 46,1% | 12 | 46,1% |
 | Unidades tácticas (UNIT) | 291 | 0 | 291 | 0 | 0 | 0 | 291 | 0,0% | 0 | 0,0% |
 | HUD y menús (SYSTEM sin KAO) | 572 | 394 | 178 | 18 | 0 | 0 | 160 | 10,1% | 14 | 7,8% |
 | ITEM (tarjetas de objeto) | 51 | 0 | 51 | 41 | 0 | 0 | 10 | 80,3% | 1 | 1,9% |
@@ -49,11 +49,11 @@ python -m unittest tests.test_hd_census
 | Finales (SAKURA1/ENDING) | - | - | Parcial (hd con otra clave pendiente): 7. |
 | IC / eyecatch (ICATCH) | - | - | Parcial (hd con otra clave pendiente): 13. |
 | TITLE (tarjetas de episodio PC) | rótulo japonés incrustado (tarjetas: capas locales) (10) | - | - |
-| Mapas tácticos: suelos | - | composición PC distinta (conservar nativo salvo testigo) (1); falta conexión en el runtime (13); falta de testigo (1) | 194 SPR de MAP en el volcado PC; 26 son suelos emparejados con las 27 MAP BIN Saturn. Los otros 168 (teselas, objetos, fotogramas) no tienen función asignada: no son denominador hasta emparejarse.  |
+| Mapas tácticos: suelos | - | composición PC distinta (conservar nativo salvo testigo) (1); falta conexión en el runtime (12); falta de testigo (1) | 194 SPR de MAP en el volcado PC; 26 son suelos emparejados con las 27 MAP BIN Saturn. Los otros 168 (teselas, objetos, fotogramas) no tienen función asignada: no son denominador hasta emparejarse.  |
 | Unidades tácticas (UNIT) | - | - | 27 bancos UNIT Saturn (10 conjuntos distintos): emparejados 0, ambiguos 0. Ningún archivo con estado explicito.  |
 | HUD y menús (SYSTEM sin KAO) | KAO: atlas de retratos, contado en retratos (394) | - | 30 claves Saturn de menu sin pareja establecida (`unknown`).  |
 | ITEM (tarjetas de objeto) | - | - | 41 archivos ITEM con imagen dibujada; 39 claves Saturn de objeto `unpaired`. Los 57 SPR de ITEM también están en el 542 táctico: aquí se cuentan una vez.  |
-| Cuerpos NC (personajes grandes) | - | - | 147 donantes PC SAKURA1/NC; los 19 NC de SAKURA3 no tienen fila. Filas del registro por disco/capitulo: 296.  |
+| Cuerpos NC (personajes grandes) | - | - | 147 donantes PC SAKURA1/NC y 19 alternos SAKURA3 del mismo conjunto Saturn. Filas del registro por disco/capitulo: 296.  |
 | Retratos (identidades Saturn) | - | - | 304 identidades con fila en el registro; el denominador es el de hd-progress.json. 394 caras PC en KAO se cuentan aquí y no en HUD.  |
 | Vídeos (FILM) | transición nativa corta sin clip PC (2) | - | 54 apariciones FILM (disco, FAD) -> 50 clips PC (6 por tramos). Verificado solo donde la fila lo declara.  |
 | Fondos decorativos KABE | - | - | Sin fila por tema en el registro; el recuento viene de hd-progress.json. 25 WALL PC, 19 temas usados. Verificación: THD25.  |
@@ -61,9 +61,9 @@ python -m unittest tests.test_hd_census
 
 Escena (7 carpetas SPR): candidatos 1192, excluidos 97, meta 1095, hd 586 (53,5%), verificados 171 (15,6%), bloqueados 14, sin pareja o sin fila 495; de los hd, 23 aún tienen otra clave pendiente (parcial).
 
-Donantes de escena que cuentan en dos estados: 22 hd y excluido a la vez, 23 hd con otra clave pendiente. Miembros de grupos de duplicados exactos listados como donantes separados en el registro: 23.
+Donantes de escena que cuentan en dos estados: 22 hd y excluido a la vez, 23 hd con otra clave pendiente. Rutas físicas extra de familias exactas presentes en el registro: 23. Comparten una identidad de conteo y conservan sus rutas del runtime.
 
-Filas `hd` sin ninguna referencia de evidencia por fila (son `hd` por la tabla del runtime, no por testigo): scene-pictures 935/1196, bodies 207/296, portraits 172/419, film 41/45, menus-hud 0/100, tactical-maps 0/11.
+Filas `hd` sin ninguna referencia de evidencia por fila (son `hd` por la tabla del runtime, no por testigo): scene-pictures 935/1196, bodies 207/296, portraits 172/419, film 41/45, menus-hud 0/100, tactical-maps 0/12.
 
 <!-- END HD CENSUS -->
 
@@ -73,11 +73,11 @@ Filas `hd` sin ninguna referencia de evidencia por fila (son `hd` por la tabla d
 2. **Tácticos sin estado.** De los 542, solo 26 suelos tienen fila (11 `hd`). Las 291 UNIT quedan sin pareja (0 emparejadas). Los 168 SPR de MAP restantes (teselas, objetos, fotogramas) no tienen función asignada; el 542 los trata como candidatos y no lo son todavía. Por eso HD_PROGRESS marca «Sin dato» en la fila táctica y no entra en el total.
 3. **EVENT y CG casi sin filas.** 214 EVENT y 211 CG distintos no tienen ninguna fila: son el 85 % de lo que falta en «escena» (425 de 495 sin pareja). Los 1.095 de HD_PROGRESS ya los incluyen en el denominador, así que el 53,5 % integrado es correcto, pero el 100 % depende de THD09.
 4. **Donantes `hd` parciales y mixtos.** 23 donantes `hd` aún tienen otra clave pendiente (filas IC `paired-not-wired`, fotos de finales, etc.) y 22 son `hd` en una clave y `excluded` en otra (recortes BG3xxx reutilizados). El 586 los cuenta enteros.
-5. **Duplicados exactos.** 23 miembros de grupos de duplicados exactos figuran como donantes separados en el registro; el censo y el generador los colapsan, pero el registro bruto los muestra dos veces.
+5. **Duplicados exactos.** El inventario agrupa 134 nombres en 59 familias. Se reprodujeron 36 familias byte a byte y otras 23 por secuencia de subimágenes RGBA, con las mismas dimensiones e índices. En el registro hay 23 familias con dos rutas físicas cada una. Las filas conservan pc para el archivo real del runtime y comparten pc_identity para el inventario.
 6. **`hd` por tabla, no por testigo.** Filas `hd` sin ninguna referencia de evidencia propia: escenas 935/1196, cuerpos 207/296, retratos 172/419, vídeo 41/45. Es lo que define `hd` (entrada en la tabla del runtime), pero no es observación: el verificado en juego es el piso documentado.
-7. **NC.** 294 claves del registro (ambos discos) son 147 archivos Saturn distintos; los 19 NC de SAKURA3 del volcado PC no tienen fila ni están en el denominador.
+7. **NC.** Los 19 NC de SAKURA3 tienen el mismo nombre y número de imágenes que su donante SAKURA1, y el mismo recurso Saturn ya registrado en ambos discos. Ningún disco incluye una ruta nativa /SAKURA3/NC*.BIN. Los 19 contenedores PC tienen SHA-256 distinto y una primera imagen de 480 píxeles de alto, salvo NC27 de 477, frente a 320 de SAKURA1. Los alternos son candidatos para los mismos 147 cuerpos. El [inventario](../../config/hd-body-alternates.json) conserva rutas, tamaños, colores de esquina y hashes. Un alterno necesita sus propias pruebas de silueta, posicionamiento y caras antes de sustituir un donante.
 8. **Retratos.** 304 identidades Saturn frente a 394 caras PC (KAO). HD_PROGRESS marca el verificado como «Sin dato»; el registro lleva 10 identidades con `verified_in_game`.
-9. **SHARDS.md** describe los `paired-not-wired` de escena como 7 finales del disco 1 y 13 intermedios del disco 2; el registro actual tiene además 12 filas de minijuegos y un par BBG.
+9. **Filas pendientes de conectar.** El registro conserva los siete finales del disco 1, trece intermedios del disco 2, doce minijuegos y un par BBG. Las condiciones de cierre están en [SHARDS.md](../SHARDS.md).
 10. **Vídeos.** 54 apariciones (disco, FAD) = 50 clips PC distintos + 2 transiciones nativas excluidas (MOVIE015 aparece en ambos discos).
 
 ## Qué falta para el 100 % por tipo

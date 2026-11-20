@@ -250,7 +250,8 @@
       "patches/0258-sakura-dark-native-transition-edges.patch",
       "patches/0259-sakura-foreground-runtime-priority.patch",
       "patches/0260-sakura-blend-ogami-hd-handoff.patch",
-      "patches/0261-sakura-repair-prepared-content.patch"
+      "patches/0261-sakura-repair-prepared-content.patch",
+      "patches/0262-sakura-map03-pc-ground.patch"
     ]
   }
 }

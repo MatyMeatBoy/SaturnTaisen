@@ -2164,6 +2164,7 @@
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
             "pc": "SAKURA1/BG/BG1011.SPR",
+            "pc_identity": "SAKURA1/BG/BG1011.SPR",
             "runtime_evidence": "docs/research/saturn-bg-format.md",
             "status": "hd",
             "verified_in_game": true
@@ -2172,6 +2173,7 @@
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
             "pc": "SAKURA1/BG/BG1012.SPR",
+            "pc_identity": "SAKURA1/BG/BG1012.SPR",
             "runtime_evidence": "docs/research/saturn-bg-format.md",
             "status": "hd",
             "verified_in_game": true
@@ -2285,6 +2287,7 @@
             "association": "observed",
             "evidence": "docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening",
             "pc": "SAKURA1/BG/BG1101.SPR",
+            "pc_identity": "SAKURA1/BG/BG1088.SPR",
             "runtime_evidence": "docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening",
             "status": "hd",
             "verified_in_game": true
@@ -2320,6 +2323,7 @@
             "association": "observed",
             "evidence": "docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1",
             "pc": "SAKURA1/BG/BG1143.SPR",
+            "pc_identity": "SAKURA1/BG/BG1143.SPR",
             "runtime_evidence": "docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1",
             "status": "hd",
             "verified_in_game": true
@@ -3385,6 +3389,7 @@
             "association": "observed",
             "evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
             "pc": "SAKURA1/BG/BG1132.SPR",
+            "pc_identity": "SAKURA1/BG/BG1132.SPR",
             "runtime_evidence": "docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws",
             "status": "hd",
             "verified_in_game": true
@@ -4175,6 +4180,7 @@
             "association": "observed",
             "evidence": "docs/research/iris-other-cutouts.md",
             "pc": "SAKURA1/BG/BG4084.SPR",
+            "pc_identity": "SAKURA1/BG/BG4084.SPR",
             "runtime_evidence": "docs/research/iris-other-cutouts.md",
             "status": "hd",
             "verified_in_game": true
@@ -4639,6 +4645,7 @@
             "association": "observed",
             "evidence": "docs/research/narrative-foreground-followup.md",
             "pc": "SAKURA1/BG/BG4059.SPR",
+            "pc_identity": "SAKURA1/BG/BG4059.SPR",
             "runtime_evidence": "docs/research/narrative-foreground-followup.md",
             "status": "hd",
             "verified_in_game": true
@@ -4923,6 +4930,7 @@
             "association": "observed",
             "evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
             "pc": "SAKURA1/BG/BG2125.SPR",
+            "pc_identity": "SAKURA1/BG/BG2125.SPR",
             "runtime_evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
             "status": "hd",
             "verified_in_game": true
@@ -4937,6 +4945,7 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build",
             "pc": "SAKURA1/BG/BG4017.SPR",
+            "pc_identity": "SAKURA1/BG/BG4017.SPR",
             "reason": "cut-out on a key colour or blank picture, not replaced by design",
             "status": "excluded"
           },
@@ -5410,6 +5419,7 @@
             "association": "observed",
             "evidence": "docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route",
             "pc": "SAKURA1/BG/BG1013.SPR",
+            "pc_identity": "SAKURA1/BG/BG1011.SPR",
             "runtime_evidence": "docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route",
             "status": "hd",
             "verified_in_game": true
@@ -5450,6 +5460,7 @@
             "association": "observed",
             "evidence": "docs/research/th8-native-attribution.md#verified-scene-draws-on-0801-and-early-0802",
             "pc": "SAKURA1/BG/BG1087.SPR",
+            "pc_identity": "SAKURA1/BG/BG1087.SPR",
             "runtime_evidence": "docs/research/th8-native-attribution.md#verified-scene-draws-on-0801-and-early-0802",
             "status": "hd",
             "verified_in_game": true
@@ -6359,6 +6370,7 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "pc": "SAKURA1/BG/BG1100.SPR",
+            "pc_identity": "SAKURA1/BG/BG1087.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "status": "hd",
             "verified_in_game": true
@@ -6367,6 +6379,7 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "pc": "SAKURA1/BG/BG1101.SPR",
+            "pc_identity": "SAKURA1/BG/BG1088.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "status": "hd",
             "verified_in_game": true
@@ -6375,6 +6388,7 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
             "pc": "SAKURA1/BG/BG1143.SPR",
+            "pc_identity": "SAKURA1/BG/BG1143.SPR",
             "status": "hd"
           },
           "2:/SAKURA1/BG1174.BIN": {
@@ -6454,6 +6468,7 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "pc": "SAKURA1/BG/BG2036.SPR",
+            "pc_identity": "SAKURA1/BG/BG2036.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "status": "hd",
             "verified_in_game": true
@@ -6597,6 +6612,7 @@
             "association": "observed",
             "evidence": "docs/research/iris-other-cutouts.md",
             "pc": "SAKURA1/BG/BG4093.SPR",
+            "pc_identity": "SAKURA1/BG/BG4092.SPR",
             "runtime_evidence": "docs/research/iris-other-cutouts.md",
             "status": "hd",
             "verified_in_game": true
@@ -7144,6 +7160,27 @@
   "hud_census": {
     "item_images": 51,
     "system_images": 572
+  },
+  "pc_body_alternates": {
+    "/SAKURA1/NC10.BIN": "SAKURA3/NC/NC10.SPR",
+    "/SAKURA1/NC16.BIN": "SAKURA3/NC/NC16.SPR",
+    "/SAKURA1/NC20.BIN": "SAKURA3/NC/NC20.SPR",
+    "/SAKURA1/NC25.BIN": "SAKURA3/NC/NC25.SPR",
+    "/SAKURA1/NC27.BIN": "SAKURA3/NC/NC27.SPR",
+    "/SAKURA1/NC30.BIN": "SAKURA3/NC/NC30.SPR",
+    "/SAKURA1/NC34.BIN": "SAKURA3/NC/NC34.SPR",
+    "/SAKURA1/NC35.BIN": "SAKURA3/NC/NC35.SPR",
+    "/SAKURA1/NC40.BIN": "SAKURA3/NC/NC40.SPR",
+    "/SAKURA1/NC43.BIN": "SAKURA3/NC/NC43.SPR",
+    "/SAKURA1/NC44.BIN": "SAKURA3/NC/NC44.SPR",
+    "/SAKURA1/NC50.BIN": "SAKURA3/NC/NC50.SPR",
+    "/SAKURA1/NC56.BIN": "SAKURA3/NC/NC56.SPR",
+    "/SAKURA1/NC60.BIN": "SAKURA3/NC/NC60.SPR",
+    "/SAKURA1/NC64.BIN": "SAKURA3/NC/NC64.SPR",
+    "/SAKURA1/NC65.BIN": "SAKURA3/NC/NC65.SPR",
+    "/SAKURA1/NC70.BIN": "SAKURA3/NC/NC70.SPR",
+    "/SAKURA1/NC72.BIN": "SAKURA3/NC/NC72.SPR",
+    "/SAKURA1/NC75.BIN": "SAKURA3/NC/NC75.SPR"
   },
   "scene_file_aliases": {
     "SAKURA1/BG/BG1039.SPR": "SAKURA1/BG/BG1037.SPR",
@@ -13703,11 +13740,13 @@
       "1:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
+        "pc_identity": "SAKURA1/BG/BG1011.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1014.SPR",
+        "pc_identity": "SAKURA1/BG/BG1012.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1015.BIN": {
@@ -13748,11 +13787,13 @@
       "1:/SAKURA1/BG1027.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1027.SPR",
+        "pc_identity": "SAKURA1/BG/BG1027.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1028.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1028.SPR",
+        "pc_identity": "SAKURA1/BG/BG1027.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1029.BIN": {
@@ -13783,21 +13824,25 @@
       "1:/SAKURA1/BG1037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
+        "pc_identity": "SAKURA1/BG/BG1037.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
+        "pc_identity": "SAKURA1/BG/BG1038.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
+        "pc_identity": "SAKURA1/BG/BG1037.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
+        "pc_identity": "SAKURA1/BG/BG1038.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1041.BIN": {
@@ -13929,126 +13974,151 @@
       "1:/SAKURA1/BG1078.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1078.SPR",
+        "pc_identity": "SAKURA1/BG/BG1078.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1079.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1079.SPR",
+        "pc_identity": "SAKURA1/BG/BG1079.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1080.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1080.SPR",
+        "pc_identity": "SAKURA1/BG/BG1080.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1081.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1081.SPR",
+        "pc_identity": "SAKURA1/BG/BG1081.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1082.SPR",
+        "pc_identity": "SAKURA1/BG/BG1082.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1083.SPR",
+        "pc_identity": "SAKURA1/BG/BG1083.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1084.SPR",
+        "pc_identity": "SAKURA1/BG/BG1084.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1085.SPR",
+        "pc_identity": "SAKURA1/BG/BG1085.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1086.SPR",
+        "pc_identity": "SAKURA1/BG/BG1086.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1087.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1087.SPR",
+        "pc_identity": "SAKURA1/BG/BG1087.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1088.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1088.SPR",
+        "pc_identity": "SAKURA1/BG/BG1088.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1089.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1089.SPR",
+        "pc_identity": "SAKURA1/BG/BG1089.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1090.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1090.SPR",
+        "pc_identity": "SAKURA1/BG/BG1090.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1091.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1091.SPR",
+        "pc_identity": "SAKURA1/BG/BG1078.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1092.SPR",
+        "pc_identity": "SAKURA1/BG/BG1079.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1093.SPR",
+        "pc_identity": "SAKURA1/BG/BG1080.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1094.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1094.SPR",
+        "pc_identity": "SAKURA1/BG/BG1081.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1095.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1095.SPR",
+        "pc_identity": "SAKURA1/BG/BG1082.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1096.SPR",
+        "pc_identity": "SAKURA1/BG/BG1083.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1097.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1097.SPR",
+        "pc_identity": "SAKURA1/BG/BG1084.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1098.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1098.SPR",
+        "pc_identity": "SAKURA1/BG/BG1085.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1099.SPR",
+        "pc_identity": "SAKURA1/BG/BG1086.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1100.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1100.SPR",
+        "pc_identity": "SAKURA1/BG/BG1087.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1102.SPR",
+        "pc_identity": "SAKURA1/BG/BG1089.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1103.SPR",
+        "pc_identity": "SAKURA1/BG/BG1090.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1104.BIN": {
@@ -14139,48 +14209,57 @@
       "1:/SAKURA1/BG1127.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1127.SPR",
+        "pc_identity": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1127.SPR",
+        "pc_identity": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1127.SPR",
+        "pc_identity": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1130.BIN": {
         "association": "unknown",
         "native_alias_of": "BG1134",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
         "native_alias_of": "BG1135",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1134.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1135.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1136.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1132.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1144.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1143.SPR",
+        "pc_identity": "SAKURA1/BG/BG1143.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1148.BIN": {
@@ -14478,6 +14557,7 @@
       "1:/SAKURA1/BG1240.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1240.SPR",
+        "pc_identity": "SAKURA1/BG/BG1240.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1241.BIN": {
@@ -14855,6 +14935,7 @@
       "1:/SAKURA1/BG1344.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1344.SPR",
+        "pc_identity": "SAKURA1/BG/BG1344.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1345.BIN": {
@@ -14915,6 +14996,7 @@
       "1:/SAKURA1/BG1357.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1344.SPR",
+        "pc_identity": "SAKURA1/BG/BG1344.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1358.BIN": {
@@ -14936,16 +15018,19 @@
       "1:/SAKURA1/BG2001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "pc_identity": "SAKURA1/BG/BG2001.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "pc_identity": "SAKURA1/BG/BG2001.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "pc_identity": "SAKURA1/BG/BG2001.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2005.BIN": {
@@ -15090,16 +15175,19 @@
       "1:/SAKURA1/BG2036.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
+        "pc_identity": "SAKURA1/BG/BG2036.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
+        "pc_identity": "SAKURA1/BG/BG2036.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
+        "pc_identity": "SAKURA1/BG/BG2036.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2040.BIN": {
@@ -15271,11 +15359,13 @@
       "1:/SAKURA1/BG2075.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2075.SPR",
+        "pc_identity": "SAKURA1/BG/BG2075.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2076.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2075.SPR",
+        "pc_identity": "SAKURA1/BG/BG2075.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2077.BIN": {
@@ -15413,11 +15503,13 @@
       "1:/SAKURA1/BG2106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2106.SPR",
+        "pc_identity": "SAKURA1/BG/BG2106.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2106.SPR",
+        "pc_identity": "SAKURA1/BG/BG2106.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2109.BIN": {
@@ -15466,16 +15558,19 @@
       "1:/SAKURA1/BG2125.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2125.SPR",
+        "pc_identity": "SAKURA1/BG/BG2125.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
+        "pc_identity": "SAKURA1/BG/BG2128.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
+        "pc_identity": "SAKURA1/BG/BG2128.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2130.BIN": {
@@ -15842,6 +15937,7 @@
       "1:/SAKURA1/BG2237.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2237.SPR",
+        "pc_identity": "SAKURA1/BG/BG2237.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2238.BIN": {
@@ -16084,6 +16180,7 @@
       "1:/SAKURA1/BG2337.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2237.SPR",
+        "pc_identity": "SAKURA1/BG/BG2237.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2338.BIN": {
@@ -16574,6 +16671,7 @@
       "1:/SAKURA1/BG4018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4018.SPR",
+        "pc_identity": "SAKURA1/BG/BG4017.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -16608,18 +16706,21 @@
       "1:/SAKURA1/BG4060.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4060.SPR",
+        "pc_identity": "SAKURA1/BG/BG4059.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "1:/SAKURA1/BG4063.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4063.SPR",
+        "pc_identity": "SAKURA1/BG/BG4063.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "1:/SAKURA1/BG4064.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4064.SPR",
+        "pc_identity": "SAKURA1/BG/BG4063.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -16634,18 +16735,21 @@
       "1:/SAKURA1/BG4085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4085.SPR",
+        "pc_identity": "SAKURA1/BG/BG4084.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "1:/SAKURA1/BG4092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4092.SPR",
+        "pc_identity": "SAKURA1/BG/BG4092.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "1:/SAKURA1/BG4093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4093.SPR",
+        "pc_identity": "SAKURA1/BG/BG4092.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -16658,12 +16762,14 @@
       "1:/SAKURA1/BG4096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4096.SPR",
+        "pc_identity": "SAKURA1/BG/BG4096.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "1:/SAKURA1/BG4097.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4097.SPR",
+        "pc_identity": "SAKURA1/BG/BG4096.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -17338,16 +17444,19 @@
       "2:/SAKURA1/BG1011.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1011.SPR",
+        "pc_identity": "SAKURA1/BG/BG1011.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1012.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1012.SPR",
+        "pc_identity": "SAKURA1/BG/BG1012.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1014.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1014.SPR",
+        "pc_identity": "SAKURA1/BG/BG1012.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1015.BIN": {
@@ -17403,11 +17512,13 @@
       "2:/SAKURA1/BG1027.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1027.SPR",
+        "pc_identity": "SAKURA1/BG/BG1027.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1028.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1028.SPR",
+        "pc_identity": "SAKURA1/BG/BG1027.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1029.BIN": {
@@ -17453,21 +17564,25 @@
       "2:/SAKURA1/BG1037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
+        "pc_identity": "SAKURA1/BG/BG1037.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
+        "pc_identity": "SAKURA1/BG/BG1038.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1037.SPR",
+        "pc_identity": "SAKURA1/BG/BG1037.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1038.SPR",
+        "pc_identity": "SAKURA1/BG/BG1038.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1041.BIN": {
@@ -17613,116 +17728,139 @@
       "2:/SAKURA1/BG1078.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1078.SPR",
+        "pc_identity": "SAKURA1/BG/BG1078.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1079.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1079.SPR",
+        "pc_identity": "SAKURA1/BG/BG1079.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1080.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1080.SPR",
+        "pc_identity": "SAKURA1/BG/BG1080.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1081.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1081.SPR",
+        "pc_identity": "SAKURA1/BG/BG1081.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1082.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1082.SPR",
+        "pc_identity": "SAKURA1/BG/BG1082.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1083.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1083.SPR",
+        "pc_identity": "SAKURA1/BG/BG1083.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1084.SPR",
+        "pc_identity": "SAKURA1/BG/BG1084.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1085.SPR",
+        "pc_identity": "SAKURA1/BG/BG1085.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1086.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1086.SPR",
+        "pc_identity": "SAKURA1/BG/BG1086.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1088.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1088.SPR",
+        "pc_identity": "SAKURA1/BG/BG1088.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1089.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1089.SPR",
+        "pc_identity": "SAKURA1/BG/BG1089.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1090.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1090.SPR",
+        "pc_identity": "SAKURA1/BG/BG1090.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1091.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1091.SPR",
+        "pc_identity": "SAKURA1/BG/BG1078.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1092.SPR",
+        "pc_identity": "SAKURA1/BG/BG1079.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1093.SPR",
+        "pc_identity": "SAKURA1/BG/BG1080.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1094.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1094.SPR",
+        "pc_identity": "SAKURA1/BG/BG1081.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1095.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1095.SPR",
+        "pc_identity": "SAKURA1/BG/BG1082.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1096.SPR",
+        "pc_identity": "SAKURA1/BG/BG1083.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1097.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1097.SPR",
+        "pc_identity": "SAKURA1/BG/BG1084.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1098.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1098.SPR",
+        "pc_identity": "SAKURA1/BG/BG1085.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1099.SPR",
+        "pc_identity": "SAKURA1/BG/BG1086.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1102.SPR",
+        "pc_identity": "SAKURA1/BG/BG1089.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1103.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1103.SPR",
+        "pc_identity": "SAKURA1/BG/BG1090.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1104.BIN": {
@@ -17818,53 +17956,63 @@
       "2:/SAKURA1/BG1127.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1127.SPR",
+        "pc_identity": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1127.SPR",
+        "pc_identity": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1127.SPR",
+        "pc_identity": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1130.BIN": {
         "association": "unknown",
         "native_alias_of": "BG1134",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
         "native_alias_of": "BG1135",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1132.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1134.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1135.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1134.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1136.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1132.SPR",
+        "pc_identity": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1144.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1143.SPR",
+        "pc_identity": "SAKURA1/BG/BG1143.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1148.BIN": {
@@ -18164,6 +18312,7 @@
       "2:/SAKURA1/BG1240.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1240.SPR",
+        "pc_identity": "SAKURA1/BG/BG1240.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1241.BIN": {
@@ -18520,6 +18669,7 @@
       "2:/SAKURA1/BG1344.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1344.SPR",
+        "pc_identity": "SAKURA1/BG/BG1344.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1345.BIN": {
@@ -18580,6 +18730,7 @@
       "2:/SAKURA1/BG1357.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1344.SPR",
+        "pc_identity": "SAKURA1/BG/BG1344.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1358.BIN": {
@@ -18597,16 +18748,19 @@
       "2:/SAKURA1/BG2001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "pc_identity": "SAKURA1/BG/BG2001.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "pc_identity": "SAKURA1/BG/BG2001.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
+        "pc_identity": "SAKURA1/BG/BG2001.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2005.BIN": {
@@ -18716,11 +18870,13 @@
       "2:/SAKURA1/BG2037.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
+        "pc_identity": "SAKURA1/BG/BG2036.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2038.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2036.SPR",
+        "pc_identity": "SAKURA1/BG/BG2036.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2039.BIN": {
@@ -18887,11 +19043,13 @@
       "2:/SAKURA1/BG2075.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2075.SPR",
+        "pc_identity": "SAKURA1/BG/BG2075.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2076.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2075.SPR",
+        "pc_identity": "SAKURA1/BG/BG2075.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2078.BIN": {
@@ -18957,11 +19115,13 @@
       "2:/SAKURA1/BG2106.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2106.SPR",
+        "pc_identity": "SAKURA1/BG/BG2106.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2107.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2106.SPR",
+        "pc_identity": "SAKURA1/BG/BG2106.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2109.BIN": {
@@ -19004,21 +19164,25 @@
       "2:/SAKURA1/BG2125.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2125.SPR",
+        "pc_identity": "SAKURA1/BG/BG2125.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2126.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2125.SPR",
+        "pc_identity": "SAKURA1/BG/BG2125.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2128.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
+        "pc_identity": "SAKURA1/BG/BG2128.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2128.SPR",
+        "pc_identity": "SAKURA1/BG/BG2128.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2130.BIN": {
@@ -19350,6 +19514,7 @@
       "2:/SAKURA1/BG2237.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2237.SPR",
+        "pc_identity": "SAKURA1/BG/BG2237.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2239.BIN": {
@@ -19566,6 +19731,7 @@
       "2:/SAKURA1/BG2337.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2237.SPR",
+        "pc_identity": "SAKURA1/BG/BG2237.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2338.BIN": {
@@ -20006,12 +20172,14 @@
       "2:/SAKURA1/BG4017.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4017.SPR",
+        "pc_identity": "SAKURA1/BG/BG4017.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "2:/SAKURA1/BG4018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4018.SPR",
+        "pc_identity": "SAKURA1/BG/BG4017.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -20038,24 +20206,28 @@
       "2:/SAKURA1/BG4059.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4059.SPR",
+        "pc_identity": "SAKURA1/BG/BG4059.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "2:/SAKURA1/BG4060.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4060.SPR",
+        "pc_identity": "SAKURA1/BG/BG4059.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "2:/SAKURA1/BG4063.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4063.SPR",
+        "pc_identity": "SAKURA1/BG/BG4063.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "2:/SAKURA1/BG4064.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4064.SPR",
+        "pc_identity": "SAKURA1/BG/BG4063.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -20070,12 +20242,14 @@
       "2:/SAKURA1/BG4084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4084.SPR",
+        "pc_identity": "SAKURA1/BG/BG4084.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "2:/SAKURA1/BG4085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4085.SPR",
+        "pc_identity": "SAKURA1/BG/BG4084.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -20088,6 +20262,7 @@
       "2:/SAKURA1/BG4092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4092.SPR",
+        "pc_identity": "SAKURA1/BG/BG4092.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -20100,12 +20275,14 @@
       "2:/SAKURA1/BG4096.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4096.SPR",
+        "pc_identity": "SAKURA1/BG/BG4096.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
       "2:/SAKURA1/BG4097.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4097.SPR",
+        "pc_identity": "SAKURA1/BG/BG4096.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -20798,10 +20975,11 @@
     "tactical-maps": {
       "1:/SAKURA2/MAP03.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP03/MAP03_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 626 images (tiles or frames) and needs an assembler",
-        "status": "paired-not-wired"
+        "runtime_evidence": "docs/research/tactical-ground-table.md#map03-at-1440p",
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA2/MAP07.BIN": {
         "association": "unknown",

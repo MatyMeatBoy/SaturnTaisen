@@ -146,7 +146,10 @@ def scene_rows(register, census):
             if row['status'] == 'unpaired':
                 unpaired_keys.add(key.partition(':')[2])
             continue
-        donor = donors[canon.get(pc, pc)]
+        identity = canon.get(pc, pc)
+        if row.get('pc_identity', identity) != identity:
+            raise ValueError(f'Invalid exact duplicate identity for {pc}')
+        donor = donors[identity]
         donor['status'].add(row['status'])
         donor['reasons'][row['status']] = row.get('reason', '')
         if row['status'] == 'hd' and row.get('verified_in_game') is True:
@@ -292,7 +295,13 @@ def body_rows(register, census):
     row['candidates'] = len(native)
     row['hd'] = sum(1 for s in native.values() if s == 'hd')
     row['verified'] = len(verified)
-    row['note'] = (f'{len(pc_files)} donantes PC SAKURA1/NC; los {census.get("SAKURA3/NC", 0)} NC de SAKURA3 no tienen fila. '
+    alternates = register.get('pc_body_alternates', {})
+    if len(alternates) != census.get('SAKURA3/NC', 0):
+        raise ValueError('El inventario de alternos NC no coincide con el censo PC')
+    if (len(set(alternates.values())) != len(alternates)
+            or any(path not in native or f'SAKURA1/NC/{Path(path).stem}.SPR' not in pc_files for path in alternates)):
+        raise ValueError('Un alterno NC carece de identidad Saturn o donante base registrado')
+    row['note'] = (f'{len(pc_files)} donantes PC SAKURA1/NC y {len(alternates)} alternos SAKURA3 del mismo conjunto Saturn. '
                    f'Filas del registro por disco/capitulo: {sum(1 for _ in all_rows(register, "bodies"))}.')
     return [finish(row)]
 
@@ -421,7 +430,8 @@ def render_block(report):
             f"bloqueados {totals['blocked']}, sin pareja o sin fila {totals['unmatched']}; de los hd, {totals['partial']} aún tienen otra clave pendiente (parcial).",
         '', 'Donantes de escena que cuentan en dos estados: ' +
             f"{report['mixed_donors']['hd_and_excluded']} hd y excluido a la vez, {report['mixed_donors']['hd_and_pending']} hd con otra clave pendiente. "
-            f"Miembros de grupos de duplicados exactos listados como donantes separados en el registro: {report['duplicate_donors_listed_twice']}.",
+            f"Rutas físicas extra de familias exactas presentes en el registro: {report['duplicate_donors_listed_twice']}. "
+            "Comparten una identidad de conteo y conservan sus rutas del runtime.",
         '', 'Filas `hd` sin ninguna referencia de evidencia por fila (son `hd` por la tabla del runtime, no por testigo): ' +
             ', '.join(f"{k} {v['without_evidence']}/{v['hd_rows']}" for k, v in report['evidence_gaps'].items()) + '.',
     ]

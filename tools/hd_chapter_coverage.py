@@ -755,6 +755,14 @@ def build(root, index_dir, portrait_audit):
                 'verified_in_game': True,
                 'runtime_evidence': STAGE21_REPORT,
             }
+        elif (disc, path) == (1, '/SAKURA2/MAP03.BIN'):
+            row = {
+                'status': 'hd',
+                'verified_in_game': True,
+                'runtime_evidence': 'docs/research/tactical-ground-table.md#map03-at-1440p',
+                'pc': 'SAKURA2/MAP/MAP03/MAP03_A.SPR',
+                'scope': 'source-4 ground only',
+            }
         elif (disc, path) == STAGE04_MAP:
             row = {
                 'status': 'hd',
@@ -1166,6 +1174,13 @@ def build(root, index_dir, portrait_audit):
                     occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
                 add('portraits', ident, occurrence, episode, 'observed', evidence)
 
+    duplicate_groups = config('hd-scene-file-duplicates')['groups']
+    duplicate_identities = {path: min(group) for group in duplicate_groups for path in group}
+    for resources in [unassigned, *(chapter['resources'] for chapter in chapters.values())]:
+        for row in resources['scene-pictures'].values():
+            if (identity := duplicate_identities.get(row.get('pc'))) is not None:
+                row['pc_identity'] = identity
+
     scene_files = {
         row['pc']
         for group in [unassigned, *(chapter['resources'] for chapter in chapters.values())]
@@ -1194,7 +1209,9 @@ def build(root, index_dir, portrait_audit):
         },
         'hud_census': hud_census,
         'scene_file_aliases': scene_aliases,
-        'scene_file_duplicate_groups': config('hd-scene-file-duplicates')['groups'],
+        'scene_file_duplicate_groups': duplicate_groups,
+        'pc_body_alternates': {row['saturn']: row['alternate_pc']
+                               for row in config('hd-body-alternates')['alternate_files']},
         'chapters': list(chapters.values()),
         'unassigned': unassigned,
     }

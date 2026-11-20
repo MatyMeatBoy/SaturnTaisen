@@ -140,13 +140,13 @@ class CommittedTableTests(unittest.TestCase):
         counts = {}
         for row in self.table['maps']:
             counts[row['status']] = counts.get(row['status'], 0) + 1
-        self.assertEqual(counts, {'hd': 11, 'candidate': 12, 'native': 2, 'needs-assembler': 1})
+        self.assertEqual(counts, {'hd': 12, 'candidate': 11, 'native': 2, 'needs-assembler': 1})
         self.assertEqual(self.table['summary'], counts)
 
-    def test_generated_entries_are_never_hd(self):
+    def test_generated_entries_need_live_verification(self):
         for row in self.table['maps']:
             if row['table'] == 'generated':
-                self.assertNotEqual(row['status'], 'hd')
+                self.assertEqual(row['status'] == 'hd', row['map'] in gt.LIVE_GENERATED)
             else:
                 self.assertEqual(row['status'], 'hd')
 
@@ -184,7 +184,7 @@ class CommittedTableTests(unittest.TestCase):
         self.assertEqual(row['ground_size'], 2415344)
         self.assertEqual(row['world'], [1024, 1024])
         self.assertEqual(row['tile_px'], 64)
-        self.assertEqual(row['status'], 'candidate')
+        self.assertEqual(row['status'], 'hd')
 
 
 if __name__ == '__main__':
