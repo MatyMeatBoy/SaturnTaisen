@@ -234,7 +234,8 @@
       "patches/0242-sakura-map15-pc-ground.patch",
       "patches/0243-sakura-nc81-mouth-underlay.patch",
       "patches/0244-sakura-wkl-tactical-command-frames.patch",
-      "patches/0245-sakura-nc40-episode6-mouths.patch"
+      "patches/0245-sakura-nc40-episode6-mouths.patch",
+      "patches/0246-sakura-nc3021-registered-faces.patch"
     ]
   }
 }
