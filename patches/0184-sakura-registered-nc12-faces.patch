@@ -1,0 +1,27 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -266,8 +266,23 @@
+     {0x77DCA7E0D07E3F85ull, 24, 16, 41, 112, 105},
+ };
+ 
++// Sakura sortie poses verified in Chapter 1.
++inline constexpr VerifiedBodyFace kNC12[] = {
++    {0xDFD3D991DBBF0B17ull, 56, 24, 11, 70, 66},
++    {0x84804DFD08203750ull, 56, 24, 12, 70, 66},
++    {0x438C12D07F5B9D48ull, 56, 24, 13, 70, 66},
++    {0xD0376F38B4CCBF77ull, 56, 24, 14, 70, 66},
++    {0xBED90A33F0A5F2AAull, 16, 16, 47, 102, 116},
++    {0x705CC47CE9FCCEB6ull, 16, 16, 48, 102, 116},
++    {0x580157F8642147F0ull, 16, 16, 49, 102, 116},
++    {0xD8373D7C4BFA8E9Bull, 16, 16, 50, 102, 116},
++    {0x764F284DD45DD3BDull, 16, 16, 51, 102, 116},
++    {0xE7900E701C6CFEE5ull, 16, 16, 52, 102, 116},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
+     if (name == "NC10.BIN") return {0xFAF25875698D3053ull, 0xCBD86983994FF9C4ull, kNC10, true};
++    if (name == "NC12.BIN") return {0x4758979916DC8F3Cull, 0x088DA609868B0E6Dull, kNC12, true};
+     if (name == "NC21.BIN") return {0x7421084549F2AD18ull, 0x63308CEB4FBE148Aull, kNC21, true};
+     if (name == "NC25.BIN") return {0x177C36A50C4CD313ull, 0x7D7DE6C915DE21C7ull, kNC25, true,
+         {0x7D07BBDDE5F6F97Dull,48,24,104,24}};
