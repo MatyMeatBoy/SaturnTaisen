@@ -441,5 +441,97 @@ class FullPcPack(unittest.TestCase):
         self.assertIn('pc-manifest.json', Path(setup.__file__).read_text(encoding='utf-8'))
 
 
+class PreparedRepair(unittest.TestCase):
+    def setUp(self):
+        fixture = tempfile.TemporaryDirectory()
+        self.addCleanup(fixture.cleanup)
+        self.root = Path(fixture.name)
+        self.paths = SimpleNamespace(program=self.root, game=self.root / 'game',
+                                     hd=self.root / 'hd-resources', home=self.root / 'user')
+        self.english = self.paths.game / 'disc1'
+        self.spanish = self.paths.game / 'disc1-es'
+        self.english.mkdir(parents=True)
+        self.spanish.mkdir()
+        self.en = b'known English data'
+        self.es = b'known Spanish data'
+        self.record = {
+            'english': {'output_sha256': hashlib.sha256(self.en).hexdigest(), 'output_bytes': len(self.en)},
+            'spanish': {'output_sha256': hashlib.sha256(self.es).hexdigest(), 'output_bytes': len(self.es)},
+            'original_sha256': 'unavailable', 'original_bytes': 2048,
+        }
+
+    def test_missing_english_cue_and_receipt_are_recreated_from_cached_iso(self):
+        (self.english / 'Track 01.iso').write_bytes(self.en)
+        setup.write_silence(self.english / 'Track 02.wav', 100)
+        setup.repair_disc_metadata(self.paths, self.record, 1, {})
+        self.assertEqual((self.english / 'game.cue').read_text(encoding='ascii'), setup.CUE)
+        self.assertEqual(setup.finished(self.english, self.record['english']), self.record['english']['output_sha256'])
+
+    def test_truncated_audio_uses_the_valid_sibling(self):
+        (self.english / 'Track 01.iso').write_bytes(self.en)
+        (self.english / 'Track 02.wav').write_bytes(b'RIFF')
+        good = self.spanish / 'Track 02.wav'
+        setup.write_silence(good, 100)
+        previous = {'game/disc1/Track 02.wav': 100}
+        setup.repair_disc_metadata(self.paths, self.record, 1, previous)
+        self.assertEqual((self.english / 'Track 02.wav').read_bytes(), good.read_bytes())
+        self.assertEqual(setup.finished(self.english, self.record['english']), self.record['english']['output_sha256'])
+
+    def test_missing_audio_without_sibling_cannot_be_blessed(self):
+        (self.english / 'Track 01.iso').write_bytes(self.en)
+        (self.english / 'Track 02.wav').write_bytes(b'RIFF')
+        incomplete = setup.repair_disc_metadata(self.paths, self.record, 1, {'game/disc1/Track 02.wav': 100})
+        self.assertIn('en', incomplete)
+        self.assertFalse((self.english / 'game.cue').exists())
+        self.assertFalse((self.english / 'taisen.json').exists())
+
+    def test_health_receipt_records_exact_profile_and_game_sizes(self):
+        (self.root / 'VERSION').write_text('0.2.26-alpha\n', encoding='ascii')
+        (self.english / 'Track 01.iso').write_bytes(self.en)
+        center = self.paths.home / 'art' / 'episode-centers' / 'EPISODE01-test-es.png'
+        center.parent.mkdir(parents=True)
+        center.write_bytes(b'center')
+        with patch.object(setup, 'prepared_hd_files', return_value=None):
+            setup.record_prepared_release(self.paths, [center, center])
+        self.assertEqual((self.paths.home / setup.PREPARED_HEALTH).read_text(encoding='utf-8').splitlines(), [
+            '0.2.26-alpha',
+            f'P\t{len(self.en)}\tgame/disc1/Track 01.iso',
+            'H\t6\tart/episode-centers/EPISODE01-test-es.png',
+        ])
+        self.assertEqual(setup.previous_files(self.paths), {'game/disc1/Track 01.iso': len(self.en)})
+
+    def test_incomplete_pc_donors_are_not_reused_as_complete(self):
+        source = self.root / 'pc-source'
+        wall = source / 'SAKURA1' / 'WALL' / 'KABE0100.SPR'
+        archive = source / 'SAKURA1' / 'SYSTEM' / 'KAO.SPR'
+        for item in (wall, archive):
+            item.parent.mkdir(parents=True)
+            item.write_bytes(b'source')
+        setup.build_pc_pack(source, self.paths.hd / 'pc', 0, 1)
+        self.assertIsNotNone(setup.complete_pc_inventory(self.paths))
+        copied = self.paths.hd / 'pc' / 'SAKURA1' / 'WALL' / wall.name
+        copied.unlink()
+        self.assertIsNone(setup.complete_pc_inventory(self.paths))
+
+    def test_failed_publish_restores_previous_folder(self):
+        previous = self.paths.hd
+        previous.mkdir()
+        (previous / 'current').write_bytes(b'keep')
+        scratch = self.root / 'scratch'
+        scratch.mkdir()
+        staged = scratch / 'candidate'
+        staged.mkdir()
+        real_replace = setup.os.replace
+
+        def replace(source, target):
+            if source == staged:
+                raise PermissionError('failed candidate rename')
+            real_replace(source, target)
+
+        with patch.object(setup.os, 'replace', side_effect=replace), self.assertRaises(PermissionError):
+            setup.replace_prepared_folder(staged, previous)
+        self.assertEqual((previous / 'current').read_bytes(), b'keep')
+
+
 if __name__ == '__main__':
     unittest.main()

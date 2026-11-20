@@ -1,0 +1,93 @@
+diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
+--- a/launcher/src/sakura_setup.cpp
++++ b/launcher/src/sakura_setup.cpp
+@@ -5,6 +5,7 @@
+ #include "ui.h"
+ #include <array>
+ #include <cctype>
++#include <charconv>
+ #include <fstream>
+ #include <memory>
+ #include <mutex>
+@@ -170,10 +171,38 @@
+ // beside it) and the «roms» folder. Discs and the PC edition (HD mod) come out of the same step.
+ bool PreparedUpdateNeeded(const launcher::PageContext& page) {
+     std::ifstream version(page.program_folder/"VERSION");
+-    std::ifstream applied(page.folder/"prepared-release.txt");
+-    std::string current,prepared;
+-    return std::getline(version,current) && !current.empty() &&
+-           (!std::getline(applied,prepared) || prepared!=current);
++    std::ifstream applied(page.folder/"prepared-health.txt");
++    std::string current,line;
++    if(!std::getline(version,current) || current.empty())return false;
++    if(!std::getline(applied,line) || line!=current)return true;
++
++    // Only metadata is needed to detect a missing or truncated managed file on startup.
++    unsigned checked=0;
++    while(std::getline(applied,line)) {
++        if(++checked>20000 || line.size()>4096 || line.size()<7 || line[1]!='\t')return true;
++        const auto separator=line.find('\t',2);
++        if(separator==std::string::npos || separator+1==line.size())return true;
++        uintmax_t expected=0;
++        const auto number=std::from_chars(line.data()+2,line.data()+separator,expected);
++        if(number.ec!=std::errc{} || number.ptr!=line.data()+separator)return true;
++
++        std::filesystem::path path;
++        try {
++            path=std::filesystem::u8path(line.begin()+separator+1,line.end());
++        } catch(const std::filesystem::filesystem_error&) {
++            return true;
++        }
++        if(path.has_root_path())return true;
++        for(const auto& part:path)if(part==".." || part==".")return true;
++        const auto first=*path.begin();
++        const bool game=line[0]=='P' && (first=="game" || first=="hd-resources");
++        const bool profile=line[0]=='H' && first=="art";
++        if(!game && !profile)return true;
++        std::error_code error;
++        const auto actual=std::filesystem::file_size((game?page.program_folder:page.folder)/path,error);
++        if(error || actual!=expected)return true;
++    }
++    return !checked || !applied.eof();
+ }
+ void StartPrepare(launcher::PageContext& page,SetupState& s,bool refresh=false) {
+     s.refreshing=refresh;
+@@ -213,7 +242,15 @@
+     if(s.worker && !running && !s.finished) {
+         s.finished=true;s.error=s.worker->exit_code()!=0;ReadProgress(s);
+         if(s.error)s.message=s.progress.empty()?"No se pudo preparar el juego. Abre la carpeta de registros en Opciones.":s.progress;
+-        else if(s.refreshing)s.message="Contenido preparado actualizado. Ya puedes jugar.";
++        else if(s.refreshing) {
++            s.message="Contenido preparado actualizado. Ya puedes jugar.";
++            const auto current=page.prefs.get("game","disc");
++            const auto disc=LanguageDisc(page.program_folder,s.language);
++            if(page.use_file) {
++                if(!current.empty())page.use_file(current);
++                else if(Exists(disc))page.use_file(Utf8(disc));
++            }
++        }
+         else {
+             page.prefs.load();page.settings.load(); // the helper wrote the disc, the language and first-run defaults
+             s.language=LanguageIndex(page.prefs.get("sakura","language"));
+@@ -256,12 +293,15 @@
+     auto& s=Follow(page);
+     const bool running=s.worker && s.worker->running();
+     const bool ready[3]={Exists(LanguageDisc(page.program_folder,0)),Exists(LanguageDisc(page.program_folder,1)),Exists(LanguageDisc(page.program_folder,2))};
+-    if(!s.autoTried && !running && !page.playing && !ready[0] && !ready[1] && HasGameFiles(DiscsFolder(page.program_folder))) {
+-        s.autoTried=true;StartPrepare(page,s);
+-    }
+-    if(!s.autoTried && !running && !page.playing && ready[1] &&
+-       Exists(page.program_folder/"game"/"disc2"/"game.cue") && PreparedUpdateNeeded(page)) {
+-        s.autoTried=true;StartPrepare(page,s,true);
++    if(!s.autoTried && !running && !page.playing) {
++        s.autoTried=true;
++        std::error_code error;
++        const bool installed=ready[0] || ready[1] || ready[2] ||
++            Exists(page.folder/"prepared-health.txt") || Exists(page.folder/"prepared-release.txt") ||
++            std::filesystem::is_directory(page.program_folder/"game"/"disc1",error) ||
++            std::filesystem::is_directory(page.program_folder/"game"/"disc2",error);
++        if(installed && PreparedUpdateNeeded(page))StartPrepare(page,s,true);
++        else if(!installed && HasGameFiles(DiscsFolder(page.program_folder)))StartPrepare(page,s);
+     }
+     const bool locked=SakuraSetupBusy() || page.playing;
+     const bool pack=HdPack(page);

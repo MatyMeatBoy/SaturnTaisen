@@ -565,16 +565,28 @@ def accepted(layer: dict) -> dict[str, bool]:
 
 def finished(folder: Path, layer: dict) -> str | None:
     """The recorded hash of a prepared disc from an earlier run that this release still produces, else None."""
-    try:
-        saved = json.loads((folder / 'taisen.json').read_text(encoding='utf-8'))
-    except (OSError, ValueError):
-        return None
+    saved = read_object(folder / 'taisen.json')
     image = folder / 'Track 01.iso'
-    if (saved.get('output_sha256') in accepted(layer) and image.is_file()
-            and image.stat().st_size == layer['output_bytes'] and (folder / 'Track 02.wav').is_file()
-            and (folder / 'game.cue').is_file()):
-        return saved['output_sha256']
+    try:
+        if (saved.get('output_sha256') in accepted(layer) and image.is_file()
+                and image.stat().st_size == layer['output_bytes'] and (folder / 'Track 02.wav').is_file()
+                and (folder / 'game.cue').is_file()):
+            return saved['output_sha256']
+    except (OSError, TypeError):
+        pass
     return None
+
+
+def replace_prepared_folder(staged: Path, final: Path) -> None:
+    previous = staged.parent / f'previous-{final.name}'
+    if final.exists():
+        os.replace(final, previous)
+    try:
+        os.replace(staged, final)
+    except OSError:
+        if previous.exists():
+            os.replace(previous, final)
+        raise
 
 
 def publish(work: Path, final: Path, image: Path, wav: Path, receipt: dict, move_wav: bool) -> None:
@@ -587,9 +599,7 @@ def publish(work: Path, final: Path, image: Path, wav: Path, receipt: dict, move
         shutil.copyfile(wav, folder / 'Track 02.wav')
     (folder / 'game.cue').write_text(CUE, encoding='ascii', newline='\n')
     (folder / 'taisen.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
-    if final.exists():
-        shutil.rmtree(final)
-    os.rename(folder, final)
+    replace_prepared_folder(folder, final)
 
 
 def identify(record: dict, digest: str) -> str | None:
@@ -605,12 +615,9 @@ def prepare_japanese(paths: Paths, record: dict, candidates: list[Path], number:
                      force: bool = False) -> None:
     """Keep a copy of the player's untouched original disc as the Japanese option, when they gave one."""
     target = paths.game / f'disc{number}-ja'
-    try:
-        saved = json.loads((target / 'taisen.json').read_text(encoding='utf-8'))
-        if not force and saved.get('output_sha256') == record['original_sha256'] and (target / 'game.cue').is_file():
-            return
-    except (OSError, ValueError):
-        pass
+    if (not force and finished(target, {'output_sha256': record['original_sha256'],
+                                       'output_bytes': record['original_bytes']})):
+        return
     paths.game.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.preparar-', dir=paths.game) as scratch:
         work = Path(scratch)
@@ -636,12 +643,12 @@ def prepare_japanese(paths: Paths, record: dict, candidates: list[Path], number:
 
 
 def prepare_disc(paths: Paths, manifest: dict, candidates: list[Path], number: int, base: int, span: int,
-                 force: bool = False) -> None:
+                 force: bool = False, *, invalid: frozenset[str] = frozenset()) -> None:
     record = manifest['discs'][str(number)]
-    prepare_japanese(paths, record, candidates, number, base, force)
+    prepare_japanese(paths, record, candidates, number, base, force or 'ja' in invalid)
     targets = {language: paths.game / f'disc{number}{suffix}' for language, suffix in LANGUAGES.items()}
     videos = paths.patches / record['videos']['patch']
-    state = {language: None if force else finished(targets[language], record[LAYERS[language]]) for language in targets}
+    state = {language: None if force or language in invalid else finished(targets[language], record[LAYERS[language]]) for language in targets}
     subtitled = {language: accepted(record[LAYERS[language]]).get(state[language], False) for language in targets}
     wants_video = videos.is_file()
     if state['en'] and state['es'] and subtitled['en'] == subtitled['es'] and (subtitled['en'] or not wants_video):
@@ -701,6 +708,20 @@ def prepare_disc(paths: Paths, manifest: dict, candidates: list[Path], number: i
             else:
                 say(base + span * 2 // 10, f'Disco {number}: traducción inglesa v2.1 reconocida; se usa tal cual.')
                 has_video = accepted(record['english'])[sha256(english)]
+        saved_spanish = targets['es']
+        if (not has_video and not wants_video and (subtitled['es']
+                or read_object(saved_spanish / 'taisen.json').get('subtitled_videos') is True)):
+            # A repair can rebuild English from Japanese after its ISO was lost.
+            # Keep verified subtitles from the older Spanish copy when available.
+            spanish_track = saved_spanish / 'Track 01.iso'
+            video_end = record['video_offset'] + record['video_bytes']
+            if spanish_track.is_file() and spanish_track.stat().st_size >= video_end:
+                old_video = work / 'saved-video.bin'
+                copy_range(spanish_track, record['video_offset'], record['video_bytes'], old_video)
+                if sha256(old_video) == record['video_subtitled_sha256']:
+                    copy_range(old_video, 0, record['video_bytes'], english, record['video_offset'])
+                    has_video = True
+                old_video.unlink()
         if wants_video and not has_video:
             say(base + span * 4 // 10, f'Disco {number}: aplicando vídeos subtitulados…')
             old, new = work / 'video-old.bin', work / 'video-new.bin'
@@ -1005,7 +1026,16 @@ def refresh_hd_portraits(paths: Paths, discs: list[Path]) -> bool:
     return True
 
 
-def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: int) -> dict:
+def link_or_copy(source, target):
+    try:
+        os.link(source, target)
+        return target
+    except OSError:
+        return shutil.copy2(source, target)
+
+
+def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: int,
+               *, saved_pc: dict | None = None, expected_pc: set[str] | None = None) -> dict:
     rows = json.loads(paths.provenance.read_text(encoding='utf-8'))['backgrounds']
     paths.hd.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.preparar-hd-', dir=paths.hd.parent) as scratch:
@@ -1048,14 +1078,18 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
         receipt = struct.pack('<8sIIQQQII', b'STFHD01\0', 1, len(entries), len(archive), fnv64(archive),
                               fnv64(manifest.read_bytes()), count, 0) + b''.join(entries)
         (staged / 'hd-pack.stfp').write_bytes(receipt)
-        pc = build_pc_pack(found, staged / 'pc', base + span * 7 // 10, span * 25 // 100, movies=movies)
+        if saved_pc is None:
+            pc = build_pc_pack(found, staged / 'pc', base + span * 7 // 10, span * 25 // 100, movies=movies)
+            if expected_pc and not expected_pc.issubset(item['path'] for item in pc['entries']):
+                raise SetupError('La edición de PC indicada no contiene todos los archivos que faltan.')
+        else:
+            pc = saved_pc
+            shutil.copytree(found, staged / 'pc', copy_function=link_or_copy)
         report = dict(schema=2, original_pc_files_included=True, backgrounds=len(entries), portraits=count,
                       pc_files=pc['files'], pc_bytes=pc['bytes'], pc_videos=pc['videos'], pc_categories=pc['categories'],
                       stamp=hd_stamp(paths))
         (staged / 'prepared-manifest.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-        if paths.hd.exists():
-            shutil.rmtree(paths.hd)
-        os.rename(staged, paths.hd)
+        replace_prepared_folder(staged, paths.hd)
     say(base + span, f'Mod HD: {report["pc_files"]} archivos de tu edición de PC guardados '
                      f'({report["pc_videos"]} vídeos); {len(rows)} fondos y {count} retratos ya activos.')
     return report
@@ -1104,12 +1138,14 @@ def saved_language(paths: Paths) -> str:
 PREVIEW_FILES = {'0': 'presentation-original.png', '1': 'presentation-enhanced.png'}
 
 
-def make_previews(paths: Paths, disc: Path, force: bool = False) -> int:
+def make_previews(paths: Paths, disc: Path, force: bool = False,
+                  *, repair: set[str] | None = None) -> int:
     """The two pictures of the presentation chooser («Tu aventura, a tu manera»): the player's own title screen
     in Original 4:3 and in Mejorada 16:9, taken by the runtime in a hidden window. They are pictures of the
     game, so they are made here from the player's disc and never shipped. Returns how many were made."""
     art = paths.home / 'art'
-    wanted = {mode: art / name for mode, name in PREVIEW_FILES.items() if force or not (art / name).is_file()}
+    wanted = {mode: art / name for mode, name in PREVIEW_FILES.items()
+              if (name in repair if repair is not None else force or not (art / name).is_file())}
     if not wanted or not paths.runtime.is_file() or not disc.is_file():
         return 0
     art.mkdir(parents=True, exist_ok=True)
@@ -1178,9 +1214,12 @@ def prepare_spanish_episode_art(paths, *, strict=False):
     if not art.is_dir():
         art = paths.program / 'assets/generated/screen-backgrounds'
     if not (art / 'EPISODE01-es-lettering-v1.png').is_file():
-        return True
+        if strict and (paths.program / 'manifest.json').is_file():
+            raise SetupError('Falta la rotulación de las tarjetas en los archivos de la versión.')
+        return []
     from episode_lettering import prepare_episode_centers
 
+    outputs = []
     ready = True
     for disc in (1, 2):
         english = paths.game / f'disc{disc}' / 'Track 01.iso'
@@ -1188,36 +1227,329 @@ def prepare_spanish_episode_art(paths, *, strict=False):
         if not (english.is_file() and spanish.is_file()):
             continue
         try:
-            prepare_episode_centers(english, spanish, art, paths.home / 'art/episode-centers')
+            outputs.extend(prepare_episode_centers(english, spanish, art, paths.home / 'art/episode-centers'))
         except (OSError, ValueError) as error:
             if strict:
                 raise SetupError(f'Disco {disc}: no se pudo actualizar la rotulación de episodios: {error}') from error
             say(97, f'Disco {disc}: no se pudo preparar la rotulación mejorada de episodios: {error}')
             ready = False
-    return ready
+    return outputs if ready else None
 
 
-def record_prepared_release(paths: Paths) -> None:
+PREPARED_HEALTH = 'prepared-health.txt'
+TRACK_FILES = ('game.cue', 'Track 01.iso', 'Track 02.wav', 'taisen.json')
+
+
+def read_object(file: Path) -> dict:
+    try:
+        result = json.loads(file.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return {}
+    return result if isinstance(result, dict) else {}
+
+
+def complete_pc_inventory(paths: Paths):
+    root = paths.hd / 'pc'
+    manifest = read_object(root / 'pc-manifest.json')
+    entries = manifest.get('entries')
+    if (manifest.get('version') != PC_PACK_VERSION or not isinstance(entries, list)
+            or not entries or len(entries) != manifest.get('files')):
+        return None
+    files = [root / 'pc-manifest.json']
+    seen = set()
+    try:
+        for item in entries:
+            name = item['path']
+            relative = Path(name)
+            if (not name or relative.is_absolute() or relative.drive or '..' in relative.parts
+                    or not relative.parts or not re.fullmatch(r'(?:SAKURA\d+|MOVIE)', relative.parts[0])
+                    or name in seen):
+                return None
+            seen.add(name)
+            file = root / relative
+            if not file.is_file() or file.stat().st_size != item['bytes']:
+                return None
+            files.append(file)
+    except (KeyError, OSError, TypeError, ValueError):
+        return None
+    return (manifest, files) if pc_folder_kind(root) == 'game' else None
+
+
+def prepared_hd_files(paths: Paths) -> list[Path] | None:
+    inventory = complete_pc_inventory(paths)
+    if not inventory or not hd_ready(paths):
+        return None
+    root = paths.hd
+    index = root / 'hd-pack.stfp'
+    portraits = root / 'portraits'
+    portrait_index = portraits / 'manifest.ini'
+    try:
+        data = index.read_bytes()
+        header = struct.Struct('<8sIIQQQII')
+        magic, version, backgrounds, _, _, portrait_hash, portrait_count, reserved = header.unpack_from(data)
+        if (magic != b'STFHD01\0' or version != 1 or reserved
+                or len(data) != header.size + backgrounds * 32):
+            return None
+        expected_backgrounds = {row['id'] for row in read_object(paths.provenance)['backgrounds']}
+        actual_backgrounds = set()
+        files = [index, root / 'prepared-manifest.json', portrait_index, *inventory[1]]
+        for position in range(header.size, len(data), 32):
+            raw_name, _, _, size = struct.unpack_from('<8sQQQ', data, position)
+            name = raw_name.decode('ascii')
+            if not re.fullmatch(r'KABE\d{4}', name) or name in actual_backgrounds:
+                return None
+            actual_backgrounds.add(name)
+            file = root / 'backgrounds' / (name + '.stfb')
+            if not size or file.stat().st_size != size:
+                return None
+            files.append(file)
+        if actual_backgrounds != expected_backgrounds:
+            return None
+        manifest = portrait_index.read_bytes()
+        if fnv64(manifest) != portrait_hash:
+            return None
+        config = configparser.ConfigParser(interpolation=None)
+        config.read_string(manifest.decode('utf-8'))
+        if config.getint('pack', 'count') != portrait_count or len(config.sections()) != portrait_count + 1:
+            return None
+        native = config.get('pack', 'native_file')
+        if not re.fullmatch(r'native-[0-9a-f]{64}\.bin', native):
+            return None
+        if (portraits / native).stat().st_size != portrait_count * 3200:
+            return None
+        files.append(portraits / native)
+        for number in range(portrait_count):
+            for variant in ('file1', 'file2'):
+                name = config.get(f'portrait-{number}', variant)
+                if not re.fullmatch(r'[0-9a-f]{64}\.png', name):
+                    return None
+                file = portraits / name
+                if not file.stat().st_size:
+                    return None
+                files.append(file)
+        return files
+    except (OSError, ValueError, KeyError, TypeError, struct.error, configparser.Error):
+        return None
+
+
+def tracked_prepared_files(paths: Paths, centers: list[Path]) -> list[tuple[str, Path, Path]]:
+    files = [(kind, paths.program, file) for kind, file in
+             [('P', paths.game / f'disc{disc}{suffix}' / name)
+              for disc in (1, 2) for suffix in ('', '-es', '-ja') for name in TRACK_FILES]
+             if file.is_file()]
+    existing_art = set(centers)
+    existing_art.update(file for name in PREVIEW_FILES.values()
+                        if (file := paths.home / 'art' / name).is_file())
+    files.extend(('H', paths.home, file) for file in sorted(existing_art))
+    files.extend(('P', paths.program, file) for file in (prepared_hd_files(paths) or []))
+    return files
+
+
+def record_prepared_release(paths: Paths, centers: list[Path]) -> None:
     version_file = paths.program / 'VERSION'
-    if version_file.is_file():
-        paths.home.mkdir(parents=True, exist_ok=True)
-        marker = paths.home / 'prepared-release.txt'
-        staged = marker.with_suffix('.tmp')
-        staged.write_text(version_file.read_text(encoding='utf-8').strip() + '\n', encoding='utf-8')
-        os.replace(staged, marker)
+    if not version_file.is_file():
+        return
+    paths.home.mkdir(parents=True, exist_ok=True)
+    marker = paths.home / PREPARED_HEALTH
+    lines = [version_file.read_text(encoding='utf-8').strip()]
+    for kind, root, file in tracked_prepared_files(paths, centers):
+        try:
+            relative = file.relative_to(root).as_posix()
+        except ValueError:  # overrides are for development and cannot be repaired by the launcher
+            continue
+        if any(char in relative for char in '\r\n\t'):
+            raise SetupError('Un archivo preparado tiene un nombre inválido.')
+        lines.append(f'{kind}\t{file.stat().st_size}\t{relative}')
+    with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', newline='\n',
+                                     dir=paths.home, delete=False) as staged:
+        temporary = Path(staged.name)
+        staged.write('\n'.join(dict.fromkeys(lines)) + '\n')
+    try:
+        os.replace(temporary, marker)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def repair_profile(paths: Paths) -> configparser.ConfigParser:
+    profile = configparser.ConfigParser(interpolation=None)
+    try:
+        profile.read(paths.home / 'launcher.ini', encoding='utf-8')
+    except (OSError, ValueError, configparser.Error):
+        profile.clear()
+    return profile
+
+
+def previous_files(paths: Paths, kind: str = 'P') -> dict[str, int]:
+    try:
+        return {parts[2]: int(parts[1])
+                for line in (paths.home / PREPARED_HEALTH).read_text(encoding='utf-8').splitlines()[1:]
+                if len(parts := line.split('\t', 2)) == 3 and parts[0] == kind}
+    except (OSError, ValueError):
+        return {}
+
+
+def atomic_prepared_file(target: Path, write) -> None:
+    with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
+        temporary = Path(stream.name)
+    try:
+        write(temporary)
+        os.replace(temporary, target)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def valid_audio(file: Path, expected: int | None = None) -> bool:
+    try:
+        size = file.stat().st_size
+        if size < 44 or (expected is not None and size != expected):
+            return False
+        with wave.open(str(file), 'rb') as wav:
+            return (wav.getnchannels() == 2 and wav.getsampwidth() == 2 and wav.getframerate() == 44100
+                    and wav.getnframes() * 4 + 44 <= size)
+    except (OSError, ValueError, EOFError, wave.Error):
+        return False
+
+
+def repair_disc_metadata(paths: Paths, record: dict, number: int, previous: dict[str, int]) -> frozenset[str]:
+    # Restore the small files around a verified ISO, using any valid sibling audio.
+    folders = {language: paths.game / f'disc{number}{suffix}' for language, suffix in ALL_LANGUAGES.items()}
+    layers = {language: record[name] for language, name in LAYERS.items()}
+    layers['ja'] = {'output_sha256': record['original_sha256'], 'output_bytes': record['original_bytes']}
+    audio = {}
+    for language, folder in folders.items():
+        track = folder / 'Track 02.wav'
+        if valid_audio(track, previous.get(f'game/{folder.name}/{track.name}')):
+            audio[language] = track
+    invalid = set()
+    for language, folder in folders.items():
+        layer = layers[language]
+        image, cue, receipt = (folder / name for name in ('Track 01.iso', 'game.cue', 'taisen.json'))
+        try:
+            cue_ok = cue.stat().st_size <= 1024 and cue.read_text(encoding='ascii') == CUE
+        except (OSError, ValueError):
+            cue_ok = False
+        recorded = read_object(receipt)
+        try:
+            current = recorded.get('output_sha256') in accepted(layer)
+            if current and cue_ok and language in audio:
+                continue
+            invalid.add(language)
+            if image.stat().st_size != layer['output_bytes']:
+                continue
+        except (OSError, TypeError):
+            continue
+        digest = sha256(image)
+        if digest not in accepted(layer):
+            continue
+        if language not in audio:
+            if not audio:
+                continue
+            donor = next(iter(audio.values()))
+            atomic_prepared_file(folder / 'Track 02.wav', lambda temporary: shutil.copyfile(donor, temporary))
+            donor_receipt = read_object(donor.parent / 'taisen.json')
+            recorded['silent_audio'] = donor_receipt.get('silent_audio', False)
+        if not cue_ok:
+            atomic_prepared_file(cue, lambda temporary: temporary.write_text(CUE, encoding='ascii', newline='\n'))
+        recorded.update(schema=2, disc=number, language=language, output_sha256=digest,
+                        subtitled_videos=accepted(layer)[digest])
+        atomic_prepared_file(receipt, lambda temporary: temporary.write_text(
+            json.dumps(recorded, indent=2) + '\n', encoding='utf-8'))
+        invalid.discard(language)
+    return frozenset(invalid)
 
 
 def refresh_installed_game(paths: Paths) -> None:
-    """Update prepared content without scanning for source discs or changing preferences."""
+    # Repair managed content without changing language or profile preferences.
     manifest = load_manifest(paths)
-    if not prepared_english(paths, manifest):
-        raise SetupError('No se pudieron validar los discos preparados. Usa Revisar en Opciones para prepararlos.')
-    for number in (1, 2):
-        prepare_disc(paths, manifest, [], number, 5 + 40 * (number - 1), 40)
-    prepare_spanish_episode_art(paths, strict=True)
-    tracks = [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)]
-    refresh_hd_portraits(paths, tracks)
-    record_prepared_release(paths)
+    profile = repair_profile(paths)
+    previous = previous_files(paths)
+    managed_hd = profile.get('sakura', 'pc_assets', fallback='')
+    want_hd = (paths.hd.is_dir() or any(name.startswith('hd-resources/') for name in previous)
+               or bool(managed_hd and Path(managed_hd).resolve() == paths.hd.resolve()))
+    paths.game.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.reparar-', dir=paths.game) as scratch:
+        work = Path(scratch)
+        sources = None
+
+        def find_sources():
+            nonlocal sources
+            if sources is None:
+                saved = profile.get('sakura', 'setup_source', fallback='')
+                selected = Path(saved) if saved else None
+                roms = discs_folder(paths.program)
+                given = [path for path in (selected, roms) if path is not None and path.exists()]
+                try:
+                    sources = gather(given, work)
+                except SetupError:
+                    if selected not in given:
+                        raise
+                    sources = gather([path for path in given if path != selected], work)
+            return sources
+
+        for number in (1, 2):
+            record = manifest['discs'][str(number)]
+            invalid = repair_disc_metadata(paths, record, number, previous)
+            english = paths.game / f'disc{number}'
+            japanese = paths.game / f'disc{number}-ja'
+            ja_layer = {'output_sha256': record['original_sha256'],
+                        'output_bytes': record['original_bytes']}
+            ja_valid = 'ja' not in invalid and finished(japanese, ja_layer)
+            need_ja = (japanese.is_dir() or f'game/disc{number}-ja/game.cue' in previous) and not ja_valid
+            candidates = []
+            if 'en' in invalid or not finished(english, record['english']):
+                if ja_valid:
+                    candidates.append(japanese / 'game.cue')
+                else:
+                    candidates.extend(find_sources()[0].get(number, []))
+            if need_ja and not candidates:
+                candidates.extend(find_sources()[0].get(number, []))
+            prepare_disc(paths, manifest, candidates, number, 5 + 30 * (number - 1), 30, invalid=invalid)
+            if not (finished(english, record['english'])
+                    and finished(paths.game / f'disc{number}-es', record['spanish'])
+                    and (not need_ja or (finished(japanese, ja_layer)
+                                        and valid_audio(japanese / 'Track 02.wav')))
+                    and valid_audio(english / 'Track 02.wav')
+                    and valid_audio(paths.game / f'disc{number}-es' / 'Track 02.wav')):
+                raise SetupError(f'El disco {number} necesita tu imagen original. Añádela en Opciones › Tus archivos.')
+        centers = prepare_spanish_episode_art(paths, strict=True)
+        if want_hd and not prepared_hd_files(paths):
+            tracks = [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)]
+            inventory = complete_pc_inventory(paths)
+            if inventory:
+                prepare_hd(paths, paths.hd / 'pc', tracks, 70, 27, saved_pc=inventory[0])
+            else:
+                pc = find_sources()[1]
+                if pc is None:
+                    raise SetupError('Faltan archivos del mod HD. Añade tu edición de PC en Opciones › Tus archivos.')
+                prefix = 'hd-resources/pc/'
+                previous_inventory = read_object(paths.hd / 'pc' / 'pc-manifest.json').get('entries', [])
+                expected_pc = {name[len(prefix):] for name in previous if name.startswith(prefix)
+                               and name != prefix + 'pc-manifest.json'}
+                if isinstance(previous_inventory, list):
+                    expected_pc.update(item['path'] for item in previous_inventory if isinstance(item, dict)
+                                       and isinstance(item.get('path'), str))
+                prepare_hd(paths, pc, tracks, 70, 27, expected_pc=expected_pc)
+            if not prepared_hd_files(paths):
+                raise SetupError('El mod HD no se pudo verificar tras la reparación.')
+    prior_art = previous_files(paths, 'H')
+    previews = set()
+    for name in PREVIEW_FILES.values():
+        key = f'art/{name}'
+        if key in prior_art:
+            try:
+                valid = (paths.home / key).stat().st_size == prior_art[key]
+            except OSError:
+                valid = False
+            if not valid:
+                previews.add(name)
+    if previews:
+        language = saved_language(paths)
+        disc = paths.game / f'disc1{ALL_LANGUAGES[language]}' / 'game.cue'
+        if not disc.is_file():
+            disc = paths.game / 'disc1' / 'game.cue'
+        if make_previews(paths, disc, repair=previews) != len(previews):
+            raise SetupError('No se pudieron restaurar las vistas previas de la presentación.')
+    record_prepared_release(paths, centers)
     say(100, 'Contenido preparado actualizado. Ya puedes jugar.')
 
 
@@ -1233,7 +1565,7 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
             raise SetupError('Faltan tus discos de Sakura Taisen para Saturn: '
                              + ' y '.join(f'disco {n}' for n in missing)
                              + '. Elígelos o cópialos en la carpeta «roms».')
-        wants_hd = pc is not None and (force or not hd_ready(paths))
+        wants_hd = pc is not None and (force or not prepared_hd_files(paths))
         share = 35 if wants_hd else 48
         prepare_disc(paths, manifest, discs.get(1, []), 1, 2, share, force)
         prepare_disc(paths, manifest, discs.get(2, []), 2, 2 + share, share, force)
@@ -1260,8 +1592,9 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
         pass  # (the chooser shows plain cards without them; never a reason to fail the setup)
     if refreshed_portraits or hd_ready(paths):  # the profile always points at this install's own pack (a moved or copied profile too)
         set_values(paths.home / 'launcher.ini', {('sakura', 'pc_assets'): str(paths.hd)})
-    if episode_art_ready and prepared_english(paths, manifest):
-        record_prepared_release(paths)
+    if (episode_art_ready is not None and prepared_english(paths, manifest)
+            and (not paths.hd.is_dir() or prepared_hd_files(paths))):
+        record_prepared_release(paths, episode_art_ready)
     return dict(disc=str(disc), language=language, hd=hd, hd_ready=hd_ready(paths))
 
 
