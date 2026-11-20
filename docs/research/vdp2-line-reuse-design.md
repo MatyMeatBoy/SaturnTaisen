@@ -42,3 +42,15 @@ Timing: see the PR (interleaved A/B, median of three, `video (vdp phases)`).
 Play test; GPU video path; interlace, 24-bit colour RAM and other resolutions are excluded, not tested; the HD
 presentation consumers were not looked at beyond the planes being equal (checked in `=check` mode only with the planes the
 benchmark's settings capture: glyph plate on, tactical/scroll off).
+
+## Timing (interleaved A/B, median of 3, `video (vdp phases)` ms per frame; the machine was shared and busy, so absolute values are about 1.8x those measured earlier, compare A with B only)
+| scenario | A (without 0144) | B (with) |
+| --- | --- | --- |
+| office | 7.456 | 4.114 |
+| resume | 8.511 | 6.448 |
+| night | 7.200 | 3.920 |
+| interm | 8.508 | 3.435 |
+| options | 8.220 | 6.059 |
+| attack (tactical, no reuse) | 14.387 | 14.435 |
+An earlier run on a quieter machine (tree older than main, same logic without the item/arrow rule): office 4.479 -> 2.139,
+resume 4.779 -> 3.174, attack 7.571 -> 7.544.
