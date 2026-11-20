@@ -192,7 +192,8 @@
       "patches/0194-sakura-ending-theatre-insets.patch",
       "patches/0195-sakura-bg2093-dream-blend.patch",
         "patches/0196-sakura-map13-pc-ground.patch",
-      "patches/0197-sakura-save-confirmation-frame.patch"
+      "patches/0197-sakura-save-confirmation-frame.patch",
+      "patches/0198-sakura-hd-room-choice-frame.patch"
     ]
   }
 }

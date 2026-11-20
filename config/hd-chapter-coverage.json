@@ -8689,6 +8689,15 @@
         "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-save-confirmation-frame",
         "status": "hd",
         "verified_in_game": true
+      },
+      "pc:SAKURA1/SYSTEM/WINDOW.SPR#2": {
+        "association": "unknown",
+        "draw": "patch 0198, port/frontend_sdl.cpp: Long Day room choice rails",
+        "pc": "SAKURA1/SYSTEM/WINDOW.SPR",
+        "pc_image_index": 2,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-long-day-room-choice-frame",
+        "status": "hd",
+        "verified_in_game": true
       }
     },
     "portraits": {
