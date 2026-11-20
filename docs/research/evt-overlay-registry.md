@@ -333,3 +333,8 @@ Strict native, English disc 2 public Finale, cold backup plus the #592 extended 
 Loads after the stop (first-load order, FAD): `ADVSE10` (114,694), `ENDING.BIN` (133,947), `SU_CG.BIN` (148,297), `SU_SPR.BIN` (148,497), `OTOMEADP.DAT` (143,267). `SU_CG.BIN` is the Sumire ending bank, so this route is the Sumire ending; no FILM stream and no further CG bank is read within 45,000 frames (the credits and `Fin` sequence is not reached by this movie). Attribution for the ending bank rows: `SU_CG`/`SU_SPR` are read here after `ENDING.BIN`.
 
 Not verified: frames past 45,000 (credits, `Fin`), other heroine endings under the full-module blocks, a run with the interpreter for all 45,000 frames, and package inclusion. The cold route here used the extended-movie confirm presses, not a human play-through.
+
+
+## Full-stack sweep of the 17 cases (2026-11-20, T55)
+
+With the PR #621 build (`sakura-full.exe`, SHA-256 `96d48742...`, 1,411,614 AOT blocks, 231 patches to 0245) all 17 cases above pass 40,200 strict native frames: exit 0, `interpreted 0`, no untranslated block, and a repeat run gives the same `frames.hash`. Per-case frames, hashes, loads and the scene pictures drawn are in [T55 sweep](t55-sweep-draws.md). No block was added to the registry.

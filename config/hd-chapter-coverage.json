@@ -4842,15 +4842,19 @@
         "scene-pictures": {
           "1:/SAKURA1/BG1178.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
             "pc": "SAKURA1/BG/BG1178.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1181.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
             "pc": "SAKURA1/BG/BG1181.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1266.BIN": {
             "association": "observed",
@@ -5451,9 +5455,11 @@
           },
           "2:/SAKURA1/BG1195.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-8.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
             "pc": "SAKURA1/BG/BG1195.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG1212.BIN": {
             "association": "observed",
@@ -6283,6 +6289,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG1062.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "pc": "SAKURA1/BG/BG1062.SPR",
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG1066.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
@@ -6452,6 +6466,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2097.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "pc": "SAKURA1/BG/BG2097.SPR",
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2098.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
@@ -6492,6 +6514,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2110.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "pc": "SAKURA1/BG/BG2110.SPR",
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2156.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
@@ -6500,15 +6530,19 @@
           },
           "2:/SAKURA1/BG2160.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
             "pc": "SAKURA1/BG/BG2160.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2236.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
             "pc": "SAKURA1/BG/BG2236.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2238.BIN": {
             "association": "observed",
@@ -17160,11 +17194,6 @@
         "pc": "SAKURA1/BG/BG1060.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1062.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1062.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1063.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1063.SPR",
@@ -18537,11 +18566,6 @@
         "pc": "SAKURA1/BG/BG2096.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG2097.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2097.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG2099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2099.SPR",
@@ -18570,11 +18594,6 @@
       "2:/SAKURA1/BG2109.BIN": {
         "association": "unknown",
         "status": "unpaired"
-      },
-      "2:/SAKURA1/BG2110.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2110.SPR",
-        "status": "hd"
       },
       "2:/SAKURA1/BG2112.BIN": {
         "association": "unknown",
