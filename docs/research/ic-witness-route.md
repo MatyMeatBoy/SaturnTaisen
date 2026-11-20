@@ -89,3 +89,30 @@ States (SHA-256, local only): round 5 start `d45ce69122628ec786db71b55cd5b6ade50
 1. Same as before: no IC####, so the coverage check, the layer-4 palette fingerprint and the RGB hash against PR #431 (`config/hd-ic-table.json`) remain unmeasured; no row changed to `hd`.
 2. Resume from the round-5 state. Keep Sakura (26 HP) out of range (move her east toward Maria and `Def > Heal`), use the pointer RAM above to aim, and attack with Kohran, Ogami and Sumire every round (about 70 HP per hit, 8 cannons need 2 hits each, the four 150-HP units 2 to 3). Expect about 6 more allied rounds, each about 6,000 frames and 15-20 segments by hand; a scripted driver that reads the unit table and the pointer and writes the next movie would remove the picture reading.
 3. Pad inputs shorter than 8 frames drop pointer moves; keep presses 30 or more frames apart.
+
+## Attempt 3 (TW7 battle-driver): scripted driver, no screenshots
+
+Tool: `tools/battle_driver.py` (decider tested in `tests/test_battle_driver.py`, 12 synthetic cases, no discs needed). Each step is one `route_segment` run with `--dump`; unit table, map pointer and `disc_files` are read back and the next input is chosen by `decide`. Per step it writes `sNNN/` (movie, `finish.state`, RAM high), `driver-log.json` (inputs, pointer, units, state SHA per step) and `driver.movie.txt` (stitched inputs, offset by frames-1 per segment; the stitched movie is **not** replay-verified). It stops on an `IC####` Play Disc, victory, Game Over, or `--max-steps`.
+
+Reproducible command (about 5 s per step; copy of `sakura-route.exe`, toolkit clang64 on PATH):
+
+    python tools/battle_driver.py --exe E --root D:/01Claude/TaisenFirst/workspace --state local/work/route2/r72/finish.state --backup local/work/route2/r72/backup.bin --out OUT --max-steps 150
+
+### Result: 0 of 12 enemies destroyed, no IC####
+
+Run from r72 (round 5 start, `d45ce69122628ec7...`): 39 steps, ended by the driver's own "no active ally" guard after the enemy phase. Kohran, Maria and Ogami moved (blue tiles reached by walking the pointer), Sakura retreated one tile and tried `Def`; no unit got an enemy into range, and the enemy phase took Sakura from 26 to 7 HP (not dead yet at the last state; the next enemy phase would kill her). Last state `s039/finish.state` SHA-256 `4561a043cc4f3ee83ca99f416b2d511dc3b4d4706bd209f4cac9fedd4f5a7992` (local only). The IC fingerprint (layer-4 palette, RGB hash vs `config/hd-ic-table.json` of #431) is therefore **not measured** and no row changed to `hd`.
+
+### New measured facts
+
+- After a move the menu is **not** open: press `A` (cursor starts on `Atk`, the Special/Normal pop-up is only a hover preview), then `3 RIGHT, A` = End. Without the `A` the three RIGHT presses move the pointer and the later `A` opens the menu on Atk.
+- End clears the +0x39 "acted" flag, so the driver tracks the units that ended in the round itself; the flag is 0x08 only between the move/attack and End.
+- During the move animation the pointer words are garbage (`1541, 29672`); the pointer sprite is drawn up to one terrace (24 px) above the unit record, so matching needs a tolerance (exact pair first).
+- Pointer steps in pixels from the unit tile: RIGHT (+24,-12), LEFT (-24,+12 to -24,-12 depending on terrace), UP (0,-24) or (-24,-12), DOWN (0,+24) or (+24,+12); the driver re-learns them from the RAM. Unit coordinates are multiples of 24 horizontally and 12 vertically.
+- `Def` takes effect (Sakura's flag becomes 0x08) but her HP stayed 26 in the following 900 frames: the Heal sub-item is not verified.
+- Moves of 3-4 tiles toward the enemy are accepted (several moves landed); a tile one terrace over was refused and the driver cancelled with B.
+
+### Not done / who
+
+1. The policy does not win: Sakura cannot get out of the reach of the four 150-HP units in one move and Heal is unverified, so a winning line probably needs a different opening (earlier state, kill the 150-HP walkers with Kohran/Ogami first, Sakura behind Maria). Desk/route owner decides; the next worker should test `Def` > Heal on a screenshot once and wire the menu index.
+2. Attack path (`RIGHT,A,A,A` then `A,A`) was never reached in the driver run (no enemy in range); it follows the manual Attempt 2 sequence and is unverified in the driver.
+3. IC fingerprint and the #431 comparison remain open until a run reaches `IC####`; the IC row decision stays with the desk.
