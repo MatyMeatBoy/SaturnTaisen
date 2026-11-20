@@ -3165,6 +3165,38 @@
             "pc": "SAKURA1/BG/BG1198.SPR",
             "status": "hd"
           },
+          "1:/SAKURA1/BG2123.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2290-native-pan.md",
+            "status": "unpaired"
+          },
+          "1:/SAKURA1/BG2289.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2290-native-pan.md",
+            "pc": "SAKURA1/BG/BG2289.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG2290.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2290-native-pan.md",
+            "pc": "SAKURA1/BG/BG2290.SPR",
+            "reason": "The live pan holds at x=0, where the tested PC crop misses the native composition before the aligned portion.",
+            "status": "unsupported-size"
+          },
+          "1:/SAKURA1/BG3123.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2290-native-pan.md",
+            "pc": "SAKURA1/BG/BG3123.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
+          },
+          "1:/SAKURA1/BG3289.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2290-native-pan.md",
+            "pc": "SAKURA1/BG/BG3289.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
+          },
           "1:/SAKURA1/TITLE3.BIN": {
             "association": "observed",
             "decision_evidence": "docs/research/episode-title-pc-pairings.md",
@@ -14057,10 +14089,6 @@
         "pc": "SAKURA1/BG/BG2122.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG2123.BIN": {
-        "association": "unknown",
-        "status": "unpaired"
-      },
       "1:/SAKURA1/BG2124.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2124.SPR",
@@ -14679,17 +14707,6 @@
         "pc": "SAKURA1/BG/BG2288.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG2289.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2289.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2290.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2290.SPR",
-        "reason": "size [432, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
-      },
       "1:/SAKURA1/BG2291.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2291.SPR",
@@ -15061,12 +15078,6 @@
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
-      "1:/SAKURA1/BG3123.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3123.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "1:/SAKURA1/BG3131.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3131.SPR",
@@ -15158,12 +15169,6 @@
       "1:/SAKURA1/BG3253.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3253.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "1:/SAKURA1/BG3289.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3289.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
