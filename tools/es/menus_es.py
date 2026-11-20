@@ -234,6 +234,26 @@ def inventario(files: Files, preview):
     put_stream(prog, offset, limit, bytes(localized), 'Inventario')
     preview.append(('Inventario: Opc. / Volver', rows, 5))
 
+    from rotulos import read_indices, write_indices
+
+    footer_offset = 0x5940C
+    panel = decompress(bytes(prog[footer_offset:offset]))
+    if hashlib.sha256(panel).hexdigest() != '049da51c96042f41522061bdc23b32b438d13d5ce801587a86124c24efe47412':
+        raise SystemExit('Inventario: panel inesperado')
+    pixels = read_indices(panel, 0, 224, 128, 4)
+    try:
+        fuente.LEVELS = [1]
+        ink, width, _ = fit('Objetos', 'CENTURY.TTF', 12, 10, 38, height=11)
+    finally:
+        fuente.LEVELS = previous_levels
+    left = (38 - width) // 2
+    for y, glyph_row in enumerate(ink, start=115):
+        pixels[y][9:47] = [15] * 38
+        pixels[y][9 + left:9 + left + width] = [3 if value else 15 for value in glyph_row]
+    localized_panel = bytearray(panel)
+    write_indices(localized_panel, 0, pixels, 4)
+    put_stream(prog, footer_offset, offset, bytes(localized_panel), 'Inventario: Objetos')
+
 
 def opciones(files: Files, preview):
     """Options and controller screens (SAKURA streams). Part tables untouched: same tiles per word."""
