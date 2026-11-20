@@ -106,7 +106,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | Shard | Estado | Lote | Cierre comprobable |
 | --- | --- | --- | --- |
 | THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. |
-| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Incluir el scroll CARGANDO en la regresión del paquete. |
+| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Incluir estos rótulos y el scroll CARGANDO en la regresión del paquete. |
 
 Mantener el idioma español según el perfil. Registrar la fuente de cada rótulo (texto del juego, textura o interfaz del port) y dejar un PR por familia de activos o pantalla. La traducción sola no suma al porcentaje de integración HD.
 

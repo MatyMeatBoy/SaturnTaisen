@@ -211,6 +211,51 @@ def in_place(rows, words, face, size, base, gamma=1.3):
         print(f'    {text!r}: {w}px en {n} tiles, compresión {sq:.2f}')
 
 
+def inventario(files: Files, preview):
+    """Localize the two 32px prompts and keep the final bracket tile."""
+    import hashlib
+    import fuente
+
+    prog = files['/SAKURA']
+    offset, limit = 0x59700, 0x59878
+    native = decompress(bytes(prog[offset:limit]))
+    if hashlib.sha256(native).hexdigest() != '20d1665dbd57c9e2c41f39a4aeeeb16c3fef36aed389093b951f69ce3773f4ed':
+        raise SystemExit('Inventario: tira de botones inesperada')
+
+    rows = strip_from(native, 0, 5)
+    previous_levels = fuente.LEVELS
+    try:
+        fuente.LEVELS = [1, 6, 9]
+        for first, label in ((0, 'Opc.'), (2, 'Volver')):
+            draw_word(rows, first, 2, label, 'CENTURY.TTF', 12, 12, align='center')
+    finally:
+        fuente.LEVELS = previous_levels
+    localized = bytearray(native)
+    strip_into(localized, 0, rows)
+    put_stream(prog, offset, limit, bytes(localized), 'Inventario')
+    preview.append(('Inventario: Opc. / Volver', rows, 5))
+
+    from rotulos import read_indices, write_indices
+
+    footer_offset = 0x5940C
+    panel = decompress(bytes(prog[footer_offset:offset]))
+    if hashlib.sha256(panel).hexdigest() != '049da51c96042f41522061bdc23b32b438d13d5ce801587a86124c24efe47412':
+        raise SystemExit('Inventario: panel inesperado')
+    pixels = read_indices(panel, 0, 224, 128, 4)
+    try:
+        fuente.LEVELS = [1]
+        ink, width, _ = fit('Objetos', 'CENTURY.TTF', 12, 10, 38, height=11)
+    finally:
+        fuente.LEVELS = previous_levels
+    left = (38 - width) // 2
+    for y, glyph_row in enumerate(ink, start=115):
+        pixels[y][9:47] = [15] * 38
+        pixels[y][9 + left:9 + left + width] = [3 if value else 15 for value in glyph_row]
+    localized_panel = bytearray(panel)
+    write_indices(localized_panel, 0, pixels, 4)
+    put_stream(prog, footer_offset, offset, bytes(localized_panel), 'Inventario: Objetos')
+
+
 def opciones(files: Files, preview):
     """Options and controller screens (SAKURA streams). Part tables untouched: same tiles per word."""
     prog = files['/SAKURA']
@@ -755,6 +800,7 @@ def main():
     preview = []
     intermedio(files, preview)
     titulo(files, preview)
+    inventario(files, preview)
     opciones(files, preview)
     carga(files, preview)
     estado(files, preview)
