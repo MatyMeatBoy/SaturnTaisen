@@ -81,6 +81,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [dialogue-catalog.md](dialogue-catalog.md) — evidence or report of the presentation block and chapter 1 coverage.
 - [portrait-animation-coverage.md](portrait-animation-coverage.md) — evidence or report of the presentation block and chapter 1 coverage.
 - [Tactical map, unit and item pairings](tactical-pairing.md)
+- [Derived tactical ground keys and geometry](tactical-ground-table.md)
 - [Saturn tactical unit bank format](saturn-unit-bank-format.md)
 - [tactical-menu-independent-reference.md](tactical-menu-independent-reference.md) — evidence or report of the presentation block and chapter 1 coverage.
 
