@@ -444,7 +444,7 @@ class ChapterCoverageTest(unittest.TestCase):
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 8)
         pan = chapter['scene-pictures']['2:/SAKURA1/BG2247.BIN']
-        self.assertEqual((pan['association'], pan['status']), ('observed', 'unsupported-size'))
+        self.assertEqual((pan['association'], pan['status']), ('observed', 'excluded'))
         self.assertEqual(pan['evidence'], 'docs/research/bg2247-native-pan.md')
         self.assertFalse(pan.get('verified_in_game'))
         self.assertIn('1:/SAKURA1/BG2247.BIN', catalog['unassigned']['scene-pictures'])

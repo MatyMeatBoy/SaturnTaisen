@@ -876,7 +876,11 @@ def build(root, index_dir, portrait_audit):
                 elif (disc, path) == (1, '/SAKURA2/EVE0118.BIN'):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE0118_REPORT)
                 elif row['status'] != 'hd':
-                    if name[2:3] in '34' or name == 'BG0000':
+                    if name in {'BG1257', 'BG1280', 'BG2247'}:
+                        row.update(status='excluded',
+                                   reason='The PC composition does not follow the native camera.',
+                                   decision_evidence='docs/research/scroll-table.md#remaining-dispositions-tp2a12')
+                    elif name[2:3] in '34' or name == 'BG0000':
                         # Character cut-outs on a key colour and the blank picture are never replaced (tools/gen_scene_bg_table.py).
                         row['status'] = 'excluded'
                         row['reason'] = 'cut-out on a key colour or blank picture, not replaced by design'
@@ -884,9 +888,7 @@ def build(root, index_dir, portrait_audit):
                         # The runtime draws a 288x144 picture only; wide and tall ones need scroll support (T105c).
                         row['status'] = 'unsupported-size'
                         row['reason'] = 'size %s, the runtime draws 288x144 pictures only' % (pair.get('size'),)
-                        if (disc, path) == (2, '/SAKURA1/BG2247.BIN'):
-                            row['reason'] = 'The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.'
-                        elif (disc, path) == (1, '/SAKURA1/BG2290.BIN'):
+                        if (disc, path) == (1, '/SAKURA1/BG2290.BIN'):
                             row['reason'] = 'The live pan holds at x=0, where the tested PC crop misses the native composition before the aligned portion.'
                     else:
                         row['reason'] = 'palette shared with a picture that maps to another PC file (ambiguous)'
