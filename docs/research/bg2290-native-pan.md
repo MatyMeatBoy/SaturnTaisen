@@ -67,3 +67,22 @@ event. The complete chapter exit and other branches are open.
 
 The private inputs, RGB evidence and states are in
 `local/work/codex-th1/bg2290-live/`.
+
+## Enhanced donor fade
+
+Patch 0188 verifies the calibrated donor on the same natural English disc 1
+route at 2560 × 1440. The viewport remains at (272,29) to (2288,1037).
+The native hold and pan stay pixel-identical through x=32. At x=33, the PC
+art starts at 16/255 opacity and reaches full opacity at x=48. The original
+foreground composite returns unchanged at frame 4600.
+
+The hard switch at frame 4327 raised the transition from 7.837 to 16.510
+mean absolute RGB levels per channel at native viewport size. The ramp
+preserves the Saturn transition's 7.837 exactly. The first donor step
+measures 8.033 versus Saturn's 7.871, and sampled early ramp steps span
+7.620 to 8.205. Frames 4400 and 4550 match the full HD plate exactly.
+All RGB changes stay in the viewport.
+
+The baseline, hard-switch and ramp runs preserve all 4,700 archived guest
+hashes and SRAM, with zero interpreted blocks. Disc 2 occurrence and
+package inclusion remain open.

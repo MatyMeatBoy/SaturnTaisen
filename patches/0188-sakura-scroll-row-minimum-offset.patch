@@ -1,0 +1,114 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2902,10 +2902,22 @@
+                                     const bool vertical = scroll->axis == ScrollAxis::Vertical;
+                                     const auto offset = FindScrollOffset(*scroll, state.pixels, softwareShown, planes.topSource,
+                                         scroll->style == ScrollStyle::ActorForeground && port.videoRenderer->BackgroundIsOpaque(2));
+-                                    if (offset) {
++                                    const uint8_t alpha = offset ? ScrollDonorOpacity(*scroll, *offset) : 0;
++                                    if (alpha) {
+                                         const auto crop = ScrollPcCrop(*scroll, *offset);
+                                         const SDL_FRect pcCrop{float(crop.x), float(crop.y), float(crop.w), float(crop.h)};
++                                        SDL_BlendMode priorBlend = SDL_BLENDMODE_NONE;
++                                        if (alpha < 255) {
++                                            SDL_GetTextureBlendMode(state.hd.texture, &priorBlend);
++                                            SDL_RenderTexture(renderer, content, &imageCrop, &imageTarget);
++                                            SDL_SetTextureBlendMode(state.hd.texture, SDL_BLENDMODE_BLEND);
++                                            SDL_SetTextureAlphaMod(state.hd.texture, alpha);
++                                        }
+                                         drewHd = SDL_RenderTexture(renderer, state.hd.texture, &pcCrop, &imageTarget);
++                                        if (alpha < 255) {
++                                            SDL_SetTextureAlphaMod(state.hd.texture, 255);
++                                            SDL_SetTextureBlendMode(state.hd.texture, priorBlend);
++                                        }
+                                         if (drewHd && !vertical) {
+                                             sceneHdForeground = zoomForeground;
+                                             for (int y = 8; y < 152; ++y)
+diff --git a/port/scroll_picture_rows.h b/port/scroll_picture_rows.h
+--- a/port/scroll_picture_rows.h
++++ b/port/scroll_picture_rows.h
+@@ -48,6 +48,9 @@
+ {"BG2269", ScrollAxis::Vertical, 288, 296, 92192, 0x194B0C75D9E3A254ull,
+  0x09CE9EC2F1BB4A9Dull, 0xE32B34078B89A94Aull, "SAKURA1/BG/BG2269.SPR", 221622, 0x41E1C10EC2F1A1FBull, 576, 592,
+  ScrollStyle::Plain},
++{"BG2290", ScrollAxis::Horizontal, 432, 144, 60544, 0x29608664A6E5B356ull,
++ 0x9215200C4EBC0C10ull, 0x5B46D87CD7FC992Dull, "SAKURA1/BG/BG2290.SPR", 156712, 0xAF6E19F3C646E4F5ull, 864, 320,
++ ScrollStyle::Plain, {2150, -68, 620, 0, 320, 32, true, 16}},
+ {"BG2295", ScrollAxis::Vertical, 288, 208, 64688, 0x40CD716674C17E1Dull,
+  0x5B088DCCBE6E471Bull, 0x019973A4BC85F784ull, "SAKURA1/BG/BG2295.SPR", 217667, 0x466721FE4E14023Cull, 576, 416,
+  ScrollStyle::Plain},
+diff --git a/port/scroll_pictures.h b/port/scroll_pictures.h
+--- a/port/scroll_pictures.h
++++ b/port/scroll_pictures.h
+@@ -25,10 +25,18 @@
+ // EdgeRamp: the last two tile columns of the native file are game-supplied edge, eased in with a ramp (BG2533, pinned by palette alone).
+ enum class ScrollStyle : uint8_t { Plain, ActorForeground, EdgeRamp };
+ 
++// Calibrated crop: PC start = origin + rate * offset / 1000 on the scroll axis (origin may be negative: the PC art can start
++// later than the Saturn picture), `length` PC pixels long. Optional per-row guards:
++//   minOffset: native offsets below it keep the native picture (the PC art does not cover that part of the scene).
++//   clampEnd : the crop start is limited so the crop never runs past the PC picture (end clip).
+ struct ScrollFit {
+     unsigned rateMilli = 0;
+-    unsigned origin = 0, length = 0;
++    int origin = 0;
++    unsigned length = 0;
+     unsigned cross = 0, crossLength = 0;
++    unsigned minOffset = 0;
++    bool clampEnd = false;
++    unsigned fadeInOffsets = 0;
+ };
+ 
+ struct ScrollPicture {
+@@ -60,15 +68,31 @@
+     return row.axis == ScrollAxis::Horizontal ? row.width - kPanInsetWidth : row.height - kPanPictureHeight;
+ }
+ 
+-inline constexpr uint64_t CalibratedScrollStart(const ScrollFit& fit, unsigned offset) {
+-    return uint64_t(fit.origin) + (uint64_t(fit.rateMilli) * offset + 500) / 1000;
++inline constexpr int64_t CalibratedScrollStart(const ScrollFit& fit, unsigned offset) {
++    return int64_t(fit.origin) + (int64_t(fit.rateMilli) * offset + 500) / 1000;
++}
++
++// True when the PC crop for `offset` is drawn; offsets below the row's minimum stay native.
++inline constexpr bool ScrollOffsetSupported(const ScrollPicture& row, unsigned offset) {
++    return !row.fit.rateMilli || offset >= row.fit.minOffset;
++}
++
++// Fade from the Saturn picture over the first supported native offsets.
++inline constexpr uint8_t ScrollDonorOpacity(const ScrollPicture& row, unsigned offset) {
++    if (!ScrollOffsetSupported(row, offset)) return 0;
++    const auto& fit = row.fit;
++    if (!fit.fadeInOffsets || offset - fit.minOffset >= fit.fadeInOffsets) return 255;
++    return uint8_t((uint64_t(offset - fit.minOffset) * 255 + fit.fadeInOffsets / 2) / fit.fadeInOffsets);
+ }
+ 
+ // PC rectangle for a proven native scroll offset.
+ inline constexpr ScrollCrop ScrollPcCrop(const ScrollPicture& row, unsigned offset) {
+     if (row.fit.rateMilli) {
+         const auto& fit = row.fit;
+-        const unsigned start = static_cast<unsigned>(CalibratedScrollStart(fit, offset));
++        const unsigned pcScroll = row.axis == ScrollAxis::Horizontal ? row.pcWidth : row.pcHeight;
++        int64_t first = CalibratedScrollStart(fit, offset);
++        if (fit.clampEnd && first + fit.length > pcScroll) first = int64_t(pcScroll) - fit.length;
++        const unsigned start = first < 0 ? 0u : static_cast<unsigned>(first);
+         return row.axis == ScrollAxis::Horizontal
+             ? ScrollCrop{start, fit.cross, fit.length, fit.crossLength}
+             : ScrollCrop{fit.cross, start, fit.crossLength, fit.length};
+@@ -88,9 +112,12 @@
+         const auto& fit = row.fit;
+         const unsigned pcScroll = horizontal ? row.pcWidth : row.pcHeight;
+         const unsigned pcCross = horizontal ? row.pcHeight : row.pcWidth;
+-        return fit.length && fit.crossLength &&
+-               CalibratedScrollStart(fit, ScrollRange(row)) + fit.length <= pcScroll &&
+-               uint64_t(fit.cross) + fit.crossLength <= pcCross;
++        if (!fit.length || !fit.crossLength || fit.length > pcScroll || uint64_t(fit.cross) + fit.crossLength > pcCross ||
++            fit.minOffset > ScrollRange(row) || fit.fadeInOffsets > ScrollRange(row) - fit.minOffset)
++            return false;
++        // Every supported offset starts inside the PC picture; the end must fit too unless the row clamps it.
++        return CalibratedScrollStart(fit, fit.minOffset) >= 0 &&
++               (fit.clampEnd || CalibratedScrollStart(fit, ScrollRange(row)) + fit.length <= pcScroll);
+     }
+     if (horizontal)
+         return row.pcWidth == 2 * row.width && row.pcHeight >= 2 * kPanPictureHeight &&

@@ -6,12 +6,12 @@ Run `python tools/measure_size_candidates.py --prepared <prepared-disc-root> --p
 
 | Picture | Saturn size | Sampled signature minimum / mean | Finding |
 |---|---|---|---|
-| BG1257 | 456 × 144 | 0.863 / 0.879 | Every sampled offset falls below 0.90. |
-| BG1280 | 512 × 144 | 0.796 / 0.852 | Some sampled offsets fall below 0.90. |
+| BG1257 | 456 × 144 | 0.863 / 0.879 | Every sampled offset falls below 0.90. Stays native (different composition). |
+| BG1280 | 512 × 144 | 0.796 / 0.852 | Some sampled offsets fall below 0.90. Stays native (different composition). |
 | BG2093 | 320 × 144 | 0.951 / 0.967 | The isolated picture aligns. The witnessed dream retains its native composite. |
 | BG2247 | 288 × 296 | 0.376 / 0.549 | The [witnessed theatre pan](bg2247-native-pan.md) retains the Saturn perspective. |
-| BG2290 | 432 × 144 | 0.877 / 0.972 | Offsets 0, 4 and 8 fall below 0.90. A minimum supported offset and the proposed end clamp still need review across the actual viewport range. |
-| BG2338 | 320 × 160 | 0.943 | The whole-picture candidate uses BG2238.SPR. It has no pan window or in-game crop witness. |
+| BG2290 | 432 × 144 | 0.877 / 0.972 | Offsets 0, 4 and 8 fall below 0.90. Connected in patch 0188 with a minimum offset of 32 and an end clamp, see [the scroll table](scroll-table.md#bg2290-minimum-offset-and-end-clamp-tp2a12-patch-0188). |
+| BG2338 | 320 × 160 | 0.943 | The whole-picture candidate uses BG2238.SPR. It has no pan window or in-game crop witness, so it stays native until a replay reaches it ([disposition](scroll-table.md#remaining-dispositions-tp2a12)). |
 | BBG238 | 320 × 224 | 0.987 | High grayscale score, with a different pose and framing. |
 | BBG239 | 320 × 224 | 0.848 | The candidate falls below the floor. |
 | BBG240 | 320 × 224 | 0.985 | High grayscale score, with a different pose and framing. |
