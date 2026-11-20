@@ -238,7 +238,8 @@
       "patches/0246-sakura-nc3021-registered-faces.patch",
       "patches/0247-sakura-nc3517-registered-body-and-faces.patch",
       "patches/0248-sakura-bg2057-masked-ending-plate.patch",
-      "patches/0249-sakura-spanish-runtime-menu-copy.patch"
+      "patches/0249-sakura-spanish-runtime-menu-copy.patch",
+      "patches/0250-sakura-shared-scene-backgrounds.patch"
     ]
   }
 }

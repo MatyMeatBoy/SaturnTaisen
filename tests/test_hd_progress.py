@@ -96,6 +96,22 @@ class HdProgressTests(unittest.TestCase):
             report.apply_register(data, path)
         self.assertEqual((scene['integrated'], scene['verified']), (2, 1))
 
+    def test_scene_alias_reduces_inventory_and_counts_one_linked_file(self):
+        data = specimen()
+        scene = next(row for row in data['categories'] if row['id'] == 'scene-images')
+        scene.update(total=3, inventory=3, matched=3, prepared=None, integrated=2, verified=None)
+        witness = {'status': 'hd', 'pc': 'BG/A.SPR', 'verified_in_game': True}
+        register = {
+            'scene_file_aliases': {'BG/B.SPR': 'BG/A.SPR'},
+            'unassigned': {'scene-pictures': {'1:/BG/A.BIN': witness, '2:/BG/B.BIN': witness}},
+        }
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'coverage.json'
+            path.write_text(json.dumps(register), encoding='utf-8')
+            report.apply_register(data, path)
+        self.assertEqual((scene['total'], scene['inventory'], scene['matched']), (2, 2, 2))
+        self.assertEqual((scene['integrated'], scene['verified']), (1, 1))
+
     def test_committed_report_and_readme_are_current(self):
         config = json.loads((ROOT / 'config/hd-progress.json').read_text(encoding='utf-8'))
         report.apply_register(config, ROOT / 'config/hd-chapter-coverage.json')

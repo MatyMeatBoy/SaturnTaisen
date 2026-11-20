@@ -15,8 +15,34 @@ python tools/build_hd_progress.py --check
 python -m unittest discover -s tests -p "test_hd*.py"
 ```
 
-The progress panel counts accepted matches, source-level integration and in-game validation separately. Its updated scene-image count uses distinct PC filenames, while the chapter index lists Saturn files by disc and FILM streams by disc and offset. The NC panel counts each Saturn body package once across both discs. It reports runtime-table membership as integration and separately counts packages with a documented draw. A preparation count and a complete audit of scene appearances remain open.
+The progress panel counts accepted matches, source-level integration and in-game validation separately. The scene-image count uses one canonical PC file per linked resource. The chapter index retains each Saturn occurrence by disc and each FILM stream by disc and offset. The NC panel counts each Saturn body package once across both discs. It reports runtime-table membership as integration and separately counts packages with a documented draw. A preparation count and a complete audit of scene appearances remain open.
 
 ## Status vocabulary (corrected 2026-11-19)
 
 `hd`, `wired-unverified`, `excluded`, `unsupported-size`, `paired-not-wired`, `unpaired` and `unknown` are defined in the `status` block of the JSON and in `docs/SHARDS.md` ("How to read the coverage numbers"). The first version of this register reported every accepted pair that was not a documented draw as `paired-not-wired`; that counted bodies already in the runtime table, cut-outs excluded on purpose and pictures of a size the runtime does not draw, so the pool of work looked far larger than it is.
+
+## Shared PC background files
+
+Patch 0250 applies the existing byte-identity rule across distinct palette and
+cell keys in the standard scene table. Only equal full PC SPR SHA-256 and equal
+subimage indices share a file path. The generator retains all 527 Saturn keys
+and redirects nine to an existing canonical PC file. All nine redirected
+source and destination files were also compared byte for byte against the
+local PC extraction. Guarded viewports, pans, and other compositors retain
+their own rules.
+
+The archived disc 1 chapter 7 BG2126 checkpoint ran for 56 strict fields in
+each of three 2560 × 1440 profiles. The reference loaded BG2126.SPR and the
+candidate loaded only BG2125.SPR. Both captures match pixel for pixel. The
+candidate without a donor has 1,254,327 different pixels inside the Zoom
+picture rectangle (272, 29)–(2288, 1037). Guest hashes and final SRAM match in
+all three profiles. This is one natural redirected appearance. The remaining
+redirected keys have table and byte-identity checks.
+
+The chapter register records source filenames with no remaining independent
+scene link in the `scene_file_aliases` field. The report removes those aliases
+from the eligible inventory and counts the canonical target once. Together
+with five aliases already shared by the earlier table, fourteen duplicate
+filenames leave the denominator and nine leave the integrated numerator.
+This changes the scene-image figure from 610/1167 to 601/1153. The number of
+verified PC resources remains 152. The patch is outside v0.2.18-alpha.

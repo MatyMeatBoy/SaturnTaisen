@@ -199,16 +199,19 @@ def apply_register(data, register_path):
                 row['verified'] = len(verified_bodies)
                 row['integrated'] = len(files[kind])
             continue
-        if kind and row['integrated'] is not None and len(files[kind]) >= row['integrated']:
+        if kind and row['integrated'] is not None and (
+                kind == 'scene-pictures' or len(files[kind]) >= row['integrated']):
             row['integrated'] = len(files[kind])
         if row['id'] == 'scene-images' and row['total'] is not None:
             row['verified'] = len(verified_scenes)
+            alias_count = len(register.get('scene_file_aliases', {}))
             # pictures excluded by design (Japanese-lettered title cards, key-colour cut-outs) are not part of the goal
-            drop = len(excluded - files[kind])
+            drop = len(excluded - files[kind]) + alias_count
             row['total'] -= drop
-            for stage in ('inventory', 'paired'):
-                if row.get(stage) is not None:
-                    row[stage] = min(row[stage], row['total'])
+            if row.get('inventory') is not None:
+                row['inventory'] = min(row['inventory'], row['total'])
+            if row.get('matched') is not None:
+                row['matched'] -= alias_count
 
 
 def render_report(data):

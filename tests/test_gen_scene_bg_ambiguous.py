@@ -36,6 +36,15 @@ class AmbiguousPaletteTable(unittest.TestCase):
         self.assertEqual(len(first), 2)
         self.assertEqual(second, [])
 
+    def test_distinct_saturn_keys_share_one_exact_pc_subimage(self):
+        left = dict(pair('BG1011', 'AA', 'BG1011', '01'), pc_sha256='a' * 64)
+        right = dict(pair('BG1012', 'BB', 'BG1012', '02'), pc_sha256='a' * 64)
+        first, second = generate([right, left])
+        self.assertEqual(first, [('AA', left['pc_file'], '0'), ('BB', left['pc_file'], '0')])
+        self.assertEqual(second, [])
+        first, _ = generate([left, dict(right, pc_image_index=1)])
+        self.assertEqual(first, [('AA', left['pc_file'], '0'), ('BB', right['pc_file'], '1')])
+
     def test_identical_cells_for_two_pc_files_stay_out(self):
         first, second = generate([pair('BG1011', 'AA', 'BG1011', '01'), pair('BG1012', 'AA', 'BG1012', '01')])
         self.assertEqual((first, second), ([], []))

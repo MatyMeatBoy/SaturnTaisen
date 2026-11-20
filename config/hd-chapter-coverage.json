@@ -4901,7 +4901,7 @@
           "1:/SAKURA1/BG2126.BIN": {
             "association": "observed",
             "evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
-            "pc": "SAKURA1/BG/BG2126.SPR",
+            "pc": "SAKURA1/BG/BG2125.SPR",
             "runtime_evidence": "docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws",
             "status": "hd",
             "verified_in_game": true
@@ -6293,7 +6293,7 @@
           },
           "2:/SAKURA1/BG1072.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
+            "evidence": "docs/research/hd-chapter-9.md#verified-bg1072-before-0901",
             "pc": "SAKURA1/BG/BG1072.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-bg1072-before-0901",
             "status": "hd",
@@ -7072,6 +7072,22 @@
   "hud_census": {
     "item_images": 51,
     "system_images": 572
+  },
+  "scene_file_aliases": {
+    "SAKURA1/BG/BG1039.SPR": "SAKURA1/BG/BG1037.SPR",
+    "SAKURA1/BG/BG1040.SPR": "SAKURA1/BG/BG1038.SPR",
+    "SAKURA1/BG/BG1128.SPR": "SAKURA1/BG/BG1127.SPR",
+    "SAKURA1/BG/BG1129.SPR": "SAKURA1/BG/BG1127.SPR",
+    "SAKURA1/BG/BG1135.SPR": "SAKURA1/BG/BG1134.SPR",
+    "SAKURA1/BG/BG1357.SPR": "SAKURA1/BG/BG1344.SPR",
+    "SAKURA1/BG/BG2002.SPR": "SAKURA1/BG/BG2001.SPR",
+    "SAKURA1/BG/BG2003.SPR": "SAKURA1/BG/BG2001.SPR",
+    "SAKURA1/BG/BG2038.SPR": "SAKURA1/BG/BG2036.SPR",
+    "SAKURA1/BG/BG2076.SPR": "SAKURA1/BG/BG2075.SPR",
+    "SAKURA1/BG/BG2107.SPR": "SAKURA1/BG/BG2106.SPR",
+    "SAKURA1/BG/BG2126.SPR": "SAKURA1/BG/BG2125.SPR",
+    "SAKURA1/BG/BG2129.SPR": "SAKURA1/BG/BG2128.SPR",
+    "SAKURA1/BG/BG2337.SPR": "SAKURA1/BG/BG2237.SPR"
   },
   "schema": 1,
   "status": {
@@ -13455,12 +13471,12 @@
       },
       "1:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1039.SPR",
+        "pc": "SAKURA1/BG/BG1037.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1040.SPR",
+        "pc": "SAKURA1/BG/BG1038.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1041.BIN": {
@@ -13812,12 +13828,12 @@
       },
       "1:/SAKURA1/BG1128.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1128.SPR",
+        "pc": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1129.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1129.SPR",
+        "pc": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1130.BIN": {
@@ -13829,7 +13845,7 @@
       "1:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
         "native_alias_of": "BG1135",
-        "pc": "SAKURA1/BG/BG1135.SPR",
+        "pc": "SAKURA1/BG/BG1134.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1134.BIN": {
@@ -13839,7 +13855,7 @@
       },
       "1:/SAKURA1/BG1135.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1135.SPR",
+        "pc": "SAKURA1/BG/BG1134.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1136.BIN": {
@@ -14581,7 +14597,7 @@
       },
       "1:/SAKURA1/BG1357.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1357.SPR",
+        "pc": "SAKURA1/BG/BG1344.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1358.BIN": {
@@ -14942,7 +14958,7 @@
       },
       "1:/SAKURA1/BG2076.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2076.SPR",
+        "pc": "SAKURA1/BG/BG2075.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2077.BIN": {
@@ -15142,7 +15158,7 @@
       },
       "1:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2129.SPR",
+        "pc": "SAKURA1/BG/BG2128.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2130.BIN": {
@@ -17059,12 +17075,12 @@
       },
       "2:/SAKURA1/BG1039.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1039.SPR",
+        "pc": "SAKURA1/BG/BG1037.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1040.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1040.SPR",
+        "pc": "SAKURA1/BG/BG1038.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1041.BIN": {
@@ -17424,12 +17440,12 @@
       },
       "2:/SAKURA1/BG1128.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1128.SPR",
+        "pc": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1129.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1129.SPR",
+        "pc": "SAKURA1/BG/BG1127.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1130.BIN": {
@@ -17441,7 +17457,7 @@
       "2:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
         "native_alias_of": "BG1135",
-        "pc": "SAKURA1/BG/BG1135.SPR",
+        "pc": "SAKURA1/BG/BG1134.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1132.BIN": {
@@ -17456,7 +17472,7 @@
       },
       "2:/SAKURA1/BG1135.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1135.SPR",
+        "pc": "SAKURA1/BG/BG1134.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1136.BIN": {
@@ -18179,7 +18195,7 @@
       },
       "2:/SAKURA1/BG1357.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG1357.SPR",
+        "pc": "SAKURA1/BG/BG1344.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1358.BIN": {
@@ -18491,7 +18507,7 @@
       },
       "2:/SAKURA1/BG2076.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2076.SPR",
+        "pc": "SAKURA1/BG/BG2075.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2078.BIN": {
@@ -18618,7 +18634,7 @@
       },
       "2:/SAKURA1/BG2126.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2126.SPR",
+        "pc": "SAKURA1/BG/BG2125.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2128.BIN": {
@@ -18628,7 +18644,7 @@
       },
       "2:/SAKURA1/BG2129.BIN": {
         "association": "unknown",
-        "pc": "SAKURA1/BG/BG2129.SPR",
+        "pc": "SAKURA1/BG/BG2128.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2130.BIN": {
