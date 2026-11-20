@@ -1,0 +1,56 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -604,6 +604,8 @@
+     std::filesystem::path achievedBadgePath;
+ #endif
+     struct IntermissionPlate {
++        int disc;
++        uint64_t palette;
+         const char* file;
+         size_t bytes;
+         uint64_t fileHash, nativeRgb, darkRgb;
+@@ -613,10 +615,12 @@
+         SDL_Texture* texture = nullptr;
+     };
+     IntermissionPlate intermissionPlates[]{
+-        {"SAKURA1/ICATCH/IC0501.SPR", 218568, 0x4A23AE5B5939DE76ull,
++        {1, 0xE9107F892185CCC8ull, "SAKURA1/ICATCH/IC0501.SPR", 218568, 0x4A23AE5B5939DE76ull,
+             0xA5E3498BEDDC1305ull, 0x1F7A14C347473045ull},
+-        {"SAKURA1/ICATCH/IC0300.SPR", 185398, 0x7A7ED93DF49A6CE5ull,
++        {1, 0xE9107F892185CCC8ull, "SAKURA1/ICATCH/IC0300.SPR", 185398, 0x7A7ED93DF49A6CE5ull,
+             0x6469CD72E7963265ull, 0},
++        {2, 0xFEBAEA7B6E7CAC67ull, "SAKURA1/ICATCH/IC0600.SPR", 179506, 0xD6AEB7F7E04B94DAull,
++            0x0F85EDA8CE4B247Dull, 0},
+     };
+     const auto resetIntermissionTextures = [&]() {
+         for (auto& plate : intermissionPlates) {
+@@ -1686,11 +1690,16 @@
+         bool icMixing = false;
+         IntermissionPlate* icPlate = nullptr;
+         const auto icReady = [&]() {
+-            if (choosing || port.menu.IsOpen() || shownDisc != 1 || !port.videoRenderer ||
++            if (choosing || port.menu.IsOpen() || !port.videoRenderer ||
+                 port.opt.pcAssetsPath.empty() || satrecomp::FeatureValue("presentation_mode") != 1 ||
+                 satrecomp::FeatureValue("pc_hd_backgrounds") != 0 || texW != 320 || texH != 224 ||
+-                softwareShown.size() != 320 * 224 || baseFit.scale < 2 ||
+-                port.videoRenderer->BackgroundPaletteFingerprint(4) != 0xE9107F892185CCC8ull) return false;
++                softwareShown.size() != 320 * 224 || baseFit.scale < 2) return false;
++            const uint64_t palette = port.videoRenderer->BackgroundPaletteFingerprint(4);
++            const auto matchesLayer = [&](const IntermissionPlate& plate) {
++                return plate.disc == shownDisc && plate.palette == palette;
++            };
++            if (std::none_of(std::begin(intermissionPlates), std::end(intermissionPlates), matchesLayer))
++                return false;
+             const auto& planes = port.videoRenderer->PresentationFrame();
+             if (planes.topSource.size() != 320 * 224 || planes.floralCoverMix.size() != 320 * 224 ||
+                 planes.floralCoverRgb.size() != 320 * 224) return false;
+@@ -1720,7 +1729,7 @@
+             }
+             for (auto& plate : intermissionPlates) {
+                 const uint64_t expected = icOffset == unshifted ? plate.nativeRgb : plate.darkRgb;
+-                if (expected && hash == expected) {
++                if (matchesLayer(plate) && expected && hash == expected) {
+                     icPlate = &plate;
+                     break;
+                 }

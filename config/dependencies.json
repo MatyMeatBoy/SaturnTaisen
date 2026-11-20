@@ -177,7 +177,8 @@
       "patches/0179-sakura-registered-nc96-faces.patch",
       "patches/0180-sakura-registered-nc21-faces.patch",
       "patches/0181-sakura-register-nc3290-body.patch",
-      "patches/0182-sakura-registered-nc32-faces.patch"
+      "patches/0182-sakura-registered-nc32-faces.patch",
+      "patches/0183-sakura-ic06-hd-intermission.patch"
     ]
   }
 }
