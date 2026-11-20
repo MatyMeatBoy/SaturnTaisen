@@ -1053,7 +1053,6 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
                       pc_files=pc['files'], pc_bytes=pc['bytes'], pc_videos=pc['videos'], pc_categories=pc['categories'],
                       stamp=hd_stamp(paths))
         (staged / 'prepared-manifest.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-        (staged / '.portrait-refresh-v1').touch()
         if paths.hd.exists():
             shutil.rmtree(paths.hd)
         os.rename(staged, paths.hd)
@@ -1174,14 +1173,15 @@ def load_manifest(paths: Paths) -> dict:
     return manifest
 
 
-def prepare_spanish_episode_art(paths):
+def prepare_spanish_episode_art(paths, *, strict=False):
     art = paths.program / 'art/screen-backgrounds'
     if not art.is_dir():
         art = paths.program / 'assets/generated/screen-backgrounds'
     if not (art / 'EPISODE01-es-lettering-v1.png').is_file():
-        return
+        return True
     from episode_lettering import prepare_episode_centers
 
+    ready = True
     for disc in (1, 2):
         english = paths.game / f'disc{disc}' / 'Track 01.iso'
         spanish = paths.game / f'disc{disc}-es' / 'Track 01.iso'
@@ -1190,18 +1190,35 @@ def prepare_spanish_episode_art(paths):
         try:
             prepare_episode_centers(english, spanish, art, paths.home / 'art/episode-centers')
         except (OSError, ValueError) as error:
+            if strict:
+                raise SetupError(f'Disco {disc}: no se pudo actualizar la rotulación de episodios: {error}') from error
             say(97, f'Disco {disc}: no se pudo preparar la rotulación mejorada de episodios: {error}')
+            ready = False
+    return ready
 
 
-def refresh_installed_portraits(paths: Paths) -> None:
-    """Run the one-time migration from the launcher without scanning for source discs."""
-    if not prepared_english(paths, load_manifest(paths)):
-        raise SetupError('No se pudieron validar los discos preparados para actualizar el mod HD.')
+def record_prepared_release(paths: Paths) -> None:
+    version_file = paths.program / 'VERSION'
+    if version_file.is_file():
+        paths.home.mkdir(parents=True, exist_ok=True)
+        marker = paths.home / 'prepared-release.txt'
+        staged = marker.with_suffix('.tmp')
+        staged.write_text(version_file.read_text(encoding='utf-8').strip() + '\n', encoding='utf-8')
+        os.replace(staged, marker)
+
+
+def refresh_installed_game(paths: Paths) -> None:
+    """Update prepared content without scanning for source discs or changing preferences."""
+    manifest = load_manifest(paths)
+    if not prepared_english(paths, manifest):
+        raise SetupError('No se pudieron validar los discos preparados. Usa Revisar en Opciones para prepararlos.')
+    for number in (1, 2):
+        prepare_disc(paths, manifest, [], number, 5 + 40 * (number - 1), 40)
+    prepare_spanish_episode_art(paths, strict=True)
     tracks = [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)]
     refresh_hd_portraits(paths, tracks)
-    marker = paths.hd / '.portrait-refresh-v1'
-    marker.touch()
-    say(100, 'Mod HD revisado. Ya puedes jugar.')
+    record_prepared_release(paths)
+    say(100, 'Contenido preparado actualizado. Ya puedes jugar.')
 
 
 def prepare(paths: Paths, given: list[Path], language: str, force: bool = False) -> dict:
@@ -1235,7 +1252,7 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
         language = 'es' if language == 'en' else 'en'
     disc = set_language(paths, language)
     write_default_settings(paths)
-    prepare_spanish_episode_art(paths)
+    episode_art_ready = prepare_spanish_episode_art(paths)
     try:
         if make_previews(paths, disc):
             say(99, 'Vistas previas de la presentación listas.')
@@ -1243,7 +1260,8 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
         pass  # (the chooser shows plain cards without them; never a reason to fail the setup)
     if refreshed_portraits or hd_ready(paths):  # the profile always points at this install's own pack (a moved or copied profile too)
         set_values(paths.home / 'launcher.ini', {('sakura', 'pc_assets'): str(paths.hd)})
-        (paths.hd / '.portrait-refresh-v1').touch()
+    if episode_art_ready and prepared_english(paths, manifest):
+        record_prepared_release(paths)
     return dict(disc=str(disc), language=language, hd=hd, hd_ready=hd_ready(paths))
 
 
@@ -1303,7 +1321,7 @@ def info(paths: Paths) -> dict:
 def main() -> int:
     global _recomplauncher_progress
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-portraits', 'language', 'info', 'frontend', 'help'))
+    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-prepared', 'language', 'info', 'frontend', 'help'))
     parser.add_argument('--folder', type=Path)
     parser.add_argument('--rom', '--disc', '--pc', dest='rom', type=Path, action='append', default=[])
     parser.add_argument('--language', choices=tuple(ALL_LANGUAGES))
@@ -1333,8 +1351,8 @@ def main() -> int:
         elif args.command == 'frontend':
             frontend(paths, args)
             print('OK', flush=True)
-        elif args.command == 'refresh-portraits':
-            refresh_installed_portraits(paths)
+        elif args.command == 'refresh-prepared':
+            refresh_installed_game(paths)
         else:
             given = list(args.rom) + ([args.folder] if args.folder else [])
             if not given and discs_folder(paths.program).is_dir():

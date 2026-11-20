@@ -4,7 +4,7 @@ Updated 2026-11-18. Verifiable detail: [current status](ESTADO_ACTUAL.md). Techn
 
 Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can add rows; each PR takes **one** row. Technical detail continues in [Saturn Priority](superpowers/plans/2026-11-17-saturn-priority.md) and [Chapter 1](superpowers/plans/2026-11-17-chapter1-progression.md).
 
-**Installed HD portraits.** Implemented a launcher migration for installations that already retain the PC portrait archive. Tested with the compiled launcher, frozen helper, older HD receipt and prepared discs. The update added the company emblem (native ID 0169), preserved the background records and the HD toggle, and left a completion marker. Older packs without the PC archive still need that source. Pending inclusion in a release. At closure the workspace measured 195,515,005,037 logical bytes including private test data, hardlinks and retained deliveries. Storage-cap cleanup remains open.
+**Updates to prepared installations.** The launcher reviews prepared content once per release. Tested with the compiled launcher, frozen helper, older HD receipt and both Spanish disc receipts from an older build. It rebuilt the Spanish layers, generated the ten Enhanced episode titles, added company emblem 0169 and retained the background records and HD setting. HD packs without the PC portrait archive still need that source. Pending inclusion in a release. The workspace measured 195,515,005,037 logical bytes including private test data, hardlinks and retained deliveries. Storage-cap cleanup remains open.
 
 **Finishing the HD mod from another PC:** start with [the HD completion handoff](research/hd-completion-handoff.md); rows T52, T53, T54, T67, T74, T76–T79, T710, T711.
 

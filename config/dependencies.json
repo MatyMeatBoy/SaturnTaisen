@@ -245,7 +245,8 @@
       "patches/0253-sakura-shooting-gallery-reward.patch",
       "patches/0254-sakura-bg1016-floral-blend.patch",
       "patches/0255-sakura-preserve-bg2236-figure.patch",
-      "patches/0256-sakura-refresh-installed-portraits.patch"
+      "patches/0256-sakura-refresh-installed-portraits.patch",
+      "patches/0257-sakura-refresh-prepared-game-on-update.patch"
     ]
   }
 }
