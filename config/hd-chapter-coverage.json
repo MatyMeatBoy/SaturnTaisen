@@ -122,8 +122,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/NC/NC56.SPR",
+            "runtime_evidence": "docs/research/nc56-registered-faces.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC81.BIN": {
             "association": "observed",
