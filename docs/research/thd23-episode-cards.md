@@ -29,3 +29,18 @@ Episodes 2 to 10 need a state or movie that reaches TITLEn; Continue-from-save r
 ## Episode 1, Spanish, v0.2.16.1-alpha
 
 The installed Spanish disc 1 and packaged runtime completed 10,500 cold strict fields using `tests/opening.movie`. Enhanced 2560 x 1440 and 1920 x 1080 have identical guest hashes. The Spanish card appears at 8,250 and 8,500, following the floral backdrop at 8,000 and before the letter transition at 8,750. The center-to-surround join is still visible, and the packaged lettering differs from the requested serif reference. These captures establish the current behavior. A per-frame fade comparison, Original and episodes 2-10 remain open. Private captures are under `local/work/codex-th1/thd41-combined/card-es-cold`.
+
+## Spanish profiles prepared from either disc
+
+The setup helper now prepares localized Enhanced centers from each
+available English and Spanish disc pair. Their names use the Spanish
+TITLE fingerprint, so a disc 2 installation can populate all ten
+centers independently. A pair with English TITLE bytes in the Spanish
+image reports a preparation error for that disc and does not stop the
+other pair from being processed.
+
+The corrected Spanish disc 2 media and the Spanish disc 1 media
+independently generated the same ten keyed centers with the release
+art. An older retained Spanish disc 2 image contains all ten English
+TITLE files. It still needs its Spanish media layer refreshed.
+The new setup helper is pending packaging.

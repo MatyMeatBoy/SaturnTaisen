@@ -11,6 +11,7 @@ from unittest.mock import patch
 import wave
 import zipfile
 from pathlib import Path
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -240,6 +241,25 @@ class PcEdition(unittest.TestCase):
             self.assertEqual(setup.pc_folder_kind(game), 'game')
             self.assertIsNone(setup.pc_folder_kind(root))
             self.assertIn(setup.scan(root)['pc'], (str(cabinets), str(game)))
+
+
+class SpanishEpisodeArt(unittest.TestCase):
+    def test_prepares_available_disc_two_without_disc_one(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            art = root / 'art/screen-backgrounds'
+            art.mkdir(parents=True)
+            (art / 'EPISODE01-es-lettering-v1.png').touch()
+            game = root / 'game'
+            tracks = [game / name / 'Track 01.iso' for name in ('disc2', 'disc2-es')]
+            for track in tracks:
+                track.parent.mkdir(parents=True)
+                track.touch()
+            home = root / 'profile'
+            paths = SimpleNamespace(program=root, game=game, home=home)
+            with patch('episode_lettering.prepare_episode_centers') as prepare:
+                setup.prepare_spanish_episode_art(paths)
+                prepare.assert_called_once_with(*tracks, art, home / 'art/episode-centers')
 
 
 class Profile(unittest.TestCase):
