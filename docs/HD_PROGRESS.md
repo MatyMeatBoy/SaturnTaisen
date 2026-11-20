@@ -7,9 +7,9 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | Sin dato |
-| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1145/1145 (100%) | 712/1145 (62,1%) | Sin dato | 566/1145 (49,4%) | 33/1145 (2,8%) |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1145/1145 (100%) | 712/1145 (62,1%) | Sin dato | 567/1145 (49,5%) | 37/1145 (3,2%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
-| Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
+| Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 50/50 (100%) | Sin dato |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 229/229 (100%) | Sin dato | Sin dato | 47/229 (20,5%) | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
@@ -20,15 +20,15 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 304/304 (100%) |
-| Imágenes de escena | 566/1145 (49,4%) |
+| Imágenes de escena | 567/1145 (49,5%) |
 | Escenas y transiciones | Sin dato |
-| Vídeos | 44/50 (88%) |
+| Vídeos | 50/50 (100%) |
 | Modo táctico | Sin dato |
 | HUD y menús PC/Saturn | 47/229 (20,5%) |
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 146/147 (99,3%) |
 
-**HD total: 1126/1894 (59,4%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1133/1894 (59,8%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 ## Qué cuenta en cada etapa
@@ -88,15 +88,16 @@ Visitas, elecciones, mapas, combates, menús, películas y transiciones navegada
 
 ### Vídeos
 
-Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.
+Clips Saturn únicos con sustitución PC completa o con tramos de imagen PC alineados al montaje Saturn.
 
-- 50 clips Saturn únicos y emparejados. La tabla del runtime conecta el vídeo PC para 44 clips y conserva el vídeo y el audio Saturn en los seis cortes alternativos.
-- El preparador copia películas si la edición PC las incluye. MOVIE000 y MOVIE001 tienen observaciones de vídeo en juego. La validación completa de subtítulos, audio, sincronización, salto y cambio de disco sigue abierta.
-- **Siguiente paso**. Verificar audio y vídeo a velocidad normal, saltos y reanudaciones, subtítulos y ambos discos.
+- 50 clips Saturn únicos con imagen PC integrada: 44 sustituciones completas y 6 sustituciones por tramos. Para estos últimos se conservan el audio Saturn y los tramos nativos que respetan el montaje original.
+- MOVIE004 y MOVIE011 tienen testigos en la historia. Los otros cuatro cortes alternativos se verificaron con reproducciones controladas. El preparador usa los archivos de la edición PC del jugador.
+- **Siguiente paso**. Verificar los cortes alternativos en las rutas de historia pendientes y comprobar subtítulos, saltos y reanudaciones en el paquete.
 
 - [scene-tagging.md](research/scene-tagging.md).
 - [intro-petals-transition.md](research/intro-petals-transition.md).
 - [video-equivalence.md](research/video-equivalence.md).
+- [bounded-film-video-spans.md](research/bounded-film-video-spans.md).
 
 ### Modo táctico
 

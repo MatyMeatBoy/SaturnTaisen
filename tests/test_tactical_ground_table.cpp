@@ -4,7 +4,7 @@
 #include <cstring>
 #include <set>
 
-// The generated ground table (patch 0185): every entry must be found by its own signature, keys must be unique and
+// The generated ground table (patch 0188): every entry must be found by its own signature, keys must be unique and
 // distinct from the hand-written grounds, and the geometry must be the one the sampler and the placement assembler expect.
 int main() {
     using namespace port::tactical_ground;

@@ -21,7 +21,7 @@ Commands (see docs/research/tactical-ground-table.md):
   python tools/gen_tactical_ground_table.py --derive --pc <PC SAKURA2 root> --iso1 "local/prepared/disc1/Track 01.iso" \
       --iso2 "local/prepared/disc2/Track 01.iso" --inc local/deps/<sdk>/port/tactical_ground_table.inc
   python tools/gen_tactical_ground_table.py --check    # offline: JSON against config/hd-tactical-map-pairs.json and the
-                                                      # .inc inside patches/0185-sakura-tactical-ground-table.patch
+                                                      # .inc inside patches/0188-sakura-tactical-ground-table.patch
 """
 import argparse
 import json
@@ -33,7 +33,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PAIRS = ROOT / 'config/hd-tactical-map-pairs.json'
 TABLE = ROOT / 'config/hd-tactical-ground-table.json'
-PATCH = ROOT / 'patches/0185-sakura-tactical-ground-table.patch'
+PATCH = ROOT / 'patches/0188-sakura-tactical-ground-table.patch'
 INC_NAME = 'port/tactical_ground_table.inc'
 SCHEMA = 1
 PAGE = 0x40000

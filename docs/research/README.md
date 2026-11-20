@@ -152,6 +152,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [IC01 HD intermission](ic01-hd-intermission.md) — Verified Chapter 1 intermission backdrop.
 - [IC06 intermission witness](ic06-intermission-witness.md) verifies the Chapter 9 disc 2 plate and menu at 1440p.
 - [IC03 intermission witness](ic03-intermission-witness.md) — Chapter 3 menu, emblem and both floral fades at 1440p.
+- [IC intermission table](ic-intermission-table.md) — one generated table recognises 15 IC pictures through the IC0501 compositor (data: `config/hd-ic-table.json`).
 - [IC0501 intermission witness](ic0501-intermission-witness.md) — Chapter 5 menu, emblem and both floral fades at 1440p, with verified Enhanced substitution.
 - [Jumping to a chapter or scene](scene-jump.md) (test tool only): Continue from a copied save, states along the way, random exploration; what is not done.
 - [HD chapter 1 report](hd-chapter-1.md): what chapter 1 shows per resource class, its status, ranked next actions and what needs the owner's discs.

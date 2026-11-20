@@ -66,6 +66,45 @@ Three alternating real-time runs at 1440p reduced the median first entry frame f
 
 A separate instrumented 0165 replay broke down transition frame 404 at 31.85 ms. It spent 9.60 ms on guest work, 3.00 ms on the retained backdrop upload and 5.50 ms on the fade exterior, within 22.25 ms of presentation. The native-size mixed layer first appeared in the trace at frame 406 and took 1.06 ms of composition plus 3.87 ms for upload and cache bookkeeping. Optimizing that later mixed layer cannot account for the earlier peak. First-frame allocation, upload, and presentation remain under investigation. The isolated trace is `local/work/codex-ogami-map-perf/warm-first-frame-breakdown/run.log`.
 
+## Narrative-to-map exit performance
+
+In the English disc 1 Chapter 1 upstairs route, the narrative gives way to the floral backdrop at replay field 288 and the theater map appears at 353. The retained 4300 checkpoint yields the same 760 guest hashes as the continuous route. The first map-fade exterior appears at field 289. In a stage-timed diagnostic, its repeated fields spent a median 3.34 ms composing and submitting the exterior, including 1.32 ms in texture updates. Other composition and presentation still contribute to the first field.
+
+Patch 0186 keeps the last fully uploaded exterior while the backdrop, integer viewport geometry, blend recipe and all verified map-edge pixels match. A different field takes the existing composition path. A resize, renderer reset or failed texture upload invalidates reuse. The cache keeps one 14 KiB row buffer alongside the existing texture. A separate paired diagnostic shows that 32 of 64 exterior fields reuse the texture, avoiding all exterior uploads on those fields.
+
+The exact 0185 and 0186 SDK trees were timed on the same Windows Direct3D 11 machine with a Ryzen 7 7435HS and an RTX 4060 Laptop GPU, hidden 2560 × 1440, dummy audio, normal pacing and no screenshot readback. Each run covers 530 fields and includes the settled map. The cold and warm cache sets each alternate two runs per executable. The table shows medians of the run statistics for the 64 exterior fields.
+
+| Cache | Whole-frame median before → after | Whole-frame p95 before → after | Composite median before → after |
+| --- | ---: | ---: | ---: |
+| Fresh profile cache | 23.32 → 20.45 ms | 27.43 → 25.31 ms | 4.35 → 3.12 ms |
+| Existing disk cache | 25.10 → 23.48 ms | 27.25 → 27.61 ms | 4.51 → 3.19 ms |
+
+In the two fresh-cache runs, fields exceeding 16.67 ms drop from 62 and 63 to 57 and 59. In the warm-cache runs they drop from 63 and 64 to 57 and 57. On field 290, the first repeated exterior, median whole composite time across both cache conditions drops from 4.35 to 0.84 ms. The first new exterior at field 289 still needs to be built and uploaded. Its timings vary from 26.40 to 38.29 ms before and 28.80 to 40.38 ms after. This trial leaves first-use latency and the warm-cache tail open. Peak process commit across the eight runs spans 923–930 MiB before and 918–928 MiB after. GPU memory and physical frame presentation were not measured.
+
+Separate strict 760-field 0185/0186 runs matched all guest hashes, decoded PCM and backup RAM. The fixed 1440p viewport and two resize steps during the fade matched all 48 RGB pairs, including 42 at 1440p and six at 1080p. A diagnostic pairing with an injected SDL device reset at field 309 matched all 24 RGB pairs and the same guest, PCM and backup results. These tests cover the replay and synthetic reset. Physical device loss, other host and renderer configurations, and package inclusion remain open.
+
+OptiPort instructions were checked against upstream commit a328c5a1b5aabc62f29aa9f1b5a96a59ad2d4ee1. Private evidence and regeneration commands are under local/work/codex-scene-exit-perf. Cleanup removed 2,596,813,653 bytes of diagnostic binaries, objects and extra states. The project measured 121,914,969,297 logical bytes with existing private assets and packages. The immutable development ZIP measured 6,315,009,692 bytes.
+
+### First exterior field on Direct3D 11
+
+On the same Chapter 1 exit at 2560×1440, four serial hidden replays with
+the 0186 runtime showed one field over 16.67 ms among the 64 exterior
+fields. That first field took 20.21–21.51 ms. Whole-frame p95 across the
+64 fields ranged from 12.43 to 13.67 ms in these quieter runs.
+
+The same instrumented executable alternated ordinary present and a
+diagnostic `SDL_FlushRenderer` before present, in off/on/on/off order.
+Ordinary present took 7.517 and 6.708 ms. With the split, the flush took
+0.938 and 0.842 ms and the remaining present took 6.376 and 6.455 ms.
+The combined time stayed within the ordinary range, leaving most of
+the delay in the backend present path. These timings do not isolate
+GPU scheduling, DXGI swap-chain policy or Windows composition.
+
+There is no production change from this diagnostic. The private
+commands and logs are under
+`local/work/codex-scene-exit-perf/first-field-analysis/`. The visible
+display and the user's other PC remain unmeasured.
+
 ## Held empty dialogue position
 
 During Chapter 1, the Enhance Zoom dialogue box rose briefly when a picture

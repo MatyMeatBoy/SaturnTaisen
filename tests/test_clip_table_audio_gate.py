@@ -15,4 +15,19 @@ class ClipTableAudioGate(unittest.TestCase):
         self.assertEqual(len(pc), 44)
         self.assertFalse(movies & saturn)
 
+    def test_bounded_video_edits_keep_saturn_audio(self):
+        edits = json.loads((ROOT / 'config/film-video-spans.json').read_text(encoding='utf8'))['edits']
+        audio = json.loads((ROOT / 'config/clip-audio-map.json').read_text(encoding='utf8'))['clips']
+        saturn = {int(clip['movie'][5:]) for clip in audio if clip['audio'] == 'saturn'}
+        expected = {(edit['disc'], int(edit['movie'][5:])) for edit in edits}
+        with tempfile.TemporaryDirectory() as folder:
+            target = pathlib.Path(folder) / 'film_clip_table.h'
+            subprocess.run([sys.executable, str(ROOT / 'tools/gen_film_clip_table.py'), str(target)],
+                           check=True, capture_output=True)
+            actual = {(int(disc), int(movie)) for disc, movie in re.findall(
+                r'\{(\d), (\d+), 0x[0-9A-F]+, \d+, \d+, kVideo\w+\}', target.read_text())}
+        self.assertEqual(expected, actual)
+        self.assertTrue(actual)
+        self.assertTrue({movie for _, movie in actual} <= saturn)
+
 if __name__ == '__main__': unittest.main()

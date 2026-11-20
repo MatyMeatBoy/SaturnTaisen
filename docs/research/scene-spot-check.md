@@ -35,7 +35,7 @@ Owner request (2026-11-19): shards connect pictures without checking each one, s
 | 29 | SAKURA1/BG/BG2015.SPR | 1:/SAKURA1/BG2015.BIN | no |
 | 30 | SAKURA1/BG/BG2028.SPR | 1:/SAKURA1/BG2028.BIN | no |
 | 31 | SAKURA1/BG/BG2041.SPR | 1:/SAKURA1/BG2041.BIN | no |
-| 32 | SAKURA1/BG/BG2053.SPR | 1:/SAKURA1/BG2053.BIN | no |
+| 32 | SAKURA1/BG/BG2053.SPR | 2:/SAKURA1/BG2053.BIN | yes, Chapter 9 |
 | 33 | SAKURA1/BG/BG2064.SPR | 1:/SAKURA1/BG2064.BIN | no |
 | 34 | SAKURA1/BG/BG2075.SPR | 1:/SAKURA1/BG2075.BIN | no |
 | 35 | SAKURA1/BG/BG2086.SPR | 1:/SAKURA1/BG2086.BIN | no |
@@ -129,6 +129,22 @@ at each of those three fields. The comparison is confined to this
 English disc 1 witness. Private samples and replay commands are under
 `local/work/codex-th1/bg2034-live/`.
 
+## BG2053 on disc 2
+
+The Chapter 9 route enters Iris's room from the door-knock checkpoint.
+Two 1,440-field English Enhanced replays at 2560×1440 load disc 2's
+BG2053 at FAD 124053. They use the same executable, bundled presentation
+art and recorded inputs. Only the donor replay has BG2053.SPR installed.
+All guest hashes and final SRAM match, with zero interpreted blocks.
+
+At fields 720 and 900 the changes are confined to the picture rectangle
+(272,29)–(2288,1037). Iris, the bear and the bedding keep the Saturn
+framing. Seven other sampled full frames match. In the patch of bedding
+at (1750,480)–(2100,740), mean absolute RGB error against independently
+decoded PC subimage 0 falls from 18.76 to 4.26 at both fields. This confirms
+the existing scene replacement on disc 2. The private replay and receipts
+are under `local/work/codex-th1/bg2053-live/`.
+
 ## BG1007, BG1046 and BG1058 on disc 1
 
 Three independent English Chapter 1 Enhanced A/B replays at 2560×1440
@@ -181,3 +197,24 @@ subimage 0 resampled to 2016×1008 verifies the crop
 
 This supplies the visible BG2039 proof missing in the earlier audit.
 Private replays are under `local/work/codex-th1/ch1-scene-draws/`.
+
+## BG1002 and BG1116 on disc 1
+
+The English Chapter 1 replay has two 1440p A/B tests against the PC
+donors selected in the scene catalog. One resumes at field 74,200
+for 650 fields, the other at field 56,850 for 730. Guest hashes match
+the uninterrupted run across both pairs and final backup RAM matches
+within each pair. All four runs report zero interpreted blocks.
+
+BG1002 changes in nine sampled captures and BG1116 in ten. The
+preceding four and three captures respectively match in full RGB.
+The changes are confined to the Zoom image rectangle
+(272,29)–(2288,1037). The independent PC subimage 0 decoder matches
+the reference crop at (1840,100)–(2220,350) after bilinear scaling.
+
+| Scene | Comparison fields | Donor RGB error | Missing donor RGB error |
+| --- | --- | --- | --- |
+| BG1002 | 260, 310, 380 | 0.116/0.116/0.112 | 15.521/15.723/15.160 |
+| BG1116 | 210, 260, 310 | 0.123/0.132/0.129 | 42.887/33.038/33.662 |
+
+Private replay evidence is under `local/work/codex-th1/ch1-scene-draws/`.

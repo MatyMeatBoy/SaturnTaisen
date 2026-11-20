@@ -185,7 +185,7 @@ class CommittedTableTests(unittest.TestCase):
 
     def test_patch_is_listed_in_the_stack(self):
         stack = json.loads((ROOT / 'config/dependencies.json').read_text(encoding='utf-8'))['satrecomp']['patches']
-        self.assertIn('patches/0185-sakura-tactical-ground-table.patch', stack)
+        self.assertIn('patches/0188-sakura-tactical-ground-table.patch', stack)
 
 
 if __name__ == '__main__':

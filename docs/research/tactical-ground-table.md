@@ -4,7 +4,7 @@ One table now decides which of the 27 Saturn tactical maps draws a PC ground, in
 
 - Data: `config/hd-tactical-ground-table.json` (26 rows; the disc 1 and disc 2 `MAP01.BIN` are one row).
 - Generator and tests: `tools/gen_tactical_ground_table.py`, `tests/test_gen_tactical_ground_table.py`, `tests/test_tactical_ground_table.cpp`.
-- Runtime: patch 0185 adds `port/tactical_ground_table.inc` (generated, 17 rows) and makes `tactical_ground::Find` search it after the six hand-written grounds (MAP01, 02, 04, 05, 06, 21). Nothing else in the renderer or the frontend changes: the compositor, the sampler, the camera maths, the colour offset rules and the placement assembler of patches 0102, 0138, 0139, 0140 and 0153 serve every row.
+- Runtime: patch 0188 adds `port/tactical_ground_table.inc` (generated, 17 rows) and makes `tactical_ground::Find` search it after the six hand-written grounds (MAP01, 02, 04, 05, 06, 21). Nothing else in the renderer or the frontend changes: the compositor, the sampler, the camera maths, the colour offset rules and the placement assembler of patches 0102, 0138, 0139, 0140 and 0153 serve every row.
 
 ## The key comes from the BIN
 
@@ -24,7 +24,7 @@ The formula reproduces seven of the eight signatures recorded from live runs, wi
 | Status | Maps | Count |
 | --- | --- | ---: |
 | `hd` (hand-written entries, witnessed) | MAP01 (both discs), 02, 04, 05, 06, 21 | 6 |
-| `wired-unverified` (patch 0185) | single image: MAP07, 08, 09, 11, 12, 13, 14, 15, 16, 17, 18, 22, 24, 25, 26; tile grids: MAP03 (626 tiles of 64 x 64), MAP20 (96 tiles of 128 x 128) | 17 |
+| `wired-unverified` (patch 0188) | single image: MAP07, 08, 09, 11, 12, 13, 14, 15, 16, 17, 18, 22, 24, 25, 26; tile grids: MAP03 (626 tiles of 64 x 64), MAP20 (96 tiles of 128 x 128) | 17 |
 | native by review | MAP10, MAP19 (composition differs from the Saturn drawing, see `tactical-pairing.md`) | 2 |
 | needs an assembler | MAP23 | 1 |
 
@@ -32,7 +32,7 @@ MAP03 and MAP20 reuse the placement assembler MAP04 and MAP05 already have (`pla
 
 ## What is verified and what is not
 
-Verified offline: the 17 generated rows load through the real `tactical_ground::Load` (file size, SHA-based asset hash, image count and size, assembler) with the owner's PC files, and every signature is unique across the 23 entries. The build of the stack plus patch 0185 (own copy of the tree and build, `local/build/rebuild-maps`) matches the previous build (stack through patch 0184) in all 200 per-frame guest hashes of each of four saved combat states, Enhanced presentation, strict native, `interpreted 0`: the MAP02 Kohran turn and enemy turn, and two Chapter 1 states (the MAP01 victory follow-up and its west dialogue). The table is host-only, so guest state cannot change. The new signatures are present in the linked executable.
+Verified offline: the 17 generated rows load through the real `tactical_ground::Load` (file size, SHA-based asset hash, image count and size, assembler) with the owner's PC files, and every signature is unique across the 23 entries. The build of the stack plus patch 0188 (own copy of the tree and build, `local/build/rebuild-maps`) matches the previous build (stack through patch 0184) in all 200 per-frame guest hashes of each of four saved combat states, Enhanced presentation, strict native, `interpreted 0`: the MAP02 Kohran turn and enemy turn, and two Chapter 1 states (the MAP01 victory follow-up and its west dialogue). The table is host-only, so guest state cannot change. The new signatures are present in the linked executable.
 
 Not verified: no map of the 17 has been seen drawn in game. Their status is `wired-unverified`, never `hd`. The 15 single-image grounds and the two tile grids assume the same one-to-one world grid as MAP02, MAP04, MAP05 and MAP06, which the live reviews of MAP10 and MAP19 show is not true for every map. Each map needs its witness: a state at the battle, a fixed-camera capture at 1440p, and a pixel comparison with the independent PC decode, as in `map02-pc-ground.md` and `map04-pc-ground.md`. These replays do not draw any of the 17 new maps (none has a retained state), so they prove that nothing regressed, not that a new ground draws. Strict AOT of the maps that stop at untranslated overlay blocks, camera travel and the package are also open.
 
@@ -45,4 +45,4 @@ python -m unittest tests.test_gen_tactical_ground_table
 python tools/check_patch_stack.py
 ```
 
-`--check` needs no game data: it compares the table with `config/hd-tactical-map-pairs.json` and with the `.inc` carried by patch 0185. A new witnessed map moves its status in `config/hd-tactical-ground-table.json` and in `tools/hd_chapter_coverage.py` together.
+`--check` needs no game data: it compares the table with `config/hd-tactical-map-pairs.json` and with the `.inc` carried by patch 0188. A new witnessed map moves its status in `config/hd-tactical-ground-table.json` and in `tools/hd_chapter_coverage.py` together.
