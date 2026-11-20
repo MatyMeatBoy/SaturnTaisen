@@ -379,7 +379,7 @@
       "confidence": "high",
       "spanish_current": "Una horquilla que queda mejor\ncon ropa y peinados\ntradicionales japoneses.",
       "spanish_suggested": "Es una horquilla kanzashi. Va bien con un kimono y un moño marumage o takashimada.",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "already-restored"
     },
     {
       "key": "0201-0016",
@@ -397,7 +397,7 @@
       "confidence": "high",
       "spanish_current": "Una espada y un escudo de\natrezzo para las obras.\nParecen hechos a mano.",
       "spanish_suggested": "Una espada y un escudo de utilería teatral. Cuidaron hasta el último detalle.",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "already-restored"
     },
     {
       "key": "0201-0019",
@@ -456,7 +456,7 @@
         "Asalto."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0085",
@@ -478,7 +478,7 @@
         "susto me dio!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0086",
@@ -499,7 +499,7 @@
         "¿Explotó?"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0102",
@@ -522,7 +522,7 @@
         "Asalto."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0122",
@@ -545,7 +545,7 @@
         "pierde."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0129",
@@ -568,7 +568,7 @@
         "pierde."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0132",
@@ -591,7 +591,7 @@
         "Oscuridad…!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0133",
@@ -614,7 +614,7 @@
         "usted…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0147",
@@ -636,7 +636,7 @@
         "resiste a morir…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0201-0151",
@@ -660,7 +660,7 @@
         "Ginza."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0072",
@@ -683,7 +683,7 @@
         "al escenario."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0081",
@@ -706,7 +706,7 @@
         "mucha fuerza en combate."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0110",
@@ -729,7 +729,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0221",
@@ -750,7 +750,7 @@
         "Eh, Ogamiii… ¿cómo va eso?"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0232",
@@ -771,7 +771,7 @@
         "Ya veo… Queda en sus manos."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0244",
@@ -813,7 +813,7 @@
         "paralizada."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0272",
@@ -874,7 +874,7 @@
         "Maria Tachibana."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0436",
@@ -896,7 +896,7 @@
         "desaparecen…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0438",
@@ -920,7 +920,7 @@
         "quizá…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0441",
@@ -943,7 +943,7 @@
         "que nadie les recuerde…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0442",
@@ -965,7 +965,7 @@
         "harás ahora?"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0443",
@@ -1007,7 +1007,7 @@
         "al escenario."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0072"
     },
     {
@@ -1031,7 +1031,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1055,7 +1055,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1079,7 +1079,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1103,7 +1103,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1127,7 +1127,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1151,7 +1151,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1175,7 +1175,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1199,7 +1199,7 @@
         "guapa de por sí…)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0301-0110"
     },
     {
@@ -1243,7 +1243,7 @@
         "ordenar…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0070",
@@ -1266,7 +1266,7 @@
         "ayudarme?"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0073",
@@ -1289,7 +1289,7 @@
         "decorados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0075",
@@ -1312,7 +1312,7 @@
         "decorados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0076",
@@ -1334,7 +1334,7 @@
         "Qué fastidio…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0078",
@@ -1357,7 +1357,7 @@
         "ayudarme."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0085",
@@ -1379,7 +1379,7 @@
         "Onii-chan?"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0088",
@@ -1401,7 +1401,7 @@
         "¡Entonces queda decidido!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0089",
@@ -1423,7 +1423,7 @@
         "cumpleaños de Iris!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0091",
@@ -1445,7 +1445,7 @@
         "estará con Iris."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0097",
@@ -1467,7 +1467,7 @@
         "cumpleaños de Iris!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0400-0089"
     },
     {
@@ -1490,7 +1490,7 @@
         "estará con Onii-chan."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0102",
@@ -1512,7 +1512,7 @@
         "cumpleaños de Iris!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0400-0089"
     },
     {
@@ -1535,7 +1535,7 @@
         "estará con Onii-chan."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0400-0099"
     },
     {
@@ -1559,7 +1559,7 @@
         "acompaño, Iris."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0118",
@@ -1600,7 +1600,7 @@
         "daño a Iris."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0133",
@@ -1623,7 +1623,7 @@
         "con Onii-chan!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0136",
@@ -1645,7 +1645,7 @@
         "preguntarle todo a Sakura?"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0144",
@@ -1667,7 +1667,7 @@
         "daño a Iris."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0400-0127"
     },
     {
@@ -1691,7 +1691,7 @@
         "con Onii-chan!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0400-0133"
     },
     {
@@ -1714,7 +1714,7 @@
         "llegue mañana!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0165",
@@ -1737,7 +1737,7 @@
         "con Onii-chan!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0400-0133"
     },
     {
@@ -1761,7 +1761,7 @@
         "cuarto."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0400-0516",
@@ -1783,7 +1783,7 @@
         "sala de decorados…"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0301-0431",
@@ -1805,7 +1805,7 @@
         "de lo más inesperados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0501-0153"
     },
     {
@@ -1828,7 +1828,7 @@
         "de lo más inesperados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0501-0153"
     },
     {
@@ -1851,7 +1851,7 @@
         "de lo más inesperados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0159",
@@ -1875,7 +1875,7 @@
         "espiritual."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0160",
@@ -1898,7 +1898,7 @@
         "casa abandonada."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0162",
@@ -1958,7 +1958,7 @@
         "Esto no fue cualquier cosa.)"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0195",
@@ -1999,7 +1999,7 @@
         "forzuda!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0203",
@@ -2022,7 +2022,7 @@
         "y has acabado en el suelo?"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0495",
@@ -2046,7 +2046,7 @@
         "sacrificios!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0500",
@@ -2069,7 +2069,7 @@
         "lugar, escuchen!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0502",
@@ -2092,7 +2092,7 @@
         "gracias!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0501-0504",
@@ -2114,7 +2114,7 @@
         "mandará al infierno! ¡Ojojojó!"
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0504-0170",
@@ -2136,7 +2136,7 @@
         "de lo más inesperados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0501-0153"
     },
     {
@@ -2159,7 +2159,7 @@
         "de lo más inesperados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0501-0153"
     },
     {
@@ -2182,7 +2182,7 @@
         "de lo más inesperados."
       ],
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0501-0153"
     },
     {
@@ -2237,7 +2237,7 @@
       "spanish_current": "Así que, bajo su apariencia de\nsiempre, al fin y al cabo es\nsolo una chica.",
       "spanish_suggested": "Al fin y al cabo, Maria también es una chica…",
       "confidence": "high",
-      "spanish_status": "pending-spanish",
+      "spanish_status": "integrate-spanish",
       "mirror_of": "0601-0633"
     },
     {
@@ -2256,7 +2256,7 @@
       "spanish_current": "Ah… estaba mirando…\nMaria, esa ropa te queda muy\nbien, ¿no?",
       "spanish_suggested": "Ah… me quedé admirándote. Maria, esa ropa también te queda bien.",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0607",
@@ -2274,7 +2274,7 @@
       "spanish_current": "No te estaba molestando.\nEres hermosa, Maria. Deberías\nusar ropa femenina más a\nmenudo.",
       "spanish_suggested": "No me burlo. Eres hermosa, Maria. De vez en cuando podrías interpretar un papel femenino.",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0608",
@@ -2292,7 +2292,7 @@
       "spanish_current": "Eso es imposible para mí.\nAdemás, los espectadores\nesperan que vista de hombre,\n¿no?",
       "spanish_suggested": "No podría… Además, el público espera verme vestida de hombre en escena.",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0633",
@@ -2310,7 +2310,7 @@
       "spanish_current": "Así que debajo de ese\nexterior, al fin y al cabo\nsolo es una chica.",
       "spanish_suggested": "Al fin y al cabo, Maria también es una chica…",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0679",
@@ -2328,7 +2328,7 @@
       "spanish_current": "¡Noooo! ¡Le había puesto una\ncalculadora de vapor con\npensamiento doble, de bobo y\nde listo…!",
       "spanish_suggested": "¡Noooo! ¡Le había puesto un procesador de vapor para hacer los dos papeles de un dúo cómico…!",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0680",
@@ -2364,7 +2364,7 @@
       "spanish_current": "Y ahora mi Chico Fiesta,\nrobot de rutinas de fiesta\nde 12 países, está en\npedazos…",
       "spanish_suggested": "Y ahora mi Chico Fiesta, el robot invencible con trucos de doce países, está hecho pedazos…",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0686",
@@ -2382,7 +2382,7 @@
       "spanish_current": "Jefecito… la próxima vez que\nalguien te diga que te calles,\nmejor haz caso. Por favor, lo\ndigo en serio…",
       "spanish_suggested": "Jefecito… Presta atención a lo que te dicen. Te lo pido en serio…",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0697",
@@ -2400,7 +2400,7 @@
       "spanish_current": "Ah, y… de verdad perdón\npor hacerte presenciar este\ndesastre… perdón.",
       "spanish_suggested": "J-Jefecito… Viniste hasta aquí y te hice ver este desastre… Perdona.",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0715",
@@ -2418,7 +2418,7 @@
       "spanish_current": "¡No me digas «lo\nsiento»! ¡Mira lo que le\nhiciste! ¡Es un montón de\ntornillos ahora!",
       "spanish_suggested": "¡Con un «lo siento» no basta! ¡Mi querido Chico Fiesta está hecho pedazos!",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0721",
@@ -2436,7 +2436,7 @@
       "spanish_current": "Si hubiera trabajado en mi\nBomba de Energía\nEspiritual, Ginza entero\npodría haber desaparecido.",
       "spanish_suggested": "Si hubiera estado fabricando una Bomba de Energía Espiritual, ya no quedarían ni el teatro ni Ginza.",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0724",
@@ -2472,7 +2472,7 @@
       "spanish_current": "Chico Fiesta llevaba una\ncalculadora de vapor con\npensamiento doble, de bobo y\nde listo…",
       "spanish_suggested": "Chico Fiesta llevaba un procesador de vapor para hacer los dos papeles de un dúo cómico…",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0729",
@@ -2508,7 +2508,7 @@
       "spanish_current": "¡Bien, bien, entiendo!\nDe verdad lo siento.",
       "spanish_suggested": "¡B-Basta! Ya lo entendí… Fue culpa mía.",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0737",
@@ -2544,7 +2544,7 @@
       "spanish_current": "Pero en serio… tener un mínimo\nde educación no debería ser\ntan difícil.",
       "spanish_suggested": "Pero sí te pido que respetes un mínimo de cortesía.",
       "confidence": "high",
-      "spanish_status": "pending-spanish"
+      "spanish_status": "integrate-spanish"
     },
     {
       "key": "0601-0945",

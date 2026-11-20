@@ -19,10 +19,10 @@
       },
       "spanish": {
         "patch": "espanol-v0.1-disc1.xdelta",
-        "patch_sha256": "35db698f2102d562ad3e166d8ae6455aee6fcb6d7b6403297f8632e9af8166eb",
-        "blank_sha256": "968230439dfce3f5bb74fc1d27ce16efc2359fd24771bfb58064e2c387f0f1fc",
-        "output_sha256": "64a5ba9f33ba189dd302110b9eac76a68cef21037f055e31c3afd6b0509cb50c",
-        "output_subtitled_sha256": "d56de56dba3f41cfc039a9dff8334a8141d03900cca142df66c3c16479658e82",
+        "patch_sha256": "7ebf21d9799c6851379f279d17e200f57371f90209ce2bacccbf6dd5399fda4d",
+        "blank_sha256": "f25364fe7d28182858347168ab3684d9fe11b457471a6bb6d67ebbc1887b5027",
+        "output_sha256": "45e0b81fb7f5c59312751461fee0af25e8623a379dcecc4b3291dc61c9215e81",
+        "output_subtitled_sha256": "1bf550e7a41983b63c0e732ab662b4d6a533edd85e74518d3932985b205196e5",
         "output_bytes": 563679232
       },
       "videos": {
@@ -47,10 +47,10 @@
       },
       "spanish": {
         "patch": "espanol-v0.1-disc2.xdelta",
-        "patch_sha256": "8ae4ff9d8ccb288018292dc66b54f1e360f976ca38ab43e517ab3613b15a4c0e",
-        "blank_sha256": "2becbdfdd076b4c43ac87f1c575c5518503afe33a293b87db83c1eec5d1c6fae",
-        "output_sha256": "b1c495222e4f066730881718237423bb8cbf257e734307f0d764e772a7bedc0f",
-        "output_subtitled_sha256": "d3fdd5a9cc098375443630fa90abcfa3204d6ced464ce14c93afd6e153cfc14b",
+        "patch_sha256": "858645404b111954fd6259d6c8863ef5699eb95d80ae7c28909136c627424679",
+        "blank_sha256": "9a40a432fe144394b105dbf9c41dbe6721b573ce44570ff2d66fd3b0e659087c",
+        "output_sha256": "af9ab2f4c881978ee8fb5b8857c20b5399614d6dcf83ee8ca2cc3fea29ab8e1d",
+        "output_subtitled_sha256": "0cd08729bf3ce515e825a9f646b66d2e31189528f7f3645a8919c44fd52fdc82",
         "output_bytes": 547973120
       },
       "videos": {

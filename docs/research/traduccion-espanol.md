@@ -30,7 +30,7 @@ The [divergence catalog](../../config/es-japanese-bridge.json) records 124
 findings by ISO path, table index and native record ID. Each entry carries
 a Spanish gloss of the Japanese meaning, the issue in English, proposed
 English wording, and the status of the Spanish correction. It contains
-no transcribed Japanese. This catalog is also the source for thirteen Spanish
+no transcribed Japanese. This catalog is also the source for ninety-six Spanish
 overrides applied to both discs. These restore Ogami's formal
 self-identification, Fukurokoji's encouragement, Sakura's escort orders
 in both copies of the line, and Iris's form of address. The follow-up
@@ -50,15 +50,12 @@ the theatrical props and Iris's table knife. For each item, all 56
 records on each disc have the same ordered Japanese glyph and line-break
 sequence as the anchor. The source overlay checks each record's English
 wording and native ID before applying the group's Spanish description.
-The additional Episode 2–6 reviews remain queued for editorial
-integration, including English-only corrections where the existing
-Spanish already preserves the original meaning. The Episode 5 batch
-adds 18 source-checked records. It tracks Tenkai sensing spiritual
-power, the cause of Sumire's fall, the theatrical role name and
-matching copies of Kohran's dialogue. The Episode 6 batch adds 22
-records on both discs, including two exact mirrors. It covers Maria's
-stage roles and Kohran's comedy robot. Fourteen entries propose Spanish
-edits and eight retain the existing Spanish wording.
+The Episode 2–6 review and the retained Episode 9 entry contributed
+83 additional Spanish revisions. Both subtitle variants were rebuilt.
+Both discs preserve record IDs, dialogue control prefixes, table
+footers and the encoded text of every unedited record in affected
+tables. Two earlier inventory proposals are covered by the shipped
+source-verified inventory groups.
 
 ## Menus
 
