@@ -1,0 +1,36 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -937,10 +937,20 @@
+         size_t paletteOffset;
+         uint64_t palette;
+         uint64_t rgb;
++        const char* file;
++        size_t fileSize;
++        uint64_t fileHash;
++        port::EveRect crop;
+     };
+     constexpr EndingPhoto endingPhotos[]{
+-        {6, 2, 0x200, 0xA19A0B84409A3AB8ull, 0xCB89538124A3A96Dull},
+-        {7, 3, 0x400, 0xBD98B23C7D99D3DDull, 0x99C3DF9439E0981Dull},
++        {6, 2, 0x200, 0xA19A0B84409A3AB8ull, 0xCB89538124A3A96Dull,
++         "SAKURA1/ENDING/END_SA.SPR", 2988213, 0x44DC7D66456C8105ull, {0, 0, 640, 320}},
++        {7, 3, 0x400, 0xBD98B23C7D99D3DDull, 0x99C3DF9439E0981Dull,
++         "SAKURA1/ENDING/END_SA.SPR", 2988213, 0x44DC7D66456C8105ull, {0, 0, 640, 320}},
++        {10, 2, 0x200, 0x8AFCB0CCAE860E87ull, 0xD14EA93345F642EDull,
++         "SAKURA1/ENDING/END_SU.SPR", 3036866, 0x3E6246A0BE590222ull, {10, 0, 616, 320}},
++        {8, 3, 0x400, 0x1679DED0816C6A33ull, 0x60A00FAE594966DDull,
++         "SAKURA1/ENDING/END_SU.SPR", 3036866, 0x3E6246A0BE590222ull, {68, 28, 522, 282}},
+     };
+     std::array<SceneHd, std::size(endingPhotos)> endingPhotoImages;
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
+@@ -3608,8 +3618,7 @@
+                         const auto visible = std::span{planes.topSource}.subspan(16 * 320, 160 * 320);
+                         if (!std::ranges::all_of(visible, [&](uint8_t layer) { return layer == photo.layer; })) continue;
+                         auto& image = endingPhotoImages[slot];
+-                        loadEveInset(image, "SAKURA1/ENDING/END_SA.SPR", 2988213, 0x44DC7D66456C8105ull,
+-                                     {0, 0, 640, 320}, 0, photo.index);
++                        loadEveInset(image, photo.file, photo.fileSize, photo.fileHash, photo.crop, 0, photo.index);
+                         if (image.texture) {
+                             const auto rect = port::EveInsetDestination(endingPhotoRect, baseFit.x, baseFit.y, baseFit.scale);
+                             const SDL_FRect target{float(rect.x), float(rect.y), float(rect.width), float(rect.height)};

@@ -579,6 +579,13 @@
       176
     ],
     "evidence": "docs/research/ending-bank-pairs.md",
-    "included_in_package": false
+    "included_in_package": false,
+    "unique_routes": {
+      "SAKURA1/SU_CG.BIN": {
+        "records": [8, 11],
+        "runtime_patch": "patches/0189-sakura-sumire-ending-photos.patch",
+        "evidence": "docs/research/ending-bank-pairs.md#natural-sumire-ending-and-unique-pc-photographs"
+      }
+    }
   }
 }

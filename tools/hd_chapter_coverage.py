@@ -330,8 +330,7 @@ def runtime_ending_photo_keys(root):
 
 
 def ending_bank_row(bank, disc, photo_keys, verified):
-    """The runtime draws the two group photographs (records 6 and 7, shared by the six heroine banks) on
-    disc 2. Every other record keeps its native composition or still lacks a live witness."""
+    """Describe the canonical group photographs and any verified unique route photographs."""
     base = {'pc': bank['pc_file'], 'scope': 'ending-bank subimages', 'decision_evidence': ENDING_REPORT}
     photos = [r for r in bank['records'] if r['saturn_record'] in ENDING_PHOTO_RECORDS]
     if len(photos) == 2 and all(r['palette_fnv'] in photo_keys for r in photos):
@@ -343,6 +342,15 @@ def ending_bank_row(bank, disc, photo_keys, verified):
         extra = {'native_records': [r['saturn_record'] for r in bank['records'] if r['saturn_record'] not in ENDING_PHOTO_RECORDS],
                  'native_reason': 'The PC redraws change the artwork. The native compositions stay in use.',
                  'runtime_patch': 'patches/0137-sakura-ending-photos.patch'}
+        if unique := verified.get('unique_routes', {}).get(bank['saturn_file']):
+            selected = [record for record in bank['records'] if record['saturn_record'] in unique['records']]
+            if len(selected) != len(unique['records']):
+                raise ValueError(f'Missing verified ending records for {bank["saturn_file"]}')
+            return {**base, **extra, 'status': 'hd', 'verified_in_game': True,
+                    'pc_image_indices': [record['pc_image_index'] for record in selected],
+                    'native_records': [n for n in extra['native_records'] if n not in unique['records']],
+                    'runtime_patch': unique['runtime_patch'], 'runtime_evidence': unique['evidence'],
+                    'shared_runtime_donor': verified['donor'], 'shared_pc_image_indices': base['pc_image_indices']}
         if bank['saturn_file'] == verified['saturn_file']:
             return {**base, **extra, 'status': 'hd', 'verified_in_game': True, 'runtime_evidence': ENDING_REPORT}
         return {**base, **extra, 'status': 'wired-unverified',
@@ -549,6 +557,8 @@ def build(root, index_dir, portrait_audit):
         elif path in endings:
             bank = endings[path]
             row = ending_bank_row(bank, disc, ending_photo_keys, ending_verified)
+            if disc == 2 and path == '/SAKURA1/SU_CG.BIN' and row.get('verified_in_game'):
+                chapter, association, report = 10, 'observed', 'docs/research/ending-bank-pairs.md#natural-sumire-ending-and-unique-pc-photographs'
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (
