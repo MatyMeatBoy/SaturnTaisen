@@ -44,3 +44,37 @@ The four frames sampled in each case changed only inside
 changed BG2080 pixels per sample match the independently decoded PC
 background within two RGB levels. The private captures are under
 `local/work/codex-th1/ch7-ch8-hd-plates/`.
+
+## Verified Chapter 7 scene draws
+
+Four distinct PC scene pictures have natural English disc 1 Chapter 7
+draw witnesses in the archived opening and continuation. The opening's
+BG2019 and BG1266 checkpoints were regenerated from cold field 9000,
+with all 2,520 guest hashes matching the cold archive. The BG2126 and
+BG1267 checkpoints come from fields 2599 and 5849 of the same continuation
+from cold field 11999, with all regenerated hashes matching their archive.
+
+The runtime through 0213 ran two strict 56-field arms per picture,
+differing only in the presence of that picture's PC donor. All 224 guest
+fields and final SRAM matched, with zero interpreted blocks.
+
+| Saturn picture | CD start FAD | Changed RGB pixels per sampled field |
+| --- | ---: | ---: |
+| BG2019 | 146440 | 1,498,691 |
+| BG1266 | 144108 | 2,029,039 |
+| BG2126 | 148707 | 1,254,327 |
+| BG1267 | 144131 | 2,029,037 |
+
+The visible changes in the four 2560 × 1440 captures per case were
+confined to the (272,29)–(2288,1037) viewport. Every changed pixel was
+part of the independent native background decode and matched the
+bilinearly scaled PC decode within two RGB levels. All other pixels
+retained their stock value.
+
+The shared-cell BG2013/BG2014 case resolved to BG2014.SPR in the renderer
+but gave no RGB changes in the tested continuation. The physical donor
+decodes at 576 × 320. This draw remains unverified.
+
+Local replay receipts are under
+`local/work/codex-witness-441-review/hud/chapter7-plates/`. These four
+draws carry no runtime or package change.

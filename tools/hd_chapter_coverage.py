@@ -184,6 +184,10 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (1, '/SAKURA1/BG1267.BIN'): (7, 'docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws'),
+    (1, '/SAKURA1/BG2126.BIN'): (7, 'docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws'),
+    (1, '/SAKURA1/BG2019.BIN'): (7, 'docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws'),
+    (1, '/SAKURA1/BG1266.BIN'): (7, 'docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws'),
     (2, '/SAKURA1/BG1076.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws'),
     (2, '/SAKURA1/BG1176.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws'),
     (2, '/SAKURA1/BG2098.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws'),
