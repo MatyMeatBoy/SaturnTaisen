@@ -1,0 +1,1308 @@
+{
+ "schema": 1,
+ "scope": "THD21 offline classification of open SYSTEM images (no KAO); the ten open item pictures are listed separately",
+ "open_system_images": 160,
+ "open_item_pictures": 10,
+ "open_total": 170,
+ "connectable_by_data_alone": 0,
+ "item_pictures": "ITEM09 full card plus nine compact icons: the card path needs a full-card counterpart; the 40 unpaired Saturn ITEM BINs have no PC card in hd-item-review.json",
+ "families": {
+  "system-frames": {
+   "connect": "witness+mechanism",
+   "note": "Frames and tab panels. The 0197-0213 patches draw rails from VDP1/VDP2 ownership per menu; the rest has no VDP1 texture witness. Needs the menu open in a state to read which layer draws it.",
+   "open": 50,
+   "files": {
+    "BURO_W": {
+     "open": 2,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        208,
+        384
+       ]
+      },
+      {
+       "index": 1,
+       "size": [
+        208,
+        384
+       ]
+      }
+     ]
+    },
+    "EXIT_W": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        512,
+        48
+       ]
+      }
+     ]
+    },
+    "OPTION": {
+     "open": 3,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        512,
+        386
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        536,
+        314
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        536,
+        314
+       ]
+      }
+     ]
+    },
+    "SISTEM": {
+     "open": 36,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        592,
+        336
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        512,
+        48
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        224,
+        48
+       ]
+      },
+      {
+       "index": 7,
+       "size": [
+        224,
+        48
+       ]
+      },
+      {
+       "index": 10,
+       "size": [
+        112,
+        32
+       ]
+      },
+      {
+       "index": 13,
+       "size": [
+        384,
+        400
+       ]
+      },
+      {
+       "index": 15,
+       "size": [
+        544,
+        272
+       ]
+      },
+      {
+       "index": 17,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 18,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 19,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 20,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 21,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 22,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 23,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 24,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 25,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 26,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 27,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 28,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 29,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 30,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 31,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 32,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 33,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 34,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 35,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 36,
+       "size": [
+        176,
+        40
+       ]
+      },
+      {
+       "index": 37,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 38,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 39,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 40,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 41,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 42,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 43,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 44,
+       "size": [
+        32,
+        32
+       ]
+      },
+      {
+       "index": 45,
+       "size": [
+        160,
+        64
+       ]
+      }
+     ]
+    },
+    "SIS_BG": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "SIS_BG2": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "SIS_BG3": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "TUIKA_W": {
+     "open": 2,
+     "images": [
+      {
+       "index": 1,
+       "size": [
+        576,
+        80
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        384,
+        80
+       ]
+      }
+     ]
+    },
+    "WINDOW": {
+     "open": 3,
+     "images": [
+      {
+       "index": 3,
+       "size": [
+        16,
+        32
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        16,
+        16
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        16,
+        16
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "disc-icons": {
+   "connect": "witness",
+   "note": "CD-1/CD-2 pink done (0112, 0146). Blue selected variants need a selected-slot state; CD-3/CD-4 never appear on a two-disc Saturn; System RAM and cartridge stay native.",
+   "open": 8,
+   "files": {
+    "SIS_ICON": {
+     "open": 8,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        80,
+        80
+       ]
+      },
+      {
+       "index": 1,
+       "size": [
+        80,
+        80
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        80,
+        80
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        80,
+        80
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        80,
+        80
+       ]
+      },
+      {
+       "index": 7,
+       "size": [
+        80,
+        80
+       ]
+      },
+      {
+       "index": 8,
+       "size": [
+        80,
+        80
+       ]
+      },
+      {
+       "index": 9,
+       "size": [
+        80,
+        80
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "title-logo": {
+   "connect": "witness+mechanism",
+   "note": "Title/logo/caution screens at 640x480 with baked Japanese or PC-only text; Saturn builds them from LOGO.SH2 16x16 tiles. Needs one witnessed frame per screen and a text decision.",
+   "open": 42,
+   "files": {
+    "CAUTION": {
+     "open": 8,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      },
+      {
+       "index": 1,
+       "size": [
+        640,
+        480
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        640,
+        480
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        640,
+        480
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        640,
+        480
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        640,
+        480
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        640,
+        480
+       ]
+      },
+      {
+       "index": 7,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "NOWLOAD": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "REDLOGO": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "SEGALOGO": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "TITLE": {
+     "open": 29,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        257,
+        298
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        116,
+        340
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        116,
+        340
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        116,
+        340
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        134,
+        156
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        134,
+        156
+       ]
+      },
+      {
+       "index": 7,
+       "size": [
+        134,
+        156
+       ]
+      },
+      {
+       "index": 8,
+       "size": [
+        134,
+        158
+       ]
+      },
+      {
+       "index": 9,
+       "size": [
+        134,
+        158
+       ]
+      },
+      {
+       "index": 10,
+       "size": [
+        134,
+        158
+       ]
+      },
+      {
+       "index": 11,
+       "size": [
+        36,
+        38
+       ]
+      },
+      {
+       "index": 12,
+       "size": [
+        376,
+        46
+       ]
+      },
+      {
+       "index": 13,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 14,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 15,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 16,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 17,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 18,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 19,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 20,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 21,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 22,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 23,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 24,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 25,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 26,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 27,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 28,
+       "size": [
+        366,
+        36
+       ]
+      },
+      {
+       "index": 29,
+       "size": [
+        16,
+        16
+       ]
+      }
+     ]
+    },
+    "TL_BG0": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "TL_ROGO0": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "extra-menu": {
+   "connect": "witness+mechanism",
+   "note": "Extra (omake) menu labels and panels; no pointer table and no witnessed draw call. Needs an extra-menu saved state.",
+   "open": 31,
+   "files": {
+    "KARAOKE": {
+     "open": 17,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        320,
+        32
+       ]
+      },
+      {
+       "index": 1,
+       "size": [
+        224,
+        32
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        256,
+        32
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        288,
+        32
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        224,
+        32
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        224,
+        32
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        256,
+        32
+       ]
+      },
+      {
+       "index": 7,
+       "size": [
+        288,
+        32
+       ]
+      },
+      {
+       "index": 8,
+       "size": [
+        352,
+        32
+       ]
+      },
+      {
+       "index": 9,
+       "size": [
+        192,
+        32
+       ]
+      },
+      {
+       "index": 10,
+       "size": [
+        288,
+        32
+       ]
+      },
+      {
+       "index": 11,
+       "size": [
+        320,
+        32
+       ]
+      },
+      {
+       "index": 12,
+       "size": [
+        224,
+        32
+       ]
+      },
+      {
+       "index": 13,
+       "size": [
+        288,
+        32
+       ]
+      },
+      {
+       "index": 14,
+       "size": [
+        224,
+        32
+       ]
+      },
+      {
+       "index": 15,
+       "size": [
+        256,
+        32
+       ]
+      },
+      {
+       "index": 16,
+       "size": [
+        224,
+        32
+       ]
+      }
+     ]
+    },
+    "MINISAKU": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "MSTAFF": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        640,
+        480
+       ]
+      }
+     ]
+    },
+    "OMKMOV_W": {
+     "open": 7,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        500,
+        376
+       ]
+      },
+      {
+       "index": 1,
+       "size": [
+        500,
+        376
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        500,
+        376
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        500,
+        376
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        500,
+        376
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        500,
+        376
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        500,
+        376
+       ]
+      }
+     ]
+    },
+    "OMKSND_W": {
+     "open": 5,
+     "images": [
+      {
+       "index": 7,
+       "size": [
+        480,
+        376
+       ]
+      },
+      {
+       "index": 8,
+       "size": [
+        480,
+        376
+       ]
+      },
+      {
+       "index": 9,
+       "size": [
+        480,
+        376
+       ]
+      },
+      {
+       "index": 10,
+       "size": [
+        480,
+        376
+       ]
+      },
+      {
+       "index": 11,
+       "size": [
+        480,
+        376
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "steam": {
+   "connect": "witness",
+   "note": "Steam animation; no native sequence identified.",
+   "open": 19,
+   "files": {
+    "JYOUKI": {
+     "open": 19,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        64,
+        64
+       ]
+      },
+      {
+       "index": 1,
+       "size": [
+        80,
+        32
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        32,
+        64
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        64,
+        32
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        64,
+        48
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        48,
+        64
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        48,
+        64
+       ]
+      },
+      {
+       "index": 7,
+       "size": [
+        64,
+        48
+       ]
+      },
+      {
+       "index": 8,
+       "size": [
+        64,
+        64
+       ]
+      },
+      {
+       "index": 9,
+       "size": [
+        64,
+        16
+       ]
+      },
+      {
+       "index": 10,
+       "size": [
+        64,
+        64
+       ]
+      },
+      {
+       "index": 11,
+       "size": [
+        48,
+        16
+       ]
+      },
+      {
+       "index": 12,
+       "size": [
+        64,
+        64
+       ]
+      },
+      {
+       "index": 13,
+       "size": [
+        48,
+        64
+       ]
+      },
+      {
+       "index": 14,
+       "size": [
+        48,
+        64
+       ]
+      },
+      {
+       "index": 15,
+       "size": [
+        48,
+        32
+       ]
+      },
+      {
+       "index": 16,
+       "size": [
+        80,
+        32
+       ]
+      },
+      {
+       "index": 17,
+       "size": [
+        48,
+        64
+       ]
+      },
+      {
+       "index": 18,
+       "size": [
+        48,
+        48
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "keep-native": {
+   "connect": "native",
+   "note": "Kept native by decision (aspect, clock face, baked Japanese labels) or no native texture (SHADE_WA).",
+   "open": 10,
+   "files": {
+    "OP_WIN": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        416,
+        304
+       ]
+      }
+     ]
+    },
+    "R_HARI": {
+     "open": 7,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        32,
+        44
+       ]
+      },
+      {
+       "index": 1,
+       "size": [
+        32,
+        44
+       ]
+      },
+      {
+       "index": 2,
+       "size": [
+        32,
+        44
+       ]
+      },
+      {
+       "index": 3,
+       "size": [
+        32,
+        44
+       ]
+      },
+      {
+       "index": 4,
+       "size": [
+        32,
+        44
+       ]
+      },
+      {
+       "index": 5,
+       "size": [
+        32,
+        44
+       ]
+      },
+      {
+       "index": 6,
+       "size": [
+        32,
+        44
+       ]
+      }
+     ]
+    },
+    "SHADE_WA": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        576,
+        320
+       ]
+      }
+     ]
+    },
+    "SHADE_WB": {
+     "open": 1,
+     "images": [
+      {
+       "index": 0,
+       "size": [
+        608,
+        128
+       ]
+      }
+     ]
+    }
+   }
+  }
+ }
+}
