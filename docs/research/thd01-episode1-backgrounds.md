@@ -120,3 +120,24 @@ Para BG2010, las referencias encontradas están en 0605, 0806 y 1003.
 BG2004, el archivo HD que reutiliza BG2010, sí tiene referencias en
 0102 y 0108. Las coincidencias de operandos orientan la búsqueda de
 rutas y la lectura de CD no acredita un dibujo.
+
+### Capa nativa de BG1120 en el cuadro 189.250
+
+El estado del cuadro 188.000 aún no contiene la paleta ni las celdas
+de BG1120. Los estados 189.250, 190.000 y 191.000 contienen los
+512 bytes de paleta y las 41.472 celdas ordenadas exactas en los
+desplazamientos serializados `0x19B23C` y `0x3CA0A4`. Las celdas
+de BG1101 siguen presentes en `0x3B48A4`.
+
+En el primer dibujo aislado desde 189.250, la fuente 4 (NBG2) ocupa
+exactamente (16,8)–(304,152). Su firma de luminancia coincide con
+BG1120 con correlación 1,0000 a cuatro decimales. BG1101 obtiene
+0,5697 en la misma comparación. Los canales del dibujo aislado
+difieren del decodificador fuera de línea en hasta 7 niveles RGB.
+
+En la prueba Enhanced de 36 cuadros a 2560×1440 con v0.2.20-alpha,
+el selector consultó la paleta compartida de BG1100/BG1101
+(`39576B476985CD3E`) con clave de celdas cero. El donante BG1120
+no cambió el PNG final ni los hashes del juego. La siguiente prueba
+debe validar la selección por fuente visible y proteger la
+composición superpuesta antes de acreditar un dibujo HD.
