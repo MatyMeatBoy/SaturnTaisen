@@ -15702,23 +15702,31 @@
       },
       "1:/SAKURA2/EVE102.BIN": {
         "association": "unknown",
+        "fixture_evidence": "docs/research/disc1-battle-insets.md#controlled-eve-plate-replays",
         "pc": "SAKURA2/BG/BBG102.SPR",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA2/EVE105.BIN": {
         "association": "unknown",
+        "fixture_evidence": "docs/research/disc1-battle-insets.md#controlled-eve-plate-replays",
         "pc": "SAKURA2/BG/BBG105.SPR",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA2/EVE205.BIN": {
         "association": "unknown",
+        "fixture_evidence": "docs/research/disc1-battle-insets.md#controlled-eve-plate-replays",
         "pc": "SAKURA2/BG/BBG205.SPR",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA2/EVE207.BIN": {
         "association": "unknown",
+        "fixture_evidence": "docs/research/disc1-battle-insets.md#controlled-eve-plate-replays",
         "pc": "SAKURA2/BG/BBG207.SPR",
-        "status": "hd"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",

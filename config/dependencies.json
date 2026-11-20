@@ -184,7 +184,8 @@
       "patches/0186-sakura-reuse-map-fade-exterior.patch",
       "patches/0187-sakura-bounded-film-video-spans.patch",
       "patches/0188-sakura-scroll-row-minimum-offset.patch",
-      "patches/0189-sakura-sumire-ending-photos.patch"
+      "patches/0189-sakura-sumire-ending-photos.patch",
+      "patches/0190-sakura-registered-eve-insets.patch"
     ]
   }
 }
