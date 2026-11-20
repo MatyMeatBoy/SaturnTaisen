@@ -173,4 +173,4 @@ contains exactly the regenerated 676,866 address-and-byte variants.
 All 10,380 strict fields and final SRAM matched the portable references
 with zero interpreted blocks. The local replays and build recipe are in
 `local/work/codex-th1/map14-late-aot`. This verifies the five listed
-segments. The remainder of the battle and package inclusion are pending.
+segments. The updated profile shipped in [v0.2.15-alpha](../releases/v0.2.15-alpha.md). The remainder of the battle is open.
