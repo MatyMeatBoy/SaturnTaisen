@@ -1,0 +1,37 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -322,7 +322,33 @@
+     {0x08B9011A3A4155C8ull, 48, 56, 18, 288, 189},
+ };
+ 
++inline constexpr VerifiedBodyFace kNC3285[] = {
++    {0x59DCA2EEC7389C53ull, 88, 32, 1, 159, 83},
++    {0xA23D5D3079E6AF71ull, 88, 32, 2, 159, 83},
++    {0x0E66074A7D16F88Cull, 88, 32, 3, 159, 83},
++    {0x0049238F6C9FE997ull, 40, 32, 4, 236, 161},
++    {0x8D0AD4AF486E57D7ull, 40, 32, 5, 236, 161},
++    {0xC017DC89128DA763ull, 40, 32, 6, 236, 161},
++    {0xC69D4CBDD2E38224ull, 40, 32, 7, 236, 161},
++    {0x929545D1E8AD6EAFull, 40, 32, 8, 236, 161},
++    {0xC9C6422E7566149Eull, 40, 32, 9, 236, 161},
++};
++
++inline constexpr VerifiedBodyFace kNC3286[] = {
++    {0x948D3FF5F908E10Eull, 72, 64, 1, 219, 13},
++    {0xF6D18C002075FA4Full, 72, 64, 2, 219, 13},
++    {0x5E0B46F465F4B027ull, 72, 64, 3, 219, 13},
++    {0x6F290EC4913593F4ull, 48, 48, 4, 207, 112},
++    {0x44B263562707F0BDull, 48, 48, 5, 207, 112},
++    {0x85C58D4136CEDFC5ull, 48, 48, 6, 207, 112},
++    {0x827DFEC2B8210E15ull, 48, 48, 7, 207, 112},
++    {0xD0FBB31DB4E04234ull, 48, 48, 8, 207, 112},
++    {0xAD9776F7AA0F1DDBull, 48, 48, 9, 207, 112},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
++    if (name == "NC3285.BIN") return {0xFB6FF15FB45973BAull, 0x78A751B8BF46778Cull, kNC3285};
++    if (name == "NC3286.BIN") return {0x5B6ECA2460F8EE4Full, 0x5737539E7FCB700Full, kNC3286};
+     if (name == "NC3058.BIN") return {0xC9FA28375C7A64F6ull, 0x79F05290DF1B9B3Dull, kNC3058};
+     if (name == "NC3057.BIN") return {0x5C9C088D5DAF42F1ull, 0xCE8AB22FABBE15C9ull, kNC3057};
+     if (name == "NC10.BIN") return {0xFAF25875698D3053ull, 0xCBD86983994FF9C4ull, kNC10, true};
