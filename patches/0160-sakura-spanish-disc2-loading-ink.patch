@@ -1,0 +1,44 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -435,9 +435,14 @@
+             }
+             if(!backdrop.files.empty())backdrops.push_back(std::move(backdrop));
+         }
++        bool spanishDisc2 = false;
+         for(const auto& spec:kScreenBackdrops) {
+             std::vector<uint8_t> source;
+             if(!port.discFiles.Read(spec.resource,source))continue;
++            // The opening backdrop already reads /SAKURA, whose Spanish disc-2 bytes
++            // distinguish the locale even though its LOAD.BIN is shared with English.
++            if (source.size() == 392024 && std::string_view(spec.id) == "OPENING")
++                spanishDisc2 = AtlasFingerprint(source) == 0x9784A80FEE884E93ull;
+             const auto palette=ScreenPalette(source,spec);if(palette.empty())continue;
+             Backdrop item;item.screen=true;item.id=spec.id;item.palette=spec.paletteHash;
+             item.layer=spec.layer;item.anchored=spec.anchored;
+@@ -453,9 +458,10 @@
+             // These two startup backgrounds are prepared before the first guest frame.
+             item.attempted=true;
+             for(const auto& file:item.files)if((item.texture=item.anchored?LoadAnchoredBackdrop(renderer,file,item.nativePalette,original,&item.pixels):LoadBackdrop(renderer,file,item.nativePalette,item.cacheDir,&item.pixels)))break;
+-            // The English and Spanish LOAD palettes match. The Spanish v0.1 disc has
+-            // a distinct LOAD.BIN payload with the existing CARGANDO lettering.
+-            if (item.texture && item.id == "LOADING" && AtlasFingerprint(source) == 0x59883EB3F920F2FAull) {
++            const uint64_t loadingFingerprint =
++                item.texture && item.id == "LOADING" ? AtlasFingerprint(source) : 0;
++            if (loadingFingerprint == 0x59883EB3F920F2FAull ||
++                (spanishDisc2 && loadingFingerprint == 0x25EBC7EF81D177B3ull)) {
+                 for (const auto& folder : {std::filesystem::path(port.opt.settingsPath).parent_path(),
+                                           std::filesystem::path(SDL_GetBasePath())}) {
+                     const auto file = folder / "art/screen-backgrounds/LOAD-es-lettering-v1.png";
+@@ -1671,8 +1677,9 @@
+                     !choosing && !port.menu.IsOpen() && planes.topSource.size() == 320 * 224 &&
+                     softwareShown.size() == 320 * 224) {
+                     // The presented VDP frame can lag live colour registers by one frame.
+-                    // Recover its neutral fade from a known white pixel, then verify the whole mask.
+-                    const uint32_t sample = softwareShown[17 * 320 + 160];
++                    // Recover the neutral fade from a pixel that is white in both native
++                    // scrolls, then verify the whole mask.
++                    const uint32_t sample = softwareShown[20 * 320 + 157];
+                     const auto shade = static_cast<int16_t>(int(sample & 255u) - 248);
+                     const std::array<int16_t, 3> offset{shade, shade, shade};
+                     bool exact = true;
