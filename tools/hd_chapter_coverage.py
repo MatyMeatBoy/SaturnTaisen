@@ -461,6 +461,16 @@ def runtime_ending_photo_keys(root):
 def ending_bank_row(bank, disc, photo_keys, verified):
     """Describe the canonical group photographs and any verified unique route photographs."""
     base = {'pc': bank['pc_file'], 'scope': 'ending-bank subimages', 'decision_evidence': ENDING_REPORT}
+    general = verified.get('general_ending')
+    if general and bank['saturn_file'] == general['saturn_file']:
+        indices = [r['pc_image_index'] for r in bank['records'] if r['saturn_record'] in general['records']]
+        if len(indices) != len(general['records']):
+            raise ValueError(f'Missing general ending records for {bank["saturn_file"]}')
+        if disc != verified['disc']:
+            return {**base, 'pc_image_indices': indices, 'status': 'paired-not-wired',
+                    'reason': 'The general ending composition is supported on disc 2.'}
+        return {**base, 'pc_image_indices': indices, 'status': 'hd', 'verified_in_game': False,
+                'runtime_patch': general['runtime_patch'], 'fixture_evidence': general['evidence']}
     photos = [r for r in bank['records'] if r['saturn_record'] in ENDING_PHOTO_RECORDS]
     if len(photos) == 2 and all(r['palette_fnv'] in photo_keys for r in photos):
         base['pc_image_indices'] = [r['pc_image_index'] for r in photos]

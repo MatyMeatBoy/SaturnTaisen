@@ -89,7 +89,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 304/304 (100%) |
-| Imágenes de escena | 607/1166 (52%) |
+| Imágenes de escena | 608/1166 (52,1%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 50/50 (100%) |
 | Modo táctico | Sin dato |
@@ -97,7 +97,7 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 146/147 (99,3%) |
 
-**HD total: 1185/1915 (61,8%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1186/1915 (61,9%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).

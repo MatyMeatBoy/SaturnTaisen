@@ -548,7 +548,14 @@ class ChapterCoverageTest(unittest.TestCase):
                     row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']
                     self.assertEqual(row['association'], 'unknown')
                     self.assertEqual(row['pc'], f'SAKURA1/ENDING/END_{name}.SPR')
-                    if name == 'GE' or disc == 1:
+                    if name == 'GE':
+                        self.assertEqual(row['status'], 'hd' if disc == 2 else 'paired-not-wired')
+                        self.assertFalse(row.get('verified_in_game'))
+                        if disc == 2:
+                            self.assertEqual(row['runtime_patch'], 'patches/0233-sakura-general-ending-hd.patch')
+                            self.assertEqual(row['fixture_evidence'],
+                                             'docs/research/ending-bank-pairs.md#general-ending-hd-composition')
+                    elif disc == 1:
                         self.assertEqual(row['status'], 'paired-not-wired')
                         self.assertFalse(row.get('verified_in_game'))
                     else:

@@ -1,0 +1,184 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -402,6 +402,8 @@
+     std::vector<uint32_t> panelPixels;std::vector<uint8_t> hdErased;
+     SDL_Texture *tacticalCanvas=nullptr;
+     SDL_Texture *mapBackdropTexture=nullptr;
++    SDL_Texture* generalEndingTexture = nullptr;
++    SDL_Texture* generalEndingSprites = nullptr;
+     SDL_Texture* irisComboTexture = nullptr;
+     SDL_Texture* comboCardTexture = nullptr;
+     SDL_Texture* narrativeCutoutTexture = nullptr;
+@@ -678,6 +680,8 @@
+         tacticalCanvas=nullptr;
+         if(mapBackdropTexture)SDL_DestroyTexture(mapBackdropTexture);
+         mapBackdropTexture=nullptr;
++        if (generalEndingTexture) SDL_DestroyTexture(std::exchange(generalEndingTexture, nullptr));
++        if (generalEndingSprites) SDL_DestroyTexture(std::exchange(generalEndingSprites, nullptr));
+         if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
+         irisComboTexture = nullptr;
+         if (comboCardTexture) SDL_DestroyTexture(comboCardTexture);
+@@ -1153,6 +1157,143 @@
+         }
+         finishSceneInset(inset, feather ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+     };
++
++    struct GeneralEndingPlate {
++        unsigned layer;
++        size_t paletteOffset;
++        uint64_t palette;
++        uint64_t cells;
++        port::EveRect crop;
++    };
++    constexpr std::array generalEndingPlates{
++        GeneralEndingPlate{2, 0xE00, 0x43B52AFDA867E289ull, 0xCE3978CE1026E2BBull, {24, 16, 600, 440}},
++        GeneralEndingPlate{3, 0x400, 0xD35E9533F1B206BFull, 0xD279F004AA17CB7Full, {0, 16, 640, 448}},
++        GeneralEndingPlate{2, 0x200, 0x4B95A19805DC92DBull, 0x8486F362F9BE9417ull, {0, 16, 640, 448}},
++        GeneralEndingPlate{3, 0x400, 0xE9B373C88E94A067ull, 0x2739C4C7E94EB262ull, {0, 16, 640, 448}},
++    };
++    using GeneralEndingImages = std::array<std::vector<uint32_t>, generalEndingPlates.size()>;
++    constexpr unsigned generalEndingWidth = 640, generalEndingHeight = 448;
++    GeneralEndingImages generalEndingImages;
++    std::future<GeneralEndingImages> generalEndingPending;
++    bool generalEndingTried = false;
++    std::vector<uint32_t> generalEndingMixed;
++    std::vector<uint32_t> generalEndingOverlay;
++    std::optional<std::tuple<int, int, unsigned, std::array<int16_t, 3>>> generalEndingRecipe;
++    const auto drawGeneralEnding = [&](const SDL_FRect& target, std::span<const uint32_t> native) {
++        const auto& video = *port.videoRenderer;
++        const auto& frame = video.PresentationFrame();
++        if (frame.width != 320 || frame.height != 224 || frame.topSource.size() != native.size()) return;
++        const auto& regs = video.Regs2();
++        if (regs.colorCalcExtended || regs.colorCalcAdd || regs.colorCalcUseSecondRatio) return;
++        const auto findPlate = [&](unsigned layer) {
++            const auto& bg = regs.bgParams[layer - 1];
++            if (!regs.layerEnabled[layer] || bg.bitmap || bg.mosaicEnable || bg.lineColorScreenEnable ||
++                bg.lineScrollXEnable || bg.lineScrollYEnable || bg.lineZoomEnable || bg.vcellScrollEnable ||
++                bg.scrollAmountH || bg.scrollAmountV || bg.scrollIncH != 256 || bg.scrollIncV != 256) return -1;
++            for (int i = 0; i < int(generalEndingPlates.size()); ++i) {
++                const auto& plate = generalEndingPlates[i];
++                if (plate.layer == layer &&
++                    PcBackdropHash(std::span{frame.palette}.subspan(plate.paletteOffset, 512)) == plate.palette &&
++                    video.BackgroundCellFingerprint(layer, 320 * 224) == plate.cells) return i;
++            }
++            return -1;
++        };
++        const int even = findPlate(2);
++        const int odd = findPlate(3);
++        if (even < 0 && odd < 0) return;
++        if (!generalEndingTried) {
++            generalEndingTried = true;
++            generalEndingPending = std::async(std::launch::async,
++                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/ENDING/END_GE.SPR",
++                 plates = generalEndingPlates] {
++                    std::vector<uint8_t> bytes;
++                    std::vector<PcSprite> decoded;
++                    std::string error;
++                    constexpr size_t donorSize = 2014133;
++                    if (!ReadPcBackdropFile(path, bytes, donorSize) || bytes.size() != donorSize ||
++                        PcBackdropHash(bytes) != 0xF79E98526C76815Aull ||
++                        !DecodePcSprites(bytes, decoded, error)) return GeneralEndingImages{};
++                    GeneralEndingImages images;
++                    for (const auto& image : decoded) {
++                        if (image.index >= plates.size()) continue;
++                        const auto& crop = plates[image.index].crop;
++                        if (!port::EveCropFits(crop, image.width, image.height)) return GeneralEndingImages{};
++                        auto& pixels = images[image.index];
++                        pixels.resize(generalEndingWidth * generalEndingHeight);
++                        for (unsigned y = 0; y < generalEndingHeight; ++y) {
++                            const auto from = size_t(crop.y + (2 * y + 1) * crop.height / (2 * generalEndingHeight)) * image.width;
++                            for (unsigned x = 0; x < generalEndingWidth; ++x)
++                                pixels[y * generalEndingWidth + x] =
++                                    image.pixels[from + crop.x + (2 * x + 1) * crop.width / (2 * generalEndingWidth)];
++                        }
++                    }
++                    if (std::ranges::any_of(images, [](const auto& pixels) { return pixels.empty(); }))
++                        return GeneralEndingImages{};
++                    return images;
++                });
++        }
++        if (generalEndingPending.valid() &&
++            generalEndingPending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++            generalEndingImages = generalEndingPending.get();
++        if (generalEndingImages[0].empty()) return;
++        const auto owners = std::span{frame.topSource};
++        const auto first = std::ranges::find_if(owners, [](uint8_t layer) { return layer != 0; });
++        if (first == owners.end() || (*first != 2 && *first != 3)) return;
++        const unsigned layer = *first;
++        const bool haveSprites = std::ranges::find(owners, 0) != owners.end();
++        if (!std::ranges::all_of(owners, [layer](uint8_t owner) { return owner == 0 || owner == layer; })) return;
++        const int top = layer == 2 ? even : odd;
++        if (top < 0) return;
++        const auto& bg = regs.bgParams[layer - 1];
++        const int lower = bg.colorCalcEnable ? (layer == 2 ? odd : even) : -1;
++        if (bg.colorCalcEnable && (lower < 0 || haveSprites || regs.specialColorCalcMode[layer - 1] != 0)) return;
++        const unsigned lowerWeight = lower < 0 ? 0 : regs.colorCalcRatio[layer] + 1;
++        const auto offset = video.BackgroundColorOffset(layer);
++        const auto recipe = std::tuple{top, lower, lowerWeight, offset};
++        if (!generalEndingTexture) {
++            generalEndingTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                SDL_TEXTUREACCESS_STREAMING, generalEndingWidth, generalEndingHeight);
++            if (!generalEndingTexture) return;
++            SDL_SetTextureScaleMode(generalEndingTexture, SDL_SCALEMODE_NEAREST);
++            SDL_SetTextureBlendMode(generalEndingTexture, SDL_BLENDMODE_NONE);
++            generalEndingRecipe.reset();
++        }
++        if (generalEndingRecipe != recipe) {
++            const auto& topImage = generalEndingImages[top];
++            generalEndingMixed.resize(topImage.size());
++            for (size_t i = 0; i < topImage.size(); ++i) {
++                const auto a = topImage[i];
++                const auto b = lower < 0 ? 0 : generalEndingImages[lower][i];
++                uint32_t pixel = 0xFF000000u;
++                for (unsigned channel = 0; channel < 3; ++channel) {
++                    const unsigned shift = channel * 8;
++                    const unsigned combined = (((a >> shift) & 255u) * (32 - lowerWeight) +
++                                               ((b >> shift) & 255u) * lowerWeight) >> 5;
++                    pixel |= uint32_t(std::clamp(int(combined) + offset[channel], 0, 255)) << shift;
++                }
++                generalEndingMixed[i] = pixel;
++            }
++            if (!SDL_UpdateTexture(generalEndingTexture, nullptr, generalEndingMixed.data(), generalEndingWidth * 4))
++                return;
++            generalEndingRecipe = recipe;
++        }
++        if (haveSprites) {
++            if (!generalEndingSprites) {
++                generalEndingSprites = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                    SDL_TEXTUREACCESS_STREAMING, 320, 224);
++                if (!generalEndingSprites) return;
++                SDL_SetTextureScaleMode(generalEndingSprites, SDL_SCALEMODE_NEAREST);
++                SDL_SetTextureBlendMode(generalEndingSprites, SDL_BLENDMODE_BLEND);
++            }
++            generalEndingOverlay.resize(native.size());
++            for (size_t i = 0; i < native.size(); ++i)
++                generalEndingOverlay[i] = owners[i] == 0 ? native[i] | 0xFF000000u : 0;
++            if (!SDL_UpdateTexture(generalEndingSprites, nullptr, generalEndingOverlay.data(), 320 * 4)) return;
++        }
++        SDL_RenderTexture(renderer, generalEndingTexture, nullptr, &target);
++        if (haveSprites) SDL_RenderTexture(renderer, generalEndingSprites, nullptr, &target);
++    };
++
+     const auto insetRgb = [](std::span<const uint32_t> pixels, port::EveRect rect = port::kEve202NativeRect) {
+         uint64_t hash = 14695981039346656037ull;
+         for (int y = rect.y; y < rect.y + rect.height; ++y) {
+@@ -4490,6 +4631,7 @@
+                 where.x == baseFit.x && where.y == baseFit.y && where.w == baseFit.w && where.h == baseFit.h &&
+                 texW == 320 && texH == 224 && softwareShown.size() == 320 * 224) {
+                 const auto& planes = port.videoRenderer->PresentationFrame();
++                drawGeneralEnding(where, softwareShown);
+                 if (planes.width == 320 && planes.height == 224 && planes.topSource.size() == 320 * 224) {
+                     for (size_t slot = 0; slot < std::size(endingPhotos); ++slot) {
+                         const auto& photo = endingPhotos[slot];
+@@ -5068,7 +5210,9 @@
+                 }
+                 if (comboCardTexture) SDL_DestroyTexture(comboCardTexture);
+                 comboCardTexture = nullptr;
+-                if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
++                if (generalEndingTexture) SDL_DestroyTexture(std::exchange(generalEndingTexture, nullptr));
++        if (generalEndingSprites) SDL_DestroyTexture(std::exchange(generalEndingSprites, nullptr));
++        if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
+                 irisComboTexture = nullptr;
+                 if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
+                 bg2093Composite = nullptr;
