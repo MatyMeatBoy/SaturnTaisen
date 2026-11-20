@@ -14,6 +14,21 @@ The first visual checks used the portable interpreter fallback. Strict replay st
 
 The v0.2.27 candidate contains the MAP03 patch and this observed AOT set. Its executable SHA-256 is `dd7965fd137544711356d3923ae7308ecfd5a1fe5de3bac53b7b98736c15bf72`. To reproduce the exact set on the owner machine, use the retained `local/work/codex-th1/map03-691/map03-v026/record.py` and `build-aot.py`. The builder checks each observed variant against EVT03 before linking and keeps its response file and verification receipts in the same directory.
 
+### Cold EVT03 deployment
+
+The `EVT03_MAP03` build registry now pins the union of 805 exact
+offset/length ranges for the cold deployment and moving-camera route.
+The owner disc provided every instruction byte. The new executable
+adds 729 entries over v0.2.27, including the alternate entry at 0020AD24.
+It completed 12,000 strict fields from power-on Continue → File 1
+through selectable Sakura in MAP03. The interpreter replay matched
+every guest hash, final SRAM and the final PNG. The strict endpoint
+still has VDP2 key 3150DAC84F35E1AE. The tested executable is
+`cb632a30be34033922760f90465d2f8baf28ad832f56b7a454a33dae3ac3ba0f`.
+Receipts and rebuild commands stay in
+`local/work/codex-th1/map03-691/map03-v027-cold`. Package inclusion
+and the remaining battle are pending.
+
 Candidate keys and dimensions are offline evidence. Runtime activation and package coverage require a separately verified draw.
 
 Run these checks from the repository root.

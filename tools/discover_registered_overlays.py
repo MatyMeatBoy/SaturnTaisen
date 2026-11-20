@@ -124,6 +124,10 @@ REGISTRY['ENDING_DISC2_EN_FULL']['evidence'] = (
     'English disc 2 cold public Finale replay: strict AOT stops on master SH-2 PC 06080000 after the '
     '/SAKURA1/ENDING.BIN load (FAD 133947); whole file is the High WRAM module at 06080000')
 
+REGISTRY['EVT03_MAP03'] = dict(
+    REGISTRY['EVT03'], observed_ranges='evt03-map03-aot-ranges.json',
+    evidence='Natural English disc 1 File 1 cold deployment and retained MAP03 camera motion; exact EVT03 bytes',
+)
 REGISTRY['EVT04_MAP04'] = dict(
     REGISTRY['EVT04'], observed_ranges='evt04-map04-aot-ranges.json',
     evidence='Disc 1 Chapter 3 second battle, the 180-frame MAP04 camera witness')
