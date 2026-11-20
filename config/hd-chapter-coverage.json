@@ -6515,6 +6515,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2517.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene",
+            "pc": "SAKURA1/BG/BG2517.SPR",
+            "runtime_evidence": "docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG3036.BIN": {
             "association": "observed",
             "evidence": "docs/research/iris-other-cutouts.md",
@@ -19203,11 +19211,6 @@
       "2:/SAKURA1/BG2516.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2516.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2517.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2517.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2518.BIN": {
