@@ -203,7 +203,8 @@
       "patches/0205-sakura-hd-options-system-rails.patch",
       "patches/0206-sakura-hd-load-panel-rails.patch",
         "patches/0208-sakura-async-tactical-status-art.patch",
-      "patches/0209-sakura-hd-controls-inventory-rails.patch"
+      "patches/0209-sakura-hd-controls-inventory-rails.patch",
+      "patches/0211-sakura-preserve-load-bracket-line-capture.patch"
     ]
   }
 }
