@@ -1,0 +1,28 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2128,6 +2128,7 @@
+                 auto fit=FitInteger(wide,high,static_cast<int>(crop.w),static_cast<int>(crop.h));
+                 // Only split the known narrative layout; overhanging artwork retains the original group.
+                 bool splitZoom=false;
++                int zoomShadowRows=0;
+                 int zoomX=scene.x,zoomW=scene.w,zoomLines=scene.y+scene.h-153,zoomGroup=scene.h;
+                 bool zoomSafe=!scene.movieOnly && satrecomp::FeatureValue("scene_view")==1 && scene.y==8 && scene.y+scene.h>153;
+                 if(zoomSafe)for(int y=0;y<153 && zoomSafe;y++)for(int x=0;x<320;x++) {
+@@ -2157,6 +2158,7 @@
+                     const auto zoom=FitSceneZoom(wide,high,zoomW,zoomLines,zoomGroup,shadowRows);
+                     if(zoom.valid) {
+                         splitZoom=true;
++                        zoomShadowRows=shadowRows;
+                         choiceTextFit=zoom.picture;choiceCropX=16;choiceCropY=8;
+                         zoomForeground=hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground;
+                         for(int y=153;y<156;y++)for(int x=20;x<308;x++)
+@@ -2981,7 +2983,7 @@
+                 // plane (a load between two scenes), the box keeps the Zoom place instead of jumping back to
+                 // the original one. Any other screen ends the hold.
+                 if(splitZoom) {
+-                    heldZoom={true,zoomX,zoomW,zoomLines,zoomGroup,0};
++                    heldZoom={true,zoomX,zoomW,zoomLines,zoomGroup,zoomShadowRows};
+                 } else if(heldZoom.valid && satrecomp::FeatureValue("scene_view")==1 && !scene.movieOnly &&
+                           DialogueOnly(planes.source,planes.width,planes.height)) {
+                     const auto zoom=FitSceneZoom(wide,high,heldZoom.width,heldZoom.lines,heldZoom.group,heldZoom.shadowRows);
