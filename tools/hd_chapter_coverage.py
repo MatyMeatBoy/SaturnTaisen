@@ -622,6 +622,8 @@ def build(root, index_dir, portrait_audit):
                     row['status'] = 'hd'
                     if (disc, path) in SCENE_DRAWS:
                         row.update(verified_in_game=True, runtime_evidence=SCENE_DRAWS[(disc, path)][1])
+                elif (disc, path) == (2, '/SAKURA1/BG2093.BIN'):
+                    row.update(status='hd', verified_in_game=True, runtime_evidence='docs/research/bg2093-dream-transition.md')
                 elif name in scroll_rows:
                     # TP2: a row of the scroll-picture table (config/hd-scroll-pictures.json) is drawn by the runtime's table path.
                     row['status'] = 'wired-unverified' if (disc, name) in SCROLL_UNVERIFIED else 'hd'
@@ -648,9 +650,7 @@ def build(root, index_dir, portrait_audit):
                         # The runtime draws a 288x144 picture only; wide and tall ones need scroll support (T105c).
                         row['status'] = 'unsupported-size'
                         row['reason'] = 'size %s, the runtime draws 288x144 pictures only' % (pair.get('size'),)
-                        if (disc, path) == (2, '/SAKURA1/BG2093.BIN'):
-                            row['reason'] = 'The witnessed dream uses a per-line viewport origin on NBG0 under a variable NBG2 blend; a single opaque crop cannot reproduce the composite.'
-                        elif (disc, path) == (2, '/SAKURA1/BG2247.BIN'):
+                        if (disc, path) == (2, '/SAKURA1/BG2247.BIN'):
                             row['reason'] = 'The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.'
                         elif (disc, path) == (1, '/SAKURA1/BG2290.BIN'):
                             row['reason'] = 'The live pan holds at x=0, where the tested PC crop misses the native composition before the aligned portion.'

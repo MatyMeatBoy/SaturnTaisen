@@ -1,0 +1,274 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -400,6 +400,7 @@ int RunWindowed(Port &port) {
+     std::vector<uint32_t> panelPixels;std::vector<uint8_t> hdErased;
+     SDL_Texture *tacticalCanvas=nullptr;
+     SDL_Texture *mapBackdropTexture=nullptr;
++    SDL_Texture* bg2093Composite = nullptr;
+     std::vector<uint32_t> tacticalPatch,tacticalPixels;
+     SakuraUi sakuraUi;
+     Shading shading;
+@@ -672,6 +673,8 @@ int RunWindowed(Port &port) {
+         tacticalCanvas=nullptr;
+         if(mapBackdropTexture)SDL_DestroyTexture(mapBackdropTexture);
+         mapBackdropTexture=nullptr;
++        if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
++        bg2093Composite = nullptr;
+         if (shaded) {
+             shading.Close();
+         } else if (port.gpu) {
+@@ -816,6 +819,8 @@ int RunWindowed(Port &port) {
+     SceneHd bg1306;
+     std::vector<uint32_t> bg1306Native;
+     SceneHd bg2238;
++    SceneHd bg2093;
++    std::vector<uint32_t> bg2093Native, bg2093Donor, bg2093Pixels;
+     // TP2: one slot per row of kScrollPictures (native pixels decoded once, PC texture loaded once).
+     struct ScrollState {SceneHd hd; std::vector<uint32_t> pixels;};
+     std::array<ScrollState, kScrollPictureCount> scrollState;
+@@ -2972,6 +2977,40 @@ int RunWindowed(Port &port) {
+                                     }
+                                 }
+                             }
++                            if (!drewHd && !drewClip && shownDisc == 2 && !choosing && !port.menu.IsOpen() &&
++                                !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++                                !port.videoRenderer->BG2093Blend().empty()) {
++                                if (!bg2093.tried) {
++                                    bg2093.tried = true;
++                                    std::vector<uint8_t> native;
++                                    if (port.discFiles.ReadBounded("BG2093.BIN", native, 50576))
++                                        bg2093Native = DecodePinnedPan(native, 320, 144, 50576, 0xF9952EE2F9E760E0ull);
++                                    if (!bg2093Native.empty())
++                                        queuePinnedPan(bg2093, "SAKURA1/BG/BG2093.SPR", 2086990, 0x7A3380B930D05FE9ull, 592, 320);
++                                }
++                                if (bg2093.pending.valid() &&
++                                    bg2093.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                                    bg2093Donor = RegisterBG2093Donor(bg2093.pending.get().pixels);
++                                if (!bg2093Donor.empty()) {
++                                    bg2093Pixels.resize(kBG2093Width * kBG2093Height * 4);
++                                    if (BuildBG2093Composite(port.videoRenderer->BG2093Blend(), bg2093Native,
++                                                            softwareShown, bg2093Donor, bg2093Pixels)) {
++                                        if (!bg2093Composite) {
++                                            bg2093Composite = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                                SDL_TEXTUREACCESS_STREAMING, kBG2093Width * 2, kBG2093Height * 2);
++                                            if (bg2093Composite) {
++                                                SDL_SetTextureBlendMode(bg2093Composite, SDL_BLENDMODE_NONE);
++                                                SDL_SetTextureScaleMode(bg2093Composite, SDL_SCALEMODE_NEAREST);
++                                            }
++                                        }
++                                        if (bg2093Composite && SDL_UpdateTexture(bg2093Composite, nullptr, bg2093Pixels.data(),
++                                                                                 kBG2093Width * 2 * sizeof(uint32_t)))
++                                            drewHd = SDL_RenderTexture(renderer, bg2093Composite, nullptr, &imageTarget);
++                                        if (drewHd && std::getenv("SATRECOMP_PAN_TRACE"))
++                                            std::fprintf(stderr, "verified dream blend: BG2093\n");
++                                    }
++                                }
++                            }
+                             if (!drewHd && !drewClip && !choosing && !port.menu.IsOpen() &&
+                                 !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
+                                 port.videoRenderer->BackgroundPaletteFingerprint(2) == kBG2238Palette &&
+@@ -4203,6 +4242,8 @@ int RunWindowed(Port &port) {
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
++                bg2093Composite = nullptr;
+                 resetIntermissionTextures();
+                 resetBodyTextures();
+                 panelWidth=pictureMixWidth=shadowMixWidth=0;
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -62,6 +62,7 @@ void Renderer::Reset(bool hard) {
+     m_regs1 = {};
+     m_ctx = {};
+     m_lipsBodyOwner={};
++    m_bg2093Blend.clear();
+     m_lipsBodyCover.clear();
+     m_lipsBodyCommand=0;
+     m_displayFB = 1;
+@@ -89,6 +90,7 @@ void Renderer::Serialize(Archive &ar) {
+     ar.Pod(m_displayFB);
+     if (!ar.Saving()) {
+         m_lipsBodyOwner={};
++        m_bg2093Blend.clear();
+         m_lipsBodyCover.clear();
+         m_lipsBodyCommand=0;
+     }
+@@ -578,6 +580,7 @@ void Renderer::SetResolution(uint32 h, uint32 v, bool exclusive) {
+ 
+ void Renderer::BeginFrame() {
+     m_reuse.pending = true;
++    m_bg2093Blend.clear();
+     m_lipsBodyCover.clear();
+     m_reuse.mode = LineReuse::Off;
+     m_presentation.itemCard.reset();
+@@ -594,6 +597,17 @@ void Renderer::BeginFrame() {
+         m_presentation.floralCoverMix.assign(m_presentation.panelMix.size(), {});
+         m_presentation.floralCoverRgb.assign(m_width==320 && m_height==224 &&
+             m_regs2.bgParams[3].pageBaseAddresses[0]==0x44000 ? m_presentation.panelMix.size():0,0);
++        if (m_width == 320 && m_height == 224 && !m_regs2.TVMD.IsInterlaced() &&
++            m_regs2.bgParams[1].pageBaseAddresses[0] == 0x40000 &&
++            m_regs2.bgParams[3].pageBaseAddresses[0] == 0x44000 &&
++            BackgroundPaletteFingerprint(2) == ::port::kBG2093Palette &&
++            BackgroundPaletteFingerprint(4) == ::port::kBG2093UpperPalette) {
++            uint64_t cells = 14695981039346656037ull;
++            for (size_t i = 0; i < 46080; ++i)
++                cells = (cells ^ m_mem.vram2[0x34800 + i]) * 1099511628211ull;
++            if (cells == ::port::kBG2093Cells)
++                m_bg2093Blend.resize(::port::kBG2093Width * ::port::kBG2093Height);
++        }
+         m_presentation.episodeBlendSamples = 0;
+         m_presentation.episodeWeight = 0;
+         m_presentation.mapFadeEdges.assign(m_width==320 && m_height==224?32*224:0, {});
+@@ -905,6 +919,7 @@ bool Renderer::ReuseEligible() const {
+ // Lines that follow an item card or a menu's arrows from line to line (state kept between lines, and a drawn capture that
+ // changes every frame without the counter moving): always composed, never kept
+ bool Renderer::ReuseVolatileLine(uint32 y) const {
++    if (!m_bg2093Blend.empty() && y >= 8 && y < 152) return true;
+     if (!m_lipsBodyCover.empty() && y>=8 && y<152) return true;
+     if (m_captureBrackets && m_drawnBrackets[m_displayFB].serial != 0 && y + 1 > static_cast<uint32>(system_hud::kY) &&
+         y < static_cast<uint32>(system_hud::kY + system_hud::kHeight)) {
+@@ -1334,6 +1349,9 @@ void Renderer::ComposeLine(uint32 y) {
+     };
+     const bool captureWhiteWeight=m_capturePresentation && !m_presentation.spriteWhiteWeight.empty() && y<m_presentation.height;
+     const bool capturePanel = captureWhiteWeight && !m_presentation.panelMix.empty() && !regs2.colorCalcAdd;
++    const bool captureDream = !m_bg2093Blend.empty() && y >= 8 && y < 152 && supported &&
++        regs2.bgParams[1].pageBaseAddresses[0] == 0x40000 &&
++        regs2.bgParams[3].pageBaseAddresses[0] == 0x44000;
+     const auto mixRecipe = [&](Color888 fixedColor, uint32 floralWeight, uint32 topLayer) {
+         ::port::PanelMix recipe;
+         recipe.topRgb = fixedColor.u32 & 0xFFFFFF;
+@@ -1462,6 +1480,12 @@ void Renderer::ComposeLine(uint32 y) {
+                 whiteWeight=255;
+             }
+         }
++        if (captureDream && &sprite == &m_sprite && capturesUnshadowedPanel && top == 4 && second == 2 &&
++            calcTop && !m_colorCalcWindow[x] && x >= 16 && x < 304) {
++            const uint32 ratio = regs2.colorCalcRatio[regs2.colorCalcUseSecondRatio ? 2 : 4];
++            const auto recipe = mixRecipe(Color888{.u32 = layers[4].color[x]}, ratio + 1, 4);
++            m_bg2093Blend[(y - 8) * ::port::kBG2093Width + x - 16] = {recipe, layers[2].color[x] & 0xffffffu};
++        }
+         return {color,top,presentationSource,backgroundTop,backgroundSecond,whiteWeight,panel,floralCover,floralRgb,mapWeight,episodeWeight,capturesUnshadowedPanel};
+     };
+     const bool glyphLine=supported && PrepareGlyphLine(line);
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -18,6 +18,7 @@
+ #include "regs.h"
+ #include "../port/panel_compositing.h"
+ #include "../port/map_crossfade.h"
++#include "../port/bg2093_dream.h"
+ 
+ #include <functional>
+ #include <memory>
+@@ -190,6 +191,7 @@ public:
+                BackgroundColorOffset(layer) == std::array<int16_t, 3>{};
+     }
+     const Presentation& PresentationFrame() const { return m_presentation; }
++    std::span<const ::port::DreamBlendPixel> BG2093Blend() const { return m_bg2093Blend; }
+     void CaptureLipsBody(bool enabled) { m_captureLipsBody=enabled; }
+     std::span<const uint32> LipsBodyCover() const { return m_lipsBodyCover; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
+@@ -579,6 +581,7 @@ private:
+     std::vector<uint32> m_tacticalGround;
+     bool TacticalGroundMatches() const;
+     uint32 TacticalGroundSample(sint32 screenX) const;
++    std::vector<::port::DreamBlendPixel> m_bg2093Blend;
+ };
+ 
+ } // namespace satrecomp::video
+diff --git a/port/bg2093_dream.h b/port/bg2093_dream.h
+new file mode 100644
+--- /dev/null
++++ b/port/bg2093_dream.h
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "panel_compositing.h"
++
++namespace port {
++
++inline constexpr uint64_t kBG2093Palette = 0x65D40E5ACD068572ull;
++inline constexpr uint64_t kBG2093Cells = 0x0D797A594AB587CDull;
++inline constexpr uint64_t kBG2093UpperPalette = 0xCBC4C20C2E46BEE0ull;
++inline constexpr int kBG2093Width = 288, kBG2093Height = 144;
++
++struct DreamBlendPixel {
++    PanelMix mix;
++    uint32_t lowerRgb = 0;
++};
++
++inline bool BuildBG2093Composite(std::span<const DreamBlendPixel> captures,
++                                 std::span<const uint32_t> nativePicture,
++                                 std::span<const uint32_t> nativeFrame,
++                                 std::span<const uint32_t> donor,
++                                 std::span<uint32_t> output) {
++    constexpr int width = kBG2093Width, height = kBG2093Height;
++    if (captures.size() != width * height || nativePicture.size() != 320 * height ||
++        nativeFrame.size() != 320 * 224 || donor.size() != 640 * height * 2 ||
++        output.size() != width * height * 4)
++        return false;
++
++    std::array<unsigned, height> origins{};
++    for (int y = 0; y < height; ++y) {
++        const auto line = captures.subspan(y * width, width);
++        const auto nativeRow = nativePicture.subspan(y * 320, 320);
++        unsigned matches = 0;
++        for (unsigned left = 0; left <= 320 - width; ++left) {
++            if (std::equal(line.begin(), line.end(), nativeRow.begin() + left,
++                    [](const DreamBlendPixel& pixel, uint32_t native) {
++                        return pixel.lowerRgb == native;
++                    })) {
++                origins[y] = left;
++                ++matches;
++            }
++        }
++        if (matches != 1) return false;
++        for (int x = 0; x < width; ++x) {
++            const auto& pixel = line[x];
++            const auto frame = nativeFrame[(y + 8) * 320 + x + 16] | 0xff000000u;
++            if (!pixel.mix.lowerWeight || CompositePanelPixel(pixel.mix, pixel.lowerRgb, frame) != frame)
++                return false;
++        }
++    }
++    for (int y = 0; y < height * 2; ++y) {
++        const auto line = captures.subspan((y / 2) * width, width);
++        const auto pc = donor.subspan(y * 640 + origins[y / 2] * 2, width * 2);
++        for (int x = 0; x < width * 2; ++x)
++            output[y * width * 2 + x] = CompositePanelPixel(line[x / 2].mix, pc[x], 0xff000000u);
++    }
++    return true;
++}
++
++// Fit the pinned PC subimage to the 2x native world before applying a row origin.
++inline std::vector<uint32_t> RegisterBG2093Donor(std::span<const uint32_t> source) {
++    constexpr int sourceWidth = 592, sourceHeight = 320, width = 640, height = 288;
++    if (source.size() != sourceWidth * sourceHeight) return {};
++    std::vector<uint32_t> out(width * height);
++    for (int y = 0; y < height; ++y) {
++        const double py = std::clamp((y + 0.5) * (320.0 / 288.0) - 0.5, 0.0, 319.0);
++        const int y0 = int(py), y1 = std::min(y0 + 1, sourceHeight - 1);
++        const double fy = py - y0;
++        for (int x = 0; x < width; ++x) {
++            const double px = std::clamp(22.5 + (x + 0.5) * (514.2 / 576.0) - 0.5, 0.0, 591.0);
++            const int x0 = int(px), x1 = std::min(x0 + 1, sourceWidth - 1);
++            const double fx = px - x0;
++            const auto a = source[y0 * sourceWidth + x0], b = source[y0 * sourceWidth + x1];
++            const auto c = source[y1 * sourceWidth + x0], d = source[y1 * sourceWidth + x1];
++            uint32_t color = 0xff000000u;
++            for (unsigned shift : {0u, 8u, 16u}) {
++                const double top = ((a >> shift) & 255) * (1 - fx) + ((b >> shift) & 255) * fx;
++                const double below = ((c >> shift) & 255) * (1 - fx) + ((d >> shift) & 255) * fx;
++                color |= static_cast<uint32_t>(top * (1 - fy) + below * fy) << shift;
++            }
++            out[y * width + x] = color;
++        }
++    }
++    return out;
++}
++
++} // namespace port
