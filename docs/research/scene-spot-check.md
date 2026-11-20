@@ -109,3 +109,22 @@ BG2039 (frames 143,040-143,100) and BG1193 (253,260-253,320) lie on the chapter 
 ### Not verified
 
 The earlier audit adds only these five offline comparisons. The remaining spot checks stay open.
+
+## BG2034 on disc 1
+
+The English Chapter 1 route reaches the drink scene from the retained field
+59,098 checkpoint. Both 2,140-field 1440p Enhanced replays use the bundled
+presentation art and the same 0176 runtime. The only difference is whether
+the PC asset directory contains BG2034.SPR. All guest hashes match the
+uninterrupted route, final SRAM matches between the cases, and both report
+zero interpreted blocks.
+
+The rendered scene changes only within (349,29)–(2288,1037) at replay
+fields 1,980, 2,040 and 2,100. The other twelve full screenshots match,
+including the early floral fade. The score checks the exposed right wall
+at (1840,100)–(2220,350) against an independent decode of the 576×320 PC
+subimage 0, resampled to the 2016×1008 picture. Mean absolute RGB error
+is 0.137/0.129/0.127 with the donor and 46.951/45.679/40.204 without it
+at each of those three fields. The comparison is confined to this
+English disc 1 witness. Private samples and replay commands are under
+`local/work/codex-th1/bg2034-live/`.
