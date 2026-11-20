@@ -5382,6 +5382,14 @@
       "disc": 2,
       "resources": {
         "bodies": {
+          "2:/SAKURA1/NC24.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc24-nc3250-mouth-placement.md",
+            "pc": "SAKURA1/NC/NC24.SPR",
+            "runtime_evidence": "docs/research/nc24-nc3250-mouth-placement.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/NC3018.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
@@ -7061,12 +7069,6 @@
       "2:/SAKURA1/NC23.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC23.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "2:/SAKURA1/NC24.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC24.SPR",
         "status": "hd",
         "verified_in_game": false
       },
