@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Episodes 1 through 4 and verified mirrors. Includes applied Spanish edits and pending bilingual editorial proposals.",
+  "scope": "Episodes 1 through 5 and verified mirrors. Includes applied Spanish edits and pending bilingual editorial proposals.",
   "evidence": "Reconstructed Japanese compared by aligned native record ID with both hash-identified Spanish/English prepared discs. Japanese source text is not included.",
   "entries": [
     {
@@ -1784,6 +1784,406 @@
       ],
       "confidence": "high",
       "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0431",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 431,
+      "record_id": 10404,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A Kohran la sigue un grupo de gente poco habitual.",
+      "english_current": "Hmm… Kohran's fanbase is a bit\nof a mystery.",
+      "english_issue": "«Fanbase is a bit of a mystery» convierte un público inesperado en un misterio sobre sus admiradores. Algunas versiones españolas heredan además el calco «base de fans».",
+      "english_suggested": "You know, Kohran is popular with a rather unexpected crowd.",
+      "spanish_current": "Hmm… los admiradores de Kohran\nson todo un misterio.",
+      "spanish_suggested": "Vaya… Kohran tiene admiradores de lo más inesperados.",
+      "spanish_lines": [
+        "Vaya… Kohran tiene admiradores",
+        "de lo más inesperados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0501-0153"
+    },
+    {
+      "key": "0400-1012",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 1012,
+      "record_id": 10959,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A Kohran la sigue un grupo de gente poco habitual.",
+      "english_current": "Hmm… Kohran's fanbase is a bit\nof a mystery.",
+      "english_issue": "«Fanbase is a bit of a mystery» convierte un público inesperado en un misterio sobre sus admiradores. Algunas versiones españolas heredan además el calco «base de fans».",
+      "english_suggested": "You know, Kohran is popular with a rather unexpected crowd.",
+      "spanish_current": "Hmm… la base de fans de Kohran\nes todo un misterio.",
+      "spanish_suggested": "Vaya… Kohran tiene admiradores de lo más inesperados.",
+      "spanish_lines": [
+        "Vaya… Kohran tiene admiradores",
+        "de lo más inesperados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0501-0153"
+    },
+    {
+      "key": "0501-0153",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 153,
+      "record_id": 10126,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A Kohran la sigue un grupo de gente poco habitual.",
+      "english_current": "Hmm… Kohran's fanbase is a bit\nof a mystery.",
+      "english_issue": "«Fanbase is a bit of a mystery» convierte un público inesperado en un misterio sobre sus admiradores. Algunas versiones españolas heredan además el calco «base de fans».",
+      "english_suggested": "You know, Kohran is popular with a rather unexpected crowd.",
+      "spanish_current": "Hmm… la base de fans de Kohran\nes un misterio.",
+      "spanish_suggested": "Vaya… Kohran tiene admiradores de lo más inesperados.",
+      "spanish_lines": [
+        "Vaya… Kohran tiene admiradores",
+        "de lo más inesperados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0159",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 159,
+      "record_id": 10132,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Pensé que solo era una casa abandonada. Su poder espiritual no se puede subestimar.",
+      "english_current": "And here I thought it was\nmerely a broken down old\nbuilding… This power is \nnothing to sniff at.",
+      "english_issue": "Ambas localizaciones convierten el poder espiritual en un poder genérico y el abandono en ruinas.",
+      "english_suggested": "I thought it was just an abandoned house… This spiritual power is not to be underestimated.",
+      "spanish_current": "Y yo que pensaba que era solo\nun edificio viejo en\nruinas… este poder no es cosa\nde risa.",
+      "spanish_suggested": "Pensé que solo era una casa abandonada… No puedo subestimar su poder espiritual.",
+      "spanish_lines": [
+        "Pensé que solo era una casa",
+        "abandonada… No puedo",
+        "subestimar su poder",
+        "espiritual."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0160",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 160,
+      "record_id": 10133,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "No queda otro remedio. Lo primero es sellar este lugar, esa casa abandonada.",
+      "english_current": "…I suppose there is no way\naround it. First we must seal\nthis place… This building…",
+      "english_issue": "El inglés y el español conservan la necesidad de sellar el lugar. Ambos omiten que Tenkai nombra de nuevo la casa abandonada.",
+      "english_suggested": "There is no other choice… First we must seal this place, that abandoned house.",
+      "spanish_current": "…supongo que no hay forma\nde evitarlo. Primero debemos\nsellar este lugar… este\nedificio…",
+      "spanish_suggested": "No queda más remedio. Primero debemos sellar este lugar… esa casa abandonada.",
+      "spanish_lines": [
+        "No queda más remedio. Primero",
+        "debemos sellar este lugar… esa",
+        "casa abandonada."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0162",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 162,
+      "record_id": 10135,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Como siempre, el papel le va perfecto a Sumire.",
+      "english_current": "I say it every time but… \nSumire sure does steal the\nshow.",
+      "english_issue": "Steal the show introduce que Sumire eclipse al resto. Kohran dice que el papel le encaja. El español ya lo conserva.",
+      "english_suggested": "As always, the role suits Sumire perfectly.",
+      "spanish_current": "Sumire… como siempre, el\npapel le sienta que ni\npintado.",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0501-0164",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 164,
+      "record_id": 10137,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Seguro que luego dirá: por qué tengo que ser la villana.",
+      "english_current": "Totally, but I bet Sumire'll\nstart yelling \"Why am I always\nthe villain!?\" afterward!",
+      "english_issue": "Always añade que Sumire siempre recibe el papel de villana. El español ya restringe la queja a este papel.",
+      "english_suggested": "I bet Sumire’ll say later, “Why do I have to play the villain?!”",
+      "spanish_current": "Pero seguro que después\nSumire dice: «¡¿Por qué tengo\nque ser yo la villana?!»",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0501-0174",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 174,
+      "record_id": 10147,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Viendo cuánto se ha estropeado la ropa, esto no ha sido cualquier cosa.",
+      "english_current": "(Judging from their clothes…\nthis was no ordinary \nargument.)",
+      "english_issue": "Ordinary argument reduce la pelea a una discusión. Ogami está juzgando lo serio del incidente por los daños en el vestuario.",
+      "english_suggested": "Still… this much damage to their clothes is no small thing.",
+      "spanish_current": "(A juzgar por su ropa…\nesta no fue una discusión\nordinaria.)",
+      "spanish_suggested": "(Y esos destrozos en la ropa… Esto no fue cualquier cosa.)",
+      "spanish_lines": [
+        "(Y esos destrozos en la ropa…",
+        "Esto no fue cualquier cosa.)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0195",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 195,
+      "record_id": 10168,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Por culpa de esa estirada he hecho el ridículo.",
+      "english_current": "This stuck-up idiot had the\nwhole crowd laughing at me!\nI've never been so \nembarrassed!",
+      "english_issue": "El inglés añade que se rio todo el público. Kanna se queja de la humillación, como ya refleja el español.",
+      "english_suggested": "That stuck-up woman made me look like a fool!",
+      "spanish_current": "¡Por culpa de esta estirada\nhe quedado en ridículo!",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0501-0196",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 196,
+      "record_id": 10169,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Eso mismo digo yo. Forzuda.",
+      "english_current": "That's MY line, you macho\ntomboy!",
+      "english_issue": "El insulto se refiere a los músculos de Kanna. «Macho tomboy» y «marimacho» cambian el objeto del insulto.",
+      "english_suggested": "That’s my line, you musclehead!",
+      "spanish_current": "¡Esa es MI frase, marimacho!",
+      "spanish_suggested": "¡Eso me toca decirlo a mí, forzuda!",
+      "spanish_lines": [
+        "¡Eso me toca decirlo a mí,",
+        "forzuda!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0203",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 203,
+      "record_id": 10176,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "No me hagas reír. ¿Cuántas veces te has caído porque te han pisado el vestido?",
+      "english_current": "Oh, don't make me laugh! How\nmany times have you tripped\nover your own fancy costume\nnow?",
+      "english_issue": "Ambas traducciones hacen que Sumire tropiece con su propia ropa. El japonés indica que le pisan la ropa y eso provoca la caída.",
+      "english_suggested": "Don’t make me laugh! How many times have you fallen because someone stepped on your costume?",
+      "spanish_current": "¡Ah, no me hagas reír!\n¿Cuántas veces te has\ntropezado ya con tu propio\ntraje elegante?",
+      "spanish_suggested": "¡No me hagas reír! ¿Cuántas veces te han pisado el vestido y has acabado en el suelo?",
+      "spanish_lines": [
+        "¡No me hagas reír! ¿Cuántas",
+        "veces te han pisado el vestido",
+        "y has acabado en el suelo?"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0495",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 495,
+      "record_id": 50004,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Mi único objetivo es culminar el Hexagrama de la Invocación Infernal. No hay que temer los sacrificios.",
+      "english_current": "However, I have but one goal!\nI must complete the Hexagram \nof Infernal Calling!! I will\nnot balk from sacrifices!!",
+      "english_issue": "El objetivo personal de Tenkai se vuelve colectivo en español. El inglés sí conserva la primera persona.",
+      "english_suggested": null,
+      "spanish_current": "Pero nuestro único objetivo\nes culminar el Hexagrama de\nla Invocación Infernal. ¡No\nhay que temer sacrificios!",
+      "spanish_suggested": "Mi único objetivo es culminar el Hexagrama de la Invocación Infernal. ¡No hay que temer sacrificios!",
+      "spanish_lines": [
+        "Mi único objetivo es culminar",
+        "el Hexagrama de la Invocación",
+        "Infernal. ¡No hay que temer",
+        "sacrificios!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0500",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 500,
+      "record_id": 50009,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Oigan, demonios y monstruos de todos los lugares y épocas.",
+      "english_current": "Hey, hey, hey, hey, hey! All\nyou demons and monsters out\nthere listen up!",
+      "english_issue": "El inglés y el español omiten la fórmula teatral que llama a monstruos de todas las épocas y lugares.",
+      "english_suggested": "Hear me, demons and monsters from every age and land!",
+      "spanish_current": "¡Oigan, oigan, oigan, oigan,\noigan! ¡Todos ustedes,\ndemonios y monstruos,\nescuchen!",
+      "spanish_suggested": "¡Oigan, oigan! ¡Demonios y monstruos de toda época y lugar, escuchen!",
+      "spanish_lines": [
+        "¡Oigan, oigan! ¡Demonios y",
+        "monstruos de toda época y",
+        "lugar, escuchen!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0502",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 502,
+      "record_id": 50011,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A todos juntos los enviaré a la Tierra Pura. Denme las gracias.",
+      "english_current": "I'll send the lot of you to \nthe other side. Give thanks \nand rest in peace!!",
+      "english_issue": "El inglés generaliza la Tierra Pura budista a «the other side» y añade que descansen en paz. El español hereda ambos cambios en esta escena de Viaje al Oeste.",
+      "english_suggested": "I’ll send the lot of you to the Pure Land. You should thank me!",
+      "spanish_current": "Voy a mandarlos a todos al\notro lado. ¡Den gracias y\ndescansen en paz!!",
+      "spanish_suggested": "¡A todos juntos los mandaré a la Tierra Pura! ¡Denme las gracias!",
+      "spanish_lines": [
+        "¡A todos juntos los mandaré a",
+        "la Tierra Pura! ¡Denme las",
+        "gracias!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0501-0504",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 504,
+      "record_id": 50013,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "La dama demonio en persona te mandará al infierno. Risa.",
+      "english_current": "I, The Demoness, will send you\nto the depths of Hell!!\nOhohoho!!",
+      "english_issue": "El inglés y el español omiten la insistencia en que irá en persona. El español cambia el nombre del papel con respecto al diálogo 0501-0163 y al cuestionario.",
+      "english_suggested": "The Demoness herself will send you to hell! Ohohoho!",
+      "spanish_current": "¡Yo, la Diablesa, te mandaré a\nlas profundidades del\ninfierno!! ¡Ojojojó!!",
+      "spanish_suggested": "¡La dama demonio en persona te mandará al infierno! ¡Ojojojó!",
+      "spanish_lines": [
+        "¡La dama demonio en persona te",
+        "mandará al infierno! ¡Ojojojó!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0504-0170",
+      "table": "/SAKURA1/0504TBL.BIN",
+      "index": 170,
+      "record_id": 10143,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A Kohran la sigue un grupo de gente poco habitual.",
+      "english_current": "Hmm… Kohran's fanbase is a bit\nof a mystery.",
+      "english_issue": "«Fanbase is a bit of a mystery» convierte un público inesperado en un misterio sobre sus admiradores. Algunas versiones españolas heredan además el calco «base de fans».",
+      "english_suggested": "You know, Kohran is popular with a rather unexpected crowd.",
+      "spanish_current": "Hmm… la base de fans de Kohran\nes un misterio.",
+      "spanish_suggested": "Vaya… Kohran tiene admiradores de lo más inesperados.",
+      "spanish_lines": [
+        "Vaya… Kohran tiene admiradores",
+        "de lo más inesperados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0501-0153"
+    },
+    {
+      "key": "0601-0158",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 158,
+      "record_id": 10131,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A Kohran la sigue un grupo de gente poco habitual.",
+      "english_current": "Hmm… Kohran's fanbase is a bit\nof a mystery.",
+      "english_issue": "«Fanbase is a bit of a mystery» convierte un público inesperado en un misterio sobre sus admiradores. Algunas versiones españolas heredan además el calco «base de fans».",
+      "english_suggested": "You know, Kohran is popular with a rather unexpected crowd.",
+      "spanish_current": "Hmm… los admiradores de Kohran\nson todo un misterio.",
+      "spanish_suggested": "Vaya… Kohran tiene admiradores de lo más inesperados.",
+      "spanish_lines": [
+        "Vaya… Kohran tiene admiradores",
+        "de lo más inesperados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0501-0153"
+    },
+    {
+      "key": "0603-0417",
+      "table": "/SAKURA1/0603TBL.BIN",
+      "index": 417,
+      "record_id": 10390,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "A Kohran la sigue un grupo de gente poco habitual.",
+      "english_current": "Hmm… Kohran's fanbase is a bit\nof a mystery.",
+      "english_issue": "«Fanbase is a bit of a mystery» convierte un público inesperado en un misterio sobre sus admiradores. Algunas versiones españolas heredan además el calco «base de fans».",
+      "english_suggested": "You know, Kohran is popular with a rather unexpected crowd.",
+      "spanish_current": "Hmm… los admiradores de Kohran\nson todo un misterio.",
+      "spanish_suggested": "Vaya… Kohran tiene admiradores de lo más inesperados.",
+      "spanish_lines": [
+        "Vaya… Kohran tiene admiradores",
+        "de lo más inesperados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0501-0153"
     }
   ]
 }
