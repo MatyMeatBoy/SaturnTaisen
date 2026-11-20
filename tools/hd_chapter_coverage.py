@@ -683,10 +683,11 @@ def build(root, index_dir, portrait_audit):
                 'scope': 'source-4 ground only',
                 'pairing_evidence': CHAPTER4_TACTICAL_REPORT,
             }
-        elif (disc, path) in (STAGE12_MAP, STAGE13_MAP, STAGE14_MAP, STAGE16_MAP):
+        elif (disc, path) in (STAGE12_MAP, STAGE13_MAP, STAGE14_MAP, STAGE15_MAP, STAGE16_MAP):
             stage = Path(path).stem
             report = {STAGE12_MAP: STAGE12_REPORT, STAGE13_MAP: STAGE13_REPORT,
-                      STAGE14_MAP: STAGE14_REPORT, STAGE16_MAP: STAGE16_REPORT}[(disc, path)]
+                      STAGE14_MAP: STAGE14_REPORT, STAGE15_MAP: STAGE15_REPORT,
+                      STAGE16_MAP: STAGE16_REPORT}[(disc, path)]
             row = {
                 'status': 'hd',
                 'verified_in_game': True,
