@@ -6370,9 +6370,11 @@
           },
           "2:/SAKURA1/BG2021.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-9.md#bg2021-on-the-earned-iris-route",
             "pc": "SAKURA1/BG/BG2021.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#bg2021-on-the-earned-iris-route",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2031.BIN": {
             "association": "observed",
