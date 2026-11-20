@@ -286,4 +286,16 @@ Seven WKL sprites now localize the return to title, restart, suspend and restart
 
 The exact attack texture from Sakura's alternate deployment slot now selects Divinidad floral in WKL02, WKL07 and WKL11. The six short allied commands are translated across 243 occurrence slots in 27 banks. Each PRS span keeps its extent and unrelated decompressed bytes. The command Podozhdi retains the name used in the Spanish battle tutorial. Exact short-command textures were found in the natural Info states, with the active draws still to be witnessed.
 
-The witnessed enemy labels Musket, Talon and Acidshot now read Mosquete, Garra and Tiro ácido. The 92 matching slots retain their file layout and decoded bytes outside the name. Controlled 1440p replays from natural MAP02, MAP13 and MAP16 checkpoints finish with matching SRAM and zero interpreted blocks. RGB changes are confined to the three name rectangles. Demon remains pending a readable fit in its smaller compressed span.
+The witnessed enemy labels Musket, Talon and Acidshot now read Mosquete, Garra and Tiro ácido. The 92 matching slots retain their file layout and decoded bytes outside the name. Controlled 1440p replays from natural MAP02, MAP13 and MAP16 checkpoints finish with matching SRAM and zero interpreted blocks. RGB changes are confined to the three name rectangles. Demon kept its English text in v0.2.17-alpha because the original compressed slot was too small for the translated graphic.
+
+## Tactical descriptive text and turn notices
+
+The WKL census covers 27 banks across both discs. The exact image role, dimensions and SHA-256 guard 43 source textures and 955 occurrences. The batch adds 42 Spanish translations for descriptive unit names, classes, commands and special attacks. Proper names retain their existing form. The two raw notices now read Actuando and En turno. Their layout and signed source textures passed the resource checks in all 27 banks. The notices still need an active in-game draw witness.
+
+When a new PRS stream exceeds its original slot, the builder repacks only the original contiguous name directory extent. All offsets outside that extent and all unrelated decoded bytes stay exact. In a controlled MAP16 replay, ordinary target changes read the repacked directory and display Demonio. Both 170-field profiles finish with matching guest hashes and SRAM and zero interpreted blocks. The two differing 1440p captures change 6,948 pixels within the name alone.
+
+## Inventory, weapons and equipment audit
+
+All 3,136 typed item descriptions in the v0.2.17-alpha installation match the Spanish translation memory or per-record override, including the pistol, prop sword and shield descriptions. The 80 Saturn cards and 85 PC item and icon images examined contain no English item labels. The current installed graphics separately contain Opc., Volver and Objetos on both discs. The inspected inventory and tactical Info paths did not show a separate equipment selector.
+
+The Episode 8 inventory replay selects Kohran's photo and displays its Spanish description at 1440p in Original and Enhanced. Its description matches the installed table bytes. Both 220-field runs match hashes and SRAM with zero interpreted blocks. The retained checkpoint carries old button artwork, so the current installed label textures were verified independently at their source.
