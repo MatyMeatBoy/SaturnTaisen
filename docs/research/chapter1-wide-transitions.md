@@ -85,6 +85,26 @@ Separate strict 760-field 0185/0186 runs matched all guest hashes, decoded PCM a
 
 OptiPort instructions were checked against upstream commit a328c5a1b5aabc62f29aa9f1b5a96a59ad2d4ee1. Private evidence and regeneration commands are under local/work/codex-scene-exit-perf. Cleanup removed 2,596,813,653 bytes of diagnostic binaries, objects and extra states. The project measured 121,914,969,297 logical bytes with existing private assets and packages. The immutable development ZIP measured 6,315,009,692 bytes.
 
+### First exterior field on Direct3D 11
+
+On the same Chapter 1 exit at 2560×1440, four serial hidden replays with
+the 0186 runtime showed one field over 16.67 ms among the 64 exterior
+fields. That first field took 20.21–21.51 ms. Whole-frame p95 across the
+64 fields ranged from 12.43 to 13.67 ms in these quieter runs.
+
+The same instrumented executable alternated ordinary present and a
+diagnostic `SDL_FlushRenderer` before present, in off/on/on/off order.
+Ordinary present took 7.517 and 6.708 ms. With the split, the flush took
+0.938 and 0.842 ms and the remaining present took 6.376 and 6.455 ms.
+The combined time stayed within the ordinary range, leaving most of
+the delay in the backend present path. These timings do not isolate
+GPU scheduling, DXGI swap-chain policy or Windows composition.
+
+There is no production change from this diagnostic. The private
+commands and logs are under
+`local/work/codex-scene-exit-perf/first-field-analysis/`. The visible
+display and the user's other PC remain unmeasured.
+
 ## Held empty dialogue position
 
 During Chapter 1, the Enhance Zoom dialogue box rose briefly when a picture
