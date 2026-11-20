@@ -4,7 +4,7 @@ The intermission screens of chapters 2-10 share one layout with IC0501, the firs
 (docs/research/ic0501-intermission-witness.md): a 320x224 picture on VDP2 layer 4, the Save/Status/Resume panel in the
 native rectangle (184,16)-(296,144) on layer 0, and a signed -16 colour offset while it fades. The game paints the
 picture's 8 bpp cells with the palette of ICLOGO.BIN (not the palette stored in the IC file), so the visible RGB
-of every IC picture follows from its cells and that one palette. This tool derives, from the decoded disc-1 files (disc 2 is not derived: its witnessed IC06 uses its own palette):
+of every IC picture follows from its cells and that one palette. This tool derives, from the decoded disc-1 files (disc 2 is not wired: its witnessed IC06 uses its own palette; `disc2_own_palette_candidates` lists the own-palette hashes, never wired):
 
   * `plate`: FNV-1a 64 of the RGB bytes (red, green, blue per pixel, five bits shifted up by three) of the 320x224
     plate outside the panel rectangle, with no colour offset, and `plate_dark` with the -16 offset.
@@ -47,6 +47,8 @@ WITNESSED = {'IC0501': {'plate': 0xA5E3498BEDDC1305, 'plate_dark': 0x1F7A14C3474
              'IC03': {'plate': 0x6469CD72E7963265, 'pc_bytes': 185398, 'pc_fnv': 0x7A7ED93DF49A6CE5}}
 LOGO_PALETTE_FNV = 0xE9107F892185CCC8  # what BackgroundPaletteFingerprint(4) reports for the IC layer
 # Not in the table: own palette key and anchored draw (patch 0107).
+# In-game witness of the own-palette route: disc-2 IC06 (patch 0183): layer-4 palette key and unshifted plate.
+OWN_PALETTE_WITNESS = {'IC06': {'palette': 0xFEBAEA7B6E7CAC67, 'plate': 0x0F85EDA8CE4B247D}}
 SEPARATE = {'IC01': 'handled by patch 0107 (own palette key, anchored backdrop)'}
 
 
@@ -133,6 +135,31 @@ def registration(saturn, pc, max_shift=MAX_SHIFT):
             'margin': round(min(others) - scores[(0, 0)], 2)}
 
 
+def own_palette_candidates(name, data):
+    """Plate hashes if the game shows the picture with the palette stored in the IC file itself (hypothesis, per disc).
+
+    Evidence for this route: disc-2 IC06 (patch 0183) and disc-1 IC01 (patch 0107). Evidence for the ICLOGO route:
+    disc-1 IC0501 and IC03. Which route a given appearance takes is decided by the game module (LOGO.SH2, which
+    differs between discs), not by the picture files, so these rows are candidates and are never wired.
+    """
+    cells = screen_cells(data)
+    if cells is None:
+        return None
+    words, indices = cells
+    row = {'id': Path(name).stem, 'palette': '%016X' % fnv1a(data[:512]),
+           'plate': '%016X' % plate_fnv(indices, words), 'plate_dark': '%016X' % plate_fnv(indices, words, DARKEN),
+           'status': 'candidate-unverified'}
+    witnessed = OWN_PALETTE_WITNESS.get(row['id'])
+    if witnessed:
+        got = {'palette': int(row['palette'], 16), 'plate': int(row['plate'], 16)}
+        if got != witnessed:
+            raise SystemExit('%s own-palette route no longer reproduces the disc-2 witness: %r vs %r' %
+                             (row['id'], got, witnessed))
+        row['status'] = 'reproduces-witness'
+        row['witness'] = 'patch 0183, disc 2'
+    return row
+
+
 def entry_id(saturn_file):
     return Path(saturn_file).stem
 
@@ -146,7 +173,13 @@ def build(iso1, iso2, pc_root, screen_map):
     if fnv1a(logo[:512]) != LOGO_PALETTE_FNV:
         raise SystemExit('ICLOGO.BIN palette is not the shared logo palette %016X' % LOGO_PALETTE_FNV)
     logo_words = struct.unpack_from('>256H', logo, 0)
-    rows, skipped = [], {}
+    rows, skipped, own = [], {}, []
+    if len(discs) > 1:
+        for name in sorted(n for n in files[1] if n.startswith('IC') and n.endswith('.BIN') and n != 'ICLOGO.BIN'):
+            row = own_palette_candidates(name, discs[1].content(files[1][name]))
+            if row:
+                row['same_file_on_disc1'] = name in files[0] and discs[0].content(files[0][name]) == discs[1].content(files[1][name])
+                own.append(row)
     for pair in screen_map['pairs']:
         name = Path(pair['saturn_file']).name
         ident = entry_id(name)
@@ -190,10 +223,10 @@ def build(iso1, iso2, pc_root, screen_map):
                                  (ident, got, witnessed))
             row['reproduces_witness'] = 'patches 0144 / 0162, disc 1'
         rows.append(row)
-    return finish(rows, skipped)
+    return finish(rows, skipped, own)
 
 
-def finish(rows, skipped):
+def finish(rows, skipped, own=()):
     seen = {}
     for row in rows:
         for key in ('plate', 'plate_dark'):
@@ -203,7 +236,8 @@ def finish(rows, skipped):
             seen[row[key]] = row['id']
     return {'schema': 1, 'scope': 'Intermission plate recogniser (names, sizes and hashes only).',
             'logo_palette_fnv': '%016X' % LOGO_PALETTE_FNV, 'menu': list(MENU), 'darken': DARKEN,
-            'entries': sorted(rows, key=lambda r: r['id']), 'not_in_table': dict(sorted(skipped.items()))}
+            'entries': sorted(rows, key=lambda r: r['id']), 'not_in_table': dict(sorted(skipped.items())),
+            'disc2_own_palette_candidates': sorted(own, key=lambda r: r['id'])}
 
 
 def render_header(table):

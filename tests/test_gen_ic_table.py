@@ -30,6 +30,29 @@ def sample(seed):
     return words, indices
 
 
+class OwnPaletteCandidates(unittest.TestCase):
+    def test_uses_the_file_palette_and_is_never_a_table_entry(self):
+        words, indices = sample(4)
+        data = screen_file(words, indices)
+        row = ic.own_palette_candidates('IC99.BIN', data)
+        self.assertEqual(row['plate'], '%016X' % ic.plate_fnv(indices, words))
+        self.assertEqual(row['palette'], '%016X' % ic.fnv1a(data[:512]))
+        self.assertEqual(row['status'], 'candidate-unverified')
+        self.assertIsNone(ic.own_palette_candidates('IC99.BIN', b'x' * 100))
+
+    def test_witness_mismatch_aborts(self):
+        words, indices = sample(5)
+        with self.assertRaises(SystemExit):
+            ic.own_palette_candidates('IC06.BIN', screen_file(words, indices))
+
+    def test_committed_candidates_reproduce_disc2_ic06(self):
+        table = json.loads((ROOT / 'config' / 'hd-ic-table.json').read_text(encoding='utf-8'))
+        rows = {r['id']: r for r in table['disc2_own_palette_candidates']}
+        self.assertEqual(rows['IC06']['plate'], '0F85EDA8CE4B247D')
+        self.assertEqual(rows['IC06']['status'], 'reproduces-witness')
+        self.assertTrue(all(r['status'] != 'hd' for r in rows.values()))
+
+
 class PlateHash(unittest.TestCase):
     def test_cells_decode_back_to_the_indices(self):
         words, indices = sample(1)
