@@ -137,6 +137,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [NC3057 ending face registration](nc3057-ending-faces.md)
 - [NC99 and NC91 face registration](nc99-nc91-registered-faces.md)
 - [Additional NC91 and NC94 face groups](nc91-nc94-additional-faces.md)
+- [NC11, NC15 and NC22 face registration](nc11-nc15-nc22-registered-faces.md)
 - [NC81 neck underlay and NC90 at 1440p](nc81-nc90-1440p.md)
 - [Chapter 1 park speech performance](park-speech-performance.md)
 - [NC3018 face placement at 1440p](nc3018-registered-faces.md)
