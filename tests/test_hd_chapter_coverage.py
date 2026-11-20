@@ -346,11 +346,14 @@ class ChapterCoverageTest(unittest.TestCase):
         groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
         rows = [row for group in groups for row in group['menus-hud'].values()]
         drawn = {(row['pc'], row['pc_image_index']) for row in rows if row['status'] == 'hd'}
-        self.assertEqual(len(drawn), 47)
-        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 6)
+        self.assertEqual(len(drawn), 48)
+        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 7)
         self.assertIn(('SAKURA1/SYSTEM/SIS_ICON.SPR', 3), drawn)
         self.assertEqual({index for pc, index in drawn if pc == 'SAKURA1/SYSTEM/SISTEM.SPR'}, {8, 9})
         items = catalog['unassigned']['menus-hud']
+        frame = items['pc:SAKURA1/SYSTEM/TUIKA_W.SPR#0']
+        self.assertEqual((frame['status'], frame['pc_image_index']), ('hd', 0))
+        self.assertTrue(frame['verified_in_game'])
         for disc in (1, 2):
             for name in ('ITEM03', 'ITEM12', 'ITEM27'):
                 with self.subTest(disc=disc, card=name):

@@ -1,0 +1,104 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -942,6 +942,7 @@
+          0x5542041CD4EA4363ull, {2, 1, 574, 319}, eve0101, eve0101Traced, port::kEve202NativeRect,
+          port::EveRect{24, 16, 255, 132}, 24},
+     };
++    SceneHd saveCompleteFrame;
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+@@ -982,12 +983,12 @@
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
+     auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop,
+                            unsigned feather = 0, unsigned index = port::kEve202PcImage,
+-                           std::vector<uint32_t> theatreUnder = {}) {
++                           std::vector<uint32_t> theatreUnder = {}, int colorOffset = 0) {
+         if (!inset.tried) {
+             inset.tried = true;
+             inset.pending = std::async(std::launch::async,
+                 [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop, feather, index,
+-                 theatreUnder = std::move(theatreUnder)]() {
++                 theatreUnder = std::move(theatreUnder), colorOffset]() {
+                     SceneHdPixels result;
+                     std::vector<uint8_t> bytes;
+                     if (!ReadPcBackdropFile(path, bytes, size) || bytes.size() != size ||
+@@ -1020,6 +1021,16 @@
+                             }
+                         }
+                         break;
++                    }
++                    if (colorOffset) {
++                        for (auto& pixel : result.pixels) {
++                            uint32_t adjusted = pixel & 0xFF000000u;
++                            for (unsigned shift : {0u, 8u, 16u}) {
++                                const auto channel = std::clamp(int((pixel >> shift) & 255u) + colorOffset, 0, 255);
++                                adjusted |= uint32_t(channel) << shift;
++                            }
++                            pixel = adjusted;
++                        }
+                     }
+                     return result;
+                 });
+@@ -3564,6 +3575,60 @@
+                 presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
++            if (!choosing && !port.menu.IsOpen() && port.videoRenderer &&
++                satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
++                texW == 320 && texH == 224 && baseFit.scale >= 2 &&
++                where.x == baseFit.x && where.y == baseFit.y && where.w == baseFit.w && where.h == baseFit.h &&
++                softwareShown.size() == 320 * 224) {
++                const auto& frame = port.videoRenderer->PresentationFrame();
++                // This pane has a separate VDP1 label. Use only the donor border strips.
++                constexpr port::EveRect border{32, 184, 256, 24};
++                struct Strip { port::EveRect source, target; };
++                constexpr Strip strips[]{
++                    {{0, 0, 8, 48}, {32, 184, 4, 24}},
++                    {{568, 0, 8, 48}, {284, 184, 4, 24}},
++                    {{8, 0, 560, 6}, {36, 184, 248, 3}},
++                    {{8, 42, 560, 6}, {36, 205, 248, 3}},
++                };
++                if (frame.topSource.size() == 320 * 224 &&
++                    PcBackdropHash(std::span{frame.palette}.subspan(0x580, 32)) == 0x809F8438D9925B74ull &&
++                    std::ranges::any_of(frame.sprites, [&](const auto& sprite) {
++                        const auto& cmd = sprite.command.words;
++                        return (cmd[0] & 0x8FFF) == 1 && cmd[2] == 0x0080 && cmd[3] == 0x02C0 &&
++                            cmd[5] == 0x2018 && sprite.x == border.x && sprite.y == border.y &&
++                            cmd[6] == 0xFF80 && cmd[7] == 0x0048 && cmd[10] == 0x007F && cmd[11] == 0x005F &&
++                            sprite.pixels.size() == 3072 && PcBackdropHash(sprite.pixels) == 0x389D300EA2A1EF61ull;
++                    })) {
++                    uint64_t rgb = 14695981039346656037ull;
++                    bool owned = true;
++                    for (int y = 0; y < border.height && owned; ++y) {
++                        for (int x = 0; x < border.width; ++x) {
++                            if (x >= 4 && x < border.width - 4 && y >= 3 && y < border.height - 3) continue;
++                            const size_t at = size_t(border.y + y) * 320 + border.x + x;
++                            if (frame.topSource[at] != 0) {
++                                owned = false;
++                                break;
++                            }
++                            for (unsigned shift : {0u, 8u, 16u})
++                                rgb = (rgb ^ uint8_t(softwareShown[at] >> shift)) * 1099511628211ull;
++                        }
++                    }
++                    if (owned && rgb == 0x4950E2BF17666485ull) {
++                        loadEveInset(saveCompleteFrame, "SAKURA1/SYSTEM/TUIKA_W.SPR", 29598, 0xDF61E81E8320F94Bull,
++                                     {0, 0, 576, 48}, 0, 0, {}, -16);
++                        if (saveCompleteFrame.texture) {
++                            for (const auto& strip : strips) {
++                                const auto t = port::EveInsetDestination(strip.target, baseFit.x, baseFit.y, baseFit.scale);
++                                const SDL_FRect source{float(strip.source.x), float(strip.source.y),
++                                    float(strip.source.width), float(strip.source.height)};
++                                const SDL_FRect target{float(t.x), float(t.y), float(t.width), float(t.height)};
++                                SDL_RenderTexture(renderer, saveCompleteFrame.texture, &source, &target);
++                            }
++                        }
++                    }
++                }
++            }
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 1 &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_portraits") == 0 && !port.opt.pcAssetsPath.empty() &&

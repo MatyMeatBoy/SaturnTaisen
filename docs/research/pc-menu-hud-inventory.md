@@ -207,7 +207,7 @@ Private inputs, states and controls remain under `local/work/codex-th1/load-arro
 
 The register (`config/hd-chapter-coverage.json`, category `menus-hud`) now carries the runtime-drawn menu/HUD pictures, and `tools/build_hd_progress.py` takes the `hud-menus` integrated count from it. The map is explicit in `tools/hd_chapter_coverage.py` (`SYSTEM_HUD_DRAWS`, `SYSTEM_HUD_EXCLUDED`; item cards come from the same selection as `tools/gen_item_table.py`). A picture counts once per PC image, whatever the disc.
 
-Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 50 distinct PC item pictures of `config/hd-item-map.json` = 228. Integrated: 41.
+Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 51 distinct PC item pictures of `config/hd-item-map.json` = 229. Integrated: 48.
 
 | Piece | PC images | Patch / table | State |
 | --- | --- | --- | --- |
@@ -215,9 +215,10 @@ Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted
 | Inventory brackets | FONT_CSL 2 of 2 | 0093, `system_brackets.h` | drawn (idle/hover/confirm) |
 | CD-1 and CD-2 load emblems | SIS_ICON 2 of 10 (subimages 2 and 3) | 0112 and 0146, `load_disc_icon.h` | verified for the top load slot; subimage 1 (System RAM icon) kept native |
 | Load menu selection arrows | SISTEM subimages 8 and 9 (of 45) | 0150, `system_brackets.h` | verified in the English load menu on both discs |
+| Save confirmation frame | TUIKA_W subimage 0 | 0197, border strips | verified in the English disc 1 save confirmation |
 | KAO | 394, excluded here | portrait pack | counted in portraits |
 
-Not drawn (open, 182 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 43, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 3 (needs layout), WINDOW 6; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
+Open (181 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 43, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 2 (needs layout), WINDOW 6; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
 
 ## TW5 wiring audit: which open families the existing mechanisms can reach
 
@@ -234,3 +235,26 @@ Patches 0090, 0093 and 0112 all recognise their Saturn picture from a **witnesse
 | Ten item pictures | Nine compact icon subimages and the full ITEM09 flower card | The card path requires a full-card counterpart. | Native icon command evidence or an ITEM09 full-card pair. |
 
 Nothing was built or replayed for this change (documentation and register notes only), so the opening-film hashes are untouched by construction.
+
+## HD save confirmation frame
+
+The English disc 1 victory continuation reaches the `Save Complete!`
+confirmation through normal save inputs. The retained state and SRAM are
+under `local/work/chapter1-victory-followup/corridor-bridge/continuous-native`.
+The saved VDP1 command uses mode `0080`, color bank `02C0`, and a 256×24
+picture at (32,184). All 1,680 native border pixels match the independently
+decoded palette and texture after the Saturn RGB offset of −16.
+
+PC `SAKURA1/SYSTEM/TUIKA_W.SPR` subimage 0 measures 576×48. The corner strips
+use the native 2× geometry, and the intervening straight rows are uniform,
+allowing them to fit the 256×24 viewport. Patch 0197 checks the captured VDP1
+command, palette, winning layer and composed RGB before drawing the four
+border strips. The separate game label and interior retain their Saturn pixels.
+
+At 1440p, all 60,480 border pixels match the independent PC decode and offset.
+Four captures of the active confirmation preserve the entire label, interior
+and surround pixel for pixel. Two captures after dismissal match the native
+screen. Six 110-field strict profiles match guest hashes and SRAM, including
+Original and the absent, corrupt and disabled donor controls. Verification
+covers the replayed confirmation on English disc 1. Package inclusion and
+other TUIKA_W subimages remain open.
