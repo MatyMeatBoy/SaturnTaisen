@@ -88,7 +88,7 @@ Cobertura: 23 de las 34 conectadas y atribuidas dibujan en la ruta fria. BG1143 
 
 ### Atribucion de las tres sin atribuir
 
-- BG1016: ningun `scene picture:` en los 49 tramos de la ruta fria. Sigue sin atribuir; su unico dibujo conocido es la ruta de Iris del capitulo 8 (`th8-native-attribution.md`).
+- BG1016: ningun `scene picture:` en los 49 tramos de la ruta fria. La aparición del disco 1 sigue sin atribuir. El mismo donante físico ya está verificado en [la ruta de Iris del disco 2](th8-native-attribution.md#verified-scene-draws-on-0801-and-early-0802).
 - BG1120: el registro da el cuadro frio 189.250; desde el estado del cuadro 186.000 (SHA-256 `b9802efd05286dd2...`), 3.400 cuadros: NOT DRAWN (hashes identicos, 0 interpretados). Sigue sin atribuir.
 - BG2010: no conectado (la clave selecciona BG2004.SPR); no dibuja por si mismo en la ruta fria (BG2004 si, cuadro 256.031). Sigue sin atribuir.
 
@@ -98,4 +98,4 @@ Atribuidos 0, integrados nuevos 0, verificados nuevos 0: las 23 ya constan `veri
 
 No verificado: las 11 conectadas sin estado en este PC y las 7 de ruta propia; la lectura visual de cada captura (solo diferencia y rectangulo; BG2039 leido en #651); las tres sin atribuir, que necesitan una ruta que las dibuje.
 
-Nota: la tabla superior la regenera `tools/thd01_ep1_backgrounds.py`; esta seccion es manual y hay que conservarla al regenerar.
+La regeneración de la tabla conserva esta sección de evidencia.
