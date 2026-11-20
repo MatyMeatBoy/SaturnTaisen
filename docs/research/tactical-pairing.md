@@ -98,9 +98,15 @@ match the previous Enhanced output. Original with and without the donor
 matches exactly. The MAP15 prologue control also matches the previous
 output at four samples over 80 guest fields with the MAP16 donor present.
 
-The replays use the portable interpreter and the uninstrumented Direct3D
-11 frontend. Strict EVT16 coverage and package inclusion remain open.
-Evidence and commands are retained in `local/work/codex-th1/map16-0240`.
+The first replays use the portable interpreter and the uninstrumented
+Direct3D 11 frontend. A second 1440p run repeats the 1,200-field movement
+replay with strict native execution and zero interpreted blocks in
+both Enhanced profiles. The 12 RGB captures match the portable
+donor and missing-donor controls. Guest hashes and final SRAM agree.
+The candidate SHA-256 is `ec9e5536270ac7914f0035138a9dc2dbbfc897d0e265742fd15d1f123f8d266f`; it links
+677,804 variants, including 161 local EVT14 variants under separate review.
+The full EVT16 battle and package inclusion remain open. Evidence and
+commands are retained in `local/work/codex-th1/map16-0240`.
 
 ## Live MAP12 PC ground
 
