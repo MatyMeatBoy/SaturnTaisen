@@ -581,6 +581,12 @@
     "evidence": "docs/research/ending-bank-pairs.md",
     "included_in_package": false,
     "unique_routes": {
+      "SAKURA1/KA_CG.BIN": {
+        "records": [8, 11],
+        "runtime_patch": "patches/0192-sakura-kanna-ending-photos.patch",
+        "evidence": "docs/research/ending-bank-pairs.md#controlled-kanna-ending-photographs",
+        "controlled": true
+      },
       "SAKURA1/SU_CG.BIN": {
         "records": [8, 11],
         "runtime_patch": "patches/0189-sakura-sumire-ending-photos.patch",

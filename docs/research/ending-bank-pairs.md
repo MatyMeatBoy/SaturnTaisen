@@ -204,7 +204,7 @@ That audit moved the six disc 2 banks away from a blanket `paired-not-wired`: di
 The earlier pattern audit used the then-current 353-variant registry and had no accessible alternate route checkpoint.
 
 What is missing and who does it:
-- Owner (discs, natural play): continuation replays of the Kaede, Maria, Iris and Kohran endings through their unique photos.
+- Owner (discs, natural play): continuation replays of the Kanna, Maria, Iris and Kohran endings through their unique photos.
 - Owner or integration desk: a GE (theatre) ending witness with viewport and fade evidence; then a generated GE table keyed by the four palette fingerprints.
 - Integration desk: a disc-1 decision (distinct ENDING module, no witness) and package inclusion.
 
@@ -250,3 +250,37 @@ Records 6 and 7 continue to use the canonical END_SA asset. Their decoded
 these shared photographs contribute one donor. The two unique Sumire
 pictures use the verified physical END_SU file. Other routes and release
 package inclusion remain open.
+
+## Controlled Kanna ending photographs
+
+The fixture comes from the natural English disc 2 Sumire relay state at
+field 27,000. It changes the 16-bit value at Low WRAM address `002003A6`
+from 2 to 4, changing one serialized byte at offset `0x1003E3`.
+The original game dispatches from `0608030C` to the Kanna arm at
+`06080350`, then loads the complete `KA_CG.BIN` from FAD 136797 at
+`00204000`. The fixture reuses the same input movie and SRAM as the
+Sumire continuation. Its recipe, reference and hashes are retained under
+`local/work/codex-witness-441-review/sumire-ending/kanna-controlled`.
+
+The 22,500-field strict comparison matches the interpreter's guest hashes,
+all 37 native RGB captures and final SRAM through Fin. The two additional opcode variants
+match the English disc 2 ENDING module at offsets `0x350` and `0x364`.
+The added photographs use the existing Enhanced opaque layer, palette and
+RGB checks. Each native record matches all 51,200 pixels at (0,16) to (320,176).
+
+| Saturn record | Continuation field | CRAM and VRAM offsets | PC subimage | PC crop (x, y, w, h) |
+| --- | --- | --- | --- | --- |
+| 11 | 18600 | `0x200`, `0x8040` | `END_KA.SPR` 10 | (16,0,620,320) |
+| 8 | 19200 | `0x400`, `0x40040` | `END_KA.SPR` 8 | (34,0,584,300) |
+
+At 1440p, the changes are confined to (320,144) to (2240,1104), all
+1,843,200 pixels within each steady donor capture match an independent
+crop and resample, and Original and the sampled fades match the native
+captures. At the group-photo entry, the native image is visible at sampled
+field 600 and the registered image is visible by field 605 in the onset
+replay. The donor loads asynchronously. Both photos use the verified
+physical END_KA file.
+The canonical group photographs continue to use END_SA once.
+
+This evidence covers a controlled authored dispatch. Natural Kanna route
+verification and package inclusion remain open.
