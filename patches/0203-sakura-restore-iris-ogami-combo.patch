@@ -1,0 +1,94 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3783,6 +3783,90 @@
+                     }
+                 }
+             }
++            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 2 &&
++                satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
++                texW == 320 && texH == 224 && baseFit.scale >= 2 &&
++                softwareShown.size() == 320 * 224) {
++                const int pose = port.videoRenderer->CaptureIrisComboPose(irisComboNative);
++                const auto& planes = port.videoRenderer->PresentationFrame();
++                if (pose >= 0 && !irisCombo[0].tried) {
++                    for (unsigned index = 0; index < irisCombo.size(); ++index) {
++                        auto& image = irisCombo[index];
++                        image.tried = true;
++                        queuePinnedPan(image, "SAKURA2/UNIT/GATTAI/IRISU/GTB_IRS.SPR", 275081,
++                            0x5B2127D6F980BFFBull, 640, 480, index);
++                    }
++                }
++                if (pose >= 0) {
++                    auto& image = irisCombo[pose];
++                    auto& donor = irisComboDonor[pose];
++                    if (image.pending.valid() && image.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                        auto art = image.pending.get();
++                        if (!art.pixels.empty()) {
++                            donor.resize(640 * 448);
++                            // Each PC subimage has its own measured 2x registration.
++                            for (int y = 0; y < 448; ++y) for (int x = 0; x < 640; ++x) {
++                                const int syNumerator = 173 * (2 * y + 1) - 600;
++                                if (pose == 0 && syNumerator < 0) continue;
++                                const int sx = pose == 0 ? (319 * (2 * x + 1) + 800) / 640
++                                                         : (306 * (2 * x + 1) + 9200) / 640;
++                                const int sy = pose == 0 ? syNumerator / 320 : (673 * (2 * y + 1) + 10400) / 1280;
++                                if (sx >= 640 || sy >= 480) continue;
++                                const uint32_t color = art.pixels[size_t(sy) * 640 + sx];
++                                if ((color & 0xFFFFFF) != 0xFFFF00)
++                                    donor[size_t(y) * 640 + x] = color | 0xFF000000;
++                            }
++                        }
++                    }
++                }
++                if (pose >= 0 && !irisComboDonor[pose].empty() && planes.source.size() == softwareShown.size() &&
++                    planes.topSource.size() == softwareShown.size() &&
++                    (pose == 1 || planes.floralCoverMix.size() == softwareShown.size())) {
++                    const auto& nativePose = irisComboNative[pose];
++                    const auto& donor = irisComboDonor[pose];
++                    irisComboPixels.assign(640 * 448, 0);
++                    bool visible = false;
++                    for (int y = 0; y < 224; ++y) for (int x = 0; x < 320; ++x) {
++                        const size_t at = size_t(y) * 320 + x;
++                        const auto native = nativePose[at];
++                        if (!native || planes.topSource[at] != 5 ||
++                            (x && !nativePose[at - 1]) || (x + 1 < 320 && !nativePose[at + 1]) ||
++                            (y && !nativePose[at - 320]) || (y + 1 < 224 && !nativePose[at + 320]))
++                            continue;
++                        PanelMix cover{};
++                        uint32_t composed = native;
++                        if (pose == 0) {
++                            if (planes.source[at] != 2 && planes.source[at] != 4) continue;
++                            cover = planes.floralCoverMix[at];
++                            if (!cover.lowerWeight || cover.lowerWeight >= 32) continue;
++                            // The capture places the live backing in topRgb and gives the actor's weight.
++                            composed = CompositePanelPixel(cover, native, native);
++                        } else if (planes.source[at] != 5) continue;
++                        if ((composed ^ softwareShown[at]) & 0xFFFFFF) continue;
++                        const size_t hi = size_t(y) * 1280 + size_t(x) * 2;
++                        for (const size_t offset : {0u, 1u, 640u, 641u}) {
++                            const auto color = donor[hi + offset];
++                            if (!color) continue;
++                            irisComboPixels[hi + offset] = pose == 0 ? CompositePanelPixel(cover, color, native) : color;
++                            visible = true;
++                        }
++                    }
++                    if (visible && !irisComboTexture) {
++                        irisComboTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                            SDL_TEXTUREACCESS_STREAMING, 640, 448);
++                        if (irisComboTexture) {
++                            SDL_SetTextureScaleMode(irisComboTexture, SDL_SCALEMODE_NEAREST);
++                            SDL_SetTextureBlendMode(irisComboTexture, SDL_BLENDMODE_BLEND);
++                        }
++                    }
++                    if (visible && irisComboTexture &&
++                        SDL_UpdateTexture(irisComboTexture, nullptr, irisComboPixels.data(), 640 * sizeof(uint32_t)) &&
++                        SDL_RenderTexture(renderer, irisComboTexture, nullptr, &where) &&
++                        std::getenv("SATRECOMP_COMBO_TRACE"))
++                        std::fprintf(stderr, "verified combo pose: GTB_IRS %d\n", pose);
++                }
++            }
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 1 &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_portraits") == 0 && !port.opt.pcAssetsPath.empty() &&

@@ -197,7 +197,8 @@
       "patches/0199-sakura-iris-ogami-combo-pose.patch",
       "patches/0200-sakura-hd-tactical-status-frame.patch",
       "patches/0201-sakura-iris-ogami-combo-blend.patch",
-      "patches/0202-sakura-hd-lips-dialogue-window-rails.patch"
+      "patches/0202-sakura-hd-lips-dialogue-window-rails.patch",
+      "patches/0203-sakura-restore-iris-ogami-combo.patch"
     ]
   }
 }
