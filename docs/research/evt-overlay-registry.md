@@ -273,7 +273,19 @@ python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track
 
 Isolated compile: copy `local/deps/satrecomp` to `local/deps/satrecomp-evt`, put the disc 2 `blocks.txt` and `handoff/current-aot/block-order.json` in `local/work/rebuild-evt`, and run `build_runtime.py recompile` with `DEP`, `WORK` and `BUILD` pointing at the `-evt` copies (about 6,882 ninja steps, 16 threads). Warning: `dependency()` refuses a shared SDK tree with edits outside the recorded patch stack; the isolated build bypassed it, so the copy carries those unrecorded edits.
 
-### Corrections and not verified
+### Isolated AOT result (1,357,536 blocks, `local/build/rebuild-evt`)
 
-- The earlier 40,000-frame sweep never completed: in `deep.log`, 14 of 17 cases ended with `TimeoutExpired` (1,500 s limit). T55 stays open; use a limit of several hours.
-- Not verified at the time of writing: the isolated AOT result (strict runs without stopping at `00204000`, per-frame hashes equal to the interpreter in the first 6,000 frames, zero interpreted) and the per-case EVT attribution by RAM match at frame 6,678 (the state at frame 8,000 no longer matches the whole file).
+Strict native, 40,000 frames with advance, all six cases: exit 0, no stop at `00204000`, `interpreted 0`, per-frame guest hashes identical to the interpreter recordings over all 40,001 lines (so also the first 6,000). RAM at frame 6,678 matches the whole disc file at `00204000`:
+
+| Case | EVT | Disc LBA | Bytes | SHA-256 prefix |
+| --- | --- | ---: | ---: | --- |
+| bank-3-battle-2 | EVT04 (disc 1) | 221,724 | 77,224 | 93fb524dc7b6 |
+| bank-3-battle-3 | EVT05 (disc 1) | 221,762 | 76,672 | 0253c98ff7cb |
+| bank-10-battle-2, bank-10-final-battle | EVT19 (disc 2) | 203,493 | 76,596 | 1e5f8f4d3f67 |
+| bank-4-battle | EVT06 (disc 1) | 221,800 | 77,716 | 3214506d26f1 |
+
+Not attributed: bank-6-battle (no state saved at an EVT load) and any EVT loaded after frame 6,678.
+
+### Corrections
+
+- The earlier 40,000-frame sweep never completed: in `deep.log`, 14 of 17 cases ended with `TimeoutExpired` (1,500 s limit). Only these six cases were re-run here; the other 11 remain.
