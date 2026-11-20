@@ -153,3 +153,7 @@ The combined patch 0244 candidate (SHA-256 prefix `f8e41c28`) completes the iden
 ### Verified BG1047 draw
 
 English disc 1 FAD 140100, saved continuation field 1499. The patch 0244 candidate `f8e41c28` replayed 56 strict fields in Direct3D 11 at 2560 × 1440. Both runs had identical guest hashes and final SRAM. The only PC asset added was the exact `SAKURA1/BG/BG1047.SPR`, which the runtime reported usable. Four samples (8, 16, 30, 50) each change 1,336,862 pixels inside the Zoom scene rectangle (272, 29) to (2288, 1037). The native foreground, dialogue, and outer framing are preserved. The captures and trace are under `local/work/codex-th6-current/bg1047-1440-art`. Release inclusion remains open.
+
+### Verified BG1003 draw
+
+English disc 1 reads BG1003 at FAD 139088 in the second continuation. The field 899 checkpoint precedes the fade to Ogami's map. The patch 0244 candidate `f8e41c28` replays 56 strict fields at 2560 × 1440 in Direct3D 11 with identical guest hashes and final SRAM. Adding only `SAKURA1/BG/BG1003.SPR` changes 2,030,954 pixels in each of four samples, all within the approved scene rectangle. The runtime reports that exact donor usable. A later checkpoint at field 999 covers the fade and map, with seven samples identical across donor and missing-donor runs. Captures and traces are under `local/work/codex-th6-current/bg1003-1440-early` and `bg1003-1440-long`. Package verification remains open.
