@@ -168,6 +168,7 @@ def main(argv=None):
     ap.add_argument('--state', type=pathlib.Path, required=True)
     ap.add_argument('--pc-assets', type=pathlib.Path, required=True, help='extraction root holding SAKURA1/BG/*.SPR')
     ap.add_argument('--control-pc-assets', type=pathlib.Path, help='matched control pack without the scene SPR under test')
+    ap.add_argument('--expect', metavar='SPR', help='skip the control when this donor is not used, for example SAKURA1/BG/BG2057.SPR')
     ap.add_argument('--disc', type=pathlib.Path, default=local_path('local/prepared/disc1/game.cue'))
     ap.add_argument('--backup', type=pathlib.Path, help='backup RAM to copy (default: a fresh one is created)')
     ap.add_argument('--movie', type=pathlib.Path)
@@ -198,9 +199,13 @@ def main(argv=None):
             print(f'{label}: incomplete strict guest evidence', file=sys.stderr)
             return 2
         backup = evidence / 'backup.bin'
-        results[label] = (parse_trace(text), shot, hashes, backup.read_bytes() if backup.is_file() else None)
+        trace = parse_trace(text)
+        if donor and args.expect and args.expect not in drawn_files(trace):
+            print(f'SKIP: {args.expect} unused in this replay window; no control run')
+            return 1
+        results[label] = (trace, shot, hashes, backup.read_bytes() if backup.is_file() else None)
     trace, donor_shot, donor_hashes, donor_backup = results['donor']
-    _, control_shot, control_hashes, control_backup = results['control']
+    control_trace, control_shot, control_hashes, control_backup = results['control']
     if donor_hashes != control_hashes or donor_backup != control_backup:
         print('Donor and control guest evidence differs', file=sys.stderr)
         return 2
@@ -210,6 +215,9 @@ def main(argv=None):
     changed = count_changed(donor_shot, control_shot)
     if changed is None:
         print('Cannot compare RGB captures. Check Pillow and the capture dimensions.', file=sys.stderr)
+        return 2
+    if args.expect and set(drawn_files(trace)) ^ set(drawn_files(control_trace)) != {args.expect}:
+        print(f'Cannot isolate {args.expect}; check the donor and control packs', file=sys.stderr)
         return 2
     drew, message = verdict(trace, changed)
     print(message)

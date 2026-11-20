@@ -48,3 +48,9 @@ Only BG1119 and BG1209 were drawn here. The other builds named in the reports we
 For attributing pixel changes, give both runs a PC asset root. Construct two small roots with the same layout. Place the scene SPR under test in the donor root only and pass the other with `--control-pc-assets`. Both runs then select the same floral backdrop. With the packaged v0.2.16-alpha runtime and the Episode 1 corridor checkpoint, the 56-field 1440p comparison traced BG1119 only in the donor run. The matched comparison changed 2,032,062 pixels; the no-pack comparison also changed the floral backdrop and gave 3,558,000. BG1119 already had a verified row.
 
 A successful scene verdict now requires a usable donor trace, changed RGB pixels, the requested number of strict guest hashes and equal donor/control guest hashes and final SRAM. Pillow is required for RGB comparison. A trace-only match remains diagnostic and exits with code 1. An incomplete or divergent replay exits with code 2.
+
+## Quickly reject inactive checkpoints
+
+For queues built from disc reads or resident memory, add `--expect SAKURA1/BG/BG2057.SPR` with the corresponding donor name. The first run checks the strict hashes and trace. If the expected file was unused in that window, the command exits 1 without running the control. A positive still runs the full control and rejects comparisons where another donor is newly active. A skipped window establishes only that this checkpoint failed to draw the requested resource.
+
+The first five-checkpoint benchmark on the release candidate found two active donors, BG2517 and BG2057, and three negatives. It used five donor runs and needed two controls instead of five. That saves three of ten runs while preserving the same positive verification checks. Start with a short settled replay window and advance inputs for checkpoints with an active fade or a loaded plate hidden by the foreground.
