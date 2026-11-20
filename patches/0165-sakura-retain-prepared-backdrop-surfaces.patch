@@ -1,0 +1,70 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -338,10 +338,15 @@
+     const int windowWidth = port.gpu ? static_cast<int>(240.0f * static_cast<float>(scale) * port.gpu->Aspect() + 0.5f) : 320 * scale;
+     SDL_Window *window = nullptr;
+     SDL_Renderer *renderer = nullptr;
++    struct PreparedBackdrop {
++        std::atomic<SDL_Surface*> surface{nullptr};
++        ~PreparedBackdrop() { if (auto* ready = surface.load()) SDL_DestroySurface(ready); }
++    };
+     struct Backdrop {
+         uint64_t palette=0;SDL_Texture* texture=nullptr;
+         std::vector<uint32_t> pixels,nativeScreen;std::array<int16_t,3> offset{};
+         std::vector<std::filesystem::path> files;std::filesystem::path cacheDir;std::vector<uint8_t> nativePalette;
++        std::shared_ptr<PreparedBackdrop> prepared;
+         bool attempted=false;
+         bool pc=false,screen=false,anchored=false;unsigned layer=5;std::string id;
+     };
+@@ -1571,7 +1576,19 @@
+                 (std::count(port.videoRenderer->PresentationFrame().source.begin(),port.videoRenderer->PresentationFrame().source.end(),uint8_t(backdrop.layer))>=1000 || (backdrop.layer==5 && (mixedFloralAvailable || mapFade.has_value())))) {
+                 if(!backdrop.attempted) {
+                     backdrop.attempted=true;
++                    if (backdrop.prepared) {
++                        const auto started = SDL_GetTicksNS();
++                        if (auto* ready = backdrop.prepared->surface.exchange(nullptr)) {
++                            backdrop.texture = BackdropTexture(renderer, ready, &backdrop.pixels);
++                            if (std::getenv("SATRECOMP_BACKGROUND_STATS"))
++                                std::fprintf(stderr,"background warm upload: asset=%s us=%llu usable=%d\n",
++                                    backdrop.id.c_str(), static_cast<unsigned long long>((SDL_GetTicksNS()-started)/1000),
++                                    backdrop.texture != nullptr);
++                        }
++                        backdrop.prepared.reset();
++                    }
+                     for(const auto& file:backdrop.files) {
++                        if (backdrop.texture) break;
+                         const bool trace=std::getenv("SATRECOMP_BACKGROUND_STATS")!=nullptr;
+                         const auto started=trace?SDL_GetTicksNS():0;
+                         backdrop.texture=backdrop.pc?
+@@ -1598,13 +1615,26 @@
+                 const unsigned count=BackgroundWorkerCount(false);
+                 if(count) {
+                     std::vector<BackgroundWorkers::Job> jobs;
+-                    for(const auto& item:backdrops) {
+-                        if(item.screen || item.cacheDir.empty() || (item.pc && !preferPc))continue;
++                    // Retain only the prepared logical grids, with a fixed CPU-memory cap.
++                    // Texture creation stays on the render thread and only occurs on a match.
++                    constexpr size_t maxPreparedBytes = 40 * 1024 * 1024;
++                    size_t preparedBytes = 0;
++                    for(auto& item:backdrops) {
++                        if(item.screen || item.attempted || item.cacheDir.empty() || (item.pc && !preferPc))continue;
++                        const size_t bytes = item.pc ? 864 * 486 * 4 : 416 * 234 * 4;
++                        if (preparedBytes + bytes <= maxPreparedBytes) {
++                            item.prepared = std::make_shared<PreparedBackdrop>();
++                            preparedBytes += bytes;
++                        }
+                         jobs.push_back([files=item.files,cache=item.cacheDir,palette=item.nativePalette,
+-                                        id=item.id,pc=item.pc,root=std::filesystem::path(port.opt.pcAssetsPath)] {
++                                        id=item.id,pc=item.pc,root=std::filesystem::path(port.opt.pcAssetsPath),
++                                        prepared=item.prepared] {
+                             for(const auto& file:files) {
+                                 auto* surface=pc?PreparePcBackdrop(file,root,id,cache,true):PrepareBackdrop(file,palette,cache,true);
+-                                if(surface) {SDL_DestroySurface(surface);return true;}
++                                if (!surface) continue;
++                                if (prepared) prepared->surface.store(surface);
++                                else SDL_DestroySurface(surface);
++                                return true;
+                             }
+                             return false;
+                         });
