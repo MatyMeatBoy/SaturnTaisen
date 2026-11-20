@@ -27,6 +27,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 
 | ID | P | Type | Status | Pending |
 |---|---|---|---|---|
+| HD Windows paths | P1 | local | implemented and tested on Windows, patch 0212 | Unicode `--pc-assets` roots load tactical artwork and films. ASCII parity checked for MAP12 and MOVIE004. Pending release packaging. See [PC resource notes](research/pc-spred-resources.md#windows-pc-asset-roots-patch-0212). |
 | T02 | P0 | local | split · see T02a–T02c | Victory of the first battle and exit. The continuous 23,443-frame movie plays on the current build with 0 interpreted and ends with the orders menu open; local handoff state `local/work/t02/fin-multiple-turns.state` (SHA-256 4d67dd1a…). |
 | T08 | P1 | local | after T01 | Extended backgrounds during fades: measure the exact frames of the `native` fallback (add frame number to the layout trace). |
 | T09 | P2 | local | PR · 240/304 | Chapter 1's pending portraits (32 in the 201 checkpoint), reviewing `004f`, `0095`, `00a1`, `00ef`, `013b`, `013c`, and `0169` for their three regions. |
