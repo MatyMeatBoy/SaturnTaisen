@@ -51,3 +51,33 @@ The festival cursor moves to the far right edge and confirms to leave the stalls
 The tactical route records Kohran's attack and subsequent enemy attack, then the allies' retreat through the shrine gate. Kanna retreats after taking damage before the remaining party clears the gate. The next tactical map opens and gives Iris the first move. The tactical receipts use the portable interpreter through this boundary. [Bounded EVT12 strict coverage](evt-overlay-registry.md) has its own witness scope.
 
 The states, battery images, inputs, screenshots and logs stay in the private archive at `local/work/codex-th1/nc3517-live/`. The two story-route journals record the exact sequence, inputs and state hashes through MAP12 turn 2. This evidence establishes a natural Iris-selected start for further replay. NC3517 rendering, the natural Chapter 9 draw, and package coverage remain open.
+
+## Offline body and face registration checkpoint
+
+The two prepared Saturn discs contain the same 44,048-byte NC3517 file.
+The disc 2 extent starts at FAD 140992. A 200 × 80 comparison strip at
+offset 0x610 has 10,112 opaque native texels. PC subimage 0 is 473 × 184.
+The shared axis fit uses scale (2088, 2254) and origin (−9775, −2197)
+in thousandths. Its 23 landmark inliers have a median residual of
+0.676 PC pixels and a maximum of 2.408.
+
+The existing registered-body compositor and an independent integer
+projection agreed on all 64,000 output RGBA samples. With the existing
+12-sample edge taper, 37,521 of the 40,448 opaque 2× samples use the
+donor and all 23,552 transparent body samples stay clear. The sampled
+donor region contains opaque art and passes the chroma check.
+
+| Candidate native part | Slots | Proposed native size | Authored PC origin |
+| --- | ---: | ---: | ---: |
+| Left eyes | 3 | 24 × 32 | (119, 17) |
+| Left mouth | 6 | 72 × 32 | (6, 94) |
+| Right eyes | 3 | 56 × 48 | (268, 17) |
+| Right mouth | 6 | 16 × 24 | (288, 107) |
+
+The four candidate groups consume the 26,496-byte native tail exactly.
+Each slot has a distinct byte fingerprint. The PC face origins come
+from the authored frame tables. Natural command positions, rendered
+face pairing and coverage during dialogue are pending the live 0904
+witness. Capture the frame before the FAD read and settled frames
+covering both characters' expressions. The fit scripts and private
+image evidence are under `local/work/codex-th1/nc3517-registration`.
