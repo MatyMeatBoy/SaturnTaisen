@@ -118,3 +118,14 @@ onto patch 0263, 60 captures across BG2025, BG2014 and their controls
 match the independent results, with identical guest hashes and final
 SRAM and zero interpreted blocks. BG2025 adds one unique verification.
 Package inclusion is pending.
+
+## BG1292 on the 1001 route
+
+The published v0.2.27 runtime ran two 220-field strict replays from the
+disc 2 episode 10 checkpoint. Guest hashes and final SRAM matched with
+zero interpreted blocks. At relative fields 34, 64 and 96 at 1440p,
+1,999,594 pixels changed inside (272,29)–(2288,1037). Each changed
+pixel matched the independently decoded native image before and the
+BG1292 PC donor within two channel levels after. Samples at fields
+8, 16, 132, 180 and 204 matched between the profiles. This confirms a
+unique donor already integrated in the published runtime.
