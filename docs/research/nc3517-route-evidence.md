@@ -81,3 +81,21 @@ face pairing and coverage during dialogue are pending the live 0904
 witness. Capture the frame before the FAD read and settled frames
 covering both characters' expressions. The fit scripts and private
 image evidence are under `local/work/codex-th1/nc3517-registration`.
+
+### Compositor fixture and retained-state search
+
+The 200 x 80 body ran through the current Windows renderer in an
+isolated synthetic fixture. Eight 12-field profiles matched guest
+hashes and SRAM within their fixture, including Original and missing
+donor controls. With a valid donor and a clear silhouette, all 784,000
+samples in the 1440p draw rectangle matched the projected overlay or
+the native coverage. At exact nearest-neighbor ties, either adjacent
+projected texel is valid. The known overlapping sprite produced a
+native RGB match because the visibility guard rejected the overlay.
+
+The retained-state search read VDP1 VRAM from 2,252 Sakura version-9
+states and found no resident match for the exact 16,000-byte texture.
+The constructed fixture separately confirmed the scanner identifies the
+active command and CRAM bank. The fixture and build receipts are private
+under `local/work/codex-th1/nc3517-registration`. Native 0904 placement
+and face animation still require the natural route witness.
