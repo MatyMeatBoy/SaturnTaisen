@@ -26,7 +26,8 @@ int main() {
     std::copy_n(atlas.begin()+48*40,640,atlas.begin()+64*40);
     match=port::MatchPortraitFrame(atlas,frame);assert(match && match->ambiguous);
     assert(!port::MatchPortraitFrame(std::span<const uint8_t>(atlas.data(),10),frame));
-    assert(port::PortraitDensity(1)==1 && port::PortraitDensity(3)==1 && port::PortraitDensity(4)==2);
+    assert(port::PortraitDensity(1)==1);
+    for(int scale:{2,3,4,5,6})assert(port::PortraitDensity(scale)==2);
     std::array<uint8_t,512> palette{};palette[3]=31; // colour 1: native RGB555 red
     frame.fill(1);std::array<uint32_t,320*224> pixels{};pixels.fill(0xFF0000F8);
     assert(port::PortraitPixelsVisible(frame,palette,pixels,320,224,16,160));

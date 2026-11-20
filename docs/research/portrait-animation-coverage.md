@@ -284,3 +284,17 @@ pack logs `portrait replace: id=0169 density=2 patch=0 y=0` and differs
 from its missing-pack control only inside (404,1090)–(644,1378) in all
 four 1440p samples. The Original pair, guest hashes and SRAM match.
 This verifies the release runtime with a compatible portrait pack.
+
+## Portrait density at odd integer scales
+
+The v0.2.28 renderer selected the 40 × 48 atlas whenever the dialogue
+viewport used an odd integer scale. In the 1920 × 1080 Spanish letter
+opening, the emblem 0169 first used the 80 × 96 atlas during the white
+fade, then dropped to the 40 × 48 atlas when Zoom placed it at 5×.
+Patch 0269 selects 80 × 96 at every viewport scale of 2× or more.
+
+The 65-field letter checkpoint comparison kept identical guest hashes
+and save memory. The four 1080p captures differ only within the portrait
+rectangle (230,788)–(430,1028). A cold Spanish replay confirms density 2
+during the fade and after the switch to the final 5× viewport. The
+layout switch itself remains open. Package inclusion is pending.
