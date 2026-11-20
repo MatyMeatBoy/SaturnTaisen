@@ -12,3 +12,5 @@ The prior NC99 search placed the active mouth at (130, 177), on the neck ornamen
 Five muted Direct3D 11 arms per appearance reproduce all 55 strict guest hashes and final SRAM. Original with or without the donor and Enhanced with missing or truncated donors reproduce the native RGB controls. In five 2560 × 1440 samples per appearance, all changes from the prior HD build stay in the affected face regions. NC99 changes 12,416–12,983 pixels per sample, and 276–309 independently projected flat texels per sample match the authored mouth. NC91 changes 120,337 pixels per sample, with all 3,312 projected flat texels matching the registered eyes and mouth. NC3286 repeats its 55-field strict test, ten captures, blend control and final SRAM exactly.
 
 The two bodies were already connected. The coverage register now credits these exact appearances. Package inclusion is pending. Private evidence and replays stay under local/work/codex-tp3c/residual0225.
+
+[Patch 0226](nc91-nc94-additional-faces.md) verifies the separate NC91 ambush expression and preserves these first-group captures.
