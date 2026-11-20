@@ -450,7 +450,7 @@ def build(root, index_dir, portrait_audit):
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
                    'verified_in_game': True, 'runtime_evidence': BBG204_REPORT}
-        elif title := re.fullmatch(r'/SAKURA1/(TITLE[1-9])\.BIN', path):
+        elif title := re.fullmatch(r'/SAKURA1/(TITLE(?:[1-9]|10))\.BIN', path):
             row = {
                 'status': 'excluded',
                 'pc': f'SAKURA1/TITLE/{title[1]}.SPR',
