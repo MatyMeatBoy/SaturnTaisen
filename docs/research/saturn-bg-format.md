@@ -1093,4 +1093,4 @@ still changes 2,223,687 pixels within the same destination against
 its own control on the Spanish disc 2 checkpoint.
 
 The patch and observed AOT extents are verified on the Spanish disc 2
-winning route. A disc 1 witness and public package remain pending.
+winning route. Patch 0253 ships in [v0.2.22-alpha](../releases/v0.2.22-alpha.md). A disc 1 witness remains pending.
