@@ -156,3 +156,28 @@ same per-channel mean absolute RGB errors.
 | BG1058 | 103215 | 2140, 2220, 2280 | 0.090/0.080/0.076 | 12.477/11.604/9.791 |
 
 Private commands and captures are under `local/work/codex-th1/ch1-scene-draws/`.
+
+## BG1070 and BG2039 on disc 1
+
+A natural 23,600-field continuation from Chapter 1 field 119,780
+matches the uninterrupted guest hashes and provides exact checkpoints
+at fields 142,710 and 143,000. The subsequent English disc 1 Enhanced
+A/B replays run 650 and 470 fields respectively at 2560×1440. The PC
+root either contains only the selected donor or is empty. The PC files
+match the scene catalog's exact SHA-256, the guest hashes match both
+within each pair and with the cold route, and both pairs retain the
+same SRAM with zero interpreted blocks.
+
+The changed samples remain inside (272,29)–(2288,1037) with seven
+visible draws for each scene. The other seven BG1070 and five BG2039
+samples match full RGB. An independent decode of each 576×320 PC
+subimage 0 resampled to 2016×1008 verifies the crop
+(1840,100)–(2220,350).
+
+| Scene | Comparison fields | Donor RGB error | Missing donor RGB error |
+| --- | --- | --- | --- |
+| BG1070 | 240, 270, 330 | 0.119/0.117/0.128 | 54.706/55.175/52.173 |
+| BG2039 | 145, 170, 220 | 0.098/0.081/0.078 | 10.042/7.724/7.118 |
+
+This supplies the visible BG2039 proof missing in the earlier audit.
+Private replays are under `local/work/codex-th1/ch1-scene-draws/`.
