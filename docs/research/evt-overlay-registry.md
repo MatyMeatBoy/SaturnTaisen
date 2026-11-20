@@ -232,3 +232,48 @@ zero interpreted blocks. The v0.2.16-alpha executable also reproduces
 all 53,940 fields across the fifteen clips that previously stopped.
 The private clips, range comparison and replay receipt are in
 `local/work/codex-th1/map14-victory-aot`.
+
+## T55 re-measurement: blocked entries and the registry (2026-11-20)
+
+The 674,182-block handoff base (`handoff/current-aot/blocks.txt`, SHA-256 `eeb6cf3a498d2ca5434b036f5dc5aca3d3379b19406230ce2df7c3a484c668ae`) still stops on the chapter 3, 4 and 10 entries. The registry already covers the missing overlays; nothing else needs to be recorded.
+
+### Reproduced blocks (copy of the 674,182 executable, strict native, 12,000 frames)
+
+| Case | Result | Expected EVT (documented above, not re-measured here) |
+| --- | --- | --- |
+| bank-3-battle-2 | exit 4, master `00204000`, frame 6,680 | EVT04 |
+| bank-3-battle-3 | exit 4, frame 6,679 | EVT05 |
+| bank-10-battle-2 | exit 4, frame 6,685 | EVT19 |
+| bank-10-final-battle | exit 4, frame 6,685 | EVT19 |
+| bank-4-battle, bank-6-battle | exit 0, 12,000 frames | EVT06 / later overlays (EVT21 appears after frame 15,859 per the registry) |
+
+### Interpreter recording versus the registry
+
+Interpreter with `SATRECOMP_NO_BLOCKS=1` and `--record-blocks` to a new file, 40,000 frames with dialogue advance every 120 frames. Each recorded block is compared (address and code bytes) with the base and with the registry output:
+
+| Case | Recorded | In base | In registry only | New |
+| --- | ---: | ---: | ---: | ---: |
+| bank-3-battle-2 | 10,653 | 9,637 | 1,016 | 0 |
+| bank-3-battle-3 | 9,291 | 8,880 | 411 | 0 |
+| bank-10-battle-2 | 10,637 | 9,640 | 997 | 0 |
+| bank-10-final-battle | 10,637 | 9,640 | 997 | 0 |
+| bank-4-battle | 11,082 | 10,758 | 324 | 0 |
+| bank-6-battle | 6,270 | 6,270 | 0 | 0 |
+
+No block falls outside base plus registry. Registered blocks carry their code bytes, so a wrong inference cannot run the wrong overlay at the same address.
+
+### Registry totals and reproducibility
+
+`discover_registered_overlays.py` on 27 EVTs: disc 1 +305,508 (12 modules), disc 2 +377,846 (13 modules), total 1,357,536. The regenerated list is byte-identical (SHA-256 prefix `4fcec64b0274`) to the one used by the earlier 1.357M build.
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc1/Track 01.iso" --module EVT01 --module EVT03 --module EVT04 --module EVT05 --module EVT07 --module EVT08 --module EVT09 --module EVT10 --module EVT11 --module EVT21 --module EVT22 --module EVT27 --seed-blocks handoff/current-aot/blocks.txt --output local/work/evt-regen/d1
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT12 --module EVT13 --module EVT14 --module EVT15 --module EVT16 --module EVT17 --module EVT18 --module EVT19 --module EVT20 --module EVT23 --module EVT24 --module EVT25 --module EVT26 --seed-blocks local/work/evt-regen/d1/blocks.txt --output local/work/evt-regen/d2
+```
+
+Isolated compile: copy `local/deps/satrecomp` to `local/deps/satrecomp-evt`, put the disc 2 `blocks.txt` and `handoff/current-aot/block-order.json` in `local/work/rebuild-evt`, and run `build_runtime.py recompile` with `DEP`, `WORK` and `BUILD` pointing at the `-evt` copies (about 6,882 ninja steps, 16 threads). Warning: `dependency()` refuses a shared SDK tree with edits outside the recorded patch stack; the isolated build bypassed it, so the copy carries those unrecorded edits.
+
+### Corrections and not verified
+
+- The earlier 40,000-frame sweep never completed: in `deep.log`, 14 of 17 cases ended with `TimeoutExpired` (1,500 s limit). T55 stays open; use a limit of several hours.
+- Not verified at the time of writing: the isolated AOT result (strict runs without stopping at `00204000`, per-frame hashes equal to the interpreter in the first 6,000 frames, zero interpreted) and the per-case EVT attribution by RAM match at frame 6,678 (the state at frame 8,000 no longer matches the whole file).
