@@ -15749,6 +15749,7 @@
       "2:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "fixture_evidence": "docs/research/ending-bank-pairs.md#controlled-iris-and-kohran-theatre-insets",
         "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
         "native_records": [
           8,
@@ -15756,13 +15757,17 @@
         ],
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
+          5
+        ],
+        "runtime_patch": "patches/0194-sakura-ending-theatre-insets.patch",
+        "scope": "ending-bank subimages",
+        "shared_pc_image_indices": [
           6,
           7
         ],
-        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
-        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
-        "scope": "ending-bank subimages",
-        "status": "wired-unverified"
+        "shared_runtime_donor": "SAKURA1/ENDING/END_SA.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/BG0000.BIN": {
         "association": "unknown",
@@ -19469,6 +19474,7 @@
       "2:/SAKURA1/KO_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "fixture_evidence": "docs/research/ending-bank-pairs.md#controlled-iris-and-kohran-theatre-insets",
         "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
         "native_records": [
           8,
@@ -19476,13 +19482,17 @@
         ],
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
+          5
+        ],
+        "runtime_patch": "patches/0194-sakura-ending-theatre-insets.patch",
+        "scope": "ending-bank subimages",
+        "shared_pc_image_indices": [
           6,
           7
         ],
-        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
-        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
-        "scope": "ending-bank subimages",
-        "status": "wired-unverified"
+        "shared_runtime_donor": "SAKURA1/ENDING/END_SA.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/MA_CG.BIN": {
         "association": "unknown",

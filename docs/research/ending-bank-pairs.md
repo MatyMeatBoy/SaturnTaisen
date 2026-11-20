@@ -284,3 +284,34 @@ The canonical group photographs continue to use END_SA once.
 
 This evidence covers a controlled authored dispatch. Natural Kanna route
 verification and package inclusion remain open.
+
+## Controlled Iris and Kohran theatre insets
+
+From the same pre-dispatch checkpoint used by the Kanna proof, set the
+authored ending selector at Low WRAM `002003A6` to 5 (Iris) or 6 (Kohran).
+Each fixture changes one serialized byte at `0x1003E3`. The original game
+loads the corresponding `AI_CG.BIN` or `KO_CG.BIN`. The source bank matches
+the Low WRAM copy byte for byte. The bounded 4,800-field strict runs reach
+the theatre insets and match the interpreter's guest hashes, 96 native
+RGB captures and SRAM for each route. The four added AOT ranges match the English disc 2 ENDING module
+at `0x36C`, `0x380`, `0x388` and `0x39C`.
+
+Both insets display record 5 at (16,96) to (104,200), with PC subimage 5
+at 176×208. All 9,152 steady native pixels match the per-channel rule
+(31 × foreground + lower) divided by 32 with integer truncation. The
+lower input is the Saturn theatre through the top 48 rows and black
+through the last 56. The replacement requires the exact palette, winning
+NBG3 layer, mixed RGB, lower input and 31/32 coefficient. Native draws
+continue through the moving theatre transition and fades.
+
+At 1440p the rectangle is (416,624) to (944,1248). The strict Enhanced
+and Original A/B tests verify the inset and guest hashes with the donor
+present and absent. All 329,472 pixels match an independent PC blend in
+each steady capture. The two 651-field fade comparisons retain exact guest
+hashes and SRAM, and all 14 sampled nonsteady frames remain pixel-exact.
+Original and the protected surround remain exact.
+The separate physical END_AI and END_KO files each add one donor. The
+shared photographs continue to use END_SA. The larger redraws remain
+native. The natural Iris and Kohran routes and package inclusion remain
+open. Private receipts are retained under
+`local/work/codex-witness-441-review/sumire-ending`.

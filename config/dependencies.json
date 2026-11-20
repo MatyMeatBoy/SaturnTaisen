@@ -188,7 +188,8 @@
       "patches/0190-sakura-registered-eve-insets.patch",
       "patches/0191-sakura-ic08-disc2-intermission.patch",
       "patches/0192-sakura-kanna-ending-photos.patch",
-      "patches/0193-sakura-map12-pc-ground.patch"
+      "patches/0193-sakura-map12-pc-ground.patch",
+      "patches/0194-sakura-ending-theatre-insets.patch"
     ]
   }
 }

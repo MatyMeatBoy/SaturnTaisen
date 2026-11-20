@@ -17,7 +17,7 @@ REGISTRY={
     'ENDING_DISC2_EN': dict(file='/SAKURA1/ENDING.BIN', base=0x06080000, bytes=178968,
                             sha256='f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553',
                             observed_ranges='ending-aot-ranges.json',
-                            evidence='English disc 2 Sakura and Sumire routes and the controlled Kanna dispatch through Fin'),
+                            evidence='English disc 2 Sakura and Sumire routes, Kanna dispatch through Fin, and bounded Iris and Kohran dispatches'),
     'SLG_RELOCATED':dict(file='/SAKURA2/0SLG.BIN',base=0x06002000,bytes=309844,
                  sha256='7ca7dda97d17f704e7e687b4fc04170fb39c731ed1a4372fafc3e50b3aed41b8',
                  slice_offset=0x47B14,slice_bytes=206,
