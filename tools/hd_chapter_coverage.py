@@ -184,6 +184,9 @@ NARRATIVE_CUTOUT_DRAWS = {
 } | {
     (2, f'/SAKURA1/{name}.BIN'): (8, 'docs/research/iris-route-foregrounds.md')
     for name in ('BG3081', 'BG3082', 'BG3083', 'BG3086', 'BG3140', 'BG3523')
+} | {
+    (1, f'/SAKURA1/{name}.BIN'): (chapter, 'docs/research/chapter-one-cutout-followup.md')
+    for chapter, name in ((1, 'BG4088'), (1, 'BG4165'), (1, 'BG4171'), (3, 'BG4114'))
 }
 
 SCENE_DRAWS = {

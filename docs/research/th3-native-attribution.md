@@ -13,7 +13,7 @@ The current 0301 cold replay completed 15,000 strict-native guest frames with ze
 | BG1022.BIN | 139525 | The entire picture matched at continuation frames 2450, 2800, 3150, and 3500. |
 | BG1008.BIN | 139203 | The entire picture matched at continuation frame 7000 and again in the separate extended replay. |
 
-The 0301 cold run also reads BG4114.BIN at 155055. Its complete cells at VDP2 address 0x4A040 and palette at CRAM 0xE00 were resident alongside BG1198 in the archived frame-9000 state. Its displayed composition is open.
+The 0301 cold run also reads BG4114.BIN at 155055. Its complete cells at VDP2 address 0x4A040 and palette at CRAM 0xE00 were resident alongside BG1198 in the archived frame-9000 state. The archived frame-9200 witness now verifies its PC cut-out with the foreground sprite preserved in [patch 0219](chapter-one-cutout-followup.md).
 
 ## Tactical resources
 
