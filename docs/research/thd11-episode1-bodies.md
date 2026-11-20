@@ -19,7 +19,7 @@ State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed 
 | NC95 | Upstairs (103,080) | 9 parts | **episodes 1 and 6 verified** | ep 1: one eye and mouth pair verified; ep 6: two faces verified | not witnessed | not witnessed |
 | NC96 | Late chapter (105,600) | 272x320 body 0 | verified | all 9 registered (patch 0179) | native blend retained | not witnessed |
 | NC55 | Iris room (189,240) | 368x320 body 5 | verified | 5 textures registered (patch 0168), 3 E + closed Ms; others fallback | none seen | not witnessed |
-| NC81 | Theater sortie (245,940) | 208x144 | **late Episode 1 and Episode 9 draws verified** | Episode 1 eye 15 and mouth 54 | native blend verified | initial sortie and other expressions pending |
+| NC81 | Theater sortie (245,940) | 208x144 | **first and late Episode 1 draws and Episode 9 draw verified** | Episode 1 eye 15 and mouth 54 | native blend verified | other expression phases pending |
 | NC12 | Sortie, Sakura (248,400) | 346x320 body 2 | verified | 4 E + 6 M (patch 0184) | earlier blend identical | native blend |
 | NC51 | Sortie, Iris (248,700) | 336x320 body 1 | verified | 3 E + 6 M (patch 0177) | earlier blend native | native blend |
 | NC21 | Sortie, Sumire (249,000) | 320x320 body 1 | verified | 3 E + 6 M (patch 0180) | blend identical | native blend |
@@ -28,14 +28,14 @@ State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed 
 
 ## Findings
 
-- All 19 bodies have a verified Episode 1 draw. The late theater witness verifies NC81. The initial sortie and unsampled expression phases remain separate checks.
+- All 19 bodies have a verified Episode 1 draw. The first and late theater witnesses verify NC81, including the native blend and closed-mouth registration. Four additional mouth phases retain native fallback.
 - Bodies with an extra pose without a control: NC3250 (mouths other than ordinal 4), NC11 (LIPS layouts other than the hallway), NC20 and NC30 (runs beyond the verified groups), NC25 (poses other than the closed-eye smile), NC55 (poses beyond the five observed textures), NC82 and NC97 (fallback frames).
 - Fade-in/out has a witness only for NC3250 and NC82; the other 17 need a fade control (dissolve plus donor-absent control) before the column can be "verified".
 - Neck/blend controls: only NC81 (chapter 9) and NC11 (LIPS) have neck or panel blend controls; the sortie bodies rely on "earlier blend identical".
 
 ## Proposed batches
 
-1. NC81 initial sortie and additional expressions: extend the late theater witness to the first appearance.
+1. NC81 additional expressions: identify the four native mouth hashes left to fallback in the first theater witness.
 2. NC3250, NC82, NC97 fade controls and extra poses.
 3. NC20, NC30, NC25, NC55 extra expression groups.
 
@@ -70,3 +70,13 @@ At 2560 × 1440 on Direct3D11, supplying only NC81.SPR changes 739,293 pixels at
 Enhanced with a truncated donor matches Enhanced with no donor. The Original arms with and without the donor match across all 12 screenshots. The existing patch 0243 runtime SHA-256 is `129E505D229EB3520A9AD4E52F6873C2BC87F609DF15F3A520ABFCB086EA5C19`.
 
 The late Episode 1 occurrence is verified independently of [the Episode 9 storage scene](nc80-nc81-registered-faces.md). The initial NC81 appearance and the other eye and mouth phases are outside this capture window. There is no runtime change or added integrated asset.
+
+## NC81 on the first Episode 1 theater appearance
+
+A 7,350-field strict relay resumes the English disc 1 route at global field 239,080 with the archived input. All guest hashes match the previous continuous run, with zero interpreted blocks. The NC81 body is absent from the active VDP1 list at global field 245,960 and present by 246,000. The decoded body is 208 × 144, FNV-1a `CAEE5C58F639F871`. The first observed mouth is the closed strip `DF6C28F40A21C707`, and the eye strip is `046C70F127834B74`.
+
+Five 180-field profiles resume at 245,960 with the original controller suffix. Each matches archived relay fields 6,881–7,060, completes with identical SRAM, and reports zero interpreted blocks. At 2560 × 1440 on Direct3D11, the first four sample offsets (5, 12, 26 and 40) are identical with and without the donor. The renderer logs the native blend guard. The eight following samples use the HD body.
+
+At offsets 52, 68, 80, 110, 145 and 172, independent projections match all 1,113 flat eye pixels of ordinal 15 at (138, 74) and all 4,589 mouth pixels of ordinal 54 at (143, 119). Each of the six captures changes 739,293 pixels from the donor-absent control, all within (615, 29)–(2048, 1037). At offsets 92 and 128 the mouth rectangle (1056, 365)–(1504, 645) is identical to the native control, while the PC body remains drawn. The texture log records four additional mouth hashes left to the native fallback. Original and truncated-donor profiles match their respective controls at all 12 sampled offsets.
+
+The current 0243 runtime is the same as the later Episode 1 witness. This is a second occurrence of the same integrated asset. The remaining mouth phases have not been verified with their PC equivalents.
