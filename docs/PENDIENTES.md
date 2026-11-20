@@ -66,7 +66,7 @@ La reatribución de #592 da 38 filas de imagen HD conectadas para buscar en capt
 
 | Shard | Estado | Lote | Punto de partida |
 | --- | --- | --- | --- |
-| THD33 | partial | Episodio 7: BG1178, BG1181, BG2014, BG2160 | [BG1178, BG1181 y BG2160 verificados a 1440p](research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route). Falta el testigo de BG2014. |
+| THD33 | verified · package pending | Episodio 7: BG1178, BG1181, BG2014, BG2160 | [BG1178, BG1181 y BG2160 a 1440p](research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route). [BG2014 detrás de NC3014](research/hd-chapter-7.md#bg2014-behind-nc3014), parche 0263. |
 | THD34 | open | Episodio 8: BG1001, BG1195, BG2004, BG2007 | [Trazas de salto](research/hd-chapter-8.md#re-attribution-with-the-evt-overlay-build). |
 | THD35 | open | Episodio 9: BG1143, BG2017, BG2031, BG2091 | [Trazas de salto](research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build). [BG2021 verificado](research/hd-chapter-9.md#bg2021-on-the-earned-iris-route). |
 | THD36 | open | Episodio 9: BG2092, BG2156, BG2160, BG2236 | Mismas trazas. BG2156 ya suma globalmente por su aparición en el episodio 6. |

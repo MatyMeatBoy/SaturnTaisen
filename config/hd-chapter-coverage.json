@@ -4906,9 +4906,11 @@
           },
           "1:/SAKURA1/BG2014.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-7.md#bg2014-behind-nc3014",
             "pc": "SAKURA1/BG/BG2014.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-7.md#bg2014-behind-nc3014",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG2019.BIN": {
             "association": "observed",
