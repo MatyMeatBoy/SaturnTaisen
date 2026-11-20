@@ -86,7 +86,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | --- | --- | --- | --- | --- | --- |
 | THD15 | P1 | local | open | **Suelos directos del disco 1.** MAP07, 08, 09, 11 y 22; MAP03 va en THD17. | Entrada real, clave FAD, geometría, cámara en movimiento y unidades/HUD intactos. |
 | THD16 | P1 | local | open | **Suelos directos del disco 2.** MAP01, 17, 18, 24, 25 y 26, más las decisiones MAP10/19 si hay nueva evidencia. | Mismos controles que THD15. Los mapas con arte distinto requieren registro propio. |
-| THD17 | P1 | local | open | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | Montaje con origen, orden y costuras comprobados en una cámara natural. |
+| THD17 | P1 | local | open | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | [Referencias offline](research/tactical-pairing.md#offline-placement-for-map03-map20-and-map23) para MAP03 y MAP20. MAP23 usa un plano rectangular de cuatro piezas. Falta validar origen, muestreo y costuras con cámara natural. |
 | THD18 | P1 | local | open | **Unidades y retratos tácticos.** UNIT y FACE por mapa, dirección, pose, ataque y combinación; conservar cuadrícula. | Una unidad y sus variantes por PR, con anclaje, poses y oclusión verificadas. |
 | THD19 | P1 | local | open | **Objetos en el mundo táctico.** ITEM en el campo, separando SPR físico de tarjeta de menú. | Emparejar objeto y estado visual con su posición de mundo, zoom y scroll. |
 
