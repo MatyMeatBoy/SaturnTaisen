@@ -1,0 +1,83 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1094,8 +1094,22 @@
+          "SAKURA1/ENDING/END_KO.SPR", 2925404, 0x1CA5866920ADDD55ull, {0, 0, 176, 208}, true},
+     };
+     std::array<SceneHd, std::size(endingPhotos)> endingPhotoImages;
+-    SceneHd maigoPicture;
+-    bool maigoTraced = false;
++    struct MinigameReward {
++        const char* label;
++        const char* file;
++        size_t bytes;
++        uint64_t fileHash, frameHash;
++        uint32_t firstRgb, lastRgb;
++        unsigned disc1Fad, disc2Fad;
++        SceneHd image;
++        bool traced = false;
++    };
++    std::array<MinigameReward, 2> minigameRewards{{
++        {"BGMAIGO", "SAKURA3/CG/MAIGO/BG_MAIGO.SPR", 243292,
++         0xC3E6BE5ED7CD8ED7ull, 0x0D9D77957DB1BEE5ull, 0xA86020u, 0xC8F0F8u, 268190, 260521},
++        {"BGSYATE", "SAKURA3/CG/SHOT/BG_SYATE.SPR", 248249,
++         0x1D44E5822143A528ull, 0xBBDEDAEA3565FB2Dull, 0x30E8E0u, 0x180010u, 0, 261147},
++    }};
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
+     const auto finishSceneInset = [&](SceneHd& inset, SDL_BlendMode blend) {
+         if (!inset.pending.valid() || inset.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
+@@ -4231,32 +4245,32 @@
+             if (!choosing && !port.menu.IsOpen() && !port.opt.pcAssetsPath.empty() &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_backgrounds") == 0) {
+-                const auto prepareMaigo = [&] {
+-                    loadEveInset(maigoPicture, "SAKURA3/CG/MAIGO/BG_MAIGO.SPR", 243292,
+-                                 0xC3E6BE5ED7CD8ED7ull, {0, 0, 640, 480}, 0, 0);
+-                };
+-                if ((shownDisc == 1 && shownPlayStart == 268190) ||
+-                    (shownDisc == 2 && shownPlayStart == 260521))
+-                    prepareMaigo();
++                for (auto& reward : minigameRewards) {
++                    const auto prepare = [&] {
++                        loadEveInset(reward.image, reward.file, reward.bytes, reward.fileHash,
++                                     {0, 0, 640, 480}, 0, 0);
++                    };
++                    const unsigned fad = shownDisc == 1 ? reward.disc1Fad : reward.disc2Fad;
++                    if (fad && shownPlayStart == fad) prepare();
+ 
+-                if (texW == 640 && texH == 448 && softwareShown.size() == 640 * 448 &&
+-                    (softwareShown.front() & 0xFFFFFFu) == 0xA86020u &&
+-                    (softwareShown.back() & 0xFFFFFFu) == 0xC8F0F8u) {
++                    if (texW != 640 || texH != 448 || softwareShown.size() != 640 * 448 ||
++                        (softwareShown.front() & 0xFFFFFFu) != reward.firstRgb ||
++                        (softwareShown.back() & 0xFFFFFFu) != reward.lastRgb)
++                        continue;
+                     uint64_t signature = 14695981039346656037ull;
+-                    for (const auto pixel : softwareShown) {
++                    for (const auto pixel : softwareShown)
+                         for (unsigned shift : {0u, 8u, 16u})
+                             signature = (signature ^ uint8_t(pixel >> shift)) * 1099511628211ull;
+-                    }
+-                    if (signature == 0x0D9D77957DB1BEE5ull) {
+-                        prepareMaigo();
+-                        if (maigoPicture.texture &&
+-                            SDL_RenderTexture(renderer, maigoPicture.texture, nullptr, &where) &&
+-                            !maigoTraced && std::getenv("SATRECOMP_BACKGROUND_STATS")) {
+-                            std::fprintf(stderr, "minigame picture: BGMAIGO drew %.0f,%.0f %.0fx%.0f\n",
+-                                         where.x, where.y, where.w, where.h);
+-                            maigoTraced = true;
+-                        }
+-                    }
++                    if (signature != reward.frameHash) continue;
++
++                    prepare();
++                    if (reward.image.texture && SDL_RenderTexture(renderer, reward.image.texture, nullptr, &where) &&
++                        !reward.traced && std::getenv("SATRECOMP_BACKGROUND_STATS")) {
++                        std::fprintf(stderr, "minigame picture: %s drew %.0f,%.0f %.0fx%.0f\n",
++                                     reward.label, where.x, where.y, where.w, where.h);
++                        reward.traced = true;
++                    }
++                    break;
+                 }
+             }
+             if (port.videoRenderer && satrecomp::FeatureValue("presentation_mode") == 1 &&

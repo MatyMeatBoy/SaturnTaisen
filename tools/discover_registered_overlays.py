@@ -157,7 +157,7 @@ REGISTRY['MINISHOT_LONG_DAY'] = dict(
     file='/SAKURA3/MINISHOT.BIN', base=0x00204000, bytes=547396,
     sha256='f605be0ecffa3e25d82e0ee362bd3754405e53f2d217b14e219fdaf736c6a9ca',
     observed_ranges='minishot-long-day-aot-ranges.json',
-    evidence='Spanish disc 2 Long Day: shooting gallery entry and practice replays')
+    evidence='Spanish disc 2 Long Day: shooting gallery entry, practice and 95-point reward replays')
 
 
 def registered_module(name,raw,profile,registry=REGISTRY):
