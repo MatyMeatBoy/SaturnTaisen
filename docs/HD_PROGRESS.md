@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 303/304 (99,6%) | 303/304 (99,6%) | 303/304 (99,6%) | Sin dato |
-| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1145/1145 (100%) | 712/1145 (62,1%) | Sin dato | 565/1145 (49,3%) | 32/1145 (2,7%) |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1145/1145 (100%) | 712/1145 (62,1%) | Sin dato | 566/1145 (49,4%) | 33/1145 (2,8%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
@@ -20,7 +20,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 303/304 (99,6%) |
-| Imágenes de escena | 565/1145 (49,3%) |
+| Imágenes de escena | 566/1145 (49,4%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 44/50 (88%) |
 | Modo táctico | Sin dato |
@@ -28,7 +28,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 146/147 (99,3%) |
 
-**HD total: 1124/1894 (59,3%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1125/1894 (59,3%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 ## Qué cuenta en cada etapa
