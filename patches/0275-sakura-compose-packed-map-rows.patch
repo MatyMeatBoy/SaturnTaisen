@@ -1,0 +1,117 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2843,7 +2843,7 @@
+                 if(selectedBackdrop && planes.panelMix.size()==320*224 &&
+                    planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+                    size_t(fit.w)*size_t(fit.h)<=16*1024*1024) {
+-                    if(sourcePixels.size()==320*224 && ResizePanelBuffer(pixels,size_t(fit.w)*fit.h)) {
++                    if(sourcePixels.size()==320*224) {
+                         // The same pixels as composing every window pixel, with the work done once per native pixel:
+                         // a native pixel either mixes with the backdrop (sampled per window pixel, as before) or is
+                         // copied as it is to its whole block. When no native pixel in view can mix, nothing is
+@@ -2907,16 +2907,41 @@
+                             const int64_t dy=int64_t(screenY)-backY;
+                             return !backOk || dy<0 || dy>=int64_t(backH)*backScale?-1:dy/backScale;
+                         };
++                        const auto step=[&](int offset,int size) {
++                            return backOk && !replaceIntermission && !sceneFade
++                                ? std::gcd(std::gcd(scale,backScale),std::gcd(offset,size)) : 1;
++                        };
++                        const int stepX=step(fit.x-backX,fit.w), stepY=step(fit.y-backY,fit.h);
++                        std::vector<int> rowStarts;
++                        if(mayMix && mapFade && backOk && !replaceIntermission && !sceneFade && stepX==1 && stepY==1 &&
++                           size_t(fit.w)*fit.h >= 4*1024*1024) {
++                            try {
++                                for(int y=0;y<fit.h;) {
++                                    const int first=y++;
++                                    const auto lower=backRow(fit.y+first);
++                                    while(y<fit.h && y/scale==first/scale && backRow(fit.y+y)==lower)++y;
++                                    rowStarts.push_back(first);
++                                }
++                                if(rowStarts.size()*2<=size_t(fit.h)) {
++                                    cache.packedRows.reserve(rowStarts.size()*6);
++                                    rowStarts.push_back(fit.h);
++                                } else rowStarts.clear();
++                            } catch(const std::bad_alloc&) {rowStarts.clear();}
++                        }
++                        const bool packed=!rowStarts.empty();
++                        const int rows=packed?static_cast<int>(rowStarts.size())-1:fit.h;
++                        if(!mayMix || !ResizePanelBuffer(pixels,size_t(fit.w)*rows))return false;
+                         std::atomic<bool> anyMix{false};
+                         // (bands of rows on the spare cores: each band writes only its own rows)
+-                        if(mayMix)parallelRows.For(fit.h,[&](int firstRow,int lastRow) {
++                        parallelRows.For(rows,[&](int firstRow,int lastRow) {
+                         bool bandMix=false;
+                         int previousNative=-2;int64_t previousBack=-2;
+-                        for(int py=firstRow;py<lastRow;py++) {
++                        for(int rowIndex=firstRow;rowIndex<lastRow;++rowIndex) {
++                            const int py=packed?rowStarts[rowIndex]:rowIndex;
+                             const int sy=top+py/scale;
+-                            uint32_t* row=pixels.data()+size_t(py)*fit.w;
++                            uint32_t* row=pixels.data()+size_t(rowIndex)*fit.w;
+                             const int64_t by=backRow(fit.y+py);
+-                            if(py>firstRow && sy==previousNative && by==previousBack &&
++                            if(!packed && rowIndex>firstRow && sy==previousNative && by==previousBack &&
+                                 ((!replaceIntermission && !sceneFade) || (2*py+1)/scale==(2*py-1)/scale)) {std::copy_n(row-fit.w,fit.w,row);continue;}
+                             previousNative=sy;previousBack=by;
+                             if(sy<0 || sy>=224) {std::fill_n(row,fit.w,0u);continue;}
+@@ -2975,48 +3000,23 @@
+                         if(hasMix) {
+                             // Each texel in the compact texture represents a block delimited by
+                             // both the native-pixel grid and the backdrop sampling grid.
+-                            const auto step=[&](int offset,int size) {
+-                                return backOk && !replaceIntermission && !sceneFade
+-                                    ? std::gcd(std::gcd(scale,backScale),std::gcd(offset,size)) : 1;
+-                            };
+-                            const int stepX=step(fit.x-backX,fit.w), stepY=step(fit.y-backY,fit.h);
+                             const int uploadW=fit.w/stepX;
+-                            int uploadH=fit.h/stepY;
++                            const int uploadH=packed?rows:fit.h/stepY;
+                             cache.packedRows.clear();
+                             if (stepX!=1 || stepY!=1) {
+                                 for (int y=0;y<uploadH;++y)
+                                     for (int x=0;x<uploadW;++x)
+                                         pixels[size_t(y)*uploadW+x]=pixels[size_t(y*stepY)*fit.w+x*stepX];
+                             }
+-                            if(mapFade && backOk && !replaceIntermission && !sceneFade && stepY==1 &&
+-                               size_t(fit.w)*fit.h >= 4*1024*1024) {
+-                                // Native row and backdrop row together determine the entire mixed row.
+-                                // Keep one sample per run, then draw each run at its exact integer height.
+-                                struct RowRun { int first, last; };
+-                                std::vector<RowRun> rows;
+-                                try {
+-                                    for(int y=0;y<fit.h;) {
+-                                        const int start=y++;
+-                                        const auto lower=backRow(fit.y+start);
+-                                        while(y<fit.h && y/scale==start/scale && backRow(fit.y+y)==lower)++y;
+-                                        rows.push_back({start,y});
+-                                    }
+-                                    cache.packedRows.reserve(rows.size()*6);
+-                                } catch(const std::bad_alloc&) {rows.clear();}
+-                                if(!rows.empty() && rows.size()*2<=size_t(fit.h)) {
+-                                    const SDL_FColor white{1,1,1,1};
+-                                    uploadH=static_cast<int>(rows.size());
+-                                    for(int i=0;i<uploadH;++i) {
+-                                        const auto [start,end]=rows[i];
+-                                        if(i!=start)std::copy_n(pixels.data()+size_t(start)*uploadW,uploadW,
+-                                            pixels.data()+size_t(i)*uploadW);
+-                                        const float u=(float(i)+0.5f)/float(uploadH);
+-                                        const float x0=target.x,x1=target.x+target.w;
+-                                        const float y0=target.y+start,y1=target.y+end;
+-                                        const SDL_Vertex tl{{x0,y0},white,{0,u}}, tr{{x1,y0},white,{1,u}};
+-                                        const SDL_Vertex bl{{x0,y1},white,{0,u}}, br{{x1,y1},white,{1,u}};
+-                                        cache.packedRows.insert(cache.packedRows.end(),{tl,tr,br,tl,br,bl});
+-                                    }
++                            if(packed) {
++                                const SDL_FColor white{1,1,1,1};
++                                const float x0=target.x,x1=target.x+target.w;
++                                for(int i=0;i<uploadH;++i) {
++                                    const float v=(float(i)+0.5f)/float(uploadH);
++                                    const float y0=target.y+rowStarts[i],y1=target.y+rowStarts[i+1];
++                                    const SDL_Vertex tl{{x0,y0},white,{0,v}}, tr{{x1,y0},white,{1,v}};
++                                    const SDL_Vertex bl{{x0,y1},white,{0,v}}, br{{x1,y1},white,{1,v}};
++                                    cache.packedRows.insert(cache.packedRows.end(),{tl,tr,br,tl,br,bl});
+                                 }
+                             }
+                             if(cachedWidth!=uploadW || cachedHeight!=uploadH) {
