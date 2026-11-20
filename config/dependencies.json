@@ -240,7 +240,9 @@
       "patches/0248-sakura-bg2057-masked-ending-plate.patch",
       "patches/0249-sakura-spanish-runtime-menu-copy.patch",
       "patches/0250-sakura-shared-scene-backgrounds.patch",
-      "patches/0251-sakura-maigo-reward-picture.patch"
+      "patches/0251-sakura-maigo-reward-picture.patch",
+      "patches/0252-sakura-bg1120-night-corridor.patch",
+      "patches/0253-sakura-shooting-gallery-reward.patch"
     ]
   }
 }
