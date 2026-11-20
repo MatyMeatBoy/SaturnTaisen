@@ -1,0 +1,59 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2758,30 +2758,32 @@
+                                         runs.push_back({x, 1, floralX, mapX});
+                                     }
+                                 }
+-                                int previousFloral = -2, previousMap = -2;
+-                                for (int y = 0; y < area.h; ++y) {
+-                                    const int screenY = area.y + y;
+-                                    const int sample = screenY - int(bg.y);
+-                                    const int floralY = sample >= 0 && sample < cover.h ? sample / cover.scale : -1;
+-                                    const int mapY = std::clamp(screenY - native.y, 0, native.h - 1) / native.scale;
+-                                    auto* row = fadeBackdropPixels.data() + size_t(y) * area.w;
+-                                    if (floralY == previousFloral && mapY == previousMap) {
+-                                        std::copy_n(row - area.w, area.w, row);
+-                                        continue;
++                                parallelRows.For(area.h, [&](int first, int last) {
++                                    int previousFloral = -2, previousMap = -2;
++                                    for (int y = first; y < last; ++y) {
++                                        const int screenY = area.y + y;
++                                        const int sample = screenY - int(bg.y);
++                                        const int floralY = sample >= 0 && sample < cover.h ? sample / cover.scale : -1;
++                                        const int mapY = std::clamp(screenY - native.y, 0, native.h - 1) / native.scale;
++                                        auto* row = fadeBackdropPixels.data() + size_t(y) * area.w;
++                                        if (floralY == previousFloral && mapY == previousMap) {
++                                            std::copy_n(row - area.w, area.w, row);
++                                            continue;
++                                        }
++                                        previousFloral = floralY;
++                                        previousMap = mapY;
++                                        for (const auto& run : runs) {
++                                            uint32_t color = 0;
++                                            if (floralY >= 0 && run.floralX >= 0) {
++                                                const auto floralRgb = selectedBackdrop->pixels[size_t(floralY) * int(bgw) + run.floralX];
++                                                const auto mapRgb = mapFadeRows[mapY * 16 + run.mapX];
++                                                color = CompositePanelPixel({floralRgb, mapFade->mapWeight, mapFade->postMixOffset},
++                                                    mapRgb, mapRgb | 0xff000000u);
++                                            }
++                                            std::fill_n(row + run.start, run.size, color);
++                                        }
+                                     }
+-                                    previousFloral = floralY;
+-                                    previousMap = mapY;
+-                                    for (const auto& run : runs) {
+-                                        uint32_t color = 0;
+-                                        if (floralY >= 0 && run.floralX >= 0) {
+-                                            const auto floralRgb = selectedBackdrop->pixels[size_t(floralY) * int(bgw) + run.floralX];
+-                                            const auto mapRgb = mapFadeRows[mapY * 16 + run.mapX];
+-                                            color = CompositePanelPixel({floralRgb, mapFade->mapWeight, mapFade->postMixOffset},
+-                                                mapRgb, mapRgb | 0xff000000u);
+-                                        }
+-                                        std::fill_n(row + run.start, run.size, color);
+-                                    }
+-                                }
++                                });
+                                 if (!SDL_UpdateTexture(fadeBackdropTexture, &area, fadeBackdropPixels.data(), area.w * sizeof(uint32_t)))
+                                     return false;
+                             }

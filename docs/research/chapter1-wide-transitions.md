@@ -151,3 +151,22 @@ width, height. Both center captures, all 11 Original capture pairs, and the
 Five Enhanced edge captures matched every predicted visible cursor texel.
 The window clipped four texels at the extreme top and 40 at the bottom.
 The pinned SDK stack through 0165 plus the candidate applied cleanly.
+
+## Parallel exterior composition on map transitions
+
+Patch 0271 uses the existing row workers to compose the exterior of
+a map crossfade. Each band writes disjoint rows and uses the same
+sampling and blend formula. The renderer uploads a strip after all
+its rows are ready, and exact repeat fields still reuse the texture.
+
+Two alternating real-time A/B pairs on the dining-room entry at
+2560 × 1440 measured 22 and 13 fields over 16.67 ms in the stock
+78-field fade, compared with 10 and 3 with the patch. These timing
+runs took no screenshots. Their 550 guest hashes matched with zero
+interpreted blocks. The first fade field still varied between runs:
+24.75 and 45.00 ms on stock, 54.69 and 24.43 ms with the patch.
+
+The entry comparison also matched nine RGB captures per resolution
+at 720p, 1080p, 1440p and 2160p, with equal guest hashes and SRAM.
+The 1440p exit comparison matched 24 RGB captures, all 760 guest
+hashes, SRAM and the PCM output. Release packaging is pending.
