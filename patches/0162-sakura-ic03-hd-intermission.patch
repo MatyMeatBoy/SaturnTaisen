@@ -1,0 +1,262 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -585,7 +585,30 @@
+     SDL_Texture* achievedBadge = nullptr;
+     std::filesystem::path achievedBadgePath;
+ #endif
++    struct IntermissionPlate {
++        const char* file;
++        size_t bytes;
++        uint64_t fileHash, nativeRgb, darkRgb;
++        bool tried = false, opaque = false;
++        std::array<int16_t, 3> cachedOffset{};
++        std::vector<uint32_t> donor, pixels;
++        SDL_Texture* texture = nullptr;
++    };
++    IntermissionPlate intermissionPlates[]{
++        {"SAKURA1/ICATCH/IC0501.SPR", 218568, 0x4A23AE5B5939DE76ull,
++            0xA5E3498BEDDC1305ull, 0x1F7A14C347473045ull},
++        {"SAKURA1/ICATCH/IC0300.SPR", 185398, 0x7A7ED93DF49A6CE5ull,
++            0x6469CD72E7963265ull, 0},
++    };
++    const auto resetIntermissionTextures = [&]() {
++        for (auto& plate : intermissionPlates) {
++            if (plate.texture) SDL_DestroyTexture(plate.texture);
++            plate.texture = nullptr;
++            plate.opaque = false;
++        }
++    };
+     auto closeWindow = [&]() {
++        resetIntermissionTextures();
+ #ifdef SATRECOMP_WITH_RA
+         if (achievedBadge) SDL_DestroyTexture(achievedBadge);
+         achievedBadge = nullptr;
+@@ -808,10 +831,6 @@
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
+     std::vector<uint32_t> sceneHdForeground;
+     SceneHd ic01;
+-    bool ic0501Tried = false, ic0501Opaque = false;
+-    std::array<int16_t, 3> ic0501CachedOffset{};
+-    std::vector<uint32_t> ic0501Donor, ic0501Pixels;
+-    SDL_Texture* ic0501Texture = nullptr;
+     bool ic01Traced=false,ic01Examined=false;
+     SceneHd eve202;
+     bool eve202Traced = false;
+@@ -1614,13 +1633,14 @@
+                 }
+             }
+         }
+-        const auto inIc0501Menu = [](int x, int y) {
++        const auto inIntermissionMenu = [](int x, int y) {
+             return x >= 184 && x < 296 && y >= 16 && y < 144;
+         };
+         // This card uses the full 320x224 native plate. The stock menu and
+         // emblem share a protected rectangle, including during both fades.
+         std::array<int16_t, 3> icOffset{};
+         bool icMixing = false;
++        IntermissionPlate* icPlate = nullptr;
+         const auto icReady = [&]() {
+             if (choosing || port.menu.IsOpen() || shownDisc != 1 || !port.videoRenderer ||
+                 port.opt.pcAssetsPath.empty() || satrecomp::FeatureValue("presentation_mode") != 1 ||
+@@ -1637,7 +1657,7 @@
+             uint64_t hash = 14695981039346656037ull;
+             for (int y = 0; y < 224; ++y) {
+                 for (int x = 0; x < 320; ++x) {
+-                    if (inIc0501Menu(x, y)) continue;
++                    if (inIntermissionMenu(x, y)) continue;
+                     const size_t at = size_t(y) * 320 + x;
+                     uint32_t stock = softwareShown[at];
+                     if (planes.topSource[at] != 4) {
+@@ -1654,64 +1674,73 @@
+                         hash = (hash ^ uint8_t(stock >> shift)) * 1099511628211ull;
+                 }
+             }
+-            if (hash != (icOffset == unshifted ? 0xA5E3498BEDDC1305ull : 0x1F7A14C347473045ull)) return false;
+-            if (!ic0501Tried) {
+-                ic0501Tried = true;
+-                const auto file = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/ICATCH/IC0501.SPR";
++            for (auto& plate : intermissionPlates) {
++                const uint64_t expected = icOffset == unshifted ? plate.nativeRgb : plate.darkRgb;
++                if (expected && hash == expected) {
++                    icPlate = &plate;
++                    break;
++                }
++            }
++            if (!icPlate) return false;
++            auto& plate = *icPlate;
++            if (!plate.tried) {
++                plate.tried = true;
++                const auto file = std::filesystem::u8path(port.opt.pcAssetsPath) / plate.file;
+                 std::vector<uint8_t> bytes;
+                 std::vector<PcSprite> images;
+                 std::string error;
+-                if (ReadPcBackdropFile(file, bytes, 218568) && bytes.size() == 218568 &&
+-                    PcBackdropHash(bytes) == 0x4A23AE5B5939DE76ull && DecodePcSprites(bytes, images, error)) {
++                if (ReadPcBackdropFile(file, bytes, plate.bytes) && bytes.size() == plate.bytes &&
++                    PcBackdropHash(bytes) == plate.fileHash && DecodePcSprites(bytes, images, error)) {
+                     for (auto& image : images) {
+                         if (image.index != 0 || image.width != 640 || image.height != 480) continue;
+-                        ic0501Donor.resize(640 * 448);
++                        plate.donor.resize(640 * 448);
+                         for (int y = 0; y < 448; ++y)
+                             std::copy_n(image.pixels.data() + size_t((2 * y + 1) * 480 / 896) * 640,
+-                                        640, ic0501Donor.data() + size_t(y) * 640);
++                                        640, plate.donor.data() + size_t(y) * 640);
+                         break;
+                     }
+                 }
+             }
+-            return !ic0501Donor.empty();
++            return !plate.donor.empty();
+         }();
+-        const auto drawNativeIc0501 = [&](const SDL_FRect& target) {
++        const auto drawNativeIntermission = [&](const SDL_FRect& target) {
+             if (!icReady || target.x != baseFit.x || target.y != baseFit.y ||
+                 target.w != baseFit.w || target.h != baseFit.h) return;
+-            if (!ic0501Texture) {
+-                ic0501Texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++            auto& plate = *icPlate;
++            if (!plate.texture) {
++                plate.texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+                                                   SDL_TEXTUREACCESS_STREAMING, 640, 448);
+-                if (!ic0501Texture) return;
+-                if (!SDL_SetTextureBlendMode(ic0501Texture, SDL_BLENDMODE_BLEND) ||
+-                    !SDL_SetTextureScaleMode(ic0501Texture, SDL_SCALEMODE_NEAREST)) {
+-                    SDL_DestroyTexture(ic0501Texture);
+-                    ic0501Texture = nullptr;
++                if (!plate.texture) return;
++                if (!SDL_SetTextureBlendMode(plate.texture, SDL_BLENDMODE_BLEND) ||
++                    !SDL_SetTextureScaleMode(plate.texture, SDL_SCALEMODE_NEAREST)) {
++                    SDL_DestroyTexture(plate.texture);
++                    plate.texture = nullptr;
+                     return;
+                 }
+-                ic0501Pixels.resize(640 * 448);
++                plate.pixels.resize(640 * 448);
+             }
+             const auto& planes = port.videoRenderer->PresentationFrame();
+             const bool mixing = icMixing;
+-            if (mixing || !ic0501Opaque || ic0501CachedOffset != icOffset) {
++            if (mixing || !plate.opaque || plate.cachedOffset != icOffset) {
+                 const PanelMix opaque{0, 32, icOffset};
+                 for (int y = 0; y < 224; ++y) for (int x = 0; x < 320; ++x) {
+-                    if (inIc0501Menu(x, y)) continue;
++                    if (inIntermissionMenu(x, y)) continue;
+                     const size_t at = size_t(y) * 320 + x;
+                     const auto recipe = planes.topSource[at] == 4 ? opaque : PanelMix{
+                         planes.floralCoverRgb[at], uint8_t(32 - planes.floralCoverMix[at].lowerWeight), icOffset};
+                     for (int dy = 0; dy < 2; ++dy) for (int dx = 0; dx < 2; ++dx) {
+                         const size_t output = size_t(y * 2 + dy) * 640 + x * 2 + dx;
+-                        ic0501Pixels[output] = CompositePanelPixel(recipe, ic0501Donor[output], 0xFF000000u);
+-                    }
+-                }
+-                if (!SDL_UpdateTexture(ic0501Texture, nullptr, ic0501Pixels.data(), 640 * sizeof(uint32_t))) {
+-                    ic0501Opaque = false;
++                        plate.pixels[output] = CompositePanelPixel(recipe, plate.donor[output], 0xFF000000u);
++                    }
++                }
++                if (!SDL_UpdateTexture(plate.texture, nullptr, plate.pixels.data(), 640 * sizeof(uint32_t))) {
++                    plate.opaque = false;
+                     return;
+                 }
+-                ic0501Opaque = !mixing;
+-                ic0501CachedOffset = icOffset;
+-            }
+-            SDL_RenderTexture(renderer, ic0501Texture, nullptr, &target);
++                plate.opaque = !mixing;
++                plate.cachedOffset = icOffset;
++            }
++            SDL_RenderTexture(renderer, plate.texture, nullptr, &target);
+         };
+ 
+         if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+@@ -1721,7 +1750,7 @@
+                 const SDL_FRect bgTarget{float(bg.x),float(bg.y),float(bg.w),float(bg.h)},nativeTarget{float(native.x),float(native.y),float(native.w),float(native.h)};
+                 SDL_RenderTexture(renderer,floral,nullptr,&bgTarget);
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
+-                drawNativeIc0501(nativeTarget);
++                drawNativeIntermission(nativeTarget);
+                 if (screenBackdrop == "LOADING" && spanishLoadingInk && native.scale > 0 &&
+                     !choosing && !port.menu.IsOpen() && planes.topSource.size() == 320 * 224 &&
+                     softwareShown.size() == 320 * 224) {
+@@ -1952,7 +1981,7 @@
+                 const auto uploadLayer=[&](SDL_Texture*& cachedTexture,int& cachedWidth,int& cachedHeight,
+                         std::vector<uint32_t>& pixels,MixedLayerCache& cache,const IntegerViewport& fit,const SDL_FRect& crop,
+                         const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr,
+-                        bool replaceIc0501=false) -> bool {
++                        bool replaceIntermission=false) -> bool {
+                     const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
+                 if(selectedBackdrop && planes.panelMix.size()==320*224 &&
+                    planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+@@ -1982,7 +2011,7 @@
+                             }
+                             return MixedPixel{source};
+                         };
+-                        if (mixCacheEnabled && !replaceIc0501 && cachedTexture &&
++                        if (mixCacheEnabled && !replaceIntermission && cachedTexture &&
+                             cache.backdrop==selectedBackdrop && cache.geometry==geometry) {
+                             auto previous=cache.pixels.begin();
+                             bool same=true;
+@@ -1999,7 +2028,7 @@
+                                 return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
+                             }
+                         }
+-                        bool mayMix=replaceIc0501;
++                        bool mayMix=replaceIntermission;
+                         for(int ly=0;ly<lines && !mayMix;ly++) {
+                             const int sy=top+ly;if(sy<0 || sy>=224)continue;
+                             for(int lx=0;lx<columns;lx++) {
+@@ -2031,7 +2060,7 @@
+                             uint32_t* row=pixels.data()+size_t(py)*fit.w;
+                             const int64_t by=backRow(fit.y+py);
+                             if(py>firstRow && sy==previousNative && by==previousBack &&
+-                                (!replaceIc0501 || (2*py+1)/scale==(2*py-1)/scale)) {std::copy_n(row-fit.w,fit.w,row);continue;}
++                                (!replaceIntermission || (2*py+1)/scale==(2*py-1)/scale)) {std::copy_n(row-fit.w,fit.w,row);continue;}
+                             previousNative=sy;previousBack=by;
+                             if(sy<0 || sy>=224) {std::fill_n(row,fit.w,0u);continue;}
+                             for(int px=0;px<fit.w;) {
+@@ -2040,7 +2069,7 @@
+                                 const size_t at=size_t(sy)*320+sx;
+                                 const auto& recipe=recipeAt(at);
+                                 const uint32_t source=solidRecipe?0xFF000000:sourcePixels[at];
+-                                if (replaceIc0501 && !inIc0501Menu(sx, sy) && by>=0) {
++                                if (replaceIntermission && !inIntermissionMenu(sx, sy) && by>=0) {
+                                     const auto& cover=planes.floralCoverMix[at];
+                                     const unsigned weight=planes.topSource[at]==4?0:cover.lowerWeight;
+                                     const size_t donorRow=size_t((2*py+1)/scale)*640;
+@@ -2055,7 +2084,7 @@
+                                         const int donorColumn=(2*px+1)/scale;
+                                         int stop=std::min(end,(donorColumn+1)*scale/2);
+                                         if (weight) stop=int(std::min<int64_t>(stop,px+(backScale-dx%backScale)));
+-                                        const uint32_t donor=ic0501Donor[donorRow+donorColumn];
++                                        const uint32_t donor=icPlate->donor[donorRow+donorColumn];
+                                         const PanelMix pc{donor,uint8_t(weight?weight:32),icOffset};
+                                         const auto below=weight?back[size_t(by)*backW+size_t(dx/backScale)]:donor;
+                                         std::fill(row+px,row+stop,CompositePanelPixel(pc,below,0xFF000000u));
+@@ -2096,7 +2125,7 @@
+                             if(cachedTexture && SDL_UpdateTexture(cachedTexture,nullptr,pixels.data(),fit.w*sizeof(uint32_t))) {
+                                 ++mixUploads;
+                                 mixUploadedBytes+=size_t(fit.w)*fit.h*sizeof(uint32_t);
+-                                if (mixCacheEnabled && !replaceIc0501) {
++                                if (mixCacheEnabled && !replaceIntermission) {
+                                     try {
+                                         cache.pixels.resize(size_t(stopX-startX)*(stopY-startY));
+                                         auto saved=cache.pixels.begin();
+@@ -3203,7 +3232,7 @@
+                     SDL_RenderTexture(renderer, clipTexture, nullptr, &target);
+                 }
+             }
+-            drawNativeIc0501(where);
++            drawNativeIntermission(where);
+             // The ending photo is a separate, opaque 2:1 picture. Keep the native credit text around it.
+             if (!choosing && !port.menu.IsOpen() && shownDisc == 2 && port.videoRenderer &&
+                 !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("presentation_mode") == 1 &&
+@@ -3747,6 +3776,7 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                resetIntermissionTextures();
+                 resetBodyTextures();
+                 panelWidth=pictureMixWidth=shadowMixWidth=0;
+                 [[fallthrough]];
