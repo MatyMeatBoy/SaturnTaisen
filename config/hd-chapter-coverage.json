@@ -4831,11 +4831,27 @@
             "evidence": "docs/research/th8-native-attribution.md",
             "status": "unpaired"
           },
+          "2:/SAKURA1/BG2077.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
+            "pc": "SAKURA1/BG/BG2077.SPR",
+            "runtime_evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2159.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2159-disc2-visual.md",
             "pc": "SAKURA1/BG/BG2159.SPR",
             "runtime_evidence": "docs/research/bg2159-disc2-visual.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2176.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
+            "pc": "SAKURA1/BG/BG2176.SPR",
+            "runtime_evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
             "status": "hd",
             "verified_in_game": true
           },
@@ -5297,6 +5313,14 @@
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
             "pc": "SAKURA1/BG/BG1176.SPR",
             "status": "hd"
+          },
+          "2:/SAKURA1/BG1282.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
+            "pc": "SAKURA1/BG/BG1282.SPR",
+            "runtime_evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2053.BIN": {
             "association": "observed",
@@ -16970,12 +16994,6 @@
         "pc": "SAKURA1/BG/BG1281.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1282.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1282.SPR",
-        "runtime_evidence": "docs/research/scroll-table.md",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1283.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1283.SPR",
@@ -17684,12 +17702,6 @@
         "pc": "SAKURA1/BG/BG2076.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG2077.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2077.SPR",
-        "runtime_evidence": "docs/research/scroll-table.md",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG2078.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2078.SPR",
@@ -18081,12 +18093,6 @@
       "2:/SAKURA1/BG2175.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2175.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2176.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2176.SPR",
-        "runtime_evidence": "docs/research/scroll-table.md",
         "status": "hd"
       },
       "2:/SAKURA1/BG2177.BIN": {

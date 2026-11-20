@@ -108,3 +108,20 @@ The two current-runtime replays match all 1,500 strict guest hashes
 and SRAM with zero interpreted blocks. The first 1,446 fields also
 match the older archived guest log, covering the full picture witness.
 Disc 2 and package inclusion remain open.
+
+
+## BG1282, BG2077 and BG2176 on English disc 2
+
+Three natural routes exercise already registered PC scroll pictures. The Chapter 9 checkpoint holds BG1282 at x=208 during the sea incantation. The Chapter 8 Iris warroom sequel pans BG2077 horizontally, and the Chapter 8 Iris deployment pans BG2176 vertically. The archived routes read each Saturn picture from disc.
+
+| Picture | Route | CD FAD / sectors | Strict fields per variant | Draws | Offset range | Active 1440p captures |
+| --- | --- | --- | ---: | ---: | --- | ---: |
+| BG1282 | Chapter 9, 0904 entry | 121163 / 40 | 120 | 43 | x=208 | 7 |
+| BG2077 | Chapter 8, 0804 night | 124605 / 34 | 850 | 430 | x=0 through 152 | 7 |
+| BG2176 | Chapter 8, 0802 deployment | 126586 / 45 | 900 | 492 | y=152 down through 0 | 5 |
+
+Four muted Direct3D 11 profiles per route tested Enhanced and Original, each with and without the donor. All strict guest histories match the archived input replay, with zero interpreted blocks and matching final SRAM within each route. The BG2077 and BG2176 relays match the archived prefixes through fields 1470 and 1570, respectively. Both moving scenes select every integer offset in the stated range.
+
+Across 31 sampled fields, Original with and without the donor remained pixel-identical. Outside the active 2016 × 1008 picture viewport, Enhanced RGB remained identical. Independent bilinear sampling of the registered PC crop matched every changed output pixel within one 8-bit level per channel at all 19 active samples. The other 12 sampled fields, outside active draws, matched exactly.
+
+This evidence verifies the three disc-2 appearances. BG1282's trace witnesses a hold at x=208. Travel at other offsets and the disc-1 appearances remain open. The runtime patches and installed art requirements are unchanged. Local replay commands, hashes, native checkpoints and screenshots stay under local/work/codex-scroll-remainder/bulk-0207.
