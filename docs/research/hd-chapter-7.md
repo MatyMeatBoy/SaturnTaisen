@@ -121,4 +121,5 @@ contour where it blends with the new background. The opaque actor
 and protected areas matched. Missing and invalid donor controls and
 both Original profiles matched. Each 200-field strict pair had the
 same guest hashes and save memory with zero interpreted blocks.
-This adds one unique verified PC file. Package inclusion is pending.
+This adds one unique verified PC file. Patch 0263 ships in
+[v0.2.28-alpha](../releases/v0.2.28-alpha.md).

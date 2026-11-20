@@ -26,8 +26,10 @@ every guest hash, final SRAM and the final PNG. The strict endpoint
 still has VDP2 key 3150DAC84F35E1AE. The tested executable is
 `cb632a30be34033922760f90465d2f8baf28ad832f56b7a454a33dae3ac3ba0f`.
 Receipts and rebuild commands stay in
-`local/work/codex-th1/map03-691/map03-v027-cold`. Package inclusion
-and the remaining battle are pending.
+`local/work/codex-th1/map03-691/map03-v027-cold`. The same
+12,000-field test passed on the combined
+[v0.2.28-alpha](../releases/v0.2.28-alpha.md) binary. The remaining
+battle is pending.
 
 Candidate keys and dimensions are offline evidence. Runtime activation and package coverage require a separately verified draw.
 

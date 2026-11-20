@@ -66,7 +66,7 @@ La reatribución de #592 da 38 filas de imagen HD conectadas para buscar en capt
 
 | Shard | Estado | Lote | Punto de partida |
 | --- | --- | --- | --- |
-| THD33 | verified · package pending | Episodio 7: BG1178, BG1181, BG2014, BG2160 | [BG1178, BG1181 y BG2160 a 1440p](research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route). [BG2014 detrás de NC3014](research/hd-chapter-7.md#bg2014-behind-nc3014), parche 0263. |
+| THD33 | verified · v0.2.28-alpha | Episodio 7: BG1178, BG1181, BG2014, BG2160 | [BG1178, BG1181 y BG2160 a 1440p](research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route). [BG2014 detrás de NC3014](research/hd-chapter-7.md#bg2014-behind-nc3014), parche 0263. |
 | THD34 | open | Episodio 8: BG1001, BG1195, BG2004, BG2007 | [Trazas de salto](research/hd-chapter-8.md#re-attribution-with-the-evt-overlay-build). |
 | THD35 | open | Episodio 9: BG1143, BG2017, BG2031, BG2091 | [Trazas de salto](research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build). [BG2021 verificado](research/hd-chapter-9.md#bg2021-on-the-earned-iris-route). |
 | THD36 | open | Episodio 9: BG2092, BG2156, BG2160, BG2236 | Mismas trazas. BG2156 ya suma globalmente por su aparición en el episodio 6. |
@@ -92,7 +92,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | --- | --- | --- | --- | --- | --- |
 | THD15 | P1 | local | open | **Suelos directos del disco 1.** MAP07, 08, 09, 11 y 22; MAP03 va en THD17. | Entrada real, clave FAD, geometría, cámara en movimiento y unidades/HUD intactos. |
 | THD16 | P1 | local | CLAIM[MatyMeatBoy\|pendientes/THD16-ground-probe\|2026-11-20T18:03:13Z] open | **Suelos directos del disco 2.** MAP01, 17, 18, 24, 25 y 26, más las decisiones MAP10/19 si hay nueva evidencia. | Mismos controles que THD15. Los mapas con arte distinto requieren registro propio. |
-| THD17 | P1 | local | partial · MAP03 included in v0.2.27-alpha | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | [MAP03 a 1440p](research/tactical-ground-table.md#map03-at-1440p) con 180 cuadros estrictos desde un punto jugable. [Entrada en frío](research/tactical-ground-table.md#cold-evt03-deployment) verificada en un candidato con 12.000 cuadros. Quedan empaquetar el AOT de entrada y verificar MAP20 y MAP23. |
+| THD17 | P1 | local | partial · MAP03 included in v0.2.28-alpha | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | [MAP03 a 1440p](research/tactical-ground-table.md#map03-at-1440p) con 180 cuadros estrictos desde un punto jugable. [Entrada en frío](research/tactical-ground-table.md#cold-evt03-deployment) verificada en el binario combinado durante 12.000 cuadros. Quedan la batalla completa y MAP20/MAP23. |
 | THD18 | P1 | local | open | **Unidades y retratos tácticos.** UNIT y FACE por mapa, dirección, pose, ataque y combinación; conservar cuadrícula. | Una unidad y sus variantes por PR, con anclaje, poses y oclusión verificadas. El [cruce EVENTANM y EVS](research/tactical-pairing.md#tactical-event-animation-dependencies) identifica las dependencias por archivo y la primera silueta de MAP02. Queda el compositor de tiras VDP1. |
 | THD19 | P1 | local | open | **Objetos en el mundo táctico.** ITEM en el campo, separando SPR físico de tarjeta de menú. | Emparejar objeto y estado visual con su posición de mundo, zoom y scroll. |
 
