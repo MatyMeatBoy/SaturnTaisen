@@ -1123,3 +1123,17 @@ regeneration from the pinned module.
 This verification covers the menu entry. The scored cooking stages
 and the BGRYORI reward in Enhanced remain open. The candidate is
 local and is not included in v0.2.23-alpha.
+
+### Swimming menu in Long Day
+
+On English disc 1, Sumire invites Ogami to the underground pool.
+Accepting the invitation loads MINISWIM.BIN at FAD 270412 for 184
+sectors. An initial strict replay on v0.2.23-alpha stops after
+991 guest fields at master SH-2 address `0025197C`.
+
+The combined local candidate adds 1,144 byte-exact swimming extents
+alongside the cooking entry variants. A 2,050-field replay from the
+invitation reaches the Start and Practice menu. Every guest hash
+and final SRAM match the interpreter and no blocks are interpreted.
+The `MINISWIM_LONG_DAY` registry records the observed ranges.
+The timed swim, BGSWIM reward and public package remain open.
