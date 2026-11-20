@@ -319,3 +319,17 @@ python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track
 Result: 1,357,536 -> 1,411,614 candidate blocks (+54,078). The sorted delta in LF `ADDRESS UPPERCASE_HEX` form has SHA-256 `27ec757128f9e1963348b391b489d29a33a3e6f41ab6adbc7128af05876b7450`; it contains `06080000`. The block list is derived from the owner's disc and stays under `local/`.
 
 Isolated compile: copy `local/deps/satrecomp-evt` to `local/deps/satrecomp-end2` (its `dependency()` check bypassed, as for `-evt`), copy `local/work/rebuild-evt` to `local/work/rebuild-end2` with the new `blocks.txt`, fresh build directory `local/build/rebuild-end2`, same `run.py` pattern with `-end2` paths. The base, the shared SDK and the shared build are not touched.
+
+### Isolated AOT result with the ENDING module (1,411,614 blocks, `local/build/rebuild-end2`)
+
+`recomp.py` reported 1,411,614 blocks, all with native code, 0 skipped; ninja 7,154 steps, exit 0 (executable SHA-256 `155b255d79fe95ec16f1ff9a24e9670472e1e457a2d780eaa40d9780b6a0b34b`, copied to `local/build/sakura-end2/`). The `-end2` SDK copy carries the same unrecorded edits as `-evt`, so `dependency()` was bypassed (`m.dependency=lambda:None`) and the shared tree was not touched.
+
+Strict native, English disc 2 public Finale, cold backup plus the #592 extended movie, 45,000 frames (`tools/chapter_loads.py`):
+
+- exit 0, 45,000 frame hashes (was 41,684 and exit 4), `interpreted 0 (0.00%)`; no stop at `06080000`.
+- The first 41,684 hashes are identical to the #592 strict run with the 1,357,536-block build (cmp), so the 41,684 frames before the stop do not change.
+- Interpreter check: from the state saved at frame 41,680 (inside the `ENDING.BIN` stream-in) the new strict build and a pure-interpreter run (`SATRECOMP_NO_BLOCKS=1`) of the same 3,300 frames produce identical per-frame hash logs (cmp), exit 0.
+
+Loads after the stop (first-load order, FAD): `ADVSE10` (114,694), `ENDING.BIN` (133,947), `SU_CG.BIN` (148,297), `SU_SPR.BIN` (148,497), `OTOMEADP.DAT` (143,267). `SU_CG.BIN` is the Sumire ending bank, so this route is the Sumire ending; no FILM stream and no further CG bank is read within 45,000 frames (the credits and `Fin` sequence is not reached by this movie). Attribution for the ending bank rows: `SU_CG`/`SU_SPR` are read here after `ENDING.BIN`.
+
+Not verified: frames past 45,000 (credits, `Fin`), other heroine endings under the full-module blocks, a run with the interpreter for all 45,000 frames, and package inclusion. The cold route here used the extended-movie confirm presses, not a human play-through.
