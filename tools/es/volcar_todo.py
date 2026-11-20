@@ -97,6 +97,9 @@ def main():
     args = parser.parse_args()
     memory, kinds = load_memory()
     overrides = load_overrides()
+    review = json.loads((ROOT / 'config/es-japanese-bridge.json').read_text(encoding='utf-8'))
+    japanese_fixes = {row['key']: row for row in review['entries']
+                      if row['spanish_status'] == 'integrate-spanish'}
     target = WORK / f'builds/es-all/disc{args.disc}/files'
     if target.exists():
         shutil.rmtree(target)
@@ -124,7 +127,16 @@ def main():
                     english = record.display_text
                     if MARKER.match(english) or not english.strip():
                         continue
-                    es = overrides.get(f"{base[:4]}-{record.index:04d}") or memory[chapter].get((False, english))
+                    key = f'{base[:4]}-{record.index:04d}'
+                    if key in japanese_fixes:
+                        correction = japanese_fixes[key]
+                        if (record.record_id != correction['record_id']
+                                or name.upper() != correction['table']
+                                or english.rstrip() != correction['english_current']):
+                            raise SystemExit(f'{key}: la base de la corrección japonesa cambió')
+                        es = correction['spanish_suggested']
+                    else:
+                        es = overrides.get(key) or memory[chapter].get((False, english))
                     if es is None:
                         untranslated[name].append(record.index)
                         continue
