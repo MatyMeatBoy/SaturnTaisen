@@ -18,3 +18,7 @@ A second cold run captured every field from 8,580 through 8,630 at 2560 x 1440. 
 ## Inspection cursor edges with the published executable
 
 A 940-field strict English disc 1 replay from the Maria inspection checkpoint reproduced all 940 guest hashes and 11 exact RGB captures from the [four-edge reference](chapter1-wide-transitions.md#inspection-hand-at-the-viewport-edges). The window measures 2560 x 1440. The v0.2.16.1-alpha executable was run outside the release marker directory so it could load the archived checkpoint. Its SHA-256 matches the packaged executable. Private results: `local/work/codex-th1/thd41-combined/pointer-regression-load/edges-final-1`.
+
+## Spanish letter to Sakura at 1440p
+
+The published v0.2.16.1-alpha executable and installer-produced Spanish disc completed a 6,361-field strict checkpoint replay from the letter through Sakura's park dialogue. The isolated runtime allowed checkpoint load. At 2560 x 1440 the 61 samples every five fields from 1,930 through 2,230 held the upper gold dialogue edge at y=1048 through the empty floral screen. Four corner pixels remained nonblack in each sample. The later sampled route reached Sakura at 4,560 and her Yoneda line at 5,280. Private evidence: `local/work/codex-th1/thd41-combined/letter-to-sakura-final/enhanced-1440`.
