@@ -67,6 +67,7 @@ PRODUCT = 'GS-9037'
 NO_WINDOW = getattr(subprocess, 'CREATE_NO_WINDOW', 0)
 IMAGE_SUFFIXES = ('.cue', '.iso', '.bin', '.img', '.mdf')
 CABINETS = ('DATA1.CAB', 'DATA1.HDR', 'DATA2.CAB')
+_recomplauncher_progress = False
 
 
 class SetupError(Exception):
@@ -74,7 +75,10 @@ class SetupError(Exception):
 
 
 def say(percent: int, message: str) -> None:
-    print(f'PROGRESO {percent} {message}', flush=True)
+    if _recomplauncher_progress:
+        print(f'progress {percent / 100:.2f} {message}', flush=True)
+    else:
+        print(f'PROGRESO {percent} {message}', flush=True)
 
 
 def sha256(path: Path) -> str:
@@ -1223,6 +1227,7 @@ def info(paths: Paths) -> dict:
 
 
 def main() -> int:
+    global _recomplauncher_progress
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('command', choices=('scan', 'prepare', 'language', 'info', 'frontend', 'help'))
     parser.add_argument('--folder', type=Path)
@@ -1231,10 +1236,13 @@ def main() -> int:
     parser.add_argument('--fullscreen', action='store_true')
     parser.add_argument('--widescreen', choices=('off', '16:9', 'fit'))
     parser.add_argument('--force', action='store_true', help='rebuild even what is already prepared')
+    parser.add_argument('--recomplauncher-progress', action='store_true',
+                        help='emit progress as a fraction for RecompLauncher')
     parser.add_argument('--home', type=Path)
     for name in ('program', 'patches', 'xdelta', 'unshield', 'runtime', 'recipe', 'provenance', 'output', 'hd-output'):
         parser.add_argument('--' + name, type=Path, help=argparse.SUPPRESS)
     args = parser.parse_args()
+    _recomplauncher_progress = args.recomplauncher_progress
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, 'reconfigure'):
             stream.reconfigure(encoding='utf-8', errors='replace')
