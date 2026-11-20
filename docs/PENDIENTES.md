@@ -44,7 +44,7 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
-| THD01 | P0 | local | CLAIM[claude-thd01|pendientes/THD01-ep1-backgrounds|2026-11-20T13:10:54Z] open | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | Separar faltantes, conexiones y muestras a 1440p con caja y primer plano nativos. |
+| THD01 | P0 | local | CLAIM[claude-thd01|pendientes/THD01-ep1-backgrounds|2026-11-20T13:10:54Z] open | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | Separar faltantes, conexiones y muestras a 1440p con caja y primer plano nativos. Tabla hecha: [thd01-episode1-backgrounds.md](research/thd01-episode1-backgrounds.md) (34 conectados y atribuidos, 7 por ruta propia, 3 conectados sin atribuir: BG1016, BG1120, BG2010). Muestras 1440p pendientes (arnes sin dibujo PC). |
 | THD02 | P1 | local | open | **Fondos normales del disco 1.** BG de episodios 2–5, lotes por ruta, excluyendo animaciones, panoramas y recortes. | Captura natural por donante nuevo y decisión explícita para los que no coinciden. |
 | THD03 | P1 | local | open | **Fondos normales del disco 2.** BG de episodios 6–10, mismos límites que THD02. | Mismo encuadre y capas en una prueba A/B por donante. |
 | THD04 | P1 | local | open | **Panoramas y escenas grandes.** BG1257, BG1280, BG2247 y variantes animadas de tamaño no estándar; apariciones restantes de BG2290. | Medir trayectoria, escala, límites y fundidos o justificar conservar Saturn. |

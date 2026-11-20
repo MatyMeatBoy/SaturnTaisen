@@ -53,3 +53,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 SPR fisicos compartidos por varios BG Saturn: ninguno.
 
 Resumen: conectado y atribuido: 34, conectado sin atribuir: 3, conectado por ruta propia (scroll/recorte), atribuido: 7
+
+## Capturas a 1440p (no verificadas)
+
+Intento: copia propia del exe (`sakura-th56`, `sakura-thd30/sakura-evt`, `sakura-th34`; la base de `sakura-thd30` no contiene el dibujo de escena PC), estado `rb-full/a.state` (cuadro 119.780, pasillo BG1119) y `chapter1-continuous-119780.state`, 2560x1440, `presentation_mode=1`, `scene_view=1`, `pc_hd_backgrounds=0`, `--pc-assets local/work/pc-cab/out-bg`, 600 campos. Resultado: hashes por cuadro iguales con y sin donante (interpretados 0), pero ninguna linea `scene picture:` y la captura con donante es identica byte a byte a la de control sin donante: el dibujo PC no se activo en este arnes headless. Por tanto no hay veredicto de caja de dialogo ni primer plano; queda como trabajo (necesita un estado con el dibujo ya testigo, p. ej. `d1-frio-dialogo`, o depurar el arnes). Delta de verificacion: 0.
