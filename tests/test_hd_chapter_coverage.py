@@ -402,9 +402,16 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(kanna['shared_pc_image_indices'], [6, 7])
         self.assertEqual(kanna['native_records'], [])
         self.assertEqual(kanna['fixture_evidence'], 'docs/research/ending-bank-pairs.md#controlled-kanna-ending-photographs')
+        for mark in ('AI', 'KO'):
+            inset = catalog[f'2:/SAKURA1/{mark}_CG.BIN']
+            self.assertEqual((inset['status'], inset['pc_image_indices']), ('hd', [5]))
+            self.assertEqual(inset['fixture_evidence'], 'docs/research/ending-bank-pairs.md#controlled-iris-and-kohran-theatre-insets')
+            self.assertFalse(inset['verified_in_game'])
+            self.assertEqual(inset['native_records'], [8, 11])
+            self.assertEqual(inset['shared_runtime_donor'], 'SAKURA1/ENDING/END_SA.SPR')
         for disc in (1, 2):
             for name in ('AI', 'GE', 'KA', 'KO', 'MA', 'SA', 'SU'):
-                if disc == 2 and name in ('KA', 'SU'):
+                if disc == 2 and name in ('AI', 'KA', 'KO', 'SU'):
                     continue
                 with self.subTest(disc=disc, ending=name):
                     row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']

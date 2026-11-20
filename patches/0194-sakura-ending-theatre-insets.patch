@@ -1,0 +1,124 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -942,6 +942,7 @@
+     SceneHd eve0118;
+     bool eve0118Traced = false;
+     constexpr port::EveRect endingPhotoRect{0, 16, 320, 160};
++    constexpr port::EveRect endingInsetRect{16, 96, 88, 104};
+     struct EndingPhoto {
+         unsigned index;
+         uint8_t layer;
+@@ -952,6 +953,7 @@
+         size_t fileSize;
+         uint64_t fileHash;
+         port::EveRect crop;
++        bool theatreInset = false;
+     };
+     constexpr EndingPhoto endingPhotos[]{
+         {6, 2, 0x200, 0xA19A0B84409A3AB8ull, 0xCB89538124A3A96Dull,
+@@ -966,15 +968,21 @@
+          "SAKURA1/ENDING/END_KA.SPR", 3020591, 0x792053C5B4B6E028ull, {16, 0, 620, 320}},
+         {8, 3, 0x400, 0x508E45A11D1B644Aull, 0x1D88349FEC00B925ull,
+          "SAKURA1/ENDING/END_KA.SPR", 3020591, 0x792053C5B4B6E028ull, {34, 0, 584, 300}},
++        {5, 5, 0x600, 0xDA64795CE64144D2ull, 0xC8B0D2082291F438ull,
++         "SAKURA1/ENDING/END_AI.SPR", 3037497, 0x5FC886DB1088A956ull, {0, 0, 176, 208}, true},
++        {5, 5, 0x600, 0xCEF938CB4700126Cull, 0xCB7F8BABC52AA9FBull,
++         "SAKURA1/ENDING/END_KO.SPR", 2925404, 0x1CA5866920ADDD55ull, {0, 0, 176, 208}, true},
+     };
+     std::array<SceneHd, std::size(endingPhotos)> endingPhotoImages;
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
+     auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop,
+-                           unsigned feather = 0, unsigned index = port::kEve202PcImage) {
++                           unsigned feather = 0, unsigned index = port::kEve202PcImage,
++                           std::vector<uint32_t> theatreUnder = {}) {
+         if (!inset.tried) {
+             inset.tried = true;
+             inset.pending = std::async(std::launch::async,
+-                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop, feather, index]() {
++                [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop, feather, index,
++                 theatreUnder = std::move(theatreUnder)]() {
+                     SceneHdPixels result;
+                     std::vector<uint8_t> bytes;
+                     if (!ReadPcBackdropFile(path, bytes, size) || bytes.size() != size ||
+@@ -990,15 +998,20 @@
+                         result.pixels.reserve(size_t(crop.width) * crop.height);
+                         for (int y = 0; y < crop.height; ++y) {
+                             const auto first = image.pixels.begin() + (y + crop.y) * image.width + crop.x;
+-                            if (feather == 0) {
++                            if (!theatreUnder.empty()) {
++                                for (int x = 0; x < crop.width; ++x) {
++                                    const uint32_t under = theatreUnder[size_t(y / 2) * (crop.width / 2) + x / 2];
++                                    result.pixels.push_back(port::CompositePanelPixel({under, 31, {}}, first[x], 0xFF000000u));
++                                }
++                            } else if (feather == 0) {
+                                 result.pixels.insert(result.pixels.end(), first, first + crop.width);
+-                                continue;
+-                            }
+-                            for (int x = 0; x < crop.width; ++x) {
+-                                const unsigned edge = std::min({x, y, crop.width - 1 - x, crop.height - 1 - y});
+-                                const unsigned t = std::min(edge, feather) * 255 / feather;
+-                                const unsigned opacity = t * t * (3 * 255 - 2 * t) / (255 * 255);
+-                                result.pixels.push_back((first[x] & 0x00FFFFFFu) | (opacity << 24));
++                            } else {
++                                for (int x = 0; x < crop.width; ++x) {
++                                    const unsigned edge = std::min({x, y, crop.width - 1 - x, crop.height - 1 - y});
++                                    const unsigned t = std::min(edge, feather) * 255 / feather;
++                                    const unsigned opacity = t * t * (3 * 255 - 2 * t) / (255 * 255);
++                                    result.pixels.push_back((first[x] & 0x00FFFFFFu) | (opacity << 24));
++                                }
+                             }
+                         }
+                         break;
+@@ -3627,15 +3640,46 @@
+                 if (planes.width == 320 && planes.height == 224 && planes.topSource.size() == 320 * 224) {
+                     for (size_t slot = 0; slot < std::size(endingPhotos); ++slot) {
+                         const auto& photo = endingPhotos[slot];
++                        const auto nativeRect = photo.theatreInset ? endingInsetRect : endingPhotoRect;
+                         if (planes.palette.size() < photo.paletteOffset + 512 ||
+                             PcBackdropHash(std::span{planes.palette}.subspan(photo.paletteOffset, 512)) != photo.palette ||
+-                            insetRgb(softwareShown, endingPhotoRect) != photo.rgb) continue;
+-                        const auto visible = std::span{planes.topSource}.subspan(16 * 320, 160 * 320);
+-                        if (!std::ranges::all_of(visible, [&](uint8_t layer) { return layer == photo.layer; })) continue;
++                            insetRgb(softwareShown, nativeRect) != photo.rgb) continue;
++                        bool ownsRect = true;
++                        for (int y = nativeRect.y; y < nativeRect.y + nativeRect.height && ownsRect; ++y) {
++                            const auto row = std::span{planes.topSource}.subspan(size_t(y) * 320 + nativeRect.x, nativeRect.width);
++                            ownsRect = std::ranges::all_of(row, [&](uint8_t layer) { return layer == photo.layer; });
++                        }
++                        if (!ownsRect) continue;
+                         auto& image = endingPhotoImages[slot];
+-                        loadEveInset(image, photo.file, photo.fileSize, photo.fileHash, photo.crop, 0, photo.index);
++                        std::vector<uint32_t> theatreUnder;
++                        if (photo.theatreInset) {
++                            const auto& regs = port.videoRenderer->Regs2();
++                            if (planes.floralCoverMix.size() != 320 * 224 || regs.colorCalcExtended ||
++                                regs.colorCalcAdd || regs.colorCalcUseSecondRatio || regs.colorCalcRatio[5] != 0 ||
++                                port.videoRenderer->BackgroundColorOffset(5) != std::array<int16_t, 3>{}) continue;
++                            // Keep the exact native lower input at each pixel, including the black part.
++                            uint64_t underHash = 14695981039346656037ull;
++                            bool validMix = true;
++                            if (!image.tried) theatreUnder.reserve(nativeRect.width * nativeRect.height);
++                            for (int y = nativeRect.y; y < nativeRect.y + nativeRect.height && validMix; ++y) {
++                                for (int x = nativeRect.x; x < nativeRect.x + nativeRect.width; ++x) {
++                                    const auto& mix = planes.floralCoverMix[size_t(y) * 320 + x];
++                                    if (mix.lowerWeight != 31 || mix.postMixOffset != std::array<int16_t, 3>{}) {
++                                        validMix = false;
++                                        break;
++                                    }
++                                    const uint32_t under = mix.topRgb;
++                                    for (unsigned shift : {0u, 8u, 16u})
++                                        underHash = (underHash ^ uint8_t(under >> shift)) * 1099511628211ull;
++                                    if (!image.tried) theatreUnder.push_back(under);
++                                }
++                            }
++                            if (!validMix || underHash != 0x3B3F09D936525DADull) continue;
++                        }
++                        loadEveInset(image, photo.file, photo.fileSize, photo.fileHash, photo.crop, 0,
++                                     photo.index, std::move(theatreUnder));
+                         if (image.texture) {
+-                            const auto rect = port::EveInsetDestination(endingPhotoRect, baseFit.x, baseFit.y, baseFit.scale);
++                            const auto rect = port::EveInsetDestination(nativeRect, baseFit.x, baseFit.y, baseFit.scale);
+                             const SDL_FRect target{float(rect.x), float(rect.y), float(rect.width), float(rect.height)};
+                             if (SDL_RenderTexture(renderer, image.texture, nullptr, &target) &&
+                                 !endingPhotoTraces[slot] && std::getenv("SATRECOMP_ENDING_PHOTO_TRACE")) {

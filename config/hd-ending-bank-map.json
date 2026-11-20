@@ -9,6 +9,24 @@
       "pc_sha256": "5eda7b2b7e794d0ede71902f04bcf9ce09e323dfe144d671c8fc502391631071",
       "records": [
         {
+          "saturn_record": 5,
+          "pc_image_index": 5,
+          "correlation": 0.98055,
+          "offset": 117800,
+          "length": 10300,
+          "size": [
+            88,
+            104
+          ],
+          "palette_fnv": "DA64795CE64144D2",
+          "cells_fnv": "759010895B5453BA",
+          "cells_sha256": "aeca591813f489ed7e705a13ea35310f8d6ac511e2d3a090b2c7840c7768ac89",
+          "pc_size": [
+            176,
+            208
+          ]
+        },
+        {
           "saturn_record": 6,
           "pc_image_index": 6,
           "correlation": 0.92534,
@@ -248,6 +266,24 @@
       "pc_file": "SAKURA1/ENDING/END_KO.SPR",
       "pc_sha256": "f6f3483e5e2b74f48e28672bffd45e2af376e1397fbd2b925ac4ac18d32d9121",
       "records": [
+        {
+          "saturn_record": 5,
+          "pc_image_index": 5,
+          "correlation": 0.96101,
+          "offset": 117800,
+          "length": 10300,
+          "size": [
+            88,
+            104
+          ],
+          "palette_fnv": "CEF938CB4700126C",
+          "cells_fnv": "8E48E4311871A768",
+          "cells_sha256": "b85dfe8482beb8c40f228eae772270a31c42ef012c63a42dbfdd9ce219731622",
+          "pc_size": [
+            176,
+            208
+          ]
+        },
         {
           "saturn_record": 6,
           "pc_image_index": 6,
@@ -582,15 +618,37 @@
     "included_in_package": false,
     "unique_routes": {
       "SAKURA1/KA_CG.BIN": {
-        "records": [8, 11],
+        "records": [
+          8,
+          11
+        ],
         "runtime_patch": "patches/0192-sakura-kanna-ending-photos.patch",
         "evidence": "docs/research/ending-bank-pairs.md#controlled-kanna-ending-photographs",
         "controlled": true
       },
       "SAKURA1/SU_CG.BIN": {
-        "records": [8, 11],
+        "records": [
+          8,
+          11
+        ],
         "runtime_patch": "patches/0189-sakura-sumire-ending-photos.patch",
         "evidence": "docs/research/ending-bank-pairs.md#natural-sumire-ending-and-unique-pc-photographs"
+      },
+      "SAKURA1/AI_CG.BIN": {
+        "records": [
+          5
+        ],
+        "runtime_patch": "patches/0194-sakura-ending-theatre-insets.patch",
+        "evidence": "docs/research/ending-bank-pairs.md#controlled-iris-and-kohran-theatre-insets",
+        "controlled": true
+      },
+      "SAKURA1/KO_CG.BIN": {
+        "records": [
+          5
+        ],
+        "runtime_patch": "patches/0194-sakura-ending-theatre-insets.patch",
+        "evidence": "docs/research/ending-bank-pairs.md#controlled-iris-and-kohran-theatre-insets",
+        "controlled": true
       }
     }
   }
