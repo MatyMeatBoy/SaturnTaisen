@@ -1,0 +1,185 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -826,8 +826,9 @@
+     SceneHd bg2238;
+     SceneHd bg2093;
+     std::vector<uint32_t> bg2093Native, bg2093Donor, bg2093Pixels;
+-    SceneHd irisCombo;
+-    std::vector<uint32_t> irisComboNative, irisComboDonor, irisComboPixels;
++    std::array<SceneHd, 2> irisCombo;
++    std::array<std::vector<uint32_t>, 2> irisComboNative, irisComboDonor;
++    std::vector<uint32_t> irisComboPixels;
+     // TP2: one slot per row of kScrollPictures (native pixels decoded once, PC texture loaded once).
+     struct ScrollState {SceneHd hd; std::vector<uint32_t> pixels;};
+     std::array<ScrollState, kScrollPictureCount> scrollState;
+@@ -3760,45 +3761,69 @@
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
+                 texW == 320 && texH == 224 && baseFit.scale >= 2 &&
+-                softwareShown.size() == 320 * 224 &&
+-                port.videoRenderer->CaptureIrisComboPose(irisComboNative)) {
++                softwareShown.size() == 320 * 224) {
++                const int pose = port.videoRenderer->CaptureIrisComboPose(irisComboNative);
+                 const auto& planes = port.videoRenderer->PresentationFrame();
+-                if (!irisCombo.tried) {
+-                    irisCombo.tried = true;
+-                    queuePinnedPan(irisCombo, "SAKURA2/UNIT/GATTAI/IRISU/GTB_IRS.SPR", 275081,
+-                        0x5B2127D6F980BFFBull, 640, 480, 1);
+-                }
+-                if (irisCombo.pending.valid() && irisCombo.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+-                    auto art = irisCombo.pending.get();
+-                    if (!art.pixels.empty()) {
+-                        irisComboDonor.resize(640 * 448);
+-                        // Register the two figures to the opaque Saturn pose at 2x.
+-                        for (int y = 0; y < 448; ++y) for (int x = 0; x < 640; ++x) {
+-                            const int sx = (306 * (2 * x + 1) + 9200) / 640;
+-                            const int sy = (673 * (2 * y + 1) + 10400) / 1280;
+-                            if (sx >= 640 || sy >= 480) continue;
+-                            const uint32_t color = art.pixels[size_t(sy) * 640 + sx];
+-                            if ((color & 0xFFFFFF) != 0xFFFF00)
+-                                irisComboDonor[size_t(y) * 640 + x] = color | 0xFF000000;
+-                        }
+-                    }
+-                }
+-                if (!irisComboDonor.empty() && planes.source.size() == softwareShown.size() &&
+-                    planes.topSource.size() == softwareShown.size()) {
++                if (pose >= 0 && !irisCombo[0].tried) {
++                    for (unsigned index = 0; index < irisCombo.size(); ++index) {
++                        auto& image = irisCombo[index];
++                        image.tried = true;
++                        queuePinnedPan(image, "SAKURA2/UNIT/GATTAI/IRISU/GTB_IRS.SPR", 275081,
++                            0x5B2127D6F980BFFBull, 640, 480, index);
++                    }
++                }
++                if (pose >= 0) {
++                    auto& image = irisCombo[pose];
++                    auto& donor = irisComboDonor[pose];
++                    if (image.pending.valid() && image.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                        auto art = image.pending.get();
++                        if (!art.pixels.empty()) {
++                            donor.resize(640 * 448);
++                            // Each PC subimage has its own measured 2x registration.
++                            for (int y = 0; y < 448; ++y) for (int x = 0; x < 640; ++x) {
++                                const int syNumerator = 173 * (2 * y + 1) - 600;
++                                if (pose == 0 && syNumerator < 0) continue;
++                                const int sx = pose == 0 ? (319 * (2 * x + 1) + 800) / 640
++                                                         : (306 * (2 * x + 1) + 9200) / 640;
++                                const int sy = pose == 0 ? syNumerator / 320 : (673 * (2 * y + 1) + 10400) / 1280;
++                                if (sx >= 640 || sy >= 480) continue;
++                                const uint32_t color = art.pixels[size_t(sy) * 640 + sx];
++                                if ((color & 0xFFFFFF) != 0xFFFF00)
++                                    donor[size_t(y) * 640 + x] = color | 0xFF000000;
++                            }
++                        }
++                    }
++                }
++                if (pose >= 0 && !irisComboDonor[pose].empty() && planes.source.size() == softwareShown.size() &&
++                    planes.topSource.size() == softwareShown.size() &&
++                    (pose == 1 || planes.floralCoverMix.size() == softwareShown.size())) {
++                    const auto& nativePose = irisComboNative[pose];
++                    const auto& donor = irisComboDonor[pose];
+                     irisComboPixels.assign(640 * 448, 0);
+                     bool visible = false;
+                     for (int y = 0; y < 224; ++y) for (int x = 0; x < 320; ++x) {
+                         const size_t at = size_t(y) * 320 + x;
+-                        const auto native = irisComboNative[at];
+-                        if (!native || planes.source[at] != 5 || planes.topSource[at] != 5 ||
+-                            ((native ^ softwareShown[at]) & 0xFFFFFF) ||
+-                            (x && !irisComboNative[at - 1]) || (x + 1 < 320 && !irisComboNative[at + 1]) ||
+-                            (y && !irisComboNative[at - 320]) || (y + 1 < 224 && !irisComboNative[at + 320]))
++                        const auto native = nativePose[at];
++                        if (!native || planes.topSource[at] != 5 ||
++                            (x && !nativePose[at - 1]) || (x + 1 < 320 && !nativePose[at + 1]) ||
++                            (y && !nativePose[at - 320]) || (y + 1 < 224 && !nativePose[at + 320]))
+                             continue;
++                        PanelMix cover{};
++                        uint32_t composed = native;
++                        if (pose == 0) {
++                            if (planes.source[at] != 2 && planes.source[at] != 4) continue;
++                            cover = planes.floralCoverMix[at];
++                            if (!cover.lowerWeight || cover.lowerWeight >= 32) continue;
++                            // The capture places the live backing in topRgb and gives the actor's weight.
++                            composed = CompositePanelPixel(cover, native, native);
++                        } else if (planes.source[at] != 5) continue;
++                        if ((composed ^ softwareShown[at]) & 0xFFFFFF) continue;
+                         const size_t hi = size_t(y) * 1280 + size_t(x) * 2;
+                         for (const size_t offset : {0u, 1u, 640u, 641u}) {
+-                            irisComboPixels[hi + offset] = irisComboDonor[hi + offset];
+-                            visible |= irisComboPixels[hi + offset] != 0;
++                            const auto color = donor[hi + offset];
++                            if (!color) continue;
++                            irisComboPixels[hi + offset] = pose == 0 ? CompositePanelPixel(cover, color, native) : color;
++                            visible = true;
+                         }
+                     }
+                     if (visible && !irisComboTexture) {
+@@ -3813,7 +3838,7 @@
+                         SDL_UpdateTexture(irisComboTexture, nullptr, irisComboPixels.data(), 640 * sizeof(uint32_t)) &&
+                         SDL_RenderTexture(renderer, irisComboTexture, nullptr, &where) &&
+                         std::getenv("SATRECOMP_COMBO_TRACE"))
+-                        std::fprintf(stderr, "verified combo pose: GTB_IRS\n");
++                        std::fprintf(stderr, "verified combo pose: GTB_IRS %d\n", pose);
+                 }
+             }
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 1 &&
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -190,26 +190,36 @@
+         return !bg.colorCalcEnable && !bg.lineColorScreenEnable && !bg.shadowEnable &&
+                BackgroundColorOffset(layer) == std::array<int16_t, 3>{};
+     }
+-    bool CaptureIrisComboPose(std::vector<uint32>& pixels) const {
++    int CaptureIrisComboPose(std::array<std::vector<uint32>, 2>& poses) const {
+         const auto& bg = m_regs2.bgParams[4];
+         if (m_width != 320 || m_height != 224 || m_regs2.TVMD.IsInterlaced() ||
+-            bg.pageBaseAddresses[0] != 0x66000 || bg.scrollAmountH != 0 ||
+-            bg.scrollAmountV != 0x10000 || bg.cramOffset != 0 ||
+-            !BackgroundIsOpaque(5) || BackgroundPaletteFingerprint(5) != 0xF6B278DAC83BC233ull)
+-            return false;
+-
+-        // NBG3's second combo pose starts 32 tile rows into the page.
+-        constexpr uint32 names = 0x67000, cells = 0x68000;
++            bg.pageBaseAddresses[0] != 0x66000 || bg.scrollAmountH != 0 || bg.cramOffset != 0 ||
++            !m_regs2.layerEnabled[5] || BackgroundPaletteFingerprint(5) != 0xF6B278DAC83BC233ull)
++            return -1;
++
++        int pose = -1;
++        if (bg.scrollAmountV == 0 && bg.colorCalcEnable && !bg.lineColorScreenEnable &&
++            !m_regs2.colorCalcExtended && !m_regs2.colorCalcAdd && !m_regs2.colorCalcUseSecondRatio)
++            pose = 0;
++        else if (bg.scrollAmountV == 0x10000 && BackgroundIsOpaque(5))
++            pose = 1;
++        if (pose < 0) return -1;
++
++        // The second pose starts 32 tile rows into the same NBG3 page.
++        const uint32 names = pose == 0 ? 0x66000 : 0x67000;
++        const uint64_t nameHash = pose == 0 ? 0x6828871F098D2DFAull : 0xE6518322FD6A1595ull;
++        constexpr uint32 cells = 0x68000;
+         const auto fingerprint = [&](uint32 start, uint32 end) {
+             uint64_t hash = 14695981039346656037ull;
+             for (uint32 pos = start; pos < end; ++pos)
+                 hash = (hash ^ m_mem.vram2[pos]) * 1099511628211ull;
+             return hash;
+         };
+-        if (fingerprint(names, 0x67E00) != 0xE6518322FD6A1595ull ||
++        if (fingerprint(names, names + 0xE00) != nameHash ||
+             fingerprint(cells, 0x78A00) != 0xC2EC39C65FB06018ull)
+-            return false;
+-
++            return -1;
++
++        auto& pixels = poses[pose];
+         if (pixels.empty()) {
+             pixels.resize(320 * 224);
+             for (uint32 y = 0; y < 224; ++y) {
+@@ -226,7 +236,7 @@
+                 }
+             }
+         }
+-        return true;
++        return pose;
+     }
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     std::span<const ::port::DreamBlendPixel> BG2093Blend() const { return m_bg2093Blend; }
