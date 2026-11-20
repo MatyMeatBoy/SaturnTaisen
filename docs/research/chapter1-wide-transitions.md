@@ -170,3 +170,35 @@ The entry comparison also matched nine RGB captures per resolution
 at 720p, 1080p, 1440p and 2160p, with equal guest hashes and SRAM.
 The 1440p exit comparison matched 24 RGB captures, all 760 guest
 hashes, SRAM and the PCM output. Release packaging is pending.
+
+## Compact map fade textures
+
+Patch 0272 packs the two side strips into one texture and the top and
+bottom into a second texture. It submits two updates and draws from
+the four exact packed rectangles. At 3840 × 2160 the pixel payload of
+these textures falls from 31.641 to 9.492 MiB. At 2560 × 1440 it falls
+from 14.062 to 4.219 MiB. These figures describe the two fade
+textures alone, excluding renderer staging and other GPU resources.
+
+The route into the dining room matched nine RGB captures at each
+of 720p, 900p, 1080p, 1440p and 2160p, with identical guest hashes
+and save memory. The exit matched 24 captures at 1440p, all 760 guest
+hashes, save memory and the PCM output.
+
+An initial 1440p comparison of the compact textures found lower
+first-field times in two of the alternating replays. The initial
+implementation repeatedly resized its CPU scratch buffer to match
+the smaller of the two textures, then grew it again. The final
+implementation grows the buffer only when necessary.
+
+Two alternating 4K A/B pairs for this final version, without
+readback, measured the first fade field at 39.92 and 53.09 ms on
+patch 0271 and 26.24 and 25.01 ms on patch 0272. Fields above
+16.67 ms across the fade fell from 7 and 28 to 4 and 5. A later
+field still reached 46.53 ms. Peak process commit dropped about
+19–21 MiB in those runs. Peak working set rose by roughly 1–2 MiB.
+These are host process measurements and do not measure total VRAM.
+
+The target hardware reference is 8 GB system RAM and a GPU with
+2 GB of video memory. The replays were run on the development PC.
+A physical test on the minimum configuration remains open.
