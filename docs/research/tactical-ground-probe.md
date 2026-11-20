@@ -67,3 +67,13 @@ No new map was reached and nothing was promoted. Facts measured (names, frames a
 4. The T55 sweep note's lists (chapter 3 battles load MAP04/MAP05, chapter 4 MAP06/MAP21, chapter 8 battle 2 MAP14, chapter 10 battles 2/final MAP19) are unchanged; no state loads MAP03, 07, 08, 09, 11, 17, 18, 20, 22, 24, 25, 26. No battle was won; the IC after a battle is not reached (the #566 driver was not run: it needs the Chapter 2 state and loses Sakura before the victory).
 
 Next: (a) steer the look-at scenes per page for bank-5, 6, 7 (they lead to the battle of their chapter); (b) rebuild with the #440 table before probing; (c) unchanged owner of IC route: desk.
+
+
+### Additional historical route controls from PR #460
+
+The companion route scan loaded MAP04, MAP05, MAP06 and MAP19 from
+the chapter 3, 4 and 10 seeds. MAP04, MAP05 and MAP06 already had
+HD counterparts. MAP19 stays native by composition review. The
+8,000-field runs from chapter jump saves did not load the other
+candidate maps. These are CD-load observations and do not establish
+what the viewport displays.
