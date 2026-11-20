@@ -14,14 +14,14 @@ python tools/tactical_pairing.py maps --pc <folder with the extracted PC SAKURA1
 
 Method: every Saturn `/SAKURA2/MAPnn.BIN` (13 files on disc 1, 14 on disc 2, 27 in total) is compared by SHA-256 with `SAKURA2/MAP/MAPnn/MAPnn.BIN` of the PC edition. The two editions ship the same terrain file, so this is stronger than a luminance signature: all 27 are byte-identical. The PC `MAPnn.TAB` (a text file) then names the ground SPR. It is `Ground:` for 11 maps and `UnderGround:` for 16 (MAP02, MAP06 and MAP21 among them); the existing verified grounds (MAP01, 02, 04, 06, 21) were identified the same way. The luminance route of `match_hd_all.py` is not used here: it needs the Saturn ground rendered from the VDP2 page, which is what the runtime already does for the verified maps.
 
-Result: 27 of 27 Saturn maps are `paired` to a PC ground SPR. Five are already `hd` in the runtime (MAP01 patch 0102, MAP02, MAP04, MAP06, MAP21; the disc 2 copy of MAP01 is the same file). The other 22 move from `unknown` to `paired-not-wired` in `config/hd-chapter-coverage.json` (generator change in `tools/hd_chapter_coverage.py`). Not paired: PC `MAP27` has a BIN and a TAB (it reuses the MAP06 files) but no Saturn file.
+Result: 27 of 27 Saturn maps are `paired` to a PC ground SPR. Six distinct grounds are now `hd` in the runtime (MAP01 patch 0102, MAP02, MAP04, [MAP05](map05-pc-ground.md), MAP06, MAP21, with the same MAP01 file on disc 2). The other 21 move from `unknown` to `paired-not-wired` in `config/hd-chapter-coverage.json` (generator change in `tools/hd_chapter_coverage.py`). Not paired: PC `MAP27` has a BIN and a TAB (it reuses the MAP06 files) but no Saturn file.
 
 Two ground layouts matter for the runtime:
 
 - single image (2048x2048, 2048x1280, 1392x960 ...): the Stage01/Stage02 sampler design applies;
-- mosaic of equal tiles (MAP03 626 tiles of 64x64, MAP04 629 tiles, MAP05 46 tiles of 256x256, MAP20 96 tiles of 128x128; MAP23 holds four 1392x1232 images): an assembler is needed first. MAP04 is already `hd`; its assembler is in the patch that draws it.
+- mosaic of equal tiles (MAP03 626 tiles of 64x64, MAP04 629 tiles, MAP05 46 tiles of 256x256, MAP20 96 tiles of 128x128; MAP23 holds four 1392x1232 images): an assembler is needed first. MAP04 and MAP05 use the runtime placement assembler.
 
-What was not verified: no PC ground beyond the five has a verified game draw. The remaining comparisons need live pattern-name fingerprints and ground registration. The two below now have a live disposition. Wiring one map at a time is the open row TW6b.
+The remaining comparisons need live pattern-name fingerprints and ground registration. The two below now have a live disposition. Wiring one map at a time is the open row TW6b.
 
 ## Units (block 2)
 
