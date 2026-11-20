@@ -8,6 +8,8 @@ Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can 
 
 At v0.2.26 closure the workspace measured 202,070,548,361 logical bytes. The retained repair fixture accounts for 5,418,053,740 logical bytes, including hardlinked inputs. The automatic permission check blocked removal of that isolated fixture.
 
+The v0.2.27-alpha ZIP measured 352,292,211 bytes. The published archive matched its SHA-256 and all 168 manifest files. Its runtime completed 240 strict cold boot fields with zero interpreted blocks. The workspace measured 210,146,693,439 logical bytes including retained trial outputs and hardlinked inputs.
+
 **Finishing the HD mod from another PC:** start with [the HD completion handoff](research/hd-completion-handoff.md); rows T52, T53, T54, T67, T74, T76–T79, T710, T711.
 
 ## How to take a pending item
@@ -90,7 +92,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | --- | --- | --- | --- | --- | --- |
 | THD15 | P1 | local | open | **Suelos directos del disco 1.** MAP07, 08, 09, 11 y 22; MAP03 va en THD17. | Entrada real, clave FAD, geometría, cámara en movimiento y unidades/HUD intactos. |
 | THD16 | P1 | local | CLAIM[MatyMeatBoy\|pendientes/THD16-ground-probe\|2026-11-20T18:03:13Z] open | **Suelos directos del disco 2.** MAP01, 17, 18, 24, 25 y 26, más las decisiones MAP10/19 si hay nueva evidencia. | Mismos controles que THD15. Los mapas con arte distinto requieren registro propio. |
-| THD17 | P1 | local | open | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | [Referencias offline](research/tactical-pairing.md#offline-placement-for-map03-map20-and-map23) para MAP03 y MAP20. MAP23 usa un plano rectangular de cuatro piezas. Falta validar origen, muestreo y costuras con cámara natural. |
+| THD17 | P1 | local | partial · MAP03 included in v0.2.27-alpha | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | [MAP03 a 1440p](research/tactical-ground-table.md#map03-at-1440p) con 180 cuadros estrictos desde un punto jugable. Quedan la entrada en frío de EVT03 y la validación en juego de MAP20 y MAP23. |
 | THD18 | P1 | local | open | **Unidades y retratos tácticos.** UNIT y FACE por mapa, dirección, pose, ataque y combinación; conservar cuadrícula. | Una unidad y sus variantes por PR, con anclaje, poses y oclusión verificadas. El [cruce EVENTANM y EVS](research/tactical-pairing.md#tactical-event-animation-dependencies) identifica las dependencias por archivo y la primera silueta de MAP02. Queda el compositor de tiras VDP1. |
 | THD19 | P1 | local | open | **Objetos en el mundo táctico.** ITEM en el campo, separando SPR físico de tarjeta de menú. | Emparejar objeto y estado visual con su posición de mundo, zoom y scroll. |
 
