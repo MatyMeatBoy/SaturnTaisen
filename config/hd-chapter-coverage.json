@@ -3217,7 +3217,8 @@
             "association": "observed",
             "evidence": "docs/research/th3-native-attribution.md",
             "pc": "SAKURA1/BG/BG1198.SPR",
-            "status": "hd"
+            "status": "hd",
+            "verified_in_game": false
           },
           "1:/SAKURA1/BG2123.BIN": {
             "association": "observed",
@@ -3846,9 +3847,11 @@
           },
           "1:/SAKURA1/BG1198.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
+            "evidence": "docs/research/hd-chapter-5.md#verified-bg1198-replacement",
             "pc": "SAKURA1/BG/BG1198.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-5.md#verified-bg1198-replacement",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1243.BIN": {
             "association": "observed",

@@ -166,3 +166,20 @@ Private logs and images are in `local/work/codex-tp3c/th4-portraits`.
 
 At block close the project measured 66,801,458,366 logical bytes, above
 the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+## Verified BG1198 replacement
+
+The English disc 1 Chapter 5 cold field 9000 checkpoint and its SRAM are
+retained under local/work/later-chapter-audit/chapter-sweep/bank-5-battle-strict.
+It reads BG1198 at FAD 142883 and shows the scene around the opaque NC90 body.
+
+At 2560×1440, the strict runtime through patch 0188 matched 180 guest hashes
+and final SRAM with and without the isolated BG1198 PC donor. Both runs
+reported zero interpreted blocks. At fields 25, 75 and 150, each of the
+678,887 changed pixels was a visible stock background pixel and matched the
+independently decoded and bilinearly scaled donor within two RGB levels. The
+image viewport was (272,29)–(2288,1037). The native foreground and all pixels
+outside the viewport matched exactly.
+
+The Chapter 3 occurrence retains its separate native observation. This
+verification covers only the named scene in the patched runtime.
