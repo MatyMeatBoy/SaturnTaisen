@@ -1,0 +1,18 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -943,10 +943,11 @@
+ bool Renderer::ReuseVolatileLine(uint32 y) const {
+     if (!m_bg2093Blend.empty() && y >= 8 && y < 152) return true;
+     if (!m_lipsBodyCover.empty() && y>=8 && y<152) return true;
+-    if (m_captureBrackets && m_drawnBrackets[m_displayFB].serial != 0 && y + 1 > static_cast<uint32>(system_hud::kY) &&
+-        y < static_cast<uint32>(system_hud::kY + system_hud::kHeight)) {
++    const auto& brackets = m_drawnBrackets[m_displayFB];
++    const uint32 bracketStart = brackets.arrows[0].y == system_hud::kLoadY ? system_hud::kLoadY : system_hud::kY;
++    // Both bracket layouts build presentation ownership in ComposeLine.
++    if (m_captureBrackets && brackets.serial && y >= bracketStart && y < bracketStart + system_hud::kHeight)
+         return true;
+-    }
+     const auto &item = m_drawnItemCard[m_displayFB];
+     return m_captureItemCards && item && static_cast<sint32>(y) >= item->y &&
+            static_cast<sint32>(y) < item->y + std::max<sint32>(kItemCardSize, ::port::kLoadDiscIconSize);

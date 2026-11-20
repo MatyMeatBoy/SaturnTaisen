@@ -319,6 +319,15 @@ Three natural 1440p replays on English discs 1 and 2 and Spanish disc 1 matched 
 
 Local receipts are in `local/work/codex-witness-441-review/hud/load-rails-ab/receipt.json` and `local/work/codex-witness-441-review/hud/load-rails-release-gate/receipt.json`. Package inclusion remains open.
 
+
+### Load overlay persistence with VDP2 line reuse
+
+The first 0206 pixel audit enabled the layer probe, which disables VDP2 line reuse. A subsequent uninstrumented replay found that the load rails and arrows could disappear on replayed fields. Scanout rebuilds bracket ownership in line composition. The old volatile-line interval covered inventory brackets at rows 108–123, while the load brackets use rows 62–77.
+
+Patch 0211 selects the volatile rows from the active bracket layout. English disc 1, English disc 2 and Spanish disc 1 each matched all 43 consecutive 1440p captures against their reuse-disabled control with the usual presentation path. Guest hashes and final SRAM matched across all 56 fields per path. Original and missing-donor controls matched pixel for pixel. Each baseline lost its overlays on 29 of 43 sampled fields. With the fix, 3,960 lines continued to use the cache in each English replay and 3,740 in the Spanish replay. The 1,950-field release crosscheck also matched all eleven captures.
+
+The local replay and full frame receipt are `local/work/codex-witness-441-review/replay-load-reuse.py` and `local/work/codex-witness-441-review/hud/load-reuse-ab/receipt.json`. Package inclusion remains open.
+
 ## HD controls and inventory panel rails
 
 Patch 0209 uses SISTEM image 12 for the controller-binding panel and OPTION image 1 for the inventory panel. The 224 × 352 controller art registers exactly at 2× to the 112 × 176 Saturn command at (192,32). The inventory donor has a narrower interior than the 224 × 128 native panel. The replacement takes the two side rail strips independently at 2× and extends only the uniform middle of the top rail.
