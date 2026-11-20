@@ -12,3 +12,5 @@ Not verified here: pixel check of the four box borders, pointer at all four edge
 ## Spanish Episode 1 card to letter, v0.2.16.1-alpha
 
 The installed Spanish disc 1 completed 8,751 strict fields from cold boot using `tests/opening.movie`. At 2560 x 1440, 35 captures every five fields from 8,580 to 8,750 show the card dissolving over the widescreen flowers, then the empty dialogue box, then the letter. None of the captures is black and all four corner samples remain nonblack. This covers the card-to-letter transition. Letter-to-Sakura, pointer motion and fields between samples remain open. Private evidence: `local/work/codex-th1/thd41-combined/card-es-fade/enhanced-1440`.
+
+A second cold run captured every field from 8,580 through 8,630 at 2560 x 1440. All 51 frames and all four corner samples per frame remained nonblack while the card dissolved into the floral screen. Frames after 8,630 retain the five-field sampling above. See also the separate [letter-to-park and Spanish Sakura-entrance replays](chapter1-wide-transitions.md#held-empty-dialogue-position). Private evidence: `local/work/codex-th1/thd41-combined/card-es-fade-dense/enhanced-1440`.
