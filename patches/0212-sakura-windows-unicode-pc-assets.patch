@@ -1,0 +1,138 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+index b73a3d2..2b9879f 100644
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -597,7 +597,7 @@ int RunWindowed(Port &port) {
+             for(auto& item:backdrops)if(!item.screen && (!item.pc || usePc)) {
+                 item.attempted=true;
+                 for(const auto& file:item.files) {
+-                    item.texture=item.pc?LoadPcBackdrop(renderer,file,port.opt.pcAssetsPath,item.id,item.cacheDir,&item.pixels):
++                    item.texture=item.pc?LoadPcBackdrop(renderer,file,std::filesystem::u8path(port.opt.pcAssetsPath),item.id,item.cacheDir,&item.pixels):
+                         LoadBackdrop(renderer,file,item.nativePalette,item.cacheDir,&item.pixels);
+                     if(item.texture) {loaded++;break;}
+                 }
+@@ -1152,7 +1152,7 @@ int RunWindowed(Port &port) {
+                 std::error_code error;
+                 const auto bytes = std::filesystem::file_size(file, error);
+                 clipDecoder.Close();
+-                clipRunning = !error && bytes == clipEdit->pcBytes && clipDecoder.Open(file.string(), 24, false, pcBegin);
++                clipRunning = !error && bytes == clipEdit->pcBytes && clipDecoder.Open(file, 24, false, pcBegin);
+                 loadedSpan = &*span;
+                 clipTextureReady = false;
+                 if (std::getenv("SATRECOMP_CLIP_TRACE"))
+@@ -1201,7 +1201,7 @@ int RunWindowed(Port &port) {
+             if(!clipRunning) {
+                 char name[48];std::snprintf(name,sizeof name,"MOVIE/MOVIE%03d.MPG",clipMovie);
+                 clipTextureReady = false;
+-                clipRunning=clipDecoder.Open((std::filesystem::u8path(port.opt.pcAssetsPath)/name).string(),24,true);
++                clipRunning=clipDecoder.Open(std::filesystem::u8path(port.opt.pcAssetsPath)/name,24,true);
+                 clipStartFrame=port.frame;clipMissing=0;
+                 if(std::getenv("SATRECOMP_CLIP_TRACE"))std::fprintf(stderr,"clip: open %s -> %d\n",name,int(clipRunning));
+                 if(!clipRunning) {clipMovie=-1;return false;}
+@@ -1962,7 +1962,7 @@ int RunWindowed(Port &port) {
+                         const bool trace=std::getenv("SATRECOMP_BACKGROUND_STATS")!=nullptr;
+                         const auto started=trace?SDL_GetTicksNS():0;
+                         backdrop.texture=backdrop.pc?
+-                            LoadPcBackdrop(renderer,file,port.opt.pcAssetsPath,backdrop.id,backdrop.cacheDir,&backdrop.pixels):
++                            LoadPcBackdrop(renderer,file,std::filesystem::u8path(port.opt.pcAssetsPath),backdrop.id,backdrop.cacheDir,&backdrop.pixels):
+                             LoadBackdrop(renderer,file,backdrop.nativePalette,backdrop.cacheDir,&backdrop.pixels);
+                         if(trace)fprintf(stderr,"background load: source=%s asset=%s us=%llu usable=%d\n",backdrop.pc?"saturn-hd":"saturn",file.filename().string().c_str(),static_cast<unsigned long long>((SDL_GetTicksNS()-started)/1000),backdrop.texture!=nullptr);
+                         if(backdrop.texture)break;
+@@ -1997,7 +1997,7 @@ int RunWindowed(Port &port) {
+                             preparedBytes += bytes;
+                         }
+                         jobs.push_back([files=item.files,cache=item.cacheDir,palette=item.nativePalette,
+-                                        id=item.id,pc=item.pc,root=std::filesystem::path(port.opt.pcAssetsPath),
++                                        id=item.id,pc=item.pc,root=std::filesystem::u8path(port.opt.pcAssetsPath),
+                                         prepared=item.prepared] {
+                             for(const auto& file:files) {
+                                 auto* surface=pc?PreparePcBackdrop(file,root,id,cache,true):PrepareBackdrop(file,palette,cache,true);
+@@ -3430,7 +3430,7 @@ int RunWindowed(Port &port) {
+                                     }
+                                     if (!cached.tried) {
+                                         cached.tried = true;
+-                                        const auto file = std::filesystem::path(port.opt.pcAssetsPath) / entry.file;
++                                        const auto file = std::filesystem::u8path(port.opt.pcAssetsPath) / entry.file;
+                                         std::vector<uint8_t> bytes;
+                                         std::vector<PcSprite> sprites;
+                                         std::string error;
+diff --git a/port/main.cpp b/port/main.cpp
+index 4e1f7d1..0a98496 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -39,6 +39,13 @@
+ #include <unistd.h>
+ #include <cstring>
+ #include <filesystem>
++#ifdef _WIN32
++#ifndef NOMINMAX
++#define NOMINMAX
++#endif
++#include <windows.h>
++#include <shellapi.h>
++#endif
+ #include <fstream>
+ #include <sstream>
+ 
+@@ -1564,6 +1571,20 @@ int main(int argc, char **argv) {
+             o.extraDiscPath = next();
+         } else if (a == "--pc-assets") {
+             o.pcAssetsPath = next();
++#ifdef _WIN32
++            // The CRT's narrow argv uses the active code page. Asset loaders expect UTF-8.
++            int wideArgc = 0;
++            auto wideArgv = CommandLineToArgvW(GetCommandLineW(), &wideArgc);
++            std::filesystem::path assetRoot;
++            if (wideArgv && wideArgc == argc) {
++                assetRoot = wideArgv[i];
++            } else {
++                assetRoot = o.pcAssetsPath;
++            }
++            if (wideArgv) LocalFree(wideArgv);
++            const auto utf8 = assetRoot.u8string();
++            o.pcAssetsPath.assign(utf8.begin(), utf8.end());
++#endif
+         } else if (a == "--soundtrack") {
+             o.soundtrack = next();
+         } else if (a == "--list-songs") {
+diff --git a/port/movie_decoder.h b/port/movie_decoder.h
+index 5434c07..9fa94d4 100644
+--- a/port/movie_decoder.h
++++ b/port/movie_decoder.h
+@@ -13,6 +13,7 @@
+ #include <cstdint>
+ #include <cstdio>
+ #include <deque>
++#include <filesystem>
+ #include <memory>
+ #include <mutex>
+ #include <string>
+@@ -27,9 +28,17 @@ public:
+     // audio=false: the MP2 stream is not decoded at all (nobody drains it, and a full audio queue would stall the video).
+     // startSeconds>0 (T115): begin at the intra frame at or before that time of the stream, and drop the audio that precedes it, to resume
+     // a clip in the middle. Frame and audio times stay those of the stream, so FrameAt(seconds) takes stream time.
+-    bool Open(const std::string& path,size_t queueFrames=8,bool audio=true,double startSeconds=0) {
++    bool Open(const std::filesystem::path& path,size_t queueFrames=8,bool audio=true,double startSeconds=0) {
+         Close();
+-        videoTrack = plm_create_with_filename(path.c_str());
++        const auto openTrack = [&path]() -> plm_t* {
++#ifdef _WIN32
++            auto* file = _wfopen(path.c_str(), L"rb");
++#else
++            auto* file = std::fopen(path.c_str(), "rb");
++#endif
++            return file ? plm_create_with_file(file, TRUE) : nullptr;
++        };
++        videoTrack = openTrack();
+         if (!videoTrack) return false;
+         plm_set_audio_enabled(videoTrack, 0);
+         plm_set_loop(videoTrack, 0);
+@@ -41,7 +50,7 @@ public:
+         if (startSeconds > 0.0 && startSeconds < duration_) plm_seek(videoTrack, startSeconds, FALSE);
+         if (audio) {
+             // Independent demux cursors keep either queue from starving the other.
+-            audioTrack = plm_create_with_filename(path.c_str());
++            audioTrack = openTrack();
+             if (audioTrack) {
+                 if (startSeconds > 0.0 && startSeconds < duration_) {
+                     // (plm_seek needs the video stream: it decodes one intra frame, then syncs the audio to it)
