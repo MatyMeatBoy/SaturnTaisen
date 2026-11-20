@@ -236,7 +236,8 @@
       "patches/0244-sakura-wkl-tactical-command-frames.patch",
       "patches/0245-sakura-nc40-episode6-mouths.patch",
       "patches/0246-sakura-nc3021-registered-faces.patch",
-      "patches/0247-sakura-nc3517-registered-body-and-faces.patch"
+      "patches/0247-sakura-nc3517-registered-body-and-faces.patch",
+      "patches/0248-sakura-bg2057-masked-ending-plate.patch"
     ]
   }
 }
