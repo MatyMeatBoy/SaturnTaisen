@@ -51,7 +51,7 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 | THD05 | P1 | local | open | **Primeros planos y recortes.** BG3123 y otros BG3xxx/4xxx con silueta, transparencia o mezcla; BG4370 disco 2 como verificación. | Verificar sólo lo visible y proteger mezcla, máscara, actor y fondo. |
 | THD06 | P1 | local | open | **Inserciones de batalla.** EVE y BBG, incluyendo activaciones naturales de EVE102/105/207, EVE0101 disco 2 y disposición BBG238–243/300. | Confirmar activación, ventana y mismo arte; conservar Saturn si el PC cambia pose o composición. |
 | THD07 | P1 | local | open | **Eyecatch e intermedios.** IC por disco y variante de encuadre, fondos compartidos por donante, menús tratados por THD20/21. | Probar entrada, salida, fundido y anclajes en la intermisión natural. |
-| THD08 | P1 | local | open | **CG y finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. |
+| THD08 | P1 | local | CLAIM[claude-thd08|pendientes/THD08-sumire-ending|2026-11-20T13:55:40Z] open | **CG y finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. |
 | THD09 | P1 | local | open | **Censo de imágenes sin equivalente.** Cruzar los candidatos SPR aún sin asociación con las ocurrencias Saturn; agrupar duplicados y exclusiones por motivo. | Un inventario reproducible con candidatos únicos, decisiones revisadas y huecos de evidencia. |
 
 ### Lotes de escenas listos para tomar
