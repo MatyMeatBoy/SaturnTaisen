@@ -289,3 +289,33 @@ Not attributed: bank-6-battle (no state saved at an EVT load) and any EVT loaded
 ### Corrections
 
 - The earlier 40,000-frame sweep never completed: in `deep.log`, 14 of 17 cases ended with `TimeoutExpired` (1,500 s limit). Only these six cases were re-run here; the other 11 remain.
+
+## ENDING module at 06080000 (public Finale stop, T55)
+
+The T55 re-attribution of PR #592 replays the English disc 2 public-Finale case cold (backup + extended movie, strict native, 45,000 frames) with the isolated 1,357,536-block build. It stops at 41,684 hash frames, exit 4, `untranslated master SH-2 block at 06080000`. A fresh replay with a copy of that executable reproduced the same stop (41,684 hashes, exit 4).
+
+Attribution:
+
+| Item | Value |
+| --- | --- |
+| Disc, file | English disc 2, `/SAKURA1/ENDING.BIN` |
+| Start FAD / LBA | 133,947 / 133,797 |
+| Size | 178,968 bytes (88 sectors read by the Play Disc command `1082 0B3B 0080 0058`) |
+| SHA-256 | `f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553` |
+| RAM base | High WRAM `06080000` |
+
+The last Play Disc commands before the stop are `ADVSE10` (sound effect) and `ENDING.BIN`; after the ENDING command only CD status polls follow. The module is streamed in while the game already runs: the state saved at hash frame 41,650 matches the first 4,096 bytes of the file at `06080000`, the state at frame 41,680 matches the first 157,696 bytes, and the rest is still loading. The disc 1 `ENDING.BIN` is a different file (SHA-256 `754d7c79...`, LBA 156,966) and is never read in this case.
+
+### Registry entry and key
+
+`ENDING_DISC2_EN` already existed, but it only carries the 353+ observed Sakura-route extents (`config/ending-aot-ranges.json`) and not the module entry at `06080000`. The new entry `ENDING_DISC2_EN_FULL` has the same file, base, size and SHA-256 and no `observed_ranges`, so the SDK analyzer emits every aligned valid prefix of the whole file (eager, 54,078 candidates; the observed extents are all contained in it).
+
+The registry key is the address plus the exact opcode bytes of each block, not the module name. `ENDING.BIN` is not mutable code in the cases seen, but if a later load or a data write changes bytes at the same addresses, the SDK compares the block's code with memory before running it and falls through to "missing block" instead of running stale code. No dependence on load count or frame.
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module ENDING_DISC2_EN_FULL --seed-blocks local/work/rebuild-evt/blocks.txt --output local/work/end2/blocks-full
+```
+
+Result: 1,357,536 -> 1,411,614 candidate blocks (+54,078). The sorted delta in LF `ADDRESS UPPERCASE_HEX` form has SHA-256 `27ec757128f9e1963348b391b489d29a33a3e6f41ab6adbc7128af05876b7450`; it contains `06080000`. The block list is derived from the owner's disc and stays under `local/`.
+
+Isolated compile: copy `local/deps/satrecomp-evt` to `local/deps/satrecomp-end2` (its `dependency()` check bypassed, as for `-evt`), copy `local/work/rebuild-evt` to `local/work/rebuild-end2` with the new `blocks.txt`, fresh build directory `local/build/rebuild-end2`, same `run.py` pattern with `-end2` paths. The base, the shared SDK and the shared build are not touched.
