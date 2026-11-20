@@ -196,6 +196,8 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG2140.BIN'): (8, 'docs/research/th8-native-attribution.md#covered-0801-and-0802-backgrounds'),
+    (2, '/SAKURA1/BG2523.BIN'): (8, 'docs/research/th8-native-attribution.md#covered-0801-and-0802-backgrounds'),
     (2, '/SAKURA1/BG2139.BIN'): (8, 'docs/research/th8-native-attribution.md#bg2139-ambush-draw'),
     (2, '/SAKURA1/BG2244.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-1001-monitor-draws'),
     (2, '/SAKURA1/BG2245.BIN'): (10, 'docs/research/th10-native-attribution.md#verified-1001-monitor-draws'),

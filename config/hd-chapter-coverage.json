@@ -5225,6 +5225,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2140.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#covered-0801-and-0802-backgrounds",
+            "pc": "SAKURA1/BG/BG2140.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#covered-0801-and-0802-backgrounds",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2159.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2159-disc2-visual.md",
@@ -5247,6 +5255,14 @@
             "pc": "SAKURA1/BG/BG2247.SPR",
             "reason": "The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.",
             "status": "unsupported-size"
+          },
+          "2:/SAKURA1/BG2523.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#covered-0801-and-0802-backgrounds",
+            "pc": "SAKURA1/BG/BG2523.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#covered-0801-and-0802-backgrounds",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG3081.BIN": {
             "association": "observed",
@@ -18299,11 +18315,6 @@
         "pc": "SAKURA1/BG/BG2138.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG2140.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2140.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG2143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2143.SPR",
@@ -18941,11 +18952,6 @@
       "2:/SAKURA1/BG2522.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2522.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2523.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2523.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2524.BIN": {
