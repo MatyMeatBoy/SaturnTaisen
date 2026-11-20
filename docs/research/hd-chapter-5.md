@@ -207,3 +207,54 @@ The upper cut-outs, dialogue and margins retained their pixels.
 BG2058 had a native observation in the route. The tested checkpoint
 showed no donor RGB change, so it retains its prior verification state.
 This verification does not change the SDK or certify the whole chapter.
+
+
+## Traced attribution (TH5)
+
+Tool: `tools/chapter_loads.py` (every `Play Disc` command mapped to its ISO file; FAD = LBA + 150; a state every 500 frames). English disc 1, `bank-5-battle` seed (backup SHA-256 `a36908d7...`), the archived 12,000-frame chapter-jump movie extended with the same confirm cadence (a press every 75 frames) to 45,000 frames (movie SHA-256 `f248fe86...`). Strict native, zero interpreted blocks, exe SHA-256 `f2fcb44a...`. The first 12,000 frame hashes are byte-identical to the archived `bank-5-battle-strict` log and to the cold replay; the 45,000-frame hash log has SHA-256 `2859926f...`. Cold command, per `tools/chapter_jump.py` seeds: `python tools/chapter_loads.py --exe local/build/sakura-th56/sakura-th56.exe --disc 1 --backup <bank-5-battle backup.bin> --movie <extended input.movie> --frames 45000 --interval 500 --out local/work/th56/long-5`. States stay in `local/work`; only names, frames and hashes are here.
+
+First loads after the chapter script (frames are estimates from the buffered hash log, early by up to a few dozen; the checkpoint is the first state at or after estimate + 60):
+
+| File | Class | FAD | Frame (est.) | Checkpoint | State SHA-256 (prefix) |
+| --- | --- | ---: | ---: | ---: | --- |
+| `SAKURA1/LOAD.BIN` | menu/HUD | 160869 | 6475 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/0501.BIN` | script/data | 130064 | 6670 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/0501TBL.BIN` | script/data | 130195 | 6670 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/0501KNJ.BIN` | script/data | 130179 | 6670 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/0501FCE.BIN` | portrait atlas | 130075 | 6670 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/KABE41.BIN` | sound/other | 159548 | 6670 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/NCOBJ.BIN` | sound/other | 165874 | 6670 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/TMAP0.BIN` | menu/HUD | 172679 | 6865 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/TMAP1Y.BIN` | menu/HUD | 172749 | 6865 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/TMAP2CY.BIN` | menu/HUD | 172959 | 6865 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/TMAPSP.BIN` | menu/HUD | 172994 | 6865 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/VDP1.BIN` | sound/other | 216654 | 6865 | 6999 | `cca2a321b71ec4ca` |
+| `SAKURA1/TITLE5.BIN` | scene | 172308 | 7059 | 7499 | `3c9a3038771ccb34` |
+| `SAKURA1/VCEADV` | sound/other | 216468 | 7059 | 7499 | `3c9a3038771ccb34` |
+| `SAKURA1/BG1198.BIN` | scene | 142883 | 7643 | 7999 | `857fd4cacd2ceed2` |
+| `SAKURA1/NC90.BIN` | body | 165629 | 8033 | 8499 | `dc75b753159564ea` |
+| `SAKURA1/NC92.BIN` | body | 165699 | 11653 | 11999 | `aa7236a96c93cb7d` |
+| `SAKURA1/NC91.BIN` | body | 165668 | 11839 | 11999 | `aa7236a96c93cb7d` |
+| `SAKURA1/BG2533.BIN` | scene | 152746 | 12211 | 12499 | `afe9d7253e9b1f3a` |
+| `SAKURA1/KABE40.BIN` | sound/other | 159510 | 13511 | 13999 | `e8d78f6cf2b910d8` |
+| `SAKURA1/TMAP1H.BIN` | menu/HUD | 172714 | 13511 | 13999 | `e8d78f6cf2b910d8` |
+| `SAKURA1/TMAP2CH.BIN` | menu/HUD | 172924 | 13511 | 13999 | `e8d78f6cf2b910d8` |
+| `SAKURA1/BG2156.BIN` | scene | 149345 | 13511 | 13999 | `e8d78f6cf2b910d8` |
+| `SAKURA1/BG1243.BIN` | scene | 143797 | 14069 | 14499 | `fe54e9d02c5bfc4a` |
+| `SAKURA1/BG1031.BIN` | scene | 139732 | 17042 | 17499 | `162362a462716769` |
+| `SAKURA1/NC60.BIN` | body | 165138 | 17042 | 17499 | `162362a462716769` |
+| `SAKURA1/BG2132.BIN` | scene | 148839 | 17786 | 17999 | `471ac201823f6470` |
+| `SAKURA1/BG3132.BIN` | scene | 153744 | 17786 | 17999 | `471ac201823f6470` |
+| `SAKURA1/BG2133.BIN` | scene | 148862 | 18715 | 18999 | `c71f78b89e9caf6c` |
+| `SAKURA1/BG3133.BIN` | scene | 153767 | 18715 | 18999 | `c71f78b89e9caf6c` |
+| `SAKURA1/BG2058.BIN` | scene | 147337 | 19830 | 19999 | `addc415458406c40` |
+| `SAKURA1/NC3058.BIN` | body | 163395 | 19830 | 19999 | `addc415458406c40` |
+| `SAKURA1/BG2258.BIN` | scene | 151154 | 21874 | 21999 | `92859d7d5f2778fc` |
+| `SAKURA1/BG1051.BIN` | scene | 140192 | 22245 | 22499 | `d618c5cf4b380f62` |
+| `SAKURA1/NC4182.BIN` | body | 164367 | 22245 | 22499 | `d618c5cf4b380f62` |
+
+Attributed to chapter 5 in the register by this pass: scene pictures `BG1051`, `BG2258` (moved from `unassigned`) and `BG2156` (second chapter occurrence, the chapter 6 row is kept); bodies `NC91`, `NC92`, `NC4182` (disc-1 rows moved from `unassigned`, status unchanged: `hd`, not verified in game). Already chapter 5 and re-confirmed by the trace: `BG1198`, `BG2533`, `BG1243`, `BG1031`, `BG2132`, `BG2133`, `BG3132`, `BG3133`, `BG2058`, `NC90`, `NC60`, `NC3058`, `TITLE5`. `0501FCE` is read at FAD 130075 (resident row kept; its identity list is unchanged). Total: 11 rows touched in `config/hd-chapter-coverage.json` (5 `unassigned` entries moved to chapter 5, one new occurrence).
+
+Not attributed on purpose: `LOAD.BIN`, `TMAP*`, `VDP1`, `NCOBJ`, `KABE40/41`, `ADV*`, `VCEADV` are chapter-neutral loader, dialogue-frame and sound data (not register categories, or read in every chapter). `TITLE5` appears at frame 7059 as expected.
+
+Not reached: after `NC4182` (frame 22245) neither the confirm cadence (22,500 more frames) nor random input (`--auto 1:0` from the 22499 state for 15,000 frames and `--auto 2:0` from the 21999 state for 12,000 frames, zero interpreted blocks) loaded another file. So this route draws no `EVE`, `EVT`, `MAP`, `UNIT`, no `IC0501` intermission, and no FILM clip after the opening reads (FAD 405 and 166362, which precede the chapter script and are not chapter 5). Tactical maps/units, the chapter's FILM clips and the later narrative phases need a route that wins the battle or a save made later in the chapter. Portraits: only the `0501FCE` atlas is loaded; `0502FCE`..`0504FCE` stay inferred. Not verified in game: any HD draw of the newly attributed rows.

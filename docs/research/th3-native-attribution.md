@@ -148,3 +148,61 @@ BG1050, BG1034 and BG2289 produced no RGB difference at the sampled
 checkpoints and remain outside this verification. Private evidence is
 under `local/work/codex-witness-441-review/hud/chapter3-plates/`. The
 continuous chapter and package gates remain open.
+
+
+## Cold replay trace
+
+Shard TH3 replayed the Chapter 3 jump seeds from a cold start with the CD
+`Play Disc` trace of `tools/witness_sweep.py` (ISO 9660 mapping, FAD = LBA + 150),
+listing every file the game reads, not only scenes. Inputs are the archived
+`bank-3-battle-1`, `bank-3-battle-2` and `bank-3-battle-3` seeds and their
+`input.movie` (`3a4344074c1adf5cce138588c30a6aa10f83fe31a6e7cc8eb54f1c390f8412b5`).
+English disc 1, muted strict native, build SHA-256
+`f2fcb44a037b1427cf9fc18f927747f826809461312b2a16e276d4cce93684a4`. A load
+is a disc read: the game asked for the file, not proof it was drawn. Frames
+are estimated from the flushed hash log (a few dozen frames of error); the state
+is the first checkpoint (every 2,000 frames) at or after estimate + 60.
+State file SHA-256 values differ between two runs of the same route although
+the 34,000 guest hashes are identical, so the state column is an entry
+point, not a byte-exact receipt.
+
+| Seed (backup SHA-256 prefix) | Frames | Result |
+| --- | ---: | --- |
+| `bank-3-battle-1` (`43bca058197b`) | 34,000, repeated to 41,000 | exit 0, zero interpreted blocks; hash log SHA-256 `cd1409e5cee6cd8b39e9911520ba5fd14b81ac94be39591738124e709f432b5f` (34,000 frames), `c7bf5fba8086991289384dae94f0c2ed8ae794d736690962aef81bcf5f5d9470` (41,000) |
+| `bank-3-battle-2` (`a0bd2a1b30ee`) | 6,680 | stops at `untranslated master SH-2 block at 00204000` (EVT04 entry); hash log `afb225af2e7bf3a759485fcddd19e7874fd60e5f8d9c9fc62840e9f0a14473e7` |
+| `bank-3-battle-3` (`1aca4bedd559`) | 6,679 | same stop (EVT05 entry); hash log `aaf19a01cdb6a328cadd912041eb00c3fd34a0f3f65516f991931789c58ab9ae` |
+
+Files read by `bank-3-battle-1` (frame estimate, checkpoint frame and
+state SHA-256 prefix of the first run):
+
+| Frame (est.) | Checkpoint | Files (FAD) |
+| ---: | --- | --- |
+| 6,670 | 7999, `c9d0f861843b` | `0301` 128869, `0301TBL` 128990, `0301KNJ` 128974, `0301FCE` 128883, `KABE21` 159396, `NCOBJ` 165874 |
+| 6,865-7,059 | 7999, `c9d0f861843b` | `TMAP0/1Y/2BY/2CY/SP`, `VDP1`, `BG1198` 142883, `BG4114` 155055 |
+| 9,590 | 9999, `3b8ba780c3c6` | `NC99` 165862 |
+| 12,396-13,140 | 13999, `34e68abf8b95` | `TITLE3` 172232, `KABE20`, `TMAP1H/2CH`, `BG1022` 139525 |
+| 15,184 | 15999, `19ebfed809c3` | `BG1008` 139203 (again at 25,033, checkpoint 25999, `add8fd41c044`), `NC30` 162269 |
+| 16,113 | 17999, `5b06dbf7bffc` | `NC31` 163522 |
+| 18,715 | 19999, `dc41c3331bbb` | `NC95` 165781 |
+
+The two battle seeds read `EVT04`/`MAP04`/`WKL04`/`UNIT04`/`FACE04`/`M04MES`
+(221874, 232311, 253487, 252233, 222410) and `EVT05`/`MAP05`/`WKL05`/`UNIT05`/`FACE05`/`M05MES`
+(221912, 232479, 253761, 252273, 222455) respectively; they have no checkpoint
+after the stop. No `FILM` start other than the shared opening
+(`SAKURA4` FAD 405 and `OPSAKURA.CPK` 166362, before the 0301 load) and no
+`EVT03`/`MAP03`/`UNIT03` read occurs in 41,000 frames of `bank-3-battle-1`.
+
+Attributed to Chapter 3 by this trace (rows moved from `unassigned`, association
+`observed`): `NC31.BIN` (disc 1, first read at 163522 in the 0301 route; status
+`hd`), `WKL04.BIN` and `WKL05.BIN` (tactical menu/work banks read with MAP04 and
+MAP05, status `unknown`) and `UNIT05.BIN` (read at 252273 with MAP05, status
+`unknown`; residency was recorded above, the CD read now fixes the load).
+Already attributed and re-observed: `0301FCE`, `BG1198`, `BG4114`, `NC99`,
+`TITLE3`, `BG1022`, `BG1008`, `MAP04`, `MAP05`, `UNIT04`. `NC30` and `NC95` keep
+their Chapter 1 rows; `LOAD` is a shared system file (also read at every
+cold start) and is not assigned. Not verified in game: any draw of the new rows.
+
+Still open for Chapter 3: the first battle (`MAP03`, `UNIT03`, `WKL03`), which
+`bank-3-battle-1` does not reach; a build that translates `00204000` to pass
+the second and third battle entries; `0302FCE`..`0309FCE` draws; FILM clips of
+the chapter; the continuous chapter exit test.
