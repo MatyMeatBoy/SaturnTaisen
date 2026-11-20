@@ -100,3 +100,23 @@ Atribuidos 0, integrados nuevos 0, verificados nuevos 0: las 23 ya constan `veri
 No verificado: las 11 conectadas sin estado en este PC y las 7 de ruta propia; la lectura visual de cada captura (solo diferencia y rectangulo; BG2039 leido en #651); las tres apariciones de la subsección anterior, que necesitan una ruta específica.
 
 La regeneración de la tabla conserva esta sección de evidencia.
+
+### Lectura de BG1120 en la ruta nocturna
+
+En v0.2.20-alpha, la continuación de 3.000 cuadros desde el estado del
+cuadro 188.000 del disco 1 llegó al final sin bloques interpretados.
+La traza de CD registra una lectura de 23 sectores de BG1120 en FAD
+141756 (`1082 29BC 0080 0017`). En la repetición Enhanced a 1440p no
+se seleccionó el donante. Las 20 muestras nativas cada 30 cuadros del
+inicio de la ventana tampoco identifican el pasillo nocturno en el
+rectángulo de escena. Queda por localizar el cuadro y la capa que
+usan el recurso tras la lectura.
+
+El operando de fondo `0033 8000 0460` aparece en `0102.BIN` en
+`0x47c4`, en `0203.BIN` en `0x36ba` y en tres posiciones de
+`0902.BIN`, en ambos discos preparados. Para BG1016 el mismo formato
+identifica referencias en 0100, 0101, 0108 y episodios posteriores.
+Para BG2010, las referencias encontradas están en 0605, 0806 y 1003.
+BG2004, el archivo HD que reutiliza BG2010, sí tiene referencias en
+0102 y 0108. Las coincidencias de operandos orientan la búsqueda de
+rutas y la lectura de CD no acredita un dibujo.
