@@ -4559,6 +4559,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1064.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#verified-bg1064-upstairs-draw",
+            "pc": "SAKURA1/BG/BG1064.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-bg1064-upstairs-draw",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1199.BIN": {
             "association": "observed",
             "evidence": "docs/research/th6-native-attribution.md#hd-background-draws",
@@ -13118,11 +13126,6 @@
       "1:/SAKURA1/BG1063.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1063.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1064.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1064.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1065.BIN": {
