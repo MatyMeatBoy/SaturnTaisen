@@ -82,6 +82,8 @@ An isolated VDP1 write-owner probe then distinguished the NC11 body, eye, and mo
 
 An offline substitution at 7× used the PC NC11 body wherever the native body command owned the pixel and the donor was fully opaque. It reapplied the witnessed panel color ratio independently for every subpixel. The proof changed 207,766 body subpixels and preserved all 1,495 UI-owned tiles exactly. Eyes, mouth, silhouette edges, and the normal runtime path remain separate validation work. The private output is `nc11-panel-body-ownership-proof.png` in the same probe folder.
 
+A private SDL runtime trial enabled the replacement only on the witnessed NC11 body, palette, and 11/32 transfer. In the timed-choice replay at 1440p it changed 202,645 subpixels in each of frames 20 and 35, all inside native body-owned tiles. The post-choice frame 120 was RGB-identical, and all 240 guest hashes matched with zero interpreted blocks. The trial still uses diagnostic capture and requires a renderer-owned lifetime, bounded capture and additional route controls before it can ship. Logs and paired PNGs are private under `local/work/codex-ch1-body-triage/lips-runtime-*`.
+
 
 The trace also named 62 portrait IDs after successful replacement texture upload. Each row preserves its first appearance bracket and the trace line. The separately observed viewport and blend traces can be used for renderer review.
 
