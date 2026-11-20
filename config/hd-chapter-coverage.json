@@ -5291,8 +5291,9 @@
             "association": "observed",
             "evidence": "docs/research/bg2093-dream-transition.md",
             "pc": "SAKURA1/BG/BG2093.SPR",
-            "reason": "The witnessed dream uses a per-line viewport origin on NBG0 under a variable NBG2 blend; a single opaque crop cannot reproduce the composite.",
-            "status": "unsupported-size"
+            "runtime_evidence": "docs/research/bg2093-dream-transition.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2098.BIN": {
             "association": "observed",
