@@ -833,7 +833,7 @@ def build(root, index_dir, portrait_audit):
                    'reason': 'The minigame layer viewport and transform still need an in-game witness.'}
             if runtime_evidence := pair.get('runtime_evidence'):
                 row.pop('reason')
-                witnessed = disc == pair['verified_disc']
+                witnessed = disc in pair['verified_discs']
                 row.update(status='hd' if witnessed else 'wired-unverified',
                            verified_in_game=witnessed, runtime_evidence=runtime_evidence)
         elif path in bg:

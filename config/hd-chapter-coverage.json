@@ -16905,8 +16905,8 @@
         "pc": "SAKURA3/CG/MAIGO/BG_MAIGO.SPR",
         "pc_image_index": 0,
         "runtime_evidence": "docs/research/saturn-bg-format.md#maigo-reward-in-long-day",
-        "status": "wired-unverified",
-        "verified_in_game": false
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/BGRYORI.BIN": {
         "association": "unknown",
