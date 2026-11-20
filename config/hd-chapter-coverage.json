@@ -2222,6 +2222,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1101.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening",
+            "pc": "SAKURA1/BG/BG1101.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1116.BIN": {
             "association": "observed",
             "cold_run_frame": 135500,
@@ -5474,6 +5482,14 @@
             "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "pc": "SAKURA1/BG/BG1325.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2018.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening",
+            "pc": "SAKURA1/BG/BG2018.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening",
             "status": "hd",
             "verified_in_game": true
           },
@@ -12787,11 +12803,6 @@
         "pc": "SAKURA1/BG/BG1100.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1101.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1101.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1102.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1102.SPR",
@@ -17566,11 +17577,6 @@
         "status": "hd"
       },
       "2:/SAKURA1/BG2017.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2018.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2018.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2018.SPR",
         "status": "hd"

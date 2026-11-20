@@ -313,3 +313,16 @@ RGB levels. The Saturn foreground stays exact.
 BG1031 also has a separate native Chapter 5 occurrence, and BG1076 has a
 native English disc 2 Chapter 9 occurrence. Their HD draws on those
 routes and package inclusion remain open.
+
+## Isolated donor witnesses for Iris's room and the Chapter 9 opening
+
+The English disc 1 Iris room checkpoint and the English disc 2 Chapter 9 opening checkpoint were replayed through patch 0217. Each case ran two 56-field strict-native profiles differing only in the availability of one PC file. All paired guest hashes and final SRAM matched. The runtime reported zero interpreted blocks.
+
+| PC file | Natural checkpoint | Changed pixels per 2560 × 1440 capture |
+| --- | --- | ---: |
+| BG1101.SPR | Iris room, disc 1 | 1,250,234 |
+| BG2018.SPR | Chapter 9 opening, disc 2 | 803,557–803,773 |
+
+All eight comparisons changed only pixels in the (272,29)–(2288,1037) scene viewport. Every changed pixel came from the independently decoded native background and matched the bilinearly scaled PC decode within two RGB levels. The donor for the Chapter 9 opening has the shared native BG2017/BG2018 identity. The retained draw proves the PC file and the shared art. The full 12,000-field cold replay matched the archived guest hashes and SRAM. It read both aliases, finishing with BG2018 at FAD 123248, 23 sectors. The registry uses that canonical row for the shared draw and counts the physical PC donor once.
+
+Private replay and pixel receipts are under `local/work/codex-th1/two-room-witnesses`. This evidence uses the existing runtime.

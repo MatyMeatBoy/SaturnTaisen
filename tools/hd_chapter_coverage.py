@@ -187,6 +187,8 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (1, '/SAKURA1/BG1101.BIN'): (1, 'docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening'),
+    (2, '/SAKURA1/BG2018.BIN'): (9, 'docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening'),
     (2, '/SAKURA1/BG1061.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
     (2, '/SAKURA1/BG1066.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
     (2, '/SAKURA1/BG1075.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
