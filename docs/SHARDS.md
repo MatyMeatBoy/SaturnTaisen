@@ -60,7 +60,7 @@ Rows TH0-TH10, TS11 and TS12 in `docs/PENDIENTES.md` mirror this list; update th
 
 ## How to read the coverage numbers (read before picking work from them)
 
-`config/hd-chapter-coverage.json` tracks occurrences by chapter and disc. A single PC image can appear in more than one row. The published integrated total in [HD progress](HD_PROGRESS.md) deduplicates scene donors and keeps runtime integration, draw evidence and package inclusion distinct. Read the current register before taking a row.
+`config/hd-chapter-coverage.json` tracks occurrences by chapter and disc. A single PC image can appear in more than one row. The published integrated total in [HD progress](HD_PROGRESS.md) deduplicates scene donors and keeps runtime integration, draw evidence and package inclusion distinct. Claim each [canonical PC file or exact duplicate family](research/hd-chapter-coverage.md#work-inventory-by-pc-resource) once. List all required Saturn keys and subimage indices as dependencies under that claim. Read the current register before taking a row.
 
 - `hd`: the runtime draws it (a documented draw for a body, a table entry for a picture or clip).
 - `wired-unverified`: in the runtime table and tried whenever it appears, but nobody has recorded seeing it in game. The work is **verification**, not wiring.

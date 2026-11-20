@@ -112,6 +112,24 @@ class HdProgressTests(unittest.TestCase):
         self.assertEqual((scene['total'], scene['inventory'], scene['matched']), (2, 2, 2))
         self.assertEqual((scene['integrated'], scene['verified']), (1, 1))
 
+    def test_scene_inventory_deduplicates_unlinked_files_too(self):
+        data = specimen()
+        scene = next(row for row in data['categories'] if row['id'] == 'scene-images')
+        scene.update(total=4, inventory=4, matched=2, integrated=2, verified=None)
+        register = {
+            'scene_file_duplicate_groups': [['BG/A.SPR', 'BG/B.SPR'], ['BG/C.SPR', 'BG/D.SPR']],
+            'unassigned': {'scene-pictures': {
+                '1:/BG/A.BIN': {'status': 'hd', 'pc': 'BG/A.SPR', 'verified_in_game': True},
+                '2:/BG/B.BIN': {'status': 'hd', 'pc': 'BG/B.SPR', 'verified_in_game': True},
+            }},
+        }
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'coverage.json'
+            path.write_text(json.dumps(register), encoding='utf-8')
+            report.apply_register(data, path)
+        self.assertEqual((scene['total'], scene['inventory']), (2, 2))
+        self.assertEqual((scene['integrated'], scene['verified']), (1, 1))
+
     def test_committed_report_and_readme_are_current(self):
         config = json.loads((ROOT / 'config/hd-progress.json').read_text(encoding='utf-8'))
         report.apply_register(config, ROOT / 'config/hd-chapter-coverage.json')
