@@ -28,19 +28,14 @@ CHAPTER2_FACE_RUNTIME_REPORT = 'docs/research/hd-chapter-2.md#face02-pc-runtime'
 CHAPTER2_FACE_BANK = '1:/SAKURA2/FACE02.BIN:253500278286bc8a8d6e7c28bdee4d7ee199cc3b48f5b61c18ebab517ada49bb'
 CHAPTER2_FACE_BASE_PAIRS = {0: 10, 30: 208, 31: 209}
 IRIS_COMMAND_ROOM_REPORT = PORTRAIT_REPORT + '#iris-00a1-command-room-portrait'
+EMBLEM_LETTER_REPORT = PORTRAIT_REPORT + '#pc-emblem-0169-in-the-letter-scene'
 CHAPTER3_PORTRAIT_REPORT = 'docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases'
 CHAPTER3_PORTRAIT_DRAWS = ('0068', '00fe', '0116', '013d')
 MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
 YONEDA_STORAGE_REPORT = PORTRAIT_REPORT + '#yoneda-00e9-storage-portrait'
 
 RESIDUAL_PORTRAIT_REPORT = PORTRAIT_REPORT + '#residual-portraits-00a1-and-0169'
-NATIVE_PORTRAIT_DECISIONS = {
-    '0169': {
-        'status': 'excluded',
-        'candidate_pc_indices': [348, 360],
-        'reason': 'The PC emblem changes the artwork and framing. Preserve the Saturn emblem by design.',
-    },
-}
+NATIVE_PORTRAIT_DECISIONS = {}
 SWEEP_REPORT = 'docs/research/chapter-sweep.md'
 BG1285_REPORT = 'docs/research/bg1285-pan.md'
 BG1207_REPORT = 'docs/research/bg1207-pan.md'
@@ -750,6 +745,9 @@ def build(root, index_dir, portrait_audit):
         if ident == '00a1':
             occurrence = dict(row, verified_in_game=True, runtime_evidence=IRIS_COMMAND_ROOM_REPORT)
             add('portraits', ident, occurrence, 1, 'observed', IRIS_COMMAND_ROOM_REPORT)
+        elif ident == '0169':
+            occurrence = dict(row, verified_in_game=True, runtime_evidence=EMBLEM_LETTER_REPORT)
+            add('portraits', ident, occurrence, 1, 'observed', EMBLEM_LETTER_REPORT)
         elif ident in CHAPTER1_ROUTE_PORTRAITS:
             chapter1_portrait = row
             if ident == '0176':

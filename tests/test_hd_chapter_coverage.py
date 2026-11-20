@@ -133,13 +133,15 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertTrue(iris['verified_in_game'])
         self.assertTrue(iris['runtime_evidence'].endswith('#iris-00a1-command-room-portrait'))
         self.assertNotIn('00a1', catalog['chapters'][6]['resources']['portraits'])
-        self.assertEqual((emblem['status'], emblem['candidate_pc_indices']), ('excluded', [348, 360]))
+        self.assertEqual((emblem['association'], emblem['status'], emblem['pc_index']), ('observed', 'hd', 360))
+        self.assertTrue(emblem['verified_in_game'])
         atlas = chapter1['portraits']['1:/SAKURA1/0102FCE.BIN']
         self.assertEqual(atlas['status'], 'hd')
         self.assertIn('00a1', atlas['identities'])
         self.assertEqual(atlas['association'], 'resident')
         self.assertFalse(atlas.get('verified_in_game'))
-        self.assertEqual(atlas['native_by_design'], ['0169'])
+        self.assertIn('0169', atlas['identities'])
+        self.assertNotIn('native_by_design', atlas)
         self.assertNotIn('uncovered', atlas)
         alternate_cuts = [row for row in catalog['unassigned']['film'].values() if row.get('alternate_cut')]
         self.assertEqual(len({row['pc'] for row in alternate_cuts}), 6)
@@ -386,8 +388,8 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(body['runtime_evidence'], 'docs/research/nc3058-cutout-1440p.md')
         self.assertFalse(catalog['unassigned']['bodies']['2:/SAKURA1/NC3058.BIN']['verified_in_game'])
         emblem = chapter5['portraits']['0169']
-        self.assertEqual((emblem['association'], emblem['status']), ('observed', 'excluded'))
-        self.assertEqual(catalog['chapters'][0]['resources']['portraits']['0169']['association'], 'inferred')
+        self.assertEqual((emblem['association'], emblem['status'], emblem['pc_index']), ('observed', 'hd', 360))
+        self.assertTrue(catalog['chapters'][0]['resources']['portraits']['0169']['verified_in_game'])
         for identity, donor in (('010f', 270), ('016a', 361)):
             row = chapter5['portraits'][identity]
             self.assertEqual((row['association'], row['status'], row['pc_index']), ('observed', 'hd', donor))
