@@ -201,3 +201,7 @@ Give the integration desk the base commit and exact PR head, the resource names 
 ## Close the chapters in order (owner, 2026-11-19). Scene shards keep priority for the many bots arriving; chapter closing (TCH1) is one worker in parallel, not a reason to stop scene work
 
 A chapter whose register has only a few open rows is closed before anything else. Chapter 1 today (register, `config/hd-chapter-coverage.json`): portrait `00a1` (the two PC eye strips must be swapped), portrait `0169` (the PC emblem changes artwork and framing; default decision: keep native, counted as closed by design unless the owner says otherwise), scene `EVE0101` (paired, not wired), and 6 FCE atlas rows that wait only on `00a1`/`0169`. Shard **TCH1** = close those three items. Then the same rule for chapter 2, 3 ...: list the open rows of the lowest chapter, close them, move on; attribution (TH2-TH10) feeds the next chapter.
+
+### Reservas en PRs abiertos
+
+`python tools/shard_claims.py --list-pr-claims` lee la cola del último commit de cada PR abierto y muestra su reserva, el número de PR y los minutos desde el último commit. Revisa este listado junto con `--list` antes de tomar un shard. Si aparece como obsoleto, el coordinador puede retomar el lote conservando el PR anterior como referencia. `--release-stale` actualiza las reservas que ya figuran en la cola de la rama de trabajo.
