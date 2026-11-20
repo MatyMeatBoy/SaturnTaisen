@@ -136,3 +136,27 @@ changes at the tested checkpoint and remains pending. Receipts and
 capture pairs are under
 `local/work/codex-witness-441-review/hud/chapter8-early-plates/`.
 The continuous chapter and package gates remain open.
+
+## BG2139 ambush draw
+
+The natural English disc-2 0802 ambush route reads
+`/SAKURA1/BG2139.BIN` at FAD 125831 for 23 sectors. The retained
+`iris-0802-ambush/f4800.state` contains the exact picture cells at
+VDP2 VRAM `0x34840` and palette at CRAM `0x200`. An Enhanced A/B
+pair replays its recorded controller suffix for 120 fields with D3D11 at
+2560×1440. The two profiles differ only in the availability of
+`SAKURA1/BG/BG2139.SPR`.
+
+The guest hashes in both arms match all 120 archived fields. Terminal
+SRAM matches between arms and both runs report zero interpreted blocks.
+The cumulative 0213 executable SHA-256 is
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`.
+
+Each of the four sampled pairs at offsets 8, 30, 50 and 90 changes
+exactly 718,789 RGB pixels. The changes lie inside (272, 29)–(2288, 890),
+within the existing Zoom picture. Every changed control pixel matches
+the independently decoded Saturn plate after RGB555 quantization and
+nearest scaling. Every replacement matches the corresponding bilinear
+PC sample within two levels per channel. The rest of each capture is
+pixel-identical. Receipts and captures are under
+`local/work/codex-witness-441-review/hud/chapter8-ambush-plate/`.
