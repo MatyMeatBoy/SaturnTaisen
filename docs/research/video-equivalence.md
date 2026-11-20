@@ -157,3 +157,12 @@ capture have RMS 762.8 on the PC-skip run and 754.9 on the native control,
 on the signed 16-bit scale. The pre-fix PC-skip capture was entirely silent
 over that interval. This validates the skip handoff of MOVIE000, not accuracy
 of A/V sync across the clip catalog or restores.
+
+
+## Bounded alternate edits
+
+The owner approved matching PC picture spans on the Saturn clock for the six
+alternate edits. The runtime keeps native footage at materially different
+cuts and keeps Saturn audio for each complete clip. The [bounded-film
+report](bounded-film-video-spans.md) lists the cut measurements, the two
+natural playback witnesses and the controlled playback fixtures separately.

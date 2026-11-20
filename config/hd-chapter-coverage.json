@@ -199,6 +199,25 @@
             "fad": 27768,
             "pc": "MOVIE003",
             "status": "hd"
+          },
+          "1:/SAKURA4+59686912": {
+            "alternate_cut": true,
+            "association": "observed",
+            "audio": "saturn",
+            "evidence": "docs/research/bounded-film-video-spans.md#movie004",
+            "fad": 29549,
+            "pc": "MOVIE004",
+            "pc_video_spans": [
+              [
+                0,
+                3413,
+                0,
+                57155
+              ]
+            ],
+            "runtime_evidence": "docs/research/bounded-film-video-spans.md#movie004",
+            "status": "bounded",
+            "verified_in_game": true
           }
         },
         "menus-hud": {},
@@ -2721,7 +2740,33 @@
             "verified_in_game": true
           }
         },
-        "film": {},
+        "film": {
+          "1:/SAKURA4+121135104": {
+            "alternate_cut": true,
+            "association": "observed",
+            "audio": "saturn",
+            "evidence": "docs/research/bounded-film-video-spans.md#movie011",
+            "fad": 59553,
+            "pc": "MOVIE011",
+            "pc_video_spans": [
+              [
+                0,
+                649,
+                0,
+                10777
+              ],
+              [
+                1107,
+                2202,
+                17400,
+                35735
+              ]
+            ],
+            "runtime_evidence": "docs/research/bounded-film-video-spans.md#movie011",
+            "status": "bounded",
+            "verified_in_game": true
+          }
+        },
         "menus-hud": {},
         "portraits": {
           "0068": {
@@ -5394,6 +5439,7 @@
   },
   "schema": 1,
   "status": {
+    "bounded": "Aligned PC picture spans on the Saturn timing, with native picture in their gaps and Saturn audio throughout.",
     "excluded": "Native by design (key-colour cut-outs, blank pictures, alternate film edits or native transitions).",
     "hd": "Implemented: the runtime table holds it and the runtime draws it when it appears (for a body, a documented draw sets verified_in_game). Seeing it in a replay is separate.",
     "paired-not-wired": "Accepted counterpart that is genuinely not in the runtime table (for example an ambiguous palette). Check `reason` first.",
@@ -7064,10 +7110,24 @@
       "1:/SAKURA4+100188160": {
         "alternate_cut": true,
         "association": "unknown",
+        "audio": "saturn",
         "fad": 49325,
         "pc": "MOVIE009",
-        "reason": "alternate PC edit stays native to preserve the Saturn timing",
-        "status": "excluded"
+        "pc_video_spans": [
+          [
+            0,
+            1226,
+            0,
+            20520
+          ],
+          [
+            1524,
+            2621,
+            24530,
+            42875
+          ]
+        ],
+        "status": "bounded"
       },
       "1:/SAKURA4+113262592": {
         "alternate_cut": false,
@@ -7075,14 +7135,6 @@
         "fad": 55709,
         "pc": "MOVIE010",
         "status": "hd"
-      },
-      "1:/SAKURA4+121135104": {
-        "alternate_cut": true,
-        "association": "unknown",
-        "fad": 59553,
-        "pc": "MOVIE011",
-        "reason": "alternate PC edit stays native to preserve the Saturn timing",
-        "status": "excluded"
       },
       "1:/SAKURA4+132290560": {
         "alternate_cut": false,
@@ -7136,10 +7188,18 @@
       "1:/SAKURA4+178169856": {
         "alternate_cut": true,
         "association": "unknown",
+        "audio": "saturn",
         "fad": 87402,
         "pc": "MOVIE020",
-        "reason": "alternate PC edit stays native to preserve the Saturn timing",
-        "status": "excluded"
+        "pc_video_spans": [
+          [
+            0,
+            1185,
+            0,
+            19800
+          ]
+        ],
+        "status": "bounded"
       },
       "1:/SAKURA4+186963968": {
         "alternate_cut": false,
@@ -7151,10 +7211,18 @@
       "1:/SAKURA4+192372736": {
         "alternate_cut": true,
         "association": "unknown",
+        "audio": "saturn",
         "fad": 94337,
         "pc": "MOVIE105",
-        "reason": "alternate PC edit stays native to preserve the Saturn timing",
-        "status": "excluded"
+        "pc_video_spans": [
+          [
+            778,
+            1396,
+            12020,
+            22355
+          ]
+        ],
+        "status": "bounded"
       },
       "1:/SAKURA4+200572928": {
         "alternate_cut": false,
@@ -7211,14 +7279,6 @@
         "fad": 121427,
         "pc": "MOVIE030",
         "status": "hd"
-      },
-      "1:/SAKURA4+59686912": {
-        "alternate_cut": true,
-        "association": "unknown",
-        "fad": 29549,
-        "pc": "MOVIE004",
-        "reason": "alternate PC edit stays native to preserve the Saturn timing",
-        "status": "excluded"
       },
       "1:/SAKURA4+75612160": {
         "alternate_cut": false,
@@ -7355,10 +7415,18 @@
       "2:/SAKURA4+26816512": {
         "alternate_cut": true,
         "association": "unknown",
+        "audio": "saturn",
         "fad": 13499,
         "pc": "MOVIE102",
-        "reason": "alternate PC edit stays native to preserve the Saturn timing",
-        "status": "excluded"
+        "pc_video_spans": [
+          [
+            0,
+            1185,
+            0,
+            19865
+          ]
+        ],
+        "status": "bounded"
       },
       "2:/SAKURA4+33234944": {
         "alternate_cut": false,
@@ -7377,10 +7445,18 @@
       "2:/SAKURA4+56791040": {
         "alternate_cut": true,
         "association": "unknown",
+        "audio": "saturn",
         "fad": 28135,
         "pc": "MOVIE105",
-        "reason": "alternate PC edit stays native to preserve the Saturn timing",
-        "status": "excluded"
+        "pc_video_spans": [
+          [
+            777,
+            1396,
+            12020,
+            22355
+          ]
+        ],
+        "status": "bounded"
       },
       "2:/SAKURA4+64991232": {
         "alternate_cut": false,

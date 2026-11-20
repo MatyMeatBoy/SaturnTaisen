@@ -107,7 +107,7 @@
       "id": "movies",
       "label": "Vídeos",
       "unit": "clips únicos",
-      "scope": "Correspondencias completas entre clips Saturn y PC, con sus variantes de montaje, subtítulos, audio y comportamiento de salto.",
+      "scope": "Clips Saturn únicos con sustitución PC completa o con tramos de imagen PC alineados al montaje Saturn.",
       "sources": [
         {
           "path": "docs/research/scene-tagging.md"
@@ -117,12 +117,15 @@
         },
         {
           "path": "docs/research/video-equivalence.md"
+        },
+        {
+          "path": "docs/research/bounded-film-video-spans.md"
         }
       ],
-      "next": "Verificar audio y vídeo a velocidad normal, saltos y reanudaciones, subtítulos y ambos discos.",
+      "next": "Verificar los cortes alternativos en las rutas de historia pendientes y comprobar subtítulos, saltos y reanudaciones en el paquete.",
       "details": [
-        "50 clips Saturn únicos y emparejados. La tabla del runtime conecta el vídeo PC para 44 clips y conserva el vídeo y el audio Saturn en los seis cortes alternativos.",
-        "El preparador copia películas si la edición PC las incluye. MOVIE000 y MOVIE001 tienen observaciones de vídeo en juego. La validación completa de subtítulos, audio, sincronización, salto y cambio de disco sigue abierta."
+        "50 clips Saturn únicos con imagen PC integrada: 44 sustituciones completas y 6 sustituciones por tramos. Para estos últimos se conservan el audio Saturn y los tramos nativos que respetan el montaje original.",
+        "MOVIE004 y MOVIE011 tienen testigos en la historia. Los otros cuatro cortes alternativos se verificaron con reproducciones controladas. El preparador usa los archivos de la edición PC del jugador."
       ],
       "total": 50,
       "inventory": 50,

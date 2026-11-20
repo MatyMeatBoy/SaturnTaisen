@@ -1,0 +1,245 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -743,7 +743,9 @@
+     uint32_t texW = 0, texH = 0;
+     uint64_t shownSerial = 0;
+     bool shownFirstMoviePhase = false;
+-    uint32_t shownPlaySerial = 0, shownPlayStart = 0;int shownDisc = 0;
++    uint32_t shownPlaySerial = 0, shownPlayStart = 0, shownPlayCdPos = 0;
++    bool shownPlayResumed = false;
++    int shownDisc = 0;
+     DialogueWitness shownDialogue;
+     DialogueWitness shownChoice;
+     std::vector<uint32_t> frameCopy;
+@@ -1010,6 +1012,9 @@
+     int presentedClip = -1, audioClip = -1;
+     uint64_t clipAudioFed = 0, clipAudioFrame0 = 0; // floats given to the device since this clip's audio began; the guest frame it began on
+     uint32_t clipSerialSeen=0;int clipMovie=-1;bool clipRunning=false;uint64_t clipStartFrame=0;unsigned clipMissing=0;
++    const port::FilmVideoEdit* clipEdit = nullptr;
++    const port::FilmVideoSpan* loadedSpan = nullptr;
++    std::optional<uint64_t> clipEditOrigin;
+     std::vector<uint32_t> clipForeground;
+     // True when a PC clip is armed, the film plane (layer 1) fills the picture and clipTexture holds the frame for this guest frame.
+     auto UpdateClip=[&](const std::vector<uint8_t>& source)->bool {
+@@ -1018,28 +1023,114 @@
+             clipSerialSeen=shownPlaySerial;int found=-1;
+             for(unsigned i=0;i<port::kFilmClipCount;i++)
+                 if(port::kFilmClips[i].disc==shownDisc && shownPlayStart>=port::kFilmClips[i].fad && shownPlayStart-port::kFilmClips[i].fad<port::kFilmClips[i].sectors) {found=port::kFilmClips[i].movie;break;}
++            const auto* edit = port::FindFilmVideoEdit(shownDisc, shownPlayStart);
++            if (edit && (shownPlayResumed || (edit != clipEdit && shownPlayStart > edit->fad + 1)))
++                edit = nullptr;
++            const bool restarted = edit && edit == clipEdit && clipEditOrigin &&
++                shownPlayStart <= edit->fad + 1 &&
++                port.frame - *clipEditOrigin >= edit->spans.back().saturnEnd;
++            if (edit != clipEdit || restarted) {
++                clipDecoder.Close();
++                clipRunning = false;
++                clipEditOrigin.reset();
++                loadedSpan = nullptr;
++                clipEdit = edit;
++            }
+             // The game re-issues its play command inside the same film (a later start sector): that is the same clip, keep it running.
+-            if(!(found>=0 && found==clipMovie && clipRunning)) {clipRunning=false;clipDecoder.Close();clipMovie=found;}
++            if (clipEdit) clipMovie = clipEdit->movie;
++            else if (!(found >= 0 && found == clipMovie && clipRunning)) {
++                clipRunning = false;
++                clipDecoder.Close();
++                clipMovie = found;
++            }
+             if(std::getenv("SATRECOMP_CLIP_TRACE"))std::fprintf(stderr,"clip: play serial %u start 0x%X disc %d -> movie %d\n",shownPlaySerial,shownPlayStart,shownDisc,clipMovie);
+         }
+         if(clipMovie<0)return false;
+         unsigned filmPixels=0;
+         for(int y=8;y<152;y++)for(int x=16;x<304;x++)filmPixels+=source[size_t(y)*320+x]==1;
+-        if(filmPixels<12000) {
+-            if(clipRunning && ++clipMissing>30) {clipRunning=false;clipDecoder.Close();}
+-            return false;
+-        }
+-        if(!clipRunning) {
+-            char name[48];std::snprintf(name,sizeof name,"MOVIE/MOVIE%03d.MPG",clipMovie);
+-            clipTextureReady = false;
+-            clipRunning=clipDecoder.Open((std::filesystem::u8path(port.opt.pcAssetsPath)/name).string(),24,true);
+-            clipStartFrame=port.frame;clipMissing=0;
+-            if(std::getenv("SATRECOMP_CLIP_TRACE"))std::fprintf(stderr,"clip: open %s -> %d\n",name,int(clipRunning));
+-            if(!clipRunning) {clipMovie=-1;return false;}
+-        }
+-        clipMissing=0;
++        double movieSeconds = 0;
++        bool drawClip = true;
++        if (clipEdit) {
++            if (!clipEditOrigin) {
++                // Calibrated cuts need a fresh play and the first full FILM plate.
++                if (shownPlayResumed || filmPixels != 288*144 || shownPlayCdPos > clipEdit->fad + 128)
++                    return false;
++                clipEditOrigin = port.frame;
++            }
++            if (shownPlayResumed || filmPixels != 288*144) return false;
++            const uint64_t elapsed = port.frame - *clipEditOrigin;
++            const auto span = std::ranges::find_if(clipEdit->spans, [&](const auto& s) { return elapsed < s.saturnEnd; });
++            if (span == clipEdit->spans.end()) return false;
++            // Seek during the native bridge so the matching shot is ready at its cut.
++            const bool preroll = elapsed < span->saturnBegin;
++            if (preroll && span->saturnBegin - elapsed > 24) return false;
++            const double pcBegin = span->pcStartMilliseconds / 1000.0;
++            if (&*span != loadedSpan) {
++                char name[48];
++                std::snprintf(name, sizeof name, "MOVIE/MOVIE%03d.MPG", clipMovie);
++                const auto file = std::filesystem::u8path(port.opt.pcAssetsPath) / name;
++                std::error_code error;
++                const auto bytes = std::filesystem::file_size(file, error);
++                clipDecoder.Close();
++                clipRunning = !error && bytes == clipEdit->pcBytes && clipDecoder.Open(file.string(), 24, false, pcBegin);
++                loadedSpan = &*span;
++                clipTextureReady = false;
++                if (std::getenv("SATRECOMP_CLIP_TRACE"))
++                    std::fprintf(stderr, "clip span: movie %d [ %u, %u ) guest origin %llu PC %.3f ready %d\n",
++                        clipMovie, span->saturnBegin, span->saturnEnd, (unsigned long long)*clipEditOrigin, pcBegin, int(clipRunning));
++            }
++            if (!clipRunning) return false;
++            drawClip = !preroll && port.videoRenderer;
++            if (drawClip) {
++                const auto& video = *port.videoRenderer;
++                const auto& plate = video.PresentationFrame();
++                const auto& regs = video.Regs2();
++                const bool direct = video.BackgroundIsOpaque(1);
++                // At ratio 31 the nominal floral top layer contributes zero, leaving
++                // the raw FILM plate. Compare the captured recipe to the composed
++                // pixel as well, so color offsets, shadows and fades stay native.
++                const bool clearFloral = !regs.colorCalcAdd && !regs.colorCalcExtended &&
++                    regs.colorCalcRatio[regs.colorCalcUseSecondRatio ? 1 : 5] == 31 &&
++                    video.BackgroundColorOffset(5) == std::array<int16_t, 3>{} &&
++                    plate.floralCoverMix.size() == source.size() &&
++                    plate.foreground.size() == source.size();
++                drawClip = plate.topSource.size() == source.size() && (direct || clearFloral);
++                for (size_t y = 8; y < 152 && drawClip; ++y) {
++                    for (size_t x = 16; x < 304 && drawClip; ++x) {
++                        const size_t at = y*320 + x;
++                        const uint8_t top = plate.topSource[at];
++                        if (top == 1 && direct) continue;
++                        if (top == 5 && clearFloral) {
++                            const auto& mix = plate.floralCoverMix[at];
++                            if (mix.lowerWeight == 0 &&
++                                mix.postMixOffset == std::array<int16_t, 3>{} &&
++                                mix.topRgb == (plate.foreground[at] & 0xFFFFFF))
++                                continue;
++                        }
++                        drawClip = false;
++                    }
++                }
++            }
++            const double pcDuration = (span->pcEndMilliseconds - span->pcStartMilliseconds) / 1000.0;
++            movieSeconds = pcBegin + (preroll ? 0 : pcDuration * (elapsed - span->saturnBegin) / (span->saturnEnd - span->saturnBegin));
++        } else {
++            if(filmPixels<12000) {
++                if(clipRunning && ++clipMissing>30) {clipRunning=false;clipDecoder.Close();}
++                return false;
++            }
++            if(!clipRunning) {
++                char name[48];std::snprintf(name,sizeof name,"MOVIE/MOVIE%03d.MPG",clipMovie);
++                clipTextureReady = false;
++                clipRunning=clipDecoder.Open((std::filesystem::u8path(port.opt.pcAssetsPath)/name).string(),24,true);
++                clipStartFrame=port.frame;clipMissing=0;
++                if(std::getenv("SATRECOMP_CLIP_TRACE"))std::fprintf(stderr,"clip: open %s -> %d\n",name,int(clipRunning));
++                if(!clipRunning) {clipMovie=-1;return false;}
++            }
++            clipMissing=0;
++            movieSeconds = double(port.frame-clipStartFrame)/59.82;
++        }
+         port::MovieDecoder::Frame frame;
+-        if(clipDecoder.FrameAt(double(port.frame-clipStartFrame)/59.82,frame) && frame.width>0) {
++        if(clipDecoder.FrameAt(movieSeconds,frame) && frame.width>0) {
+             if(!clipTexture || clipTextureW!=frame.width || clipTextureH!=frame.height) {
+                 if(clipTexture)SDL_DestroyTexture(clipTexture);
+                 clipTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,frame.width,frame.height);
+@@ -1048,7 +1139,7 @@
+             }
+             clipTextureReady = clipTexture && SDL_UpdateTexture(clipTexture, nullptr, frame.rgba.data(), frame.width * 4);
+         }
+-        return clipTextureReady;
++        return drawClip && clipTextureReady;
+     };
+     // Enhanced episode cards use the generated surround and the Saturn-sized center.
+     SDL_Texture* spanishCardCenter[10]={};
+@@ -4295,7 +4386,7 @@
+             audio.pending.clear(); // (no sound in slow motion)
+         }
+ 
+-        const int nextAudioClip = clipRunning && port.menu.Speed() == 100 ? presentedClip : -1;
++        const int nextAudioClip = clipRunning && !clipEdit && port.menu.Speed() == 100 ? presentedClip : -1;
+         if (audio.stream && nextAudioClip != audioClip) {
+             // Queued samples from the previous source do not follow a film skip or start.
+             SDL_ClearAudioStream(audio.stream);
+@@ -4381,6 +4472,8 @@
+                     softwareShown = port.fb;
+                     shownFirstMoviePhase = port.fbFirstMoviePhase;
+                     shownPlaySerial = port.fbPlaySerial;shownPlayStart = port.fbPlayStart;shownDisc = port.discNumber;
++                    shownPlayCdPos = port.fbPlayCdPos;
++                    shownPlayResumed = port.fbPlayResumed;
+                     shownDialogue = port.fbDialogue;
+                     shownChoice = port.fbChoice;
+                     if (std::getenv("SATRECOMP_DIALOGUE_TRACE")) {
+diff --git a/port/film_clip_table.h b/port/film_clip_table.h
+--- a/port/film_clip_table.h
++++ b/port/film_clip_table.h
+@@ -1,7 +1,9 @@
+ // SPDX-License-Identifier: GPL-3.0-only
+-// Generated by tools/gen_film_clip_table.py from config/film-fad-map.json: do not edit.
++// Generated by tools/gen_film_clip_table.py from config/film-*.json: do not edit.
+ #pragma once
++#include <array>
+ #include <cstdint>
++#include <span>
+ namespace port {
+ struct FilmClip {uint8_t disc;uint32_t fad;uint32_t sectors;int16_t movie;};
+ inline constexpr FilmClip kFilmClips[54]={
+@@ -61,4 +63,49 @@
+     {2,0x32D0F,2595,119},
+ };
+ inline constexpr unsigned kFilmClipCount=54;
++struct FilmVideoSpan { unsigned saturnBegin, saturnEnd, pcStartMilliseconds, pcEndMilliseconds; };
++struct FilmVideoEdit {
++    int disc, movie;
++    uint32_t fad, sectors;
++    uint64_t pcBytes;
++    std::span<const FilmVideoSpan> spans;
++};
++inline constexpr FilmVideoSpan kVideo1MOVIE004[]={
++    {0, 3413, 0, 57155},
++};
++inline constexpr FilmVideoSpan kVideo1MOVIE009[]={
++    {0, 1226, 0, 20520},
++    {1524, 2621, 24530, 42875},
++};
++inline constexpr FilmVideoSpan kVideo1MOVIE011[]={
++    {0, 649, 0, 10777},
++    {1107, 2202, 17400, 35735},
++};
++inline constexpr FilmVideoSpan kVideo1MOVIE020[]={
++    {0, 1185, 0, 19800},
++};
++inline constexpr FilmVideoSpan kVideo1MOVIE105[]={
++    {778, 1396, 12020, 22355},
++};
++inline constexpr FilmVideoSpan kVideo2MOVIE102[]={
++    {0, 1185, 0, 19865},
++};
++inline constexpr FilmVideoSpan kVideo2MOVIE105[]={
++    {777, 1396, 12020, 22355},
++};
++inline constexpr std::array<FilmVideoEdit, 7> kVideoEdits={{
++    {1, 4, 0x736D, 7776, 17618948, kVideo1MOVIE004},
++    {1, 9, 0xC0AD, 6384, 13209604, kVideo1MOVIE009},
++    {1, 11, 0xE8A1, 5447, 10967044, kVideo1MOVIE011},
++    {1, 20, 0x1556A, 4294, 9746436, kVideo1MOVIE020},
++    {1, 105, 0x17081, 4004, 7008260, kVideo1MOVIE105},
++    {2, 102, 0x34BB, 3134, 6645764, kVideo2MOVIE102},
++    {2, 105, 0x6DE7, 4004, 7008260, kVideo2MOVIE105},
++}};
++inline const FilmVideoEdit* FindFilmVideoEdit(int disc, uint32_t fad) {
++    for (const auto& edit : kVideoEdits)
++        if (edit.disc == disc && fad >= edit.fad && fad - edit.fad < edit.sectors)
++            return &edit;
++    return nullptr;
+ }
++}
