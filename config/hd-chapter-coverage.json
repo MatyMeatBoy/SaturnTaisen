@@ -81,6 +81,14 @@
             "status": "hd",
             "verified_in_game": false
           },
+          "1:/SAKURA1/NC3173.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3173-nc3285-cutout-1440p.md",
+            "pc": "SAKURA1/NC/NC3173.SPR",
+            "runtime_evidence": "docs/research/nc3173-nc3285-cutout-1440p.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/NC32.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
@@ -5348,7 +5356,16 @@
       "chapter": 10,
       "disc": 2,
       "resources": {
-        "bodies": {},
+        "bodies": {
+          "2:/SAKURA1/NC3285.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3173-nc3285-cutout-1440p.md",
+            "pc": "SAKURA1/NC/NC3285.SPR",
+            "runtime_evidence": "docs/research/nc3173-nc3285-cutout-1440p.md",
+            "status": "hd",
+            "verified_in_game": true
+          }
+        },
         "film": {},
         "menus-hud": {},
         "portraits": {
@@ -5938,12 +5955,6 @@
       "1:/SAKURA1/NC3129.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3129.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC3173.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC3173.SPR",
         "status": "hd",
         "verified_in_game": false
       },
@@ -6806,12 +6817,6 @@
       "2:/SAKURA1/NC3264.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3264.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "2:/SAKURA1/NC3285.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC3285.SPR",
         "status": "hd",
         "verified_in_game": false
       },
