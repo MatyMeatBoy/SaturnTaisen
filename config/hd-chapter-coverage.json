@@ -2363,6 +2363,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG3034.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg3034-wide-cutout.md",
+            "pc": "SAKURA1/BG/BG3034.SPR",
+            "runtime_evidence": "docs/research/bg3034-wide-cutout.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG4088.BIN": {
             "association": "observed",
             "evidence": "docs/research/chapter-one-cutout-followup.md",
@@ -15146,12 +15154,6 @@
       "1:/SAKURA1/BG3026.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3026.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "1:/SAKURA1/BG3034.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3034.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },

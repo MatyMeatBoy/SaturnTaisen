@@ -382,6 +382,21 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertEqual(row['runtime_evidence'], 'docs/research/iris-other-cutouts.md')
                 self.assertFalse(rows[f'{3 - disc}:/SAKURA1/{name}.BIN'].get('verified_in_game'))
 
+    def test_bg3034_wide_cutout_has_exact_disc_scope(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        rows = dict(catalog['unassigned']['scene-pictures'])
+        for chapter in catalog['chapters']:
+            rows.update(chapter['resources']['scene-pictures'])
+
+        for disc, chapter, name in ((1, 1, 'BG3034'),):
+            with self.subTest(name=name):
+                row = catalog['chapters'][chapter - 1]['resources']['scene-pictures'][f'{disc}:/SAKURA1/{name}.BIN']
+                self.assertEqual(row['status'], 'hd')
+                self.assertTrue(row['verified_in_game'])
+                self.assertEqual(row['runtime_evidence'], 'docs/research/bg3034-wide-cutout.md')
+                self.assertFalse(rows[f'{3 - disc}:/SAKURA1/{name}.BIN'].get('verified_in_game'))
+
     def test_registered_narrative_cutouts_are_disc_one_only(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))

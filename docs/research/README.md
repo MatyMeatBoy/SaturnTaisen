@@ -128,6 +128,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Iris route foregrounds in Chapter 8](iris-route-foregrounds.md)
 - [Additional Chapter 1 and 3 foregrounds](chapter-one-cutout-followup.md)
 - [Additional Chapter 5, 8 and 9 foregrounds](iris-other-cutouts.md)
+- [Wider BG3034 foreground](bg3034-wide-cutout.md)
 - [Iris and Ogami’s MAP13 combo](iris-ogami-combo.md) records the opaque character pose and native effects.
 - [bg-matching-progress.md](bg-matching-progress.md): Running log of the PC BG scene-image matching by screenshot; counts only.
 - [NC3058 cut-out at 1440p](nc3058-cutout-1440p.md) records the natural scene, native mask and facial fallback.
