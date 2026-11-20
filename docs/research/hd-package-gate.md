@@ -12,6 +12,22 @@ The scroll JSON describes the source scroll rows. The renderer uses a generated 
 
 ## Gate verification
 
+### v0.2.26-alpha
+
+The published helper built a fresh private installation from both Japanese discs
+and the extracted PC edition. All six data tracks matched their release digests,
+and all 2,375 PC files matched the source by SHA-256, including 52 videos.
+Preparation produced 19 background caches, 304 portraits (including 0169),
+ten localized episode centers and two presentation previews. The published ZIP
+passed all 166 manifest file hashes.
+
+The packaged RecompLauncher profile's prepare command produced all four expected
+CUEs. Its `--no-launcher` command started the prepared Spanish disc and rendered
+240 fields. This exercises the bundled commands. A separate RecompLauncher
+desktop installation was outside this test. Repeating preparation exposed a
+progress regression from 98% to 97%. The source fix was retested against the
+same installation and now reports 50%, 98%, 98%, 100%.
+
 The package-art tests checked the twenty approved public card layers, staged recipe/tool paths and hashes, missing and modified files, and the rejection of stray movie data. The release-marker and synthetic setup suites exercise the existing development-state marker and private PC clip extraction. A separate clean-machine package build and preparation run remain open.
 
 ## Earlier staging evidence
