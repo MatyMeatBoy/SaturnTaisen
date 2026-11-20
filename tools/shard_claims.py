@@ -13,7 +13,7 @@ or on origin) newer than the limit, or the claim itself is newer than the limit.
 and every claim older than the limit with no newer commit becomes `open · released (stale claim of <name>, <time>)`. `--list` shows the
 claims and their age. Only rows whose first cell is an ID are touched.
 """
-import argparse, datetime, pathlib, re, subprocess, sys
+import argparse, datetime, json, pathlib, re, subprocess, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 QUEUE = ROOT / 'docs/PENDIENTES.md'
@@ -93,12 +93,43 @@ def git_commit_time(branch):
     return best
 
 
+def open_pr_claims():
+    """Read claims from open PR heads, including those not merged into the queue."""
+    result = subprocess.check_output(
+        ['gh', 'pr', 'list', '--limit', '200', '--json', 'number,headRefName,headRefOid'],
+        cwd=ROOT, encoding='utf-8')
+    for pr in json.loads(result):
+        oid = pr['headRefOid']
+        if subprocess.run(['git', 'cat-file', '-e', oid], cwd=ROOT, capture_output=True).returncode:
+            subprocess.run(['git', 'fetch', '--no-tags', 'origin', f"refs/pull/{pr['number']}/head"],
+                           cwd=ROOT, check=True, capture_output=True)
+        stamp = subprocess.check_output(['git', 'show', '-s', '--format=%ct', oid], cwd=ROOT, text=True)
+        commit = datetime.datetime.fromtimestamp(int(stamp), datetime.timezone.utc)
+        result = subprocess.run(['git', 'show', f'{oid}:docs/PENDIENTES.md'], cwd=ROOT,
+                                capture_output=True, encoding='utf-8')
+        if result.returncode:
+            continue
+        for line in result.stdout.splitlines():
+            parsed = row_cells(line)
+            match = CLAIM.search(line) if parsed else None
+            if match and match[2] == pr['headRefName']:
+                yield parsed[0], match[1], pr['number'], max(commit, parse_time(match[3]))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--claim'); ap.add_argument('--who'); ap.add_argument('--branch', default='')
     ap.add_argument('--release-stale', action='store_true'); ap.add_argument('--list', action='store_true')
+    ap.add_argument('--list-pr-claims', action='store_true', help='report active and stale claims on open PR heads')
     ap.add_argument('--minutes', type=int, default=30); ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args()
+    if a.list_pr_claims:
+        now = now_utc()
+        for row, who, number, stamp in sorted(open_pr_claims()):
+            age = (now - stamp).total_seconds() / 60
+            state = 'stale' if age > a.minutes else 'active'
+            print(f'{row}: {state}, {who}, PR #{number}, idle {int(age)} min')
+        return
     text = QUEUE.read_text(encoding='utf-8')
     newline = '\r\n' if '\r\n' in text else '\n'
     lines = text.split(newline)
