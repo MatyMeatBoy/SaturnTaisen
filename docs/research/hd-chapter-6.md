@@ -231,3 +231,13 @@ exit dispatch that reaches the GCG loader depends on a mode byte copied
 from guest high WRAM 0x06003013. The naturally earned episode route
 keeps that mode at zero. A separate natural mode that sets it remains
 to be found before the Maigo illustration can be witnessed.
+
+The Long Day launch, winning route, Rankings, and return add 138
+observed instruction spans to the same MINIMAIG registry. The
+isolated strict candidate completes 1,250 menu-entry fields,
+5,400 winning fields, 450 Rankings fields and 660 return fields
+from their natural checkpoints. The entry and win logs match
+the interpreter and each test preserves final SRAM. The donor
+and control match through Rankings and return. The [HD reward
+witness](saturn-bg-format.md#maigo-reward-in-long-day) records
+the rendering comparison.

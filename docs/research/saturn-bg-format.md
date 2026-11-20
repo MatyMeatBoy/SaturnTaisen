@@ -1035,3 +1035,28 @@ interpreter. The strict run stops at 0x0027BAF8 after 940 complete
 fields. All 940 guest hashes match the interpreter prefix. The
 1,800-field interpreter trace has no MINISHOT.GCG read and its
 Start/Practice artwork does not contain BGSYATE.
+
+### Maigo reward in Long Day
+
+Kanna's Recall option in the naturally unlocked Long Day on Spanish
+disc 2 sets the minigame mode byte to one. The nine-name route earns
+Perfect at 49.50 seconds and reads all 114 sectors of MINIMAIG.GCG
+from FAD 260521. The resulting 640 × 448 frame matches all 286,720
+pixels of the decoded Saturn background after RGB555 expansion.
+The foreground Rankings menu appears when the player confirms.
+
+Patch 0251 uses the complete 640 × 480 PC image in the same
+destination as the native 640 × 448 frame. The loader decodes
+asynchronously, checks the donor fingerprint, and only draws
+over the exact unobscured Saturn RGB frame. The native rankings
+composition, fades and return retain their existing presentation.
+
+At 2560 × 1440, strict donor and missing-donor runs change
+2,223,687 pixels within (320,48)–(2240,1392) on the settled plate.
+Both profiles match every guest hash and final SRAM. Original
+with and without the donor, and Enhanced with a truncated donor
+versus the missing-donor control, match at the sampled frame.
+The 450-field Rankings entry and 660-field return have matching
+guest hashes and SRAM per pair. Once the rankings cover the
+illustration, all sampled captures and the return fade match
+the control. The disc 1 reward path and public packaging remain open.
