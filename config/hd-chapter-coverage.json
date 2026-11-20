@@ -3189,6 +3189,22 @@
             "pc": "SAKURA1/BG/BG1022.SPR",
             "status": "hd"
           },
+          "1:/SAKURA1/BG1031.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1",
+            "pc": "SAKURA1/BG/BG1031.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1076.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1",
+            "pc": "SAKURA1/BG/BG1076.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1171.BIN": {
             "association": "observed",
             "evidence": "docs/research/scene-spot-check.md#bg1171-on-english-disc-1",
@@ -3825,7 +3841,8 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
             "pc": "SAKURA1/BG/BG1031.SPR",
-            "status": "hd"
+            "status": "hd",
+            "verified_in_game": false
           },
           "1:/SAKURA1/BG1198.BIN": {
             "association": "observed",
@@ -12279,11 +12296,6 @@
         "association": "unknown",
         "cold_run_frame": 164250,
         "pc": "SAKURA1/BG/BG1075.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1076.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1076.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1077.BIN": {
