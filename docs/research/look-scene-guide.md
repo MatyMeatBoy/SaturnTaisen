@@ -46,3 +46,22 @@ Findings: the page has a Start command menu (Item cards with a "use on the scene
 ## Not done
 
 bank-6, bank-7, public-7, the ground probe (`tools/tactical_ground_probe.py`) and the `hd` promotion were not attempted. No input script is committed because no state advanced past page 1.
+
+## RAM table and the condition that leaves bank-5 page 1 (found by RAM diffs; verified by normal input)
+
+Method: `--dump-ram` after segments from state 39999 (private copy of the PR #691 exe), diffs between idle, Kanna look, Sumire look runs, then a cursor grid (about 550 short runs) reading the hit id. The dumps were used only to understand; the route below is plain input.
+
+| Where | Meaning |
+| --- | --- |
+| Low WRAM 0x22 / 0x24 (int16) | cursor x / y relative to the screen centre (start -12,-44; clamp x -160..136, y -112..88). Mirrors in High WRAM 0x65D10/0x65D12 |
+| Low WRAM 0x100 + 2N | script variable N (BE16). var00 = id of the hotspot just looked at (95 = screen edge), var20 = edge-hand flag, var74 and var76 = look counters |
+| High WRAM 0x685B4 (BE32) | script cursor; the script file is resident from Low WRAM 0x204000 (look loop wait command at 0x206B22) |
+| Script bytes | `00 1b <id> 02 f6 <state>` registers a hotspot (ids 30-42, 95); state 2 marks the two main ones, 36 and 41. Jump operands are word offsets (x2) |
+
+Hit boxes (cursor units, measured): id 41 (Sumire) x -66..-60, y -37..-28; id 36 (Kanna side, upper centre) x 12..36, y -74..-64. Other ids (30-35, 37-40, 42) are decoration texts with a first-time flag and do not count. The previous "looks at Kanna/Sumire" hit ids 31 and 95 (edge), which is why 5 looks never advanced.
+
+Condition: look at id 41 twice and at id 36 twice (var74 and var76 reach 2; first look sets 1). Then the script falls through to the finale and the page ends (CD loads NC40/NC24, then the theatre map).
+
+Input script (frames from state 39999, hold = direction held): 5 LEFT+DOWN, release DOWN at 19, LEFT at 33 (cursor lands at -60,-32); press A every 25 frames (4-frame press) for about 1500 frames until var74 = 2 and the dialog closes (script cursor back at 0x206B22); then 5 RIGHT+UP, release UP at 30, RIGHT at 42 (cursor at 20,-71); A every 25 frames for about 1500 frames: var76 = 2, finale plays. Input is ignored while a dialog is open, so wait for the script cursor to return to a wait address before moving. After the finale, A every 25 frames (1800 frames x2) reaches a theatre-map room picker ("Stage" label) where the script stays at 0x204D7E.
+
+Not done: the room picker (needs the right room; a 35-position grid with A showed no CD load), bank-6, bank-7, public-7, no MAPnn reached, no ground probe, nothing promoted to `hd`. `tools/lookscene_driver.py` is a draft: its pure decider matched these dumps, but the closed loop did not move the cursor in a 60-frame segment (LWRAM 0x22 did not update; the manual runs used 70+ frames and long A spam), so the loop is unverified and has no unit tests yet.
