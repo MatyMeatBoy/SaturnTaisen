@@ -1,0 +1,172 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -401,6 +401,7 @@
+     std::vector<uint32_t> panelPixels;std::vector<uint8_t> hdErased;
+     SDL_Texture *tacticalCanvas=nullptr;
+     SDL_Texture *mapBackdropTexture=nullptr;
++    SDL_Texture* irisComboTexture = nullptr;
+     SDL_Texture* bg2093Composite = nullptr;
+     std::vector<uint32_t> tacticalPatch,tacticalPixels;
+     SakuraUi sakuraUi;
+@@ -674,6 +675,8 @@
+         tacticalCanvas=nullptr;
+         if(mapBackdropTexture)SDL_DestroyTexture(mapBackdropTexture);
+         mapBackdropTexture=nullptr;
++        if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
++        irisComboTexture = nullptr;
+         if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
+         bg2093Composite = nullptr;
+         if (shaded) {
+@@ -822,21 +825,23 @@
+     SceneHd bg2238;
+     SceneHd bg2093;
+     std::vector<uint32_t> bg2093Native, bg2093Donor, bg2093Pixels;
++    SceneHd irisCombo;
++    std::vector<uint32_t> irisComboNative, irisComboDonor, irisComboPixels;
+     // TP2: one slot per row of kScrollPictures (native pixels decoded once, PC texture loaded once).
+     struct ScrollState {SceneHd hd; std::vector<uint32_t> pixels;};
+     std::array<ScrollState, kScrollPictureCount> scrollState;
+     auto queuePinnedPan = [&](SceneHd& pan, const char* relativePath, size_t fileSize,
+-                              uint64_t fingerprint, unsigned width, unsigned height) {
++                              uint64_t fingerprint, unsigned width, unsigned height, unsigned index = 0) {
+         const auto file = std::filesystem::path(port.opt.pcAssetsPath) / relativePath;
+-        pan.pending = std::async(std::launch::async, [file, fileSize, fingerprint, width, height] {
++        pan.pending = std::async(std::launch::async, [file, fileSize, fingerprint, width, height, index] {
+             SceneHdPixels decoded;
+             std::vector<uint8_t> bytes;
+             if (!ReadPcBackdropFile(file, bytes, fileSize) || AtlasFingerprint(bytes) != fingerprint) return decoded;
+             std::vector<PcSprite> images;
+             std::string error;
+             if (!DecodePcSprites(bytes, images, error)) return decoded;
+-            const auto part = std::find_if(images.begin(), images.end(), [width, height](const auto& item) {
+-                return item.index == 0 && item.width == width && item.height == height;
++            const auto part = std::find_if(images.begin(), images.end(), [width, height, index](const auto& item) {
++                return item.index == index && item.width == width && item.height == height;
+             });
+             if (part != images.end()) {
+                 decoded.width = part->width;
+@@ -3731,6 +3736,66 @@
+                     }
+                 }
+             }
++            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 2 &&
++                satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
++                texW == 320 && texH == 224 && baseFit.scale >= 2 &&
++                softwareShown.size() == 320 * 224 &&
++                port.videoRenderer->CaptureIrisComboPose(irisComboNative)) {
++                const auto& planes = port.videoRenderer->PresentationFrame();
++                if (!irisCombo.tried) {
++                    irisCombo.tried = true;
++                    queuePinnedPan(irisCombo, "SAKURA2/UNIT/GATTAI/IRISU/GTB_IRS.SPR", 275081,
++                        0x5B2127D6F980BFFBull, 640, 480, 1);
++                }
++                if (irisCombo.pending.valid() && irisCombo.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                    auto art = irisCombo.pending.get();
++                    if (!art.pixels.empty()) {
++                        irisComboDonor.resize(640 * 448);
++                        // Register the two figures to the opaque Saturn pose at 2x.
++                        for (int y = 0; y < 448; ++y) for (int x = 0; x < 640; ++x) {
++                            const int sx = (306 * (2 * x + 1) + 9200) / 640;
++                            const int sy = (673 * (2 * y + 1) + 10400) / 1280;
++                            if (sx >= 640 || sy >= 480) continue;
++                            const uint32_t color = art.pixels[size_t(sy) * 640 + sx];
++                            if ((color & 0xFFFFFF) != 0xFFFF00)
++                                irisComboDonor[size_t(y) * 640 + x] = color | 0xFF000000;
++                        }
++                    }
++                }
++                if (!irisComboDonor.empty() && planes.source.size() == softwareShown.size() &&
++                    planes.topSource.size() == softwareShown.size()) {
++                    irisComboPixels.assign(640 * 448, 0);
++                    bool visible = false;
++                    for (int y = 0; y < 224; ++y) for (int x = 0; x < 320; ++x) {
++                        const size_t at = size_t(y) * 320 + x;
++                        const auto native = irisComboNative[at];
++                        if (!native || planes.source[at] != 5 || planes.topSource[at] != 5 ||
++                            ((native ^ softwareShown[at]) & 0xFFFFFF) ||
++                            (x && !irisComboNative[at - 1]) || (x + 1 < 320 && !irisComboNative[at + 1]) ||
++                            (y && !irisComboNative[at - 320]) || (y + 1 < 224 && !irisComboNative[at + 320]))
++                            continue;
++                        const size_t hi = size_t(y) * 1280 + size_t(x) * 2;
++                        for (const size_t offset : {0u, 1u, 640u, 641u}) {
++                            irisComboPixels[hi + offset] = irisComboDonor[hi + offset];
++                            visible |= irisComboPixels[hi + offset] != 0;
++                        }
++                    }
++                    if (visible && !irisComboTexture) {
++                        irisComboTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                            SDL_TEXTUREACCESS_STREAMING, 640, 448);
++                        if (irisComboTexture) {
++                            SDL_SetTextureScaleMode(irisComboTexture, SDL_SCALEMODE_NEAREST);
++                            SDL_SetTextureBlendMode(irisComboTexture, SDL_BLENDMODE_BLEND);
++                        }
++                    }
++                    if (visible && irisComboTexture &&
++                        SDL_UpdateTexture(irisComboTexture, nullptr, irisComboPixels.data(), 640 * sizeof(uint32_t)) &&
++                        SDL_RenderTexture(renderer, irisComboTexture, nullptr, &where) &&
++                        std::getenv("SATRECOMP_COMBO_TRACE"))
++                        std::fprintf(stderr, "verified combo pose: GTB_IRS\n");
++                }
++            }
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 1 &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_portraits") == 0 && !port.opt.pcAssetsPath.empty() &&
+@@ -4409,6 +4474,8 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
++                irisComboTexture = nullptr;
+                 if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
+                 bg2093Composite = nullptr;
+                 resetIntermissionTextures();
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -189,6 +189,44 @@
+         const auto& bg = m_regs2.bgParams[layer - 1];
+         return !bg.colorCalcEnable && !bg.lineColorScreenEnable && !bg.shadowEnable &&
+                BackgroundColorOffset(layer) == std::array<int16_t, 3>{};
++    }
++    bool CaptureIrisComboPose(std::vector<uint32>& pixels) const {
++        const auto& bg = m_regs2.bgParams[4];
++        if (m_width != 320 || m_height != 224 || m_regs2.TVMD.IsInterlaced() ||
++            bg.pageBaseAddresses[0] != 0x66000 || bg.scrollAmountH != 0 ||
++            bg.scrollAmountV != 0x10000 || bg.cramOffset != 0 ||
++            !BackgroundIsOpaque(5) || BackgroundPaletteFingerprint(5) != 0xF6B278DAC83BC233ull)
++            return false;
++
++        // NBG3's second combo pose starts 32 tile rows into the page.
++        constexpr uint32 names = 0x67000, cells = 0x68000;
++        const auto fingerprint = [&](uint32 start, uint32 end) {
++            uint64_t hash = 14695981039346656037ull;
++            for (uint32 pos = start; pos < end; ++pos)
++                hash = (hash ^ m_mem.vram2[pos]) * 1099511628211ull;
++            return hash;
++        };
++        if (fingerprint(names, 0x67E00) != 0xE6518322FD6A1595ull ||
++            fingerprint(cells, 0x78A00) != 0xC2EC39C65FB06018ull)
++            return false;
++
++        if (pixels.empty()) {
++            pixels.resize(320 * 224);
++            for (uint32 y = 0; y < 224; ++y) {
++                for (uint32 x = 0; x < 320; ++x) {
++                    const uint32 name = Vram2Word(names + 2 * ((y / 8) * 64 + x / 8));
++                    const uint32 cell = 0x3000 | (name & 0xFFF);
++                    const uint32 dot = m_mem.vram2[cell * 32 + (y % 8) * 8 + x % 8];
++                    if (dot) {
++                        const uint32 palette = (name >> 12) & 7;
++                        const uint16 color = CramWord(2 * (palette * 256 + dot));
++                        pixels[y * 320 + x] = 0xFF000000u | (uint32(color & 31) << 3) |
++                            (uint32(color & 0x3E0) << 6) | (uint32(color & 0x7C00) << 9);
++                    }
++                }
++            }
++        }
++        return true;
+     }
+     const Presentation& PresentationFrame() const { return m_presentation; }
+     std::span<const ::port::DreamBlendPixel> BG2093Blend() const { return m_bg2093Blend; }
