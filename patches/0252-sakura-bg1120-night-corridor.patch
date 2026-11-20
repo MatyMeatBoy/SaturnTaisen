@@ -1,0 +1,69 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -969,7 +969,7 @@
+         }
+         finishPinnedPan(state.hd);
+     };
+-    std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount);
++    std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount+1);
+     std::vector<uint32_t> sceneHdForeground;
+     SceneHd ic01;
+     bool ic01Traced=false,ic01Examined=false;
+@@ -3596,9 +3596,29 @@
+                                     const char* const sceneFile=slot<kSceneBgCount?kSceneBg[slot].file:kSceneBgAmbiguous[slot-kSceneBgCount].file;
+                                     const unsigned sceneIndex=slot<kSceneBgCount?kSceneBg[slot].index:kSceneBgAmbiguous[slot-kSceneBgCount].index;
+                                     const auto offset=port.videoRenderer->BackgroundColorOffset(layer);
+-                                    if(offset[0]||offset[1]||offset[2])continue;
++                                    const bool nightCorridor = layer == 4 && fingerprint == 0xC0D35CE807B1A201ull &&
++                                        offset == std::array<int16_t, 3>{-16, -16, -16};
++                                    if ((offset[0] || offset[1] || offset[2]) && !nightCorridor) continue;
++                                    if (nightCorridor) {
++                                        const auto& regs = port.videoRenderer->Regs2();
++                                        const auto& bg = regs.bgParams[layer - 1];
++                                        if (regs.colorCalcExtended || bg.colorCalcEnable || bg.lineColorScreenEnable ||
++                                            bg.shadowEnable || planes.topSource.size() != planes.source.size() ||
++                                            port.videoRenderer->BackgroundCellFingerprint(layer, 41472) != 0x06B4B6ABDE7575FFull)
++                                            continue;
++                                    }
+                                     unsigned visible=0;
+                                     for(int y=8;y<152;y++)for(int x=16;x<304;x++)visible+=planes.source[size_t(y)*320+x]==layer;
++                                    if (nightCorridor) {
++                                        bool exactPlate = visible >= 12000;
++                                        for (int y = 8; y < 152 && exactPlate; ++y) {
++                                            for (int x = 16; x < 304 && exactPlate; ++x) {
++                                                const auto at = size_t(y) * 320 + x;
++                                                exactPlate = (planes.source[at] == layer) == (planes.topSource[at] == layer);
++                                            }
++                                        }
++                                        if (!exactPlate) continue;
++                                    }
+                                     if (visible < 12000) {
+                                         if (layer != 2 || shownDisc != 2 || visible < 9500 || choosing || port.menu.IsOpen())
+                                             continue;
+@@ -3629,19 +3649,22 @@
+                                             if (foregroundOffset[0] || foregroundOffset[1] || foregroundOffset[2]) continue;
+                                         }
+                                     }
+-                                    auto& hd=sceneHd[slot];
++                                    auto& hd=sceneHd[nightCorridor ? kNoSlot : slot];
+                                     if(!hd.tried) {
+                                         // Decode the PC picture on a worker thread: doing it here cost about 20 ms
+                                         // the first time a picture appeared. Until it is ready the native one shows.
+                                         hd.tried=true;
+-                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex]() {
++                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex,nightCorridor,offset]() {
+                                             SceneHdPixels result;
+                                             std::vector<uint8_t> bytes;
+                                             if(!ReadPcBackdropFile(file,bytes,64u<<20))return result;
+                                             std::vector<PcSprite> images;std::string error;
+                                             if(!DecodePcSprites(bytes,images,error))return result;
+                                             for(auto& image:images)if(image.index==index && image.width && image.height) {
+-                                                result.width=image.width;result.height=image.height;result.pixels=std::move(image.pixels);break;
++                                                result.width=image.width;result.height=image.height;result.pixels=std::move(image.pixels);
++                                                if (nightCorridor)
++                                                    for (auto& pixel : result.pixels) pixel = OffsetBackdropPixel(pixel, offset);
++                                                break;
+                                             }
+                                             return result;
+                                         });
