@@ -189,3 +189,9 @@ From continuation field 1199, an isolated PC `NC26.SPR` A/B at 2560 × 1440 matc
 ### Verified NC24 and NC42 in 0602
 
 Two isolated PC-donor A/B pairs continue from field 1199 with the original confirm cadence. Each pair completes 1,200 strict fields with identical guest hashes and final SRAM. At 2560 × 1440 the NC42 donor changes 956,281–956,282 pixels in seven samples (fields 180–360), within (496,29)–(2274,1037). NC24 changes 815,202–815,204 pixels in 16 samples within (496,29)–(1784,1037). The remaining samples of each pair match. The separate disc 2 NC24 witness remains in the ledger. This verifies the two body draws in 0602. Individual facial expressions and packaging remain open.
+
+### Kohran and the later 0602 dialogue
+
+The next 2,400-field strict continuation reads NC60 at FAD 165138. From its field 599 checkpoint, an isolated `NC60.SPR` A/B passes 56 strict fields with identical guest hashes and SRAM. Four 2560 × 1440 samples change 593,300–621,521 pixels within the body bounds (1000,29)–(1996,1037). NC60 already has a separate verified body witness.
+
+A subsequent 3,500-field strict exploration (`--auto 6:0`) reads NC50 at FAD 164735, NC60 at 165138, NC10 at 161671 and NC30 at 162269. It completes without interpreted blocks and does not reach the next file or combat. These later reads establish file residency. Captures and checkpoints stay under `local/work/codex-th6-current/NC60-0602-early`, `file0602-deeper` and `file0602-next`.
