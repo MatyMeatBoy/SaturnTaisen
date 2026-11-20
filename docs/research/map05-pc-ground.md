@@ -20,3 +20,7 @@ The camera remained at (263, 149) in the sampled window. At 2560 × 1440, every 
 The local strict-native build matched the earlier runtime in all 1,200 opening guest hashes, final capture and SRAM. The separate strict-native MAP04 comparison passed with matching 180 guest hashes, four 1440p captures and SRAM. Both regressions reported zero interpreted blocks. Strict execution of the MAP05 fixture stops at untranslated master SH-2 entry `00205ED4`. A moving camera, complete battle and packaging remain open.
 
 Private comparison inputs and receipts are under `local/work/codex-th1/map05-triage/`.
+
+### Native MAP05 checkpoint replay
+
+The integrated 680,449-variant candidate reproduced the `00205ED4` stop from the retained battle checkpoint. Recording 600 fields with the interpreter and the archived controller movie found 65 missing variants. Every complete instruction span matches the pinned disc 1 EVT05 file. The `EVT05_MAP05` profile reconstructs those exact ranges from the owner disc. The resulting 680,514-variant candidate completes the same 600 fields in strict native mode, with all guest hashes and final SRAM equal to the interpreter reference. This covers the retained checkpoint window. The full battle and packaging remain open. The private traces are under `local/work/codex-th1/map05-triage/t55-*`.

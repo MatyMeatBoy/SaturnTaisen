@@ -133,6 +133,10 @@ REGISTRY['EVT16_MAP15'] = dict(
     REGISTRY['EVT16'], observed_ranges='evt16-map15-aot-ranges.json',
     evidence='Disc 2 Chapter 9 theater defense, observed deployment and combat through entry into turn four')
 
+REGISTRY['EVT05_MAP05'] = dict(
+    REGISTRY['EVT05'], observed_ranges='evt05-map05-aot-ranges.json',
+    evidence='Disc 1 Chapter 3: observed native MAP05 checkpoint and controller replay')
+
 REGISTRY['MINIMAIG_EP6'] = dict(
     file='/SAKURA3/MINIMAIG.BIN', base=0x00204000, bytes=475592,
     sha256='7f9b353111f3f80a7256dcc573afb9fb8ed5dd595f7aae3333b8398dca2727d5',
