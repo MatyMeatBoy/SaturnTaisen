@@ -15,3 +15,11 @@ Patch 0142 clips the existing linear texture sampling to opaque native row spans
 - The non-cut-out NC50 control matches all 60 guest hashes and the sampled 1440p RGB. The headless opening matches all 1,500 guest hashes.
 
 The register marks the observed disc 1 NC3058 appearance. The remaining cut-outs, other expressions and package verification remain open. Replay inputs, controls and the native mask proof are retained under `local/work/codex-nc3058/`.
+
+## Exact facial registration in patch 0223
+
+The same natural Chapter 5 checkpoint exposes the two native mouth rectangles retained by the previous path. The Saturn file stores 18 face strips directly after the body in four contiguous runs of 3, 6, 3 and 6 frames. PC expression table 6 uses matching groups. Tables 8 and 9 give their placement in the 576 × 320 source. Patch 0223 pins the whole-disc and PC file fingerprints, the 18 native hashes and dimensions, and all four authored positions. This uses the same registration mechanism as [NC3057](nc3057-ending-faces.md).
+
+The sampled appearance selects PC parts 1, 4, 10 and 13. The two native mouth rectangles no longer break either face outline. Five 1440p samples each match 19,351 independently projected flat source texels across the four facial regions. Each sample changes 1,869,517 pixels inside the same 38,298-position native silhouette, including when the BG2058 donor is installed. Seven muted Direct3D 11 profiles match 55 strict guest hashes and final SRAM. Original with and without the donor and Enhanced with a missing or truncated donor reproduce the corresponding native RGB. NC3057 retains its exact 55-field replay, SRAM and 10 RGB captures.
+
+This verifies the four active strips in the sampled appearance. The other authored ordinals remain unwitnessed here. Package inclusion is pending. Private comparisons and commands are under local/work/codex-tp3c/residual0223.
