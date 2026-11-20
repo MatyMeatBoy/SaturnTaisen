@@ -1,0 +1,22 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -472,7 +472,18 @@
+     {0xC6FFA20DABFAB939ull, 24, 16, 9, 159, 123},
+ };
+ 
++inline constexpr VerifiedBodyFace kNC24Mouths[] = {
++    {0x33209387136F3F63ull, 16, 16, 99, 200, 101},
++    {0x6FFB96044398A7CEull, 16, 16, 102, 200, 101},
++};
++
++inline constexpr VerifiedBodyFace kNC3250Mouths[] = {
++    {0x81DD60932D669929ull, 32, 32, 4, 250, 210},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
++    if (name == "NC24.BIN") return {0xFCEE392AD2ECF0D8ull, 0x826208A119122FE6ull, kNC24Mouths, true};
++    if (name == "NC3250.BIN") return {0x516FD18EA268BA3Bull, 0x7085367867DEF578ull, kNC3250Mouths, true};
+     if (name == "NC60.BIN") return {0x96A815B0DC506675ull, 0xA4B7CD3186BFD5CBull, kNC60LibraryFaces, true};
+     if (name == "NC61.BIN") return {0x4D2CC80196B35D35ull, 0x432CF945E97698FCull, kNC60LibraryFaces, true};
+     if (name == "NC3038.BIN") return {0x2C2BF5055EBFA948ull, 0x11216AFFF0EF5CF3ull, kNC3038};
