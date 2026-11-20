@@ -4,7 +4,7 @@ Runtime: development build of main at 0684db8 (patch stack through 0245), strict
 
 | Ep | Surround in package | Drawn in Enhanced | 1440p witness (EN) | 1440p witness (ES) |
 | --- | --- | --- | --- | --- |
-| 1 | yes (`EPISODE01-surround-v2`, `-es-lettering-v1`) | yes | **yes** (`title-final.state` + `tests/chapter1-title-new-game.movie`) | falta (no Spanish disc prepared locally) |
+| 1 | yes (`EPISODE01-surround-v2`, `-es-lettering-v1`) | yes | **yes** (`title-final.state` + `tests/chapter1-title-new-game.movie`) | yes (v0.2.16.1-alpha cold replay below) |
 | 2 | yes | not seen | falta (no run reaches TITLE2) | falta |
 | 3 | yes | not seen | falta: Continue run of 12,000 frames ends in dialogue, no TITLE3 | falta |
 | 4 | yes | not seen | falta (run stops at EVT06 without the overlay build) | falta |
@@ -25,3 +25,7 @@ All ten surrounds and Spanish lettering layers are in `assets/generated/screen-b
 ## Not witnessed here (needs a worker with a route)
 
 Episodes 2 to 10 need a state or movie that reaches TITLEn; Continue-from-save routes in `chapter-sweep` do not (they land in dialogue). A Spanish disc (`tools/es/construir_todo.py --disc 1`) is not prepared on this machine.
+
+## Episode 1, Spanish, v0.2.16.1-alpha
+
+The installed Spanish disc 1 and packaged runtime completed 10,500 cold strict fields using `tests/opening.movie`. Enhanced 2560 x 1440 and 1920 x 1080 have identical guest hashes. The Spanish card appears at 8,250 and 8,500, following the floral backdrop at 8,000 and before the letter transition at 8,750. The center-to-surround join is still visible, and the packaged lettering differs from the requested serif reference. These captures establish the current behavior. A per-frame fade comparison, Original and episodes 2-10 remain open. Private captures are under `local/work/codex-th1/thd41-combined/card-es-cold`.

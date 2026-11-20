@@ -26,7 +26,7 @@ Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, origina
 
 ## HD pendiente por recurso
 
-Base publicada [v0.2.16-alpha](releases/v0.2.16-alpha.md). El [progreso generado](HD_PROGRESS.md) sigue siendo el registro de cifras. Esta cola separa el trabajo por recurso y prueba; las filas históricas conservan sus referencias y evidencias. Cada shard admite lotes pequeños nombrados por donante físico, ruta o capa. Antes de tomarlo, buscar PR y ejecuciones activas en ese mismo lote.
+Base de runtime publicada [v0.2.16-alpha](releases/v0.2.16-alpha.md). La actualización [v0.2.16.1-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.16.1-alpha) distribuye los rótulos españoles del panel táctico y el inventario. El [progreso generado](HD_PROGRESS.md) sigue siendo el registro de cifras. Esta cola separa el trabajo por recurso y prueba; las filas históricas conservan sus referencias y evidencias. Cada shard admite lotes pequeños nombrados por donante físico, ruta o capa. Antes de tomarlo, buscar PR y ejecuciones activas en ese mismo lote.
 
 | Área | Pendiente en esta base |
 | --- | --- |
@@ -44,7 +44,7 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
-| THD01 | P0 | local | open | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | Separar faltantes, conexiones y muestras a 1440p con caja y primer plano nativos. |
+| THD01 | P0 | local | open | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | [Inventario de fondos](research/thd01-episode1-backgrounds.md) por donante. Quedan las muestras a 1440p con caja y primer plano nativos. La [prueba headless](research/headless-scene-draw.md) usa un control con el mismo fondo floral. |
 | THD02 | P1 | local | open | **Fondos normales del disco 1.** BG de episodios 2–5, lotes por ruta, excluyendo animaciones, panoramas y recortes. | Captura natural por donante nuevo y decisión explícita para los que no coinciden. |
 | THD03 | P1 | local | open | **Fondos normales del disco 2.** BG de episodios 6–10, mismos límites que THD02. | Mismo encuadre y capas en una prueba A/B por donante. |
 | THD04 | P1 | local | open | **Panoramas y escenas grandes.** BG1257, BG1280, BG2247 y variantes animadas de tamaño no estándar; apariciones restantes de BG2290. | Medir trayectoria, escala, límites y fundidos o justificar conservar Saturn. |
@@ -75,7 +75,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
 | THD10 | P0 | local | active · Iris 0904 | **Último cuerpo NC.** NC3517 en la ruta Iris 0904; la prueba controlada existente sirve de base. | Captura natural de cuerpo, dos caras, oclusión y fallback. |
-| THD11 | P0 | local | open | **Cuerpos grandes del episodio 1.** Revisar los 19 cuerpos observados, dividir por ruta y expresión. | Dos estados de cara cuando existan y controles de mezcla y cuello. |
+| THD11 | P0 | local | open | **Cuerpos grandes del episodio 1.** [Inventario de 19 cuerpos observados](research/thd11-episode1-bodies.md), con tres apariciones pendientes: NC95, NC81 y NC3004. | Capturar esas tres apariciones a 1440p. Para los cuerpos ya verificados, comprobar las expresiones y fundidos que indica el inventario. |
 | THD12 | P1 | local | open · NC81 lote activo | **Cuerpos grandes de otros episodios.** NC de episodios 2–10 fuera de THD10, lotes de 2–4 paquetes por ruta. | Registrar pose, ojos, boca y al menos un control de oclusión/fundido por familia. |
 | THD13 | P1 | local | open | **Retratos y animación del disco 1.** Atlas FCE de episodios 1–5 por identidad, iconos sin interlocutor aparte. | Validar base, parpadeo, boca y modos HD/Original, incluido el emblema inicial. |
 | THD14 | P1 | local | open | **Retratos y animación del disco 2.** Atlas FCE de episodios 6–10 por identidad, excluyendo FACE táctico. | Mismo control de base, cuadros animados, alfa y fallback con evidencia por identidad. |
@@ -86,7 +86,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | --- | --- | --- | --- | --- | --- |
 | THD15 | P1 | local | open | **Suelos directos del disco 1.** MAP07, 08, 09, 11 y 22; MAP03 va en THD17. | Entrada real, clave FAD, geometría, cámara en movimiento y unidades/HUD intactos. |
 | THD16 | P1 | local | open | **Suelos directos del disco 2.** MAP01, 17, 18, 24, 25 y 26, más las decisiones MAP10/19 si hay nueva evidencia. | Mismos controles que THD15. Los mapas con arte distinto requieren registro propio. |
-| THD17 | P1 | local | open | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | Montaje con origen, orden y costuras comprobados en una cámara natural. |
+| THD17 | P1 | local | open | **Suelos multipieza.** MAP03, MAP20 y MAP23. Atribuir cada subimagen a arte, máscara o animación. | [Referencias offline](research/tactical-pairing.md#offline-placement-for-map03-map20-and-map23) para MAP03 y MAP20. MAP23 usa un plano rectangular de cuatro piezas. Falta validar origen, muestreo y costuras con cámara natural. |
 | THD18 | P1 | local | open | **Unidades y retratos tácticos.** UNIT y FACE por mapa, dirección, pose, ataque y combinación; conservar cuadrícula. | Una unidad y sus variantes por PR, con anclaje, poses y oclusión verificadas. |
 | THD19 | P1 | local | open | **Objetos en el mundo táctico.** ITEM en el campo, separando SPR físico de tarjeta de menú. | Emparejar objeto y estado visual con su posición de mundo, zoom y scroll. |
 
@@ -96,8 +96,13 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | --- | --- | --- | --- | --- | --- |
 | THD20 | P1 | local | open | **Tarjetas e iconos de inventario.** ITEM en menús, tarjetas enteras, iconos y estados de selección; cada subimagen cuenta una vez. | Confirmar a 1440p contenido e idioma, con control nativo y de donante ausente. |
 | THD21 | P1 | local | open | **Marcos y menús del sistema.** SYSTEM sin KAO, WINDOW/SLGSYS/FONT_CSL, opciones, guardado, carga y confirmaciones. | Asociar por pieza y estado; comprobar foco, sombras, pantalla e idioma. |
+<<<<<<< HEAD
 | THD22 | P1 | local | partial · two WKL02 shells verified at 1440p | **HUD de batalla y mapas.** WKL por mapa, selección, turno, LIPS táctico y marcos exclusivos del modo táctico. | [Dos submenús WKL02](research/hd-chapter-2.md#verified-wkl02-command-submenus) verificados en MAP02 con el parche 0244. Barras horizontales, turno y LIPS táctico siguen pendientes. |
-| THD23 | P0 | local | CLAIM[claude-thd23|pendientes/THD23-episode-cards|2026-11-20T13:11:04Z] open | **Tarjetas de episodio y scroll inicial.** Comprobar los 10 episodios en inglés y español, modos Original/Mejorado y CARGANDO. | Usar la tarjeta Saturn y el arte aprobado a 16:9, escala entera máxima a 1440p y 1080p, fundidos y rótulos por episodio. |
+| THD23 | P0 | local | open | **Tarjetas de episodio y scroll inicial.** [Inventario y prueba del episodio 1](research/thd23-episode-cards.md), con capturas de la tarjeta instalada en español a 1440p y 1080p. | Mejorar la costura y la rotulacion, comprobar Original, los fundidos cuadro a cuadro y las tarjetas de los episodios 2-10. |
+=======
+| THD22 | P1 | local | partial · two WKL02 shells verified at 1440p | **HUD de batalla y mapas.** WKL por mapa, selección, turno, LIPS táctico y marcos exclusivos del modo táctico. | [Dos submenús WKL02](research/hd-chapter-2.md#verified-wkl02-command-submenus) verificados en MAP02 con el parche 0244. Barras horizontales, turno y LIPS táctico siguen pendientes. La [ficha táctica de unidad en español](research/traduccion-espanol.md#tactical-unit-information-in-spanish) traduce ocho rótulos en la receta WKL. La distribución de los parches de idioma queda pendiente. |
+| THD23 | P0 | local | open | **Tarjetas de episodio y scroll inicial.** Comprobar los 10 episodios en inglés y español, modos Original/Mejorado y CARGANDO. | Usar la tarjeta Saturn y el arte aprobado a 16:9, escala entera máxima a 1440p y 1080p, fundidos y rótulos por episodio. |
+>>>>>>> main
 | THD24 | P0 | local | open | **Fundidos, puntero y caja de diálogo.** Entradas y salidas, carta→Sakura, cuatro bordes, caja vacía, blink negro y flores widescreen. | Secuencia de capturas antes/durante/después, encuadre Zoom aprobado y Original exacto. |
 | THD25 | P1 | local | open | **Fondos decorativos KABE.** 19 temas, día/noche, flores, carga y retorno desde mapa/menú. | Catálogo de apariciones y A/B con iluminación y fundido por tema. |
 
@@ -105,8 +110,8 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 
 | Shard | Estado | Lote | Cierre comprobable |
 | --- | --- | --- | --- |
-| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. |
-| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Incluir el scroll CARGANDO en la regresión del paquete. |
+| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. Ocho rótulos de la ficha de unidad distribuidos en v0.2.16.1-alpha. Quedan los nombres de ataques y las otras pantallas. |
+| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Los tres rótulos se distribuyen en v0.2.16.1-alpha. LOAD.BIN conserva su SHA-256 en ambos discos. La regresión de CARGANDO pasó en el paquete con cinco capturas de 1440p idénticas al referente publicado. |
 
 Mantener el idioma español según el perfil. Registrar la fuente de cada rótulo (texto del juego, textura o interfaz del port) y dejar un PR por familia de activos o pantalla. La traducción sola no suma al porcentaje de integración HD.
 
@@ -273,7 +278,7 @@ El barrido de esta actualización no encontró tokens `CLAIM` vencidos. Los PR h
 | TP5n | P0 | implemented and tested ? patch0243 | [NC81 mouth registration](research/nc80-nc81-registered-faces.md#closed-mouth-follow-up) uses the authored PC strip and preserves the native neck underlay. Package inclusion is pending. |
 | TP6 | P0 | shard | portrait choices recorded | All 112 FCE atlases have a terminal coverage classification. The natural Chapter 1 replay verifies `00a1` with both strips exchanged, and `0169` now selects the approved PC artwork. Packaging remains pending. |
 | TP7 | P0 | shard | done · clip decisions | 44 distinct synchronized PC clips are connected. The six alternate edits and the native opening transition stay Saturn. MOVIE118 is an exact alias of MOVIE015. See [film catalog decisions](research/film-catalog-decisions.md). Listening, live spot checks and package inclusion still belong to their verification rows. |
-| TP9 | P1 | shard | open | Spot check: verify one in every ten of the connected scene pictures, list in `docs/research/scene-spot-check.md`. Report OK / wrong picture / not reachable per item; a wrong match means checking its neighbours. Sample 3, BG1021, passed in two disc 1 scenes. Five additional pairs passed the offline comparison. [BG1030, BG2535, BG2173 and BG1193](research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1) have matched 1440p gameplay A/B draws on English disc 1. [BG1143 and BG2004](research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1) also match their PC donors at 1440p, with exact disc reads. The remaining visual sample is open. |
+| TP9 | P1 | shard | open | Spot check: verify one in every ten of the connected scene pictures, list in `docs/research/scene-spot-check.md`. Report OK / wrong picture / not reachable per item; a wrong match means checking its neighbours. Sample 3, BG1021, passed in two disc 1 scenes. Five additional pairs passed the offline comparison. [BG1030, BG2535, BG2173 and BG1193](research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1) have matched 1440p gameplay A/B draws on English disc 1. [BG1143 and BG2004](research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1) also match their PC donors at 1440p, with exact disc reads. The remaining visual sample is open. **Headless draw unblocked (2026-11-20):** a runtime copied without the `art/` folder beside the original executable never draws a scene picture; see [headless-scene-draw](research/headless-scene-draw.md) and `tools/scene_draw_probe.py`. |
 | TP8 | P2 | shard | open | Cleanup after TP1-TP7: verify scenes and transitions in game (campaign, `tools/coverage_campaign.py`), unify the counting on unique PC files. |
 | TC1 | P3 | continuous | open | Continuous improvement (owner, 2026-11-19): turn game functions into hand-written C, one function per PR, to get a source close to a decompilation that holds what we understand. Method: pick a function already identified (names, structure, hooks in the SDK), write the C with comments on what it does, run it next to the translated block and keep only if guest per-frame hashes stay identical (opening-film replay, 0 interpreted blocks). Never blocks the HD priorities; docs go in docs/research. |
 | TW4 | P1 | shard | open | W4 NC30 and NC20 native faces: runtime consumer for the verified face maps (T106a/b) |
