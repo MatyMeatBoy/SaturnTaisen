@@ -8,7 +8,7 @@ Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can 
 
 ## How to take a pending item
 
-1. `git fetch` and read this list on `origin/main`, plus open PRs (`gh pr list`). A row with a branch or open PR is already taken.
+1. `git fetch` and read this list on `origin/main`, plus open PRs (`gh pr list`). Treat an actively worked branch or PR as taken. Historical PRs listed in the HD queue are retained as evidence for the available lots.
 2. Choose the first `free` row (those marked `after Txx` wait for that row) by priority (P0 before P1…) whose **Type** can be resolved with what is available:
    - `agent`: code, synthetic tests, or documentation, with no private data.
    - `local`: requires the owner's `local/` (states, prepared discs); only on their PC and without uploading anything from `local/`.
