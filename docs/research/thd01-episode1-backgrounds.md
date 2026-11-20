@@ -14,7 +14,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 | BG1012 | BG1012.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
 | BG1016 | BG1016.SPR | conectado sin verificar |  | - |
 | BG1017 | BG1017.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
-| BG1021 | BG1021.SPR | conectado sin verificar |  | - |
+| BG1021 | BG1021.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1021-on-disc-1 |
 | BG1030 | BG1030.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
 | BG1036 | BG1036.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#additional-night-patrol-doors |
 | BG1043 | BG1043.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
@@ -53,7 +53,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 Donantes PC distintos: 43.
 - `BG2004.SPR` se reutiliza en BG2004, BG2010.
 
-Apariciones Saturn: conectado y verificado: 40, conectado sin verificar: 4
+Apariciones Saturn: conectado y verificado: 41, conectado sin verificar: 3
 
 ## Verificacion en juego a 2560x1440 (2026-11-20, con `art/` junto al exe)
 
