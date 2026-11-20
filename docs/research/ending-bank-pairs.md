@@ -56,7 +56,7 @@ The interpreter state at the aperture contains the complete 407,908-byte `SA_CG.
 
 Rectangles use half-open bounds. The pixel comparison expands each native RGB555 channel with a left shift of three. Intermediate captures show separate character insets over the full-width theatre strip and separate credits text. A full-screen substitution cannot preserve these layers. The already-cataloged PC exterior art also uses a different framing. The two observed exterior records retain the original draw. The GE variants still need a live composition witness.
 
-The current strict build (`sakura.exe` SHA-256 `38bed813262e937e7cfe328b8ab2e3ec35aef280e4996675558465ccfbde300f`) completes a 20,164-frame cold replay from this seed through theatre narration before the CG bank loads. Resuming the exact aperture state under strict AOT then stops at master PC `06080104`, which is file offset `0x104` of the byte-matched `ENDING.BIN` at `06080000`. The earlier static model used `00204000` as an inferred candidate origin. The observed high-WRAM placement and execution site are recorded in the [ending module analysis](ending-module-analysis.json). The state, input movies, captured frames and hashes remain in `local/work/codex-th1`.
+The earlier strict build (`sakura.exe` SHA-256 `38bed813262e937e7cfe328b8ab2e3ec35aef280e4996675558465ccfbde300f`) completes a 20,164-frame cold replay from this seed through theatre narration before the CG bank loads. Resuming the exact aperture state under strict AOT then stops at master PC `06080104`, which is file offset `0x104` of the byte-matched `ENDING.BIN` at `06080000`. The earlier static model used `00204000` as an inferred candidate origin. The observed high-WRAM placement and execution site are recorded in the [ending module analysis](ending-module-analysis.json). The state, input movies, captured frames and hashes remain in `local/work/codex-th1`.
 
 ## Verified color and sepia group photos
 
@@ -93,3 +93,102 @@ python tools/build_runtime.py recompile --toolchain C:/msys64/clang64
 The normal recompile command validates the dependency patch stack, generates the native blocks, and links `local/build/sakura/sakura.exe`. The isolated trial used project commit `127c5ca` and the 674,535-variant merged seed. The trial kept its own SDK, block order, generated code, object files, and executable.
 
 The build exited 0 after generating 674,535 native blocks with zero skipped. Its executable SHA-256 is `b08616243a4a89d14088b85cbdc5a6b9cdad56ce95c4b474d541088a320adba8`. Strict replay of both natural photo checkpoints verified the 2560×1440 replacement rectangle and exact Original and missing-donor fallbacks. A 290-frame `Fin` continuation matched the interpreter in guest hashes, both RGB captures, and SRAM. The disc-1 opening matched all 1,200 guest hashes and the title capture. The shared executable and release package are separate from this isolated build.
+
+## Exact 0183 candidate verification
+
+The IC06 development candidate at project commit `a3722eb` has executable
+SHA-256 `d29a9f17ecf980d96e2673166c20985d7960a6a0ac191233ffd79baa60c26c0a`.
+Its response file links the 353 ending blocks in table 1686 and the 94
+later EVT04 blocks in table 1687. Executable extraction returned 674,629
+unique address-and-byte rows. All 353 expected rows from the pinned English
+disc 2 `ENDING.BIN` and `config/ending-aot-ranges.json` are present.
+
+| Replay | Archived checkpoint | Length | Matched against archived interpreter |
+| --- | --- | ---: | --- |
+| Epilogue into aperture | `ending-bank2/end.state` | 5,305 frames | Every guest hash, SRAM, two native RGB captures |
+| Aperture through Fin | `ending-bank3/end.state` | 18,605 frames | Every guest hash, SRAM, six native RGB captures including the visible Fin at frame 18,000 |
+
+Both strict runs reported zero interpreted blocks. Their guest hash logs
+have SHA-256 `218e67cedc3cf58931fdc51fd28f5a47e9f20328de11c2fa6f531617d05e4fc7`
+and `0572b894e3187fd79be001a2ff16ff32046ed395cccdff1767c70c970b6edb71`,
+respectively. A cold English disc 1 opening also matched all 1,200 hashes
+and the native title capture against the archived strict baseline. The two
+English disc 2 group photographs passed the 135-frame Enhanced, Original
+and missing-donor controls at 1440p. Donor changes were confined to
+`(320,144)–(2240,1104)` on both photographs, and all five modes per photo
+matched in guest hashes.
+
+For AOT membership, run the following from the project root with the
+retained local candidate and prepared English disc 2. This checks the PE
+executable's linked rows, with no compilation.
+
+```powershell
+$trial = Join-Path $PWD 'local/work/ending-0183-reproduction'
+New-Item -ItemType Directory -Force $trial | Out-Null
+$env:TAISEN_ENDING_LINKED_ROWS = Join-Path $trial 'linked-blocks.txt'
+$candidate = Join-Path $PWD 'local/work/codex-th1/ic06-live/candidate.exe'
+python tools/extract_blocks_from_exe.py $candidate $env:TAISEN_ENDING_LINKED_ROWS
+@'
+import hashlib, json, os, sys
+from pathlib import Path
+sys.path.insert(0, "tools")
+from decode_saturn_bg import Iso
+disc = Iso("local/prepared/disc2/Track 01.iso")
+data = disc.content(disc.find("SAKURA1/ENDING.BIN"))
+assert len(data) == 178968
+assert hashlib.sha256(data).hexdigest() == "f85eff4cef05796bcbaedb29099795dcc9ebd61bf24d81d8fb819899eb4b1553"
+ranges = json.loads(Path("config/ending-aot-ranges.json").read_text())
+expected = {f"{0x06080000 + offset:08X} {data[offset:offset+size].hex().upper()}"
+            for offset, size in ranges}
+linked = set(Path(os.environ["TAISEN_ENDING_LINKED_ROWS"]).read_text().splitlines())
+assert len(linked) == 674629 and len(expected) == 353 and expected <= linked
+print("353 linked English disc 2 ending variants")
+'@ | python -
+```
+
+For the replay, use a fresh output directory and copy the corresponding
+checkpoint's `backup.bin` there before starting. All inputs below are
+under `local/work/codex-th1/final-battle-probes`. Use
+`ending-aot-entry-observe/input.movie` for the entry checkpoint and
+`ending-aot-full-observe/input.movie` for the aperture checkpoint. Each
+movie's directory also holds the interpreter hash log, final SRAM and
+native RGB references.
+
+```powershell
+$saved = Join-Path $PWD 'local/work/codex-th1/final-battle-probes'
+$disc = Join-Path $PWD 'local/prepared/disc2/game.cue'
+$dlls = Join-Path $PWD 'local/releases/SaturnTaisen-v0.2.10-alpha-win64/data'
+$env:PATH = "$dlls;$env:PATH"
+$env:SATRECOMP_STRICT_NATIVE = '1'
+foreach ($replay in @(
+    @{ Seed = 'ending-bank2'; Ref = 'ending-aot-entry-observe'; Count = 5305; Interval = 2400 },
+    @{ Seed = 'ending-bank3'; Ref = 'ending-aot-full-observe'; Count = 18605; Interval = 3000 }
+)) {
+    $seed = Join-Path $saved $replay.Seed
+    $ref = Join-Path $saved $replay.Ref
+    $out = Join-Path $trial $replay.Seed
+    New-Item -ItemType Directory $out | Out-Null
+    Copy-Item -LiteralPath "$seed/backup.bin" -Destination "$out/backup.bin"
+    Push-Location $out
+    try {
+        & $candidate --headless --unthrottled --mute --stats --disc $disc `
+          --frames $replay.Count --state-load "0:$seed/end.state" `
+          --movie "$ref/input.movie" --backup "$out/backup.bin" `
+          --hash-log "$out/frames.hash" --shot-every "$($replay.Interval):$out/shot-" `
+          *> "$out/run.log"
+        if ($LASTEXITCODE -ne 0) { throw "Strict replay failed" }
+    } finally { Pop-Location }
+    foreach ($file in @('frames.hash', 'backup.bin')) {
+        if ((Get-FileHash "$out/$file").Hash -ne (Get-FileHash "$ref/$file").Hash) {
+            throw "Replay mismatch in $file"
+        }
+    }
+    Select-String -Path "$out/run.log" -Pattern 'interpreted 0 \('
+}
+```
+
+Compare the matching `shot-*.png` files as decoded RGB. Private verification
+records are in `local/work/codex-ending-0183`. This evidence covers the
+specified 0183 candidate, these English checkpoints and the opening check.
+Other heroine endings, a complete campaign and package inclusion remain
+open.
