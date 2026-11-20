@@ -6558,9 +6558,11 @@
           },
           "2:/SAKURA1/BG2236.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/t55-sweep-draws.md#bg2236-opaque-and-translucent-phases",
             "pc": "SAKURA1/BG/BG2236.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/t55-sweep-draws.md#bg2236-opaque-and-translucent-phases",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2238.BIN": {
             "association": "observed",

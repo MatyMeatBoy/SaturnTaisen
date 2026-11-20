@@ -89,3 +89,20 @@ missing-donor control. The runs matched all 72 guest hashes and ended
 with zero interpreted blocks. This confirms reuse of the existing
 file in the settled composition. The earlier translucent-figure
 case remains open under THD05.
+
+### BG2236 opaque and translucent phases
+
+Visual examination of the earlier field-16499 comparison confirmed that
+the native capture contains the translucent figure and the current
+donor draw removes it. At this checkpoint the upper scene source is
+NBG2 with BG2236 palette `CBC4C20C2E46BEE0`. Patch 0255 limits the
+existing replacement to opaque BG2236, preserving the native
+composition while the figure is visible.
+
+The opaque checkpoint at field 16400 still draws the PC plate at
+2560 × 1440. Its 32-field donor and control pair changes 1,903,837
+pixels. At field 16499, the patched 72-field donor and control
+comparison produces identical PNGs with the figure present. Guest
+hashes and final SRAM match within both pairs, with zero interpreted
+blocks. This verifies the opaque donor and the translucent fallback.
+Mixing the figure with the HD plate and public packaging remain open.
