@@ -48,7 +48,7 @@
         "tile_archive": "SAKURA3/MINIMAIG.GCG",
         "tile_sha256": "ad6a3868a3233cefd64dd3438680b4f646b6eadd9d79fb818d2c872a54a3f882"
       },
-      "verified_disc": 2,
+      "verified_discs": [1, 2],
       "runtime_evidence": "docs/research/saturn-bg-format.md#maigo-reward-in-long-day"
     },
     {

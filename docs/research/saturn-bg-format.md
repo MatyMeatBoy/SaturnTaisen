@@ -1059,4 +1059,12 @@ versus the missing-donor control, match at the sampled frame.
 The 450-field Rankings entry and 660-field return have matching
 guest hashes and SRAM per pair. Once the rankings cover the
 illustration, all sampled captures and the return fade match
-the control. The disc 1 reward path and public packaging remain open.
+the control. Patch 0251 ships in v0.2.20-alpha.
+
+On English disc 1, 18,760 strict fields from a cold start with unlocked
+SRAM reach the same Perfect result at 49.50 seconds with zero interpreted
+blocks. The reward reads all 114 MINIMAIG.GCG sectors from FAD 268190.
+A 32-field comparison at 2560 × 1440 on the published runtime changes
+2,223,687 pixels in the same rectangle, and all guest hashes and final
+SRAM match. Only the donor profile logs `minigame picture: BGMAIGO drew`.
+Both verified disc occurrences use one PC file.
