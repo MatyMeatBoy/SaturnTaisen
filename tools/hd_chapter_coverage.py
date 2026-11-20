@@ -163,6 +163,7 @@ CHAPTER_WITNESSES = {
     (2, '/SAKURA1/NC81.BIN'): (9, CHAPTER9_ROUTE_REPORT),
     (1, '/SAKURA2/MAP10.BIN'): (7, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
     (2, '/SAKURA2/MAP19.BIN'): (10, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
+    (1, '/SAKURA1/IC03.BIN'): (3, 'docs/research/ic03-intermission-witness.md'),
     (1, '/SAKURA1/IC0501.BIN'): (5, 'docs/research/ic0501-intermission-witness.md'),
     (1, '/SAKURA1/NC3058.BIN'): (5, CHAPTER5_ROUTE_REPORT),
     (2, '/SAKURA1/BG2247.BIN'): (8, 'docs/research/bg2247-native-pan.md'),
@@ -570,6 +571,8 @@ def build(root, index_dir, portrait_audit):
                 row['verified_in_game'] = disc == 1
                 if disc == 1:
                     row['runtime_evidence'] = 'docs/research/ic01-hd-intermission.md'
+            elif (disc, path) == (1, '/SAKURA1/IC03.BIN'):
+                row.update(status='hd', verified_in_game=True, runtime_evidence='docs/research/ic03-intermission-witness.md')
             elif (disc, path) == (1, '/SAKURA1/IC0501.BIN'):
                 row.update(status='hd', verified_in_game=True,
                            runtime_evidence='docs/research/ic0501-intermission-witness.md#enhanced-presentation')
