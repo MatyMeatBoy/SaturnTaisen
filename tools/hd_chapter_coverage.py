@@ -100,6 +100,7 @@ TH6_TRACE_REPORT = 'docs/research/hd-chapter-6.md#traced-attribution-th6'
 CHAPTER9_ROUTE_REPORT = 'docs/research/hd-chapter-9.md#native-route-observations'
 CHAPTER9_ROUTE_FILES = {'BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100', 'NC81', 'NC3018'}
 NATIVE_ROUTE_FILES = {
+    1: ({'NC95'}, CHAPTER1_ROUTE_REPORT),
     3: ({'BG1198'}, 'docs/research/th3-native-attribution.md'),
     5: (CHAPTER5_ROUTE_FILES, CHAPTER5_ROUTE_REPORT),
     6: ({'BG1008', 'BG1021', 'NC97'}, TH6_TRACE_REPORT),
@@ -307,6 +308,7 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 EXACT_BODY_DRAWS = {
+    (1, '/SAKURA1/NC95.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc95-upstairs-body'),
     (1, '/SAKURA1/NC3173.BIN'): (1, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
     (2, '/SAKURA1/NC3285.BIN'): (10, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
     (2, '/SAKURA1/NC3286.BIN'): (10, 'docs/research/nc3286-ending-cutout.md'),
@@ -383,6 +385,7 @@ CHAPTER_WITNESSES = {
     **{(1, f'/SAKURA1/{name}.BIN'): (1, CHAPTER1_ROUTE_REPORT)
        for name in CHAPTER1_ROUTE_SCENES + CHAPTER1_ROUTE_BODIES},
     **SCENE_DRAWS,
+    (1, '/SAKURA1/NC95.BIN'): EXACT_BODY_DRAWS[(1, '/SAKURA1/NC95.BIN')],
     (1, '/SAKURA1/NC20.BIN'): (1, BODY_REPORT),
     (1, '/SAKURA1/NC30.BIN'): (1, BODY_REPORT),
     (2, '/SAKURA1/BG1285.BIN'): (10, BG1285_REPORT),

@@ -4192,6 +4192,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/NC95.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#verified-nc95-upstairs-body",
+            "pc": "SAKURA1/NC/NC95.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-nc95-upstairs-body",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/NC97.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",

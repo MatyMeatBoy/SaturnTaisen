@@ -171,3 +171,7 @@ Patch 0245 adds the 24 × 16 native strips at file offsets 40336 and 41488, pair
 From the post-minigame state the 4,500-field confirm route reaches the lobby and reads BG1008. A directional move and confirm opens the second floor. The 1,200-field strict continuation reads `BG1064.BIN` at FAD 140491 and `NC95.BIN` at FAD 165781. Both segments report zero interpreted blocks.
 
 From the upstairs continuation field 599, the 680,541-variant candidate `2c129cae` replays 56 strict fields with matching guest hashes and SRAM in both arms. At 2560 × 1440 the exact `BG1064.SPR` donor changes 1,331,893 pixels in each of four samples, confined to (272,29)–(2288,1037). The test isolates the background donor and preserves the native actor and dialogue. Evidence is under `local/work/codex-th6-current/bg1064-upstairs-1440`. Package verification remains open.
+
+### Verified NC95 upstairs body
+
+A second 56-field strict A/B from the same upstairs checkpoint adds only the PC `SAKURA1/NC/NC95.SPR`. The candidate reports nine PC parts. Four 2560 × 1440 samples each change 673,461 pixels within the bounds (853,29)–(1840,1037). The donor and missing-donor arms have identical guest hashes and final SRAM. The witness records this episode 6 body draw and preserves the separate episode 1 occurrence. Face animation and package inclusion remain open. Private evidence is in `local/work/codex-th6-current/nc95-upstairs-1440`.
