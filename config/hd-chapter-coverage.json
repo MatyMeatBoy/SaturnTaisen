@@ -147,8 +147,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/NC/NC81.SPR",
+            "runtime_evidence": "docs/research/thd11-episode1-bodies.md#nc81-on-the-episode-1-late-theater-route",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC82.BIN": {
             "association": "observed",

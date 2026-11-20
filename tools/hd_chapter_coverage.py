@@ -334,6 +334,7 @@ NATIVE_ROUTE_DRAWS = {
 }
 
 EXACT_BODY_DRAWS = {
+    (1, '/SAKURA1/NC81.BIN'): (1, 'docs/research/thd11-episode1-bodies.md#nc81-on-the-episode-1-late-theater-route'),
     (1, '/SAKURA1/NC3004.BIN'): (1, 'docs/research/thd11-episode1-bodies.md#nc3004-at-the-episode-1-hanami'),
     (2, '/SAKURA1/NC3021.BIN'): (9, 'docs/research/hd-chapter-9.md#nc3021-face-registration-witness'),
     (1, '/SAKURA1/NC24.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602'),

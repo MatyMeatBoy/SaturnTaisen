@@ -1,6 +1,6 @@
 # THD11: Chapter 1 large bodies (19 observed NC)
 
-This is the review table for the 19 NC bodies named in [Chapter 1 HD coverage](hd-chapter-1.md). It was compiled from the tracked evidence (coverage register, face reports, body-format report). The first-frame brackets are from the full cold route (`hd-chapter-1.md`). Follow-up replay evidence for NC95 and NC3004 appears below.
+This is the review table for the 19 NC bodies named in [Chapter 1 HD coverage](hd-chapter-1.md). It was compiled from the tracked evidence (coverage register, face reports, body-format report). The first-frame brackets are from the full cold route (`hd-chapter-1.md`). Follow-up replay evidence for NC95, NC3004 and NC81 appears below.
 
 State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed in the route with a PC donor named; *connected* = runtime draws the PC body; *verified* = `verified_in_game` with a paired capture. Expression = how eyes (E) and mouth (M) are chosen. Fade and occlusion are only listed where a report witnesses them; "not witnessed" is not a negative result.
 
@@ -19,7 +19,7 @@ State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed 
 | NC95 | Upstairs (103,080) | 9 parts | **episodes 1 and 6 verified** | ep 1: one eye and mouth pair verified; ep 6: two faces verified | not witnessed | not witnessed |
 | NC96 | Late chapter (105,600) | 272x320 body 0 | verified | all 9 registered (patch 0179) | native blend retained | not witnessed |
 | NC55 | Iris room (189,240) | 368x320 body 5 | verified | 5 textures registered (patch 0168), 3 E + closed Ms; others fallback | none seen | not witnessed |
-| NC81 | Theater sortie (245,940) | 208x144 | **episode 1 occurrence NOT verified** (verified in chapter 9: neck underlay patch 0149, E 15-17 patch 0241, M native) | ep 9 only | n/a | n/a |
+| NC81 | Theater sortie (245,940) | 208x144 | **late Episode 1 and Episode 9 draws verified** | Episode 1 eye 15 and mouth 54 | native blend verified | initial sortie and other expressions pending |
 | NC12 | Sortie, Sakura (248,400) | 346x320 body 2 | verified | 4 E + 6 M (patch 0184) | earlier blend identical | native blend |
 | NC51 | Sortie, Iris (248,700) | 336x320 body 1 | verified | 3 E + 6 M (patch 0177) | earlier blend native | native blend |
 | NC21 | Sortie, Sumire (249,000) | 320x320 body 1 | verified | 3 E + 6 M (patch 0180) | blend identical | native blend |
@@ -28,14 +28,14 @@ State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed 
 
 ## Findings
 
-- 18 of 19 are `verified_in_game`. **NC81** (theater sortie) still needs chapter 1 verification.
+- All 19 bodies have a verified Episode 1 draw. The late theater witness verifies NC81. The initial sortie and unsampled expression phases remain separate checks.
 - Bodies with an extra pose without a control: NC3250 (mouths other than ordinal 4), NC11 (LIPS layouts other than the hallway), NC20 and NC30 (runs beyond the verified groups), NC25 (poses other than the closed-eye smile), NC55 (poses beyond the five observed textures), NC82 and NC97 (fallback frames).
 - Fade-in/out has a witness only for NC3250 and NC82; the other 17 need a fade control (dissolve plus donor-absent control) before the column can be "verified".
 - Neck/blend controls: only NC81 (chapter 9) and NC11 (LIPS) have neck or panel blend controls; the sortie bodies rely on "earlier blend identical".
 
 ## Proposed batches
 
-1. NC81 (ch 1): natural-route checkpoints, 2560x1440 Enhanced vs Original, donor present vs absent, identical guest hashes with 0 interpreted.
+1. NC81 initial sortie and additional expressions: extend the late theater witness to the first appearance.
 2. NC3250, NC82, NC97 fade controls and extra poses.
 3. NC20, NC30, NC25, NC55 extra expression groups.
 
@@ -60,3 +60,13 @@ The transition checkpoint logs a blend over NC3004. Nine samples through offset 
 The sampled eye phases correspond to PC ordinals 1 and 2. Projection at the authored (217, 63) matches 2,007/2,023 and 2,044/2,059 flat opaque samples. The current refine pass places these phases at (218, 63), one donor pixel to the right, with no visible seam in crops of either phase. The closed mouth matches all 862 projected pixels for ordinal 4 at the authored (251, 118). The unsampled closed-eye phase reports a different heuristic offset and was not visually certified. No runtime patch is required for the witnessed draw.
 
 Existing 0243 runtime SHA-256 `129E505D229EB3520A9AD4E52F6873C2BC87F609DF15F3A520ABFCB086EA5C19`. This evidence verifies the Episode 1 occurrence and the observed blend fallback. Other expressions and package inclusion remain open.
+
+## NC81 on the Episode 1 late theater route
+
+A retained English disc 1 checkpoint from the continuous Chapter 1 route shows the 208 × 144 NC81 body at (64, 8), texture FNV-1a `CAEE5C58F639F871`. The relay checkpoint is `aliases-0188/14020.state`, around global field 253,100. Replaying the original input suffix matches the next 180 archived guest hashes (relay fields 14,021–14,200). All five arms have identical final SRAM and zero interpreted blocks.
+
+At 2560 × 1440 on Direct3D11, supplying only NC81.SPR changes 739,293 pixels at offsets 5 and 12, all within (615, 29)–(2048, 1037). Each of these positive captures agrees with 1,113 independently projected flat opaque pixels of eye ordinal 15 at body-relative (138, 74), and 4,589 of mouth ordinal 54 at (143, 119). The runtime matches the corresponding native texture hashes `046C70F127834B74` and `DF6C28F40A21C707`. The ten captures from offset 26 onward match the donor-absent control. The renderer logs the native blend guard in this window.
+
+Enhanced with a truncated donor matches Enhanced with no donor. The Original arms with and without the donor match across all 12 screenshots. The existing patch 0243 runtime SHA-256 is `129E505D229EB3520A9AD4E52F6873C2BC87F609DF15F3A520ABFCB086EA5C19`.
+
+The late Episode 1 occurrence is verified independently of [the Episode 9 storage scene](nc80-nc81-registered-faces.md). The initial NC81 appearance and the other eye and mouth phases are outside this capture window. There is no runtime change or added integrated asset.
