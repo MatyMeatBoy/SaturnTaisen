@@ -124,6 +124,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Chapter 2 tactical progression](chapter2-tactical-progression.md) — Continue, orders, enemy phase, and ally attack with AOT/interpreter comparison.
 - [EVT overlay registry](evt-overlay-registry.md)
 - [Registered narrative foreground cut-outs](narrative-foreground-cutouts.md)
+- [Additional Chapter 3, 6 and 8 foregrounds](narrative-foreground-followup.md)
 - [Iris and Ogami’s MAP13 combo](iris-ogami-combo.md) records the opaque character pose and native effects.
 - [bg-matching-progress.md](bg-matching-progress.md): Running log of the PC BG scene-image matching by screenshot; counts only.
 - [NC3058 cut-out at 1440p](nc3058-cutout-1440p.md) records the natural scene, native mask and facial fallback.

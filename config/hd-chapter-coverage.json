@@ -3266,10 +3266,11 @@
           },
           "1:/SAKURA1/BG3289.BIN": {
             "association": "observed",
-            "evidence": "docs/research/bg2290-native-pan.md",
+            "evidence": "docs/research/narrative-foreground-followup.md",
             "pc": "SAKURA1/BG/BG3289.SPR",
-            "reason": "cut-out on a key colour or blank picture, not replaced by design",
-            "status": "excluded"
+            "runtime_evidence": "docs/research/narrative-foreground-followup.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/IC03.BIN": {
             "association": "observed",
@@ -4278,17 +4279,19 @@
           },
           "1:/SAKURA1/BG4059.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th6-native-attribution.md",
+            "evidence": "docs/research/narrative-foreground-followup.md",
             "pc": "SAKURA1/BG/BG4059.SPR",
-            "reason": "cut-out on a key colour or blank picture, not replaced by design",
-            "status": "excluded"
+            "runtime_evidence": "docs/research/narrative-foreground-followup.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG4119.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th6-native-attribution.md",
+            "evidence": "docs/research/narrative-foreground-followup.md",
             "pc": "SAKURA1/BG/BG4119.SPR",
-            "reason": "cut-out on a key colour or blank picture, not replaced by design",
-            "status": "excluded"
+            "runtime_evidence": "docs/research/narrative-foreground-followup.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/TITLE6.BIN": {
             "association": "observed",
@@ -4872,10 +4875,11 @@
           },
           "2:/SAKURA1/BG4187.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th8-native-attribution.md",
+            "evidence": "docs/research/narrative-foreground-followup.md",
             "pc": "SAKURA1/BG/BG4187.SPR",
-            "reason": "cut-out on a key colour or blank picture, not replaced by design",
-            "status": "excluded"
+            "runtime_evidence": "docs/research/narrative-foreground-followup.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/IC08.BIN": {
             "association": "observed",

@@ -207,7 +207,8 @@
       "patches/0210-sakura-registered-narrative-cutouts.patch",
       "patches/0211-sakura-preserve-load-bracket-line-capture.patch",
       "patches/0212-sakura-windows-unicode-pc-assets.patch",
-      "patches/0213-sakura-hd-save-compact-rails.patch"
+      "patches/0213-sakura-hd-save-compact-rails.patch",
+      "patches/0215-sakura-narrative-cutout-followup.patch"
     ]
   }
 }

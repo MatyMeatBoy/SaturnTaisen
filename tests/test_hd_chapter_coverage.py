@@ -244,11 +244,11 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 8)
-        for name, status in (('BG1050', 'hd'), ('BG1212', 'unpaired'), ('BG4187', 'excluded'), ('TITLE8', 'excluded')):
+        for name, status in (('BG1050', 'hd'), ('BG1212', 'unpaired'), ('BG4187', 'hd'), ('TITLE8', 'excluded')):
             with self.subTest(scene=name):
                 row = chapter['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
                 self.assertEqual((row['association'], row['status']), ('observed', status))
-                self.assertEqual(bool(row.get('verified_in_game')), name == 'BG1050')
+                self.assertEqual(bool(row.get('verified_in_game')), name in ('BG1050', 'BG4187'))
                 self.assertNotIn(f'1:/SAKURA1/{name}.BIN', chapter['scene-pictures'])
         self.assertNotIn('2:/SAKURA1/BG1341.BIN', chapter['scene-pictures'])
 
@@ -319,6 +319,22 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(dream['runtime_evidence'], dream['evidence'])
         self.assertFalse(catalog['unassigned']['scene-pictures']['1:/SAKURA1/BG2093.BIN'].get('verified_in_game'))
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
+
+    def test_narrative_cutout_followup_has_exact_disc_scope(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        rows = dict(catalog['unassigned']['scene-pictures'])
+        for chapter in catalog['chapters']:
+            rows.update(chapter['resources']['scene-pictures'])
+        for disc, name in ((1, 'BG3289'), (1, 'BG4059'), (1, 'BG4119'), (2, 'BG4187')):
+            with self.subTest(name=name):
+                row = rows[f'{disc}:/SAKURA1/{name}.BIN']
+                self.assertEqual(row['status'], 'hd')
+                self.assertTrue(row['verified_in_game'])
+                self.assertEqual(row['runtime_evidence'], 'docs/research/narrative-foreground-followup.md')
+                other = rows[f'{3 - disc}:/SAKURA1/{name}.BIN']
+                self.assertEqual(other['status'], 'excluded')
+                self.assertFalse(other.get('verified_in_game'))
 
     def test_registered_narrative_cutouts_are_disc_one_only(self):
         root = Path(__file__).resolve().parents[1]
