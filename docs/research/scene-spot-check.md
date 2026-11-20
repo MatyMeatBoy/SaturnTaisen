@@ -35,7 +35,7 @@ Owner request (2026-11-19): shards connect pictures without checking each one, s
 | 29 | SAKURA1/BG/BG2015.SPR | 1:/SAKURA1/BG2015.BIN | no |
 | 30 | SAKURA1/BG/BG2028.SPR | 1:/SAKURA1/BG2028.BIN | no |
 | 31 | SAKURA1/BG/BG2041.SPR | 1:/SAKURA1/BG2041.BIN | no |
-| 32 | SAKURA1/BG/BG2053.SPR | 1:/SAKURA1/BG2053.BIN | no |
+| 32 | SAKURA1/BG/BG2053.SPR | 2:/SAKURA1/BG2053.BIN | yes, Chapter 9 |
 | 33 | SAKURA1/BG/BG2064.SPR | 1:/SAKURA1/BG2064.BIN | no |
 | 34 | SAKURA1/BG/BG2075.SPR | 1:/SAKURA1/BG2075.BIN | no |
 | 35 | SAKURA1/BG/BG2086.SPR | 1:/SAKURA1/BG2086.BIN | no |
@@ -128,6 +128,22 @@ is 0.137/0.129/0.127 with the donor and 46.951/45.679/40.204 without it
 at each of those three fields. The comparison is confined to this
 English disc 1 witness. Private samples and replay commands are under
 `local/work/codex-th1/bg2034-live/`.
+
+## BG2053 on disc 2
+
+The Chapter 9 route enters Iris's room from the door-knock checkpoint.
+Two 1,440-field English Enhanced replays at 2560×1440 load disc 2's
+BG2053 at FAD 124053. They use the same executable, bundled presentation
+art and recorded inputs. Only the donor replay has BG2053.SPR installed.
+All guest hashes and final SRAM match, with zero interpreted blocks.
+
+At fields 720 and 900 the changes are confined to the picture rectangle
+(272,29)–(2288,1037). Iris, the bear and the bedding keep the Saturn
+framing. Seven other sampled full frames match. In the patch of bedding
+at (1750,480)–(2100,740), mean absolute RGB error against independently
+decoded PC subimage 0 falls from 18.76 to 4.26 at both fields. This confirms
+the existing scene replacement on disc 2. The private replay and receipts
+are under `local/work/codex-th1/bg2053-live/`.
 
 ## BG1007, BG1046 and BG1058 on disc 1
 

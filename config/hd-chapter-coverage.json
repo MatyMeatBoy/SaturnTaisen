@@ -5145,6 +5145,14 @@
             "pc": "SAKURA1/BG/BG1176.SPR",
             "status": "hd"
           },
+          "2:/SAKURA1/BG2053.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#bg2053-on-disc-2",
+            "pc": "SAKURA1/BG/BG2053.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg2053-on-disc-2",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2093.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2093-dream-transition.md",
@@ -17296,11 +17304,6 @@
       "2:/SAKURA1/BG2052.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2052.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2053.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2053.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2054.BIN": {
