@@ -264,3 +264,16 @@ names and live disc-2 coverage stay open. Local receipts are under
 The two Spanish installer deltas include the eight tactical status labels in all 27 WKL banks and the three inventory labels from /SAKURA on both discs. The normal installer updated both prepared English v2.1 discs with subtitled video in an isolated install. The resulting Spanish images matched the candidate SHA-256 hashes. The regenerated manifest changes only the Spanish records, and LOAD.BIN compares byte for byte against the previous Spanish source on both discs. The validated deltas are distributed in [v0.2.16.1-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.16.1-alpha). The release uses the v0.2.16-alpha executable. The ZIP passed CRC and SHA-256 checks for the 158 manifested files.
 
 Using the packaged v0.2.16.1-alpha executable and the Spanish disc 1 produced by the installer, the 2,940-field strict opening replay completed without interpreted blocks. The CARGANDO and fade captures at fields 2,440, 2,520, 2,600, 2,680 and 2,760 were pixel-identical at 2560 × 1440 to the v0.2.16-alpha legacy Spanish-disc replay. The guest hashes differ from field index 109 between these disc versions. This is a visual regression result.
+
+
+## Allied tactical special attacks in Spanish
+
+The WKL recipe translates six allied special-attack names across the 27 banks on both discs. The guarded 88 × 16 replacement preserves the native palette and record layout. All 162 PRS edits fit in their existing spans, with at least 33 bytes spare. Maria's Snegurochka retains its proper name. The remaining short commands and enemy labels need their own coverage.
+
+Sakura and Kohran displayed Divinidad floral and Minirrobots in natural MAP02 Info replays at 1440p. Controlled Original and Enhanced comparisons reproduced the translated texture inside the attack-name rectangle. The guest fields ran strictly and final SRAM agreed within each comparison.
+
+## Spanish episode and loading art on disc 2
+
+The previous Spanish disc 2 retained all ten English TITLE files and the English LOAD file. The Spanish language layer now carries the same localized title and loading files as disc 1. Both English discs have identical source resources for these eleven files. The replacements retain the palette and cell-table headers, file sizes and disc extents. Disc 2 uses the same ten Enhanced lettering keys as disc 1.
+
+The packaged v0.2.16.1-alpha executable was replayed from cold Continue for 6,600 strict fields with the old and corrected Spanish disc 2. Three 1440p samples covering steady loading and its fade match all 9,504 expected native letter texels per sample: English on the old disc and CARGANDO on the corrected disc. Other sampled frames match RGB and the two runs finish with identical SRAM. The title files and generated center keys match disc 1 exactly. Natural visual proof of all ten Episode cards remains open.
