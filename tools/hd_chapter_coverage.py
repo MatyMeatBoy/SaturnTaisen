@@ -9,6 +9,8 @@ from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
 IC_TABLE_IDS = {row['id'] for row in json.loads((ROOT / 'config/hd-ic-table.json').read_text(encoding='utf-8'))['entries']}
+FULL_FRAME_ROWS = {row['name']: row for row in json.loads((ROOT / 'config/hd-full-frames.json').read_text(encoding='utf-8'))['rows']}
+FULL_FRAME_REPORT = 'docs/research/bbg-full-frame.md'
 sys.path.insert(0, str(ROOT / 'tools'))
 import gen_item_table  # noqa: E402
 CHAPTERS = range(1, 11)
@@ -576,6 +578,13 @@ def build(root, index_dir, portrait_audit):
                     # TP2: a row of the scroll-picture table (config/hd-scroll-pictures.json) is drawn by the runtime's table path.
                     row['status'] = 'hd'
                     row.setdefault('runtime_evidence', SCROLL_REPORT)
+                elif disc == 2 and path == f'/SAKURA2/{name}.BIN' and name in FULL_FRAME_ROWS:
+                    # TP2b (patch 0186): full-frame row. In the runtime table with an exact native-frame guard and a native
+                    # fallback; no frame of it exists in any saved state yet, so it is never `hd` here.
+                    row.update(status='wired-unverified', verified_in_game=False, pc=FULL_FRAME_ROWS[name]['pc_file'],
+                               runtime_table='config/hd-full-frames.json', runtime_evidence=FULL_FRAME_REPORT,
+                               reason=('in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, '
+                                       'native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture'))
                 elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
                     row['runtime_evidence'] = SCENE_DRAWS[(disc, path)][1]

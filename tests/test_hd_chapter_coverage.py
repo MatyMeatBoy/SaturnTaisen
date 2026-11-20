@@ -53,6 +53,21 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertFalse(rows[key]['verified_in_game'], key)
             self.assertEqual(rows[key]['pc'], entry['pc_file'])
 
+    def test_full_frame_rows_are_wired_but_never_hd_without_a_witness(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        table = json.loads((root / 'config/hd-full-frames.json').read_text(encoding='utf-8'))
+        rows = dict(catalog['unassigned']['scene-pictures'])
+        for chapter in catalog['chapters']:
+            rows.update(chapter['resources']['scene-pictures'])
+        for entry in table['rows']:
+            row = rows[f"2:/SAKURA2/{entry['name']}.BIN"]
+            self.assertEqual(row['status'], 'wired-unverified', entry['name'])
+            self.assertFalse(row['verified_in_game'], entry['name'])
+            self.assertEqual(row['pc'], entry['pc_file'])
+        for name in table['skipped']:
+            self.assertNotEqual(rows[f'2:/SAKURA2/{name}.BIN']['status'], 'wired-unverified', name)
+
     def test_published_catalog_keeps_replacement_and_occurrence_separate(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf8'))

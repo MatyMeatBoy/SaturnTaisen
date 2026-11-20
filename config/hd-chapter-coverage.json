@@ -19470,8 +19470,11 @@
       "2:/SAKURA2/BBG238.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG238.SPR",
-        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture",
+        "runtime_evidence": "docs/research/bbg-full-frame.md",
+        "runtime_table": "config/hd-full-frames.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "2:/SAKURA2/BBG239.BIN": {
         "association": "unknown",
@@ -19482,26 +19485,38 @@
       "2:/SAKURA2/BBG240.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG240.SPR",
-        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture",
+        "runtime_evidence": "docs/research/bbg-full-frame.md",
+        "runtime_table": "config/hd-full-frames.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "2:/SAKURA2/BBG241.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG241.SPR",
-        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture",
+        "runtime_evidence": "docs/research/bbg-full-frame.md",
+        "runtime_table": "config/hd-full-frames.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "2:/SAKURA2/BBG242.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG242.SPR",
-        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture",
+        "runtime_evidence": "docs/research/bbg-full-frame.md",
+        "runtime_table": "config/hd-full-frames.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "2:/SAKURA2/BBG243.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG243.SPR",
-        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture",
+        "runtime_evidence": "docs/research/bbg-full-frame.md",
+        "runtime_table": "config/hd-full-frames.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "2:/SAKURA2/BBG244.BIN": {
         "association": "unknown",
@@ -19536,8 +19551,11 @@
       "2:/SAKURA2/BBG300.BIN": {
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG300.SPR",
-        "reason": "size [320, 224], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "in the runtime full-frame table (patch 0186, measured PC crop, exact native-frame guard, native fallback); not seen drawn in game, and the PC pose and framing differ from the Saturn picture",
+        "runtime_evidence": "docs/research/bbg-full-frame.md",
+        "runtime_table": "config/hd-full-frames.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "2:/SAKURA2/EVE0101.BIN": {
         "association": "unknown",
