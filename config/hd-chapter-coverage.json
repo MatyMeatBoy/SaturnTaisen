@@ -5455,7 +5455,10 @@
           },
           "2:/SAKURA1/TITLE10.BIN": {
             "association": "inferred",
-            "status": "unknown"
+            "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+            "pc": "SAKURA1/TITLE/TITLE10.SPR",
+            "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
+            "status": "excluded"
           }
         },
         "tactical-maps": {
@@ -15737,7 +15740,10 @@
       },
       "1:/SAKURA1/TITLE10.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+        "pc": "SAKURA1/TITLE/TITLE10.SPR",
+        "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
+        "status": "excluded"
       },
       "1:/SAKURA1/TITLE8.BIN": {
         "association": "unknown",

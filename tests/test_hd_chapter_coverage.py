@@ -267,12 +267,11 @@ class ChapterCoverageTest(unittest.TestCase):
         groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
         scenes = {key: row for group in groups for key, row in group['scene-pictures'].items()}
         for disc in (1, 2):
-            for episode in range(1, 10):
+            for episode in range(1, 11):
                 row = scenes[f'{disc}:/SAKURA1/TITLE{episode}.BIN']
                 self.assertEqual(row['status'], 'excluded')
                 self.assertEqual(row['pc'], f'SAKURA1/TITLE/TITLE{episode}.SPR')
                 self.assertFalse(row.get('verified_in_game'))
-            self.assertEqual(scenes[f'{disc}:/SAKURA1/TITLE10.BIN']['status'], 'unknown')
 
     def test_bg2238_only_records_the_witnessed_disc_and_chapter(self):
         root = Path(__file__).resolve().parents[1]
