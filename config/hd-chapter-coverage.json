@@ -4550,9 +4550,11 @@
           },
           "1:/SAKURA1/BG1047.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "evidence": "docs/research/hd-chapter-6.md#verified-bg1047-draw",
             "pc": "SAKURA1/BG/BG1047.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-bg1047-draw",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1199.BIN": {
             "association": "observed",
