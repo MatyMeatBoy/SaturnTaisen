@@ -96,11 +96,13 @@ TH5_TRACE_REPORT = 'docs/research/hd-chapter-5.md#traced-attribution-th5'
 CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
 CHAPTER5_PORTRAIT_DRAWS = ('010f', '016a')
 CHAPTER5_PORTRAIT_REPORT = 'docs/research/hd-chapter-5.md#verified-0501fce-portrait-bases'
+TH6_TRACE_REPORT = 'docs/research/hd-chapter-6.md#traced-attribution-th6'
 CHAPTER9_ROUTE_REPORT = 'docs/research/hd-chapter-9.md#native-route-observations'
 CHAPTER9_ROUTE_FILES = {'BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100', 'NC81', 'NC3018'}
 NATIVE_ROUTE_FILES = {
     3: ({'BG1198'}, 'docs/research/th3-native-attribution.md'),
     5: (CHAPTER5_ROUTE_FILES, CHAPTER5_ROUTE_REPORT),
+    6: ({'BG1008', 'BG1021', 'NC97'}, TH6_TRACE_REPORT),
     9: (CHAPTER9_ROUTE_FILES, CHAPTER9_ROUTE_REPORT),
 }
 NATIVE_ROUTE_PORTRAITS = {
@@ -356,6 +358,8 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/BG4119.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG1025.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG4059.BIN'): (6, 'docs/research/th6-native-attribution.md'),
+    **{(1, f'/SAKURA1/{name}.BIN'): (6, TH6_TRACE_REPORT)
+       for name in ('BG1003', 'BG1047', 'NC40')},
     (1, '/SAKURA1/TITLE3.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     **{(1, f'/SAKURA1/{name}.BIN'): (3, 'docs/research/bg2290-native-pan.md')
        for name in ('BG2123', 'BG3123', 'BG2289', 'BG3289', 'BG2290')},
