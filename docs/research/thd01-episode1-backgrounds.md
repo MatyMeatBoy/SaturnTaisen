@@ -28,7 +28,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 | BG1101 | BG1101.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening |
 | BG1116 | BG1116.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1 |
 | BG1119 | BG1119.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#observations-from-the-full-cold-route |
-| BG1120 | BG1120.SPR | conectado sin verificar | variante de iluminación de BG1119 | - |
+| BG1120 | BG1120.SPR | conectado y verificado | variante de iluminación de BG1119 | docs/research/thd01-episode1-backgrounds.md#bg1120-hd-con-la-iluminacion-nocturna |
 | BG1143 | BG1143.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1 |
 | BG1193 | BG1193.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
 | BG1207 | BG1207.SPR | conectado y verificado |  | docs/research/bg1207-pan.md |
@@ -53,7 +53,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 Donantes PC distintos: 43.
 - `BG2004.SPR` se reutiliza en BG2004, BG2010.
 
-Apariciones Saturn: conectado y verificado: 41, conectado sin verificar: 3
+Apariciones Saturn: conectado y verificado: 42, conectado sin verificar: 2
 
 ## Verificacion en juego a 2560x1440 (2026-11-20, con `art/` junto al exe)
 
@@ -141,3 +141,22 @@ el selector consultó la paleta compartida de BG1100/BG1101
 no cambió el PNG final ni los hashes del juego. La siguiente prueba
 debe validar la selección por fuente visible y proteger la
 composición superpuesta antes de acreditar un dibujo HD.
+
+### BG1120 HD con la iluminacion nocturna
+
+La traza del selector identificó que NBG2 usa el ajuste RGB de
+(-16,-16,-16). El parche 0252 verifica la paleta y celdas de BG1120,
+ese ajuste y la correspondencia entre la fuente visible y la superior
+antes de sustituir los píxeles de NBG2. La textura oscurecida se prepara
+en el trabajo de decodificación asíncrono y se guarda por separado de
+la textura con iluminación neutra.
+
+Desde el estado 189.250 del disco 1, las parejas Enhanced de 72 cuadros
+con y sin donante cambiaron 1.198.030 píxeles a 2560×1440 y 611.318 a
+1920×1080. A 1440p todos los cambios quedaron en el rectángulo Zoom
+(272,29)–(2288,1037). Los hashes de juego y el SRAM coinciden en la
+pareja 1440p. En modo Original, las capturas, hashes y SRAM con y sin
+donante coincidieron. Las pruebas fueron estrictas, con cero bloques
+interpretados. El candidato tiene SHA-256
+`8446a95bb0485a77f0d58589d64b1c034d8d41d3ab7424ff01708bf6b4660b19`.
+Queda pendiente incluir el parche en una versión pública.

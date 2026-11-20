@@ -2299,6 +2299,15 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1120.BIN": {
+            "association": "observed",
+            "cold_run_frame": 189250,
+            "evidence": "docs/research/thd01-episode1-backgrounds.md#bg1120-hd-con-la-iluminacion-nocturna",
+            "pc": "SAKURA1/BG/BG1120.SPR",
+            "runtime_evidence": "docs/research/thd01-episode1-backgrounds.md#bg1120-hd-con-la-iluminacion-nocturna",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1143.BIN": {
             "association": "observed",
             "evidence": "docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1",
@@ -14100,12 +14109,6 @@
       "1:/SAKURA1/BG1117.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1117.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1120.BIN": {
-        "association": "unknown",
-        "cold_run_frame": 189250,
-        "pc": "SAKURA1/BG/BG1120.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1122.BIN": {
