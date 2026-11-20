@@ -128,6 +128,8 @@ EVE_PAIRS = {
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
+    ('SAKURA1/SYSTEM/SISTEM.SPR', 8): ('patch 0150, port/system_brackets.h: left load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),
+    ('SAKURA1/SYSTEM/SISTEM.SPR', 9): ('patch 0150, port/system_brackets.h: right load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),
     ('SAKURA1/SYSTEM/FONT_CSL.SPR', 0): ('patch 0093, port/system_brackets.h: left inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
     ('SAKURA1/SYSTEM/FONT_CSL.SPR', 1): ('patch 0093, port/system_brackets.h: right inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
     ('SAKURA1/SYSTEM/SIS_ICON.SPR', 2): ('patch 0112, port/load_disc_icon.h: CD-1 load emblem', MENU_REPORT + '#t110b-cd-1-emblem-in-the-load-menu'),
@@ -669,9 +671,12 @@ def build(root, index_dir, portrait_audit):
         for image in file['images']:
             if (name, image['index']) in SYSTEM_HUD_DRAWS:
                 note, evidence = SYSTEM_HUD_DRAWS[(name, image['index'])]
-                unassigned['menus-hud'][f"pc:{name}#{image['index']}"] = {
+                row = {
                     'status': 'hd', 'pc': name, 'pc_image_index': image['index'], 'association': 'unknown',
                     'draw': note, 'runtime_evidence': evidence}
+                if (name, image['index']) in {('SAKURA1/SYSTEM/SISTEM.SPR', 8), ('SAKURA1/SYSTEM/SISTEM.SPR', 9)}:
+                    row['verified_in_game'] = True
+                unassigned['menus-hud'][f"pc:{name}#{image['index']}"] = row
     hud_census = {
         'system_images': sum(len(file['images']) for file in census['menus']),
         'item_images': len({(p['pc_file'], p['pc_image_index']) for p in config('hd-item-map')['pairs']}),
