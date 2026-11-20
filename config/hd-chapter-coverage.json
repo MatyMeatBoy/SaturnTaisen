@@ -4937,9 +4937,11 @@
           },
           "1:/SAKURA1/BG2160.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route",
             "pc": "SAKURA1/BG/BG2160.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG4017.BIN": {
             "association": "observed",
