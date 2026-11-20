@@ -90,3 +90,16 @@ Shard TH-reattribution repeated the traced attribution with the isolated AOT bui
 The `0700` cold route (both `bank-7-battle` and `public-7`, identical reads) loads `TITLE7`, BG2019, BG1266, BG2014, NC3014, BG2126, NC3126, BG1267, BG1268, BG2160, BG1181, NC70, BG1178, BG4017 and BG2080. Eight of them were `unassigned` and are now chapter 7 (disc 1): BG1178, BG1181, BG2014, BG2160, BG4017, NC3014, NC3126, NC70. `LOAD.BIN` stays `unassigned` (read by chapters 5 to 10).
 
 Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
+
+## Verified BG2160 on the Episode 7 route
+
+The v0.2.27-alpha runtime replayed the Episode 7 continuation at
+2560 × 1440. At relative field 330, BG2160 changed 2,028,420 pixels
+when its verified PC archive was present. Every changed pixel matched
+the native Saturn decode without the donor and the independent PC decode
+within two channel levels with it. The changes stayed inside
+(272,29)–(2288,1037). The same process reverified BG1181 at fields
+600, 690, 780 and 870 and BG1178 at field 1200. The donor controls had
+matching guest hashes across 5,100 fields, identical save memory and
+zero interpreted blocks. BG2160 was already counted through its disc 2
+witness, so this adds the Episode 7 appearance to the evidence.
