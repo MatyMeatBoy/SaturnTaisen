@@ -361,12 +361,24 @@ class ChapterCoverageTest(unittest.TestCase):
         disc1 = catalog['unassigned']['scene-pictures']['1:/SAKURA1/BG2238.BIN']
         self.assertFalse(disc1.get('verified_in_game'))
 
-    def test_ending_bank_status_follows_the_photo_draw_of_patch_0137(self):
+    def test_ending_bank_status_tracks_unique_and_shared_photographs(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter10 = catalog['chapters'][9]['resources']['scene-pictures']
         catalog = catalog['unassigned']['scene-pictures']
+        sumire = chapter10['2:/SAKURA1/SU_CG.BIN']
+        self.assertEqual((sumire['association'], sumire['status']), ('observed', 'hd'))
+        self.assertTrue(sumire['verified_in_game'])
+        self.assertEqual(sumire['pc'], 'SAKURA1/ENDING/END_SU.SPR')
+        self.assertEqual(sumire['pc_image_indices'], [8, 10])
+        self.assertEqual(sumire['shared_runtime_donor'], 'SAKURA1/ENDING/END_SA.SPR')
+        self.assertEqual(sumire['shared_pc_image_indices'], [6, 7])
+        self.assertEqual(sumire['native_records'], [])
+        self.assertNotIn('2:/SAKURA1/SU_CG.BIN', catalog)
         for disc in (1, 2):
             for name in ('AI', 'GE', 'KA', 'KO', 'MA', 'SA', 'SU'):
+                if (disc, name) == (2, 'SU'):
+                    continue
                 with self.subTest(disc=disc, ending=name):
                     row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']
                     self.assertEqual(row['association'], 'unknown')

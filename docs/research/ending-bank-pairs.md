@@ -197,13 +197,56 @@ open.
 
 How the game composes an ending, from the documented captures: the backdrop is a VDP2 bitmap layer fed from one `*_CG.BIN` record (palette in CRAM, 8-bit cells in VRAM). The sepia and color group photographs use two different layers and palette banks (CRAM `0x200` and `0x400`) at the same `(0,16,320,176)` rectangle. Credit text, character insets and the localized `Fin` are separate layers drawn over or around that rectangle. The theatre strip records (0, 1, 9) occupy `(0,24,320,144)` or a black-surround aperture and are shared with moving insets. So only the record that fills an opaque, unobstructed rectangle can be replaced; patch 0137 already does that with the recogniser pattern of the scene pictures (palette fingerprint, layer ownership, native RGB signature, native fallback).
 
-Measured from `config/hd-ending-bank-map.json` and patch 0137: the seven banks hold 76 records (4 GE + 6 x 12). Records 6 and 7 are byte-identical in the six heroine banks (same palette and cell fingerprints `A19A0B84409A3AB8`/`FCAFB7040FA7C5ED` and `BD98B23C7D99D3DD`/`F660240773226223`), so the single table of patch 0137 already covers 12 of the 72 heroine records with two keys and one donor (`END_SA.SPR`, subimages 6 and 7, donors decode identically in all six `END_*.SPR`). Records 8 and 11 (route-specific) stay native by decision (the PC redraws the mullions and the Sakura mouth). Records 0-5, 9 and 10 are strips, insets, petals and the Fin mark with different PC geometry. The four GE records are whole-screen variants with no composition witness.
+Measured from `config/hd-ending-bank-map.json` and patch 0137: the seven banks hold 76 records (4 GE + 6 x 12). Records 6 and 7 are byte-identical in the six heroine banks (same palette and cell fingerprints `A19A0B84409A3AB8`/`FCAFB7040FA7C5ED` and `BD98B23C7D99D3DD`/`F660240773226223`), so the single table of patch 0137 already covers 12 of the 72 heroine records with two keys and one donor (`END_SA.SPR`, subimages 6 and 7, donors decode identically in all six `END_*.SPR`). Records 8 and 11 are specific to each heroine. The initial audit kept their native presentation because the PC redraws change the framing and details. Records 0-5, 9 and 10 are strips, insets, petals and the Fin mark with different PC geometry. The four GE records are whole-screen variants with no composition witness.
 
-The register now reflects this instead of a blanket `paired-not-wired`: disc 2 SA is `hd` (records 6 and 7 verified), disc 2 AI/KA/KO/MA/SU are `wired-unverified` (same keys, no replay of that route), disc 1 banks and GE stay `paired-not-wired` with a specific reason. The generator derives the keys from patch 0137, so the status cannot drift from the runtime.
+That audit moved the six disc 2 banks away from a blanket `paired-not-wired`: disc 2 SA is `hd` (records 6 and 7 verified), disc 2 AI/KA/KO/MA/SU are `wired-unverified` (same keys, no replay of that route), disc 1 banks and GE stay `paired-not-wired` with a specific reason. The generator derives the keys from patch 0137, so the status cannot drift from the runtime.
 
-No state, input movie or save on this machine reaches any ending (the private `local/work/codex-th1` evidence is not present here; only the Sakura and Sumire backup RAMs exist, and the ending blocks need the 353-variant AOT build of patch 0183's candidate). Nothing was built or replayed in this shard; no runtime patch was added, because a table-only refactor would add no coverage.
+The earlier pattern audit used the then-current 353-variant registry and had no accessible alternate route checkpoint.
 
 What is missing and who does it:
-- Owner (discs, natural play): continuation replays of the Kaede, Sumire (Sumire backup RAM exists), Maria, Iris and Kohran endings through the group photos with the 0183 candidate, to move five `wired-unverified` entries to `hd`.
+- Owner (discs, natural play): continuation replays of the Kaede, Maria, Iris and Kohran endings through their unique photos.
 - Owner or integration desk: a GE (theatre) ending witness with viewport and fade evidence; then a generated GE table keyed by the four palette fingerprints.
 - Integration desk: a disc-1 decision (distinct ENDING module, no witness) and package inclusion.
+
+## Natural Sumire ending and unique PC photographs
+
+The English disc 2 archived Finale slot reaches Sumire by ordinary inputs.
+Load `local/work/later-chapter-audit/chapter-sweep/public-finale-strict/state-11999.bin`
+with its SRAM. Advance with mask `0400` for eight fields every 70 fields
+from field 120. The 27,000-field relay ends before the ending dispatch.
+Its unmodified selector is 2 at Saturn address `002003A6`. The dispatch
+at `060802F0` chooses `SU_CG.BIN`; the complete bank at `00204000` from
+continuation field 3000 matches the source at FAD 148297 byte for byte.
+
+The prior strict runtime stopped at master SH-2 PC `06080318`. The 23,000-field
+interpreter continuation uses the same input pattern from relay field 0 and
+shows the localized Fin at field 22200. Seven additional block variants match
+the English disc 2 ENDING module exactly. The combined strict registry has
+360 module variants and reproduces the continuation's guest hashes, SRAM
+and all 38 native RGB captures. The checkpoint, shifted input and reference output are
+kept under `local/work/codex-witness-441-review/sumire-ending`.
+
+| Saturn record | Continuation field | CRAM and VRAM offsets | PC subimage | PC crop (x, y, w, h) |
+| --- | --- | --- | --- | --- |
+| 11 | 19200 | `0x200`, `0x8040` | `END_SU.SPR` 10 | (10,0,616,320) |
+| 8 | 19800 | `0x400`, `0x40040` | `END_SU.SPR` 8 | (68,28,522,282) |
+
+Both records match all 51,200 native pixels in the half-open rectangle
+(0,16) to (320,176). The PC crops align the faces and theatre mullions
+to the Saturn framing. Patch 0189 uses the original palette, full RGB
+signature and full layer ownership to select each donor. At 1440p
+the rendered rectangle is (320,144) to (2240,1104). The 90-field strict
+Enhanced and Original pairs agree in guest hashes and SRAM for each
+record. Enhanced changes only the photograph rectangle. Original matches
+exactly when the donor is present or absent. All 1,843,200 pixels inside
+the enhanced rectangle in each steady comparison match the independently
+cropped and nearest-scaled PC source. A continuous 2,201-field Enhanced
+comparison matches guest hashes and SRAM. The 13 sampled fades and
+surrounding pictures remain pixel-exact. The four fully opaque Sumire
+samples change only within the photograph rectangle.
+
+Records 6 and 7 continue to use the canonical END_SA asset. Their decoded
+640×320 RGBA pixels are byte-identical in all six heroine PC files, so
+these shared photographs contribute one donor. The two unique Sumire
+pictures use the verified physical END_SU file. Other routes and release
+package inclusion remain open.
