@@ -85,6 +85,18 @@ def main():
                 out = merged / file.relative_to(menus)
                 out.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(file, out)
+    from decodificar import Disc
+    from slg_options import traducir_opciones_slg
+
+    original = Disc(source / 'Track 01.iso')
+    programa = (merged / 'SAKURA').read_bytes()
+    for name in ('0SLG.BIN', 'SLG.BIN'):
+        resource = Path('SAKURA2') / name
+        overlay = bytearray(original.read('/' + resource.as_posix()))
+        traducir_opciones_slg(programa, overlay, args.disc)
+        destination = merged / resource
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(overlay)
     if args.portadas:
         media_es(args.disc, source, merged)
     run('iso.py', '--source-dir', str(source), '--output-dir', str(target), '--files', str(merged))
