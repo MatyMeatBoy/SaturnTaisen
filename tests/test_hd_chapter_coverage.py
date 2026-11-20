@@ -144,8 +144,14 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertIs(ground12['verified_in_game'], True)
         self.assertEqual(ground12['scope'], 'source-4 ground only')
         self.assertEqual(ground12['runtime_evidence'], coverage.STAGE12_REPORT)
-        self.assertEqual(catalog['unassigned']['tactical-maps']['2:/SAKURA2/MAP15.BIN']['status'],
-                         'paired-not-wired')
+        chapter9_maps = by_chapter[9]['resources']['tactical-maps']
+        map15 = chapter9_maps['2:/SAKURA2/MAP15.BIN']
+        self.assertEqual((map15['association'], map15['status']), ('observed', 'paired-not-wired'))
+        map16 = chapter9_maps['2:/SAKURA2/MAP16.BIN']
+        self.assertEqual((map16['association'], map16['status']), ('observed', 'hd'))
+        self.assertIs(map16['verified_in_game'], True)
+        self.assertEqual(map16['runtime_evidence'], coverage.STAGE16_REPORT)
+        self.assertEqual(map16['scope'], 'source-4 ground only')
         city = chapter8.get('2:/SAKURA1/BG2159.BIN', {})
         self.assertEqual(city.get('association'), 'observed')
         self.assertEqual(city.get('status'), 'hd')
