@@ -1,31 +1,44 @@
-# T116: reuse of unchanged VDP2 lines (measurement and design, nothing activated)
+# T116: reuse of unchanged VDP2 lines (patch 0144)
 
-Status: measured, designed, prototype written but not built or validated. No patch is added and no behaviour changes.
+Status: implemented, pixel/hash-identical in ten scenarios, measured faster in static scenes, neutral elsewhere. Not played.
 
-## Measurement (shadow probe, T103 scenarios, 1,200 frames each, strict native)
-Compared at the start of each frame: VDP2 VRAM, colour RAM, VDP2 registers, displayed VDP1 framebuffer (content, not index: the
-index flips every frame), picture size.
-- office-return-3000: inputs equal to the previous frame in 1,130 of 1,200 frames; picture equal in 1,021; 111 frames had equal
-  start inputs but a different picture (mid-frame writes), so a frame-start comparison alone is NOT exact.
-- resume-chapter-6000: inputs equal 1,043; picture equal 834; 209 equal-input frames with a different picture.
-- chapter1-first-attack: VRAM changes in 1,199 of 1,200 frames; no reuse possible.
-Upper bound: about 85% (office) and 70% (resume) of the ~3.5 ms `ComposeLine` work, 0% in attack. Not measured as a speedup.
+## What it does
+`Renderer::RenderLine` composes a VDP2 line from VRAM, colour RAM, the VDP2 and VDP1 registers and the displayed VDP1
+framebuffer. When none of those moved, the line is the same as last frame's, so it is copied back instead of composed.
 
-## Design
-1. Exact change tracking: a state counter bumped on every value-changing write to VDP2 VRAM and colour RAM (`BusWrite8/16` in
-   machine.cpp, compare old and new), VDP2/VDP1 register writes (value changed), `SetField`, `LatchDisplayMode`, `SetResolution`,
-   `Reset`, state load. The displayed VDP1 framebuffer and the VDP1 registers are compared by content at the frame's first line
-   (swap and erase happen before it).
-2. Per-frame homogeneity: keep a frame's lines only if the counter did not move during it and equals the previous frame's first-line
-   value; replay in the next frame only while the counter is unchanged; any change mid-frame drops the cache (needed because
-   scroll accumulators depend on earlier lines).
-3. Replay set per line: `m_framebuffer` row, presentation planes (source, topSource, underSource, foreground, underSprites,
-   spriteWhiteWeight, panelMix/underPanelMix/floralCoverMix, mapFadeEdges), `m_lines`, `m_layerLines`. Never cache lines that touch
-   `episodeBlendSamples`, approximation/reference counters, glyph plates (disable when glyph capture is on, so HD portraits give no gain
-   at first), scroll capture, interlace, rotation screens.
-4. Proof tool: `SATRECOMP_VDP2_LINE_REUSE=check` composes every line and compares it with the kept one; must report 0 mismatches
-   in all scenarios plus one with scroll/fade (after-options-3000) before any activation.
+- **Change counter** (`m_stateGen`): bumped by every value-changing write to VDP2 VRAM and colour RAM (`BusWrite8/16` in
+  `machine.cpp`; equal-valued writes do not count), by value-changing VDP2 and VDP1 register writes, `SetField`,
+  `LatchDisplayMode`, `SetResolution`, `Reset`, state load and `NoteVideoMemoryWrite`. Those are the only writers of the
+  two memories (grep of the dependency: nothing else touches `m_vram2`/`m_cram`).
+- **Content snapshots at the frame's first line** (the VDP1 swap and erase have happened, the displayed framebuffer does not
+  change during the picture): the displayed VDP1 framebuffer (256 KB memcmp), the VDP1 registers, the glyph stamps of the
+  displayed framebuffer. A difference bumps the counter.
+- **Frame states.** A frame whose first-line counter equals the previous frame's is *built* (its lines are kept as it is
+  composed); it is kept only if the counter did not move during it. The next frame whose first-line counter equals the kept
+  frame's is *replayed*. A change at any moment of a frame (mid-frame write) drops the cache and composes the rest of the
+  frame; scroll accumulators run for every line (`LayersPrepareLine/FinishLine` still execute), so replay does not depend on
+  earlier lines.
+- **Replayed per line:** `m_framebuffer` row, the presentation planes (source, topSource, underSource, foreground,
+  underSprites, spriteWhiteWeight, panelMix/underPanelMix/floralCoverMix when the row has any, mapFadeEdges, glyph plate rows
+  with an owner), `m_lines` and `m_layerLines`.
+- **Never cached:** lines that move the reference/approximation counters or `episodeBlendSamples`; lines inside the item
+  card or menu-arrow rows when those captures are on (they keep state from line to line; `ReuseVolatileLine`).
+- **Not eligible (whole frame composed):** GPU path, `m_check`, display off, interlace, RBG0/RBG1, scroll capture
+  (`scrollWidth`, tactical maps), sizes above 704x512, `SATRECOMP_LAYER_PROBE`.
+- **Switches:** `SATRECOMP_VDP2_LINE_REUSE=0` off; `=check` composes every line and compares it with the kept one (stderr
+  "reuse check" on a difference, the end-of-run report counts mismatches).
 
-## Not done
-Build and validation, hash/RGB parity, A/B timing, synthetic invalidation test. A prototype (renderer.cpp/h, machine.cpp edits) was
-written in the local tree but its build did not finish; it is not part of this PR.
+## Evidence (stack = origin/main at ef71af6 plus patch 0144, built with the toolchain in `local/build/rebuild-perf`)
+Per-frame state hashes (they include the picture) of A (stack without 0144) and B (with) over 1,200 frames, 0 interpreted
+blocks: identical in office, resume, attack, night, interm, cont, options, morning, dining, stairs. The same B with
+`=check`: identical hashes and 0 line mismatches in all ten (about 1.0-1.6 million replayed lines in the check runs).
+`tests/test_vdp2_line_reuse.cpp`: 600 random frames with mid-frame VRAM/CRAM/register writes, planes and picture compared
+with a renderer that composes every line; with `T116_MUTATE=1` (a VRAM write that does not tell the renderer) it fails at
+frame 14, so the test can see a missed write.
+
+Timing: see the PR (interleaved A/B, median of three, `video (vdp phases)`).
+
+## Not verified
+Play test; GPU video path; interlace, 24-bit colour RAM and other resolutions are excluded, not tested; the HD
+presentation consumers were not looked at beyond the planes being equal (checked in `=check` mode only with the planes the
+benchmark's settings capture: glyph plate on, tactical/scroll off).
