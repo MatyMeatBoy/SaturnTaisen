@@ -83,7 +83,8 @@ def count_changed(path_a, path_b):
         a, b = a.convert('RGB'), b.convert('RGB')
         if a.size != b.size:
             return a.size[0] * a.size[1]
-        diff = ImageChops.difference(a, b).convert('L').point(lambda v: 255 if v else 0)
+        r, g, bl = ImageChops.difference(a, b).split()  # per-channel: a one-level change in blue alone is a change too
+        diff = ImageChops.lighter(ImageChops.lighter(r, g), bl).point(lambda v: 255 if v else 0)
         return diff.histogram()[255]
 
 
@@ -150,10 +151,25 @@ def run_once(args, run, donor):
         command += ['--movie', str(args.movie)]
     if donor:
         command += ['--pc-assets', str(args.pc_assets)]
+    command += ['--hash-log', str(run / 'frames.hash'), '--stats']
     done = subprocess.run(command, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=args.timeout)
     text = done.stderr.decode(errors='replace')
     (run / 'stderr.log').write_text(text, encoding='utf-8')
     return done.returncode, text, shot
+
+
+INTERPRETED = re.compile(r'block runs: recompiled \d+ \([\d.]+%\), interpreted (\d+)')
+
+
+def hashes(run):
+    """The per-frame guest hash lines of a run (empty when the run wrote none)."""
+    path = run / 'frames.hash'
+    return path.read_text().splitlines() if path.is_file() else []
+
+
+def interpreted_blocks(text):
+    match = INTERPRETED.search(text)
+    return int(match.group(1)) if match else None
 
 
 def main(argv=None):
@@ -183,13 +199,16 @@ def main(argv=None):
         if code != 0:
             print('%s run exited with %d, see %s' % (label, code, args.out / label / 'stderr.log'), file=sys.stderr)
             return 2
-        results[label] = (parse_trace(text), shot)
-    trace, donor_shot = results['donor']
+        results[label] = (parse_trace(text), shot, hashes(args.out / label), interpreted_blocks(text))
+    trace, donor_shot = results['donor'][:2]
     control_shot = results['control'][1]
     changed = count_changed(donor_shot, control_shot)
     identical = donor_shot.is_file() and control_shot.is_file() and donor_shot.read_bytes() == control_shot.read_bytes()
     drew, message = verdict(trace, changed, identical)
     print(message)
+    same_hashes = results['donor'][2] == results['control'][2] and bool(results['donor'][2])
+    print('guest hashes per frame with and without the donor: %s (%d frames); interpreted blocks donor/control: %s/%s' % (
+        'identical' if same_hashes else 'DIFFERENT', len(results['donor'][2]), results['donor'][3], results['control'][3]))
     print('layouts: %s; zoom path: %s; control trace lines: %d' % (', '.join(trace['layouts']) or 'none', trace['zoom'],
                                                                    len(drawn_files(results['control'][0]))))
     return 0 if drew else 1
