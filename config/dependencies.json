@@ -225,7 +225,8 @@
       "patches/0231-sakura-layered-iris-backgrounds.patch",
       "patches/0233-sakura-general-ending-hd.patch",
       "patches/0234-sakura-nc24-nc3250-verified-faces.patch",
-      "patches/0235-sakura-nc36-nc72-verified-faces.patch"
+      "patches/0235-sakura-nc36-nc72-verified-faces.patch",
+      "patches/0236-sakura-bg4370-registered-cutout.patch"
     ]
   }
 }

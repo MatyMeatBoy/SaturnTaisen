@@ -2443,6 +2443,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG4370.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/chapter-one-cutout-followup.md#bg4370-sortie-foreground",
+            "pc": "SAKURA1/BG/BG4370.SPR",
+            "runtime_evidence": "docs/research/chapter-one-cutout-followup.md#bg4370-sortie-foreground",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/IC01.BIN": {
             "association": "observed",
             "evidence": "docs/research/chapter1-wide-transitions.md",
@@ -16001,12 +16009,6 @@
       "1:/SAKURA1/BG4362.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4362.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "1:/SAKURA1/BG4370.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4370.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },

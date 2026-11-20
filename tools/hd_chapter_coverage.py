@@ -193,6 +193,8 @@ NARRATIVE_CUTOUT_DRAWS = {
 } | {
     (disc, f'/SAKURA1/{name}.BIN'): (chapter, 'docs/research/bg3034-wide-cutout.md')
     for disc, chapter, name in ((1, 1, 'BG3034'),)
+} | {
+    (1, '/SAKURA1/BG4370.BIN'): (1, 'docs/research/chapter-one-cutout-followup.md#bg4370-sortie-foreground'),
 }
 
 SCENE_DRAWS = {
