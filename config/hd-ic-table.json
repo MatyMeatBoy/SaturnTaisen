@@ -1,0 +1,334 @@
+{
+ "schema": 1,
+ "scope": "Intermission plate recogniser (names, sizes and hashes only).",
+ "logo_palette_fnv": "E9107F892185CCC8",
+ "menu": [
+  184,
+  16,
+  296,
+  144
+ ],
+ "darken": -16,
+ "entries": [
+  {
+   "id": "IC02",
+   "saturn_file": "SAKURA1/IC02.BIN",
+   "saturn_sha256": "7f99b9625015152ac9ee1af2a12e1be9dcc0ff7c3ce91f8abe62ed98487553ca",
+   "pc_file": "SAKURA1/ICATCH/IC0200.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 223478,
+   "pc_fnv": "E2A3E1815BFF09C8",
+   "plate": "B00342FB671360A5",
+   "plate_dark": "310275E116D1B22D",
+   "registration": {
+    "mad": 27.22,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 2.36
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC03",
+   "saturn_file": "SAKURA1/IC03.BIN",
+   "saturn_sha256": "a9610eae300a4cd39e5d686b53fa549cea97f8812a8de23a10dd85944ba7b0fe",
+   "pc_file": "SAKURA1/ICATCH/IC0300.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 185398,
+   "pc_fnv": "7A7ED93DF49A6CE5",
+   "plate": "6469CD72E7963265",
+   "plate_dark": "8FC1BAC7F863CCB5",
+   "registration": {
+    "mad": 19.67,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.83
+   },
+   "discs": 2,
+   "reproduces_witness": "patches 0144 / 0162, disc 1"
+  },
+  {
+   "id": "IC04",
+   "saturn_file": "SAKURA1/IC04.BIN",
+   "saturn_sha256": "83da2b4e4b046c87169ee87df18c4607cc1b7ff904ab294f4e311441e08d3d6c",
+   "pc_file": "SAKURA1/ICATCH/IC0400.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 187004,
+   "pc_fnv": "27E93C0A421ACED1",
+   "plate": "8507572743127B95",
+   "plate_dark": "28F5EF54DB82B63D",
+   "registration": {
+    "mad": 28.66,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.59
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC0501",
+   "saturn_file": "SAKURA1/IC0501.BIN",
+   "saturn_sha256": "72275b7fe3f0ba7f9b725bd40a9695d91801a822fefb21f625a71931a3ed30fa",
+   "pc_file": "SAKURA1/ICATCH/IC0501.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 218568,
+   "pc_fnv": "4A23AE5B5939DE76",
+   "plate": "A5E3498BEDDC1305",
+   "plate_dark": "1F7A14C347473045",
+   "registration": {
+    "mad": 23.64,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.18
+   },
+   "discs": 2,
+   "reproduces_witness": "patches 0144 / 0162, disc 1"
+  },
+  {
+   "id": "IC0502",
+   "saturn_file": "SAKURA1/IC0502.BIN",
+   "saturn_sha256": "5df33be48b18ca07d64cda15b2cb9c6b804bb0f930f2b73d18f16b0154755b88",
+   "pc_file": "SAKURA1/ICATCH/IC0502.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 211326,
+   "pc_fnv": "FD1C733A768F6810",
+   "plate": "0341D4C965A38F4D",
+   "plate_dark": "7B83DC2072B73675",
+   "registration": {
+    "mad": 25.19,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.81
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC06",
+   "saturn_file": "SAKURA1/IC06.BIN",
+   "saturn_sha256": "dad3910df4e73285f08592c7e1f8794a74bd6338c379b1252181d16d9cb4c747",
+   "pc_file": "SAKURA1/ICATCH/IC0600.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 179506,
+   "pc_fnv": "D6AEB7F7E04B94DA",
+   "plate": "0D87B2D1DABE4DFD",
+   "plate_dark": "ECCF072827426105",
+   "registration": {
+    "mad": 19.14,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.36
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC07",
+   "saturn_file": "SAKURA1/IC07.BIN",
+   "saturn_sha256": "35824fc17dca328dc2edcac22cca2a0a5f2f362a8cc42e53694ae6b9b71225af",
+   "pc_file": "SAKURA1/ICATCH/IC0700.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 190430,
+   "pc_fnv": "D9B296464B7C6A20",
+   "plate": "DFB47C7189EF3775",
+   "plate_dark": "DF5382D7F5A9C24D",
+   "registration": {
+    "mad": 21.69,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.52
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC08",
+   "saturn_file": "SAKURA1/IC08.BIN",
+   "saturn_sha256": "42eb32b7c89259cb51d838e5994b5db79adaf7d07bdb68eb0c5ad43dd4064b60",
+   "pc_file": "SAKURA1/ICATCH/IC0800.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 185067,
+   "pc_fnv": "172242F4CF71EC08",
+   "plate": "5B5040D9F19D66FD",
+   "plate_dark": "94B18E0F26FFA9FD",
+   "registration": {
+    "mad": 19.5,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.53
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC09",
+   "saturn_file": "SAKURA1/IC09.BIN",
+   "saturn_sha256": "0bd79d4e86fd855ced91842c9726886055d953aeaf17bd8bfe6f5335cbf8ca96",
+   "pc_file": "SAKURA1/ICATCH/IC0900.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 226719,
+   "pc_fnv": "59DD92FA60CCCDDD",
+   "plate": "226870CCA7FAE12D",
+   "plate_dark": "D6828B58BBE6861D",
+   "registration": {
+    "mad": 26.87,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.65
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC1001",
+   "saturn_file": "SAKURA1/IC1001.BIN",
+   "saturn_sha256": "3e78e39cbd6bcb6bc1f3b7ad225962e611dfbf07679303945fd4946e2fdb5eff",
+   "pc_file": "SAKURA1/ICATCH/IC1001.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 199324,
+   "pc_fnv": "CB952F05DEE5E27A",
+   "plate": "5440011E910F333D",
+   "plate_dark": "2760AAC2DB21AC0D",
+   "registration": {
+    "mad": 19.12,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 2.41
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC1002",
+   "saturn_file": "SAKURA1/IC1002.BIN",
+   "saturn_sha256": "73c66bb1abe109b75a970c1ee0d50e3a7bd62c0a1fc84ca8382992fb05c3f12d",
+   "pc_file": "SAKURA1/ICATCH/IC1002.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 212069,
+   "pc_fnv": "D9E0EF2D94B886B4",
+   "plate": "5677298DFCA35465",
+   "plate_dark": "A408C4AA0E028545",
+   "registration": {
+    "mad": 26.78,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 2.07
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC1003",
+   "saturn_file": "SAKURA1/IC1003.BIN",
+   "saturn_sha256": "0e53fb360006ae7c5b0202d1c301a0eb5db21b899908e0efb5509fc93124b589",
+   "pc_file": "SAKURA1/ICATCH/IC1003.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 195720,
+   "pc_fnv": "E16F35DAC01F59B8",
+   "plate": "4060D5CB2F3D9B55",
+   "plate_dark": "89A2EB061EEFFD2D",
+   "registration": {
+    "mad": 24.87,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.71
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC1004",
+   "saturn_file": "SAKURA1/IC1004.BIN",
+   "saturn_sha256": "3ccd9c208004238e8c137deac8086e9daddacb5e925af1ccdbee19a07fe7bcc2",
+   "pc_file": "SAKURA1/ICATCH/IC1004.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 194712,
+   "pc_fnv": "2E4FD7A5A5E88E91",
+   "plate": "3948B2A516BA9255",
+   "plate_dark": "E2D4C60F504DEB0D",
+   "registration": {
+    "mad": 22.22,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.94
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC1005",
+   "saturn_file": "SAKURA1/IC1005.BIN",
+   "saturn_sha256": "012ebe4680ff2324c0a3c8976d142208abcb2412c845358f19194b165cdb0529",
+   "pc_file": "SAKURA1/ICATCH/IC1005.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 189596,
+   "pc_fnv": "0BFAF891C7DEA562",
+   "plate": "C15518EF24CCF9D5",
+   "plate_dark": "6889EEE9A861A72D",
+   "registration": {
+    "mad": 28.88,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.58
+   },
+   "discs": 2
+  },
+  {
+   "id": "IC1006",
+   "saturn_file": "SAKURA1/IC1006.BIN",
+   "saturn_sha256": "6971509d236ac142c8f6e62fcdcaf54ec5559498f01e43f0d0310ff90dca4715",
+   "pc_file": "SAKURA1/ICATCH/IC1006.SPR",
+   "pc_image_index": 0,
+   "pc_bytes": 190518,
+   "pc_fnv": "12C6227083A0F8A0",
+   "plate": "EC09407C43883AC5",
+   "plate_dark": "1EEE023D349F9A25",
+   "registration": {
+    "mad": 24.86,
+    "best_shift": [
+     0,
+     0
+    ],
+    "registered": true,
+    "margin": 1.41
+   },
+   "discs": 2
+  }
+ ],
+ "not_in_table": {
+  "IC01": "handled by patch 0107 (own palette key, anchored backdrop)"
+ }
+}
