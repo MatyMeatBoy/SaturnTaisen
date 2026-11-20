@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import unittest
+from tools import hd_chapter_coverage as coverage
 from tools.hd_chapter_coverage import asset_category, indexed_chapter, film_key
 
 
@@ -311,7 +312,7 @@ class ChapterCoverageTest(unittest.TestCase):
         disc1 = catalog['unassigned']['scene-pictures']['1:/SAKURA1/BG2238.BIN']
         self.assertFalse(disc1.get('verified_in_game'))
 
-    def test_ending_bank_donors_are_subimage_pairs_with_no_runtime_claim(self):
+    def test_ending_bank_status_follows_the_photo_draw_of_patch_0137(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         catalog = catalog['unassigned']['scene-pictures']
@@ -319,10 +320,28 @@ class ChapterCoverageTest(unittest.TestCase):
             for name in ('AI', 'GE', 'KA', 'KO', 'MA', 'SA', 'SU'):
                 with self.subTest(disc=disc, ending=name):
                     row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']
-                    self.assertEqual((row['association'], row['status']), ('unknown', 'paired-not-wired'))
+                    self.assertEqual(row['association'], 'unknown')
                     self.assertEqual(row['pc'], f'SAKURA1/ENDING/END_{name}.SPR')
-                    self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3] if name == 'GE' else [6, 7, 8, 10])
-                    self.assertFalse(row.get('verified_in_game'))
+                    if name == 'GE' or disc == 1:
+                        self.assertEqual(row['status'], 'paired-not-wired')
+                        self.assertFalse(row.get('verified_in_game'))
+                    else:
+                        self.assertEqual(row['pc_image_indices'], [6, 7])
+                        self.assertEqual(row['native_records'], [8, 11])
+                        self.assertEqual(row['status'], 'hd' if name == 'SA' else 'wired-unverified')
+                        self.assertEqual(bool(row.get('verified_in_game')), name == 'SA')
+                    if name == 'GE':
+                        self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3])
+
+    def test_ending_photo_keys_are_shared_by_the_six_heroine_banks(self):
+        root = Path(__file__).resolve().parents[1]
+        banks = {p['saturn_file']: p for p in json.loads(
+            (root / 'config/hd-ending-bank-map.json').read_text(encoding='utf-8'))['pairs']}
+        keys = coverage.runtime_ending_photo_keys(root)
+        self.assertEqual(keys, {'A19A0B84409A3AB8', 'BD98B23C7D99D3DD'})
+        for name, bank in banks.items():
+            photos = {r['saturn_record']: r['palette_fnv'] for r in bank['records'] if r['saturn_record'] in (6, 7)}
+            self.assertEqual(set(photos.values()) <= keys and len(photos) == 2, 'GE' not in name, name)
 
     def test_guarded_viewport_connections_have_no_in_game_witness(self):
         root = Path(__file__).resolve().parents[1]

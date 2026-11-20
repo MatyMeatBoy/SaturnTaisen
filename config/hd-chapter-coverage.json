@@ -11849,11 +11849,9 @@
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15280,7 +15278,7 @@
           2,
           3
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The four GE pictures are whole-screen theatre variants; the ending viewport, fade and overlay layers have no live witness, so no replacement is selected.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15368,11 +15366,9 @@
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15382,11 +15378,9 @@
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15396,11 +15390,9 @@
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15410,11 +15402,9 @@
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15424,11 +15414,9 @@
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph draw is limited to disc 2 and the English ENDING module; disc 1 has no ending witness.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -15552,16 +15540,20 @@
       "2:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/BG0000.BIN": {
         "association": "unknown",
@@ -19161,7 +19153,7 @@
           2,
           3
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The four GE pictures are whole-screen theatre variants; the ending viewport, fade and overlay layers have no live witness, so no replacement is selected.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -19258,72 +19250,93 @@
       "2:/SAKURA1/KA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/KO_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/MA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/SA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "runtime_evidence": "docs/research/ending-bank-pairs.md",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": true
       },
       "2:/SAKURA1/SU_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "native_reason": "The PC redraws change the artwork. The native compositions stay in use.",
+        "native_records": [
+          8,
+          11
+        ],
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7,
-          8,
-          10
+          7
         ],
-        "reason": "Requires ending-layer composition and viewport evidence.",
+        "reason": "The photograph records have the same palette and cell keys as the verified Sakura bank, so the draw is tried when they appear; no replay of this route was recorded.",
+        "runtime_patch": "patches/0137-sakura-ending-photos.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/TITLE1.BIN": {
         "association": "unknown",
