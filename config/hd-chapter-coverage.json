@@ -2401,8 +2401,10 @@
             "evidence": "docs/research/stage01-pc-ground.md",
             "extension": "STAGE01-right-v1.png",
             "pc": "SAKURA2/MAP/MAP01/MAP01_A.SPR",
+            "runtime_evidence": "docs/research/stage01-pc-ground.md",
             "scope": "source-4 ground only",
-            "status": "hd"
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-units": {}

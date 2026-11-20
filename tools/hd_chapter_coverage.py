@@ -499,6 +499,8 @@ def build(root, index_dir, portrait_audit):
         if (disc, path) == STAGE01_MAP:
             row = {
                 'status': 'hd',
+                'verified_in_game': True,
+                'runtime_evidence': STAGE01_REPORT,
                 'pc': 'SAKURA2/MAP/MAP01/MAP01_A.SPR',
                 'scope': 'source-4 ground only',
                 'extension': 'STAGE01-right-v1.png',

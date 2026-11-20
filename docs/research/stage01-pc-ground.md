@@ -21,3 +21,7 @@ The first matching Enhanced frame requests the asset once on a background worker
 - The synthetic loader fixture covers file length, fingerprint, dimensions, cyan transparency, world sampling, and the map boundary.
 
 The runtime comparisons use owner-provided game data in private profiles. The test builds requested strict-native mode and reported zero interpreted blocks. They also reported zero recompiled blocks, so the reported counters add no independent evidence of execution mode. This verifies a partial source-4 substitution and the sampled stretches of camera travel. Other maps, priority/water replacements, UNIT, the full battle and packaging remain open.
+
+## Follow-up on patch 0199 at 1440p
+
+The first-attack and west-dialogue checkpoints each replayed 450 camera fields in a 2560 × 1440 window. Both Enhanced donor and missing controls had byte-identical guest logs and SRAM to their archived counterparts, with zero interpreted blocks. In 20 paired captures, an independent world-coordinate check matched every changed native-grid sample to the exact original PC texel. The changes span both sides of the viewport at eight distinct origins in each replay and stop before the extension boundary x=656. The existing 0102 tests separately cover Original and individual VDP1 sprite ownership.
