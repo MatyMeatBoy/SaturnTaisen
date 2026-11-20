@@ -74,3 +74,65 @@ Related catalog totals: `hd-scene-bg-map` 519 content + 216 number-tier pairs + 
 - Should the unassigned pool be split by chapter from the scene index (`local/work/scene-index-later`) before TH6 starts? That index is not in Git, so this report did not read it.
 - The JSON has no menus/HUD attribution rule; which HUD files count as chapter 6?
 - Count of chapter 6 scene pictures: no data. Count of chapter 6 FILM streams: no data.
+
+
+## Traced attribution (TH6)
+
+Tool: `tools/chapter_loads.py` (every `Play Disc` command mapped to its ISO file; FAD = LBA + 150; a state every 500 frames). English disc 1, `bank-6-battle` seed (backup SHA-256 `6633cfb0...`), the archived 12,000-frame chapter-jump movie extended with the same confirm cadence (a press every 75 frames) to 45,000 frames (movie SHA-256 `f248fe86...`). Strict native, zero interpreted blocks, exe SHA-256 `f2fcb44a...`. The first 12,000 frame hashes are byte-identical to the archived `bank-6-battle-strict` log; the 45,000-frame hash log has SHA-256 `6421ca86...`. Command: `python tools/chapter_loads.py --exe local/build/sakura-th56/sakura-th56.exe --disc 1 --backup <bank-6-battle backup.bin> --movie <extended input.movie> --frames 45000 --interval 500 --out local/work/th56/long-6`. States stay in `local/work`; only names, frames and hashes are here.
+
+Frames are estimates from the buffered hash log (early by up to a few dozen); the checkpoint is the first state at or after estimate + 60.
+
+Confirm-cadence route (`long-6`):
+
+| File | Class | FAD | Frame (est.) | Checkpoint | State SHA-256 (prefix) |
+| --- | --- | ---: | ---: | ---: | --- |
+| `SAKURA1/LOAD.BIN` | menu/HUD | 160869 | 6475 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/0601.BIN` | script/data | 130578 | 6670 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/0601TBL.BIN` | script/data | 130728 | 6670 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/0601KNJ.BIN` | script/data | 130712 | 6670 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/0601FCE.BIN` | portrait atlas | 130596 | 6670 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/KABE50.BIN` | other | 159586 | 6670 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/NCOBJ.BIN` | other | 165874 | 6865 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/TMAP0.BIN` | menu/HUD | 172679 | 6865 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/TMAP1H.BIN` | menu/HUD | 172714 | 6865 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/TMAP2CH.BIN` | menu/HUD | 172924 | 6865 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/TMAPSP.BIN` | menu/HUD | 172994 | 6865 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/VDP1.BIN` | other | 216654 | 6865 | 6999 | `1d86c9e4d71afd55` |
+| `SAKURA1/TITLE6.BIN` | scene | 172346 | 7059 | 7499 | `a3a261523d5742ae` |
+| `SAKURA1/VCEADV` | other | 216468 | 7059 | 7499 | `a3a261523d5742ae` |
+| `SAKURA1/BG1199.BIN` | scene | 142906 | 7643 | 7999 | `e34dd62318d663e8` |
+| `SAKURA1/BG4119.BIN` | scene | 155101 | 7643 | 7999 | `e34dd62318d663e8` |
+| `SAKURA1/BG2156.BIN` | scene | 149345 | 12025 | 12499 | `93884953f3f769e9` |
+| `SAKURA1/BG1021.BIN` | scene | 139502 | 12396 | 12499 | `93884953f3f769e9` |
+| `SAKURA1/BG1025.BIN` | scene | 139594 | 13511 | 13999 | `44d7d0e210259d23` |
+| `SAKURA1/BG4059.BIN` | scene | 154618 | 13511 | 13999 | `44d7d0e210259d23` |
+| `SAKURA1/NC97.BIN` | body | 165809 | 13697 | 13999 | `44d7d0e210259d23` |
+
+The confirm cadence stops loading anything after `NC97` (frame 13697): the dialogue waits. Random input continues the chapter. From the `long-6` state at frame 13999 (`--state ... --auto 1:0 --frames 15000`; frames below are local to this continuation):
+
+| File | Class | FAD | Frame (est.) | Checkpoint | State SHA-256 (prefix) |
+| --- | --- | ---: | ---: | ---: | --- |
+| `SAKURA1/BG1047.BIN` | scene | 140100 | 1025 | 1499 | `5ea4b910f64391f2` |
+| `SAKURA1/NC40.BIN` | body | 164276 | 1025 | 1499 | `5ea4b910f64391f2` |
+| `SAKURA1/BG1008.BIN` | scene | 139203 | 3556 | 3999 | `c83b2e0cea1d6cec` |
+| `SAKURA1/LOADBGR.DAT` | menu/HUD | 160945 | 4334 | - | - |
+| `?` | other | 212 | 4334 | - | - |
+| `SAKURA3/MINIMAIG.BIN` | other | 267957 | 4334 | - | - |
+
+From the `long-6` state at frame 12499 (`--auto 2:0 --frames 9000`):
+
+| File | Class | FAD | Frame (est.) | Checkpoint | State SHA-256 (prefix) |
+| --- | --- | ---: | ---: | ---: | --- |
+| `SAKURA1/BG1003.BIN` | scene | 139088 | 822 | 999 | `bbcf322bc9342900` |
+| `SAKURA1/BG1047.BIN` | scene | 140100 | 1415 | 1499 | `b8d2ca3c307022bc` |
+| `SAKURA1/NC40.BIN` | body | 164276 | 1415 | 1499 | `b8d2ca3c307022bc` |
+| `SAKURA1/BG1008.BIN` | scene | 139203 | 2972 | - | - |
+| `SAKURA1/LOADBGR.DAT` | menu/HUD | 160945 | 3166 | - | - |
+| `?` | other | 212 | 3166 | - | - |
+| `SAKURA3/MINIMAIG.BIN` | other | 267957 | 3166 | - | - |
+
+Both continuations end with exit code 4 `strict AOT: untranslated master SH-2 block at 00204000` right after `LOADBGR.DAT` and `SAKURA3/MINIMAIG.BIN`: the chapter script enters the tactical stage and the EVT overlay that lands at `00204000` is not translated in this build (the same lock as the chapter 4 stage, see [chapter sweep](chapter-sweep.md)). The overlay, map and units for the stage were not read before the lock, so no `EVT`, `MAP` or `UNIT` file can be attributed to chapter 6 from this build.
+
+Attributed to chapter 6 by this pass: scene pictures `BG1003` and `BG1047` and body `NC40` (disc-1 rows moved from `unassigned`, status `hd`, not verified in game) plus second-occurrence rows for `BG1008` (chapter 3 row kept), `BG1021` and `NC97` (chapter 1 rows kept). Already chapter 6 and re-confirmed: `TITLE6`, `BG1199`, `BG4119`, `BG1025`, `BG4059`, `BG2156`. 9 JSON entries changed. `0601FCE` is read at FAD 130596 (resident row kept). Chapter-neutral loads (`LOAD.BIN`, `TMAP*`, `KABE50`, `VDP1`, `NCOBJ`, `ADV*`, `VCEADV`, `LOADBGR.DAT`) are listed above but not attributed.
+
+Not verified: any HD draw of the new rows; the FILM clips of the chapter (none read after the opening FADs 405 and 166362, which precede the script); `0602FCE`..`0607FCE` (not read); the tactical stage; the chapter exit test. The random-input continuations show the branch the autopilot chose, not the canonical path.
