@@ -8692,6 +8692,24 @@
         "status": "hd",
         "verified_in_game": true
       },
+      "pc:SAKURA1/SYSTEM/WINDOW.SPR#0": {
+        "association": "unknown",
+        "draw": "patch 0202, port/frontend_sdl.cpp: timed LIPS choice rails",
+        "pc": "SAKURA1/SYSTEM/WINDOW.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-timed-lips-and-dialogue-window-rails",
+        "status": "hd",
+        "verified_in_game": true
+      },
+      "pc:SAKURA1/SYSTEM/WINDOW.SPR#1": {
+        "association": "unknown",
+        "draw": "patch 0202, port/frontend_sdl.cpp: dialogue box rails",
+        "pc": "SAKURA1/SYSTEM/WINDOW.SPR",
+        "pc_image_index": 1,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-timed-lips-and-dialogue-window-rails",
+        "status": "hd",
+        "verified_in_game": true
+      },
       "pc:SAKURA1/SYSTEM/WINDOW.SPR#2": {
         "association": "unknown",
         "draw": "patch 0198, port/frontend_sdl.cpp: Long Day room choice rails",
