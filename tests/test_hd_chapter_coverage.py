@@ -433,7 +433,8 @@ class ChapterCoverageTest(unittest.TestCase):
         background = '1:/SAKURA1/BG1198.BIN'
         self.assertEqual(chapter3['scene-pictures'][background]['association'], 'observed')
         self.assertEqual(chapter5['scene-pictures'][background]['association'], 'observed')
-        self.assertFalse(chapter5['scene-pictures'][background].get('verified_in_game'))
+        self.assertFalse(chapter3['scene-pictures'][background].get('verified_in_game'))
+        self.assertTrue(chapter5['scene-pictures'][background]['verified_in_game'])
         body = chapter5['bodies']['1:/SAKURA1/NC3058.BIN']
         self.assertEqual((body['association'], body['status']), ('observed', 'hd'))
         self.assertTrue(body['verified_in_game'])

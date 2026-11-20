@@ -86,6 +86,7 @@ CHAPTER5_PORTRAIT_REPORT = 'docs/research/hd-chapter-5.md#verified-0501fce-portr
 CHAPTER9_ROUTE_REPORT = 'docs/research/hd-chapter-9.md#native-route-observations'
 CHAPTER9_ROUTE_FILES = {'BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100', 'NC81', 'NC3018'}
 NATIVE_ROUTE_FILES = {
+    3: ({'BG1198'}, 'docs/research/th3-native-attribution.md'),
     5: (CHAPTER5_ROUTE_FILES, CHAPTER5_ROUTE_REPORT),
     9: (CHAPTER9_ROUTE_FILES, CHAPTER9_ROUTE_REPORT),
 }
@@ -148,6 +149,7 @@ MENU_CENSUS = 'docs/research/pc-menu-hud-inventory.json'
 BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
 # Draw evidence applies to the exact disc, resource, and chapter observed.
 SCENE_DRAWS = {
+    (1, '/SAKURA1/BG1198.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-bg1198-replacement'),
     (1, '/SAKURA1/BG1031.BIN'): (3, 'docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1'),
     (1, '/SAKURA1/BG1076.BIN'): (3, 'docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1'),
     (1, '/SAKURA1/BG1171.BIN'): (3, 'docs/research/scene-spot-check.md#bg1171-on-english-disc-1'),
@@ -208,7 +210,6 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/BG4119.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG1025.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG4059.BIN'): (6, 'docs/research/th6-native-attribution.md'),
-    (1, '/SAKURA1/BG1198.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/TITLE3.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1022.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1008.BIN'): (3, 'docs/research/th3-native-attribution.md'),
