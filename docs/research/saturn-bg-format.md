@@ -651,6 +651,12 @@ The Saturn Original control at 1080p also matches all 6,670 guest
 hashes and seven capture frames with those same legacy files present.
 All three replays report zero interpreted blocks.
 
+#### Matching the surround softness at the native edge
+
+Patch 0161 measures the visible difference between the generated surround and the native drawing at the card edges. The Episode 1 top, right and bottom bands had roughly twice the neighboring native luminance curvature, and Episode 6 had a smaller excess at the left and bottom. The other bands were already as soft or softer. A one-pixel binomial filter on the surround texture applies to the affected bands, with a 16-pixel strength ramp into the adjoining bands. It preserves alpha, the integer layout, and the wording and image in both native centers.
+
+Three paired 6,610-frame replays compared exact 0160 and 0161 builds. The Episode 1 English and Spanish 1440p pairs match the guest hashes, every fully visible center pixel, and the captures immediately before and after the card. The fade samples differ only outside the center. The 1080p Original control matches all six RGB captures. All six runs used strict native execution with zero interpreted blocks. Episode 6 was evaluated from the local original artwork rather than a live transition.
+
 
 ### Identical PC donors for shared-cell pictures
 
