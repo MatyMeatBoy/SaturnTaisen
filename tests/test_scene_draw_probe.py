@@ -30,7 +30,16 @@ class ParseTests(unittest.TestCase):
         self.assertEqual(trace['shared'], ['SAKURA1/BG/BG1021.SPR'])
         self.assertTrue(trace['zoom'])
         self.assertEqual(trace['layouts'], ['narrative'])
-        self.assertEqual(probe.drawn_files(trace), ['SAKURA1/BG/BG1209.SPR', 'SAKURA1/BG/BG1021.SPR'])
+        self.assertEqual(probe.drawn_files(trace), ['SAKURA1/BG/BG1209.SPR'])
+
+    def test_shared_palette_selection_without_texture_is_not_a_draw(self):
+        trace = probe.parse_trace(
+            'scene picture with a shared palette 1234: cells ABCD -> SAKURA1/BG/BG1016.SPR\n'
+            'scene picture: SAKURA1/BG/BG1016.SPR usable=0\n'
+        )
+        self.assertEqual(trace['shared'], ['SAKURA1/BG/BG1016.SPR'])
+        self.assertEqual(probe.drawn_files(trace), [])
+        self.assertFalse(probe.verdict(trace, 0, True)[0])
 
     def test_native_run(self):
         trace = probe.parse_trace(NATIVE)

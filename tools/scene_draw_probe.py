@@ -2,7 +2,7 @@
 
 A development runtime (no release.marker) is started hidden and unthrottled twice from the same state: once with
 `--pc-assets DONOR` (the PC picture can be drawn) and once without it (control). The picture is "drawn" when the donor run prints
-a `scene picture: FILE usable=1` line (or `scene picture with a shared palette ... -> FILE`) and the capture comparison is reported separately. An unexplained capture difference alone does not identify a scene.
+a `scene picture: FILE usable=1` line and the capture comparison is reported separately. An unexplained capture difference alone does not identify a scene.
 
     python tools/scene_draw_probe.py --exe local/build/sakura-probe/sakura-probe.exe \
         --state local/work/probe-cold/b1209.state --pc-assets local/work/pc-cab/out-bg --size 2560x1440
@@ -41,7 +41,7 @@ ZOOM = re.compile(r'^scene zoom: ')
 def parse_trace(text):
     """Distinct scene-draw evidence in the stderr text of a run.
 
-    Returns a dict: `pictures` (file -> usable 0/1), `shared` (list of PC files drawn by cell hash), `layouts` (in order of first
+    Returns a dict: `pictures` (file -> usable 0/1), `shared` (list of PC files selected by cell hash), `layouts` (in order of first
     appearance) and `zoom` (True when the Zoom scene path ran, which is the only path that draws the picture).
     """
     result = {'pictures': {}, 'shared': [], 'layouts': [], 'zoom': False}
@@ -66,8 +66,8 @@ def parse_trace(text):
 
 
 def drawn_files(trace):
-    files = sorted(name for name, usable in trace['pictures'].items() if usable)
-    return files + [name for name in trace['shared'] if name not in files]
+    # The shared-palette message is emitted before the file is opened.
+    return sorted(name for name, usable in trace['pictures'].items() if usable)
 
 
 def count_changed(path_a, path_b):
