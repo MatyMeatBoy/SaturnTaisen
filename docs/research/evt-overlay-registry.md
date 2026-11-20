@@ -118,3 +118,13 @@ python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track
 These retained segments bound the proof. A fresh campaign route,
 remaining turns and package inclusion stay open. Inputs, states and
 binary evidence are private under `local/work/codex-th1/map-bulk-live/`.
+
+## Chapter 8 rematch: EVT13 camera coverage
+
+Two natural English disc 2 segments reach MAP13 after retreating through the shrine gate. The runtime reads EVT13 at FAD 203415 and MAP13 at FAD 219573. The first 71,692 bytes at `00204000` match the pinned 75,280-byte EVT13 module in both retained camera states.
+
+The two interpreter recordings match all 4,380 reference guest fields and final SRAM. The observed range profile records 195 new spans whose complete bytes match EVT13. It excludes the 925 remaining spans from the multi-module entrance segment. The combined strict candidate verifies the 540-field camera segment against the interpreter with identical guest hashes and final SRAM and zero interpreted blocks. The complete MAP13 entrance remains open for strict replay, and this profile is not in the published package.
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT13_MAP13 --seed-blocks local/work/sakura/blocks.txt --output local/work/evt13-map13-aot
+```
