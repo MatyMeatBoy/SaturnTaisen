@@ -199,3 +199,24 @@ visible in both modes, and Enhanced fills the surrounding window from the card
 edges. The draft still shows banding on the right edge and retains its draft
 lettering. The other nine cards were verified on disc only. This run used an
 existing executable and disc, and did not create a package.
+
+### Spanish disc 1 prepared by older installers
+
+Cold replays of the untouched v0.2.9-alpha Windows executable at 2560×1440
+show CARGANDO on the current Spanish disc 1 and LOADING on disc 1 prepared
+with the v0.2.2-alpha Spanish delta. The older disc has the same Spanish
+opening program as the current disc (391,712 bytes, FNV-1a
+`E65F2131FA510155`) and the same LOAD.BIN as English
+(`25EBC7EF81D177B3`). Patch 0175 recognizes that exact pair in Enhanced
+and reuses the existing generated ink during the native fade.
+
+The 2,940-frame A/B replays match guest hashes and SRAM per disc. Spanish
+frames 2440, 2520, 2600, 2680 and 2760 match the current release's Spanish
+ink pixel for pixel. RGB differences are inside the lettering window.
+The before/after checkpoints and all seven English Enhanced captures match.
+Three Spanish Original captures and all 2,840 guest hashes also match.
+A new public package remains pending.
+
+The closure snapshot counted 101,509,576,559 project bytes after removing
+5,144,675,840 bytes of superseded local diagnostic executables. The retained
+development ZIP measures 6,315,009,692 bytes.
