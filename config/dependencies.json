@@ -168,7 +168,8 @@
       "patches/0170-sakura-fast-indexed-vdp1-rows.patch",
       "patches/0171-sakura-registered-nc50-faces.patch",
       "patches/0172-sakura-draw-nc11-under-lips.patch",
-      "patches/0173-sakura-nc25-baked-eyes.patch"
+      "patches/0173-sakura-nc25-baked-eyes.patch",
+      "patches/0174-sakura-reuse-vdp2-background-priority.patch"
     ]
   }
 }
