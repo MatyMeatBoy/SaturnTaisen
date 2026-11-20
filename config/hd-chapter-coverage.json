@@ -2232,6 +2232,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1143.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1",
+            "pc": "SAKURA1/BG/BG1143.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1193.BIN": {
             "association": "observed",
             "evidence": "docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1",
@@ -2262,6 +2270,14 @@
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/BG/BG1216.SPR",
             "runtime_evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG2004.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1",
+            "pc": "SAKURA1/BG/BG2004.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1",
             "status": "hd",
             "verified_in_game": true
           },
@@ -12533,11 +12549,6 @@
         "pc": "SAKURA1/BG/BG1132.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1143.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1143.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1144.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1143.SPR",
@@ -13329,11 +13340,6 @@
       "1:/SAKURA1/BG2003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2001.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2004.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2004.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG2005.BIN": {
