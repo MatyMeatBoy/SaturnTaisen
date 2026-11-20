@@ -106,7 +106,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | Shard | Estado | Lote | Cierre comprobable |
 | --- | --- | --- | --- |
 | THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. Ocho rótulos de la ficha de unidad distribuidos en v0.2.16.1-alpha. Quedan los nombres de ataques y las otras pantallas. |
-| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Los tres rótulos se distribuyen en v0.2.16.1-alpha. LOAD.BIN conserva su SHA-256 en ambos discos. La regresión visual del scroll CARGANDO en la nueva versión sigue pendiente. |
+| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Los tres rótulos se distribuyen en v0.2.16.1-alpha. LOAD.BIN conserva su SHA-256 en ambos discos. La regresión de CARGANDO pasó en el paquete con cinco capturas de 1440p idénticas al referente publicado. |
 
 Mantener el idioma español según el perfil. Registrar la fuente de cada rótulo (texto del juego, textura o interfaz del port) y dejar un PR por familia de activos o pantalla. La traducción sola no suma al porcentaje de integración HD.
 
