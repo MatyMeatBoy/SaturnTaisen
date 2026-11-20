@@ -261,7 +261,8 @@
       "patches/0269-sakura-hd-portraits-odd-scale.patch",
       "patches/0270-sakura-anchor-first-dialogue-zoom.patch",
       "patches/0271-sakura-parallel-map-fade-exterior.patch",
-      "patches/0272-sakura-compact-map-fade-strips.patch"
+      "patches/0272-sakura-compact-map-fade-strips.patch",
+      "patches/0273-sakura-tactical-ground-line-context.patch"
     ]
   }
 }

@@ -41,3 +41,17 @@ python -m unittest tests.test_gen_tactical_ground_table
 ```
 
 To regenerate the table, supply --derive with --pc pointing to the donor root containing SAKURA2/MAP and --iso1 / --iso2 pointing to the prepared data tracks. The optional --inc exports candidate rows for inspection.
+
+## Ground sampling cost per scanline
+
+Patch 0273 resolves the tactical ground entry, its eligibility and
+its signed camera origin once for each captured scanline. The side
+samples and central ground use the same result. The existing offset,
+shadow, sprite ownership and unsupported-format guards stay in place.
+
+Two alternating 600-field 1440p MAP03 replays per version matched the
+guest trace. After the first 30 fields, the frame p95 was 12.49 ms in
+each baseline and 12.22 and 12.28 ms with the patch. Median VDP phase
+time was 7.14 and 7.165 ms before and 7.02 and 7.00 ms after. Six HD
+and six Original captures match their respective baseline pixels and
+both pairs match SRAM. The test covers the retained MAP03 checkpoint.
