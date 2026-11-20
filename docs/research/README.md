@@ -129,6 +129,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [NC3018 face placement at 1440p](nc3018-registered-faces.md)
 - [Iris NC55 face registration](nc55-registered-faces.md) — Chapter 1 expression placement and 1440p replay.
 - [Iris NC50 face registration](nc50-registered-faces.md) â€” Chapter 1 staircase blink and speech at 1440p.
+- [Sumire NC25 authored eyes](nc25-baked-eyes.md) — Chapter 1 closed-eye pose and three mouth frames.
 - [Sakura NC10 park expressions](nc10-park-faces.md) — Authored eye and mouth placement with English and Spanish 1440p replays.
 - [saturn-bg-format.md](saturn-bg-format.md): Saturn BG*.BIN/BBG*.BIN layouts (three variants) and the mass BG pairing by file number (`config/hd-scene-bg-map.json`).
 - [bg-matching-shards.md](bg-matching-shards.md): Split of the 766 PC BG images into shards so the matching can run in parallel.

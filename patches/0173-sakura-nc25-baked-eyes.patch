@@ -1,0 +1,82 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2482,6 +2482,7 @@
+                                     if(offset<0) {ok=false;why="a sprite over the body is not a face frame";break;}
+                                     found.emplace_back(offset,&sp);
+                                 }
++                                bool hasBakedFace=false;
+                                 if(ok && !found.empty()) {
+                                     // Which PC part is each face frame? The one that looks most like it (correlation of a 24x24
+                                     // grey signature, cached per frame), so the arrangement of the frames in the NC file does not matter.
+@@ -2523,6 +2524,11 @@
+                                         if(!st.verified.frames.empty()) {
+                                             if(st.verifiedAssets) {
+                                                 const unsigned width=unsigned(spriteWidth(*sp)),height=unsigned(spriteHeight(*sp));
++                                                if (st.verified.baked.matches(hash,width,height,sp->x-bx,sp->y-by)) {
++                                                    hasBakedFace=true;
++                                                    ++frameIndex;
++                                                    continue;
++                                                }
+                                                 for(const auto& candidate:st.verified.frames) {
+                                                     if(candidate.hash!=hash || candidate.width!=width || candidate.height!=height)continue;
+                                                     const auto item=std::find(st.originalIndex.begin(),st.originalIndex.end(),candidate.pcIndex);
+@@ -2654,7 +2660,7 @@
+                                     }
+                                 }
+                                 // Nothing may blend over the body (fades, white mixes): every sprite pixel inside must be plain.
+-                                if(ok && (!bodyDraw.faces.empty() || !keep.empty())) {
++                                if(ok && (hasBakedFace || !bodyDraw.faces.empty() || !keep.empty())) {
+                                     for(int y=std::max(by,0);y<std::min(by+bh,152) && ok;y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++) {
+                                         const size_t at=size_t(y)*320+x;
+                                         if(planes.source[at]==0 && planes.spriteWhiteWeight[at]!=0) {ok=false;why="a blend over the body";break;}
+@@ -2664,7 +2670,7 @@
+                                         if(offset[0]||offset[1]||offset[2])ok=false;
+                                     }
+                                 }
+-                                if(ok && (!bodyDraw.faces.empty() || !keep.empty())) {
++                                if(ok && (hasBakedFace || !bodyDraw.faces.empty() || !keep.empty())) {
+                                     bodyDraw.valid=true;bodyDraw.slot=slot;bodyDraw.x=bx;bodyDraw.y=by;bodyDraw.w=bw;bodyDraw.h=bh;bodyDraw.keep=keep;
+                                     // TP5b: a cut-out body (the PC picture has the scene painted in) is drawn only where the Saturn
+                                     // sprites are opaque; everything else keeps the scene behind it.
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -5,10 +5,19 @@
+ #include <string_view>
+ namespace port {
+ struct VerifiedBodyFace { uint64_t hash; unsigned width, height, pcIndex; int pcX=-1, pcY=-1; };
++struct VerifiedBakedFace {
++    uint64_t hash=0;
++    unsigned width=0, height=0;
++    int x=0, y=0;
++    constexpr bool matches(uint64_t pixels, unsigned w, unsigned h, int dx, int dy) const {
++        return hash && hash==pixels && width==w && height==h && x==dx && y==dy;
++    }
++};
+ struct VerifiedBodyFaces {
+     uint64_t nativeAsset, pcAsset;
+     std::span<const VerifiedBodyFace> frames;
+     bool allowHeuristicFallback=false;
++    VerifiedBakedFace baked;
+ };
+ inline constexpr VerifiedBodyFace kNC20[] = {
+     {0x00C3995FAC06E28Dull, 24, 24, 49},
+@@ -185,8 +194,17 @@
+     {0x3B1824A64529257Cull,24,24,58,112,121},
+ };
+ 
++// NC25.SPR group 10 leaves its authored closed eyes on the body image.
++inline constexpr VerifiedBodyFace kNC25[] = {
++    {0x8D057D175FA95006ull,24,24,93,240,77},
++    {0x88EDAECE4ECADBBBull,24,24,94,240,77},
++    {0x8AADA8C2504B9066ull,24,24,97,240,77},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
+     if (name == "NC10.BIN") return {0xFAF25875698D3053ull, 0xCBD86983994FF9C4ull, kNC10, true};
++    if (name == "NC25.BIN") return {0x177C36A50C4CD313ull, 0x7D7DE6C915DE21C7ull, kNC25, true,
++        {0x7D07BBDDE5F6F97Dull,48,24,104,24}};
+     if (name == "NC50.BIN") return {0x2713B2FC1E22BEC7ull, 0xE7290E1124DB4414ull, kNC50, true};
+     if (name == "NC55.BIN") return {0x71438806B6CC7698ull, 0x57B26C77E879C89Full, kNC55, true};
+     if (name == "NC3018.BIN") return {0x246B7B9A3865FE6Aull, 0x0770708C73A587ADull, kNC3018};
