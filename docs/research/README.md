@@ -78,6 +78,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [chapter1-wide-transitions.md](chapter1-wide-transitions.md) — evidence or report of the presentation block and chapter 1 coverage.
 - [dialogue-catalog.md](dialogue-catalog.md) — evidence or report of the presentation block and chapter 1 coverage.
 - [portrait-animation-coverage.md](portrait-animation-coverage.md) — evidence or report of the presentation block and chapter 1 coverage.
+- [Tactical map, unit and item pairings](tactical-pairing.md)
+- [Saturn tactical unit bank format](saturn-unit-bank-format.md)
 - [tactical-menu-independent-reference.md](tactical-menu-independent-reference.md) — evidence or report of the presentation block and chapter 1 coverage.
 
 - [dialogue-panel-compositing.md](dialogue-panel-compositing.md): Exact Saturn blend and background continuity inside the panel.
@@ -121,6 +123,9 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [EVT overlay registry](evt-overlay-registry.md)
 - [bg-matching-progress.md](bg-matching-progress.md): Running log of the PC BG scene-image matching by screenshot; counts only.
 - [NC3058 cut-out at 1440p](nc3058-cutout-1440p.md) records the natural scene, native mask and facial fallback.
+- [NC81 neck underlay and NC90 at 1440p](nc81-nc90-1440p.md)
+- [Chapter 1 park speech performance](park-speech-performance.md)
+- [NC3018 face placement at 1440p](nc3018-registered-faces.md)
 - [saturn-bg-format.md](saturn-bg-format.md): Saturn BG*.BIN/BBG*.BIN layouts (three variants) and the mass BG pairing by file number (`config/hd-scene-bg-map.json`).
 - [bg-matching-shards.md](bg-matching-shards.md): Split of the 766 PC BG images into shards so the matching can run in parallel.
 - [pc-asset-census.md](pc-asset-census.md): Header-level census of the PC edition cabinet that sizes the HD categories.
@@ -133,13 +138,14 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [EVE0116 tactical inset](eve0116-tactical-inset.md): disc-1 episode-1 tactical close-up in HD with 1440p verification.
 - [EVE0118 tactical inset](eve0118-tactical-inset.md): disc-1 farewell picture in HD with 1440p verification.
 - [IC01 HD intermission](ic01-hd-intermission.md) — Verified Chapter 1 intermission backdrop.
-- [IC0501 intermission witness](ic0501-intermission-witness.md) — Native Chapter 5 menu, emblem and floral fade.
+- [IC0501 intermission witness](ic0501-intermission-witness.md) — Chapter 5 menu, emblem and both floral fades at 1440p, with verified Enhanced substitution.
 - [Jumping to a chapter or scene](scene-jump.md) (test tool only): Continue from a copied save, states along the way, random exploration; what is not done.
 - [HD chapter 1 report](hd-chapter-1.md): what chapter 1 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 2 report](hd-chapter-2.md): what chapter 2 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 3 report](hd-chapter-3.md): what chapter 3 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [th3-native-attribution.md](th3-native-attribution.md) — Exact disc-1 reads and native frame evidence.
 - [MAP04 tiled ground](map04-pc-ground.md) records the Chapter 3 ground draw and native animated layers.
+- [MAP05 tiled ground](map05-pc-ground.md)
 - [HD chapter 4 report](hd-chapter-4.md): what chapter 4 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 5 report](hd-chapter-5.md): what chapter 5 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 6 report](hd-chapter-6.md): what chapter 6 shows per resource class, its status, ranked next actions and what needs the owner's discs.
@@ -163,3 +169,6 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Full-frame battle pictures](bbg-full-frame.md)
 
 - [Constrained scroll fits and scenario references](tp2a-remaining-scroll.md)
+
+- [Offline crop measurements for size mismatches](size-candidates.md)
+- [VDP2 line reuse](vdp2-line-reuse-design.md)

@@ -1,0 +1,158 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -304,6 +304,24 @@
+     BackgroundWorkers backgroundWorkers;
+     bool backgroundWarmupStarted=false;
+     SDL_Texture *foreground=nullptr;
++    struct MixedPixel {
++        uint32_t source = 0;
++        uint32_t topRgb = 0;
++        std::array<int16_t, 3> offset{};
++        uint8_t weight = 0;
++        bool operator==(const MixedPixel&) const = default;
++    };
++    struct MixedLayerCache {
++        const Backdrop* backdrop = nullptr;
++        std::array<int, 10> geometry{};
++        std::vector<MixedPixel> pixels;
++    };
++    MixedLayerCache panelMixCache, pictureMixCache, shadowMixCache;
++    const auto invalidateMixedLayers=[&] {
++        panelMixCache.backdrop=pictureMixCache.backdrop=shadowMixCache.backdrop=nullptr;
++    };
++    const bool mixCacheEnabled = std::getenv("SATRECOMP_DISABLE_MIX_CACHE")==nullptr;
++    uint64_t mixHits=0,mixUploads=0,mixUploadedBytes=0;
+     SDL_Texture *panelTexture=nullptr;int panelWidth=0,panelHeight=0;
+     SDL_Texture *pictureMixTexture=nullptr,*fadeBackdropTexture=nullptr,*shadowMixTexture=nullptr;
+     int pictureMixWidth=0,pictureMixHeight=0,fadeBackdropWidth=0,fadeBackdropHeight=0,shadowMixWidth=0,shadowMixHeight=0;
+@@ -531,6 +549,7 @@
+         foreground=nullptr;
+         if(panelTexture)SDL_DestroyTexture(panelTexture);
+         panelTexture=nullptr;panelWidth=panelHeight=0;
++        invalidateMixedLayers();
+         if(pictureMixTexture)SDL_DestroyTexture(pictureMixTexture);
+         if(fadeBackdropTexture)SDL_DestroyTexture(fadeBackdropTexture);
+         if(shadowMixTexture)SDL_DestroyTexture(shadowMixTexture);
+@@ -1825,7 +1844,7 @@
+                 if(firstMovieBlank) {enhanced=true;presentationKind="movie-transition";}
+                 else {
+                 const auto uploadLayer=[&](SDL_Texture*& cachedTexture,int& cachedWidth,int& cachedHeight,
+-                        std::vector<uint32_t>& pixels,const IntegerViewport& fit,const SDL_FRect& crop,
++                        std::vector<uint32_t>& pixels,MixedLayerCache& cache,const IntegerViewport& fit,const SDL_FRect& crop,
+                         const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr,
+                         bool replaceIc0501=false) -> bool {
+                     const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
+@@ -1843,6 +1862,37 @@
+                         };
+                         const int scale=fit.scale,left=int(crop.x),top=int(crop.y);
+                         const int columns=(fit.w+scale-1)/scale,lines=(fit.h+scale-1)/scale;
++                        // The backdrop's unshifted pixels are immutable while its SDL renderer lives.
++                        const std::array geometry{fit.x,fit.y,fit.w,fit.h,scale,left,top,
++                                                  int(bg.x),int(bg.y),cover.scale};
++                        const int startX=std::clamp(left,0,320),stopX=std::clamp(left+columns,0,320);
++                        const int startY=std::clamp(top,0,224),stopY=std::clamp(top+lines,0,224);
++                        const auto mixInput=[&](size_t at) {
++                            const uint32_t source=solidRecipe?0xFF000000u:sourcePixels[at];
++                            if (source>>24) {
++                                const auto& recipe=recipeAt(at);
++                                if (recipe.lowerWeight)
++                                    return MixedPixel{source,recipe.topRgb,recipe.postMixOffset,recipe.lowerWeight};
++                            }
++                            return MixedPixel{source};
++                        };
++                        if (mixCacheEnabled && !replaceIc0501 && cachedTexture &&
++                            cache.backdrop==selectedBackdrop && cache.geometry==geometry) {
++                            auto previous=cache.pixels.begin();
++                            bool same=true;
++                            for (int sy=startY;sy<stopY && same;++sy) {
++                                for (int sx=startX;sx<stopX;++sx,++previous) {
++                                    if (mixInput(size_t(sy)*320+sx)!=*previous) {
++                                        same=false;
++                                        break;
++                                    }
++                                }
++                            }
++                            if (same) {
++                                ++mixHits;
++                                return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
++                            }
++                        }
+                         bool mayMix=replaceIc0501;
+                         for(int ly=0;ly<lines && !mayMix;ly++) {
+                             const int sy=top+ly;if(sy<0 || sy>=224)continue;
+@@ -1936,8 +1986,25 @@
+                                     SDL_DestroyTexture(cachedTexture);cachedTexture=nullptr;cachedWidth=cachedHeight=0;
+                                 }
+                             }
+-                            if(cachedTexture && SDL_UpdateTexture(cachedTexture,nullptr,pixels.data(),fit.w*sizeof(uint32_t)))
++                            cache.backdrop=nullptr;
++                            if(cachedTexture && SDL_UpdateTexture(cachedTexture,nullptr,pixels.data(),fit.w*sizeof(uint32_t))) {
++                                ++mixUploads;
++                                mixUploadedBytes+=size_t(fit.w)*fit.h*sizeof(uint32_t);
++                                if (mixCacheEnabled && !replaceIc0501) {
++                                    try {
++                                        cache.pixels.resize(size_t(stopX-startX)*(stopY-startY));
++                                        auto saved=cache.pixels.begin();
++                                        for (int sy=startY;sy<stopY;++sy)
++                                            for (int sx=startX;sx<stopX;++sx)
++                                                *saved++=mixInput(size_t(sy)*320+sx);
++                                        cache.geometry=geometry;
++                                        cache.backdrop=selectedBackdrop;
++                                    } catch (const std::bad_alloc&) {
++                                        // The texture is already ready to draw.
++                                    }
++                                }
+                                 return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
++                            }
+                         }
+                     }
+                 }
+@@ -2362,13 +2429,13 @@
+                         const auto shadowRecipe=UniformPictureShadowRecipe(planes.panelMix,planes.floralCoverMix);
+                         auto shadowFit=zoom.picture;shadowFit.x+=zoom.shadow;shadowFit.y+=zoom.shadow;
+                         if(!shadowRecipe ||
+-                           !uploadLayer(shadowMixTexture,shadowMixWidth,shadowMixHeight,shadowMixPixels,shadowFit,imageCrop,zoomForeground,&*shadowRecipe)) {
++                           !uploadLayer(shadowMixTexture,shadowMixWidth,shadowMixHeight,shadowMixPixels,shadowMixCache,shadowFit,imageCrop,zoomForeground,&*shadowRecipe)) {
+                             SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+                             SDL_SetRenderDrawColor(renderer,80,80,80,166);
+                             SDL_RenderFillRect(renderer,&shadow);
+                             SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+                         }
+-                        if(!uploadLayer(pictureMixTexture,pictureMixWidth,pictureMixHeight,pictureMixPixels,zoom.picture,imageCrop,zoomForeground)) {
++                        if(!uploadLayer(pictureMixTexture,pictureMixWidth,pictureMixHeight,pictureMixPixels,pictureMixCache,zoom.picture,imageCrop,zoomForeground)) {
+                             // T74: when the picture on screen is a recognised Saturn scene picture and nothing
+                             // blends over it, draw the PC picture under the native overlays (actors, clock).
+                             bool drewHd=false;
+@@ -2857,7 +2924,7 @@
+                     SDL_UpdateTexture(foreground,nullptr,clipForeground.data(),320*sizeof(uint32_t));
+                     SDL_RenderTexture(renderer,foreground,&crop,&target);
+                 } else
+-                if(scene.movieOnly || !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,fit,crop,mixedSource,
++                if(scene.movieOnly || !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,panelMixCache,fit,crop,mixedSource,
+                     nullptr, icReady && !splitZoom && crop.x == 0 && crop.y == 0 && crop.w == 320 && crop.h == 224 &&
+                     fit.x == baseFit.x && fit.y == baseFit.y && fit.w == baseFit.w && fit.h == baseFit.h))
+                     SDL_RenderTexture(renderer,content,&crop,&target);
+@@ -3536,6 +3603,12 @@
+             }
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
++            case SDL_EVENT_RENDER_DEVICE_RESET:
++                panelWidth=pictureMixWidth=shadowMixWidth=0;
++                [[fallthrough]];
++            case SDL_EVENT_RENDER_TARGETS_RESET:
++                invalidateMixedLayers();
++                break;
+             case SDL_EVENT_KEY_DOWN:
+                 if ((ev.key.scancode == SDL_SCANCODE_ESCAPE || ev.key.scancode == SDL_SCANCODE_F1) && !ev.key.repeat) {
+                     toggleMenu();
+@@ -3908,6 +3981,9 @@
+     }
+ 
+     frameProfile.Report();
++    if (frameProfile.on)
++        std::fprintf(stderr,"mixed layers: hits=%llu uploads=%llu bytes=%llu\n",
++                     (unsigned long long)mixHits,(unsigned long long)mixUploads,(unsigned long long)mixUploadedBytes);
+     port.audioSink = nullptr;
+     if (audio.stream) {
+         SDL_DestroyAudioStream(audio.stream);

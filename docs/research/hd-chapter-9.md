@@ -126,7 +126,7 @@ disc. Their indistinguishable visible region provides no
 file-specific attribution here. The two already attributed
 Chapter 1 portrait occurrences and the separate BG2238 HD
 draw remain intact. This is native attribution. It does not
-add new HD draws, certify later routes or change a package.
+add new HD draws, certify later routes or change a package. The later [NC81 underlay replay](nc81-nc90-1440p.md) verifies the HD body with the native face in the storage checkpoint. The [registered NC3018 face replay](nc3018-registered-faces.md) verifies the corrected face placement in the cold checkpoint.
 
 At block close the project measured 61,293,478,622 logical bytes
 with hard links counted once and reparse points excluded, above

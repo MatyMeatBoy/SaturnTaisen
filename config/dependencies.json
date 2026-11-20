@@ -139,7 +139,19 @@
       "patches/0141-sakura-face02-tactical-portraits.patch",
       "patches/0142-sakura-body-cutout-clip.patch",
       "patches/0143-sakura-calibrated-scroll-pictures.patch",
-      "patches/0144-sakura-vdp2-line-reuse.patch"
+      "patches/0144-sakura-ic0501-hd-compositor.patch",
+      "patches/0145-sakura-two-calibrated-scroll-rows.patch",
+      "patches/0146-sakura-hd-cd2-load-icon.patch",
+      "patches/0147-sakura-add-inventory-cards.patch",
+      "patches/0148-sakura-registered-nc4138-body.patch",
+      "patches/0149-sakura-nc81-native-neck-underlay.patch",
+      "patches/0150-sakura-load-selector-arrows.patch",
+      "patches/0151-sakura-registered-nc3018-faces.patch",
+      "patches/0152-sakura-registered-nc3125-nc3126-bodies.patch",
+      "patches/0153-sakura-map05-tiled-ground.patch",
+      "patches/0154-sakura-reuse-floral-composites.patch",
+      "patches/0155-sakura-fast-body-frame-matching.patch",
+      "patches/0156-sakura-vdp2-line-reuse.patch"
     ]
   }
 }

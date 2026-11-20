@@ -22,15 +22,18 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(film_key({'disc': 2, 'lba': 300}, 4096), (2, 452))
 
 
-    def test_chapter5_intermission_has_native_witness_on_disc1(self):
+    def test_chapter5_intermission_has_verified_hd_draw_on_disc1(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         chapter5 = catalog['chapters'][4]['resources']['scene-pictures']
         row = chapter5['1:/SAKURA1/IC0501.BIN']
-        self.assertEqual((row['association'], row['status']), ('observed', 'paired-not-wired'))
+        self.assertEqual((row['association'], row['status']), ('observed', 'hd'))
         self.assertEqual(row['pc'], 'SAKURA1/ICATCH/IC0501.SPR')
-        self.assertFalse(row.get('verified_in_game'))
-        self.assertIn('2:/SAKURA1/IC0501.BIN', catalog['unassigned']['scene-pictures'])
+        self.assertTrue(row['verified_in_game'])
+        self.assertEqual(row['runtime_evidence'], 'docs/research/ic0501-intermission-witness.md#enhanced-presentation')
+        disc2 = catalog['unassigned']['scene-pictures']['2:/SAKURA1/IC0501.BIN']
+        self.assertEqual(disc2['status'], 'paired-not-wired')
+        self.assertFalse(disc2.get('verified_in_game'))
 
     def test_published_catalog_keeps_replacement_and_occurrence_separate(self):
         root = Path(__file__).resolve().parents[1]
@@ -151,7 +154,11 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual((film['association'], film['fad'], film['pc']), ('observed', 80874, 'MOVIE019'))
         self.assertEqual(chapter['tactical-units']['1:/SAKURA2/UNIT10.BIN']['association'], 'resident')
         self.assertEqual(chapter['menus-hud']['1:/SAKURA2/WKL10.BIN']['association'], 'resident')
-        self.assertNotIn('1:/SAKURA2/MAP10.BIN', chapter['tactical-maps'])
+        ground = chapter['tactical-maps']['1:/SAKURA2/MAP10.BIN']
+        self.assertEqual((ground['association'], ground['status']), ('observed', 'paired-not-wired'))
+        self.assertIn('different offsets', ground['reason'])
+        self.assertFalse(ground.get('verified_in_game'))
+        self.assertNotIn('runtime_evidence', ground)
 
     def test_chapter8_native_scenes_preserve_donor_decisions(self):
         root = Path(__file__).resolve().parents[1]
@@ -176,7 +183,26 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertFalse(scene.get('verified_in_game'))
         self.assertEqual(chapter['portraits']['2:/SAKURA1/1001FCE.BIN']['association'], 'resident')
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG1285.BIN']['verified_in_game'])
-        self.assertNotIn('2:/SAKURA2/MAP19.BIN', chapter['tactical-maps'])
+        ground = chapter['tactical-maps']['2:/SAKURA2/MAP19.BIN']
+        self.assertEqual((ground['association'], ground['status']), ('observed', 'paired-not-wired'))
+        self.assertIn('lamps and rails differently', ground['reason'])
+        self.assertFalse(ground.get('verified_in_game'))
+        self.assertNotIn('runtime_evidence', ground)
+
+    def test_body_witness_batch_remains_disc_scoped(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        nc90 = catalog['chapters'][4]['resources']['bodies']['1:/SAKURA1/NC90.BIN']
+        nc81 = catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC81.BIN']
+        self.assertTrue(nc90['verified_in_game'])
+        self.assertTrue(nc81['verified_in_game'])
+        self.assertTrue(nc81['native_face_fallback'])
+        self.assertEqual(nc81['runtime_evidence'], 'docs/research/nc81-nc90-1440p.md')
+        self.assertFalse(catalog['chapters'][0]['resources']['bodies']['1:/SAKURA1/NC81.BIN']['verified_in_game'])
+        nc3018 = catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC3018.BIN']
+        self.assertTrue(nc3018['verified_in_game'])
+        self.assertEqual(nc3018['runtime_evidence'], 'docs/research/nc3018-registered-faces.md')
+        self.assertFalse(catalog['unassigned']['bodies']['1:/SAKURA1/NC3018.BIN']['verified_in_game'])
 
     def test_eve202_only_attributes_the_witnessed_disc(self):
         root = Path(__file__).resolve().parents[1]
@@ -236,10 +262,20 @@ class ChapterCoverageTest(unittest.TestCase):
         groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
         rows = [row for group in groups for row in group['menus-hud'].values()]
         drawn = {(row['pc'], row['pc_image_index']) for row in rows if row['status'] == 'hd'}
-        self.assertEqual(len(drawn), 41)
-        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 3)
+        self.assertEqual(len(drawn), 47)
+        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 6)
+        self.assertIn(('SAKURA1/SYSTEM/SIS_ICON.SPR', 3), drawn)
+        self.assertEqual({index for pc, index in drawn if pc == 'SAKURA1/SYSTEM/SISTEM.SPR'}, {8, 9})
+        items = catalog['unassigned']['menus-hud']
+        for disc in (1, 2):
+            for name in ('ITEM03', 'ITEM12', 'ITEM27'):
+                with self.subTest(disc=disc, card=name):
+                    row = items[f'{disc}:/SAKURA1/{name}.BIN']
+                    self.assertEqual(row['status'], 'hd')
+                    self.assertEqual((row['pc'], row['pc_image_index']), (f'SAKURA1/ITEM/{name}.SPR', 0))
+                    self.assertEqual(row.get('verified_in_game', False), disc == 1 and name == 'ITEM12')
         self.assertEqual(sum(row.get('images', 0) for row in rows if row['status'] == 'excluded'), 394)
-        self.assertEqual(catalog['hud_census'], {'system_images': 572, 'item_images': 50})
+        self.assertEqual(catalog['hud_census'], {'system_images': 572, 'item_images': 51})
 
     def test_pc_title_donors_remain_excluded_in_both_disc_inventories(self):
         root = Path(__file__).resolve().parents[1]
@@ -247,12 +283,11 @@ class ChapterCoverageTest(unittest.TestCase):
         groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
         scenes = {key: row for group in groups for key, row in group['scene-pictures'].items()}
         for disc in (1, 2):
-            for episode in range(1, 10):
+            for episode in range(1, 11):
                 row = scenes[f'{disc}:/SAKURA1/TITLE{episode}.BIN']
                 self.assertEqual(row['status'], 'excluded')
                 self.assertEqual(row['pc'], f'SAKURA1/TITLE/TITLE{episode}.SPR')
                 self.assertFalse(row.get('verified_in_game'))
-            self.assertEqual(scenes[f'{disc}:/SAKURA1/TITLE10.BIN']['status'], 'unknown')
 
     def test_bg2238_only_records_the_witnessed_disc_and_chapter(self):
         root = Path(__file__).resolve().parents[1]
@@ -275,7 +310,7 @@ class ChapterCoverageTest(unittest.TestCase):
                     row = catalog[f'{disc}:/SAKURA1/{name}_CG.BIN']
                     self.assertEqual((row['association'], row['status']), ('unknown', 'paired-not-wired'))
                     self.assertEqual(row['pc'], f'SAKURA1/ENDING/END_{name}.SPR')
-                    self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3] if name == 'GE' else [6, 7])
+                    self.assertEqual(row['pc_image_indices'], [0, 1, 2, 3] if name == 'GE' else [6, 7, 8, 10])
                     self.assertFalse(row.get('verified_in_game'))
 
     def test_guarded_viewport_connections_have_no_in_game_witness(self):
@@ -293,7 +328,7 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         for disc in (1, 2):
-            for name in ('NC3125', 'NC3126', 'NC3290', 'NC3517', 'NC4138'):
+            for name in ('NC3290', 'NC3517'):
                 with self.subTest(disc=disc, body=name):
                     row = catalog['unassigned']['bodies'][f'{disc}:/SAKURA1/{name}.BIN']
                     self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
@@ -372,6 +407,41 @@ class ChapterCoverageTest(unittest.TestCase):
         for identity in ('0001', '00e9'):
             self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
             self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')
+
+    def test_registered_short_bodies_have_fixture_scope_only(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        rows = dict(catalog['unassigned']['bodies'])
+        for chapter in catalog['chapters']:
+            rows.update(chapter['resources']['bodies'])
+        for disc in (1, 2):
+            for name, anchor in (
+                ('NC4138', '#nc4138-registered-silhouette'),
+                ('NC3125', '#nc3125-and-nc3126-registered-subsets'),
+                ('NC3126', '#nc3125-and-nc3126-registered-subsets'),
+            ):
+                body = rows[f'{disc}:/SAKURA1/{name}.BIN']
+                self.assertEqual((body['status'], body['pc']), ('hd', f'SAKURA1/NC/{name}.SPR'))
+                self.assertTrue(body['native_face_fallback'])
+                self.assertFalse(body.get('verified_in_game'))
+                self.assertTrue(body['fixture_evidence'].endswith(anchor))
+            for other in ('NC3290', 'NC3517'):
+                self.assertEqual(rows[f'{disc}:/SAKURA1/{other}.BIN']['status'], 'paired-not-wired')
+
+    def test_scene_corridor_aliases_use_existing_runtime_keys(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        scenes = dict(catalog['unassigned']['scene-pictures'])
+        for chapter in catalog['chapters']:
+            scenes.update(chapter['resources']['scene-pictures'])
+        for disc in (1, 2):
+            for alias, canonical in (('BG1130', 'BG1134'), ('BG1131', 'BG1135')):
+                row = scenes[f'{disc}:/SAKURA1/{alias}.BIN']
+                self.assertEqual(row['status'], 'hd')
+                self.assertEqual(row['native_alias_of'], canonical)
+                self.assertEqual(row['pc'], f'SAKURA1/BG/{canonical}.SPR')
+                self.assertFalse(row.get('verified_in_game'))
+        self.assertEqual(scenes['1:/SAKURA1/BG4049.BIN']['status'], 'unpaired')
 
     def test_chapter3_0301_portrait_draws_are_occurrence_specific(self):
         root = Path(__file__).resolve().parents[1]

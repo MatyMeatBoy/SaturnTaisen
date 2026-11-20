@@ -28,6 +28,6 @@ Selecting File 1 from the original `save7.bkr` labels the save Episode 7 at fram
 | `FACE10.BIN` | 222685 | 92,740 | Low WRAM `002b3800` |
 | `M10MES.BIN` | 231556 | 10,490 | Low WRAM `002dd800` |
 
-`WKL10.BIN` and `UNIT10.BIN` enter the catalog as resident. The trace also reads `MAP10.BIN` at FAD 233232. No full copy was found in either WRAM bank and the strict replay has no map activity evidence. `FACE10.BIN` residence establishes a loaded bank with no individual portrait attribution in this test.
+`WKL10.BIN` and `UNIT10.BIN` enter the catalog as resident. The trace also reads `MAP10.BIN` at FAD 233232. No full copy was found in either WRAM bank and this strict replay stops before display. The separate [live ground review](tactical-pairing.md#live-map10-and-map19-ground-review) shows MAP10 and records why it retains the native ground. `FACE10.BIN` residence establishes a loaded bank with no individual portrait attribution in this test.
 
 The strict chapter exit, displayed tactical map and units, and the proposed later EVT22/EVE207 route remain open. The archived relay, cold save, screenshots and memory state are local under `local/work/codex-eve207/`; the disc comparison receipt is under `local/work/codex-th7-attribution/`.

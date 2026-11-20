@@ -19,7 +19,7 @@ The 0301 cold run also reads BG4114.BIN at 155055. Its complete cells at VDP2 ad
 
 The Chapter 3 second-battle save loads EVT04 at 221874. The same trace reads MAP04 at 232311 and UNIT04 at 252233. FACE04 (222410), WKL04 (253487), and FIX04 (223008) were also read. The continued mission shows the tactical map and unit activity. At continuation frame 3850, Kanna is selected, with her unit HUD and movement grid visible. MAP04 and UNIT04 are the only map and unit resources read in that route.
 
-The third-battle save reads EVT05 at 221912, MAP05 at 232479 and UNIT05 at 252273. Frame 6677 contains all 76,672 bytes of EVT05 at Low WRAM offset 0x4000 and all 81,420 bytes of UNIT05 at High WRAM offset 0xC0000. The tested 674,182-block local AOT binary stops after frame 6679 at untranslated master SH-2 entry 00204000, before a tactical frame. MAP05 has a read witness and UNIT05 has a residency witness. Both remain outside the observed tactical catalog rows. This result is specific to the tested local AOT binary and does not alter the earlier rebuilt sweep result in the [overlay registry](evt-overlay-registry.md).
+The third-battle save reads EVT05 at 221912, MAP05 at 232479 and UNIT05 at 252273. Frame 6677 contains all 76,672 bytes of EVT05 at Low WRAM offset 0x4000 and all 81,420 bytes of UNIT05 at High WRAM offset 0xC0000. The tested 674,182-block local AOT binary stops after frame 6679 at untranslated master SH-2 entry 00204000, before a tactical frame. MAP05 has a separate [interpreter ground witness](map05-pc-ground.md). UNIT05 has a residency witness. This result is specific to the tested local AOT binary and does not alter the earlier rebuilt sweep result in the [overlay registry](evt-overlay-registry.md).
 
 ## Body, portrait and film reads
 

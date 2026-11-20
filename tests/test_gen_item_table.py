@@ -38,14 +38,21 @@ class ItemTable(unittest.TestCase):
         review = json.loads((ROOT / 'config/hd-item-review.json').read_text(encoding='utf-8'))['pairs']
         textures = json.loads((ROOT / 'config/hd-item-texture-fingerprints.json').read_text(encoding='utf-8'))
         rows = g.build_rows(data, review)
-        self.assertEqual(len(rows), 38)
-        self.assertNotIn('235B09AEB829FB4C', textures)  # ITEM12 is an icon-only match
+        self.assertEqual(len(rows), 41)
+        for name, palette in (('ITEM03', '303817C07D8AD3EA'), ('ITEM12', '235B09AEB829FB4C'),
+                              ('ITEM27', '61BE6F092AD8446C')):
+            with self.subTest(item=name):
+                self.assertIn((palette, (f'SAKURA1/ITEM/{name}.SPR', 0)), rows)
         runtime_header = g.render_runtime(rows, textures)
-        patch, = (ROOT / 'patches').glob('*-sakura-hd-inventory-cards.patch')
-        section = patch.read_text(encoding='utf-8').split('diff --git a/port/item_card_table.h ', 1)[1]
-        section = section.split('diff --git ', 1)[0]
-        added = [line[1:] for line in section.splitlines() if line.startswith('+') and not line.startswith('+++')]
-        self.assertEqual(added, runtime_header.splitlines())
+        spec = json.loads((ROOT / 'config/dependencies.json').read_text(encoding='utf-8'))['satrecomp']
+        with tempfile.TemporaryDirectory() as directory:
+            header = Path(directory) / 'port/item_card_table.h'
+            for path in spec['patches']:
+                patch = ROOT / path
+                if 'diff --git a/port/item_card_table.h ' in patch.read_text(encoding='utf-8'):
+                    subprocess.run(['git', 'apply', '--include=port/item_card_table.h', str(patch)],
+                                   cwd=directory, check=True)
+            self.assertEqual(header.read_text(encoding='utf-8'), runtime_header)
 
     def test_runtime_table_rejects_mismatched_and_duplicate_fingerprints(self):
         rows = [('AA', ('A.SPR', 0)), ('BB', ('B.SPR', 0))]
@@ -66,7 +73,7 @@ class ItemTable(unittest.TestCase):
             candidates = {g.review_key(row) for row in real['pairs'] if row['tier'] == 'candidate'}
             self.assertEqual({g.review_key(row) for row in review}, candidates)
             self.assertEqual(len(review), len(candidates))
-            self.assertEqual(text.count('ull,"'), real['summary']['content'] + 26)
+            self.assertEqual(text.count('ull,"'), real['summary']['content'] + 29)
             self.assertIn('kItemCount', text)
 
 

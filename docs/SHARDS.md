@@ -4,13 +4,13 @@ Each shard is independent, has its own files and its own "done" test. Rules for 
 
 "Needs assets" means the shard cannot be finished without the owner's own Saturn discs and PC edition; a bot without them can still do the **code and tests** half (use the synthetic tests) and leave the data half to the owner.
 
-## Priority: finish HD mode first (owner, 2026-11-19)
+## Priority: playback performance and HD
 
-Bots take shards in this order; anything that does not move HD mode toward done waits. Conflicts in shared files (`docs/PENDIENTES.md`, `docs/research/bg-matching-progress.md`, `config/hd-scene-bg-review.json`): rebase on `origin/main` and keep both sides (lists and keys are unions); the coordinator does the same when integrating.
+Playback regressions with slowdown, audio breakup or flicker have priority. Use the reported scene and settings for a before-and-after replay and verify the shared renderer or runtime paths before releasing. Independent HD work continues in parallel. Conflicts in shared files (`docs/PENDIENTES.md`, `docs/research/bg-matching-progress.md`, `config/hd-scene-bg-review.json`): rebase on `origin/main` and keep both sides (lists and keys are unions); the coordinator does the same when integrating.
 
-1. **Runtime, visible in game:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106).
-2. **Data that feeds the runtime:** the background review shards (T76-T711), item and body maps.
-3. **Performance:** S6 VDP (T103), S7 SH-2 (T104), only after a visible item is blocked on someone else.
+1. **Playback performance:** T86a and T86 for scene composition, S6 VDP (T103) and S7 SH-2 (T104) for measured emulation bottlenecks.
+2. **Runtime, visible in game:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106).
+3. **Data that feeds the runtime:** the background review shards (T76-T711), item and body maps.
 4. **Owner-only:** painted art (T87).
 
 | Shard | Queue | Needs assets | Files it owns | Done when |
@@ -129,9 +129,9 @@ Send PRs as early as you have a verified slice, then keep sending: the coordinat
 - **Rebase before sending** (`git merge origin/main`, then `python tools/check_patch_stack.py`; `python tools/rebase_patch.py <patch> --author-ref=origin/<branch>` re-anchors a patch whose context moved, but it can misplace a block: always compile after).
 
 
-## Priority order (owner, 2026-11-19)
+## Priority within HD
 
-Scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, TP4a/b/c unpaired), then large bodies (TP5), portraits (TP6), videos (TP7); verification and cleanup last (TP8). Each shard is sized for one PR; send it as soon as the picture is connected and its A/B hash check is done.
+After playback regressions, take scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, TP4a/b/c unpaired), then large bodies (TP5), portraits (TP6), videos (TP7); verification and cleanup last (TP8). Each shard is sized for one PR; send it as soon as the picture is connected and its A/B hash check is done.
 
 ## Lessons for shard workers (from the integration desk)
 
@@ -171,15 +171,21 @@ Therefore:
 2. **Completion follows the chapter.** Once a chapter has attributed resources, a worker finishing the type shards (TP1-TP7) takes the items of the lowest chapter first, then the next. Chapter 1 is done when its register shows no `unknown`/`paired-not-wired` row except the documented blocked ones (`00a1`, `0169`, the IC pictures).
 3. Until a chapter is attributed, the type shards (TP1-TP7) stay the way to make progress: they are chapter-independent (palette/cell matching).
 
-## Quick-win order (2026-11-19)
+## HD shard priority by expected coverage and time
 
-Take in this order; each line is what gains the most per hour of work with what we have today:
-1. **Scroll scenes without a 2x table row (TP2a, 10 pictures)**: data rows plus an offline alignment, no game needed.
-2. **Remaining scene pairings (TP3b BBG unknown 14, TP3c 8, TP1 non-ambiguous leftovers)**: palette/cell matching, no game needed.
-3. **Unpaired scene pictures (TP4a/b/c, 56)**: look again for a counterpart; where none exists, record the reason so the row stops counting as open.
-4. **Large bodies without a decoded Saturn side (TP5, NC3125/3126/4138) and the 2 bad strides (NC3290/NC3517)**: decode work, no game needed.
-5. **Chapter attribution TH2-TH10**: needs chapter jumps/replays; slower, but it unlocks the chapter order.
-6. **Needs the owner's saves**: IC02-IC1006, the CD-2 emblem (SIS_ICON), window frames and tab panels, title/logo screens, karaoke/extra menu, 0169, 00a1.
+Work through the earliest available batch. A worker who reaches a missing witness or incompatible donor can hand off that specific blocker and take the next ready batch. Keep chapter order for gameplay witnesses.
+
+1. **Finish proven batches.** Integrate complete PRs and group exact table entries that share a renderer, such as scroll pictures, item cards and the load-menu controls. Include the existing build, opening parity and generated registers for each batch. Leave the per-picture playthrough to the spot check.
+2. **Search scene pictures across PC folders.** Compare unmatched Saturn scene plates with the PC EVENT, CG, ENDING and ICATCH subimages in one offline pass. Review the strongest exact art and geometry matches together. Connect those covered by an existing compositor, and keep separate notes for components with distinct layer or camera requirements.
+3. **Group tactical grounds by decoder and geometry.** The exact BIN/TAB inventory pairs all 27 maps. Reuse the single-image sampler or the MAP04 mosaic approach for groups with compatible tile geometry, and check raw pattern and source-layer ownership at the archived cameras. Record tactical maps separately from scene pictures.
+4. **Use the remaining ready witnesses.** Close guarded body and menu variants from existing checkpoints. Prefer several compatible resources in one replay and retain the native pixels where a donor has gaps or art changes.
+5. **Resume blocked and longer routes in parallel.** IC02–IC1006, remaining endings, rewritten camera angles and other incomplete appearances need specific states or composition analysis. Prioritize checkpoints that expose multiple unresolved resources. Continue short TP9 spot checks when a suitable checkpoint is already available.
+
+The first cross-folder pass covered 82 distinct unresolved decoded Saturn identities and 491 PC files. Of the PC files, 469 subimages met the large opaque plate filter. Ranking with 32×16 normalized luma and edge signatures produced 15 luma candidates above 0.83. All were known IC intermission pairs. No additional EVENT or CG plate was found within that filter. Keep component-level searching separate from the plate queue. The local receipt is `local/work/codex-tw2-fullscreen-bbg/cross-namespace-scenes/audit.json`.
+
+For the remaining IC pairs, preserve the verified menu and floral transition. IC0501 uses the exact on-screen source-4 palette and RGB. Its disc-file palette has a different fingerprint, even though the full 71,680 native picture bytes are present in VDP2 VRAM. Use a natural palette and layer witness before extending the fade path. Reuse the exact common compositor when that witness confirms the same layout and blend.
+
+Give the integration desk the base commit and exact PR head, the resource names and distinct count, and the proven outcomes in the PR body. Cite the replay or fixture and its resolution where relevant. Record offline pairing, compiled integration, gameplay verification and packaging at the level actually reached. Submit finished work while the desk integrates preceding patches.
 
 ## Close the chapters in order (owner, 2026-11-19). Scene shards keep priority for the many bots arriving; chapter closing (TCH1) is one worker in parallel, not a reason to stop scene work
 

@@ -1,0 +1,53 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2120,6 +2120,16 @@
+                                         SDL_SetTextureBlendMode(texture,SDL_BLENDMODE_BLEND);SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_LINEAR);
+                                         return texture;
+                                     };
++                                    // Verified face recipes may also pin a position in the PC body atlas.
++                                    if (st.verifiedAssets) for (const auto& frame:st.verified.frames) {
++                                        if (frame.pcX<0 || frame.pcY<0) continue;
++                                        const auto part=std::ranges::find(st.originalIndex,frame.pcIndex);
++                                        if (part==st.originalIndex.end()) continue;
++                                        const unsigned index=unsigned(part-st.originalIndex.begin());
++                                        if (unsigned(frame.pcX)+decoded.partW[index]<=decoded.bodyW &&
++                                            unsigned(frame.pcY)+decoded.partH[index]<=decoded.bodyH)
++                                            st.refinedPos.try_emplace(index,std::array{float(frame.pcX),float(frame.pcY)});
++                                    }
+                                     st.body=make(decoded.body,decoded.bodyW,decoded.bodyH);st.bodyW=decoded.bodyW;st.bodyH=decoded.bodyH;
+                                     st.bodyPixels=decoded.body;st.partPixels=decoded.parts;st.partSig=std::move(decoded.partSig);st.partOpaque=std::move(decoded.partOpaque);
+                                     for(size_t i=0;i<decoded.parts.size();i++) {
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -4,7 +4,7 @@
+ #include <span>
+ #include <string_view>
+ namespace port {
+-struct VerifiedBodyFace { uint64_t hash; unsigned width, height, pcIndex; };
++struct VerifiedBodyFace { uint64_t hash; unsigned width, height, pcIndex; int pcX=-1, pcY=-1; };
+ struct VerifiedBodyFaces {
+     uint64_t nativeAsset, pcAsset;
+     std::span<const VerifiedBodyFace> frames;
+@@ -132,7 +132,22 @@
+     {0xF70BF8DE5FF2D6A7ull, 24, 16, 44},
+ };
+ 
++// These native frames exhaust the two NC3018 runs. PC positions are measured
++// against subimage 0 using the stable pixels outside the animated features.
++inline constexpr VerifiedBodyFace kNC3018[] = {
++    {0x80FF6CDD39614A41ull, 56, 40, 1, 62, 49},
++    {0x02170F40DF3D9F33ull, 56, 40, 2, 62, 49},
++    {0xA4F602B1425F977Cull, 56, 40, 3, 62, 49},
++    {0x2C0FEFFD075A8D9Full, 80, 56, 4, 32, 170},
++    {0xF6C1171BD65EE3C6ull, 80, 56, 5, 32, 170},
++    {0xAB218C1EC1DC022Full, 80, 56, 6, 32, 170},
++    {0xD8E1F3BA9D459585ull, 80, 56, 7, 32, 170},
++    {0xCA22A54A2E2812F0ull, 80, 56, 8, 32, 170},
++    {0xAF36979CB0C7747Full, 80, 56, 9, 32, 170},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
++    if (name == "NC3018.BIN") return {0x246B7B9A3865FE6Aull, 0x0770708C73A587ADull, kNC3018};
+     if (name == "NC20.BIN") return {0x6D5853C18EC0B141ull, 0x6509F77B3891DF92ull, kNC20};
+     if (name == "NC30.BIN") return {0x005AB85B5EA60FEFull, 0xBA8DF2D0A3C0FC13ull, kNC30};
+     return {};

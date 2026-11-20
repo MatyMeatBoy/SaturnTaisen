@@ -29,13 +29,19 @@ Each heroine bank is 407,908 bytes and follows this layout.
 
 ## Confirmed donor records and composition
 
-[The ending bank map](../../config/hd-ending-bank-map.json) stores the four GE pairs and records 6 and 7 from each heroine bank. The color and sepia photographs have distinct palette and cell keys, each repeated across all six native banks. Their corresponding PC subimages are 6 and 7. The 16 entries represent seven inventory files and include the repeated photograph records. The catalog classifies all seven banks as `paired-not-wired`.
+[The ending bank map](../../config/hd-ending-bank-map.json) stores the four GE pairs and records 6, 7, 8 and 11 from each heroine bank. The color and sepia photographs have distinct palette and cell keys, each repeated across all six native banks. Their corresponding PC subimages are 6 and 7. The 28 entries represent seven inventory files and include the repeated photograph records. The catalog classifies all seven banks as `paired-not-wired`.
 
-The GE pictures are whole-screen variants. The runtime needs the ending viewport, fade and overlay behavior before selecting one by its native key. The four small heroine records are art components with separate bounds. The remaining close-ups have corresponding motifs and different crops. Both groups need their native framing and layer evidence before replacement.
+The GE pictures are whole-screen variants. The runtime needs the ending viewport, fade and overlay behavior before selecting one by its native key. The four small heroine records are art components with separate bounds. The small illustrations need per-record layout evidence. The close-ups and final illustrations have distinct redraws.
 
 PC subimages 0, 1 and 9 depict a different view of the theatre exterior. The PC mark at subimage 11 has different geometry and lettering. The native exterior records and the native ending mark, including localized Fin variants, remain the display sources.
 
 The comparison uses `decode_saturn_bg.py`'s row-major tile decode and `decode_spred.py`, with 32×16 grayscale signatures to rank PC candidates. The four GE variants and the two group photographs were reviewed side by side. The private full-file SHA checks, decoded contact sheets and per-record scores are in `local/work/codex-th1/tp3c-cg`.
+
+## Route-specific portraits
+
+Each of the six heroine banks pairs Saturn record 8 with PC subimage 8 and Saturn record 11 with PC subimage 10. All twelve matches rank first within their respective PC SPR and agree in character and composition. The catalog pins each 320×160 native record and its 640×320 PC donor. The PC redraws shift the background mullions, and the Sakura close-up changes the mouth. The native compositions remain in use.
+
+The English disc 2 Sakura route displays record 11 at credits frame 2,880 and record 8 at frame 3,360. Both fill the same rectangle as the group photos, `(0,16,320,176)` in half-open bounds. Each capture matches all 51,200 native pixels. Those captures establish the layout for the two Sakura records. The other routes and the four GE variants still need composition witnesses.
 
 ## Observed Sakura ending on English disc 2
 

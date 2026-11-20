@@ -876,10 +876,10 @@ dimensions and face-strip placement for these bodies remain unwitnessed.
 | NC3517 | 200×80 | 36.8% | 473×184 | 2.8% | PC uses a wider two-character strip and fills both face openings. |
 | NC4138 | 112×112 | 71.2% | 230×254 | 0% | PC paints the surroundings and fills the opening in front of the character with a flower box. |
 
-The coverage register records matching PC artwork for these five
-resources. Their compositor path stays native pending a verified
-alignment and an explicit way to preserve the animated face layers and
-scene around them. The generated body table is byte-identical.
+The coverage register originally recorded matching PC artwork for
+these five resources while preserving native composition. The later
+[NC4138 registration](#nc4138-registered-silhouette) connects one of them
+through a separate short-body overlay.
 
 At block close the main workspace measured 59,916,175,934 logical
 bytes with hard links counted once and reparse points excluded, above
@@ -894,3 +894,59 @@ bodies and 147 matches. Its nine in-game witnesses are the same.
 At the coverage correction close the workspace measured
 60,143,213,623 logical bytes. The delivered development ZIP remains
 6,315,009,692 bytes.
+
+
+### NC4138 registered silhouette
+
+All five short bodies were compared again using masked affine registration.
+Visible-pixel luminance correlation ranks NC4138 at 0.979, NC3125 at
+0.947, NC3126 at 0.856, and NC3517 at 0.803. NC3290 has only three inliers
+and a 0.204 correlation. The approved integer axis fit for NC4138 keeps
+every opaque sample inside the 230×254 donor. The comparable NC3125
+fit would lose 6,530 of 46,772 opaque samples at 2×. The other four
+retain their prior pair statuses.
+
+Patch 0148 uses the byte-identified 112×112 NC4138 body and captured
+palette in the Enhanced integer narrative viewport. The source is the
+exact 71,692-byte `NC4138.SPR`, subimage 0. The runtime builds a 224×224
+texture only within the opaque native silhouette, using the fixed PC
+registration. Every opaque source pixel must match the composed live
+VDP1 RGB without a color blend, and the whole body must fit the native
+scene rectangle. The replacement is additive. Native eyes, mouth,
+flower box and scenery remain in the compositor. An overlapping
+sprite, fade, mismatched palette, command or PC asset keeps the native
+draw. The prepared English disc 1 and 2 NC4138 files are byte-identical.
+
+A private test fixture inserted the exact original body and palette into
+a preserved narrative checkpoint. At 2560×1440 the fixture's body occupies
+(1504,85) to (2288,869). The 176,841 opaque output pixels match the
+independent donor registration exactly. 168,711 output pixels change,
+all inside the silhouette. Original, missing-donor and overlapping
+sprite controls preserve the native output. Each control set agrees on
+all 12 strict guest hashes with zero interpreted blocks. The main
+fixture guest log SHA-256 is
+`00e44e7dabc624c87091ddcb4c4ba8df7e56af8202e1b2c7fc76a2f4420f515b`.
+The 900-frame #0147 opening baseline matches every guest hash and three
+1440p images. Opening guest log SHA-256 is
+`3e0d0f59d0344ea51c62fd2a3c15311d7f8929e2b59b01a66c65cc83474737dd`.
+
+The English `0400.BIN` selects this body at offsets `0x3BEC`, `0x3C9C`
+and `0x412A` in the accessory store branch. The archive scan found no
+natural active NC4138 command in 877 saved states. The two disc entries
+are connected under the exact guard. Natural verification remains open.
+Private fixture data and receipts remain in `local/work/codex-tp3c/tp5a-align`.
+
+At block close the project measured 67,198,306,153 logical bytes, above
+the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+### NC3125 and NC3126 registered subsets
+
+Patch 0152 connects the exact 200×96 NC3125 and 192×96 NC3126 Saturn sprites to subimage 0 of their corresponding PC files. The runtime checks the native texture, palette, command geometry and donor fingerprint. Each donor fills some scenery around its character. The recipe projects a 2× sample grid into the donor, limits coverage to the opaque Saturn silhouette, and interpolates toward the native color across the final 12 donor pixels near the crop edge. Samples beyond the usable donor rectangle retain the native draw. If any opaque native pixel is occluded or blended, the full overlay is skipped. The 0148 NC4138 registration keeps its full silhouette and uses the same checked path.
+
+The private fixtures place the original palettes and sprite textures into the same preserved narrative checkpoint. At 2560×1440, both overlays start at (496,113), with extents of 1400×672 and 1344×672. The independent registration agrees on all 487,795 sampled NC3125 pixels and 587,594 NC3126 pixels. The donor changes 375,736 and 567,261 pixels, respectively, all inside the registered subset. Original and overlapping-sprite controls match their missing-donor captures at frames 2 and 8. Each fixture mode agrees on all 12 guest hashes within its seed and reports zero interpreted blocks.
+
+Against the patch 0151 runtime, the existing NC4138 fixture matches both 1440p captures and all 12 guest hashes. The muted opening replay agrees on 900 guest hashes and three 1440p captures, with zero interpreted blocks. Its guest-log SHA-256 is `3e0d0f59d0344ea51c62fd2a3c15311d7f8929e2b59b01a66c65cc83474737dd`.
+
+The coverage register records fixture evidence for both disc entries. Natural scene draws, other animation phases and package validation remain open. NC3290 and NC3517 still await safe registration. Private fixtures and receipts are under `local/work/codex-tp3c/nc3125-subset/`.
+
+At block close the project measured 68,423,377,348 logical bytes, above the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

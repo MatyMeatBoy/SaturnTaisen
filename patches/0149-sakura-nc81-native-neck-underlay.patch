@@ -1,0 +1,66 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -933,7 +933,7 @@
+         bool tried=false;SDL_Texture* body=nullptr;unsigned bodyW=0,bodyH=0;
+         bool cutout=false;SDL_Texture* maskTexture=nullptr;std::optional<uint64_t> maskHash;
+         std::vector<std::array<int,3>> maskRuns;
+-        VerifiedBodyFaces verified;bool verifiedAssets=false;std::vector<unsigned> originalIndex;
++        VerifiedBodyFaces verified;bool verifiedAssets=false, nc81NeckUnderlay=false;std::vector<unsigned> originalIndex;
+         std::future<BodyPixels> pending;std::vector<SDL_Texture*> parts;std::vector<unsigned> partW,partH,runCount;
+         std::vector<uint8_t> nc;std::unordered_map<uint64_t,long> offsets;
+         std::vector<uint32_t> bodyPixels;std::vector<std::vector<uint32_t>> partPixels;
+@@ -2082,6 +2082,10 @@
+                                     st.verifiedAssets=!st.verified.frames.empty() &&
+                                         AtlasFingerprint(st.nc)==st.verified.nativeAsset &&
+                                         decoded.pcAsset==st.verified.pcAsset;
++                                    st.nc81NeckUnderlay=entry.hash==0xCAEE5C58F639F871ull &&
++                                        AtlasFingerprint(st.nc)==0x8127C7DF8AA7D6EAull &&
++                                        decoded.pcAsset==0xD518AFE0D9E5D944ull &&
++                                        decoded.bodyW==416 && decoded.bodyH==320;
+                                     auto make=[&](const std::vector<uint32_t>& pixels,unsigned w,unsigned h)->SDL_Texture* {
+                                         if(!w || !h || pixels.size()!=size_t(w)*h)return nullptr;
+                                         auto* texture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STATIC,int(w),int(h));
+@@ -2105,6 +2109,7 @@
+                                 bool ok=st.body && !st.nc.empty() && st.nc.size()>bodyEnd && bw>0 && bh>0 && !st.parts.empty();
+                                 std::vector<std::pair<long,const PresentationSprite*>> found;
+                                 std::vector<std::array<int,4>> keep;
++                                std::optional<std::array<int,4>> nativeNc81Neck;
+                                 const char* why=nullptr;
+                                 if(!ok)why=st.body?"no PC parts":"PC picture not ready";
+                                 if(ok)for(const auto& sp:planes.sprites) {
+@@ -2246,6 +2251,10 @@
+                                             // No clear PC part: this frame stays as the native sprite over the HD body (its expression is
+                                             // right, only its sharpness is not). The body is drawn if at least one frame was matched.
+                                             keep.push_back({sp->x,sp->y,spriteWidth(*sp),spriteHeight(*sp)});
++                                            if(st.nc81NeckUnderlay && bw==208 && bh==144 &&
++                                                hash==0xDF6C28F40A21C707ull && spriteWidth(*sp)==64 &&
++                                                spriteHeight(*sp)==40 && sp->x==bx+64 && sp->y==by+48)
++                                                nativeNc81Neck=std::array{bx,sp->y,bw,56};
+                                             continue;
+                                         }
+                                         const unsigned ordinal=unsigned(part);
+@@ -2275,6 +2284,24 @@
+                                     for(int y=std::max(by,0);y<std::min(by+bh,152);y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++) {
+                                         bool kept=false;
+                                         for(const auto& r:keep)if(x>=r[0] && x<r[0]+r[2] && y>=r[1] && y<r[1]+r[3]) {kept=true;break;}
++                                        // The pinned PC body has a green vacancy below this native face strip.
++                                        // Retain the native underlay only if the linear footprint can see a keyed texel.
++                                        if (!kept && nativeNc81Neck) {
++                                            const auto& [left,top,width,height]=*nativeNc81Neck;
++                                            if(x>=left && x<left+width && y>=top && y<top+height) {
++                                                constexpr int pcWidth=416,pcHeight=320;
++                                                const int x0=std::max(0,((x-bx)*2*pcWidth-bw)/(2*bw));
++                                                const int x1=std::min(pcWidth-1,(((x-bx+1)*2*pcWidth-bw)/(2*bw))+1);
++                                                const int y0=((y-by)*2*pcHeight-bh)/(2*bh);
++                                                const int y1=(((y-by+1)*2*pcHeight-bh)/(2*bh))+1;
++                                                for(int py=y0;py<=y1 && !kept;++py)
++                                                    for(int px=x0;px<=x1;++px)
++                                                        if(!(st.bodyPixels[size_t(py)*pcWidth+px]>>24)) {
++                                                            kept=true;
++                                                            break;
++                                                        }
++                                            }
++                                        }
+                                         if(!kept && planes.source[size_t(y)*320+x]==0)zoomForeground[size_t(y)*320+x]=0;
+                                     }
+                                 } else {
