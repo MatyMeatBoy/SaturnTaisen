@@ -145,3 +145,17 @@ matched. Each pair ran 220 strict fields with identical guest hashes
 and save memory. The byte-identical BG2022 alias shares the donor
 identity. Verification applies to the witnessed disc 2 BG2023 entry.
 Package inclusion is pending.
+
+## BG2026 under BG3026
+
+Patch 0268 checks the disc 2 BG2026 palette, opaque plane, foreground
+palette and visible source ownership before drawing the registered PC
+plate. The native light effect is preserved while the plane is translucent.
+
+In the 220-field ending replay at 2560 × 1440, fields 8 and 16 match the
+control. Each sampled opaque field from 20 to 204 changes 459,760 pixels
+inside (272,29)–(2288,1037). Every changed pixel matches the independently
+decoded Saturn source before replacement and the PC donor within two
+channel levels after replacement. The foreground remains exact. The
+Original and invalid donor controls match across all sampled fields.
+Release packaging is pending.
