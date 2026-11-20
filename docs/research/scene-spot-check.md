@@ -275,3 +275,21 @@ BG2004 first changes at sampled field 170, after two matching samples.
 Private replay commands, state anchors, CD trace, RGB captures and
 comparison outputs are retained under
 `local/work/codex-th1/ch1-scene-draws/aliases-0188/`.
+
+## BG1171 on English disc 1
+
+The natural Chapter 3 stage-wing continuation requests BG1171 at
+FAD 142446 for 23 sectors. The archived native frames 8500 and 9000
+show the same background. Resume the matching state and SRAM from
+local/work/codex-th1/bg2290-live/after-stage-wing without controller input.
+
+The exact runtime through patch 0188 matches 180 strict guest hashes
+and SRAM with the donor present or absent. Both runs report zero
+interpreted blocks. At frames 25, 75 and 150, all RGB differences
+stay inside the existing image viewport (272,29) to (2288,1037).
+The 1,330,988 changed pixels per capture match the independent bilinear
+decode of BG1171.SPR subimage 0 within two levels per RGB channel.
+Every changed pixel falls on unoccluded Saturn picture content before
+replacement, so the native foreground remains exact.
+
+Disc 2 and package inclusion remain open.
