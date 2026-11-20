@@ -1,0 +1,162 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -9,6 +9,7 @@
+ #include "presentation_layout.h"
+ #include "movie_phase.h"
+ #include "panel_compositing.h"
++#include "../video/counters.h"
+ #include "map_crossfade.h"
+ #include "screen_backdrop.h"
+ #include "ic_intermission_table.h"
+@@ -943,6 +944,8 @@
+          port::EveRect{24, 16, 255, 132}, 24},
+     };
+     SceneHd saveCompleteFrame;
++    SceneHd roomChoiceFrame;
++    std::vector<uint8_t> roomChoiceInk;
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+@@ -981,6 +984,19 @@
+     };
+     std::array<SceneHd, std::size(endingPhotos)> endingPhotoImages;
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
++    const auto finishSceneInset = [&](SceneHd& inset, SDL_BlendMode blend) {
++        if (!inset.pending.valid() || inset.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
++            return;
++        auto pixels = inset.pending.get();
++        if (pixels.pixels.empty()) return;
++        auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++            SDL_TEXTUREACCESS_STATIC, pixels.width, pixels.height);
++        if (picture && SDL_UpdateTexture(picture, nullptr, pixels.pixels.data(), pixels.width * 4)) {
++            SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_NEAREST);
++            SDL_SetTextureBlendMode(picture, blend);
++            inset.texture = picture;
++        } else if (picture) SDL_DestroyTexture(picture);
++    };
+     auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop,
+                            unsigned feather = 0, unsigned index = port::kEve202PcImage,
+                            std::vector<uint32_t> theatreUnder = {}, int colorOffset = 0) {
+@@ -1035,17 +1051,7 @@
+                     return result;
+                 });
+         }
+-        if (!inset.pending.valid() || inset.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
+-            return;
+-        auto pixels = inset.pending.get();
+-        if (pixels.pixels.empty()) return;
+-        auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+-            SDL_TEXTUREACCESS_STATIC, pixels.width, pixels.height);
+-        if (picture && SDL_UpdateTexture(picture, nullptr, pixels.pixels.data(), pixels.width * 4)) {
+-            SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_NEAREST);
+-            SDL_SetTextureBlendMode(picture, feather ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+-            inset.texture = picture;
+-        } else if (picture) SDL_DestroyTexture(picture);
++        finishSceneInset(inset, feather ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+     };
+     const auto insetRgb = [](std::span<const uint32_t> pixels, port::EveRect rect = port::kEve202NativeRect) {
+         uint64_t hash = 14695981039346656037ull;
+@@ -3629,6 +3635,102 @@
+                     }
+                 }
+             }
++            if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 2 &&
++                satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
++                texW == 320 && texH == 224 && baseFit.scale >= 2 &&
++                where.x == baseFit.x && where.y == baseFit.y && where.w == baseFit.w && where.h == baseFit.h &&
++                softwareShown.size() == 320 * 224) {
++                const auto& frame = port.videoRenderer->PresentationFrame();
++                constexpr port::EveRect roomChoice{32, 40, 257, 89};
++                constexpr int sourceWidth=256, sourceHeight=88;
++                if (frame.topSource.size() == 320 * 224 &&
++                    PcBackdropHash(std::span{frame.palette}.subspan(0xA00, 512)) == 0x5AB92AFB3C366AFEull) {
++                    const auto match = std::ranges::find_if(frame.sprites, [&](const auto& sprite) {
++                        const auto& cmd = sprite.command.words;
++                        return cmd[0] == 0x1A01 && cmd[2] == 0x00A0 && cmd[3] == 0xC500 && cmd[5] == 0x2058 &&
++                            sprite.x == 160 && sprite.y == 84 && cmd[8] == 0x0100 && cmd[9] == 0x0058 &&
++                            sprite.pixels.size() == sourceWidth * sourceHeight &&
++                            PcBackdropHash(sprite.pixels) == 0x79B376CDE20172A5ull;
++                    });
++                    if (match != frame.sprites.end()) {
++                        const auto rasterAxis = [](int source, int output) {
++                            satrecomp::video::TexelWalk walk;
++                            walk.Begin(output, 0, source - 1);
++                            std::vector<unsigned> samples(output);
++                            for (auto& sample : samples) {
++                                while (walk.Behind()) walk.Advance();
++                                sample = walk.At();
++                                walk.PixelDone();
++                            }
++                            return samples;
++                        };
++                        static const auto columns = rasterAxis(sourceWidth, roomChoice.width);
++                        static const auto rows = rasterAxis(sourceHeight, roomChoice.height);
++                        if (roomChoiceInk.empty()) {
++                            roomChoiceInk.reserve(roomChoice.width * roomChoice.height);
++                            for (const unsigned y : rows)
++                                for (const unsigned x : columns)
++                                    roomChoiceInk.push_back(match->pixels[y * sourceWidth + x]);
++                        }
++                        constexpr uint32_t colors[] = {0, 0x003898D8, 0x00003858};
++                        bool owned = true;
++                        for (int y = 0; y < roomChoice.height && owned; ++y) {
++                            for (int x = 0; x < roomChoice.width; ++x) {
++                                const unsigned ink = roomChoiceInk[size_t(y) * roomChoice.width + x];
++                                if (!ink) continue;
++                                const size_t at = size_t(roomChoice.y + y) * 320 + roomChoice.x + x;
++                                if (ink >= std::size(colors) || frame.topSource[at] != 0 ||
++                                    (softwareShown[at] & 0xFFFFFF) != colors[ink]) {
++                                    owned = false;
++                                    break;
++                                }
++                            }
++                        }
++                        if (owned) {
++                            if (!roomChoiceFrame.tried) {
++                                roomChoiceFrame.tried = true;
++                                roomChoiceFrame.pending = std::async(std::launch::async,
++                                    [file = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/WINDOW.SPR",
++                                     ink = roomChoiceInk]() {
++                                        SceneHdPixels result;
++                                        std::vector<uint8_t> bytes;
++                                        if (!ReadPcBackdropFile(file, bytes, 93941) || bytes.size() != 93941 ||
++                                            PcBackdropHash(bytes) != 0xAF9AB06AB9D017A2ull) return result;
++                                        std::vector<PcSprite> images;
++                                        std::string error;
++                                        if (!DecodePcSprites(bytes, images, error)) return result;
++                                        for (const auto& image : images) {
++                                            if (image.index != 2 || image.width != 512 || image.height != 176) continue;
++                                            result.width = 514;
++                                            result.height = 178;
++                                            result.pixels.resize(result.width * result.height);
++                                            for (unsigned y = 0; y < result.height; ++y) {
++                                                for (unsigned x = 0; x < result.width; ++x) {
++                                                    const size_t native = size_t(y / 2) * 257 + x / 2;
++                                                    if (!ink[native]) continue;
++                                                    const uint32_t pixel = image.pixels[(2 * rows[y / 2] + y % 2) * 512 +
++                                                                                       2 * columns[x / 2] + x % 2];
++                                                    const uint32_t rgb = pixel & 0xFFFFFFu;
++                                                    if ((pixel >> 24) == 255 && rgb != 0x00FF00u && rgb != 0xFFFF00u)
++                                                        result.pixels[size_t(y) * result.width + x] = pixel;
++                                                }
++                                            }
++                                            return result;
++                                        }
++                                        return result;
++                                    });
++                            }
++                            finishSceneInset(roomChoiceFrame, SDL_BLENDMODE_BLEND);
++                            if (roomChoiceFrame.texture) {
++                                const auto t = port::EveInsetDestination(roomChoice, baseFit.x, baseFit.y, baseFit.scale);
++                                const SDL_FRect target{float(t.x), float(t.y), float(t.width), float(t.height)};
++                                SDL_RenderTexture(renderer, roomChoiceFrame.texture, nullptr, &target);
++                            }
++                        }
++                    }
++                }
++            }
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer && shownDisc == 1 &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_portraits") == 0 && !port.opt.pcAssetsPath.empty() &&

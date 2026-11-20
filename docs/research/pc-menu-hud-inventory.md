@@ -207,7 +207,7 @@ Private inputs, states and controls remain under `local/work/codex-th1/load-arro
 
 The register (`config/hd-chapter-coverage.json`, category `menus-hud`) now carries the runtime-drawn menu/HUD pictures, and `tools/build_hd_progress.py` takes the `hud-menus` integrated count from it. The map is explicit in `tools/hd_chapter_coverage.py` (`SYSTEM_HUD_DRAWS`, `SYSTEM_HUD_EXCLUDED`; item cards come from the same selection as `tools/gen_item_table.py`). A picture counts once per PC image, whatever the disc.
 
-Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 51 distinct PC item pictures of `config/hd-item-map.json` = 229. Integrated: 48.
+Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted under portraits), plus the 51 distinct PC item pictures of `config/hd-item-map.json` = 229. Integrated: 49.
 
 | Piece | PC images | Patch / table | State |
 | --- | --- | --- | --- |
@@ -216,9 +216,10 @@ Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted
 | CD-1 and CD-2 load emblems | SIS_ICON 2 of 10 (subimages 2 and 3) | 0112 and 0146, `load_disc_icon.h` | verified for the top load slot; subimage 1 (System RAM icon) kept native |
 | Load menu selection arrows | SISTEM subimages 8 and 9 (of 45) | 0150, `system_brackets.h` | verified in the English load menu on both discs |
 | Save confirmation frame | TUIKA_W subimage 0 | 0197, border strips | verified in the English disc 1 save confirmation |
+| Long Day choice frame | WINDOW subimage 2 | 0198, rail mask | English disc 2 room choice |
 | KAO | 394, excluded here | portrait pack | counted in portraits |
 
-Open (181 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 43, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 2 (needs layout), WINDOW 6; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
+Open (180 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 43, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 2 (needs layout), WINDOW 5; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
 
 ## TW5 wiring audit: which open families the existing mechanisms can reach
 
@@ -258,3 +259,28 @@ screen. Six 110-field strict profiles match guest hashes and SRAM, including
 Original and the absent, corrupt and disabled donor controls. Verification
 covers the replayed confirmation on English disc 1. Package inclusion and
 other TUIKA_W subimages remain open.
+
+## HD Long Day room choice frame
+
+The natural English disc 2 Long Day room menu displays the two-option
+room choice after the archived continuation in
+`local/work/codex-th1/final-battle-probes/longday-hall`. The size field
+describes a 256×88 source. The centered VDP1 scaled sprite renders an
+inclusive (32,40) to (288,128) rectangle of 257×89 native pixels.
+The texture walk reproduces all 2,806 native gold rail pixels using
+the witnessed palette.
+
+Patch 0198 selects WINDOW.SPR subimage 2 and maps its 2× source through
+the same VDP1 geometry. The texture preserves native pixels outside
+the authored gold rails and where the donor is keyed. The draw requires
+the matching command, palette, winning layer and composed native inks.
+
+Seven 190-field strict replays at 1440p match the stock runtime in guest
+hashes and SRAM. The highlighted option changes under normal controller
+input. An independent decode reconstructs every output pixel in six
+captures, with 100,926 changed RGB pixels in each. The choice label,
+selection bar, translucent interior, portrait and background remain
+exact. Original and the absent, corrupt and disabled donor profiles
+match the corresponding native RGB. This evidence covers the English
+disc 2 room choice. Other WINDOW variants and package inclusion remain
+open.

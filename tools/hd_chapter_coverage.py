@@ -141,6 +141,7 @@ EVE_CONTROLLED_REPORT = 'docs/research/disc1-battle-insets.md#controlled-eve-pla
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
+    ('SAKURA1/SYSTEM/WINDOW.SPR', 2): ('patch 0198, port/frontend_sdl.cpp: Long Day room choice rails', MENU_REPORT + '#hd-long-day-room-choice-frame'),
     ('SAKURA1/SYSTEM/TUIKA_W.SPR', 0): ('patch 0197, port/frontend_sdl.cpp: save confirmation frame border', MENU_REPORT + '#hd-save-confirmation-frame'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 8): ('patch 0150, port/system_brackets.h: left load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 9): ('patch 0150, port/system_brackets.h: right load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),
@@ -845,6 +846,7 @@ def build(root, index_dir, portrait_audit):
                 if (name, image['index']) in {
                     ('SAKURA1/SYSTEM/SISTEM.SPR', 8), ('SAKURA1/SYSTEM/SISTEM.SPR', 9),
                     ('SAKURA1/SYSTEM/TUIKA_W.SPR', 0),
+                    ('SAKURA1/SYSTEM/WINDOW.SPR', 2),
                 }:
                     row['verified_in_game'] = True
                 unassigned['menus-hud'][f"pc:{name}#{image['index']}"] = row
