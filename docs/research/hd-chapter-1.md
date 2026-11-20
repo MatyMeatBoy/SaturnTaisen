@@ -78,6 +78,8 @@ Patch 0173 [preserves the eyes drawn on the NC25 PC body](nc25-baked-eyes.md) an
 
 Patch 0176 [registers the NC56 expression bank](nc56-registered-faces.md). Its first paired 1440p draw proof verifies the wink and both visible mouth poses at their authored coordinates. The earlier blink during the blend retains the native image.
 
+Patch 0179 [registers the NC96 face bank](nc96-registered-faces.md) and removes the displaced hair and cheek rectangles seen with the previous placement. The late Chapter 1 replay selects all nine parts and retains the native blend.
+
 Patch 0177 [registers the NC51 theater sortie expression](nc51-registered-faces.md). The 900-field English replay verifies all three eyes and six mouths at their authored coordinates. The earlier blend retains the native image.
 
 Patch 0169 [registers Sakura’s ten NC10 park face textures](nc10-park-faces.md) at their authored PC positions. The English Yoneda replay exercised the full four-eye and six-mouth set. The Spanish park replay verified the same four eyes and three of those mouths.
