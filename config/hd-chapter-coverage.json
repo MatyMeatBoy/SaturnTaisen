@@ -6434,6 +6434,22 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2101.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "pc": "SAKURA1/BG/BG2101.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2102.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "pc": "SAKURA1/BG/BG2102.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2156.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
@@ -18497,16 +18513,6 @@
       "2:/SAKURA1/BG2099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2099.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2101.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2101.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2102.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2102.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2103.BIN": {
