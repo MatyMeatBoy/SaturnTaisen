@@ -18,6 +18,10 @@ First goal: all menus and chapter 1. The tools live in `tools/es/`; the script, 
 - `tools/es/iso.py`: copies the prepared English ISO and moves all `*TBL.BIN` and `*MES.BIN` files to fixed 128 KiB slots at the end; the other files are replaced in place with the same size. LBAs don't change between builds, so savestates from a Spanish ISO remain valid. The game locates files via the ISO directory (the English patch already rebuilt the image).
 - A savestate contains the already-loaded table: to see new text you must start from a state prior to that load.
 
+### Iris's form of address
+
+The Spanish script now keeps «Onii-chan» when Iris addresses Ogami. The opening lobby line uses that affectionate form in the Saturn voice and text. The Spanish version had carried over «Mon Frère» from the English adaptation. The correction covers dialogue and battle messages on both discs. Local read-back found 474 occurrences updated on disc 1 and 465 on disc 2. The check covered record IDs, prefixes, unrelated text, lip-sync footers and the position of every modified table. Both Spanish xdelta layers reproduce the new images.
+
 ## Menus
 
 Custom LZ compression (SH-2 routine `0x0600A164`), implemented in `tools/es/red_lz.py` and verified against all known streams. When reinserting, a stream can only occupy its original length plus the zero padding that already followed it: palettes or tables usually sit behind it.
