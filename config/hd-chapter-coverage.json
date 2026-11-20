@@ -4184,6 +4184,21 @@
       "disc": 1,
       "resources": {
         "bodies": {
+          "1:/SAKURA1/NC24.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#west-staircase-and-file-0602",
+            "pc": "SAKURA1/NC/NC24.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC26.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#verified-nc26-body-in-0602",
+            "pc": "SAKURA1/NC/NC26.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-nc26-body-in-0602",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/NC40.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
@@ -4191,6 +4206,13 @@
             "runtime_evidence": "docs/research/hd-chapter-6.md#verified-nc40-body-draw",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/NC42.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#west-staircase-and-file-0602",
+            "pc": "SAKURA1/NC/NC42.SPR",
+            "status": "hd",
+            "verified_in_game": false
           },
           "1:/SAKURA1/NC95.BIN": {
             "association": "observed",
@@ -4606,6 +4628,13 @@
             "runtime_evidence": "docs/research/narrative-foreground-followup.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/BG4351.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#west-staircase-and-file-0602",
+            "pc": "SAKURA1/BG/BG4351.SPR",
+            "reason": "cut-out on a key colour or blank picture, not replaced by design",
+            "status": "excluded"
           },
           "1:/SAKURA1/TITLE6.BIN": {
             "association": "observed",
@@ -6545,18 +6574,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "1:/SAKURA1/NC24.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC24.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC26.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC26.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "1:/SAKURA1/NC27.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC27.SPR",
@@ -7008,12 +7025,6 @@
       "1:/SAKURA1/NC4199.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC4199.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC42.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC42.SPR",
         "status": "hd",
         "verified_in_game": false
       },
@@ -16109,12 +16120,6 @@
       "1:/SAKURA1/BG4302.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4302.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "1:/SAKURA1/BG4351.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4351.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
