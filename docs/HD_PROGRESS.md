@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | Sin dato |
-| Imágenes de escena | recursos SPR PC únicos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1120/1120 (100%) | 698/1120 (62,3%) | Sin dato | 601/1120 (53,6%) | 152/1120 (13,5%) |
+| Imágenes de escena | recursos SPR PC únicos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1095/1095 (100%) | 591/1095 (53,9%) | Sin dato | 584/1095 (53,3%) | 150/1095 (13,6%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 50/50 (100%) | Sin dato |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
@@ -20,7 +20,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 304/304 (100%) |
-| Imágenes de escena | 601/1120 (53,6%) |
+| Imágenes de escena | 584/1095 (53,3%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 50/50 (100%) |
 | Modo táctico | Sin dato |
@@ -28,7 +28,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 147/147 (100%) |
 
-**HD total: 1180/1869 (63,1%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1163/1844 (63%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 ## Qué cuenta en cada etapa
@@ -65,7 +65,7 @@ Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y b
 Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
 
 - El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.
-- El cruce TH0 registra 712 archivos PC con correspondencia aceptada antes de agrupar duplicados. El informe cuenta cada archivo enlazado una sola vez, aunque aparezca en ambos discos o varias claves Saturn lo utilicen.
+- El registro cuenta los recursos con correspondencia reconocida y agrupa archivos con las mismas subimágenes RGBA. Cada recurso se cuenta una vez, aunque varias claves Saturn lo utilicen.
 - La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. La columna de verificación en juego cuenta un archivo PC por cada imagen con al menos una aparición HD observada. Es un mínimo documentado. El recuento de recursos preparados y la auditoría de todas las apariciones siguen pendientes.
 - **Siguiente paso**. Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.
 

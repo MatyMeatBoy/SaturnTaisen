@@ -145,6 +145,7 @@ def apply_register(data, register_path):
         return
     register = json.loads(register_path.read_text(encoding='utf-8'))
     files = {kind: set() for kind in REGISTER_COUNTS.values()}
+    matched_scenes = set()
     verified_scenes = set()
     body_inventory = set()
     matched_bodies = set()
@@ -173,6 +174,9 @@ def apply_register(data, register_path):
                 files[kind].update(row['pc'] for row in rows.values()
                                    if row.get('status') in integrated_statuses and row.get('pc'))
                 if kind == 'scene-pictures':
+                    matched_scenes.update(row['pc'] for row in rows.values() if row.get('pc')
+                                          and row.get('status') in (
+                                              'hd', 'paired-not-wired', 'wired-unverified', 'unsupported-size'))
                     verified_scenes.update(row['pc'] for row in rows.values()
                                            if row.get('status') == 'hd' and row.get('pc')
                                            and row.get('verified_in_game') is True)
@@ -223,7 +227,12 @@ def apply_register(data, register_path):
             if row.get('inventory') is not None:
                 row['inventory'] = min(row['inventory'], row['total'])
             if row.get('matched') is not None:
-                row['matched'] -= alias_count
+                if duplicate_groups:
+                    matched_duplicates = sum(max(0, len(group & matched_scenes) - 1)
+                                             for group in duplicate_groups)
+                    row['matched'] = len(matched_scenes) - matched_duplicates
+                else:
+                    row['matched'] -= alias_count
 
 
 def render_report(data):
