@@ -53,3 +53,49 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 SPR fisicos compartidos por varios BG Saturn: ninguno.
 
 Resumen: conectado y atribuido: 34, conectado sin atribuir: 2, conectado por ruta propia (scroll/recorte), atribuido: 7, no conectado: 1
+
+## Verificacion en juego a 2560x1440 (2026-11-20, con `art/` junto al exe)
+
+Sustituye al intento anterior: no dibujaba porque la copia del exe no tenia la carpeta `art/` ([headless-scene-draw.md](headless-scene-draw.md), PR #604). Herramienta: `tools/scene_draw_probe.py` (#604, ampliada en #651). Exe propio `local/build/sakura-verify/sakura-verify.exe` (SHA-256 `2818e414...`) con `art/` al lado, `--pc-assets local/work/pc-cab/out-bg`, Enhanced 2560x1440, estricto nativo. La ruta fria (`rb-full/input.movie`, 297.107 cuadros) se guardo en estados cada 6.000 cuadros; cada tramo se reprodujo con donante y el primer cuadro con la linea `scene picture:` se hallo por biseccion; despues una pareja con y sin donante (captura 45 cuadros despues). En todas las parejas los hashes por cuadro con y sin donante son identicos y hay 0 bloques interpretados; los cambios quedan dentro del rectangulo Zoom (272,29)-(2288,1037) y lo de debajo (caja de dialogo) es identico al control. Sin pixeles aqui.
+
+| Saturn BG | Estado de partida | Primer cuadro dibujado | Resultado |
+|---|---|---|---|
+| BG1001 | estado ruta fria cuadro 18.000 (SHA `9399b82071b4`) | 21.890 | DRAWN. 2.030.091 px distintos |
+| BG1002 | estado ruta fria cuadro 72.000 (SHA `903522703ebe`) | 74.390 | DRAWN. 2.030.953 px distintos |
+| BG1006 | estado ruta fria cuadro 24.000 (SHA `70baa33d44f7`) | 29.296 | DRAWN. 1.968.255 px distintos |
+| BG1007 | estado ruta fria cuadro 72.000 (SHA `903522703ebe`) | 77.460 | DRAWN. 2.000.556 px distintos |
+| BG1017 | estado ruta fria cuadro 48.000 (SHA `09c5d2a97d40`) | 50.203 | DRAWN. 2.031.391 px distintos |
+| BG1021 | estado ruta fria cuadro 54.000 (SHA `d372e89c000e`) | 59.788 | DRAWN. 1.193.642 px distintos |
+| BG1030 | estado ruta fria cuadro 228.000 (SHA `212088be396d`) | 228.609 | DRAWN. 1.603.009 px distintos |
+| BG1045 | estado ruta fria cuadro 30.000 (SHA `c311394f0cb6`) | 30.234 | DRAWN. 1.320.464 px distintos |
+| BG1046 | estado ruta fria cuadro 90.000 (SHA `8cd85ef729be`) | 94.593 | DRAWN. 2.017.765 px distintos |
+| BG1058 | estado ruta fria cuadro 102.000 (SHA `4d36bea44cc3`) | 105.398 | DRAWN. 1.795.570 px distintos |
+| BG1070 | estado ruta fria cuadro 138.000 (SHA `1c9021c787b2`) | 142.921 | DRAWN. 2.031.841 px distintos |
+| BG1116 | estado ruta fria cuadro 54.000 (SHA `d372e89c000e`) | 57.023 | DRAWN. 1.281.931 px distintos |
+| BG1119 | estado ruta fria cuadro 114.000 (SHA `c7dc595b5e39`) | 118.265 | DRAWN. 2.032.066 px distintos |
+| BG1193 | estado ruta fria cuadro 252.000 (SHA `dbf9a25fd658`) | 253.312 | DRAWN. 1.198.577 px distintos |
+| BG1209 | estado ruta fria cuadro 6.000 (SHA `7c6101c439e9`) | 8.788 | DRAWN. 1.350.143 px distintos |
+| BG2004 | estado ruta fria cuadro 252.000 (SHA `dbf9a25fd658`) | 256.031 | DRAWN. 654.306 px distintos |
+| BG2034 | estado ruta fria cuadro 60.000 (SHA `88c9c991e51e`) | 61.078 | DRAWN. 1.177.090 px distintos |
+| BG2039 | estado ruta fria cuadro 138.000 (SHA `1c9021c787b2`) | 143.109 | DRAWN. 2.019.152 px distintos |
+| BG2159 | estado ruta fria cuadro 18.000 (SHA `9399b82071b4`) | 20.179 | DRAWN. 2.031.401 px distintos |
+| BG2173 | estado ruta fria cuadro 234.000 (SHA `1d4431aaa727`) | 239.273 | DRAWN. 1.085.904 px distintos |
+| BG2250 | estado ruta fria cuadro 6.000 (SHA `7c6101c439e9`) | 10.453 | DRAWN. 937.440 px distintos |
+| BG2251 | estado ruta fria cuadro 12.000 (SHA `e4629a343733`) | 12.210 | DRAWN. 2.032.103 px distintos |
+| BG2535 | estado ruta fria cuadro 228.000 (SHA `212088be396d`) | 232.991 | DRAWN. 869.993 px distintos |
+
+Cobertura: 23 de las 34 conectadas y atribuidas dibujan en la ruta fria. BG1143 y BG1216 (atribuidas, ruta fria) no dibujaron en ningun tramo de la ruta fria (NOT DRAWN; no se probo un estado de continuacion distinto). No se probaron, por falta de estado o pelicula en este PC (`codex-witness-441-review`): BG1010, BG1011, BG1012, BG1036, BG1043, BG1055, BG1057, BG1059 (patrulla nocturna y extras), BG1101 (capitulo 9) y las 7 de ruta propia (scroll/recorte).
+
+### Atribucion de las tres sin atribuir
+
+- BG1016: ningun `scene picture:` en los 49 tramos de la ruta fria. Sigue sin atribuir; su unico dibujo conocido es la ruta de Iris del capitulo 8 (`th8-native-attribution.md`).
+- BG1120: el registro da el cuadro frio 189.250; desde el estado del cuadro 186.000 (SHA-256 `b9802efd05286dd2...`), 3.400 cuadros: NOT DRAWN (hashes identicos, 0 interpretados). Sigue sin atribuir.
+- BG2010: no conectado (la clave selecciona BG2004.SPR); no dibuja por si mismo en la ruta fria (BG2004 si, cuadro 256.031). Sigue sin atribuir.
+
+### Deltas
+
+Atribuidos 0, integrados nuevos 0, verificados nuevos 0: las 23 ya constan `verified_in_game` en `config/hd-chapter-coverage.json`, que no cambia (`docs/HD_PROGRESS.md` tampoco). Esto las reproduce con la herramienta correcta.
+
+No verificado: las 11 conectadas sin estado en este PC y las 7 de ruta propia; la lectura visual de cada captura (solo diferencia y rectangulo; BG2039 leido en #651); las tres sin atribuir, que necesitan una ruta que las dibuje.
+
+Nota: la tabla superior la regenera `tools/thd01_ep1_backgrounds.py`; esta seccion es manual y hay que conservarla al regenerar.
