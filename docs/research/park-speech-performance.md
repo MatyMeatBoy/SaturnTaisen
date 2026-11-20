@@ -1,5 +1,15 @@
 # Chapter 1 park speech performance
 
+## Foreground contention and opening presentation
+
+A 1440p replay under four CPU workers pinned with the game to four logical CPUs reproduced long Direct3D11 presents. Two 738-field windows had 470 and 486 frames above 16.67 ms. Present p95 reached 34.40 and 34.31 ms, while composition stayed below 0.65 ms and sound below 1.6 ms at p95. External promotion of just the main Windows thread to above normal reduced the two repeated late-frame counts to 47 and 8. Guest traces matched in all runs. Those measurements used synthetic CPU contention and the priority was applied by the harness.
+
+Patch 0259 gives that priority only to the runtime thread while its window is focused and the game is running in real time. The compiled candidate at 2560×1440 gained priority on focus and restored normal priority on focus loss. An 800-field hidden control stayed at normal priority with the same guest trace. Foreground A/B throughput is tracked separately.
+
+Patch 0258 removes the bright side strips on the final nearly black native fallback after confirming New Game. In English and Spanish at 1440p the fix changed only the offending field, left the center unchanged and matched the Original control, guest hashes and save memory.
+
+Patch 0260 smooths the exact NC3250/BG2250 handoff after the Saturn fade. The largest mean RGB step in the picture dropped from 15.51 to 2.07 levels. Changes were confined to the large picture for eight fields. The Original controls, 49 guest hashes and save memory matched in the isolated and combined A/B. The Spanish salute line was also captured over 62 consecutive 1440p fields. The only picture changes during the held line were the animated eyes. The monitor-only report and fast dialogue advances are separate checks.
+
 The owner reported slow sound and a flashing background as Sakura begins speaking on another PC with v0.2.7-alpha. The local replay reaches the same park conversation from a recorded Chapter 1 checkpoint. The shipped executable was tested separately. It predates the BG1207 HD substitution and showed several slow frames while the new mouth poses were first matched. The three late matching frames took 27–28 ms each. The emulator's sound work on those frames took about 1.2 ms.
 
 Patch 0154 reuses a mixed floral texture when native input pixels, effective blend recipes, backdrop and placement match. Resize and renderer resets invalidate the relevant entries. Patch 0155 samples each candidate mouth or eye mask once and scores the same 49 shifted windows with bit counts for narrow strips. Both patches run through the shared Enhanced presentation path.

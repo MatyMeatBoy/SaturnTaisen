@@ -1,0 +1,79 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -58,6 +58,16 @@
+ 
+ #include <SDL3/SDL.h>
+ 
++#ifdef _WIN32
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#ifndef NOMINMAX
++#define NOMINMAX
++#endif
++#include <windows.h>
++#endif
++
+ #include <algorithm>
+ #include <numeric>
+ #include <tuple>
+@@ -179,6 +189,34 @@
+     }
+ };
+ FrameProfile frameProfile;
++
++#ifdef _WIN32
++// Present is synchronous on this thread. Favor it during foreground play so
++// competing CPU work cannot starve an otherwise short frame.
++class ForegroundRuntimePriority {
++public:
++    ~ForegroundRuntimePriority() { Update(false); }
++
++    void Update(bool foreground) {
++        if (foreground == foreground_) return;
++        foreground_ = foreground;
++        const HANDLE thread = GetCurrentThread();
++        const int priority = GetThreadPriority(thread);
++        if (foreground) {
++            if (priority == THREAD_PRIORITY_NORMAL)
++                boosted_ = SetThreadPriority(thread, THREAD_PRIORITY_ABOVE_NORMAL) != 0;
++        } else if (boosted_) {
++            if (priority == THREAD_PRIORITY_ABOVE_NORMAL)
++                SetThreadPriority(thread, THREAD_PRIORITY_NORMAL);
++            boosted_ = false;
++        }
++    }
++
++private:
++    bool foreground_ = false;
++    bool boosted_ = false;
++};
++#endif
+ struct ProfileScope {
+     FrameProfile::Section* section;uint64_t start;
+     explicit ProfileScope(FrameProfile::Section& one):section(frameProfile.on?&one:nullptr),start(section?SDL_GetTicksNS():0) {}
+@@ -5328,6 +5366,9 @@
+     uint64_t nextFrame = SDL_GetTicksNS();
+     uint64_t lastMouseMoveNs = SDL_GetTicksNS();
+     bool cursorHidden = false;
++#ifdef _WIN32
++    ForegroundRuntimePriority runtimePriority;
++#endif
+     bool running = true;
+     uint64_t pass = 0, loggedFrame = ~0ull;
+     const uint64_t startedAt = SDL_GetTicksNS();
+@@ -5648,6 +5689,13 @@
+             port.pad[1] = pads[1];
+         }
+ 
++#ifdef _WIN32
++        const auto windowFlags = SDL_GetWindowFlags(window);
++        runtimePriority.Update(running && !testHidden && !port.opt.unthrottled &&
++                               !choosing && !paused && !port.menu.IsOpen() &&
++                               (windowFlags & SDL_WINDOW_INPUT_FOCUS) &&
++                               !(windowFlags & (SDL_WINDOW_HIDDEN | SDL_WINDOW_MINIMIZED)));
++#endif
+         if (audio.stream && silent != port.menu.muted) {
+             silent = port.menu.muted;
+             SDL_SetAudioStreamGain(audio.stream, silent ? 0.0f : 1.0f);

@@ -1,0 +1,23 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -4299,8 +4299,18 @@
+             SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
+             const SDL_FRect where = satrecomp::video::FitPicture(wide, high, static_cast<float>(texW), static_cast<float>(texH), 4.0f / 3.0f, scaling,
+                                                                  satrecomp::FeatureValue("display_shape"));
++            // At the end of a native fade, leave the nearly black Saturn picture intact
++            // and keep the exterior dark when the Enhanced backdrop is no longer recognized.
++            const bool enhancedMode = satrecomp::FeatureValue("presentation_mode") == 1;
++            if (enhancedMode && texW == 320 && texH == 224 && softwareShown.size() == 320 * 224 &&
++                std::all_of(softwareShown.begin(), softwareShown.end(), [](uint32_t pixel) {
++                    return (pixel & 0x00F0F0F0u) == 0;
++                })) {
++                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
++                SDL_RenderClear(renderer);
++            }
+             // A temporary native fallback must not reintroduce the Original frame.
+-            if(satrecomp::FeatureValue("presentation_mode")!=1) {
++            if (!enhancedMode) {
+                 SDL_FRect edge{where.x-3,where.y-3,where.w+6,where.h+6};
+                 SDL_SetRenderDrawColor(renderer,129,65,76,255);
+                 SDL_RenderFillRect(renderer,&edge);
