@@ -186,6 +186,8 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/TITLE3.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1022.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     (1, '/SAKURA1/BG1008.BIN'): (3, 'docs/research/th3-native-attribution.md'),
+    **{(1, f'/SAKURA1/{name}.BIN'): (3, 'docs/research/bg2290-native-pan.md')
+       for name in ('BG2123', 'BG3123', 'BG2289', 'BG3289', 'BG2290')},
     STAGE04_MAP: (3, 'docs/research/th3-native-attribution.md'),
     STAGE05_MAP: (3, STAGE05_REPORT),
     (1, '/SAKURA2/UNIT04.BIN'): (3, 'docs/research/th3-native-attribution.md'),
@@ -555,6 +557,8 @@ def build(root, index_dir, portrait_audit):
                             row['reason'] = 'The witnessed dream uses a per-line viewport origin on NBG0 under a variable NBG2 blend; a single opaque crop cannot reproduce the composite.'
                         elif (disc, path) == (2, '/SAKURA1/BG2247.BIN'):
                             row['reason'] = 'The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.'
+                        elif (disc, path) == (1, '/SAKURA1/BG2290.BIN'):
+                            row['reason'] = 'The live pan holds at x=0, where the tested PC crop misses the native composition before the aligned portion.'
                     else:
                         row['reason'] = 'palette shared with a picture that maps to another PC file (ambiguous)'
             elif name in bg_review['rejected'] or pair.get('tier') == 'missing':
