@@ -205,6 +205,7 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (1, '/SAKURA1/BG1064.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-bg1064-upstairs-draw'),
     (1, '/SAKURA1/BG1003.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-bg1003-draw'),
     (1, '/SAKURA1/BG1047.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-bg1047-draw'),
     (2, '/SAKURA1/BG2140.BIN'): (8, 'docs/research/th8-native-attribution.md#covered-0801-and-0802-backgrounds'),
