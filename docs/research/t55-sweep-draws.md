@@ -76,3 +76,16 @@ this sweep. The integrated count remains 585 of 1,095 and the verified
 count rises from 151 to 168. The report uses the current scene register.
 The older 1,167-file baseline and its totals are superseded by the
 canonical resource census. The renderer and public package are unchanged.
+
+### BG2236 on the public episode 9 route
+
+A 5,000-field strict continuation from the public episode 9 checkpoint
+at field 12,000 reached a second, settled BG2236 witness. The save at
+field 16,499 has SHA-256
+`9ebf5f957db33c9cfca0997e44ea061b000cc441991f744e2d9e5411421d50f0`.
+At 2560 × 1440, v0.2.20-alpha selected the existing
+`SAKURA1/BG/BG2236.SPR` and changed 2,021,423 pixels against the
+missing-donor control. The runs matched all 72 guest hashes and ended
+with zero interpreted blocks. This confirms reuse of the existing
+file in the settled composition. The earlier translucent-figure
+case remains open under THD05.
