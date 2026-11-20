@@ -3697,7 +3697,18 @@
             "verified_in_game": true
           }
         },
-        "tactical-units": {}
+        "tactical-units": {
+          "1:/SAKURA2/UNIT06.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-4.md#cold-replay-trace",
+            "status": "unknown"
+          },
+          "1:/SAKURA2/UNIT21.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-4.md#cold-replay-trace",
+            "status": "unknown"
+          }
+        }
       }
     },
     {
@@ -20242,10 +20253,6 @@
         "association": "unknown",
         "status": "unknown"
       },
-      "1:/SAKURA2/UNIT06.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
       "1:/SAKURA2/UNIT07.BIN": {
         "association": "unknown",
         "status": "unknown"
@@ -20259,10 +20266,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/UNIT11.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/UNIT21.BIN": {
         "association": "unknown",
         "status": "unknown"
       },

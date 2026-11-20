@@ -132,3 +132,50 @@ Full chapter parity, new HD rendering and packaging remain open.
 At block close the main workspace measured 61,180,516,152 logical bytes
 with hard links counted once and reparse points excluded, above the
 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+
+## Cold replay trace
+
+Shard TH4 replayed the Chapter 4 jump again from a cold start with the CD
+`Play Disc` trace of `tools/witness_sweep.py` (the same ISO 9660 mapping,
+FAD = LBA + 150), but listing every file instead of only scenes. Input is
+the archived `bank-4-battle` seed (`backup.bin` SHA-256
+`ed2f71f1996faa34299cc39653fefc6d442787140ccfd16dfebd7feb3010a0cc`) and its
+`input.movie` (`3a4344074c1adf5cce138588c30a6aa10f83fe31a6e7cc8eb54f1c390f8412b5`),
+English disc 1, muted strict native, build SHA-256
+`f2fcb44a037b1427cf9fc18f927747f826809461312b2a16e276d4cce93684a4`.
+The run stopped at 18,373 guest frames with the known
+`untranslated master SH-2 block at 00204000` (EVT21 entry, see
+[the sweep](chapter-sweep.md)). The hash log of those frames has SHA-256
+`2c176ed87f6e89ee164ea0135dda5dada054dc31152b6a175e0637f8e2d0d33e`.
+Load frames are estimated from the flushed hash log (early or late by a few
+dozen frames; the last ones fall at the stop), and the state is the first
+checkpoint at or after estimate + 60. A load is a disc read: it shows that
+the game asked for the file, not that the file was drawn.
+
+| Frame (est.) | Checkpoint (frame, state SHA-256 prefix) | Files read |
+| ---: | --- | --- |
+| 6,670 | 7999, `16373ef61a5f` | `EVT06` 221950, `MAP06` 232643, `WKL06` 254038 |
+| 6,865 | 7999, `16373ef61a5f` | `UNIT06` 252313, `FACE06` 222500, `M06MES` 231496, `FIX06` 223053 |
+| 7,449 | 7999, `16373ef61a5f` | `BBG204` 220685 |
+| 11,281 / 14,626 | 11999, `9e1186436b37`; 15999, `5f9fdfa4dfeb` | `N004`, `K004`, `IRIS.SE`, `PCMSE` (battle-side data, not register classes) |
+| 15,927 | 15999, `5f9fdfa4dfeb` | `LIPS_CG` (also read by the Chapter 2 route, so it is left with the lower chapter) |
+| stop (18,373) | no checkpoint (the run ends first) | `EVT21` 222176, `MAP21` 233572, `WKL21` 255679, `UNIT21` 252553, `FACE21` 222775, `M21MES` 231583 |
+
+The route contains no BG, NC, portrait atlas or FILM read after the opening
+logo and film (`SAKURA4` at FAD 405 and `OPSAKURA.CPK` at 166362, which every
+cold start plays): the Chapter 4 save starts in the tactical module, so the
+story scenes of the chapter are not reached from a battle save.
+
+Attributed to Chapter 4 by this trace (rows moved from `unassigned`, association
+`observed`): `UNIT06.BIN` (252313, read with `MAP06`) and `UNIT21.BIN` (252553,
+read with `MAP21` and `WKL21`). Their status stays `unknown`: the disc read
+identifies the unit bank the battle requested, not which sprites drew (the two
+files are byte-identical, see above, so the earlier RAM match alone could not
+decide). `MAP06`, `MAP21`, `WKL06`, `WKL21` and `BBG204` were already
+attributed. Not verified in game: any draw of the two unit rows.
+
+Still open for Chapter 4 (nobody has this witness yet): a save or jump into
+the story part (`0400FCE`..`0403FCE`, `TITLE4`, backgrounds and bodies of
+Chapter 4), FILM clips of the chapter, the battle that follows the
+`00204000` stop, and the translated build that would let the route pass it.

@@ -384,6 +384,8 @@ CHAPTER_WITNESSES = {
     TH2_UNITS: (2, TH2_REPORT),
     STAGE21_MAP: (4, STAGE21_REPORT),
     STAGE06_MAP: (4, CHAPTER4_TACTICAL_REPORT),
+    (1, '/SAKURA2/UNIT06.BIN'): (4, 'docs/research/hd-chapter-4.md#cold-replay-trace'),
+    (1, '/SAKURA2/UNIT21.BIN'): (4, 'docs/research/hd-chapter-4.md#cold-replay-trace'),
 }
 
 
