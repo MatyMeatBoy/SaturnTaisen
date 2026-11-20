@@ -5749,6 +5749,14 @@
             "runtime_evidence": "docs/research/nc3173-nc3285-cutout-1440p.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "2:/SAKURA1/NC3286.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3286-ending-cutout.md",
+            "pc": "SAKURA1/NC/NC3286.SPR",
+            "runtime_evidence": "docs/research/nc3286-ending-cutout.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "film": {},
@@ -7226,12 +7234,6 @@
       "2:/SAKURA1/NC3264.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3264.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "2:/SAKURA1/NC3286.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC3286.SPR",
         "status": "hd",
         "verified_in_game": false
       },
