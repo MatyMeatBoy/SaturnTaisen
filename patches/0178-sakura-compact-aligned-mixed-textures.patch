@@ -1,0 +1,49 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -55,6 +55,7 @@
+ #include <SDL3/SDL.h>
+ 
+ #include <algorithm>
++#include <numeric>
+ #include <tuple>
+ #include <atomic>
+ #include "parallel_rows.h"
+@@ -2230,19 +2231,32 @@
+                         });
+                         hasMix=anyMix;
+                         if(hasMix) {
+-                            if(cachedWidth!=fit.w || cachedHeight!=fit.h) {
++                            // Each texel in the compact texture represents a block delimited by
++                            // both the native-pixel grid and the backdrop sampling grid.
++                            const auto step=[&](int offset,int size) {
++                                return backOk && !replaceIntermission
++                                    ? std::gcd(std::gcd(scale,backScale),std::gcd(offset,size)) : 1;
++                            };
++                            const int stepX=step(fit.x-backX,fit.w), stepY=step(fit.y-backY,fit.h);
++                            const int uploadW=fit.w/stepX, uploadH=fit.h/stepY;
++                            if (stepX!=1 || stepY!=1) {
++                                for (int y=0;y<uploadH;++y)
++                                    for (int x=0;x<uploadW;++x)
++                                        pixels[size_t(y)*uploadW+x]=pixels[size_t(y*stepY)*fit.w+x*stepX];
++                            }
++                            if(cachedWidth!=uploadW || cachedHeight!=uploadH) {
+                                 if(cachedTexture)SDL_DestroyTexture(cachedTexture);
+-                                cachedTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,fit.w,fit.h);
+-                                cachedWidth=cachedTexture?fit.w:0;cachedHeight=cachedTexture?fit.h:0;
++                                cachedTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,uploadW,uploadH);
++                                cachedWidth=cachedTexture?uploadW:0;cachedHeight=cachedTexture?uploadH:0;
+                                 if(cachedTexture && (!SDL_SetTextureBlendMode(cachedTexture,SDL_BLENDMODE_BLEND) ||
+                                     !SDL_SetTextureScaleMode(cachedTexture,SDL_SCALEMODE_NEAREST))) {
+                                     SDL_DestroyTexture(cachedTexture);cachedTexture=nullptr;cachedWidth=cachedHeight=0;
+                                 }
+                             }
+                             cache.backdrop=nullptr;
+-                            if(cachedTexture && SDL_UpdateTexture(cachedTexture,nullptr,pixels.data(),fit.w*sizeof(uint32_t))) {
++                            if(cachedTexture && SDL_UpdateTexture(cachedTexture,nullptr,pixels.data(),uploadW*sizeof(uint32_t))) {
+                                 ++mixUploads;
+-                                mixUploadedBytes+=size_t(fit.w)*fit.h*sizeof(uint32_t);
++                                mixUploadedBytes+=size_t(uploadW)*uploadH*sizeof(uint32_t);
+                                 if (mixCacheEnabled && !replaceIntermission) {
+                                     try {
+                                         cache.pixels.resize(size_t(stopX-startX)*(stopY-startY));

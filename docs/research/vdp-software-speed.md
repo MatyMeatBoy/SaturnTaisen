@@ -126,6 +126,36 @@ VDP work measured 4.340 to 4.190 ms at the first transition frame and 4.900 to
 also sped up. The post-transition Ogami span gives the clearest measured
 improvement. Release packaging remains pending.
 
+## T123 aligned mixed textures
+
+In the 0175 Ogami map-to-dining replay, the first narrative frame (482)
+uploaded three mixed textures. An unrestricted Direct3D 11 diagnostic run
+measured approximately 10.16 ms in upload and cache bookkeeping and 2.04 ms
+in CPU blending. The preceding map fade had already prepared its floral
+background. An experimental dirty-rectangle upload reduced bytes by 1.8%
+and increased recurring composition time, so the transfer reduction below
+comes from eliminating repeated texels.
+
+Patch 0178 uses the common integer step of the native image and backdrop
+sampling grids on each axis. The step must also divide the target dimensions
+and the relative origin of the grids. A texture texel then represents one
+identical rectangular block in the existing pixel buffer. The destination
+and nearest-neighbor scale mode are the existing ones. Intermission donor
+sampling retains its full-size texture.
+
+The 0175 timing comparison used three interleaved runs per binary, background
+workers left enabled, and no GPU readback. At 1440p the Ogami replay uploaded
+813,517,056 to 481,854,208 mixed-layer bytes with 107 updates and 153 cache
+hits in both builds. The held Yoneda replay uploaded 36,930,168 to 19,216,440
+bytes. Ogami frame 482 median composition was 26.20 to 17.91 ms, and the
+median for even frames 484–532 was 7.12 to 5.94 ms. Host load also moved
+unrelated phases, leaving the transfer counts as the steadier measure.
+
+The two strict replays matched all 790 guest hashes and 14 sampled window
+captures at each of 1440p, 1080p and 720p. The exact composed runtime through
+0177 also matched at 1440p. Tests cover Direct3D 11 on this host and these two
+replays. Package inclusion remains pending.
+
 ## Not verified
 
 Three scenarios of 1,200 frames only; the GPU video path (`NormalLine` is shared) and other resolutions, interlace and
