@@ -16,10 +16,10 @@ Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can 
    - `decision`: needs a response from the owner before touching code.
 3. If the row does not fit in ~15 minutes, do the minimum verifiable part and split the rest into new rows.
 4. Work from `origin/main`, branch `pendientes/<id>-<topic>`, reusing the single auxiliary copy allowed by `AGENTS.md`. If it is busy, coordinate and wait; do not create more worktrees. Never mix uncommitted work from another copy.
-5. Open a PR with: row taken, what was verified (command and result), and what was not. Change the row's status in the same PR.
+5. Open a draft PR as soon as the change is reviewable. Name the shard, mark outstanding checks and keep test results in that PR as they arrive. Workers can pick independent shards across the project. Record the final status when the change is verified.
 6. Priority above all: blockers or progress loss > chapter 1 validation > presentation > decoration.
 
-Integration rules confirmed by the user on 2026-11-18: Claude and the workers only send PRs; coordinator Codex reviews, resolves conflicts, and integrates authorized PRs. Do not ask for authorization again for each routine integration. An open PR claims the row; check its branch before duplicating work.
+Integration rules confirmed by the user on 2026-11-18: Claude and the workers send PRs early; coordinator Codex reviews, corrects, verifies and integrates them. A draft can be reviewed while tests or another independent shard are in progress. Do not ask for authorization again for each routine integration. An open PR claims the row; check its branch before duplicating work.
 
 Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, original PC assets, `local/`, or the personal ZIP; v0.1.0, v0.1.5, and v0.1.2 are immutable; Saturn has priority over PC; no partial test is presented as a complete chapter or campaign.
 
