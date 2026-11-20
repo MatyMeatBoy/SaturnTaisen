@@ -59,3 +59,27 @@ The dispatcher prototype replaced two byte reads of CCR.CE with an inline read t
 Two muted 1440p WASAPI runs holding the Yoneda line for 1,200 fields recorded ten and zero wholly empty requests after startup. Two 1,800-field park replays without per-frame state hashing recorded five and zero. A separate hash-logged repeat averaged 56.62 fields/s and recorded 42 empty requests, while its paired run averaged 59.95 fields/s and recorded none. All the shortages occurred during execution of the next guest field. The source produced about 738 stereo frames per guest field, with no submission errors.
 
 Submitting already-generated PCM in smaller batches reduced wholly empty requests under induced strain, but one comparison increased total missing audio from 267.48 to 316.69 ms. The experiment was left out of the runtime. These local results constrain the problem to production gaps under load without establishing which subsystem dominates on the reported PC. Private traces and replay identities are in `local/work/codex-audio-0160/`.
+
+## Letter dialogue input at 1440p
+
+Four 750-field Spanish disc-1 replays alternated the portrait option
+in the order native, HD, HD, native, with the updated Zoom panel in
+all four runs. Guest hashes match. The window was hidden, audio muted
+and no screenshots were taken. The same 80 fields around the scripted
+input presses were compared in each run.
+
+| Portrait setting | Fields over 16.67 ms | p95 | Maximum |
+| --- | ---: | ---: | ---: |
+| Native, run 1 | 1 | 14.38 ms | 17.32 ms |
+| HD, run 1 | 11 | 21.69 ms | 24.04 ms |
+| HD, run 2 | 17 | 23.94 ms | 25.07 ms |
+| Native, run 2 | 0 | 12.45 ms | 14.66 ms |
+
+The 25.07 ms field spent 21.14 ms in emulation and 3.92 ms
+in presentation. Its VDP phases took 10.81 ms. The HD replays show
+only emblem 0169 in the portrait trace. The test is specific to this
+letter checkpoint and does not isolate the delay in foreground play.
+
+The NC3250/BG2250 salute handoff was replayed separately with patch
+0270. All 46 captures per mode at 1440p match the archived patch
+0260 combined-build reference, with identical guest hashes.
