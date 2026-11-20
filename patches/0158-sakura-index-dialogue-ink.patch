@@ -1,0 +1,43 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1233,7 +1233,7 @@
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
+                 const auto* catalogRecord=port.dialogueCatalog?port.dialogueCatalog->Get(shownDialogue):nullptr;
+-                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;std::map<size_t,uint16_t> owners;bool valid=true,needsPlate=false,plateReady=false,catalogExact=true;};
++                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;std::array<uint16_t,16*320> owners{};bool valid=true,needsPlate=false,plateReady=false,catalogExact=true;};
+                 std::map<int,TextRow> rows;
+                 std::map<uint16_t,int> ownerRows;
+                 int localX=0,localY=0;
+@@ -1262,14 +1262,16 @@
+                         if(planes.source[at]!=0) row.valid=false;
+                         if(planes.topSource.size()==320*224 && planes.topSource[at]!=0)row.needsPlate=true;
+                         row.ink.push_back(at);
+-                        row.owners[at]=uint16_t(&shown-planes.sprites.data()+1);
++                        row.owners[at-size_t(y)*320]=uint16_t(&shown-planes.sprites.data()+1);
+                     }
+                 }
+                 hdNative=softwareShown;hdForeground=planes.foreground;
+-                std::map<size_t,int> inkRows;
++                std::array<uint8_t,(kTextBottom-kTextTop)*320> inkRows{};
+                 for(auto& [y,row]:rows)for(auto at:row.ink) {
+-                    const auto [peer,inserted]=inkRows.emplace(at,y);
+-                    if(!inserted && peer->second!=y) {row.needsPlate=true;rows.at(peer->second).needsPlate=true;}
++                    // This band is guaranteed by NarrativeRecognizedInkFits above.
++                    auto& firstRow=inkRows[at-kTextTop*320];
++                    if(!firstRow) firstRow=static_cast<uint8_t>(y);
++                    else if(firstRow!=y) {row.needsPlate=true;rows.at(firstRow).needsPlate=true;}
+                     if(planes.glyphPlate.size()==320*224 && planes.glyphPlate[at].underOwner)row.needsPlate=true;
+                 }
+                 for(auto& [y,row]:rows) if(row.valid && !row.chars.empty()) {
+@@ -1281,7 +1283,8 @@
+                     if(!row.valid)continue;
+                     row.plateReady=planes.glyphPlate.size()==320*224 && std::all_of(row.ink.begin(),row.ink.end(),[&](size_t at) {
+                         const auto& plate=planes.glyphPlate[at];
+-                        return plate.owner && (plate.owner==row.owners.at(at) || plate.underOwner==row.owners.at(at));
++                        const uint16_t owner=row.owners[at-size_t(y)*320];
++                        return plate.owner && (plate.owner==owner || plate.underOwner==owner);
+                     });
+                 }
+                 // Shared descender/ascender pixels must be restored for every participating
