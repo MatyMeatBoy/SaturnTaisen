@@ -111,7 +111,11 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertTrue(body['verified_in_game'])
         self.assertTrue(body['native_face_fallback'])
         self.assertEqual(body['runtime_evidence'], 'docs/research/nc51-registered-faces.md')
-        unwitnessed = chapter1['bodies']['1:/SAKURA1/NC12.BIN']
+        sakura = chapter1['bodies']['1:/SAKURA1/NC12.BIN']
+        self.assertTrue(sakura['verified_in_game'])
+        self.assertTrue(sakura['native_face_fallback'])
+        self.assertEqual(sakura['runtime_evidence'], 'docs/research/nc12-registered-faces.md')
+        unwitnessed = chapter1['bodies']['1:/SAKURA1/NC3004.BIN']
         self.assertEqual(unwitnessed['association'], 'observed')
         self.assertFalse(unwitnessed.get('verified_in_game'))
         self.assertEqual(chapter1['portraits']['0001']['association'], 'observed')

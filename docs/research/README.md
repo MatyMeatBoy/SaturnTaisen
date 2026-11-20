@@ -135,6 +135,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Iris NC51 sortie expression](nc51-registered-faces.md) verifies the authored Chapter 1 blink and speech positions.
 - [Sumire NC21 sortie expression](nc21-registered-faces.md) verifies the authored Chapter 1 blink and speech positions.
 - [Maria NC32 sortie expression](nc32-registered-faces.md) verifies the authored Chapter 1 blink and speech positions.
+- [Sakura NC12 sortie expression](nc12-registered-faces.md) verifies the authored Chapter 1 blink and speech positions.
 - [Sumire NC25 authored eyes](nc25-baked-eyes.md) — Chapter 1 closed-eye pose and three mouth frames.
 - [Sakura NC10 park expressions](nc10-park-faces.md) — Authored eye and mouth placement with English and Spanish 1440p replays.
 - [saturn-bg-format.md](saturn-bg-format.md): Saturn BG*.BIN/BBG*.BIN layouts (three variants) and the mass BG pairing by file number (`config/hd-scene-bg-map.json`).
