@@ -68,6 +68,8 @@ The VDP1 body bitmap recognizer resolved 19 NC package names. Each callback was 
 | `NC32.BIN` | 249,240–249,300 | 93,979 | 54 / 2 |
 | `NC3004.BIN` | 255,900–255,960 | 94,622 | 9 / 2 |
 
+Two follow-up 240-field Enhanced runs at 1440p separated body availability from expression coverage. In the `iris-correct-room-3000` replay, NC55 loaded the 97-part PC atlas. The matcher accepted PC eye parts 19 and 21, while a 24×24 mouth and a 56×32 eye retained the native pixels. In `prebattle-3000`, NC11 loaded its atlas, then rejected an intersecting sprite outside the recognized face strips. Subsequent full-size shots drew the PC body and selected the logged eye and mouth parts. The two replays completed with zero interpreted blocks. Trace and capture evidence is under `local/work/codex-ch1-body-triage/`.
+
 
 The trace also named 62 portrait IDs after successful replacement texture upload. Each row preserves its first appearance bracket and the trace line. The separately observed viewport and blend traces can be used for renderer review.
 

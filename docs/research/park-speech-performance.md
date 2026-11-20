@@ -40,6 +40,10 @@ The cold visual comparisons held the async decode at its first demand in both bu
 
 The trial preserved private traces, settings and RGB evidence under `local/work/codex-body-uploads` and `local/work/codex-audio-sustained`. It removed 283,775,208 bytes of regenerable caches. At closure, the project measured 71,995,005,982 logical bytes, above the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
 
+## SH-2 cache-control read experiment
+
+The dispatcher prototype replaced two byte reads of CCR.CE with an inline read that also preserved both activity counters. The 0160 1440p comparisons matched 240 guest hashes and five sampled RGB pairs. On the later 0165 pair all guest hashes still matched, but the first capture differed in the NC10 body area before both asynchronous uploads had finished. The other four captures were exact. Four alternating no-hash headless runs per executable measured a median 27.03 billion process cycles on the baseline and 28.43 billion on the candidate. The windowed timing varied with host load. The prototype stays out of the runtime pending a repeatable gain.
+
 ## Sustained audio after patch 0160
 
 Two muted 1440p WASAPI runs holding the Yoneda line for 1,200 fields recorded ten and zero wholly empty requests after startup. Two 1,800-field park replays without per-frame state hashing recorded five and zero. A separate hash-logged repeat averaged 56.62 fields/s and recorded 42 empty requests, while its paired run averaged 59.95 fields/s and recorded none. All the shortages occurred during execution of the next guest field. The source produced about 738 stereo frames per guest field, with no submission errors.
