@@ -938,3 +938,15 @@ Private fixture data and receipts remain in `local/work/codex-tp3c/tp5a-align`.
 
 At block close the project measured 67,198,306,153 logical bytes, above
 the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+### NC3125 and NC3126 registered subsets
+
+Patch 0152 connects the exact 200×96 NC3125 and 192×96 NC3126 Saturn sprites to subimage 0 of their corresponding PC files. The runtime checks the native texture, palette, command geometry and donor fingerprint. Each donor fills some scenery around its character. The recipe projects a 2× sample grid into the donor, limits coverage to the opaque Saturn silhouette, and interpolates toward the native color across the final 12 donor pixels near the crop edge. Samples beyond the usable donor rectangle retain the native draw. If any opaque native pixel is occluded or blended, the full overlay is skipped. The 0148 NC4138 registration keeps its full silhouette and uses the same checked path.
+
+The private fixtures place the original palettes and sprite textures into the same preserved narrative checkpoint. At 2560×1440, both overlays start at (496,113), with extents of 1400×672 and 1344×672. The independent registration agrees on all 487,795 sampled NC3125 pixels and 587,594 NC3126 pixels. The donor changes 375,736 and 567,261 pixels, respectively, all inside the registered subset. Original and overlapping-sprite controls match their missing-donor captures at frames 2 and 8. Each fixture mode agrees on all 12 guest hashes within its seed and reports zero interpreted blocks.
+
+Against the patch 0151 runtime, the existing NC4138 fixture matches both 1440p captures and all 12 guest hashes. The muted opening replay agrees on 900 guest hashes and three 1440p captures, with zero interpreted blocks. Its guest-log SHA-256 is `3e0d0f59d0344ea51c62fd2a3c15311d7f8929e2b59b01a66c65cc83474737dd`.
+
+The coverage register records fixture evidence for both disc entries. Natural scene draws, other animation phases and package validation remain open. NC3290 and NC3517 still await safe registration. Private fixtures and receipts are under `local/work/codex-tp3c/nc3125-subset/`.
+
+At block close the project measured 68,423,377,348 logical bytes, above the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

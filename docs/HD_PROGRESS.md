@@ -13,7 +13,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 229/229 (100%) | Sin dato | Sin dato | 47/229 (20,5%) | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 147/147 (100%) | Sin dato | 143/147 (97,2%) | 14/147 (9,5%) |
+| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 147/147 (100%) | Sin dato | 145/147 (98,6%) | 14/147 (9,5%) |
 
 ## Resumen global de integración
 
@@ -26,9 +26,9 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Modo táctico | Sin dato |
 | HUD y menús PC/Saturn | 47/229 (20,5%) |
 | Fondos decorativos KABE | 19/19 (100%) |
-| Personajes grandes NC | 143/147 (97,2%) |
+| Personajes grandes NC | 145/147 (98,6%) |
 
-**HD total: 1120/1894 (59,1%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1122/1894 (59,2%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 ## Qué cuenta en cada etapa

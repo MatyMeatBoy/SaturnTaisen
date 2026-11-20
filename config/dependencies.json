@@ -146,7 +146,8 @@
       "patches/0148-sakura-registered-nc4138-body.patch",
       "patches/0149-sakura-nc81-native-neck-underlay.patch",
       "patches/0150-sakura-load-selector-arrows.patch",
-      "patches/0151-sakura-registered-nc3018-faces.patch"
+      "patches/0151-sakura-registered-nc3018-faces.patch",
+      "patches/0152-sakura-registered-nc3125-nc3126-bodies.patch"
     ]
   }
 }

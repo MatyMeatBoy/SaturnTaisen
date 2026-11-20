@@ -1,0 +1,290 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -29,7 +29,7 @@
+ #include "scene_bg_table.h"
+ #include "eve_inset.h"
+ #include "body_table.h"
+-#include "nc4138_overlay.h"
++#include "registered_body_overlay.h"
+ #include "verified_body_faces.h"
+ #include "film_clip_table.h"
+ #include "load_disc_icon.h"
+@@ -940,8 +940,14 @@
+         std::vector<std::vector<float>> partSig;std::vector<float> partOpaque;std::unordered_map<uint64_t,int> matches;std::unordered_map<unsigned,std::array<float,2>> refinedPos;
+     };
+     std::vector<BodyHd> bodyHd(kBodyCount);
+-    SDL_Texture* nc4138Texture = nullptr;
+-    bool nc4138Tried = false;
++    struct RegisteredBodyTexture { SDL_Texture* texture = nullptr; bool tried = false; };
++    std::array<RegisteredBodyTexture, registered_body::kEntries.size()> registeredTextures{};
++    auto resetRegisteredBodies = [&] {
++        for (auto& body : registeredTextures) {
++            if (body.texture) SDL_DestroyTexture(body.texture);
++            body = {};
++        }
++    };
+     std::vector<SDL_Vertex> bodyMaskVertices;
+     std::vector<int> bodyMaskIndices;
+     using ItemCapture=satrecomp::video::Renderer::ItemCardCapture;
+@@ -2627,53 +2633,58 @@
+                             satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
+                             imageTarget.w >= 576.0f && imageTarget.w == 288.0f * std::floor(imageTarget.w / 288.0f) &&
+                             imageTarget.h == 144.0f * (imageTarget.w / 288.0f)) {
+-                            using namespace nc4138;
++                            using namespace registered_body;
+                             const auto palette = std::span<const uint8_t>(planes.palette).first(512);
+-                            if (AtlasFingerprint(palette) == kPaletteHash) {
++                            const auto paletteHash = AtlasFingerprint(palette);
++                            const auto slot = std::ranges::find(kEntries, paletteHash, &Entry::paletteHash);
++                            if (slot != kEntries.end()) {
++                                const auto& entry = *slot;
++                                auto& cached = registeredTextures[slot - kEntries.begin()];
++                                const bool trace = std::getenv("SATRECOMP_REGISTERED_BODY_TRACE") != nullptr;
+                                 for (const auto& sprite : planes.sprites) {
+                                     const auto& cmd = sprite.command.words;
++                                    const auto size = ((entry.width/8)<<8) | entry.height;
+                                     if ((cmd[0] & 0xC03F) != 0 || cmd[2] != 0xA0 ||
+-                                        cmd[3] != 0x2000 || cmd[5] != 0x0E70 ||
+-                                        sprite.pixels.size() != kSize*kSize ||
+-                                        AtlasFingerprint(sprite.pixels) != kBodyHash) continue;
+-                                    if (!Visible(sprite.pixels, palette, softwareShown, planes.topSource,
++                                        cmd[3] != 0x2000 || cmd[5] != size ||
++                                        sprite.pixels.size() != size_t(entry.width*entry.height) ||
++                                        AtlasFingerprint(sprite.pixels) != entry.bodyHash) continue;
++                                    if (!Visible(entry, sprite.pixels, palette, softwareShown, planes.topSource,
+                                                  planes.spriteWhiteWeight, sprite.x, sprite.y)) {
+-                                        if (std::getenv("SATRECOMP_NC4138_TRACE"))
+-                                            std::fprintf(stderr, "NC4138 native visibility rejected\n");
++                                        if (trace) std::fprintf(stderr, "%s native visibility rejected\n", entry.name);
+                                         break;
+                                     }
+-                                    if (!nc4138Tried) {
+-                                        nc4138Tried = true;
+-                                        const auto file = std::filesystem::path(port.opt.pcAssetsPath) / "SAKURA1/NC/NC4138.SPR";
++                                    if (!cached.tried) {
++                                        cached.tried = true;
++                                        const auto file = std::filesystem::path(port.opt.pcAssetsPath) / entry.file;
+                                         std::vector<uint8_t> bytes;
+                                         std::vector<PcSprite> sprites;
+                                         std::string error;
+-                                        if (ReadPcBackdropFile(file, bytes, kDonorBytes) && bytes.size() == kDonorBytes &&
+-                                            AtlasFingerprint(bytes) == kDonorHash && DecodePcSprites(bytes, sprites, error)) {
++                                        if (ReadPcBackdropFile(file, bytes, entry.donorBytes) &&
++                                            bytes.size() == entry.donorBytes && AtlasFingerprint(bytes) == entry.donorHash &&
++                                            DecodePcSprites(bytes, sprites, error)) {
+                                             for (const auto& donor : sprites) {
+-                                                if (donor.index || donor.width != kDonorWidth || donor.height != kDonorHeight)
+-                                                    continue;
+-                                                const auto rgb = Register(sprite.pixels, donor.pixels);
++                                                if (donor.index || donor.width != unsigned(entry.donorWidth) ||
++                                                    donor.height != unsigned(entry.donorHeight)) continue;
++                                                const auto rgb = Register(entry, sprite.pixels, palette, donor.pixels);
+                                                 if (rgb.empty()) break;
+-                                                auto* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+-                                                    SDL_TEXTUREACCESS_STATIC, kSize*2, kSize*2);
+-                                                if (texture && SDL_UpdateTexture(texture, nullptr, rgb.data(), kSize*8) &&
+-                                                    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST) &&
+-                                                    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND))
+-                                                    nc4138Texture = texture;
+-                                                else SDL_DestroyTexture(texture);
++                                                auto* replacement = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                                    SDL_TEXTUREACCESS_STATIC, entry.width*2, entry.height*2);
++                                                if (replacement && SDL_UpdateTexture(replacement, nullptr, rgb.data(), entry.width*8) &&
++                                                    SDL_SetTextureScaleMode(replacement, SDL_SCALEMODE_NEAREST) &&
++                                                    SDL_SetTextureBlendMode(replacement, SDL_BLENDMODE_BLEND))
++                                                    cached.texture = replacement;
++                                                else SDL_DestroyTexture(replacement);
+                                                 break;
+                                             }
+                                         }
+                                     }
+-                                    if (nc4138Texture) {
++                                    if (cached.texture) {
+                                         const float scale = imageTarget.w / 288.0f;
+                                         const SDL_FRect target{imageTarget.x + (sprite.x-16)*scale,
+-                                            imageTarget.y + (sprite.y-8)*scale, kSize*scale, kSize*scale};
+-                                        if (SDL_RenderTexture(renderer, nc4138Texture, nullptr, &target) &&
+-                                            std::getenv("SATRECOMP_NC4138_TRACE"))
+-                                            std::fprintf(stderr, "NC4138 drew x=%g y=%g size=%g\n",
+-                                                target.x, target.y, target.w);
++                                            imageTarget.y + (sprite.y-8)*scale, entry.width*scale, entry.height*scale};
++                                        if (SDL_RenderTexture(renderer, cached.texture, nullptr, &target) && trace)
++                                            std::fprintf(stderr, "%s drew x=%g y=%g w=%g h=%g\n",
++                                                entry.name, target.x, target.y, target.w, target.h);
+                                     }
+                                     break;
+                                 }
+@@ -3451,9 +3462,7 @@
+                         SDL_DestroyTexture(texture);
+                         texture = nullptr;
+                     }
+-                    if (nc4138Texture) SDL_DestroyTexture(nc4138Texture);
+-                    nc4138Texture = nullptr;
+-                    nc4138Tried = false;
++                    resetRegisteredBodies();
+                     closeWindow();
+                     preset = wanted;
+                     if (!openWindow(wide, high, full)) {
+@@ -3917,7 +3926,7 @@
+     }
+     if(itemOverlay)SDL_DestroyTexture(itemOverlay);
+     for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);
+-    if (nc4138Texture) SDL_DestroyTexture(nc4138Texture);
++    resetRegisteredBodies();
+     if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);
+     if(loadArrowOverlay)SDL_DestroyTexture(loadArrowOverlay);
+     if (texture) {
+diff --git a/port/nc4138_overlay.h b/port/nc4138_overlay.h
+deleted file mode 100644
+--- a/port/nc4138_overlay.h
++++ /dev/null
+@@ -1,54 +0,0 @@
+-#pragma once
+-
+-#include <cstddef>
+-#include <cstdint>
+-#include <span>
+-#include <vector>
+-
+-namespace port::nc4138 {
+-inline constexpr int kSize = 112;
+-inline constexpr int kDonorWidth = 230;
+-inline constexpr int kDonorHeight = 254;
+-inline constexpr uint64_t kBodyHash = 0x0CAB60660ABA6DD5ull;
+-inline constexpr uint64_t kPaletteHash = 0x7C07B11306D1DEA2ull;
+-inline constexpr uint64_t kDonorHash = 0x5D01F8A13100D78Full;
+-inline constexpr std::size_t kDonorBytes = 71692;
+-
+-inline bool Visible(std::span<const uint8_t> indices, std::span<const uint8_t> palette,
+-                    std::span<const uint32_t> screen, std::span<const uint8_t> source,
+-                    std::span<const uint8_t> white, int x, int y) {
+-    if (indices.size() != kSize*kSize || palette.size() != 512 ||
+-        screen.size() != 320*224 || source.size() != screen.size() || white.size() != screen.size() ||
+-        x < 16 || y < 8 || x > 304-kSize || y > 152-kSize) return false;
+-    for (int row = 0; row < kSize; ++row) {
+-        for (int column = 0; column < kSize; ++column) {
+-            const unsigned i = indices[row*kSize + column];
+-            if (!i) continue;
+-            const std::size_t at = (y+row)*320 + x+column;
+-            const uint32_t word = uint32_t(palette[i*2])<<8 | palette[i*2+1];
+-            const uint32_t rgb = ((word & 31) << 3) | ((word & 0x03E0) << 6) | ((word & 0x7C00) << 9);
+-            if (source[at] != 0 || white[at] != 0 || (screen[at] & 0xFFFFFF) != rgb) return false;
+-        }
+-    }
+-    return true;
+-}
+-
+-inline std::vector<uint32_t> Register(std::span<const uint8_t> indices, std::span<const uint32_t> donor) {
+-    if (indices.size() != kSize*kSize || donor.size() != kDonorWidth*kDonorHeight) return {};
+-    constexpr int outputSize = kSize*2;
+-    std::vector<uint32_t> output(outputSize*outputSize);
+-    for (int y = 0; y < outputSize; ++y) {
+-        for (int x = 0; x < outputSize; ++x) {
+-            if (!indices[(y/2)*kSize + x/2]) continue;
+-            // The integer fit projects each of the two output samples per native axis.
+-            const int rawX = 2073*(2*x-1) - 4*3508 + 2000;
+-            const int rawY = 2249*(2*y-1) - 4*4654 + 2000;
+-            if (rawX < 0 || rawY < 0 || rawX/4000 >= kDonorWidth || rawY/4000 >= kDonorHeight) return {};
+-            const uint32_t color = donor[(rawY/4000)*kDonorWidth + rawX/4000];
+-            if (color>>24 != 255) return {};
+-            output[y*outputSize+x] = color;
+-        }
+-    }
+-    return output;
+-}
+-}
+diff --git a/port/registered_body_overlay.h b/port/registered_body_overlay.h
+new file mode 100644
+--- /dev/null
++++ b/port/registered_body_overlay.h
+@@ -0,0 +1,89 @@
++#pragma once
++
++#include <algorithm>
++#include <array>
++#include <cstddef>
++#include <cstdint>
++#include <span>
++#include <vector>
++
++namespace port::registered_body {
++struct Entry {
++    const char* name;
++    const char* file;
++    uint64_t bodyHash, paletteHash, donorHash;
++    std::size_t donorBytes;
++    int width, height, donorWidth, donorHeight;
++    int scaleX, scaleY, originX, originY;
++    int feather;
++};
++inline constexpr std::array<Entry, 3> kEntries{{
++    {"NC4138", "SAKURA1/NC/NC4138.SPR", 0x0CAB60660ABA6DD5ull, 0x7C07B11306D1DEA2ull,
++     0x5D01F8A13100D78Full, 71692, 112, 112, 230, 254, 2073, 2249, -3508, -4654, 0},
++    {"NC3125", "SAKURA1/NC/NC3125.SPR", 0xD490539B25905CE9ull, 0x8A6FB394C17EE70Cull,
++     0x1AC5E04E7DB219DCull, 55414, 200, 96, 398, 205, 2177, 2339, -60, -17403, 12},
++    {"NC3126", "SAKURA1/NC/NC3126.SPR", 0x15A1798B00413580ull, 0x9B408B83C410FE86ull,
++     0x705578D90A9E85A5ull, 69063, 192, 96, 385, 209, 2098, 2260, -5610, -5919, 12},
++}};
++
++inline uint32_t NativeRgb(std::span<const uint8_t> palette, unsigned index) {
++    const uint32_t word = uint32_t(palette[index*2])<<8 | palette[index*2+1];
++    return ((word & 31) << 3) | ((word & 0x03E0) << 6) | ((word & 0x7C00) << 9);
++}
++
++inline bool Visible(const Entry& entry, std::span<const uint8_t> indices,
++                    std::span<const uint8_t> palette, std::span<const uint32_t> screen,
++                    std::span<const uint8_t> source, std::span<const uint8_t> white, int x, int y) {
++    if (indices.size() != std::size_t(entry.width*entry.height) || palette.size() != 512 ||
++        screen.size() != 320*224 || source.size() != screen.size() || white.size() != screen.size() ||
++        x < 16 || y < 8 || x > 304-entry.width || y > 152-entry.height) return false;
++    for (int row = 0; row < entry.height; ++row) {
++        for (int column = 0; column < entry.width; ++column) {
++            const unsigned index = indices[row*entry.width + column];
++            if (!index) continue;
++            const std::size_t at = (y+row)*320 + x+column;
++            if (source[at] != 0 || white[at] != 0 ||
++                (screen[at] & 0xFFFFFF) != NativeRgb(palette, index)) return false;
++        }
++    }
++    return true;
++}
++
++inline std::vector<uint32_t> Register(const Entry& entry, std::span<const uint8_t> indices,
++                                      std::span<const uint8_t> palette, std::span<const uint32_t> donor) {
++    if (indices.size() != std::size_t(entry.width*entry.height) || palette.size() != 512 ||
++        donor.size() != std::size_t(entry.donorWidth*entry.donorHeight)) return {};
++    const int outputWidth = entry.width*2, outputHeight = entry.height*2;
++    std::vector<uint32_t> output(outputWidth*outputHeight);
++    for (int y = 0; y < outputHeight; ++y) {
++        for (int x = 0; x < outputWidth; ++x) {
++            const unsigned index = indices[(y/2)*entry.width + x/2];
++            if (!index) continue;
++            // Project each of the two samples per native axis through the measured integer fit.
++            const int rawX = entry.scaleX*(2*x-1) + 4*entry.originX + 2000;
++            const int rawY = entry.scaleY*(2*y-1) + 4*entry.originY + 2000;
++            const int sx = rawX/4000, sy = rawY/4000;
++            if (rawX < 0 || rawY < 0 || sx >= entry.donorWidth || sy >= entry.donorHeight) {
++                if (entry.feather) continue;
++                return {};
++            }
++            const int edge = std::min({sx, sy, entry.donorWidth-1-sx, entry.donorHeight-1-sy});
++            if (entry.feather && !edge) continue;
++            uint32_t color = donor[sy*entry.donorWidth + sx];
++            if (color>>24 != 255) return {};
++            if (edge < entry.feather) {
++                const uint32_t native = NativeRgb(palette, index);
++                const uint32_t pc = color;
++                color = 0xFF000000;
++                for (unsigned shift : {0u, 8u, 16u}) {
++                    const auto channel = (int((pc>>shift)&255)*edge +
++                        int((native>>shift)&255)*(entry.feather-edge) + entry.feather/2) / entry.feather;
++                    color |= uint32_t(channel)<<shift;
++                }
++            }
++            output[y*outputWidth+x] = color;
++        }
++    }
++    return output;
++}
++}
