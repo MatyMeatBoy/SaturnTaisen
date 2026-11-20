@@ -113,6 +113,7 @@ CHAPTER_FILE_RESIDENCIES = {
 }
 BBG204_INSET = (1, '/SAKURA2/BBG204.BIN')
 TACTICAL_PAIRING_REPORT = 'docs/research/tactical-pairing.md'
+GROUND_TABLE_REPORT = 'docs/research/tactical-ground-table.md'
 BBG204_REPORT = 'docs/research/bbg204-tactical-inset.md'
 BBG_INSET_REPORT = 'docs/research/disc1-battle-insets.md'
 BBG_INSET_PAIRS = {'BBG002', 'BBG003', 'BBG004', 'BBG005', 'BBG006', 'BBG007', 'BBG008', 'BBG103', 'BBG104', 'BBG106', 'BBG205', 'BBG235'}
@@ -332,6 +333,7 @@ def build(root, index_dir, portrait_audit):
         for row in bg.values() if row.get('pc_file') and 'pc_image_index' in row
     }
     tactical_maps = {r['saturn']: r for r in config('hd-tactical-map-pairs')['maps']}
+    ground_table = {saturn: row for row in config('hd-tactical-ground-table')['maps'] for saturn in row['saturn']}
     screens = pairs(config('hd-screen-map'))
     endings = pairs(config('hd-ending-bank-map'))
     bodies = pairs(config('hd-body-map'))
@@ -467,6 +469,21 @@ def build(root, index_dir, portrait_audit):
                            + ('; the ground holds %d images (tiles or frames) and needs an assembler' % pair['ground_image_count']
                               if pair.get('ground_layout') == 'tiles' else '')),
             }
+            table_row = ground_table.get(f'{disc}:{path}', {})
+            if table_row.get('status') == 'wired-unverified':
+                row = {
+                    'status': 'wired-unverified',
+                    'pc': pair['pc_ground'],
+                    'scope': 'source-4 ground only',
+                    'pairing_evidence': TACTICAL_PAIRING_REPORT,
+                    'runtime_evidence': GROUND_TABLE_REPORT,
+                    'reason': ('In the generated ground table (patch 0185): the runtime keys it by the pattern-name '
+                               'signature derived from the identical BIN and draws the PC ground when it appears; '
+                               'nobody has recorded seeing it drawn'
+                               + ('; the same BIN as disc 1 MAP01, which is verified' if path == '/SAKURA2/MAP01.BIN' else '')),
+                }
+            elif table_row.get('status') == 'needs-assembler':
+                row['reason'] = table_row['reason']
             if (disc, path) == (1, '/SAKURA2/MAP10.BIN'):
                 row['reason'] = ('The PC facades and terrace require different offsets, and the PC roof '
                                  'has a keyed span with a different boundary. Keep the native ground.')

@@ -1,0 +1,633 @@
+{
+ "key": "FNV-1a of the first 8192 name-page bytes of VDP2 source 4 at page 0x40000 (see tools/gen_tactical_ground_table.py)",
+ "maps": [
+  {
+   "bin_sha256": "cf5ae6caf3f696f0ee8cab4ab1aa2b9af4b2d6abda129492f85b30de2450e5ec",
+   "derived_signature": "1CAF3218B4B0F9F0",
+   "ground_fnv": "F7205A4FCC95F748",
+   "ground_sha256": "5716a3b06fc3e6b049ec81467758921cf602c03fc708fc29f7c1dcfe81394d31",
+   "ground_size": 1786365,
+   "images": [
+    "1408x960"
+   ],
+   "layout": "single",
+   "map": "MAP01",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP01/MAP01_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP01.BIN",
+    "2:/SAKURA2/MAP01.BIN"
+   ],
+   "signature": "1CAF3218B4B0F9F0",
+   "signature_derivable": true,
+   "status": "hd",
+   "table": "hand"
+  },
+  {
+   "bin_sha256": "f2bc29c87209a2bb1ab28b0664e3be1140b2245632005e03f35d84e1b8015611",
+   "derived_signature": "25FF56EB6965E424",
+   "ground_fnv": "437AE98D69D62C17",
+   "ground_sha256": "82b49a84a91c5982e5f22d0f18c5ebb2cf613a19ddeb19c36eb7a03ad00e5983",
+   "ground_size": 5829484,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP02",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP02/MAP02_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP02.BIN"
+   ],
+   "signature": "25FF56EB6965E424",
+   "signature_derivable": true,
+   "status": "hd",
+   "table": "hand"
+  },
+  {
+   "bin_sha256": "b452766741378d0b239db0074ff525afa752db3c2d525cba8402324e3e3b0a63",
+   "centre_layout": "stage03-hd-ground",
+   "ground_fnv": "70A1A621311CCC80",
+   "ground_sha256": "4ee5832ccea218f77dddc881300f829f898837680cba8f5fef720fdb7d0a3dc7",
+   "ground_size": 2415344,
+   "images": [
+    "64x64"
+   ],
+   "layout": "tiles",
+   "map": "MAP03",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP03/MAP03_A.SPR",
+   "plane": [
+    2048,
+    2048
+   ],
+   "saturn": [
+    "1:/SAKURA2/MAP03.BIN"
+   ],
+   "signature": "3150DAC84F35E1AE",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 64,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "cbf03a915ce77f009c49c874354940717639447662317353724aa8f2710e0eaf",
+   "derived_signature": "451ACDDB5522070E",
+   "ground_fnv": "B9A138FDA90D0DEF",
+   "ground_sha256": "3c1fb662bec664056bbc28f1bdb90d732b98e4e6b23f53b0c1309bf3303bdb42",
+   "ground_size": 1839340,
+   "images": [
+    "64x64"
+   ],
+   "layout": "tiles",
+   "map": "MAP04",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP04/MAP04_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP04.BIN"
+   ],
+   "signature": "451ACDDB5522070E",
+   "signature_derivable": true,
+   "status": "hd",
+   "table": "hand"
+  },
+  {
+   "bin_sha256": "59e60cb1754564908151f74835a6c926c2b49eb517bdbc1ea2e4482f22ab2601",
+   "derived_signature": "A18A5122F7C18729",
+   "ground_fnv": "F3F7198CA32391D8",
+   "ground_sha256": "d3e2478a8d327fc46ee3478688d7c159d3439fa3d7e79ab22fb74931b9ccf3a0",
+   "ground_size": 2361801,
+   "images": [
+    "256x256"
+   ],
+   "layout": "tiles",
+   "map": "MAP05",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP05/MAP05_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP05.BIN"
+   ],
+   "signature": "A18A5122F7C18729",
+   "signature_derivable": true,
+   "status": "hd",
+   "table": "hand"
+  },
+  {
+   "bin_sha256": "70b44bd3d9e0a5fa3bf850cd55d51ce32db0be5d861fe9f3df91a3e8130b258a",
+   "derived_signature": "B533F608A5E864D1",
+   "ground_fnv": "8A5D85E913F97BAB",
+   "ground_sha256": "53361c5f205203eb0ac652f9cd01bbb0a987ad620694932b10eb08a43eeb0aac",
+   "ground_size": 6152194,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP06",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP06/MAP06_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP06.BIN"
+   ],
+   "signature": "B533F608A5E864D1",
+   "signature_derivable": true,
+   "status": "hd",
+   "table": "hand"
+  },
+  {
+   "bin_sha256": "fb0f99bf1e6fac51bbf449b55e1058289a379d4ec50be55d782c511f3ee0a22a",
+   "centre_layout": "stage07-hd-ground",
+   "ground_fnv": "6C7B58813E9D7AEC",
+   "ground_sha256": "14be99adf0ede9075d812147036e9436343c46b46219298b63403930fef5c963",
+   "ground_size": 6358659,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP07",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP07/MAP07_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP07.BIN"
+   ],
+   "signature": "EEF9B6CB3B179F60",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "d4e50cc2cd1e76fcf42ee09f58defe7e96b8324e4110807348b3703c5f5760e4",
+   "centre_layout": "stage08-hd-ground",
+   "ground_fnv": "4620C1643BE2B379",
+   "ground_sha256": "cecc649f3cca84cbd68c92bbe48e91221683f21e2369be47f6d36f141341f6ef",
+   "ground_size": 3826276,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP08",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP08/MAP08_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP08.BIN"
+   ],
+   "signature": "7EE5F9416E6CFE55",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "93e305a663f418af252017caa58d8cab46382710ce0a11d3c31e8f468d28e670",
+   "centre_layout": "stage09-hd-ground",
+   "ground_fnv": "D62EF23F79CF076C",
+   "ground_sha256": "05d7e9f6a0187275ef767dd2907fd212d7a48dc74df45e63c2053f04c63e797e",
+   "ground_size": 4107593,
+   "images": [
+    "2048x1792"
+   ],
+   "layout": "single",
+   "map": "MAP09",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP09/MAP09_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP09.BIN"
+   ],
+   "signature": "16F7C2CBA831B3CC",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    896
+   ]
+  },
+  {
+   "bin_sha256": "804201fdc21c9de1e8f8e834563ba6fcafa33e28a7e97f2ae49196460dfb7de1",
+   "ground_fnv": "8D4C253FC359E36E",
+   "ground_sha256": "79e45cdbf7e6d6b00ac7fef0ff414385516586b1dc987841ee4834fc3e38ffc0",
+   "ground_size": 1004827,
+   "images": [
+    "1442x928"
+   ],
+   "layout": "single",
+   "map": "MAP10",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP10/MAP10_A.SPR",
+   "reason": "The PC facades and terrace need different offsets and the roof has a keyed span with another boundary; a single world sampler would misplace part of the foreground. Keep the native ground.",
+   "saturn": [
+    "1:/SAKURA2/MAP10.BIN"
+   ],
+   "signature": "E364F3D731C3D6DE",
+   "status": "native",
+   "table": "generated"
+  },
+  {
+   "bin_sha256": "c0458008c716eb186b8f1204c4aa63fb7583999873a3bae05166ea2f1d844eaa",
+   "centre_layout": "stage11-hd-ground",
+   "ground_fnv": "A376D5D99FBBEEB8",
+   "ground_sha256": "129a4499065d34df4bcdfabc4c2b114c50e96ecae3873ad825c411b6e591a6b6",
+   "ground_size": 3120168,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP11",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP11/MAP11_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP11.BIN"
+   ],
+   "signature": "51F16F840299873E",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "37520330006194ca2c615ea61fedadac6015658a7e67e9be88c4c9aefcff18fa",
+   "centre_layout": "stage12-hd-ground",
+   "ground_fnv": "945A598FB01534A3",
+   "ground_sha256": "8a3d1ceaa36942b7b037b341cabf93e57cc4aef4c0b11470882993ffdef6c105",
+   "ground_size": 3584520,
+   "images": [
+    "2048x1280"
+   ],
+   "layout": "single",
+   "map": "MAP12",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP12/MAP12_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP12.BIN"
+   ],
+   "signature": "334C1BC64DDC4CEC",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    640
+   ]
+  },
+  {
+   "bin_sha256": "b633027aa8ae1af1cf2b940766e52f02565411a2334c85faa39dd15e2d62562b",
+   "centre_layout": "stage13-hd-ground",
+   "ground_fnv": "2A90980F7060988E",
+   "ground_sha256": "13ad709077628fb416c85a50490a8802a0e542443a6ec35ee1bd97cea2982111",
+   "ground_size": 3656187,
+   "images": [
+    "2048x1280"
+   ],
+   "layout": "single",
+   "map": "MAP13",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP13/MAP13_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP13.BIN"
+   ],
+   "signature": "62C7F53B0136508A",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    640
+   ]
+  },
+  {
+   "bin_sha256": "6ea42d1b6b121d45b31ecf791f6804171e751920fdf6b4bbf5a052268c9b9ace",
+   "centre_layout": "stage14-hd-ground",
+   "ground_fnv": "D97BF02A6A2990C2",
+   "ground_sha256": "ad970abefa402341533e8a9a2f6fd682e0d535ca71edc7c2aa94cc62e9190146",
+   "ground_size": 5656390,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP14",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP14/MAP14_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP14.BIN"
+   ],
+   "signature": "6CA2B0FED140A513",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "f2cd566dcb2f02cc9c1f40eed2885d6f0f11b29b131d6f68fb4d509c5ece77ee",
+   "centre_layout": "stage15-hd-ground",
+   "ground_fnv": "67000D2031CCBEA3",
+   "ground_sha256": "17f0fe51941dde23ad6781ae56a656faecf9fbfb93fc0c9bfb9fb64c5807261c",
+   "ground_size": 3613340,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP15",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP15/MAP15_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP15.BIN"
+   ],
+   "signature": "4EF5A9A4BBA061C9",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "d0492d480d6ffcba28f362965abb880ab1b9f4aa67785ccd14d76d7763519233",
+   "centre_layout": "stage16-hd-ground",
+   "ground_fnv": "A27A32D43AD77CCB",
+   "ground_sha256": "aec8c732dca5b8ae05d19b1c9b20af18f1d5000741220db691264659f00ec6ce",
+   "ground_size": 6641198,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP16",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP16/MAP16_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP16.BIN"
+   ],
+   "signature": "388594B7DBCB32C6",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "37ca09eab11ec3410c621f8429fab6e91a9325c4f7e9325a1c78ab8563bd8501",
+   "centre_layout": "stage17-hd-ground",
+   "ground_fnv": "4A42EDA5053264D3",
+   "ground_sha256": "76ee183d8cefb1e84fad6b21a535adc1adccd28c4af97d2ad875dacac385e0dc",
+   "ground_size": 3797354,
+   "images": [
+    "2048x2048"
+   ],
+   "layout": "single",
+   "map": "MAP17",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP17/MAP17_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP17.BIN"
+   ],
+   "signature": "EF0D324CBB36FA91",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "d6fa0554f0d43c666f9d5d9be11e3f947376676bb391f132fe15459d10f24cd1",
+   "centre_layout": "stage18-hd-ground",
+   "ground_fnv": "93EA60160A54774A",
+   "ground_sha256": "cfa693792c7240b3968eba5105bb852a0021b82ec28b382bb8b4228c7411aedd",
+   "ground_size": 2528919,
+   "images": [
+    "2048x1440"
+   ],
+   "layout": "single",
+   "map": "MAP18",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP18/MAP18_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP18.BIN"
+   ],
+   "signature": "AABF931F9960EDBA",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    1024,
+    720
+   ]
+  },
+  {
+   "bin_sha256": "8e6776ee659860f8ee4ebae890ee2f91dead0d866c416bd195f8eb1372e138e5",
+   "ground_fnv": "811AA9E5539CD040",
+   "ground_sha256": "0c76bf93e5f19a47462ad0dc804b61c99133f213eb83c319de5aced818782e07",
+   "ground_size": 2752946,
+   "images": [
+    "2048x1664"
+   ],
+   "layout": "single",
+   "map": "MAP19",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP19/MAP19_A.SPR",
+   "reason": "The PC lamps and rails sit differently from the Saturn drawing at the witnessed camera. Keep the native ground.",
+   "saturn": [
+    "2:/SAKURA2/MAP19.BIN"
+   ],
+   "signature": "FA30687F240C0BEB",
+   "status": "native",
+   "table": "generated"
+  },
+  {
+   "bin_sha256": "57f7b0a7c7e2d22e3fd9f9de09187faf108a00c8100459d19dc3dac65831ab64",
+   "centre_layout": "stage20-hd-ground",
+   "ground_fnv": "D1A6E908336495EA",
+   "ground_sha256": "615e8f2f9df7a5a280c32c800636c45af17301de82057dd42907acb74b52ea30",
+   "ground_size": 552578,
+   "images": [
+    "128x128"
+   ],
+   "layout": "tiles",
+   "map": "MAP20",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP20/MAP20_A.SPR",
+   "plane": [
+    2048,
+    2048
+   ],
+   "saturn": [
+    "2:/SAKURA2/MAP20.BIN"
+   ],
+   "signature": "B0096DE29CC3A325",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 128,
+   "world": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "bin_sha256": "f01e20e18560ceb03cc27718373f0eedd6973cc8a0ff82d39b77eed43d032f91",
+   "derived_signature": "8C52C148BC60C5C3",
+   "ground_fnv": "0006FEAF367A7203",
+   "ground_sha256": "3a3514e6389bc0265c6bb8f23d60edfced2db4c75f93582a20c19bb90ef5b80b",
+   "ground_size": 1105672,
+   "images": [
+    "1118x910"
+   ],
+   "layout": "single",
+   "map": "MAP21",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP21/MAP21_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP21.BIN"
+   ],
+   "signature": "446FB372F79EDD04",
+   "signature_derivable": false,
+   "status": "hd",
+   "table": "hand"
+  },
+  {
+   "bin_sha256": "6837b6a7098c67a27af54e4f8ddce0bae60b3aed72ad4156c6105c1dc98d85d1",
+   "centre_layout": "stage22-hd-ground",
+   "ground_fnv": "4C3D4DCB63C619E1",
+   "ground_sha256": "8a88e89f316e9fe9822db85728cc151c6c27c92a1ca689de67f33f0d3b82c0de",
+   "ground_size": 1701128,
+   "images": [
+    "1728x1042"
+   ],
+   "layout": "single",
+   "map": "MAP22",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP22/MAP22_A.SPR",
+   "saturn": [
+    "1:/SAKURA2/MAP22.BIN"
+   ],
+   "signature": "CCD72F646DC72847",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    864,
+    521
+   ]
+  },
+  {
+   "bin_sha256": "62ee53e7bd5b4e9744980efc050b53e4900165671827cc19d1a4f2a42874cbbe",
+   "ground_fnv": "B3BA8186F6C89A0B",
+   "ground_sha256": "6f50eb4b05456306462e4e49f21c6d6be54767e269781cd4184da3cfa1fbe67e",
+   "ground_size": 2949915,
+   "images": [
+    "1392x1232"
+   ],
+   "layout": "tiles",
+   "map": "MAP23",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP23/MAP23_A.SPR",
+   "reason": "4 images of 1392x1232 are not equal square tiles on the 2048 px plane: the placement assembler of patch 0140 draws one tile size on a square plane, and these look like alternative images rather than tiles; one image has to be chosen per scene before a sampler can use it",
+   "saturn": [
+    "2:/SAKURA2/MAP23.BIN"
+   ],
+   "signature": "0CB634432264A576",
+   "status": "needs-assembler",
+   "table": "generated"
+  },
+  {
+   "bin_sha256": "e5e2ec516a59bcb4c90313489a14b9db9ace14fdeac61345a4ca99592ec5fe89",
+   "centre_layout": "stage24-hd-ground",
+   "ground_fnv": "08F8C419783CDBB1",
+   "ground_sha256": "ed44947c9dffa62558d02799754349d6aa0c41bb43f812c86abb21ab1ed1ff6d",
+   "ground_size": 1651067,
+   "images": [
+    "1392x960"
+   ],
+   "layout": "single",
+   "map": "MAP24",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP24/MAP24_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP24.BIN"
+   ],
+   "signature": "8A03B78AA817DF0C",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    696,
+    480
+   ]
+  },
+  {
+   "bin_sha256": "da37302a63366cc2f49f06aa15f5098bd681a78f33e6322f85a1e13bfb69114d",
+   "centre_layout": "stage25-hd-ground",
+   "ground_fnv": "2B07BEB0AB3614FD",
+   "ground_sha256": "107c5512f3be2175fee5e48a504782d3f8200b83c092adb520bc80e7097741d2",
+   "ground_size": 1685457,
+   "images": [
+    "1392x960"
+   ],
+   "layout": "single",
+   "map": "MAP25",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP25/MAP25_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP25.BIN"
+   ],
+   "signature": "91608BD930EA1AE4",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    696,
+    480
+   ]
+  },
+  {
+   "bin_sha256": "6080ef63205c775fd60717322b2337f3afc7f074af41f66a9ffe438f2633f7c2",
+   "centre_layout": "stage26-hd-ground",
+   "ground_fnv": "9F35BB3FE48E282C",
+   "ground_sha256": "9fe1f96b74b9d00e30c04324954db9c622b091039e74e869388d76a040288f48",
+   "ground_size": 1764161,
+   "images": [
+    "1392x960"
+   ],
+   "layout": "single",
+   "map": "MAP26",
+   "page": "0x40000",
+   "pc_ground": "SAKURA2/MAP/MAP26/MAP26_A.SPR",
+   "saturn": [
+    "2:/SAKURA2/MAP26.BIN"
+   ],
+   "signature": "44A5831551F52D3F",
+   "status": "wired-unverified",
+   "table": "generated",
+   "tile_px": 0,
+   "world": [
+    696,
+    480
+   ]
+  }
+ ],
+ "schema": 1,
+ "scope": "Tactical ground table: Saturn MAPnn.BIN to PC ground SPR and the runtime key. Data only.",
+ "summary": {
+  "hd": 6,
+  "native": 2,
+  "needs-assembler": 1,
+  "wired-unverified": 17
+ }
+}

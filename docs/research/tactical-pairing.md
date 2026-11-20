@@ -21,7 +21,7 @@ Two ground layouts matter for the runtime:
 - single image (2048x2048, 2048x1280, 1392x960 ...): the Stage01/Stage02 sampler design applies;
 - mosaic of equal tiles (MAP03 626 tiles of 64x64, MAP04 629 tiles, MAP05 46 tiles of 256x256, MAP20 96 tiles of 128x128; MAP23 holds four 1392x1232 images): an assembler is needed first. MAP04 and MAP05 use the runtime placement assembler.
 
-The remaining comparisons need live pattern-name fingerprints and ground registration. The two below now have a live disposition. Wiring one map at a time is the open row TW6b.
+The remaining comparisons need live pattern-name fingerprints and ground registration. The two below now have a live disposition. The runtime key of every map is now derived from its BIN and the remaining grounds are wired in one generated table, see [the tactical ground table](tactical-ground-table.md) (row TW6b).
 
 ## Units (block 2)
 

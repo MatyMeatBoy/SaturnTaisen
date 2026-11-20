@@ -19517,43 +19517,55 @@
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP03/MAP03_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 626 images (tiles or frames) and needs an assembler",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "1:/SAKURA2/MAP07.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP07/MAP07_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "1:/SAKURA2/MAP08.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP08/MAP08_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "1:/SAKURA2/MAP09.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP09/MAP09_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "1:/SAKURA2/MAP11.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP11/MAP11_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "1:/SAKURA2/MAP22.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP22/MAP22_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP01.BIN": {
         "association": "unknown",
@@ -19566,85 +19578,107 @@
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP12/MAP12_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP13.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP13/MAP13_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP14.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP14/MAP14_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP15.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP15/MAP15_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP16.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP16/MAP16_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP17.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP17/MAP17_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP18.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP18/MAP18_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP20.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP20/MAP20_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 96 images (tiles or frames) and needs an assembler",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP23.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP23/MAP23_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 4 images (tiles or frames) and needs an assembler",
+        "reason": "4 images of 1392x1232 are not equal square tiles on the 2048 px plane: the placement assembler of patch 0140 draws one tile size on a square plane, and these look like alternative images rather than tiles; one image has to be chosen per scene before a sampler can use it",
         "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP24.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP24/MAP24_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP25.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP25/MAP25_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       },
       "2:/SAKURA2/MAP26.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP26/MAP26_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "reason": "In the generated ground table (patch 0185): the runtime keys it by the pattern-name signature derived from the identical BIN and draws the PC ground when it appears; nobody has recorded seeing it drawn",
+        "runtime_evidence": "docs/research/tactical-ground-table.md",
+        "scope": "source-4 ground only",
+        "status": "wired-unverified"
       }
     },
     "tactical-units": {

@@ -46,6 +46,8 @@ class FrontendTests(unittest.TestCase):
 
     def test_tactical_ground_load_checks_shape_hash_key_and_world_bounds(self):
         self.fixture('tactical_ground')
+    def test_generated_tactical_ground_table_is_unique_and_found_by_signature(self):
+        self.fixture('tactical_ground_table')
     def test_english_dialogue_tables_preserve_ids_offsets_and_reject_truncation(self):
         self.fixture('dialogue_catalog')
     def fixture(self,name,extra=()):
