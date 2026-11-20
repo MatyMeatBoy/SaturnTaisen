@@ -1,0 +1,12 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -425,6 +425,8 @@
+ };
+ 
+ inline constexpr VerifiedBodyFace kNC40[] = {
++    {0x3FD0F160F129B3A8ull, 24, 16, 42, 96, 117},
++    {0x58637BAC8C499865ull, 24, 16, 45, 96, 117},
+     {0x488C858281C65638ull, 48, 32, 13, 72, 61},
+     {0x91B5FC0D191C2F44ull, 24, 16, 48, 96, 117},
+     {0x1EAF4A7B26213851ull, 24, 16, 49, 96, 117},
