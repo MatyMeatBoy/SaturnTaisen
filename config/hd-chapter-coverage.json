@@ -3184,6 +3184,14 @@
             "evidence": "docs/research/bg2290-native-pan.md",
             "status": "unpaired"
           },
+          "1:/SAKURA1/BG2172.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scroll-table.md#bg2172-on-english-disc-1",
+            "pc": "SAKURA1/BG/BG2172.SPR",
+            "runtime_evidence": "docs/research/scroll-table.md#bg2172-on-english-disc-1",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG2289.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2290-native-pan.md",
@@ -14041,12 +14049,6 @@
       "1:/SAKURA1/BG2168.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2168.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG2172.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2172.SPR",
-        "runtime_evidence": "docs/research/scroll-table.md",
         "status": "hd"
       },
       "1:/SAKURA1/BG2174.BIN": {
