@@ -1,0 +1,56 @@
+diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
+--- a/launcher/src/sakura_setup.cpp
++++ b/launcher/src/sakura_setup.cpp
+@@ -19,6 +19,7 @@
+     std::string message,progress;
+     Uint64 lastRead=0;
+     int language=0; // 0 Español, 1 English, 2 Japonés
++    bool refreshing=false;
+     bool autoTried=false; // (preparation started on its own once, when the roms folder already has the files)
+ };
+ std::shared_ptr<SetupState> state;
+@@ -167,12 +168,16 @@
+ }
+ // Runs the helper over the player's files: what they chose (any disc, image or folder: the rest is looked for
+ // beside it) and the «roms» folder. Discs and the PC edition (HD mod) come out of the same step.
+-void StartPrepare(launcher::PageContext& page,SetupState& s) {
+-    page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
+-    std::vector<std::string> args={"prepare","--language",kLanguageCode[s.language],"--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
+-    if(s.source[0]) {args.push_back("--rom");args.push_back(s.source.data());}
+-    const auto discs=DiscsFolder(page.program_folder);
+-    if(!discs.empty() && HasGameFiles(discs)) {args.push_back("--folder");args.push_back(Utf8(discs));}
++void StartPrepare(launcher::PageContext& page,SetupState& s,bool refresh=false) {
++    s.refreshing=refresh;
++    std::vector<std::string> args={refresh?"refresh-portraits":"prepare","--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
++    if(!refresh) {
++        page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
++        args.insert(args.end(),{"--language",kLanguageCode[s.language]});
++        if(s.source[0])args.insert(args.end(),{"--rom",s.source.data()});
++        const auto discs=DiscsFolder(page.program_folder);
++        if(!discs.empty() && HasGameFiles(discs))args.insert(args.end(),{"--folder",Utf8(discs)});
++    }
+     s.finished=false;s.error=false;s.message.clear();s.progress="0 % · Iniciando…";
+     std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
+     s.log=page.folder/"logs"/"preparar-juego.log";s.worker=std::make_unique<GameProcess>();
+@@ -201,6 +206,7 @@
+     if(s.worker && !running && !s.finished) {
+         s.finished=true;s.error=s.worker->exit_code()!=0;ReadProgress(s);
+         if(s.error)s.message=s.progress.empty()?"No se pudo preparar el juego. Abre la carpeta de registros en Opciones.":s.progress;
++        else if(s.refreshing)s.message="Mod HD revisado. Ya puedes jugar.";
+         else {
+             page.prefs.load();page.settings.load(); // the helper wrote the disc, the language and first-run defaults
+             s.language=LanguageIndex(page.prefs.get("sakura","language"));
+@@ -246,7 +252,12 @@
+     if(!s.autoTried && !running && !page.playing && !ready[0] && !ready[1] && HasGameFiles(DiscsFolder(page.program_folder))) {
+         s.autoTried=true;StartPrepare(page,s);
+     }
+-    const bool locked=running || page.playing;
++    const auto packFolder=page.program_folder/"hd-resources";
++    if(!s.autoTried && !running && !page.playing && ready[1] &&
++       Exists(packFolder/"hd-pack.stfp") && Exists(packFolder/"pc"/"SAKURA1"/"SYSTEM"/"KAO.SPR") && !Exists(packFolder/".portrait-refresh-v1")) {
++        s.autoTried=true;StartPrepare(page,s,true);
++    }
++    const bool locked=SakuraSetupBusy() || page.playing;
+     const bool pack=HdPack(page);
+     const bool enhanced=page.settings.get("features","presentation_mode")=="1";
+     const bool sharp=enhanced && page.settings.get("features","text_style")!="1";
