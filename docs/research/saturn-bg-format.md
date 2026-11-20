@@ -977,3 +977,32 @@ SHA-256, paths, and PC subimage indices are in the
 The offline correspondence is approved for each file. The visible
 Saturn layer, viewport timing, active crop, and fade still need natural
 gameplay witnesses before an Enhanced replacement may be connected.
+
+### Runtime archive dependencies
+
+Each standalone background stores the same 4,480 names used by its
+playable module and the same tile bytes as its separate GCG archive.
+The following byte comparisons agree on both prepared English discs.
+The pair catalog pins the whole module and GCG hashes as well as the
+offset of the first name in the module.
+
+| Background | Executable | Name map offset | Tile archive | Contiguous palette matches |
+| --- | --- | ---: | --- | --- |
+| BGHANA | MINIHANA.BIN | 0xAB4CC | MINIHANA.GCG | No |
+| BGKOIKOI | HANAMAIN.BIN | 0x62DF0 | HANAFUDA.GCG | No |
+| BGMAIGO | MINIMAIG.BIN | 0x6F7C8 | MINIMAIG.GCG | Yes |
+| BGRYORI | MINICOOK.BIN | 0xAEF88 | MINICOOK.GCG | Yes |
+| BGSLOT | MINISLOT.BIN | 0x7E964 | MINISLOT.GCG | Yes |
+| BGSOUJI | MINISOJI.BIN | 0x74F30 | MINISOJI.GCG | Yes |
+| BGSWIM | MINISWIM.BIN | 0x56E40 | MINISWIM.GCG | Yes |
+| BGSYATE | MINISHOT.BIN | 0x81044 | MINISHOT.GCG | Yes |
+
+For Maigo, the existing episode 6 strict-native checkpoint enters the
+minigame and plays the archived losing route. Regenerated 150- and
+1,800-field runs match the archived guest hashes. The sampled frames show
+the instructions and playable room. Across 54 sampled frames, including
+the archived return to the lobby, none shows BGMAIGO. The matching name
+map is resident in the module. A CD head position at the first sector of
+MINIMAIG.GCG alone does not prove a read because that sector immediately
+follows the previous BIN read. A winning branch is the next route to
+check for the illustration, its viewport and fades.
