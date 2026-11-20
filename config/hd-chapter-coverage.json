@@ -5388,7 +5388,7 @@
     "unknown": "Pairing or integration is not established by the input catalogs.",
     "unpaired": "The catalog records a rejected or absent counterpart.",
     "unsupported-size": "Accepted counterpart whose size the runtime cannot draw yet (not 288x144): needs scroll or size support (T105c).",
-    "wired-unverified": "Reserved: in a table but not drawn by the runtime. Bodies in the runtime table are `hd` now; `verified_in_game` says whether a draw was observed."
+    "wired-unverified": "In the runtime table and tried whenever it appears, but nobody has recorded seeing it in game. The work is verification, not wiring."
   },
   "unassigned": {
     "bodies": {
@@ -15287,80 +15287,106 @@
       "1:/SAKURA1/IC02.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0200.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC04.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0400.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC0502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0502.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC06.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0600.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC07.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0700.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC08.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0800.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC09.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0900.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1001.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1001.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1002.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1002.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1003.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1003.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1004.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1005.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1005.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/IC1006.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC1006.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "reason": "in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); not seen drawn in game; see docs/research/ic-intermission-table.md",
+        "runtime_table": "config/hd-ic-table.json",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "1:/SAKURA1/KA_CG.BIN": {
         "association": "unknown",
