@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Visual review of all 68 top-ranked candidate item pictures. Only full item cards qualify as confirmed.",
+  "scope": "Visual review of 68 item candidates, with explicit full-card overrides where icons previously ranked higher.",
   "pairs": [
     {
       "saturn_file": "SAKURA1/ITEM01.BIN",
@@ -11,10 +11,10 @@
     },
     {
       "saturn_file": "SAKURA1/ITEM03.BIN",
-      "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
-      "pc_image_index": 2,
-      "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
-      "verdict": "icon_only"
+      "pc_file": "SAKURA1/ITEM/ITEM03.SPR",
+      "pc_image_index": 0,
+      "pc_sha256": "05225b96b9760996ec6d4432b190680f27da59322f52b579ae5f7771c726e363",
+      "verdict": "confirmed"
     },
     {
       "saturn_file": "SAKURA1/ITEM04.BIN",
@@ -46,10 +46,10 @@
     },
     {
       "saturn_file": "SAKURA1/ITEM12.BIN",
-      "pc_file": "SAKURA1/ITEM/ITEMICON.SPR",
-      "pc_image_index": 12,
-      "pc_sha256": "a4095c819d9193e661ed4f98543e21307bde9e356815289b51daccf71406a754",
-      "verdict": "icon_only"
+      "pc_file": "SAKURA1/ITEM/ITEM12.SPR",
+      "pc_image_index": 0,
+      "pc_sha256": "00aca58615ba43c70319ac88ee712d19566359d39e2642a5a71cecccf8c922c3",
+      "verdict": "confirmed"
     },
     {
       "saturn_file": "SAKURA1/ITEM13.BIN",
@@ -137,10 +137,10 @@
     },
     {
       "saturn_file": "SAKURA1/ITEM27.BIN",
-      "pc_file": "SAKURA1/ITEM/BUROICON.SPR",
-      "pc_image_index": 13,
-      "pc_sha256": "f3faab6733725847c5052ad3ba85f2fb68b0dbf8001c675e7438be2c0ce0e555",
-      "verdict": "icon_only"
+      "pc_file": "SAKURA1/ITEM/ITEM27.SPR",
+      "pc_image_index": 0,
+      "pc_sha256": "461ab45824390ee61fd211afe462b24875f934d41d0bb6522ba5110a6ea5f4ba",
+      "verdict": "confirmed"
     },
     {
       "saturn_file": "SAKURA1/ITEM40.BIN",

@@ -39,9 +39,7 @@ Data: `config/hd-tactical-item-inventory.json` (names, sizes, SHA-256, image cou
 
 The Saturn side was paired before this work: `tools/match_hd_items.py` (32x32 luminance signature correlation, 112x112 Saturn card against the 224x224 PC picture) and the eye review. This block adds the PC-side view of the 57 `SAKURA1/ITEM` SPR files. A PC picture is `paired` when a Saturn item is confirmed to it (review `confirmed`, or tier `content` without a review row), `ambiguous` when it is only the best candidate of items the review rejected or called icon-only, and `no counterpart` when no Saturn item ranks it first.
 
-Result for the 57 PC pictures: 38 paired, 4 ambiguous (`BUROICON`, `ITEMICON`, `ITEM03`, `ITEM09`), 15 no counterpart (`BURO01`-`BURO13`, `ITEM12`, `ITEM27`). Saturn side, 80 files: 38 confirmed (26 reviewed plus 12 content tier), 3 icon-only, 39 rejected. These agree with the register, which already marks the confirmed items `hd`/`paired-not-wired` and the rejected ones `unpaired` (the item draw itself is row T109/W5): no status changes, so `config/hd-chapter-coverage.json` and `docs/HD_PROGRESS.md` are not regenerated.
-
-Not verified here: the review itself was not redone (no pictures were looked at); the 15 unmatched PC pictures were not searched against other Saturn banks; the runtime draw of item cards is untouched.
+Result for the 57 PC pictures: 41 paired, three ambiguous and 13 without a counterpart. The Saturn side has 41 confirmed files and 39 rejected. ITEM03, ITEM12 and ITEM27 now join to the full cards, following the [item-card review](pc-menu-hud-inventory.md#item03-item12-and-item27). The inventory records the pairings, and the coverage register records the renderer evidence.
 
 ## Live MAP10 and MAP19 ground review
 

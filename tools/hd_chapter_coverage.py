@@ -586,6 +586,10 @@ def build(root, index_dir, portrait_audit):
                 row = {'status': 'paired-not-wired', 'pc': pair['pc_file'], 'pc_image_index': pair['pc_image_index']}
                 if pair['palette_fnv'].upper() in item_runtime:
                     row.update(status='hd', runtime_evidence=MENU_REPORT + '#item-detail-sprite-witness-t109')
+                    if name in ('ITEM03', 'ITEM12', 'ITEM27'):
+                        row['runtime_evidence'] = MENU_REPORT + '#item03-item12-and-item27'
+                    if (disc, name) == (1, 'ITEM12'):
+                        row['verified_in_game'] = True
             elif path in item_review:
                 row['status'] = 'unpaired'
         if kind == 'portraits' and f'{disc}:{path}' in fce_atlases and row['status'] == 'unknown':

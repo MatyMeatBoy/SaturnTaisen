@@ -5473,7 +5473,7 @@
     }
   ],
   "hud_census": {
-    "item_images": 50,
+    "item_images": 51,
     "system_images": 572
   },
   "schema": 1,
@@ -7513,7 +7513,10 @@
       },
       "1:/SAKURA1/ITEM03.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM03.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM04.BIN": {
         "association": "unknown",
@@ -7570,7 +7573,11 @@
       },
       "1:/SAKURA1/ITEM12.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM12.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/ITEM13.BIN": {
         "association": "unknown",
@@ -7672,7 +7679,10 @@
       },
       "1:/SAKURA1/ITEM27.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM27.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM28.BIN": {
         "association": "unknown",
@@ -8003,7 +8013,10 @@
       },
       "2:/SAKURA1/ITEM03.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM03.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM04.BIN": {
         "association": "unknown",
@@ -8060,7 +8073,10 @@
       },
       "2:/SAKURA1/ITEM12.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM12.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM13.BIN": {
         "association": "unknown",
@@ -8162,7 +8178,10 @@
       },
       "2:/SAKURA1/ITEM27.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM27.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM28.BIN": {
         "association": "unknown",

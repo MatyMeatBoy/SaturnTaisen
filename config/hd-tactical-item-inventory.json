@@ -178,8 +178,6 @@
    "reason": "only the best candidate of Saturn items the review did not confirm",
    "saturn_confirmed": [],
    "saturn_other": [
-    "SAKURA1/ITEM03.BIN:icon_only",
-    "SAKURA1/ITEM27.BIN:icon_only",
     "SAKURA1/ITEM44.BIN:rejected",
     "SAKURA1/ITEM48.BIN:rejected",
     "SAKURA1/ITEM53.BIN:rejected",
@@ -225,14 +223,15 @@
    ],
    "images": 1,
    "pc": "SAKURA1/ITEM/ITEM03.SPR",
-   "reason": "only the best candidate of Saturn items the review did not confirm",
-   "saturn_confirmed": [],
+   "saturn_confirmed": [
+    "SAKURA1/ITEM03.BIN"
+   ],
    "saturn_other": [
     "SAKURA1/ITEM50.BIN:rejected"
    ],
    "sha256": "05225b96b9760996ec6d4432b190680f27da59322f52b579ae5f7771c726e363",
    "size": 37681,
-   "status": "ambiguous"
+   "status": "paired"
   },
   {
    "image_sizes": [
@@ -363,12 +362,13 @@
    ],
    "images": 1,
    "pc": "SAKURA1/ITEM/ITEM12.SPR",
-   "reason": "no Saturn ITEM ranks this picture first",
-   "saturn_confirmed": [],
+   "saturn_confirmed": [
+    "SAKURA1/ITEM12.BIN"
+   ],
    "saturn_other": [],
    "sha256": "00aca58615ba43c70319ac88ee712d19566359d39e2642a5a71cecccf8c922c3",
    "size": 32118,
-   "status": "no-counterpart"
+   "status": "paired"
   },
   {
    "image_sizes": [
@@ -578,12 +578,13 @@
    ],
    "images": 1,
    "pc": "SAKURA1/ITEM/ITEM27.SPR",
-   "reason": "no Saturn ITEM ranks this picture first",
-   "saturn_confirmed": [],
+   "saturn_confirmed": [
+    "SAKURA1/ITEM27.BIN"
+   ],
    "saturn_other": [],
    "sha256": "461ab45824390ee61fd211afe462b24875f934d41d0bb6522ba5110a6ea5f4ba",
    "size": 45766,
-   "status": "no-counterpart"
+   "status": "paired"
   },
   {
    "image_sizes": [
@@ -828,7 +829,6 @@
    "reason": "only the best candidate of Saturn items the review did not confirm",
    "saturn_confirmed": [],
    "saturn_other": [
-    "SAKURA1/ITEM12.BIN:icon_only",
     "SAKURA1/ITEM42.BIN:rejected",
     "SAKURA1/ITEM45.BIN:rejected",
     "SAKURA1/ITEM55.BIN:rejected",
@@ -851,9 +851,9 @@
    "verdict": "confirmed"
   },
   {
-   "pc": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc": "SAKURA1/ITEM/ITEM03.SPR",
    "saturn": "SAKURA1/ITEM03.BIN",
-   "verdict": "icon_only"
+   "verdict": "confirmed"
   },
   {
    "pc": "SAKURA1/ITEM/ITEM04.SPR",
@@ -896,9 +896,9 @@
    "verdict": "confirmed"
   },
   {
-   "pc": "SAKURA1/ITEM/ITEMICON.SPR",
+   "pc": "SAKURA1/ITEM/ITEM12.SPR",
    "saturn": "SAKURA1/ITEM12.BIN",
-   "verdict": "icon_only"
+   "verdict": "confirmed"
   },
   {
    "pc": "SAKURA1/ITEM/ITEM13.SPR",
@@ -971,9 +971,9 @@
    "verdict": "confirmed"
   },
   {
-   "pc": "SAKURA1/ITEM/BUROICON.SPR",
+   "pc": "SAKURA1/ITEM/ITEM27.SPR",
    "saturn": "SAKURA1/ITEM27.BIN",
-   "verdict": "icon_only"
+   "verdict": "confirmed"
   },
   {
    "pc": "SAKURA1/ITEM/ITEM28.SPR",
@@ -1245,13 +1245,12 @@
  "scope": "PC SAKURA1/ITEM pictures joined with the Saturn item pairs and review; data only.",
  "summary": {
   "pc": {
-   "ambiguous": 4,
-   "no-counterpart": 15,
-   "paired": 38
+   "ambiguous": 3,
+   "no-counterpart": 13,
+   "paired": 41
   },
   "saturn": {
-   "confirmed": 38,
-   "icon_only": 3,
+   "confirmed": 41,
    "rejected": 39
   }
  }
