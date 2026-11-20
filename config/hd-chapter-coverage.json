@@ -2512,7 +2512,13 @@
       "resources": {
         "bodies": {},
         "film": {},
-        "menus-hud": {},
+        "menus-hud": {
+          "1:/SAKURA2/WKL02.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-2.md",
+            "status": "unknown"
+          }
+        },
         "portraits": {
           "1:/SAKURA1/0201FCE.BIN": {
             "association": "inferred",
@@ -8717,10 +8723,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/WKL01.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/WKL02.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
