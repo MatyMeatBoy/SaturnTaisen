@@ -64,3 +64,30 @@ The first trial did not demonstrate interaction: its seeds had the selection fix
 | 20002, three rows | 10054 | 10061 |
 
 The controls log catalog consumption and 0 interpreted blocks. Private anchors: `two-anchor/f1176.state` SHA256 `a9b64760e87a7f574e397dd881e1c41a7972cd2633b2c2c26ff0dd3b5c762bb8` and `earlier/f0336.state` SHA256 `61a3de6ad685849fb729728f7a8816f33abc1831d850510a9a71485dfef150da`, under `local/work/choice-input-probe`. Their movies, states, fonts and text are not published. Review of the helpers and panel found no blockers. The additional cross-host comparison from those anchors passes for all six profiles of each group: 4,200 hashes and 118 identical RGB pairs, including selection, confirmation and natural expiry. Private evidence: `choice-preload-active-runtime/result.json` and `choice-preload-active-two-runtime/result.json`, under `local/work`. Added to the first suite, that's 24 run pairs, 7,440 hashes and 220 identical RGB pairs, with zero interpreted blocks. Candidate not yet included in test.3; the delivered packages remain immutable. Other choices, scripts, chapters and localizations are still pending.
+
+## HD narrative ink index
+
+Patch 0158 uses the verified native glyph band to index each ink pixel's
+first dialogue row and the latest sprite owner within that row. The existing
+glyph bounds check guarantees both array indices. The ordered glyph columns,
+cross-row collision detection, saved-under plate verification, and selection
+of the native ink colour follow the existing rules.
+
+Two private builds used the same 0157 base, AOT objects and display settings.
+Strict replays compared the office with a state reload at frame 250
+(500 frames), the three-choice LIPS route (260), and the Spanish park dialogue
+at 2560×1440 (400). All 1,160 guest hashes and 11 sampled RGB pairs matched.
+Both builds reported zero interpreted blocks and the same VDP2 reuse counters.
+The text-layout, glyph-plate, dialogue-preload and choice-text tests passed.
+
+Three unthrottled alternating runs per build gave these medians of the
+per-run HD text scan times, in milliseconds. Window captures were disabled
+for the timed runs.
+
+| Replay | Mean before | Mean after | P95 before | P95 after |
+| --- | ---: | ---: | ---: | ---: |
+| Office | 1.118 | 0.305 | 1.749 | 0.407 |
+| Spanish park | 0.283 | 0.108 | 0.841 | 0.220 |
+
+The measurement covers the HD text scan, including frames with little text.
+The reported other-PC flicker and release packaging remain unverified.
