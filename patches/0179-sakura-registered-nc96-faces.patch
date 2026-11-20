@@ -1,0 +1,31 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -227,6 +227,19 @@
+     {0x66540C4C0E410BF4ull, 24, 24, 76, 160, 121},
+ };
+ 
++// NC96.SPR contains one expression group with shared authored positions.
++inline constexpr VerifiedBodyFace kNC96[] = {
++    {0x6436E9A5EFA4F819ull,56,24,1,32,25},
++    {0xB4D3AB09FFBE32CEull,56,24,2,32,25},
++    {0xE812BFFF5E1E39AAull,56,24,3,32,25},
++    {0x6304A98F9EAC61B6ull,16,16,4,112,105},
++    {0x0883CB37C8589682ull,16,16,5,112,105},
++    {0x695A53E3B21B4217ull,16,16,6,112,105},
++    {0x251212E9E24DC22Full,16,16,7,112,105},
++    {0xE0669AE9ECD23F0Cull,16,16,8,112,105},
++    {0x774478D4F636261Cull,16,16,9,112,105},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
+     if (name == "NC10.BIN") return {0xFAF25875698D3053ull, 0xCBD86983994FF9C4ull, kNC10, true};
+     if (name == "NC25.BIN") return {0x177C36A50C4CD313ull, 0x7D7DE6C915DE21C7ull, kNC25, true,
+@@ -234,6 +247,7 @@
+     if (name == "NC50.BIN") return {0x2713B2FC1E22BEC7ull, 0xE7290E1124DB4414ull, kNC50, true};
+     if (name == "NC51.BIN") return {0xBD48D984612C5BB2ull, 0x6DF3B8AE5CA82D57ull, kNC51, true};
+     if (name == "NC56.BIN") return {0xAC0E7FA242BB31C5ull, 0x9EF3AC7440EC0E6Eull, kNC56, true};
++    if (name == "NC96.BIN") return {0x0B3929452D595C6Dull, 0x65D5B1D476AB6D80ull, kNC96, true};
+     if (name == "NC55.BIN") return {0x71438806B6CC7698ull, 0x57B26C77E879C89Full, kNC55, true};
+     if (name == "NC3018.BIN") return {0x246B7B9A3865FE6Aull, 0x0770708C73A587ADull, kNC3018};
+     if (name == "NC20.BIN") return {0x6D5853C18EC0B141ull, 0x6509F77B3891DF92ull, kNC20};
