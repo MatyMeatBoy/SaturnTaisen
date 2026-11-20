@@ -1,6 +1,6 @@
 # T117: lazy presentation planes (measured, not shipped)
 
-Tried on top of the T116 line reuse (patch 0144): `BeginFrame` cleared only the rows of the sparse planes (panelMix, underPanelMix,
+Tried on top of the T116 line reuse: `BeginFrame` cleared only the rows of the sparse planes (panelMix, underPanelMix,
 floralCoverMix, glyphPlate, mapFadeEdges) that the previous frame wrote, instead of `assign` of about 6 MB, with a row-dirty flag set
 in `ComposeLine`/replay. Switch `SATRECOMP_LAZY_PLANES=0` restored the old path in the same executable.
 
