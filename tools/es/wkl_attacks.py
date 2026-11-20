@@ -18,6 +18,7 @@ ATTACKS = {
     5: ('45003032ef4b72f261cbe5e373bfd75f588b1709a06c55d03c0beb8194e411c9', 'Minirrobots'),
     6: ('169346f1c0097921fdda39f8b481997db634ac571a93ec54db01e214f0a83e33', 'Lluvia de bambú'),
 }
+ATTACK_DIGESTS = {digest: slot for slot, (digest, _) in ATTACKS.items()}
 WIDTH = 88
 HEIGHT = 16
 INK = {0: (40, 40, 80), 1: (208, 208, 208), 3: (56, 56, 72)}
@@ -53,14 +54,29 @@ def traducir_ataques_wkl(wkl: bytearray) -> None:
         raise ValueError('WKL: directorio de ataques truncado')
 
     replacements = []
-    for slot in ATTACKS:
+    for slot in range(64):
         relative, capacity = struct.unpack_from('>II', wkl, directory + 8 * slot)
+        if not capacity and slot not in ATTACKS:
+            continue
         start = directory + relative
         end = start + capacity
         if relative < 512 or capacity == 0 or end > len(wkl):
             raise ValueError(f'WKL: bloque de ataque {slot} inválido')
         decoded, _ = decompress_ex(wkl[start:end], limit=16384)
-        encoded = _translated_group(decoded, slot)
+        identity = slot
+        if slot not in ATTACKS:
+            # Alternate deployments can repeat a character in another slot.
+            # Match only the same exact third sprite in a four-image record.
+            if len(decoded) < 80 or struct.unpack_from('>H', decoded)[0] != 4:
+                continue
+            width, height, _, _, _, offset, _, size = struct.unpack_from('>8H', decoded, 48)
+            at = 80 + offset
+            if (width, height, size) != (WIDTH, HEIGHT, WIDTH * HEIGHT // 2) or at + size > len(decoded):
+                continue
+            identity = ATTACK_DIGESTS.get(sha256(decoded[at:at + size]).hexdigest())
+            if identity is None:
+                continue
+        encoded = _translated_group(decoded, identity)
         if len(encoded) > capacity:
             raise ValueError(f'WKL: ataque {slot} necesita {len(encoded)} bytes, límite {capacity}')
         replacements.append((start, end, encoded))

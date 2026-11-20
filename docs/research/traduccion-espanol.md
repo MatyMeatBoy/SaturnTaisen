@@ -268,7 +268,7 @@ Using the packaged v0.2.16.1-alpha executable and the Spanish disc 1 produced by
 
 ## Allied tactical special attacks in Spanish
 
-The WKL recipe translates six allied special-attack names across the 27 banks on both discs. The guarded 88 × 16 replacement preserves the native palette and record layout. All 162 PRS edits fit in their existing spans, with at least 33 bytes spare. Maria's Snegurochka retains its proper name. The remaining short commands and enemy labels need their own coverage.
+The WKL recipe translates six allied special-attack names across the 27 banks on both discs. The guarded 88 × 16 replacement preserves the native palette and record layout. All 162 PRS edits fit in their existing spans, with at least 33 bytes spare. Maria's Snegurochka retains its proper name. Other command and enemy labels are tracked separately.
 
 Sakura and Kohran displayed Divinidad floral and Minirrobots in natural MAP02 Info replays at 1440p. Controlled Original and Enhanced comparisons reproduced the translated texture inside the attack-name rectangle. The guest fields ran strictly and final SRAM agreed within each comparison.
 
@@ -281,3 +281,9 @@ The packaged v0.2.16.1-alpha executable was replayed from cold Continue for 6,60
 ## Tactical pause and confirmation in Spanish
 
 Seven WKL sprites now localize the return to title, restart, suspend and restart confirmations, affirmative response and Options entry. All 27 banks retain the original byte ranges outside the seven exact-size texture spans. The negative response already reads No. A controlled A/B from the natural MAP02 pause and Restart confirmation ran 170 strict fields at 1440p with matching SRAM. RGB differences stay inside the translated labels. The advanced Options panel reads its resources from two copies in `0SLG.BIN` and `SLG.BIN`. Both now use the matching Spanish options streams from the same disc. The preparation recipe verifies the original and translated signatures and preserves the fixed offsets. The 170-field MAP02 Options replay at 1440p changed only the translated panel, with zero interpreted blocks and matching SRAM.
+
+## Tactical name variants and short commands
+
+The exact attack texture from Sakura's alternate deployment slot now selects Divinidad floral in WKL02, WKL07 and WKL11. The six short allied commands are translated across 243 occurrence slots in 27 banks. Each PRS span keeps its extent and unrelated decompressed bytes. The command Podozhdi retains the name used in the Spanish battle tutorial. Exact short-command textures were found in the natural Info states, with the active draws still to be witnessed.
+
+The named enemy Musket now reads Mosquete. The 27 matching slots retain the file layout and decoded bytes outside the name. A controlled 1440p replay from the natural MAP02 enemy target changed 8,064 pixels inside the name, with matching SRAM and zero interpreted blocks. Other enemy labels remain an open audit.
