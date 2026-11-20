@@ -1,0 +1,27 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -845,7 +845,7 @@
+         size_t donorBytes;
+         int disc, scaleX, scaleY, offsetX, offsetY;
+     };
+-    constexpr std::array<NarrativeCutout, 16> narrativeCutouts{{
++    constexpr std::array<NarrativeCutout, 20> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -878,6 +878,14 @@
+             "BG4171.BIN", "SAKURA1/BG/BG4171.SPR", 137850, 1, 2010, 2165, -5000, 3000},
+         {0x255FCBF8B60D73A9ull, 0xE484AFF967112C6Eull, 0xCCAFAE94EC5E6E4Aull, 0x90BBACF55CE1E473ull,
+             "BG4114.BIN", "SAKURA1/BG/BG4114.SPR", 75659, 1, 1970, 2200, -500, 2000},
++        {0x9A2BA9764BD0E888ull, 0x883DB8AC5849B790ull, 0x967C101BE236229Dull, 0x48811313E563DDC4ull,
++            "BG3036.BIN", "SAKURA1/BG/BG3036.SPR", 70900, 2, 2070, 2170, -6000, 19000},
++        {0x8A1C4C8ED551BBA1ull, 0x261A6FF082FA9A7Bull, 0x82027A5B79A10E43ull, 0x702D8F0CE951731Cull,
++            "BG4093.BIN", "SAKURA1/BG/BG4093.SPR", 56332, 2, 2075, 2235, -11000, 2000},
++        {0x756419EDE2D8FD96ull, 0x831FE5FC8A761D21ull, 0x4470181F356AF41Aull, 0x296BA1F0333B34B0ull,
++            "BG3139.BIN", "SAKURA1/BG/BG3139.SPR", 113011, 2, 2085, 2255, -5000, -8500},
++        {0xE2F6019A8689F6BDull, 0xFAA0573B3DB23F2Aull, 0x887BCB77554DD3A9ull, 0x6B31D3DDF17AD34Aull,
++            "BG4084.BIN", "SAKURA1/BG/BG4084.SPR", 71798, 1, 2060, 2220, -7000, -2000},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
