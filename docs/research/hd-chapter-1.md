@@ -70,6 +70,8 @@ The VDP1 body bitmap recognizer resolved 19 NC package names. Each callback was 
 
 Two follow-up 240-field Enhanced runs at 1440p separated body availability from expression coverage. In the `iris-correct-room-3000` replay, NC55 loaded the 97-part PC atlas. The matcher accepted PC eye parts 19 and 21, while a 24×24 mouth and a 56×32 eye retained the native pixels. In `prebattle-3000`, NC11 loaded its atlas, then rejected an intersecting sprite outside the recognized face strips. Subsequent full-size shots drew the PC body and selected the logged eye and mouth parts. The two replays completed with zero interpreted blocks. Trace and capture evidence is under `local/work/codex-ch1-body-triage/`.
 
+The NC11 overlap is the timed LIPS choice display over Sakura, rather than a missing face part. The first rejected command is at nominal (160,76), size 272×120, mode `00A0`, color `C500`, and texture fingerprint `4ADC5FF69258EF85`. It appears after the body in VDP1 draw order. The 1440p capture shows the translucent panel, timer, and ink over her face and shoulders. Any replacement must preserve the native overlay and its ordering, including the visible body through the panel. Simply accepting the intersecting sprite would erase or cover part of that display.
+
 
 The trace also named 62 portrait IDs after successful replacement texture upload. Each row preserves its first appearance bracket and the trace line. The separately observed viewport and blend traces can be used for renderer review.
 
