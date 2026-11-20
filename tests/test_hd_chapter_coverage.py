@@ -602,17 +602,6 @@ class ChapterCoverageTest(unittest.TestCase):
                     self.assertEqual(row['status'], 'hd')
                     self.assertFalse(row.get('verified_in_game'))
 
-    def test_short_body_pairs_keep_native_compositing(self):
-        root = Path(__file__).resolve().parents[1]
-        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
-        for disc in (1, 2):
-            for name in ('NC3517',):
-                with self.subTest(disc=disc, body=name):
-                    row = catalog['unassigned']['bodies'][f'{disc}:/SAKURA1/{name}.BIN']
-                    self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
-                    self.assertEqual(row['status'], 'paired-not-wired')
-                    self.assertFalse(row.get('verified_in_game'))
-
     def test_cutout_body_review_is_reflected_in_runtime_coverage(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
@@ -704,7 +693,13 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertTrue(body['native_face_fallback'])
                 self.assertFalse(body.get('verified_in_game'))
                 self.assertTrue(body['fixture_evidence'].endswith(anchor))
-            self.assertEqual(rows[f'{disc}:/SAKURA1/NC3517.BIN']['status'], 'paired-not-wired')
+            body = rows[f'{disc}:/SAKURA1/NC3517.BIN']
+            self.assertEqual((body['status'], body['pc']), ('hd', 'SAKURA1/NC/NC3517.SPR'))
+            self.assertTrue(body['native_face_fallback'])
+            self.assertEqual(bool(body.get('verified_in_game')), disc == 2)
+            if disc == 2:
+                self.assertEqual(body['association'], 'observed')
+                self.assertTrue(body['runtime_evidence'].endswith('#natural-0904-body-and-faces'))
             body = rows[f'{disc}:/SAKURA1/NC3290.BIN']
             self.assertEqual((body['status'], body['pc']), ('hd', 'SAKURA1/NC/NC3290.SPR'))
             self.assertTrue(body['native_face_fallback'])

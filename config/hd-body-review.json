@@ -37,18 +37,16 @@
   "NC99"
  ],
  "rejected": {
-  "NC3290": "short native body with separate face strips; the runtime table assumes a 144-row body",
-  "NC3517": "short native body with separate face strips; the runtime table assumes a 144-row body"
+  "NC3290": "short native body with separate face strips; the runtime table assumes a 144-row body"
  },
  "registered_silhouettes": {
   "NC3290": "docs/research/nc3290-stage-wing.md",
   "NC3125": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
   "NC3126": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
-  "NC4138": "docs/research/saturn-bg-format.md#nc4138-registered-silhouette"
+  "NC4138": "docs/research/saturn-bg-format.md#nc4138-registered-silhouette",
+  "NC3517": "docs/research/nc3517-route-evidence.md#natural-0904-body-and-faces"
  },
- "paired_not_wired": {
-  "NC3517": "The PC two-character strip uses a different crop and fills both native face openings."
- },
+ "paired_not_wired": {},
  "note": "Tier-content pairs were checked side by side only for a random 16 of the first 64; the transparency flag removed full-frame PC pictures from both tiers. The Saturn side has blank faces in both; eyes and mouths are separate strips that are not paired yet.",
  "paired_full_frame": {
   "NC3013": "Reviewed again (TP5): the Saturn body is itself an opaque full frame (0% transparent before the face hole), so the PC full frame replaces it without covering a scene; connected.",

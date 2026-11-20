@@ -5826,6 +5826,15 @@
             "status": "hd",
             "verified_in_game": false
           },
+          "2:/SAKURA1/NC3517.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3517-route-evidence.md#natural-0904-body-and-faces",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC3517.SPR",
+            "runtime_evidence": "docs/research/nc3517-route-evidence.md#natural-0904-body-and-faces",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/NC41.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
@@ -7491,10 +7500,9 @@
       },
       "1:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3517.SPR",
-        "reason": "The PC two-character strip uses a different crop and fills both native face openings.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
@@ -8126,13 +8134,6 @@
         "pc": "SAKURA1/NC/NC3516.SPR",
         "status": "hd",
         "verified_in_game": false
-      },
-      "2:/SAKURA1/NC3517.BIN": {
-        "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
-        "pc": "SAKURA1/NC/NC3517.SPR",
-        "reason": "The PC two-character strip uses a different crop and fills both native face openings.",
-        "status": "paired-not-wired"
       },
       "2:/SAKURA1/NC3518.BIN": {
         "association": "unknown",

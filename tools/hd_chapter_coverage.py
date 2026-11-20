@@ -359,6 +359,7 @@ EXACT_BODY_DRAWS = {
 }
 
 CHAPTER_WITNESSES = {
+    (2, '/SAKURA1/NC3517.BIN'): (9, 'docs/research/nc3517-route-evidence.md#natural-0904-body-and-faces'),
     (2, '/SAKURA1/BG1360.BIN'): (9, 'docs/research/hd-chapter-9.md#bg1360-door-variant'),
     **EXACT_BODY_DRAWS,
     (1, '/SAKURA1/BG4351.BIN'): (6, 'docs/research/hd-chapter-6.md#west-staircase-and-file-0602'),
@@ -914,8 +915,8 @@ def build(root, index_dir, portrait_audit):
                 'native_face_fallback': True,
             }
             proof = body_review['registered_silhouettes'][name]
-            if name == 'NC3290':
-                if disc == 1:
+            if name in ('NC3290', 'NC3517'):
+                if disc == (1 if name == 'NC3290' else 2):
                     row.update(verified_in_game=True, runtime_evidence=proof)
             else:
                 row['fixture_evidence'] = proof
