@@ -207,3 +207,27 @@ Shard TH-reattribution repeated the traced attribution with the isolated AOT bui
 The route reproduces the TH6 list (TITLE6, BG1199, BG4119, BG2156, BG1021, BG1025, BG4059, NC97), all already attributed. No row moved.
 
 Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
+
+### Strict Perfect result and return
+
+A continuous 6,150-field replay starts at the natural MINIMAIG entry
+state (SHA-256 prefix a6cdcb5e5baf15d6). It solves all nine names, earns
+the Perfect result at 49.50 seconds, and returns to the adventure. Its
+input SHA-256 is
+`35d7aeae2c9ab09aa3af70c57eb96eaa9090925b0315375c6ee6610b5d0447b8`.
+
+Recording this replay in the interpreter identifies 65 new instruction
+extents. Every extent matches complete bytes of the pinned MINIMAIG.BIN
+module, including an entry at 0x0021C682. An isolated strict link with
+these extents completes all 6,150 fields with zero interpreted blocks,
+identical guest hashes, and byte-identical final SRAM. The shared guest
+hash log SHA-256 is
+`7967dde4cfefd8501cd4b801bfba1fefb3f4b30d5e47f68b078aea2c4a34d108`.
+The regenerated registry includes the new extents. Public packaging
+remains open.
+
+The Perfect route has no MINIMAIG.GCG read. In the pinned module, the
+exit dispatch that reaches the GCG loader depends on a mode byte copied
+from guest high WRAM 0x06003013. The naturally earned episode route
+keeps that mode at zero. A separate natural mode that sets it remains
+to be found before the Maigo illustration can be witnessed.
