@@ -129,9 +129,9 @@ Send PRs as early as you have a verified slice, then keep sending: the coordinat
 - **Rebase before sending** (`git merge origin/main`, then `python tools/check_patch_stack.py`; `python tools/rebase_patch.py <patch> --author-ref=origin/<branch>` re-anchors a patch whose context moved, but it can misplace a block: always compile after).
 
 
-## Priority order (owner, 2026-11-19)
+## Priority within HD
 
-Scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, TP4a/b/c unpaired), then large bodies (TP5), portraits (TP6), videos (TP7); verification and cleanup last (TP8). Each shard is sized for one PR; send it as soon as the picture is connected and its A/B hash check is done.
+After playback regressions, take scene pictures first (TP1 ambiguous, TP2a/b scroll, TP3a/b/c unknown pairings, TP4a/b/c unpaired), then large bodies (TP5), portraits (TP6), videos (TP7); verification and cleanup last (TP8). Each shard is sized for one PR; send it as soon as the picture is connected and its A/B hash check is done.
 
 ## Lessons for shard workers (from the integration desk)
 
