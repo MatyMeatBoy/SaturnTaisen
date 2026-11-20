@@ -1,6 +1,6 @@
 # Shards: what is left for the HD mod, split so other bots can send PRs
 
-Each shard is independent, has its own files and its own "done" test. Rules for every shard: author MatyMeatBoy, PRs only (the coordinator reviews and merges), never commit discs, BIOS, saves, game pixels, `local/` or original PC assets (names, hashes, scores and code are fine), do not move the approved Zoom framing, guest hashes must stay identical (`interpreted 0`, same per-frame hashes as `main`), update `docs/PENDIENTES.md` with what is implemented, tested and packaged. Read `docs/HANDOFF.md` and `docs/research/hd-completion-handoff.md` first. Runtime code lives in the satrecomp dependency as a numbered patch in `patches/` (see `tools/build_runtime.py`); do not run it while someone else has unrecorded dependency changes.
+Workers can pick independent shards across scenes, character art, menus, tactical mode or performance. A shard may cover one complete image or a group of images that share the same runtime path and can be tested together. Rules for every shard: author MatyMeatBoy, PRs only (the coordinator reviews and merges), never commit discs, BIOS, saves, game pixels, `local/` or original PC assets (names, hashes, scores and code are fine), do not move the approved Zoom framing, guest hashes must stay identical (`interpreted 0`, same per-frame hashes as `main`), update `docs/PENDIENTES.md` with what is implemented, tested and packaged. Read `docs/HANDOFF.md` and `docs/research/hd-completion-handoff.md` first. Runtime code lives in the satrecomp dependency as a numbered patch in `patches/` (see `tools/build_runtime.py`); do not run it while someone else has unrecorded dependency changes.
 
 "Needs assets" means the shard cannot be finished without the owner's own Saturn discs and PC edition; a bot without them can still do the **code and tests** half (use the synthetic tests) and leave the data half to the owner.
 
@@ -28,13 +28,13 @@ Playback regressions with slowdown, audio breakup or flicker have priority. Use 
 
 Order for the fastest visible gain: S1, S2 (independent, small), then S3 and S4, then S5 and S8. S6 and S7 are performance and can run in parallel with anything else.
 
-Each PR should say which shard it closes, the commands run and their results, and what is still not verified.
+Open a draft PR as soon as the change is reviewable. State the shard, the known scope and the checks still running. The coordinator can review and correct it while workers continue tests or take independent work.
 
 ## HD by chapter (added 2026-11-19)
 
 The remaining HD work is split by chapter so several bots can work at once without touching the same files. Every chapter shard has the same scope and the same exit test; take one, say so in the queue row, and keep PRs small.
 
-**H0 (TH0), do first, anyone:** `tools/hd_chapter_coverage.py` + `config/hd-chapter-coverage.json`: for each of the 10 chapters list the resources the chapter shows (scene pictures BG/EVE/CG, NC bodies, portraits, FILM clips, tactical maps and units, menus/HUD) from the scene index and the existing `config/hd-*-map.json`, marking each as `hd`, `paired-not-wired`, `unpaired` or `unknown`. Also refresh `docs/HD_PROGRESS.md` and `config/hd-progress.json`, whose counts are stale (it still reports 0 integrated scene pictures; 459 are wired and the bodies and clips are in).
+**H0 (TH0), do first, anyone:** `tools/hd_chapter_coverage.py` + `config/hd-chapter-coverage.json`: for each of the 10 chapters list the resources the chapter shows (scene pictures BG/EVE/CG, NC bodies, portraits, FILM clips, tactical maps and units, menus/HUD) from the scene index and the existing `config/hd-*-map.json`, marking each as `hd`, `paired-not-wired`, `unpaired` or `unknown`. Also refresh `docs/HD_PROGRESS.md` and `config/hd-progress.json`, with the current generated counts.
 
 **H1-H10 (TH1-TH10), one per chapter** (chapters 1-5 on disc 1, 6-10 on disc 2; take the numbering from the scene index). Scope of each: (a) every scene picture the chapter shows has an HD pair or a recorded reason it has none; (b) every NC body and portrait the chapter uses is matched and, where the matcher leaves a face native, listed with its frame layout (follow T106a-d); (c) the chapter's FILM clips are mapped (`config/film-fad-map.json`) and each alternate cut has a decision; (d) the tactical maps/units of the chapter are listed for S11. Exit test: a continuous strict-native replay of the chapter's path with the HD runtime shows per-frame guest hashes identical to the build without HD and a short report (`docs/research/hd-chapter-N.md`) with the screenshots the owner can open, what is HD, what stays native and why. Do not claim a chapter complete from a saved state alone.
 
@@ -58,7 +58,7 @@ Rows TH0-TH10, TS11 and TS12 in `docs/PENDIENTES.md` mirror this list; update th
 
 ## How to read the coverage numbers (read before picking work from them)
 
-`config/hd-chapter-coverage.json` and `docs/HD_PROGRESS.md` count catalog entries, not pictures a player sees, and the two discs share many files, so a count is up to twice the real number. Statuses (regenerated 2026-11-19 after a miscount: the first version called every accepted pair that is not a documented draw "paired-not-wired", which made 246 bodies and 474 pictures look like unfinished wiring when 129 bodies and 459 pictures were already in the runtime tables):
+`config/hd-chapter-coverage.json` tracks occurrences by chapter and disc. A single PC image can appear in more than one row. The published integrated total in [HD progress](HD_PROGRESS.md) deduplicates scene donors and keeps runtime integration, draw evidence and package inclusion distinct. Read the current register before taking a row.
 
 - `hd`: the runtime draws it (a documented draw for a body, a table entry for a picture or clip).
 - `wired-unverified`: in the runtime table and tried whenever it appears, but nobody has recorded seeing it in game. The work is **verification**, not wiring.
@@ -69,9 +69,9 @@ Rows TH0-TH10, TS11 and TS12 in `docs/PENDIENTES.md` mirror this list; update th
 
 Rules for a worker: never turn a `paired-not-wired` count into a to-do list without reading the `reason`; do not re-review pictures or bodies the review files already decide (`config/hd-scene-bg-review.json`, `config/hd-body-review.json`: 15 NC bodies and 45 pictures are rejected, 118 are cut-outs); a number that disagrees with the runtime tables is a bug in the generator (`tools/hd_chapter_coverage.py`), fix it there and regenerate with the command in `docs/research/hd-chapter-coverage.md`.
 
-## A shard PR must arrive connected (owner rule, 2026-11-19)
+## What a shard needs before integration
 
-A pairing, a review or a report is not a finished shard. The PR that closes a shard row contains the whole chain, so the coordinator only has to review it:
+A draft can start with the pairing, code or evidence. The coordinator assembles and verifies the whole chain before closing a runtime shard:
 
 1. **The data** (map/review JSON, generated table input, names and hashes only).
 2. **The connection**: the generated table or header regenerated by the tool, the SDK patch (next free number, `tools/check_patch_stack.py` passes) and the recogniser change that makes the runtime use it. If the runtime cannot be built where you work, say so in the PR and deliver the code, the regenerated tables and the tests; the coordinator builds and checks it.
