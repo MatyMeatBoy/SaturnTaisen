@@ -2866,6 +2866,13 @@
       "disc": 1,
       "resources": {
         "bodies": {
+          "1:/SAKURA1/NC31.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md#cold-replay-trace",
+            "pc": "SAKURA1/NC/NC31.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
           "1:/SAKURA1/NC3290.BIN": {
             "association": "observed",
             "evidence": "docs/research/nc3290-stage-wing.md",
@@ -2911,7 +2918,18 @@
             "verified_in_game": true
           }
         },
-        "menus-hud": {},
+        "menus-hud": {
+          "1:/SAKURA2/WKL04.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md#cold-replay-trace",
+            "status": "unknown"
+          },
+          "1:/SAKURA2/WKL05.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md#cold-replay-trace",
+            "status": "unknown"
+          }
+        },
         "portraits": {
           "0068": {
             "association": "observed",
@@ -3459,6 +3477,11 @@
           "1:/SAKURA2/UNIT04.BIN": {
             "association": "observed",
             "evidence": "docs/research/th3-native-attribution.md",
+            "status": "unknown"
+          },
+          "1:/SAKURA2/UNIT05.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th3-native-attribution.md#cold-replay-trace",
             "status": "unknown"
           }
         }
@@ -6657,12 +6680,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "1:/SAKURA1/NC31.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC31.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "1:/SAKURA1/NC3101.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3101.SPR",
@@ -8727,14 +8744,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/WKL03.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/WKL04.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/WKL05.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
@@ -20237,10 +20246,6 @@
         "status": "unknown"
       },
       "1:/SAKURA2/UNIT03.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/UNIT05.BIN": {
         "association": "unknown",
         "status": "unknown"
       },
