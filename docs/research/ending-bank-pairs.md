@@ -315,3 +315,34 @@ shared photographs continue to use END_SA. The larger redraws remain
 native. The natural Iris and Kohran routes and package inclusion remain
 open. Private receipts are retained under
 `local/work/codex-witness-441-review/sumire-ending`.
+
+## Controlled general ending playback
+
+A private English disc 2 Sakura state taken at the theatre aperture holds
+`0x81` in the completion word at `06003050`. The ending routine masks that
+word with `0x3F` and enters the general branch when all six bits are set.
+Changing the single serialized byte from `0x81` to `0xBF` in a copy of
+that state exercises the original branch and loader. The control from
+the unmodified Sakura route does not take this branch.
+
+The old strict build stops at `06080710` after 18,105 fields. An
+interpreter continuation from field 18,000 issues a 150-sector read at
+FAD 134315 and loads the complete `GE_CG.BIN` at `00204000`. The four
+decoded Saturn records match all 71,680 native pixels in the following
+continuation samples.
+
+| Record | Fields |
+| --- | --- |
+| Theatre | 450, 600 |
+| Cast | 2,700, 2,850 |
+| Cast with logo | 3,000 |
+| Cast with logo and final mark | 3,150, 3,300 |
+
+The English disc 2 ENDING registry adds 84 observed block variants. All
+84 match bytes in the pinned module, taking the registry from 366 to 450.
+The linked 677,461-block build reproduced all 3,300 guest fields, all 22
+native RGB samples and final SRAM with zero interpreted blocks. Evidence
+is retained in `local/work/codex-th1/tp3c-cg`.
+
+This is a controlled reproduction of the original branch. A natural
+six-route completion, HD composition and package inclusion remain open.
