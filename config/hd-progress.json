@@ -188,7 +188,7 @@
       "details": [
         "Las pruebas de presentación de Saturn cubrieron menús tácticos. Las sustituciones de recursos se verifican por pieza y por pantalla.",
         "El censo PC reúne 29 archivos y 572 entradas de imagen con cabeceras validadas.",
-        "El censo PC reúne 572 imágenes SYSTEM; las 394 de KAO cuentan como retratos y se suman las 50 imágenes de objeto candidatas: 228. Integradas 41 (38 tarjetas de objeto, 2 marcos FONT_CSL, 1 emblema CD-1), medidas desde el registro."
+        "El censo PC reúne 572 imágenes SYSTEM; las 394 de KAO cuentan como retratos y se suman las 50 imágenes de objeto candidatas: 228. La tabla calcula las integraciones desde el registro. Incluye tarjetas de objeto, los dos marcos FONT_CSL y los emblemas CD-1 y CD-2."
       ],
       "total": 228,
       "inventory": 228,

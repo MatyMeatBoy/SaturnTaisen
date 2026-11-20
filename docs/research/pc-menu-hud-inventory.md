@@ -167,6 +167,12 @@ The 2560×1440 comparison replayed the same settings, PC data and guest inputs o
 
 SIS_ICON subimage 1 also matches the System RAM icon's silhouette. Its 2×2 blocks are all uniform, and the candidate keeps that icon native. Private captures and receipts are in `local/work/codex-tw5-next`. Other menu layouts, palette variants and disc 2 remain open. No package change.
 
+### T110c CD-2 emblem in the load menu
+
+The English disc 2 title replay opened **Data to load** with two Chapter 8 slots and one Chapter 7 slot. The top CD-2 emblem uses the same 40×40 Saturn command and position (24,64) as the verified CD-1 call. Its complete texture fingerprint is `9AF2CC56D5CAEB11` and palette fingerprint is `52C0DBB1EA90290A`. The corresponding pink CD-2 subimage is 3 of the existing pinned `SIS_ICON.SPR`. The 80×80 alpha silhouette matches the doubled Saturn indices.
+
+Patch 0146 uses the previous VDP1 ownership and VDP2 blend checks. Each exact emblem has its own decoded cache entry. The renderer keeps the lower slots on the native path. At 2560×1440, the independent 31/32 PC and 1/32 background reconstruction reproduced the entire result, with 1,122 native-owned texels in the tested draw and preserved pixels outside the emblem. All seven 30-frame runs shared the same strict guest hash log. Original, disabled, missing and corrupt-donor controls passed. The existing disc 1 HD emblem retained identical output and guest hashes. Other slot positions, other variants and package inclusion remain open.
+
 ## HD measure of the menu/HUD category (TW5)
 
 The register (`config/hd-chapter-coverage.json`, category `menus-hud`) now carries the runtime-drawn menu/HUD pictures, and `tools/build_hd_progress.py` takes the `hud-menus` integrated count from it. The map is explicit in `tools/hd_chapter_coverage.py` (`SYSTEM_HUD_DRAWS`, `SYSTEM_HUD_EXCLUDED`; item cards come from the same selection as `tools/gen_item_table.py`). A picture counts once per PC image, whatever the disc.
@@ -177,10 +183,10 @@ Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted
 | --- | --- | --- | --- |
 | Inventory item cards | 38 `SAKURA1/ITEM/ITEMnn.SPR` (of 50 candidates) | 0090, `item_card_table.h` | drawn; the other 12 have no accepted pair or a duplicate palette |
 | Inventory brackets | FONT_CSL 2 of 2 | 0093, `system_brackets.h` | drawn (idle/hover/confirm) |
-| CD-1 load emblem | SIS_ICON 1 of 10 (subimage 2) | 0112, `load_disc_icon.h` | drawn on disc 1; subimage 1 (System RAM icon) kept native |
+| CD-1 and CD-2 load emblems | SIS_ICON 2 of 10 (subimages 2 and 3) | 0112 and 0146, `load_disc_icon.h` | verified for the top load slot; subimage 1 (System RAM icon) kept native |
 | KAO | 394, excluded here | portrait pack | counted in portraits |
 
-Not drawn (open, 187 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 9, SISTEM 45, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 3 (needs layout), WINDOW 6; plus 12 item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
+Not drawn (open, 186 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 45, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 3 (needs layout), WINDOW 6; plus 12 item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
 
 ## TW5 wiring audit: which open families the existing mechanisms can reach
 

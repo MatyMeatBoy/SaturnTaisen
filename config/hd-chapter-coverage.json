@@ -8505,6 +8505,14 @@
         "pc_image_index": 2,
         "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110b-cd-1-emblem-in-the-load-menu",
         "status": "hd"
+      },
+      "pc:SAKURA1/SYSTEM/SIS_ICON.SPR#3": {
+        "association": "unknown",
+        "draw": "patch 0146, port/load_disc_icon.h: CD-2 load emblem in the top slot",
+        "pc": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+        "pc_image_index": 3,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110c-cd-2-emblem-in-the-load-menu",
+        "status": "hd"
       }
     },
     "portraits": {
