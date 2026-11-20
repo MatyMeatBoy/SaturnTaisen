@@ -1,0 +1,31 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -253,6 +253,19 @@
+     {0xB39FF1B9201E7BF4ull, 24, 24, 50, 168, 101},
+ };
+ 
++// The Maria sortie expression in Chapter 1.
++inline constexpr VerifiedBodyFace kNC32[] = {
++    {0xE0F4C969ABFD88B0ull, 32, 16, 9, 112, 65},
++    {0xCB187D90C06DCE92ull, 32, 16, 10, 112, 65},
++    {0xCAA0D6E0E55A0EAAull, 32, 16, 11, 112, 65},
++    {0x3C18961EC9A8F8EEull, 24, 16, 36, 112, 105},
++    {0x2DBF4F875FFC6075ull, 24, 16, 37, 112, 105},
++    {0xE9302D1A1734BDBCull, 24, 16, 38, 112, 105},
++    {0x79B03685BC82D8D2ull, 24, 16, 39, 112, 105},
++    {0x0F39D30A1DFD13CFull, 24, 16, 40, 112, 105},
++    {0x77DCA7E0D07E3F85ull, 24, 16, 41, 112, 105},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
+     if (name == "NC10.BIN") return {0xFAF25875698D3053ull, 0xCBD86983994FF9C4ull, kNC10, true};
+     if (name == "NC21.BIN") return {0x7421084549F2AD18ull, 0x63308CEB4FBE148Aull, kNC21, true};
+@@ -265,6 +278,7 @@
+     if (name == "NC55.BIN") return {0x71438806B6CC7698ull, 0x57B26C77E879C89Full, kNC55, true};
+     if (name == "NC3018.BIN") return {0x246B7B9A3865FE6Aull, 0x0770708C73A587ADull, kNC3018};
+     if (name == "NC20.BIN") return {0x6D5853C18EC0B141ull, 0x6509F77B3891DF92ull, kNC20};
++    if (name == "NC32.BIN") return {0xE9C38BD90B69ADD7ull, 0xD3972C2B4121E5FDull, kNC32, true};
+     if (name == "NC30.BIN") return {0x005AB85B5EA60FEFull, 0xBA8DF2D0A3C0FC13ull, kNC30};
+     return {};
+ }
