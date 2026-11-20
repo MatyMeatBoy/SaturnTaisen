@@ -16,7 +16,7 @@ State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed 
 | NC82 | Man with glasses (50,580) | exact layout | verified | exact-layout match, fallback for the rest | none seen | fade-in witnessed (T106c) |
 | NC56 | Iris (58,320) | 288x320 body 6 | verified | 3 E + 6 M registered (patch 0176); blink during blend native | native blend retained | not witnessed |
 | NC97 | Short-hair girl (74,760) | 272x320 | verified | exact layout 3 E + 6 M | none seen | not witnessed |
-| NC95 | Upstairs (103,080) | 9 parts | **episode 6 occurrence verified; episode 1 occurrence NOT verified** | ep 6: two faces verified (hd-chapter-6) | not witnessed | not witnessed |
+| NC95 | Upstairs (103,080) | 9 parts | **episodes 1 and 6 verified** | ep 1: one eye and mouth pair verified; ep 6: two faces verified | not witnessed | not witnessed |
 | NC96 | Late chapter (105,600) | 272x320 body 0 | verified | all 9 registered (patch 0179) | native blend retained | not witnessed |
 | NC55 | Iris room (189,240) | 368x320 body 5 | verified | 5 textures registered (patch 0168), 3 E + closed Ms; others fallback | none seen | not witnessed |
 | NC81 | Theater sortie (245,940) | 208x144 | **episode 1 occurrence NOT verified** (verified in chapter 9: neck underlay patch 0149, E 15-17 patch 0241, M native) | ep 9 only | n/a | n/a |
@@ -28,15 +28,23 @@ State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed 
 
 ## Findings
 
-- 16 of 19 are `verified_in_game`. The three not verified in chapter 1 are **NC3004** (hanami), **NC81** (theater sortie; only the chapter 9 occurrence is proven) and **NC95** (only the episode 6 occurrence is proven).
+- 17 of 19 are `verified_in_game`. **NC3004** (hanami) and **NC81** (theater sortie) still need chapter 1 verification.
 - Bodies with an extra pose without a control: NC3250 (mouths other than ordinal 4), NC11 (LIPS layouts other than the hallway), NC20 and NC30 (runs beyond the verified groups), NC25 (poses other than the closed-eye smile), NC55 (poses beyond the five observed textures), NC82 and NC97 (fallback frames).
 - Fade-in/out has a witness only for NC3250 and NC82; the other 17 need a fade control (dissolve plus donor-absent control) before the column can be "verified".
 - Neck/blend controls: only NC81 (chapter 9) and NC11 (LIPS) have neck or panel blend controls; the sortie bodies rely on "earlier blend identical".
 
 ## Proposed batches
 
-1. NC3004, NC81 (ch 1), NC95 (ch 1): natural-route checkpoints, 2560x1440 Enhanced vs Original, donor present vs absent, identical guest hashes with 0 interpreted.
+1. NC3004, NC81 (ch 1): natural-route checkpoints, 2560x1440 Enhanced vs Original, donor present vs absent, identical guest hashes with 0 interpreted.
 2. NC3250, NC82, NC97 fade controls and extra poses.
 3. NC20, NC30, NC25, NC55 extra expression groups.
 
 Reported deltas for this PR: attributed 0, integrated new 0, verified new 0.
+
+## NC95 on the Episode 1 upstairs route
+
+A retained checkpoint from the English disc 1 Chapter 1 cold route shows the 144 × 144 NC95 body sprite at (96, 8), texture FNV-1a `8CB41598D7FE8FC0`. The checkpoint is field 28146 of the [NC96 continuation](nc96-registered-faces.md#replay-results). The test resumes with the archived input suffix. It matches the next 180 hashes (recorded fields 28147–28326), with identical final SRAM across five profiles and zero interpreted blocks. The existing 0243 runtime has SHA-256 `129E505D229EB3520A9AD4E52F6873C2BC87F609DF15F3A520ABFCB086EA5C19`.
+
+At 2560 × 1440 on Direct3D11, supplying only NC95.SPR changes 673,463 pixels in each of 12 paired captures. All changes are within (853, 29)–(1840, 1037), right and bottom exclusive. Independent projection matches the 4,093 sampled flat eye pixels of ordinal 1 at body-relative (32, 73) and 1,408 mouth pixels of ordinal 4 at (96, 121) in each capture. Missing and truncated donor controls match in Enhanced. The Original profiles with and without the donor also match.
+
+The window verifies the observed Episode 1 body and face. The [Episode 6 occurrence](hd-chapter-6.md#verified-nc95-upstairs-body) remains independently verified. Other expressions and blends are outside the sampled window. There is no new integrated asset or runtime change.
