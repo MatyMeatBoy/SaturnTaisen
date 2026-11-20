@@ -65,7 +65,9 @@
         "adjacent_palette_matches": true,
         "tile_archive": "SAKURA3/MINICOOK.GCG",
         "tile_sha256": "df07c11bd01d8f4c87088520258254ffcf2c6e3db46ff4d7bc8457a4d8040474"
-      }
+        },
+        "verified_discs": [1],
+        "runtime_evidence": "docs/research/saturn-bg-format.md#cooking-reward-in-long-day"
     },
     {
       "saturn_file": "SAKURA1/BGSLOT.BIN",

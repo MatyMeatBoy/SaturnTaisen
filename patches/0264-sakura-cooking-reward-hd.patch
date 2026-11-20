@@ -1,0 +1,18 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1150,11 +1150,13 @@
+         SceneHd image;
+         bool traced = false;
+     };
+-    std::array<MinigameReward, 2> minigameRewards{{
++    std::array<MinigameReward, 3> minigameRewards{{
+         {"BGMAIGO", "SAKURA3/CG/MAIGO/BG_MAIGO.SPR", 243292,
+          0xC3E6BE5ED7CD8ED7ull, 0x0D9D77957DB1BEE5ull, 0xA86020u, 0xC8F0F8u, 268190, 260521},
+         {"BGSYATE", "SAKURA3/CG/SHOT/BG_SYATE.SPR", 248249,
+          0x1D44E5822143A528ull, 0xBBDEDAEA3565FB2Dull, 0x30E8E0u, 0x180010u, 0, 261147},
++        {"BGRYORI", "SAKURA3/CG/COOK/BG_RYORI.SPR", 241331,
++         0xFE2E19421522F8A4ull, 0x2FBCC67122384B9Dull, 0x5030F8u, 0x8068F8u, 266889, 0},
+     }};
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
+     const auto finishSceneInset = [&](SceneHd& inset, SDL_BlendMode blend) {

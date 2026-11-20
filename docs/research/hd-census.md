@@ -26,7 +26,7 @@ python -m unittest tests.test_hd_census
 | Fondos de escena (BG) | 665 | 87 | 578 | 525 | 0 | 0 | 53 | 90,8% | 157 | 27,1% |
 | Fondos EVE/BBG (batalla y evento) | 50 | 0 | 50 | 36 | 0 | 8 | 6 | 72,0% | 6 | 12,0% |
 | EVENT (SAKURA2/EVENT) | 214 | 0 | 214 | 0 | 0 | 0 | 214 | 0,0% | 0 | 0,0% |
-| CG (SAKURA3/CG) | 219 | 0 | 219 | 2 | 0 | 6 | 211 | 0,9% | 2 | 0,9% |
+| CG (SAKURA3/CG) | 219 | 0 | 219 | 3 | 0 | 5 | 211 | 1,3% | 3 | 1,3% |
 | Finales (SAKURA1/ENDING) | 13 | 0 | 13 | 7 | 0 | 0 | 6 | 53,8% | 2 | 15,3% |
 | IC / eyecatch (ICATCH) | 21 | 0 | 21 | 16 | 0 | 0 | 5 | 76,1% | 5 | 23,8% |
 | TITLE (tarjetas de episodio PC) | 10 | 10 | 0 | 0 | 0 | 0 | 0 | - | 0 | - |
@@ -45,7 +45,7 @@ python -m unittest tests.test_hd_census
 | Fondos de escena (BG) | composición PC no sigue la cámara nativa (3); recorte sobre color clave o imagen en blanco (diseño) (84) | - | 52 claves Saturn distintas `unpaired` (sin donante PC) no entran en el denominador de archivos PC; total escena sin excluidos: 1095. Parcial (hd con otra clave pendiente): 3. |
 | Fondos EVE/BBG (batalla y evento) | - | falta de testigo (1); tamaño no soportado (T105c) (7) | - |
 | EVENT (SAKURA2/EVENT) | - | - | - |
-| CG (SAKURA3/CG) | - | falta de testigo (6) | - |
+| CG (SAKURA3/CG) | - | falta de testigo (5) | Parcial (hd con otra clave pendiente): 1. |
 | Finales (SAKURA1/ENDING) | - | - | Parcial (hd con otra clave pendiente): 7. |
 | IC / eyecatch (ICATCH) | - | - | Parcial (hd con otra clave pendiente): 13. |
 | TITLE (tarjetas de episodio PC) | rótulo japonés incrustado (tarjetas: capas locales) (10) | - | - |
@@ -59,11 +59,11 @@ python -m unittest tests.test_hd_census
 | Fondos decorativos KABE | - | - | Sin fila por tema en el registro; el recuento viene de hd-progress.json. 25 WALL PC, 19 temas usados. Verificación: THD25.  |
 | Tarjetas de episodio | - | - | Marco y rótulo español de los 10 episodios en el paquete; solo el episodio 1 tiene testigo de dibujo. Los 10 TITLE PC se excluyen (letras japonesas).  |
 
-Escena (7 carpetas SPR): candidatos 1192, excluidos 97, meta 1095, hd 586 (53,5%), verificados 172 (15,7%), bloqueados 14, sin pareja o sin fila 495; de los hd, 23 aún tienen otra clave pendiente (parcial).
+Escena (7 carpetas SPR): candidatos 1192, excluidos 97, meta 1095, hd 587 (53,6%), verificados 173 (15,7%), bloqueados 13, sin pareja o sin fila 495; de los hd, 24 aún tienen otra clave pendiente (parcial).
 
-Donantes de escena que cuentan en dos estados: 22 hd y excluido a la vez, 23 hd con otra clave pendiente. Rutas físicas extra de familias exactas presentes en el registro: 23. Comparten una identidad de conteo y conservan sus rutas del runtime.
+Donantes de escena que cuentan en dos estados: 22 hd y excluido a la vez, 24 hd con otra clave pendiente. Rutas físicas extra de familias exactas presentes en el registro: 23. Comparten una identidad de conteo y conservan sus rutas del runtime.
 
-Filas `hd` sin ninguna referencia de evidencia por fila (son `hd` por la tabla del runtime, no por testigo): scene-pictures 935/1196, bodies 207/296, portraits 172/419, film 41/45, menus-hud 0/100, tactical-maps 0/12.
+Filas `hd` sin ninguna referencia de evidencia por fila (son `hd` por la tabla del runtime, no por testigo): scene-pictures 935/1197, bodies 207/296, portraits 172/419, film 41/45, menus-hud 0/100, tactical-maps 0/12.
 
 <!-- END HD CENSUS -->
 
