@@ -114,3 +114,22 @@ compared 23,088 reused lines with zero mismatches. Both default runs
 and check recorded the same 87 unstable, 42 build and 111 reuse
 fields. The observed late field alone does not isolate a correctness
 problem or a performance regression in line reuse.
+
+### Park replay with background CPU load
+
+Four alternating 1440p runs used the same integrated patch 0275
+runtime with no guest hashing and a hidden window. The two loaded
+runs started four independent normal-priority CPU loops and stopped
+them when the replay ended. All four replays finished in strict mode.
+
+| Run | p95 | Fields over 16.67 ms after field 30 |
+| --- | ---: | ---: |
+| Idle A | 22.43 ms | 29 |
+| CPU load A | 19.33 ms | 20 |
+| CPU load B | 19.95 ms | 66 |
+| Idle B | 15.28 ms | 6 |
+
+Host variation also appeared in the idle controls. The capture fixes
+and test rig remain the same across all four runs. Load on a separate
+GPU and audible WASAPI playback were outside this comparison. Private
+logs are in the park-contention-0275 staging directory.
