@@ -215,3 +215,18 @@ under `local/work/codex-th1/map14-victory-aot`.
 
 The evidence covers these three clips. The complete battle through
 all intervening turns and package inclusion remain open.
+
+### MAP14 intermediate turn registry
+
+The archived Iris victory route contains 62 sequential clips. Fifteen
+clips stopped in the earlier strict candidate. A matching portable
+replay of those clips recorded 161 further variants, all byte-matched
+to the pinned EVT14 module. The observed MAP14 registry now contains
+1,349 variants, and the Windows release candidate links exactly
+677,804 variants across all modules.
+
+A continuous replay of the stitched controller inputs matches the
+archived guest hashes through at least field 62,000, with no
+intermediate state loads in that span. Full continuous verification
+is tracked separately from the release. The private clips, range
+comparison and replay receipt are in `local/work/codex-th1/map14-victory-aot`.
