@@ -26,7 +26,7 @@ The same review corrected the existing quiz options to «Dama demonio» and «Ch
 
 ### Japanese-to-English divergence catalog
 
-The [divergence catalog](../../config/es-japanese-bridge.json) records 102
+The [divergence catalog](../../config/es-japanese-bridge.json) records 124
 findings by ISO path, table index and native record ID. Each entry carries
 a Spanish gloss of the Japanese meaning, the issue in English, proposed
 English wording, and the status of the Spanish correction. It contains
@@ -50,12 +50,15 @@ the theatrical props and Iris's table knife. For each item, all 56
 records on each disc have the same ordered Japanese glyph and line-break
 sequence as the anchor. The source overlay checks each record's English
 wording and native ID before applying the group's Spanish description.
-The additional Episode 2–5 reviews remain queued for editorial
+The additional Episode 2–6 reviews remain queued for editorial
 integration, including English-only corrections where the existing
 Spanish already preserves the original meaning. The Episode 5 batch
 adds 18 source-checked records. It tracks Tenkai sensing spiritual
 power, the cause of Sumire's fall, the theatrical role name and
-matching copies of Kohran's dialogue.
+matching copies of Kohran's dialogue. The Episode 6 batch adds 22
+records on both discs, including two exact mirrors. It covers Maria's
+stage roles and Kohran's comedy robot. Fourteen entries propose Spanish
+edits and eight retain the existing Spanish wording.
 
 ## Menus
 
