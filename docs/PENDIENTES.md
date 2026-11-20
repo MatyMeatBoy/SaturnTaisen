@@ -75,7 +75,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
 | THD10 | P0 | local | active · Iris 0904 | **Último cuerpo NC.** NC3517 en la ruta Iris 0904; la prueba controlada existente sirve de base. | Captura natural de cuerpo, dos caras, oclusión y fallback. |
-| THD11 | P0 | local | CLAIM[claude-thd11|pendientes/THD11-ep1-bodies|2026-11-20T13:10:56Z] open | **Cuerpos grandes del episodio 1.** Revisar los 19 cuerpos observados, dividir por ruta y expresión. | Dos estados de cara cuando existan y controles de mezcla y cuello. |
+| THD11 | P0 | local | open | **Cuerpos grandes del episodio 1.** [Inventario de 19 cuerpos observados](research/thd11-episode1-bodies.md), con tres apariciones pendientes: NC95, NC81 y NC3004. | Capturar esas tres apariciones a 1440p. Para los cuerpos ya verificados, comprobar las expresiones y fundidos que indica el inventario. |
 | THD12 | P1 | local | open · NC81 lote activo | **Cuerpos grandes de otros episodios.** NC de episodios 2–10 fuera de THD10, lotes de 2–4 paquetes por ruta. | Registrar pose, ojos, boca y al menos un control de oclusión/fundido por familia. |
 | THD13 | P1 | local | open | **Retratos y animación del disco 1.** Atlas FCE de episodios 1–5 por identidad, iconos sin interlocutor aparte. | Validar base, parpadeo, boca y modos HD/Original, incluido el emblema inicial. |
 | THD14 | P1 | local | open | **Retratos y animación del disco 2.** Atlas FCE de episodios 6–10 por identidad, excluyendo FACE táctico. | Mismo control de base, cuadros animados, alfa y fallback con evidencia por identidad. |
