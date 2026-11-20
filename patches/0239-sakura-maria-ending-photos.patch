@@ -1,0 +1,14 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1071,6 +1071,10 @@
+         bool theatreInset = false;
+     };
+     constexpr EndingPhoto endingPhotos[]{
++        {10, 2, 0x200, 0x21810A8264DDA955ull, 0x14E5BA617038FA85ull,
++         "SAKURA1/ENDING/END_MA.SPR", 3132106, 0x97F376CBAA42EA89ull, {0, 0, 640, 320}},
++        {8, 3, 0x400, 0x8E132332AF86D74Dull, 0x7D71DC517DA189FDull,
++         "SAKURA1/ENDING/END_MA.SPR", 3132106, 0x97F376CBAA42EA89ull, {48, 48, 540, 270}},
+         {6, 2, 0x200, 0xA19A0B84409A3AB8ull, 0xCB89538124A3A96Dull,
+          "SAKURA1/ENDING/END_SA.SPR", 2988213, 0x44DC7D66456C8105ull, {0, 0, 640, 320}},
+         {7, 3, 0x400, 0xBD98B23C7D99D3DDull, 0x99C3DF9439E0981Dull,

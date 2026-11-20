@@ -227,7 +227,8 @@
       "patches/0234-sakura-nc24-nc3250-verified-faces.patch",
       "patches/0235-sakura-nc36-nc72-verified-faces.patch",
       "patches/0236-sakura-bg4370-registered-cutout.patch",
-      "patches/0238-sakura-nc31-nc62-nc70-verified-faces.patch"
+      "patches/0238-sakura-nc31-nc62-nc70-verified-faces.patch",
+      "patches/0239-sakura-maria-ending-photos.patch"
     ]
   }
 }

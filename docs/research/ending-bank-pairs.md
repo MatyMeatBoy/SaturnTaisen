@@ -377,3 +377,33 @@ The coverage register credits the physical donor once. The proof is
 from a controlled save, and package inclusion and the natural
 six-route completion remain open. Private receipts and renders are
 under `local/work/codex-th1/tp3c-cg/ge-render`.
+
+## Controlled Maria ending photographs
+
+The English disc 2 fixture changes the heroine selector at `002003A6`
+from 2 to 3 in a private copy of the natural Sumire checkpoint. The
+game takes its original Maria dispatch and loads the complete native
+`MA_CG.BIN`. It draws both unique photographs as full, unobscured
+320 × 160 rectangles at (0,16).
+
+| Saturn record | CRAM / VRAM | PC subimage | PC crop (x, y, w, h) |
+| --- | --- | --- | --- |
+| 11 | `0x200` / `0x8040` | 10 | (0,0,640,320) |
+| 8 | `0x400` / `0x40040` | 8 | (48,48,540,270) |
+
+Patch 0239 uses the existing ending photograph compositor. The
+independently decoded donor matches every sample in the 1,843,200-pixel
+rectangle at 1440p. Surrounding pixels stay native. Six steady captures
+show the corresponding HD photo. The sampled transitions, Original mode,
+and missing and truncated PC files match the native controls. The five
+profiles match all 1,160 guest fields and final SRAM.
+
+The two observed dispatch variants at ENDING offsets `0x334` and
+`0x348` match the pinned module bytes. The linked 677,643-variant
+runtime matches all 22,500 guest fields, 37 native RGB captures and
+final SRAM against the interpreter. No interpreted blocks were needed.
+The private receipts are under `local/work/codex-th1/tp3c-cg/maria-hd`.
+
+The coverage register credits the physical Maria donor once. The
+canonical shared cast photos still use END_SA. The native Maria route
+and package inclusion remain open.
