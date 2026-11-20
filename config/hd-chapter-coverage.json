@@ -4361,6 +4361,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG2156.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th6-native-attribution.md#bg2156-hd-continuation-draw",
+            "pc": "SAKURA1/BG/BG2156.SPR",
+            "runtime_evidence": "docs/research/th6-native-attribution.md#bg2156-hd-continuation-draw",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG4059.BIN": {
             "association": "observed",
             "evidence": "docs/research/narrative-foreground-followup.md",
@@ -14640,11 +14648,6 @@
       "1:/SAKURA1/BG2155.BIN": {
         "association": "unknown",
         "status": "unpaired"
-      },
-      "1:/SAKURA1/BG2156.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2156.SPR",
-        "status": "hd"
       },
       "1:/SAKURA1/BG2157.BIN": {
         "association": "unknown",
