@@ -6295,7 +6295,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
             "pc": "SAKURA1/BG/BG1072.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-bg1072-before-0901",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG1075.BIN": {
             "association": "observed",

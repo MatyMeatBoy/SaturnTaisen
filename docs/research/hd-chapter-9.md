@@ -247,3 +247,20 @@ The native VDP2 register image from the serialized VIDE section confirms two con
 ## BG1360 door variant
 
 The natural second-floor 0904 route reads BG1360 from FAD 122811. The Saturn asset depicts the closed wooden door with floorboards, a narrow vertical plaque and the handle on the left. PC BG1360 has the wrong wainscoting and floor. The best whole-picture matches BG1087 and BG1100 (correlation 0.9901) put a floral emblem in place of the plaque. PC BG1083 and BG1096 preserve the narrow plaque but put the handle on the right, and BG1085 and BG1098 also change the plaque. The door remains unpaired for this occurrence. Private comparisons: `local/work/codex-th1/thd01-probe/bg1360-ranked.png` and `bg1360-plaques.png`.
+
+## Verified BG1072 before 0901
+
+The resumed Ayame room confirmation route displays BG1072 before entering
+0901 on disc 2. The development runtime matching the v0.2.18-alpha executable
+(SHA-256 beginning `d0a1415b1b0d83ce`) replayed 1,203 fields with only
+`SAKURA1/BG/BG1072.SPR` available and again without a PC donor. The source
+state and input movie SHA-256 prefixes are `fe4bc3a37f1e52b7` and
+`8d9ec4465a61ae36`, respectively. The donor trace reports
+`BG1072.SPR usable=1` and the control has zero scene donor lines.
+Per-field guest hashes and final SRAM match, with zero interpreted blocks.
+
+At field 1,200 the 2560 × 1440 RGB comparison changes 1,434,706 pixels.
+All changed pixels lie inside the Zoom picture rectangle
+(272, 29)–(2288, 1037), with exclusive right and bottom edges. The dialogue
+box and portrait match the control. This verifies this observed disc 2
+appearance of BG1072; the disc 1 association remains unknown.
