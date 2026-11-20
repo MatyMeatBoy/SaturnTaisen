@@ -5391,17 +5391,65 @@
           }
         },
         "scene-pictures": {
+          "2:/SAKURA1/BG1061.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG1061.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1066.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG1066.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG1072.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
             "pc": "SAKURA1/BG/BG1072.SPR",
             "status": "hd"
           },
+          "2:/SAKURA1/BG1075.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG1075.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG1076.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG1076.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1077.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG1077.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1100.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG1100.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1101.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG1101.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "status": "hd",
             "verified_in_game": true
           },
@@ -5418,6 +5466,22 @@
             "evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
             "pc": "SAKURA1/BG/BG1282.SPR",
             "runtime_evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1325.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG1325.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2036.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
+            "pc": "SAKURA1/BG/BG2036.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "status": "hd",
             "verified_in_game": true
           },
@@ -16305,11 +16369,6 @@
         "pc": "SAKURA1/BG/BG1060.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1061.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1061.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1062.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1062.SPR",
@@ -16328,11 +16387,6 @@
       "2:/SAKURA1/BG1065.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1065.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1066.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1066.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1067.BIN": {
@@ -16368,16 +16422,6 @@
       "2:/SAKURA1/BG1074.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1074.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1075.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1075.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1077.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1077.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1078.BIN": {
@@ -16488,16 +16532,6 @@
       "2:/SAKURA1/BG1099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1099.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1100.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1100.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1101.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1101.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1102.BIN": {
@@ -17290,11 +17324,6 @@
         "pc": "SAKURA1/BG/BG1324.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1325.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1325.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1326.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1326.SPR",
@@ -17629,11 +17658,6 @@
       "2:/SAKURA1/BG2035.BIN": {
         "association": "unknown",
         "status": "unpaired"
-      },
-      "2:/SAKURA1/BG2036.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2036.SPR",
-        "status": "hd"
       },
       "2:/SAKURA1/BG2037.BIN": {
         "association": "unknown",

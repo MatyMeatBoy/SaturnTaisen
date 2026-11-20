@@ -187,6 +187,14 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG1061.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
+    (2, '/SAKURA1/BG1066.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
+    (2, '/SAKURA1/BG1075.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
+    (2, '/SAKURA1/BG1077.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
+    (2, '/SAKURA1/BG1100.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
+    (2, '/SAKURA1/BG1101.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
+    (2, '/SAKURA1/BG1325.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
+    (2, '/SAKURA1/BG2036.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
     (1, '/SAKURA1/BG1267.BIN'): (7, 'docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws'),
     (1, '/SAKURA1/BG2126.BIN'): (7, 'docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws'),
     (1, '/SAKURA1/BG2019.BIN'): (7, 'docs/research/th7-native-attribution.md#verified-chapter-7-scene-draws'),

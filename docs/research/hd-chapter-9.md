@@ -162,3 +162,41 @@ BG1076's disc 1 witness remains in the registry; its donor is counted once.
 Local receipts and replay outputs remain under
 `local/work/codex-witness-441-review/hud/chapter9-plates/`.
 This verification covers these four appearances.
+
+## Verified lower scene plates on the natural 0904 route
+
+The English disc 2 Iris route provides archived snapshots of eight
+distinct lower scene pictures. Strict Enhanced pairs at 2560 × 1440
+used the runtime through patch 0213 and differed only in the named
+physical PC image. The existing native foregrounds were present in
+both arms.
+
+| Saturn picture | Natural checkpoint | Changed RGB pixels per positive capture |
+| --- | --- | ---: |
+| BG1061 | Iris entrance | 1,880,192 |
+| BG1066 | Quiet map junction | 2,031,745 |
+| BG1075 | Library continuation terminal | 2,029,456 |
+| BG1077 | Iris room route at field 540 | 1,328,177 |
+| BG1100 | Iris door knock | 2,032,127 |
+| BG1101 | Iris room at field 180 | 2,032,126 |
+| BG1325 | Hall relay at field 600 | 1,175,001 |
+| BG2036 | Library entry at field 600 | 1,241,716 |
+
+The 56-field arms match stock guest hashes and final SRAM for every
+checkpoint, with zero interpreted blocks. Sampling fields 8, 16, 30 and
+50 gives 35 positive RGB comparisons across nine replay sites. BG1075
+matches stock at field 50 after the positive interval. Every changed
+pixel lies within the (272,29)–(2288,1037) viewport, belongs to the exact
+native lower plate, and matches the independent bilinear PC decode within
+two RGB levels. All pixels outside the visible plate remain stock exact.
+
+BG2036, BG2037 and BG2038 have identical Saturn file bytes on disc 2 and
+the same registered PC BG2036 donor. The library entry's first 600 guest
+hashes reproduced the archived replay and the CD trace read BG2036 at
+FAD 123662 before the snapshot. A later library continuation scene with
+the same native bytes independently changed 1,322,804 pixels per capture
+with the canonical donor. The registry counts the one physical donor once.
+
+Local receipts and repro commands are under
+`local/work/codex-witness-441-review/hud/iris-background-plates/`.
+This work verifies the named appearances without an SDK or package change.
