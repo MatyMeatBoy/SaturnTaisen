@@ -72,6 +72,8 @@ Two follow-up 240-field Enhanced runs at 1440p separated body availability from 
 
 The NC11 overlap is the timed LIPS choice display over Sakura, rather than a missing face part. The first rejected command is at nominal (160,76), size 272×120, mode `00A0`, color `C500`, and texture fingerprint `4ADC5FF69258EF85`. It appears after the body in VDP1 draw order. The 1440p capture shows the translucent panel, timer, and ink over her face and shoulders. Any replacement must preserve the native overlay and its ordering, including the visible body through the panel. Simply accepting the intersecting sprite would erase or cover part of that display.
 
+A strict replay of the frame-20 checkpoint captured the sprite plane and the separate VDP2 panel. In native rectangle (40,48)–(280,121), 6,316 of 7,811 distinct-color pixels with both planes present match `(panel × 21 + sprite × 11) / 32` with per-channel truncation. Another 168 match a sprite weight of 31, and 1,327 match no single ratio in that pair of source planes. The sprite plane already contains text, timer and chrome as well as the character, so a uniform overlay cannot recover their individual ownership. The local layer captures are under `local/work/codex-ch1-body-triage/save-prebattle-3000/`.
+
 
 The trace also named 62 portrait IDs after successful replacement texture upload. Each row preserves its first appearance bracket and the trace line. The separately observed viewport and blend traces can be used for renderer review.
 
