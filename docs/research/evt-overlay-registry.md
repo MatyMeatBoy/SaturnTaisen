@@ -289,3 +289,19 @@ Not attributed: bank-6-battle (no state saved at an EVT load) and any EVT loaded
 ### Corrections
 
 - The earlier 40,000-frame sweep never completed: in `deep.log`, 14 of 17 cases ended with `TimeoutExpired` (1,500 s limit). Only these six cases were re-run here; the other 11 remain.
+
+## THD30: EVT15 `00209C7A` identification and local re-measurement (2026-11-20)
+
+The strict stop at master SH-2 `00209C7A` ([MAP15 ground review](tactical-pairing.md#live-map15-ground-review)) is inside the `EVT15` overlay (base `00204000`, offset 0x5C7A). Module on the English disc 2 image:
+
+| Module | LBA | FAD | Bytes | SHA-256 |
+| --- | ---: | ---: | ---: | --- |
+| `/SAKURA2/EVT15.BIN` | 203,340 | 203,490 | 77,316 | `d56eb172d8ac8250cc3ec45f70b62595a8b4c05c734c9f86f5c36366508ace89` |
+
+It is read during the Chapter 9 prologue (MAP15 setup), 38 sectors, and followed by `EVT16` at FAD 203,528. The 330 runtime variants of EVT15 (plus one of EVT16) that closed the stop are already in the 678,135-variant candidate of v0.2.16 (see the MAP15 section above); this entry adds the identification and the registry state, not a new variant list.
+
+Registry state: the 1,357,536-block registry (`--module EVT15` as part of the 13 disc 2 modules, see the T55 section) lists 25 static variants at `00209C7A`. Whether they include every one of the 330 runtime variants was not measured here: the retained natural prologue checkpoint is private to another machine.
+
+Local measurement (copies of the 674,182 base and of the isolated 1,357,536 `rebuild-evt` executable, strict native, 40,000 frames with dialogue advance every 120, `tools/chapter_jump.py`): the disc 2 battle saves `bank-9-battle-1` and `bank-9-battle-2` run 40,000 frames, exit 0, no untranslated block, on both executables. So the Chapter 9 Battle Saves do **not** reproduce the `00209C7A` stop (they do not pass through the EVT15 load); the stop needs the natural prologue route. Not done: a replay of that route, the strict comparison of 45,000+ frames with the interpreter, and the check that `00209C7A` variants of the route are all covered by the registry. Nothing new was compiled for this entry.
+
+MAP14 replay performance and stutters remain open under THD30; the continuous MAP14 victory replay is recorded above and no MAP14 work was duplicated here.
