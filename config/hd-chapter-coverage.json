@@ -3189,6 +3189,14 @@
             "pc": "SAKURA1/BG/BG1022.SPR",
             "status": "hd"
           },
+          "1:/SAKURA1/BG1171.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/scene-spot-check.md#bg1171-on-english-disc-1",
+            "pc": "SAKURA1/BG/BG1171.SPR",
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1171-on-english-disc-1",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1198.BIN": {
             "association": "observed",
             "evidence": "docs/research/th3-native-attribution.md",
@@ -12622,11 +12630,6 @@
       "1:/SAKURA1/BG1170.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1170.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1171.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1171.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1172.BIN": {

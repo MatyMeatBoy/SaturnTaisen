@@ -148,6 +148,7 @@ MENU_CENSUS = 'docs/research/pc-menu-hud-inventory.json'
 BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
 # Draw evidence applies to the exact disc, resource, and chapter observed.
 SCENE_DRAWS = {
+    (1, '/SAKURA1/BG1171.BIN'): (3, 'docs/research/scene-spot-check.md#bg1171-on-english-disc-1'),
     (1, '/SAKURA1/BG2172.BIN'): (3, 'docs/research/scroll-table.md#bg2172-on-english-disc-1'),
     BBG204_INSET: (4, BBG204_REPORT),
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, BODY_REPORT) for number in (1011, 1012, 1017)},
