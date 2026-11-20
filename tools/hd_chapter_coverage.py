@@ -220,6 +220,23 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG1284.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2020.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (1, '/SAKURA1/BG1181.BIN'): (7, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (1, '/SAKURA1/BG1178.BIN'): (7, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG1195.BIN'): (8, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2160.BIN'): (9, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2166.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2167.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2163.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2164.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2165.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2168.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2284.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG1062.BIN'): (9, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2097.BIN'): (9, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG2110.BIN'): (9, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
+    (2, '/SAKURA1/BG1293.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (2, '/SAKURA1/BG1072.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-bg1072-before-0901'),
     (2, '/SAKURA1/BG2057.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2057-behind-nc3057'),
     (2, '/SAKURA1/BG2517.BIN'): (9, 'docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene'),
