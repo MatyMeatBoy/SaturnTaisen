@@ -141,6 +141,8 @@ EVE_CONTROLLED_REPORT = 'docs/research/disc1-battle-insets.md#controlled-eve-pla
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
+    ('SAKURA1/SYSTEM/SISTEM.SPR', 1): ('patch 0206, port/frontend_sdl.cpp: Load-menu title banner rails', MENU_REPORT + '#hd-load-menu-banner-and-control-rails'),
+    ('SAKURA1/SYSTEM/SISTEM.SPR', 4): ('patch 0206, port/frontend_sdl.cpp: Load-menu two-button frame rails', MENU_REPORT + '#hd-load-menu-banner-and-control-rails'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 11): ('patch 0205, port/frontend_sdl.cpp: Options panel rails', MENU_REPORT + '#hd-options-and-system-panel-rails'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 14): ('patch 0205, port/frontend_sdl.cpp: System panel rails', MENU_REPORT + '#hd-options-and-system-panel-rails'),
     ('SAKURA1/SYSTEM/WINDOW.SPR', 0): ('patch 0202, port/frontend_sdl.cpp: timed LIPS choice rails', MENU_REPORT + '#hd-timed-lips-and-dialogue-window-rails'),
@@ -856,6 +858,8 @@ def build(root, index_dir, portrait_audit):
                     ('SAKURA1/SYSTEM/WINDOW.SPR', 1),
                     ('SAKURA1/SYSTEM/SISTEM.SPR', 11),
                     ('SAKURA1/SYSTEM/SISTEM.SPR', 14),
+                    ('SAKURA1/SYSTEM/SISTEM.SPR', 1),
+                    ('SAKURA1/SYSTEM/SISTEM.SPR', 4),
                     ('SAKURA1/SYSTEM/WINDOW.SPR', 2),
                 }:
                     row['verified_in_game'] = True

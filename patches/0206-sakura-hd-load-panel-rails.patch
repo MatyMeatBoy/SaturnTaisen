@@ -1,0 +1,186 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1441,6 +1441,139 @@
+         const SDL_FRect dest{target.x+(left-crop.x)*scale,target.y+(top-crop.y)*scale,
+                              float(width*scale),float(bracketHeight*scale)};
+         SDL_RenderTexture(renderer,overlay,nullptr,&dest);
++    };
++    struct LoadPanel {
++        unsigned image;
++        int x, y, width, height;
++        uint16_t right, bottom;
++        uint64_t fingerprint;
++    };
++    constexpr LoadPanel loadPanels[] = {
++        {1, 16, 24, 176, 24, 0x001F, 0xFFBF, 0x7EB44FE1D8684661ull},
++        {4, 160, 178, 144, 32, 0x008F, 0x0061, 0xE60BBF3F6AFC4E4Aull},
++    };
++    struct LoadRail {
++        size_t frameOffset, artOffset;
++        uint32_t native;
++    };
++    struct LoadPanelOverlay {
++        std::vector<LoadRail> rails;
++        std::vector<uint32_t> donor, blended, lower, lastLower;
++        SDL_Texture* texture{};
++    };
++    std::array<LoadPanelOverlay, std::size(loadPanels)> loadPanelOverlays;
++    using LoadPanelImages = std::array<std::vector<uint32_t>, std::size(loadPanels)>;
++    std::future<LoadPanelImages> pendingLoadPanels;
++    bool loadPanelsTried = false;
++    const auto drawLoadPanels = [&](const satrecomp::video::Renderer::Presentation& planes,
++                                    std::span<const uint32_t> native, const SDL_FRect& crop, const SDL_FRect& target, int scale) {
++        if (!planes.brackets || planes.brackets->arrows[0].y != system_hud::kLoadY ||
++            choosing || port.menu.IsOpen() || satrecomp::FeatureValue("presentation_mode") != 1 ||
++            satrecomp::FeatureValue("pc_hd_backgrounds") != 0 || port.opt.pcAssetsPath.empty() || scale < 2 ||
++            crop.x != 0 || crop.y != 0 || crop.w != 320 || crop.h != 224 ||
++            planes.topSource.size() != 320 * 224 || planes.underSource.size() != 320 * 224 ||
++            planes.underSprites.size() != 320 * 224 || native.size() != 320 * 224)
++            return;
++        const auto palette = std::span{planes.palette}.subspan(0x580, 32);
++        if (PcBackdropHash(palette) != system_hud::kLoadPalette) return;
++        for (size_t slot = 0; slot < std::size(loadPanels); ++slot) {
++            const auto& panel = loadPanels[slot];
++            const auto sprite = std::ranges::find_if(planes.sprites, [&](const auto& candidate) {
++                const auto& cmd = candidate.command.words;
++                return cmd[0] == 0x1001 && cmd[2] == 0x0080 && cmd[3] == system_hud::kLoadColor &&
++                       cmd[5] == ((panel.width / 8) << 8 | panel.height) &&
++                       candidate.x == panel.x && candidate.y == panel.y &&
++                       cmd[10] == panel.right && cmd[11] == panel.bottom &&
++                       candidate.pixels.size() == size_t(panel.width * panel.height) / 2 &&
++                       PcBackdropHash(candidate.pixels) == panel.fingerprint;
++            });
++            if (sprite == planes.sprites.end()) continue;
++            auto& overlay = loadPanelOverlays[slot];
++            if (overlay.rails.empty()) {
++                for (int y = 0; y < panel.height; ++y) {
++                    for (int x = 0; x < panel.width; ++x) {
++                        // The secondary panel keeps both button wells and the space around their text.
++                        if (panel.image == 4 && x >= 4 && x < 140 && y >= 4 && y < 26) continue;
++                        const size_t offset = size_t(y) * panel.width + x;
++                        const unsigned ink = (sprite->pixels[offset / 2] >> (offset % 2 ? 0 : 4)) & 15;
++                        if (ink == 0 || ink == 9) continue;
++                        const unsigned color = (unsigned(palette[2 * ink]) << 8) | palette[2 * ink + 1];
++                        const uint32_t rgb = ((color & 31) << 3) |
++                            ((color & 0x3E0) << 6) | ((color & 0x7C00) << 9);
++                        overlay.rails.push_back({size_t(panel.y + y) * 320 + panel.x + x,
++                            size_t(2 * y) * 2 * panel.width + 2 * x, rgb});
++                    }
++                }
++                overlay.lower.resize(overlay.rails.size());
++            }
++            bool matches = !overlay.rails.empty();
++            for (size_t i = 0; matches && i < overlay.rails.size(); ++i) {
++                const auto& rail = overlay.rails[i];
++                const size_t at = rail.frameOffset;
++                const auto below = planes.underSprites[at];
++                matches = planes.topSource[at] == 0 && planes.underSource[at] == 5 &&
++                    ((native[at] ^ system_hud::LoadBlend(rail.native, below)) & 0xFFFFFF) == 0;
++                overlay.lower[i] = below;
++            }
++            if (!matches) continue;
++            if (!loadPanelsTried) {
++                loadPanelsTried = true;
++                pendingLoadPanels = std::async(std::launch::async,
++                    [path = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/SISTEM.SPR", loadPanels]() {
++                        LoadPanelImages result;
++                        std::vector<uint8_t> bytes;
++                        if (!ReadPcBackdropFile(path, bytes, 285236) || bytes.size() != 285236 ||
++                            PcBackdropHash(bytes) != 0x0DBC9A3C989D369Bull) return result;
++                        std::vector<PcSprite> images;
++                        std::string error;
++                        if (!DecodePcSprites(bytes, images, error)) return result;
++                        for (size_t i = 0; i < std::size(loadPanels); ++i) {
++                            const auto& expected = loadPanels[i];
++                            for (auto& image : images) {
++                                if (image.index == expected.image && image.width == 2 * expected.width &&
++                                    image.height == 2 * expected.height) {
++                                    result[i] = std::move(image.pixels);
++                                    break;
++                                }
++                            }
++                        }
++                        return result;
++                    });
++            }
++            if (pendingLoadPanels.valid() &&
++                pendingLoadPanels.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                auto loaded = pendingLoadPanels.get();
++                for (size_t i = 0; i < std::size(loadPanels); ++i)
++                    loadPanelOverlays[i].donor = std::move(loaded[i]);
++            }
++            if (overlay.donor.empty()) continue;
++            const int stride = 2 * panel.width;
++            if (!overlay.texture) {
++                overlay.texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                    SDL_TEXTUREACCESS_STREAMING, stride, 2 * panel.height);
++                if (!overlay.texture) continue;
++                SDL_SetTextureScaleMode(overlay.texture, SDL_SCALEMODE_NEAREST);
++                SDL_SetTextureBlendMode(overlay.texture, SDL_BLENDMODE_BLEND);
++                overlay.blended.resize(overlay.donor.size());
++            }
++            if (overlay.lastLower != overlay.lower) {
++                for (size_t i = 0; i < overlay.rails.size(); ++i) {
++                    const size_t at = overlay.rails[i].artOffset;
++                    for (size_t sample : {at, at + 1, at + stride, at + stride + 1}) {
++                        const uint32_t color = overlay.donor[sample];
++                        const uint32_t rgb = color & 0xFFFFFF;
++                        if ((color >> 24) == 255 && rgb != 0xFFFF00 && rgb != 0x00FF00)
++                            overlay.blended[sample] = system_hud::LoadBlend(color, overlay.lower[i]);
++                    }
++                }
++                if (!SDL_UpdateTexture(overlay.texture, nullptr, overlay.blended.data(), stride * sizeof(uint32_t)))
++                    continue;
++                overlay.lastLower = overlay.lower;
++            }
++            const SDL_FRect dest{target.x + panel.x * float(scale), target.y + panel.y * float(scale),
++                panel.width * float(scale), panel.height * float(scale)};
++            SDL_RenderTexture(renderer, overlay.texture, nullptr, &dest);
++        }
+     };
+     auto drawItem=[&](const satrecomp::video::Renderer::Presentation& planes,const SDL_FRect& crop,
+                       const SDL_FRect& target,int scale) {
+@@ -3590,6 +3723,7 @@
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 if(!scene.movieOnly && !splitZoom) {
+                     drawItem(planes,crop,target,fit.scale);
++                    drawLoadPanels(planes,softwareShown,crop,target,fit.scale);
+                     drawBrackets(planes,crop,target,fit.scale);
+                 }
+                 portraitViewport=!scene.movieOnly;
+@@ -4252,8 +4386,11 @@
+             }
+             if(port.videoRenderer && texW==320 && texH==224) {
+                 const int scale=static_cast<int>(where.h/224);
+-                if(where.w==320*scale && where.h==224*scale)
+-                    drawBrackets(port.videoRenderer->PresentationFrame(),{0,0,320,224},where,scale);
++                if(where.w==320*scale && where.h==224*scale) {
++                    const auto& planes = port.videoRenderer->PresentationFrame();
++                    drawLoadPanels(planes,softwareShown,{0,0,320,224},where,scale);
++                    drawBrackets(planes,{0,0,320,224},where,scale);
++                }
+             }
+         }
+         }
+@@ -4701,6 +4838,11 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                for (auto& overlay : loadPanelOverlays) {
++                    if (overlay.texture) SDL_DestroyTexture(overlay.texture);
++                    overlay.texture = nullptr;
++                    overlay.lastLower.clear();
++                }
+                 if (comboCardTexture) SDL_DestroyTexture(comboCardTexture);
+                 comboCardTexture = nullptr;
+                 if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
+@@ -5115,6 +5257,8 @@
+     resetRegisteredBodies();
+     if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);
+     if(loadArrowOverlay)SDL_DestroyTexture(loadArrowOverlay);
++    for (auto& overlay : loadPanelOverlays)
++        if (overlay.texture) SDL_DestroyTexture(overlay.texture);
+     if (texture) {
+         SDL_DestroyTexture(texture);
+     }
