@@ -6007,10 +6007,10 @@
       },
       "1:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc4138-registered-silhouette",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC4138.SPR",
-        "reason": "The PC edition bakes the flower box and background into the native body opening.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/NC4182.BIN": {
         "association": "unknown",
@@ -6834,10 +6834,10 @@
       },
       "2:/SAKURA1/NC4138.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc4138-registered-silhouette",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC4138.SPR",
-        "reason": "The PC edition bakes the flower box and background into the native body opening.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/NC4182.BIN": {
         "association": "unknown",

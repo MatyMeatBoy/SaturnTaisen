@@ -142,7 +142,8 @@
       "patches/0144-sakura-ic0501-hd-compositor.patch",
       "patches/0145-sakura-two-calibrated-scroll-rows.patch",
       "patches/0146-sakura-hd-cd2-load-icon.patch",
-      "patches/0147-sakura-add-inventory-cards.patch"
+      "patches/0147-sakura-add-inventory-cards.patch",
+      "patches/0148-sakura-registered-nc4138-body.patch"
     ]
   }
 }

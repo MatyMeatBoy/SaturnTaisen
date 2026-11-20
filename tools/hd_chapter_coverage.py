@@ -558,6 +558,13 @@ def build(root, index_dir, portrait_audit):
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')
         elif name in EVE_PAIRS:
             row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/' + EVE_PAIRS[name] + '.SPR'}
+        elif kind == 'bodies' and name in body_review.get('registered_silhouettes', {}):
+            row = {
+                'status': 'hd',
+                'pc': f'SAKURA1/NC/{name}.SPR',
+                'native_face_fallback': True,
+                'fixture_evidence': body_review['registered_silhouettes'][name],
+            }
         elif kind == 'bodies' and name in body_review.get('paired_not_wired', {}):
             row = {
                 'status': 'paired-not-wired',
