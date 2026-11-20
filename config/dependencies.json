@@ -153,7 +153,8 @@
       "patches/0155-sakura-fast-body-frame-matching.patch",
       "patches/0156-sakura-vdp2-line-reuse.patch",
       "patches/0157-sakura-prime-guest-audio-at-startup.patch",
-      "patches/0158-sakura-index-dialogue-ink.patch"
+      "patches/0158-sakura-index-dialogue-ink.patch",
+      "patches/0159-sakura-upload-selected-body-faces.patch"
     ]
   }
 }
