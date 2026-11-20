@@ -5,8 +5,7 @@ native and unthrottled (a cold backup plus an input movie, or a saved state plus
 block (`SATRECOMP_CD_TRACE`) to the ISO 9660 file that holds the start sector (FAD = LBA + 150). Unlike tools/witness_sweep.py (scenes
 only) it records every file (SAKURA1/SAKURA2 scenes, NC bodies, FCE/TBL portraits, EVT/MAP/UNIT/FACE/WKL/FIX tactical files, FILM
 streams, menus). A state is saved every `--interval` frames; each first load is attributed to the first state at or after its estimated
-frame (the hash log is buffered, so the estimate can be early by a few dozen frames: `--margin`). Only names, frames and hashes are
-written, never pixels; states stay in local/work.
+frame (the hash log is buffered, so the estimate can be early by a few dozen frames: `--margin`). The report records names, frames and hashes. Save states stay in a new directory under local/work.
 
     python tools/chapter_loads.py --exe local/build/sakura-th2/sakura-th2.exe --disc 1 --backup B --movie M --frames 28491 \
         --interval 500 --out local/work/th2/continuous [--state S]
@@ -105,7 +104,13 @@ def main():
     ap.add_argument('--out', type=pathlib.Path, required=True)
     a = ap.parse_args()
     out, exe = a.out.resolve(), a.exe.resolve()
-    shutil.rmtree(out, ignore_errors=True)
+    work = (ROOT / 'local/work').resolve()
+    if out == work or not out.is_relative_to(work):
+        ap.error('--out must name a new directory under local/work')
+    if a.frames < 1 or a.interval < 1 or a.margin < 0:
+        ap.error('--frames and --interval must be positive, and --margin cannot be negative')
+    if out.exists():
+        ap.error('--out already exists')
     out.mkdir(parents=True)
     shutil.copyfile(a.backup, out / 'backup.bin')
     if a.movie:
@@ -116,17 +121,20 @@ def main():
     checkpoints = list(range(a.interval - 1, a.frames, a.interval))
     cmd = [str(exe), '--disc', str(ROOT / ('local/prepared/disc%d/game.cue' % a.disc)), '--headless', '--unthrottled', '--mute',
            '--frames', str(a.frames), '--backup', str(out / 'backup.bin'), '--settings', str(out / 'settings.ini'),
-           '--hash-log', str(hash_log), '--stats',
-           '--state-save', ','.join('%d:%s' % (n, (out / ('state-%d.bin' % n)).as_posix()) for n in checkpoints)]
+           '--hash-log', str(hash_log), '--stats']
+    if checkpoints:
+        cmd += ['--state-save', ','.join(f"{n}:{(out / f'state-{n}.bin').as_posix()}" for n in checkpoints)]
     if a.movie:
         cmd += ['--movie', str(out / 'input.movie')]
     if a.auto:
         cmd += ['--auto', a.auto]
     if a.state:
         cmd += ['--state-load', '0:' + str(a.state.resolve())]
-    env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
-    env['PATH'] = os.pathsep.join([str(exe.parent), 'D:/01Claude/TaisenFirst/toolkit/msys64/clang64/bin', env.get('PATH', '')])
-    env.update(SATRECOMP_CD_TRACE='1', SATRECOMP_NO_CALLS='1', SATRECOMP_NO_FUNCTIONS='1', SATRECOMP_STRICT_NATIVE='1')
+    env = {k: v for k, v in os.environ.items()
+           if not k.upper().startswith(('SATRECOMP_', 'SATURN_TAISEN'))}
+    env['PATH'] = os.pathsep.join([str(exe.parent), env.get('PATH', '')])
+    env.update(SATRECOMP_CD_TRACE='1', SATRECOMP_NO_CALLS='1', SATRECOMP_NO_FUNCTIONS='1',
+               SATRECOMP_STRICT_NATIVE='1', SATURN_TAISEN_FIRST_HOME=str(out), SDL_AUDIODRIVER='dummy')
     loads, log_lines = [], []
     p = subprocess.Popen(cmd, cwd=out, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, errors='replace')
     for line in p.stderr:

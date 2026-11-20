@@ -175,3 +175,20 @@ narrative FCE rows retain their prior coverage status.
 
 At this block close the project measured 63,457,660,640 logical bytes,
 above the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+## Traced attribution (TH2 pass 2)
+
+Tool: `tools/chapter_loads.py` (every `Play Disc` command mapped to its ISO file, a state every 500 frames). Route: English disc 1, the 28,491-frame continuous Episode 2 File 1 movie (`local/work/t30-chapter2-followup/continuous-to-kohran`), strict native, zero interpreted blocks. Its frame hashes match the reference file byte for byte (SHA-256 `12cae74f096b5a5bff308994efce70ec40cef1525e9de663686e256903d136cf`); backup SHA-256 `4c22bf1e...`, movie `8b5539f3...`.
+
+| Resource | Class | FAD | Frame (est.) | Checkpoint state SHA-256 (prefix) |
+| --- | --- | ---: | ---: | --- |
+| `SAKURA2/EVE202.BIN` | scene | 221148 | 7059 | `3b81dc4b` (state 7499) |
+| `SAKURA2/EVE002.BIN` | scene | 221023 | 10724 | `85e1d10b` (state 10999) |
+| `SAKURA2/MAP02.BIN` | map | 231973 | 6670 | `0780a726` (state 6999) |
+| `SAKURA2/UNIT02.BIN` | unit | 252153 | 6865 | `0780a726` |
+| `SAKURA2/FACE02.BIN` | portrait bank | 222327 | 6865 | `0780a726` |
+| `SAKURA2/WKL02.BIN` | menu/HUD | 252927 | 6670 | `0780a726` |
+
+Result: 1 row moved from `unassigned` to chapter 2 (`WKL02.BIN`, menus-hud, status unknown); the other five were already chapter 2. Four random-input continuations from the last state (24,000 frames each) only restarted stage 2 (same EVT02/MAP02/UNIT02 reloads) and added no scene, body, portrait or film. `LIPS_CG.BIN` is read during the stage but is a shared tactical file and is not attributed. The route draws no NC body, no `02xxFCE` atlas and no FILM clip, so `0201FCE`..`0206FCE` stay inferred. The unit files `N0xx/H0xx/K0xx` are not register categories.
+
+Blocker: the chapter's story after the stage-2 victory needs a state or save at the end of the battle (or a full winning play). Without it NC bodies, BG scenes, `02xxFCE` and FILM clips cannot be attributed. Not verified in game: any HD draw of WKL02.
