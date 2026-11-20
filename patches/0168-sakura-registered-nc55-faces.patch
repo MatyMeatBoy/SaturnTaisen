@@ -1,0 +1,48 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2523,9 +2523,12 @@
+                                                     break;
+                                                 }
+                                             }
+-                                        } else if(layoutOk)part=layoutPart[frameIndex];
+-                                        else if(known!=st.matches.end())part=known->second;
+-                                        else {
++                                        }
++                                        const bool useHeuristic=part<0 &&
++                                            (st.verified.frames.empty() || st.verified.allowHeuristicFallback);
++                                        if(useHeuristic && layoutOk) part=layoutPart[frameIndex];
++                                        else if(useHeuristic && known!=st.matches.end()) part=known->second;
++                                        else if(useHeuristic) {
+                                             const unsigned fw=unsigned(spriteWidth(*sp)),fh=unsigned(spriteHeight(*sp));
+                                             std::vector<uint32_t> rgba(sp->pixels.size());
+                                             for(size_t i=0;i<rgba.size();i++)rgba[i]=sp->pixels[i]?palette[sp->pixels[i]]:0u;
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -8,6 +8,7 @@
+ struct VerifiedBodyFaces {
+     uint64_t nativeAsset, pcAsset;
+     std::span<const VerifiedBodyFace> frames;
++    bool allowHeuristicFallback=false;
+ };
+ inline constexpr VerifiedBodyFace kNC20[] = {
+     {0x00C3995FAC06E28Dull, 24, 24, 49},
+@@ -146,7 +147,17 @@
+     {0xAF36979CB0C7747Full, 80, 56, 9, 32, 170},
+ };
+ 
++// NC55.SPR groups 5 and 7 supply the observed eye cycles and closed mouths.
++inline constexpr VerifiedBodyFace kNC55[] = {
++    {0x24EF353C40FD9286ull,56,32,20,144,97},
++    {0x83B38D30B6C5BB4Eull,24,24,71,176,137},
++    {0x2B49113EC88410D6ull,56,32,26,144,89},
++    {0x58D1DFF3A3A37078ull,56,32,27,144,89},
++    {0x2BDE5287C1DFE7DCull,24,24,83,176,137},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
++    if (name == "NC55.BIN") return {0x71438806B6CC7698ull, 0x57B26C77E879C89Full, kNC55, true};
+     if (name == "NC3018.BIN") return {0x246B7B9A3865FE6Aull, 0x0770708C73A587ADull, kNC3018};
+     if (name == "NC20.BIN") return {0x6D5853C18EC0B141ull, 0x6509F77B3891DF92ull, kNC20};
+     if (name == "NC30.BIN") return {0x005AB85B5EA60FEFull, 0xBA8DF2D0A3C0FC13ull, kNC30};

@@ -615,7 +615,10 @@ def build(root, index_dir, portrait_audit):
                     row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:
                     row['native_face_fallback'] = True
-                    row['runtime_evidence'] = BODY_REPORT
+                    row['runtime_evidence'] = (
+                        'docs/research/nc55-registered-faces.md'
+                        if (disc, path) == (1, '/SAKURA1/NC55.BIN') else BODY_REPORT
+                    )
         elif path in items:
             pair = items[path]
             if pair['tier'] == 'content' or item_review.get(path, {}).get('verdict') == 'confirmed':
