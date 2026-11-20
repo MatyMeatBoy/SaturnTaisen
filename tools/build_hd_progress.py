@@ -148,6 +148,7 @@ def apply_register(data, register_path):
     verified_scenes = set()
     body_inventory = set()
     matched_bodies = set()
+    verified_bodies = set()
     excluded = set()
     groups = [register.get('unassigned', {})] + [chapter.get('resources', {}) for chapter in register.get('chapters', [])]
     for group in groups:
@@ -165,6 +166,8 @@ def apply_register(data, register_path):
                             matched_bodies.add(native)
                             if status == 'hd':
                                 files[kind].add(native)
+                                if resource.get('verified_in_game') is True:
+                                    verified_bodies.add(native)
                     continue
                 files[kind].update(row['pc'] for row in rows.values() if row.get('status') == 'hd' and row.get('pc'))
                 if kind == 'scene-pictures':
@@ -191,6 +194,7 @@ def apply_register(data, register_path):
         if kind == 'bodies':
             if row['total'] is not None and len(body_inventory) == row['total']:
                 row['matched'] = len(matched_bodies)
+                row['verified'] = len(verified_bodies)
                 row['integrated'] = len(files[kind])
             continue
         if kind and row['integrated'] is not None and len(files[kind]) >= row['integrated']:

@@ -65,10 +65,10 @@ class HdProgressTests(unittest.TestCase):
     def test_body_counts_follow_native_resources_and_shared_donors(self):
         data = specimen()
         body = data['categories'][-1]
-        body.update(total=4, inventory=4, matched=2, prepared=None, integrated=2, verified=1)
+        body.update(total=4, inventory=4, matched=2, prepared=None, integrated=2, verified=0)
         resources = {
-            '1:/SAKURA1/NC10.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
-            '2:/SAKURA1/NC10.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
+            '1:/SAKURA1/NC10.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR', 'verified_in_game': True},
+            '2:/SAKURA1/NC10.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR', 'verified_in_game': True},
             '1:/SAKURA1/NC11.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
             '1:/SAKURA1/NC12.BIN': {'status': 'hd', 'pc': 'BODIES/COMMON.SPR'},
             '1:/SAKURA1/NC13.BIN': {'status': 'paired-not-wired', 'pc': 'BODIES/OTHER.SPR'},
