@@ -118,3 +118,10 @@ under `local/work/codex-th1/nc3517-registration`. The later natural route provid
 Patch 0247 registers the PC body and four expression groups against the native draw commands. It draws each expression only when the corresponding body overlay was drawn and the native command, geometry, palette and visible pixels match. Transparent texels and unsupported overlap retain the native draw.
 
 At 2560 × 1440 the ordinary-input English disc 2 Iris route produced the body and both faces. The alternate-expression checkpoint comparison changed 650,429 pixels inside (535, 40)–(1896, 589). Original, the truncated PC donor, and the pre-body checkpoint each matched their control RGB exactly. Each donor/control pair matched all 48 guest hashes and final SRAM with zero interpreted blocks. The missing-donor control used the same checkpoint and settings. The earlier controlled fixture exercised native occlusion. Package inclusion is pending.
+
+
+## BG2517 bedroom scene
+
+Two 48-field donor/control comparisons at 2560 × 1440 from the natural `iris-0904-earned-nightmare1/f1260.state` checkpoint confirm the BG2517 PC draw. The released executable and the patch 0247 candidate each reported BG2517 usable, with 1,232,185 changed pixels inside the narrative scene bounds (272, 29)–(2288, 1037). The candidate comparison supplied NC3517 in both profiles. Both pairs matched guest hashes and ending SRAM with zero interpreted blocks. The dialogue frame and floral surround were outside the changed bounds.
+
+At `iris-0904-earned-nightmare3/f720.state` the solo sleeping Iris shot selects BG2053 even with BG2517 available. The BG2517-only and empty-pack captures matched pixel for pixel, with 48 matching guest hashes and identical SRAM. Private receipts are under `local/work/codex-th1/thd01-probe/iris-bg2517-witness`.
