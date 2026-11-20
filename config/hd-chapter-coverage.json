@@ -4089,7 +4089,23 @@
       "chapter": 6,
       "disc": 1,
       "resources": {
-        "bodies": {},
+        "bodies": {
+          "1:/SAKURA1/NC40.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "pc": "SAKURA1/NC/NC40.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/NC97.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC97.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          }
+        },
         "film": {},
         "menus-hud": {},
         "portraits": {
@@ -4409,6 +4425,27 @@
           }
         },
         "scene-pictures": {
+          "1:/SAKURA1/BG1003.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "pc": "SAKURA1/BG/BG1003.SPR",
+            "status": "hd"
+          },
+          "1:/SAKURA1/BG1008.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "pc": "SAKURA1/BG/BG1008.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
+          "1:/SAKURA1/BG1021.BIN": {
+            "association": "observed",
+            "cold_run_frame": 59750,
+            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "pc": "SAKURA1/BG/BG1021.SPR",
+            "status": "hd",
+            "verified_in_game": false
+          },
           "1:/SAKURA1/BG1025.BIN": {
             "association": "observed",
             "evidence": "docs/research/th6-native-attribution.md#hd-background-draws",
@@ -4416,6 +4453,12 @@
             "runtime_evidence": "docs/research/th6-native-attribution.md#hd-background-draws",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1047.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
+            "pc": "SAKURA1/BG/BG1047.SPR",
+            "status": "hd"
           },
           "1:/SAKURA1/BG1199.BIN": {
             "association": "observed",
@@ -6837,12 +6880,6 @@
       "1:/SAKURA1/NC36.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC36.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "1:/SAKURA1/NC40.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC40.SPR",
         "status": "hd",
         "verified_in_game": false
       },
@@ -12830,11 +12867,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/BG1003.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1003.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1004.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1004.SPR",
@@ -12968,11 +13000,6 @@
       "1:/SAKURA1/BG1044.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1044.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1047.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1047.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1048.BIN": {
