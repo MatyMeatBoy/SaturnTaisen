@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Episodes 1 and 2, verified dialogue records and pending editorial proposals.",
+  "scope": "Episodes 1 through 4 and verified mirrors. Includes applied Spanish edits and pending bilingual editorial proposals.",
   "evidence": "Reconstructed Japanese compared by aligned native record ID with both hash-identified Spanish/English prepared discs. Japanese source text is not included.",
   "entries": [
     {
@@ -658,6 +658,1129 @@
         "trasladado de la sucursal de",
         "Hanayashiki a la sede de",
         "Ginza."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0072",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 72,
+      "record_id": 10045,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "¿Dónde estarán las integrantes de la División Flor? Iré a ver al escenario.",
+      "english_current": "I wonder… Where is everyone?\nMaybe I should check out the\nstage.",
+      "english_issue": "Ambas traducciones omiten el nombre del grupo al que se refiere Ogami.",
+      "english_suggested": "I wonder where everyone from the Flower Division is. Maybe I’ll check the stage.",
+      "spanish_current": "Me pregunto… ¿dónde estará\ntodo el mundo? Quizá debería\nir al escenario.",
+      "spanish_suggested": "¿Dónde estarán las de la División Flor? Quizá deba ir al escenario.",
+      "spanish_lines": [
+        "¿Dónde estarán las de la",
+        "División Flor? Quizá deba ir",
+        "al escenario."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0081",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 81,
+      "record_id": 10054,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Kohran se ha incorporado a las filas y ha aumentado mucho la fuerza de combate de la División Flor.",
+      "english_current": "Since Kohran joined the Flower\nDivision, our capabilities \nhave grown.",
+      "english_issue": "Las traducciones convierten el aumento de la fuerza de combate en capacidades generales.",
+      "english_suggested": "With Kohran in our ranks, the Flower Division has grown considerably stronger in battle.",
+      "spanish_current": "Desde que Kohran se unió a la\nDivisión Flor, nuestras\ncapacidades han crecido.",
+      "spanish_suggested": "Con Kohran en nuestras filas, la División Flor ha ganado mucha fuerza en combate.",
+      "spanish_lines": [
+        "Con Kohran en nuestras filas,",
+        "la División Flor ha ganado",
+        "mucha fuerza en combate."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0110",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 110,
+      "record_id": 10083,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\nmuch make-up. Well, she's got\na nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use mucho\nmaquillaje. Bueno, tiene una\nbase de piel bonita, no creo\nque lo necesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0221",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 221,
+      "record_id": 10194,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Eh, Ogamiii… ¿Cómo te va?",
+      "english_current": "Yo, Ogamiii… howzit goin'?",
+      "english_issue": "La interjección inglesa Yo quedó literalmente en español, donde se lee como un pronombre.",
+      "english_suggested": null,
+      "spanish_current": "Yo, Ogamiii… ¿cómo va eso?",
+      "spanish_suggested": "Eh, Ogamiii… ¿cómo va eso?",
+      "spanish_lines": [
+        "Eh, Ogamiii… ¿cómo va eso?"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0232",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 232,
+      "record_id": 10205,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Entiendo. Por favor, ocúpese de ello.",
+      "english_current": "I see… Well, let's keep at it.",
+      "english_issue": "El inglés y el español pasan a un esfuerzo en común. Ogami está dejando el encargo a Yoneda, que a continuación le pide ocuparse de sus propios deberes.",
+      "english_suggested": "I see… I’ll leave it in your hands, sir.",
+      "spanish_current": "Ya veo… Bueno, sigamos con\nello.",
+      "spanish_suggested": "Ya veo… Queda en sus manos.",
+      "spanish_lines": [
+        "Ya veo… Queda en sus manos."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0244",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 244,
+      "record_id": 10217,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Es una insignia de teniente. ¿Cómo no me había dado cuenta?",
+      "english_current": "(…That's a lieutenant \ncolonel's pin! How could I \nhave not noticed before?)",
+      "english_issue": "El inglés convierte teniente en teniente coronel. El rango español ya coincide con el original.",
+      "english_suggested": "A lieutenant’s insignia! How did I not notice it until now?",
+      "spanish_current": "(…¡La insignia de teniente!\n¿Cómo es que no me había\nfijado hasta ahora?)",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0301-0267",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 267,
+      "record_id": 10240,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Si hubiéramos tardado un poco más, las funciones de Tokio habrían quedado paralizadas.",
+      "english_current": "If we had been any later, it\nwould have disabled Tokyo's\nability to function as the\nheart of this country.",
+      "english_issue": "El inglés introduce que Tokio es el corazón del país. El español pierde además la condición temporal y habla de que la situación hubiera empeorado.",
+      "english_suggested": "Any later, and Tokyo would have ground to a halt.",
+      "spanish_current": "Si hubiera sido un poco peor,\nlas funciones urbanas de Tokio\nhabrían quedado paralizadas.",
+      "spanish_suggested": "Si hubiéramos tardado un poco más, Tokio habría quedado paralizada.",
+      "spanish_lines": [
+        "Si hubiéramos tardado un poco",
+        "más, Tokio habría quedado",
+        "paralizada."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0272",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 272,
+      "record_id": 10245,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sigo pensando que tú puedes obtener un resultado mejor que este.",
+      "english_current": "I had thought you would be \nable to produce much more\nimpressive results…",
+      "english_issue": "I had thought sitúa la confianza de Ayame en el pasado. La línea japonesa expresa una confianza vigente y el español ya la conserva.",
+      "english_suggested": "I’m sure you can do better than this, Ogami.",
+      "spanish_current": "Yo creo que tú, sin duda,\npuedes lograr mejores\nresultados que estos…",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0301-0281",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 281,
+      "record_id": 10254,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Kohran tiene poco poder de ataque, pero puede atacar en área. Tenlo presente.",
+      "english_current": "Kohran's attack power is weak,\nbut she has a wide range. Take\nthat into consideration when\ngiving her orders.",
+      "english_issue": "Wide range puede entenderse como distancia de alcance. El original describe un ataque que afecta a un área; el español ya lo expresa correctamente.",
+      "english_suggested": "Kohran’s attack power is low, but she can hit an area. Keep that in mind.",
+      "spanish_current": "Kohran tiene poco ataque, pero\npuede atacar en área. Tenlo\npresente.",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0301-0435",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 435,
+      "record_id": 10408,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "La fuerza de la Compañía de Asalto radica en el mando de Ichiro Ogami, su capitán, y Maria Tachibana.",
+      "english_current": "The strength of the Assault\nTroupe is focused on its\nleaders, Ichiro Ogami and \nMaria Tachibana.",
+      "english_issue": "El inglés y el español los llaman líderes por igual y omiten que Ogami es el capitán. El español además pierde su nombre de pila.",
+      "english_suggested": "The Assault Troop’s strength comes from the leadership of its captain, Ichiro Ogami, and Maria Tachibana.",
+      "spanish_current": "La fuerza de la Compañía\nImperial de Asalto recae en\nsus líderes: Ogami y Maria\nTachibana.",
+      "spanish_suggested": "Su fuerza está en el mando del capitán Ichiro Ogami y de Maria Tachibana.",
+      "spanish_lines": [
+        "Su fuerza está en el mando del",
+        "capitán Ichiro Ogami y de",
+        "Maria Tachibana."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0436",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 436,
+      "record_id": 10409,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Es decir, si esos dos desaparecieran…",
+      "english_current": "So, if we just take those two\nout of the picture…",
+      "english_issue": "Out of the picture es una adaptación inglesa. El español la traduce literalmente como salir del cuadro.",
+      "english_suggested": "In other words, if those two were gone…",
+      "spanish_current": "Así que, si eliminamos a esos\ndos del cuadro…",
+      "spanish_suggested": "En otras palabras, si esos dos desaparecen…",
+      "spanish_lines": [
+        "En otras palabras, si esos dos",
+        "desaparecen…"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0438",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 438,
+      "record_id": 10411,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Me he hecho con información interesante sobre Maria Tachibana. Si la aprovechamos, seguramente…",
+      "english_current": "…I happen to have some very\ninteresting information\nregarding Maria Tachibana… If\nwe make good use of it…",
+      "english_issue": "Happen to have y da la casualidad introducen coincidencia. El original dice que Setsuna se hizo con la información y expresa una expectativa al usarla.",
+      "english_suggested": "I’ve obtained some interesting information about Maria Tachibana. If we use it, we may be able to…",
+      "spanish_current": "…Da la casualidad de que tengo\ninformación muy interesante\nsobre Maria Tachibana… Si la\nusamos bien…",
+      "spanish_suggested": "He conseguido información interesante sobre Maria Tachibana… Si la aprovechamos, quizá…",
+      "spanish_lines": [
+        "He conseguido información",
+        "interesante sobre Maria",
+        "Tachibana… Si la aprovechamos,",
+        "quizá…"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0441",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 441,
+      "record_id": 10414,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Todo el mundo tiene un pasado vergonzoso que no quiere que le recuerden.",
+      "english_current": "Hmhmhm… Every human has a\nskeleton in their closet they\nhope will never be unearthed…",
+      "english_issue": "El inglés introduce el modismo del esqueleto en el armario y el español lo conserva literalmente. El original habla de un pasado que se prefiere no remover.",
+      "english_suggested": "Heh heh… Everyone has a shameful past they’d rather leave undisturbed…",
+      "spanish_current": "Jmjmjm… Todo humano tiene un\nesqueleto en el armario que\nespera que nunca salga a la\nluz…",
+      "spanish_suggested": "Je, je, je… Todos tienen un pasado oscuro que no quieren que nadie les recuerde…",
+      "spanish_lines": [
+        "Je, je, je… Todos tienen un",
+        "pasado oscuro que no quieren",
+        "que nadie les recuerde…"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0442",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 442,
+      "record_id": 10415,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Veamos, Maria Tachibana. ¿Cómo responderás?",
+      "english_current": "Well now, Maria Tachibana… how\nwill you handle my little\nsurprise?",
+      "english_issue": "My little surprise, trasladado en español, añade una sorpresa posesiva que Setsuna no menciona aquí.",
+      "english_suggested": "Now then, Maria Tachibana… what will you do?",
+      "spanish_current": "Vaya, vaya, Maria Tachibana…\n¿cómo manejarás mi pequeña\nsorpresa?",
+      "spanish_suggested": "Veamos, Maria Tachibana… ¿qué harás ahora?",
+      "spanish_lines": [
+        "Veamos, Maria Tachibana… ¿qué",
+        "harás ahora?"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0301-0443",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 443,
+      "record_id": 10416,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Concluye la función de Cenicienta de la División Flor de la Compañía Imperial de Ópera.",
+      "english_current": "Ladies and gentlemen, this\nconcludes the Imperial Troupe,\nFlower Division's performance\nof \"Cinderella.\"",
+      "english_issue": "Imperial Troupe pierde la denominación de ópera, que el español ya recuperó.",
+      "english_suggested": "This concludes Cinderella, performed by the Flower Division of the Imperial Opera Troupe.",
+      "spanish_current": "Con esto concluye la función\n«Cenicienta» de la División\nFlor, de la Compañía Imperial\nde Ópera.",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0301-0688",
+      "table": "/SAKURA1/0301TBL.BIN",
+      "index": 688,
+      "record_id": 10661,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "¿Dónde estarán las integrantes de la División Flor? Iré a ver al escenario.",
+      "english_current": "I wonder… where is everyone?\nMaybe I should check out the\nstage.",
+      "english_issue": "Ambas traducciones omiten el nombre del grupo al que se refiere Ogami.",
+      "english_suggested": "I wonder where everyone from the Flower Division is. Maybe I’ll check the stage.",
+      "spanish_current": "Me pregunto… ¿dónde estará\ntodo el mundo? Quizá debería\nir al escenario.",
+      "spanish_suggested": "¿Dónde estarán las de la División Flor? Quizá deba ir al escenario.",
+      "spanish_lines": [
+        "¿Dónde estarán las de la",
+        "División Flor? Quizá deba ir",
+        "al escenario."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0072"
+    },
+    {
+      "key": "0400-1133",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 1133,
+      "record_id": 11079,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\na lot of make-up. Well, she's\ngot a nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use mucho\nmaquillaje. Bueno, tiene una\nbuena base, no creo que lo\nnecesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0501-0438",
+      "table": "/SAKURA1/0501TBL.BIN",
+      "index": 438,
+      "record_id": 10411,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\na lot of make-up. Well, she's\ngot a nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use mucho\nmaquillaje. Bueno, tiene una\nbuena base, no creo que lo\nnecesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0504-0589",
+      "table": "/SAKURA1/0504TBL.BIN",
+      "index": 589,
+      "record_id": 10562,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\na lot of make-up. Well, she's\ngot a nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use mucho\nmaquillaje. Bueno, tiene una\nbuena base, no creo que lo\nnecesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0601-0766",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 766,
+      "record_id": 10739,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\nmuch make-up. Well, she's got\na nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use mucho\nmaquillaje. Bueno, tiene una\nbuena base, no creo que lo\nnecesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0601-0961",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 961,
+      "record_id": 10934,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\nmake-up. Well, she's got such\na nice foundation, I don't\nthink she really needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use\nmaquillaje. Tiene una base\ntan buena que no creo que\nlo necesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0603-0121",
+      "table": "/SAKURA1/0603TBL.BIN",
+      "index": 121,
+      "record_id": 10094,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\nmuch make-up. Well, she's got\na nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use mucho\nmaquillaje. Bueno, tiene una\nbuena base, no creo que lo\nnecesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0603-0316",
+      "table": "/SAKURA1/0603TBL.BIN",
+      "index": 316,
+      "record_id": 10289,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\nmuch make-up. Well, she's got\na nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece que use mucho\nmaquillaje. Bueno, tiene una\nbuena base, no creo que lo\nnecesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0900-0252",
+      "table": "/SAKURA1/0900TBL.BIN",
+      "index": 252,
+      "record_id": 10221,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sorprende que Yuri casi no lleve maquillaje. Ya es guapa de por sí.",
+      "english_current": "(It doesn't seem like she uses\na lot of make-up. Well, she's\ngot a nice foundation, I don't\nthink she needs it…)",
+      "english_issue": "En un comentario sobre cosmética, nice foundation se presta a entender base de maquillaje. El original habla del atractivo natural, no de un producto ni de una base de piel.",
+      "english_suggested": "I’m surprised Yuri wears so little makeup. But she’s pretty without it…",
+      "spanish_current": "(No parece usar\nmucho maquillaje.\nTiene buena base,\nno creo que lo necesite…)",
+      "spanish_suggested": "(Me sorprende que Yuri casi no se maquille. Aunque ya es guapa de por sí…)",
+      "spanish_lines": [
+        "(Me sorprende que Yuri casi no",
+        "se maquille. Aunque ya es",
+        "guapa de por sí…)"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0301-0110"
+    },
+    {
+      "key": "0400-0036",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 36,
+      "record_id": 10009,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Oye, Maria, mañana…",
+      "english_current": "Hey, Maria. Know what…?",
+      "english_issue": "El inglés omite «mañana». El español ya lo conserva.",
+      "english_suggested": "Hey, Maria. Tomorrow…",
+      "spanish_current": "Oye, Maria. Mañana es…",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0400-0042",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 42,
+      "record_id": 10015,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Creía que no me tocaba picar entradas. En cambio, hay un montón de comprobantes que ordenar.",
+      "english_current": "Sheesh… Just when I think I've\ngotten out of ticket punching,\nI get roped into sorting pay\nslips…",
+      "english_issue": "Pay slips introduce una nómina que el original no menciona. Recibos de pago hereda esa especificidad.",
+      "english_suggested": "Just when I thought I’d get a break from punching tickets, there are all these vouchers to sort…",
+      "spanish_current": "Vaya… justo cuando creo que\nya no tengo que picar\nentradas, me enredan con\nordenar recibos de pago…",
+      "spanish_suggested": "Vaya… Creía que no me tocaba picar entradas, pero tengo todos estos comprobantes por ordenar…",
+      "spanish_lines": [
+        "Vaya… Creía que no me tocaba",
+        "picar entradas, pero tengo",
+        "todos estos comprobantes por",
+        "ordenar…"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0070",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 70,
+      "record_id": 10042,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Estoy pensando en limpiar a fondo la sala de decorados. ¿Me ayudaría?",
+      "english_current": "I was actually thinking of\ncleaning up the large prop\nroom. I don't suppose you'd be\nwilling to lend me a hand?",
+      "english_issue": "El japonés se refiere a la sala donde se guardan los decorados grandes. El calco español convierte el tamaño de los decorados en el del cuarto. Ambas traducciones pierden el alcance de una limpieza a fondo.",
+      "english_suggested": "I was thinking of giving the scenery room a thorough cleaning. Could you help me?",
+      "spanish_current": "En realidad pensaba limpiar el\ncuarto grande de utilería. ¿No\nle importaría darme una mano?",
+      "spanish_suggested": "Pensaba limpiar a fondo la sala de decorados. ¿Podría ayudarme?",
+      "spanish_lines": [
+        "Pensaba limpiar a fondo la",
+        "sala de decorados. ¿Podría",
+        "ayudarme?"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0073",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 73,
+      "record_id": 10044,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Si tiene tiempo, venga por favor a la sala de decorados.",
+      "english_current": "Oh, really? Then if you think\nyou'll have the time, please \ndo come by the large prop \nroom.",
+      "english_issue": "El japonés se refiere a la sala donde se guardan los decorados grandes. El calco español convierte el tamaño de los decorados en el del cuarto.",
+      "english_suggested": "I see. If you have time, please come to the scenery room.",
+      "spanish_current": "Ah, ¿en serio? Entonces si\ncree que tendrá tiempo, por\nfavor venga al cuarto grande\nde utilería.",
+      "spanish_suggested": "Ah, ya veo. Si tiene tiempo, por favor venga a la sala de decorados.",
+      "spanish_lines": [
+        "Ah, ya veo. Si tiene tiempo,",
+        "por favor venga a la sala de",
+        "decorados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0075",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 75,
+      "record_id": 10046,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Gracias. Mañana le espero en la sala de decorados.",
+      "english_current": "Thanks so much! OK, I'll be\nwaiting for you at the large\nprop room tomorrow.",
+      "english_issue": "El japonés se refiere a la sala donde se guardan los decorados grandes. El calco español convierte el tamaño de los decorados en el del cuarto.",
+      "english_suggested": "Thank you! I’ll wait for you in the scenery room tomorrow.",
+      "spanish_current": "¡Muchas gracias! Bien, lo\nespero en el cuarto grande de\nutilería mañana.",
+      "spanish_suggested": "¡Muchas gracias! Mañana lo espero en la sala de decorados.",
+      "spanish_lines": [
+        "¡Muchas gracias! Mañana lo",
+        "espero en la sala de",
+        "decorados."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0076",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 76,
+      "record_id": 10047,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "¿Limpiar la sala de decorados? Qué fastidio…",
+      "english_current": "Cleaning the large prop room?\nSounds like a pain…",
+      "english_issue": "El japonés se refiere a la sala donde se guardan los decorados grandes. El calco español convierte el tamaño de los decorados en el del cuarto.",
+      "english_suggested": "Clean the scenery room? Sounds like a pain…",
+      "spanish_current": "¿Limpiar el cuarto grande de\nutilería? Suena pesado…",
+      "spanish_suggested": "¿Limpiar la sala de decorados? Qué fastidio…",
+      "spanish_lines": [
+        "¿Limpiar la sala de decorados?",
+        "Qué fastidio…"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0078",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 78,
+      "record_id": 10049,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Si tiene tiempo, por favor venga a ayudar a la sala de decorados.",
+      "english_current": "Um, but if you have the time\nand don't mind, please do come\nby and help.",
+      "english_issue": "El inglés y el español omiten la sala que indica Sakura como destino de esta rama.",
+      "english_suggested": "If you have time, please come to the scenery room and help me.",
+      "spanish_current": "Hmm, pero si tiene tiempo y no\nle importa, por favor venga a\nayudarme.",
+      "spanish_suggested": "Si tiene tiempo, por favor venga a la sala de decorados a ayudarme.",
+      "spanish_lines": [
+        "Si tiene tiempo, por favor",
+        "venga a la sala de decorados a",
+        "ayudarme."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0085",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 85,
+      "record_id": 10056,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "¿Sí? ¿Verdad que sí, Onii-chan?",
+      "english_current": "So… you'll come, right?",
+      "english_issue": "El inglés y el español omiten cómo Iris se dirige a Ogami en esta réplica.",
+      "english_suggested": "Won’t you come, Onii-chan?",
+      "spanish_current": "Así que… vendrás, ¿verdad?",
+      "spanish_suggested": "Por favor… ¿verdad que sí, Onii-chan?",
+      "spanish_lines": [
+        "Por favor… ¿verdad que sí,",
+        "Onii-chan?"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0088",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 88,
+      "record_id": 10058,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "¿Sí, Onii-chan? ¡Entonces queda decidido!",
+      "english_current": "It'll be fun! OK, that settles\nit!",
+      "english_issue": "El inglés sustituye la insistencia dirigida a Onii-chan por «será divertido», que el español repite.",
+      "english_suggested": "Come on, Onii-chan! Then that settles it!",
+      "spanish_current": "¡Será divertido! Bien,\n¡está decidido!",
+      "spanish_suggested": "Vamos, Onii-chan, ¿sí? ¡Entonces queda decidido!",
+      "spanish_lines": [
+        "Vamos, Onii-chan, ¿sí?",
+        "¡Entonces queda decidido!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0089",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 89,
+      "record_id": 10059,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Porque mañana es el cumpleaños de Iris.",
+      "english_current": "I mean, tomorrow is my\nbirthday!",
+      "english_issue": "Ambas versiones sustituyen la autorreferencia de Iris por la primera persona.",
+      "english_suggested": "Because tomorrow is Iris’s birthday!",
+      "spanish_current": "¡Es que mañana es mi\ncumpleaños!",
+      "spanish_suggested": "¡Es que mañana es el cumpleaños de Iris!",
+      "spanish_lines": [
+        "¡Es que mañana es el",
+        "cumpleaños de Iris!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0091",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 91,
+      "record_id": 10061,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sí. Por eso mañana Onii-chan estará con Iris.",
+      "english_current": "Yep! So, I wanna be with you\ntomorrow.",
+      "english_issue": "La frase presenta el plan con seguridad y nombra a ambos. Las localizaciones lo vuelven solamente un deseo en primera persona.",
+      "english_suggested": "Yes! That’s why Onii-chan is spending tomorrow with Iris!",
+      "spanish_current": "¡Sí! Así que quiero estar\ncontigo mañana.",
+      "spanish_suggested": "¡Sí! Por eso mañana Onii-chan estará con Iris.",
+      "spanish_lines": [
+        "¡Sí! Por eso mañana Onii-chan",
+        "estará con Iris."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0097",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 97,
+      "record_id": 10067,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Porque mañana es el cumpleaños de Iris.",
+      "english_current": "I mean, tomorrow is my\nbirthday!",
+      "english_issue": "Ambas versiones sustituyen la autorreferencia de Iris por la primera persona.",
+      "english_suggested": "Because tomorrow is Iris’s birthday!",
+      "spanish_current": "¡Es que mañana es mi\ncumpleaños!",
+      "spanish_suggested": "¡Es que mañana es el cumpleaños de Iris!",
+      "spanish_lines": [
+        "¡Es que mañana es el",
+        "cumpleaños de Iris!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0400-0089"
+    },
+    {
+      "key": "0400-0099",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 99,
+      "record_id": 10069,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sí. Por eso mañana Iris estará con Onii-chan.",
+      "english_current": "Yep! So, I wanna be with you\ntomorrow.",
+      "english_issue": "El plan enunciado por Iris queda como un deseo en primera persona y pierde ambos nombres.",
+      "english_suggested": "Yes! That’s why Iris is spending tomorrow with Onii-chan!",
+      "spanish_current": "¡Sí! Así que quiero estar\ncontigo mañana.",
+      "spanish_suggested": "¡Sí! Por eso mañana Iris estará con Onii-chan.",
+      "spanish_lines": [
+        "¡Sí! Por eso mañana Iris",
+        "estará con Onii-chan."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0102",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 102,
+      "record_id": 10072,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Porque mañana es el cumpleaños de Iris.",
+      "english_current": "I mean, tomorrow is my\nbirthday!",
+      "english_issue": "Ambas versiones sustituyen la autorreferencia de Iris por la primera persona.",
+      "english_suggested": "Because tomorrow is Iris’s birthday!",
+      "spanish_current": "¡Es que mañana es mi\ncumpleaños!",
+      "spanish_suggested": "¡Es que mañana es el cumpleaños de Iris!",
+      "spanish_lines": [
+        "¡Es que mañana es el",
+        "cumpleaños de Iris!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0400-0089"
+    },
+    {
+      "key": "0400-0104",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 104,
+      "record_id": 10074,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sí. Por eso mañana Iris estará con Onii-chan.",
+      "english_current": "Yep! So, I wanna be with you\ntomorrow.",
+      "english_issue": "El plan enunciado por Iris queda como un deseo en primera persona y pierde ambos nombres.",
+      "english_suggested": "Yes! That’s why Iris is spending tomorrow with Onii-chan!",
+      "spanish_current": "¡Sí! Así que quiero estar\ncontigo mañana.",
+      "spanish_suggested": "¡Sí! Por eso mañana Iris estará con Onii-chan.",
+      "spanish_lines": [
+        "¡Sí! Por eso mañana Iris",
+        "estará con Onii-chan."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0400-0099"
+    },
+    {
+      "key": "0400-0107",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 107,
+      "record_id": 10076,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Bien, vamos. Tu cumpleaños es una vez al año. Te acompaño, Iris.",
+      "english_current": "OK, let's go! After all, your\nbirthday only comes once a\nyear.",
+      "english_issue": "El inglés y el español omiten la promesa explícita con la que Ogami cierra su respuesta.",
+      "english_suggested": "All right, let’s go! Your birthday comes once a year. I’ll go with you, Iris.",
+      "spanish_current": "Bien, ¡vamos! Al fin y al\ncabo, tu cumpleaños solo\nllega una vez al año.",
+      "spanish_suggested": "¡Bien, vamos! Tu cumpleaños solo llega una vez al año. Te acompaño, Iris.",
+      "spanish_lines": [
+        "¡Bien, vamos! Tu cumpleaños",
+        "solo llega una vez al año. Te",
+        "acompaño, Iris."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0118",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 118,
+      "record_id": 10087,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Onii-chan odia a Iris…",
+      "english_current": "You must hate me…",
+      "english_issue": "El inglés pierde el apelativo. El español lo conserva.",
+      "english_suggested": "Onii-chan must hate Iris…",
+      "spanish_current": "Onii-chan me odia…",
+      "spanish_suggested": null,
+      "spanish_lines": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0400-0127",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 127,
+      "record_id": 10096,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Su cumpleaños… Quizá le hice daño a Iris.",
+      "english_current": "Her birthday… I feel pretty \nbad for her.",
+      "english_issue": "La culpa por lo que acaba de hacer se vuelve una pena genérica por Iris.",
+      "english_suggested": "Her birthday… I think I might have hurt Iris.",
+      "spanish_current": "Su cumpleaños… me siento\nbastante mal por ella.",
+      "spanish_suggested": "Su cumpleaños… Creo que hice daño a Iris.",
+      "spanish_lines": [
+        "Su cumpleaños… Creo que hice",
+        "daño a Iris."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0133",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 133,
+      "record_id": 10102,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sí, Sakura tiene razón. ¡Mañana tengo una cita con Onii-chan!",
+      "english_current": "Yeah, Sakura's right! Hooray!\nMon Frère and I are going on a\ndate!",
+      "english_issue": "Las dos traducciones omiten «mañana», que Iris recalca al celebrar el acuerdo.",
+      "english_suggested": "Yes, Sakura’s right! Hooray! Tomorrow is my date with Onii-chan!",
+      "spanish_current": "¡Sí, Sakura tiene razón!\n¡Bien! ¡Onii-chan y yo vamos\na salir en una cita!",
+      "spanish_suggested": "¡Sí, Sakura tiene razón! ¡Bien! ¡Mañana tengo una cita con Onii-chan!",
+      "spanish_lines": [
+        "¡Sí, Sakura tiene razón!",
+        "¡Bien! ¡Mañana tengo una cita",
+        "con Onii-chan!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0136",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 136,
+      "record_id": 10105,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Onii-chan, ¿por qué le preguntas a Sakura cada pequeña cosa?",
+      "english_current": "How come you have to ask \nSakura about every little\nthing?!",
+      "english_issue": "Ambas versiones omiten el nombre con que Iris interpela a Ogami en esta rama.",
+      "english_suggested": "Onii-chan, why do you have to ask Sakura about every little thing?",
+      "spanish_current": "¡¿Por qué tienes que\npreguntarle a Sakura hasta\npor la cosa más pequeña?!",
+      "spanish_suggested": "Onii-chan, ¿por qué tienes que preguntarle todo a Sakura?",
+      "spanish_lines": [
+        "Onii-chan, ¿por qué tienes que",
+        "preguntarle todo a Sakura?"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0144",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 144,
+      "record_id": 10113,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Su cumpleaños… Quizá le hice daño a Iris.",
+      "english_current": "Her birthday… I feel pretty \nbad for her.",
+      "english_issue": "La culpa por lo que acaba de hacer se vuelve una pena genérica por Iris.",
+      "english_suggested": "Her birthday… I think I might have hurt Iris.",
+      "spanish_current": "Su cumpleaños… me siento\nbastante mal por ella.",
+      "spanish_suggested": "Su cumpleaños… Creo que hice daño a Iris.",
+      "spanish_lines": [
+        "Su cumpleaños… Creo que hice",
+        "daño a Iris."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0400-0127"
+    },
+    {
+      "key": "0400-0149",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 149,
+      "record_id": 10118,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sí, Sakura tiene razón. ¡Mañana tengo una cita con Onii-chan!",
+      "english_current": "Yeah, Sakura's right! Hooray!\nMon Frère and I are going on a\ndate!",
+      "english_issue": "Las dos traducciones omiten «mañana», que Iris recalca al celebrar el acuerdo.",
+      "english_suggested": "Yes, Sakura’s right! Hooray! Tomorrow is my date with Onii-chan!",
+      "spanish_current": "¡Sí, Sakura tiene razón!\n¡Bien! ¡Onii-chan y yo vamos\na salir en una cita!",
+      "spanish_suggested": "¡Sí, Sakura tiene razón! ¡Bien! ¡Mañana tengo una cita con Onii-chan!",
+      "spanish_lines": [
+        "¡Sí, Sakura tiene razón!",
+        "¡Bien! ¡Mañana tengo una cita",
+        "con Onii-chan!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0400-0133"
+    },
+    {
+      "key": "0400-0151",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 151,
+      "record_id": 10120,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Qué bien. Tengo ganas de que llegue mañana.",
+      "english_current": "Hooray! I'm so excited!",
+      "english_issue": "El entusiasmo queda en genérico. Se omite que Iris está pensando en el día de mañana.",
+      "english_suggested": "Hooray! I can’t wait for tomorrow!",
+      "spanish_current": "¡Bien! ¡Qué emoción!",
+      "spanish_suggested": "¡Bien! ¡Qué ganas de que llegue mañana!",
+      "spanish_lines": [
+        "¡Bien! ¡Qué ganas de que",
+        "llegue mañana!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0165",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 165,
+      "record_id": 10134,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sí, Sakura tiene razón. ¡Mañana tengo una cita con Onii-chan!",
+      "english_current": "Yeah, Sakura's right! Hooray!\nMon Frère and I are going on a\ndate!",
+      "english_issue": "Las dos traducciones omiten «mañana», que Iris recalca al celebrar el acuerdo.",
+      "english_suggested": "Yes, Sakura’s right! Hooray! Tomorrow is my date with Onii-chan!",
+      "spanish_current": "¡Sí, Sakura tiene razón!\n¡Bien! ¡Onii-chan y yo vamos\na salir en una cita!",
+      "spanish_suggested": "¡Sí, Sakura tiene razón! ¡Bien! ¡Mañana tengo una cita con Onii-chan!",
+      "spanish_lines": [
+        "¡Sí, Sakura tiene razón!",
+        "¡Bien! ¡Mañana tengo una cita",
+        "con Onii-chan!"
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0400-0133"
+    },
+    {
+      "key": "0400-0176",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 176,
+      "record_id": 10144,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Entonces, Onii-chan, mañana ven a buscar a Iris a su cuarto.",
+      "english_current": "Right, so tomorrow, you should\ncome to my room to pick me up.",
+      "english_issue": "El inglés y el español omiten el nombre que Iris usa al dirigirse a Ogami y al referirse a sí misma.",
+      "english_suggested": "Then come pick Iris up in her room tomorrow, Onii-chan.",
+      "spanish_current": "Bien, entonces mañana ven a\nmi cuarto a buscarme.",
+      "spanish_suggested": "Entonces, Onii-chan, mañana ven a buscar a Iris a su cuarto.",
+      "spanish_lines": [
+        "Entonces, Onii-chan, mañana",
+        "ven a buscar a Iris a su",
+        "cuarto."
+      ],
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0400-0516",
+      "table": "/SAKURA1/0400TBL.BIN",
+      "index": 516,
+      "record_id": 10470,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Eh… Sobre limpiar la sala de decorados…",
+      "english_current": "Um, I'm about to go clean the\nlarge prop room…",
+      "english_issue": "El japonés se refiere a la sala donde se guardan los decorados grandes. El calco español convierte el tamaño de los decorados en el del cuarto.",
+      "english_suggested": "Um… about cleaning the scenery room…",
+      "spanish_current": "Eh… sobre la limpieza del\ncuarto grande de utilería…",
+      "spanish_suggested": "Eh… sobre la limpieza de la sala de decorados…",
+      "spanish_lines": [
+        "Eh… sobre la limpieza de la",
+        "sala de decorados…"
       ],
       "confidence": "high",
       "spanish_status": "pending-spanish"
