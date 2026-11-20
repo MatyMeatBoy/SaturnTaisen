@@ -157,6 +157,8 @@ SCENE_DRAWS = {
        for number in (1007, 1046, 1058)},
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, 'docs/research/scene-spot-check.md#bg1070-and-bg2039-on-disc-1')
        for number in (1070, 2039)},
+    **{(1, f'/SAKURA1/BG{number}.BIN'): (1, 'docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1')
+       for number in (1002, 1116)},
     (1, '/SAKURA1/BG1216.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
     (2, '/SAKURA1/BG2238.BIN'): (9, 'docs/research/bg2238-still.md'),
@@ -298,6 +300,41 @@ def fce_atlas_row(identities, recipes):
     return row
 
 
+ENDING_REPORT = 'docs/research/ending-bank-pairs.md'
+ENDING_PHOTO_RECORDS = (6, 7)
+
+
+def runtime_ending_photo_keys(root):
+    """Palette fingerprints the ending-photo draw of patch 0137 tests (records 6 and 7)."""
+    text = (root / 'patches/0137-sakura-ending-photos.patch').read_text(encoding='utf-8')
+    return set(re.findall(r'\{[67], [23], 0x[0-9A-F]+, 0x([0-9A-F]{16})ull,', text))
+
+
+def ending_bank_row(bank, disc, photo_keys, verified):
+    """The runtime draws the two group photographs (records 6 and 7, shared by the six heroine banks) on
+    disc 2. Every other record keeps its native composition or still lacks a live witness."""
+    base = {'pc': bank['pc_file'], 'scope': 'ending-bank subimages', 'decision_evidence': ENDING_REPORT}
+    photos = [r for r in bank['records'] if r['saturn_record'] in ENDING_PHOTO_RECORDS]
+    if len(photos) == 2 and all(r['palette_fnv'] in photo_keys for r in photos):
+        base['pc_image_indices'] = [r['pc_image_index'] for r in photos]
+        if disc != verified['disc']:
+            return {**base, 'status': 'paired-not-wired',
+                    'reason': ('The photograph draw is limited to disc 2 and the English ENDING module; '
+                               'disc 1 has no ending witness.')}
+        extra = {'native_records': [r['saturn_record'] for r in bank['records'] if r['saturn_record'] not in ENDING_PHOTO_RECORDS],
+                 'native_reason': 'The PC redraws change the artwork. The native compositions stay in use.',
+                 'runtime_patch': 'patches/0137-sakura-ending-photos.patch'}
+        if bank['saturn_file'] == verified['saturn_file']:
+            return {**base, **extra, 'status': 'hd', 'verified_in_game': True, 'runtime_evidence': ENDING_REPORT}
+        return {**base, **extra, 'status': 'wired-unverified',
+                'reason': ('The photograph records have the same palette and cell keys as the verified Sakura '
+                           'bank, so the draw is tried when they appear; no replay of this route was recorded.')}
+    return {**base, 'pc_image_indices': [r['pc_image_index'] for r in bank['records']],
+            'status': 'paired-not-wired',
+            'reason': ('The four GE pictures are whole-screen theatre variants; the ending viewport, fade and '
+                       'overlay layers have no live witness, so no replacement is selected.')}
+
+
 def build(root, index_dir, portrait_audit):
     def config(name):
         return load(root / 'config' / (name + '.json'))
@@ -335,6 +372,8 @@ def build(root, index_dir, portrait_audit):
     tactical_maps = {r['saturn']: r for r in config('hd-tactical-map-pairs')['maps']}
     screens = pairs(config('hd-screen-map'))
     endings = pairs(config('hd-ending-bank-map'))
+    ending_photo_keys = runtime_ending_photo_keys(root)
+    ending_verified = config('hd-ending-bank-map')['verified_runtime']
     bodies = pairs(config('hd-body-map'))
     body_review = config('hd-body-review')
     # Match tools/gen_body_table.py, including reviewed cut-outs with a candidate-tier pair.
@@ -488,14 +527,7 @@ def build(root, index_dir, portrait_audit):
             row = {'status': 'hd', 'pc': f'SAKURA2/BG/{name}.SPR', 'pairing_evidence': BBG_INSET_REPORT}
         elif path in endings:
             bank = endings[path]
-            row = {
-                'status': 'paired-not-wired',
-                'pc': bank['pc_file'],
-                'pc_image_indices': [record['pc_image_index'] for record in bank['records']],
-                'scope': 'ending-bank subimages',
-                'reason': 'Requires ending-layer composition and viewport evidence.',
-                'decision_evidence': 'docs/research/ending-bank-pairs.md',
-            }
+            row = ending_bank_row(bank, disc, ending_photo_keys, ending_verified)
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (

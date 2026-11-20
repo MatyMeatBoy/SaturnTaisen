@@ -181,3 +181,24 @@ subimage 0 resampled to 2016×1008 verifies the crop
 
 This supplies the visible BG2039 proof missing in the earlier audit.
 Private replays are under `local/work/codex-th1/ch1-scene-draws/`.
+
+## BG1002 and BG1116 on disc 1
+
+The English Chapter 1 replay has two 1440p A/B tests against the PC
+donors selected in the scene catalog. One resumes at field 74,200
+for 650 fields, the other at field 56,850 for 730. Guest hashes match
+the uninterrupted run across both pairs and final backup RAM matches
+within each pair. All four runs report zero interpreted blocks.
+
+BG1002 changes in nine sampled captures and BG1116 in ten. The
+preceding four and three captures respectively match in full RGB.
+The changes are confined to the Zoom image rectangle
+(272,29)–(2288,1037). The independent PC subimage 0 decoder matches
+the reference crop at (1840,100)–(2220,350) after bilinear scaling.
+
+| Scene | Comparison fields | Donor RGB error | Missing donor RGB error |
+| --- | --- | --- | --- |
+| BG1002 | 260, 310, 380 | 0.116/0.116/0.112 | 15.521/15.723/15.160 |
+| BG1116 | 210, 260, 310 | 0.123/0.132/0.129 | 42.887/33.038/33.662 |
+
+Private replay evidence is under `local/work/codex-th1/ch1-scene-draws/`.

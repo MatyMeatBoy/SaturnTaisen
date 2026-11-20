@@ -13,7 +13,7 @@ One table now recognises the chapter intermission pictures that share IC0501's l
 | Registration | PC picture fitted to the height of the canvas, anchored 5 native pixels from the left edge, wide margins drawn | whole PC picture mapped onto the 320 x 224 viewport (rows (2y+1)*480/896, 2 x 2 samples), nothing drawn outside |
 | Recogniser | palette hash, layer footprint, RGB hash `B98D70AA066A62B5` | the same checks, with the RGB hash looked up in the table |
 
-The first witnessed IC picture (IC01) took a different route (a pause backdrop with its own palette), so nothing of its palette key, darkening or anchor generalises. IC0501 did generalise: the game paints each IC picture's cells with the **ICLOGO palette** (the palette stored in the IC file is not what is shown), the panel rectangle is fixed, and the signed offset is the native one. Hence the visible RGB of every later IC picture can be computed from the decoded files, with no per-picture measurement.
+The first witnessed IC picture (IC01) took a different route (a pause backdrop with its own palette), so nothing of its palette key, darkening or anchor generalises. IC0501 did generalise: the game paints each IC picture's cells with the **ICLOGO palette** (the palette stored in the IC file is not what is shown), the panel rectangle is fixed, and the signed offset is the native one. The disc-1 table uses that palette and rectangle when deriving candidate signatures. Each match still requires the exact displayed palette, sources and RGB.
 
 `python tools/gen_ic_table.py build` computes, per picture: FNV-1a of the visible RGB bytes outside the panel with offset 0 and -16, the PC file size and FNV-1a (what `PcBackdropHash` checks), and a registration fit of the PC picture against the plate (the best shift over +-3 native pixels must be (0,0); all 15 pictures meet it, margin 1.2-2.4 grey levels against the best shifted fit).
 
@@ -37,7 +37,17 @@ python -m unittest tests.test_gen_ic_table tests.test_hd_chapter_coverage
 
 ## Verification state
 
-See the pull request for the replay results. A status moves from `wired-unverified` to `hd` only after a real intermission has been seen drawn with this table (`SATRECOMP_IC_TRACE=1` prints `IC table ICxx plate matched`); a synthetic fixture is not enough.
+The linked 0185 candidate was compared with 0184 at 2560×1440.
+The English disc-1 IC03 entrance (740 fields), disc-1 IC0501 menu exit
+(340 fields) and disc-2 IC06 exit (430 fields) preserve all 1,510
+guest hashes, final SRAM and 43 full-window RGB pairs. All runs
+report zero interpreted blocks. Private captures and build inputs
+are in `local/work/codex-th1/ic-table-integration/`.
+
+Each new row is recorded as `wired-unverified` until a natural
+intermission replay confirms the matching PC pixels on screen.
+The 13 offline-derived rows are outside the three runtime witnesses.
+Package inclusion remains pending.
 
 ## Disc 2: why it is not derivable offline (TP1 follow-up)
 
@@ -46,9 +56,9 @@ Compared offline, read-only, with `tools/gen_ic_table.py build`:
 - All 16 `IC*.BIN` files, `ICLOGO.BIN` and `ICATALL.DAT` are **byte-identical on both discs**. The same file therefore shows different RGB on different routes, so the palette choice is not in the picture files.
 - Own-palette plate of disc-2 IC06 = `0F85EDA8CE4B247D` and own palette key = `FEBAEA7B6E7CAC67`: both equal the patch 0183 in-game witness. The ICLOGO derivation gives `0D87B2D1DABE4DFD`, which was not seen.
 - Disc-1 IC0501 and IC03 equal their witnesses only with the ICLOGO palette (own palette: `C997599B21F685B5`, `7240B16ECBB05835`, not seen). Disc-1 IC01 (patch 0107) is witnessed with its own palette.
-- So both routes occur, on both discs (own palette: IC01 d1, IC06 d2; ICLOGO: IC0501 d1, IC03 d1). Which one an appearance takes is decided by code: `LOGO.SH2` carries the IC name table and differs between discs (only 1,514 bytes, mostly relocated pointers, so no disc-specific palette table is evident). Strings in all of SAKURA1 show no other module naming ICLOGO/IC files.
+- The samples exhibit both palette routes (own palette: IC01 d1 and IC06 d2; ICLOGO: IC0501 d1 and IC03 d1). Which one an appearance takes is decided by code: `LOGO.SH2` carries the IC name table and differs between discs (only 1,514 bytes, mostly relocated pointers, so no disc-specific palette table is evident). Strings in all of SAKURA1 show no other module naming ICLOGO/IC files.
 - Consequence: the disc-1 IC06 row in the table (ICLOGO route) is itself unwitnessed, and the same file shows the own palette on disc 2. It stays `wired-unverified`; a disc-1 IC06 witness could be a mismatch.
 
 `config/hd-ic-table.json` now also lists `disc2_own_palette_candidates` (own-palette `plate`, `plate_dark`, palette key per file; IC06 `reproduces-witness`, the rest `candidate-unverified`). They are not entries, not in the generated header, not wired and not counted in coverage.
 
-**Missing datum:** per IC (at least disc-2 IC02-IC09, IC1001-IC1006, and disc-1 IC06), a layer-4 palette fingerprint (`E9107F892185CCC8` = ICLOGO route, or the file palette key in the candidates list) and the RGB hash from one real intermission, or a trace/disassembly of the SH-2 routine in `LOGO.SH2` that loads the IC file and decides whether ICLOGO.BIN is read afterwards (IC0501 doc: IC file then ICLOGO.BIN). With `SATRECOMP_IC_TRACE=1` / the layer-4 palette fingerprint the route is observable per appearance; a rule can then be written. Needs the owner's runtime (not done here).
+**Missing datum:** per IC (at least disc-2 IC02-IC09, IC1001-IC1006, and disc-1 IC06), a layer-4 palette fingerprint (`E9107F892185CCC8` = ICLOGO route, or the file palette key in the candidates list) and the RGB hash from one real intermission, or a trace/disassembly of the SH-2 routine in `LOGO.SH2` that loads the IC file and decides whether ICLOGO.BIN is read afterwards (IC0501 doc: IC file then ICLOGO.BIN). The layer-4 palette is observable with `SATRECOMP_LAYER_PROBE` at the matching checkpoint. A runtime replay of each candidate remains pending.
