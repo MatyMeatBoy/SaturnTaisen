@@ -4241,15 +4241,19 @@
         "scene-pictures": {
           "1:/SAKURA1/BG1025.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th6-native-attribution.md",
+            "evidence": "docs/research/th6-native-attribution.md#hd-background-draws",
             "pc": "SAKURA1/BG/BG1025.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/th6-native-attribution.md#hd-background-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1199.BIN": {
             "association": "observed",
-            "evidence": "docs/research/th6-native-attribution.md",
+            "evidence": "docs/research/th6-native-attribution.md#hd-background-draws",
             "pc": "SAKURA1/BG/BG1199.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/th6-native-attribution.md#hd-background-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG4059.BIN": {
             "association": "observed",

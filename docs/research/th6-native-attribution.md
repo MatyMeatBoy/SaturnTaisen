@@ -25,3 +25,25 @@ The cold trace also reads KABE50 at 159586. The archived frame-9000 state contai
 The cold film reads at FAD 405 and 166362 occur before the Chapter 6 script load. This route still needs a chapter-specific film and a tactical display witness. The displayed native resources establish attribution. HD draws, the continuous chapter exit test and package inclusion remain open.
 
 Private receipts are under local/work/codex-th6-attribution.
+
+## HD background draws
+
+Two 180-field replay pairs in the 0188 runtime use the Chapter 6 cold
+frame-9000 checkpoint and the final state of the 6,000-field Chapter 6
+continuation. Both pairs use the same English disc 1, recorded checkpoints
+and 2560×1440 Enhanced setup. Only the respective PC background is present
+in its donor profile. The 360 paired guest hashes and final SRAM match,
+with zero interpreted blocks.
+
+The four RGB samples in each pair differ only inside the Zoom rectangle
+(272,29)–(2288,1037). Each changed pixel matches the independently decoded
+PC image within two RGB levels. The uniquely identified foreground pixels
+match the Saturn control exactly.
+
+| Background | Changed pixels in each sample | Saturn foreground | Preserved foreground pixels |
+| --- | ---: | --- | ---: |
+| BG1199 | 1,913,159 | BG4119 | 113,092 |
+| BG1025 | 1,790,430 | BG4059 | 172,186 |
+
+These witnesses cover the two retained occurrences on disc 1. The private
+commands and captures are under `local/work/codex-th1/ch6-hd-plates/`.
