@@ -13946,8 +13946,8 @@
       "1:/SAKURA1/BG2093.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2093.SPR",
-        "runtime_evidence": "docs/research/scroll-table.md",
-        "status": "wired-unverified"
+        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
+        "status": "unsupported-size"
       },
       "1:/SAKURA1/BG2094.BIN": {
         "association": "unknown",

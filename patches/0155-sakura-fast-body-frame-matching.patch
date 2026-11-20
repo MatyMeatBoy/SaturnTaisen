@@ -1,0 +1,82 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -37,6 +37,7 @@
+ #include "window_policy.h"
+ #define PL_MPEG_IMPLEMENTATION
+ #include "movie_decoder.h"
++#include <bit>
+ #include <unordered_map>
+ #include "portrait_pack.h"
+ #include "background_workers.h"
+@@ -2256,24 +2257,59 @@
+                                                 std::vector<char> saturnMask(rgba.size(),0);
+                                                 size_t saturnDark=0;
+                                                 for(size_t i=0;i<rgba.size();i++) {saturnMask[i]=dark(rgba[i]);saturnDark+=saturnMask[i];}
++                                                // Score the same 49 windows over one sampled mask. Adjacent
++                                                // shifts otherwise classify the same donor pixels repeatedly.
++                                                const bool packed=fw<=58 && sp->x>=bx && sp->y>=by;
++                                                std::vector<uint64_t> nativeRows, donorRows;
++                                                if(packed) {
++                                                    nativeRows.resize(fh);
++                                                    donorRows.resize(fh+6);
++                                                    for(unsigned y=0;y<fh;++y)
++                                                        for(unsigned x=0;x<fw;++x)
++                                                            nativeRows[y]|=uint64_t(saturnMask[size_t(y)*fw+x])<<x;
++                                                }
+                                                 double second=-1.0;
+                                                 best=-1.0;
+                                                 if(saturnDark>=6)for(size_t k=0;k<st.parts.size() && k<st.partPixels.size();k++) {
+                                                     const int pw1=int(st.partW[k]),ph1=int(st.partH[k]);
+                                                     const float tlx0=cxp-pw1*0.5f,tly0=cyp-ph1*0.5f;
+                                                     double bestShift=0;
+-                                                    for(int sy=-3;sy<=3;sy++)for(int sx=-3;sx<=3;sx++) {
+-                                                        size_t inter=0,pcDark=0;
+-                                                        for(unsigned v=0;v<fh;v++)for(unsigned u=0;u<fw;u++) {
+-                                                            const float gx=(sp->x-bx+u+0.5f+sx)*kxp,gy=(sp->y-by+v+0.5f+sy)*kyp;
+-                                                            const int qx=int(gx-tlx0),qy=int(gy-tly0);
+-                                                            bool isDark=false;
+-                                                            if(qx>=0 && qy>=0 && qx<pw1 && qy<ph1)isDark=dark(st.partPixels[k][size_t(qy)*pw1+qx]);
+-                                                            pcDark+=isDark;
+-                                                            inter+=isDark && saturnMask[size_t(v)*fw+u];
++                                                    if(packed) {
++                                                        for(unsigned y=0;y<fh+6;++y) {
++                                                            const int qy=int((sp->y-by+int(y)-3+0.5f)*kyp-tly0);
++                                                            uint64_t row=0;
++                                                            if(qy>=0 && qy<ph1)for(unsigned x=0;x<fw+6;++x) {
++                                                                const int qx=int((sp->x-bx+int(x)-3+0.5f)*kxp-tlx0);
++                                                                if(qx>=0 && qx<pw1 && dark(st.partPixels[k][size_t(qy)*pw1+qx]))
++                                                                    row|=uint64_t{1}<<x;
++                                                            }
++                                                            donorRows[y]=row;
+                                                         }
+-                                                        const double dice=(saturnDark+pcDark)?2.0*double(inter)/double(saturnDark+pcDark):0.0;
+-                                                        if(dice>bestShift)bestShift=dice;
++                                                        const uint64_t widthMask=(uint64_t{1}<<fw)-1;
++                                                        for(unsigned sy=0;sy<7;++sy)for(unsigned sx=0;sx<7;++sx) {
++                                                            size_t intersection=0,pcDark=0;
++                                                            for(unsigned y=0;y<fh;++y) {
++                                                                const auto sample=(donorRows[y+sy]>>sx)&widthMask;
++                                                                pcDark+=std::popcount(sample);
++                                                                intersection+=std::popcount(sample&nativeRows[y]);
++                                                            }
++                                                            const double dice=2.0*double(intersection)/double(saturnDark+pcDark);
++                                                            if(dice>bestShift)bestShift=dice;
++                                                        }
++                                                    } else {
++                                                        for(int sy=-3;sy<=3;sy++)for(int sx=-3;sx<=3;sx++) {
++                                                            size_t inter=0,pcDark=0;
++                                                            for(unsigned v=0;v<fh;v++)for(unsigned u=0;u<fw;u++) {
++                                                                const float gx=(sp->x-bx+u+0.5f+sx)*kxp,gy=(sp->y-by+v+0.5f+sy)*kyp;
++                                                                const int qx=int(gx-tlx0),qy=int(gy-tly0);
++                                                                bool isDark=false;
++                                                                if(qx>=0 && qy>=0 && qx<pw1 && qy<ph1)isDark=dark(st.partPixels[k][size_t(qy)*pw1+qx]);
++                                                                pcDark+=isDark;
++                                                                inter+=isDark && saturnMask[size_t(v)*fw+u];
++                                                            }
++                                                            const double dice=(saturnDark+pcDark)?2.0*double(inter)/double(saturnDark+pcDark):0.0;
++                                                            if(dice>bestShift)bestShift=dice;
++                                                        }
+                                                     }
+                                                     if(bestShift>best) {second=best;best=bestShift;part=int(k);}
+                                                     else if(bestShift>second)second=bestShift;

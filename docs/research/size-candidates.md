@@ -1,37 +1,25 @@
-# TP2a-size: the 19 `unsupported-size` entries against the free-box row style
+# Offline crop measurements for size-mismatched pictures
 
-The 19 entries are 12 distinct pictures (one or both discs): BG1257, BG1280, BG2093, BG2247, BG2290, BG2338 and the seven full-screen battle frames BBG238-BBG243 and BBG300. BG2077 and BG1283 (named in TP2a7) are no longer in the list: patches 0143 and 0145 already added them as calibrated rows.
+The coverage register has 19 `unsupported-size` entries across 13 distinct pictures. The six SAKURA1 BG files are byte-identical between the prepared English discs. The seven SAKURA2 BBG files are on disc 2. The measurements use one copy of each picture.
 
-## The row style
+Run `python tools/measure_size_candidates.py --prepared <prepared-disc-root> --pc <extracted-pc-root> --out <json-output>` with NumPy and Pillow installed. The search samples a finite grid of independent X and Y scales. For each scale, it compares integer positions in a reduced grayscale image using normalized correlation. The selected crop is then rescored using the scroll generator's grayscale signature. Pan samples use a four-pixel stride and always include the final offset. When the stride lands on that endpoint, the sweep counts it again. `config/hd-size-candidates.json` records the scores, candidate full-frame boxes and sampled offsets below 0.90. These scores describe the sampled crops. They do not establish an upper bound for other transforms, prove geometric registration, or demonstrate an in-game draw.
 
-The style asked for exists since patch 0143: a `ScrollFit` row gives the PC box of a native offset with its own scale and crop (`rate_milli`, `origin`, `length`, `cross`, `cross_length`), guarded by the exact native-window matcher. This work measures every candidate against that style and wider (any scale on both axes, any position) and adds what passes.
-
-Method (`tools/measure_size_candidates.py`, numbers only; `config/hd-size-candidates.json`): for each native window (stride 4 on the scroll axis; the whole picture for full-screen ones) the best PC box over a scale grid and every integer position, scored with the 32x16 grey signature of `tools/gen_scroll_pictures.py`, floor 0.90. The per-window best is a ceiling: if its minimum is below 0.90 no affine row can pass either.
-
-| Picture | Native / PC | Ceiling min / mean | Result |
+| Picture | Saturn size | Sampled signature minimum / mean | Finding |
 |---|---|---|---|
-| BG2093 | 320x144 / 592x320 | 0.951 / 0.967 | passes; row added (patch 0154): rate 1.796, origin 23, 512x320 crop, all 33 offsets, min 0.9665 |
-| BG2290 | 432x144 / 864x320 | 0.877 / 0.972 | only offsets 0, 4 and 8 are below the floor; needs a minimum-offset and an end clamp in the row (see below) |
-| BG1257 | 456x144 / 1181x320 | 0.863 / 0.879 | fails at every offset: PC composition differs |
-| BG1280 | 512x144 / 1241x320 | 0.796 / 0.852 | fails: PC composition differs |
-| BG2247 | 288x296 / 576x592 | 0.376 / 0.549 | fails: different camera (native pan stays native, see bg2247-native-pan.md) |
-| BG2338 | 320x160 / BG2238.SPR 592x320 | 0.943 (whole picture, box 28,0,584,320) | passes as a still, but it is a cross-number pair of the BG2238 still, not a scroll window |
-| BBG238 | 320x224 / 640x480 | 0.987, box (74,33)-(615,425) | passes, static full frame |
-| BBG239 | idem | 0.848 | fails |
-| BBG240 | idem | 0.985, box (66,40)-(639,471) | passes |
-| BBG241 | idem | 0.926, box (64,20)-(591,479) | passes |
-| BBG242 | idem | 0.915, box (0,79)-(610,454) | passes |
-| BBG243 | idem | 0.989, box (44,37)-(588,453) | passes |
-| BBG300 | idem | 1.000, box (8,0)-(640,473) | passes |
+| BG1257 | 456 × 144 | 0.863 / 0.879 | Every sampled offset falls below 0.90. |
+| BG1280 | 512 × 144 | 0.796 / 0.852 | Some sampled offsets fall below 0.90. |
+| BG2093 | 320 × 144 | 0.951 / 0.967 | The isolated picture aligns. The witnessed dream retains its native composite. |
+| BG2247 | 288 × 296 | 0.376 / 0.549 | The [witnessed theatre pan](bg2247-native-pan.md) retains the Saturn perspective. |
+| BG2290 | 432 × 144 | 0.877 / 0.972 | Offsets 0, 4 and 8 fall below 0.90. A minimum supported offset and the proposed end clamp still need review across the actual viewport range. |
+| BG2338 | 320 × 160 | 0.943 | The whole-picture candidate uses BG2238.SPR. It has no pan window or in-game crop witness. |
+| BBG238 | 320 × 224 | 0.987 | High grayscale score, with a different pose and framing. |
+| BBG239 | 320 × 224 | 0.848 | The candidate falls below the floor. |
+| BBG240 | 320 × 224 | 0.985 | High grayscale score, with a different pose and framing. |
+| BBG241 | 320 × 224 | 0.926 | High grayscale score, with a different pose and framing. |
+| BBG242 | 320 × 224 | 0.915 | High grayscale score, with a different pose and framing. |
+| BBG243 | 320 × 224 | 0.989 | High grayscale score, with a different pose and framing. |
+| BBG300 | 320 × 224 | 1.000 | Broad gradient agreement gives no unique registration. |
 
-BG2077 and BG1283 stay as they are (rows of patches 0143/0145).
+The [BG2093 dream witness](bg2093-dream-transition.md) records per-line origins and a changing blend with a second source on disc 2. The offline fit measures the isolated art. A separate disc-1 appearance with a compatible composition remains unwitnessed. The [full-frame BBG review](bbg-full-frame.md) compared poses and framing directly. Its native disposition still applies.
 
-## What the style does not cover
-
-- The full-screen 320x224 frames have no proportional PC correspondence: the six that pass each need their own box (scale 1.7-2.0 and an offset up to 79 px, different per picture), so there is no common rule beyond "one measured box per picture". The table row type is a 288x144 scrolling window at (16,8); a full-frame row needs a new matcher (exact comparison of the 320x224 layer) and draw path in `frontend_sdl.cpp`. That is TP2b, not data. The measured boxes above are the data half. BBG239 has no box over 0.90 (best 0.848).
-- BG2093 only draws where the native window matches exactly. The witnessed dream (per-line viewport origin under a variable blend) never matches, so disc-2 BG2093 in chapter 8 stays `unsupported-size`; the disc-1 entry becomes `wired-unverified`.
-- BG2338 is not variant B and has no scroll window.
-
-## Native witnesses
-
-All 131 saved states under `local/work` (chapters 1-2 plus the probes) were searched for 64-byte tile blocks of each target (and of the rows already in the table). None of them contains any of these pictures, so none is witnessed natively: BG2093 is `wired-unverified`, not `hd`. Scenario scripts that request BG2093 are 0900 (chapter 9); BBG238-BBG300 are disc-2 battle frames. A witness needs a chapter 9 state or a replay of those scenes.
+The offline sweep requires no SDK change. A compatible live composition and a rebuilt replay are still required before activating a new substitution.

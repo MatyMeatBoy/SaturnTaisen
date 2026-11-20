@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Offline measurement of crop candidates for the `unsupported-size` scroll/battle pictures (TP2a-size).
+"""Measure offline crop candidates for selected scene and battle pictures.
 
-For each picture the native image (decode_saturn_bg) is compared with the PC subimage 0 under every crop box of the
-"free" row style: any scale (separate x/y), any position. The best per-window score is a ceiling: if its minimum over
-the windows is below the 0.90 floor of tools/gen_scroll_pictures.py, no row style (affine or otherwise) can pass.
-Only numbers are printed/written. Needs the prepared discs and the extracted PC BG folder (never committed).
+The search samples a scale grid and finds a position at each scale using
+normalized grayscale correlation. It scores the selected box separately with
+the same grayscale signature used by the scroll-table generator. It reports
+numeric measurements of the decoded assets.
 """
 import argparse, json, sys
 from pathlib import Path
@@ -48,7 +48,7 @@ def ncc_search(tpl, big):
 
 
 def best_box(native_win, pc, scales_x, scales_y, work=0.5):
-    """Search PC boxes for one native window. Returns (sig correlation, box)."""
+    """Sample PC boxes for one native window. Returns (signature correlation, box)."""
     tpl = grey(native_win.resize((int(native_win.width * work), int(native_win.height * work)), Image.BOX))
     best = (-1.0, None)
     for sy in scales_y:
@@ -83,8 +83,10 @@ def main():
     ap.add_argument('--prepared', default=str(ROOT / 'local/prepared'))
     ap.add_argument('--pc', required=True, help='root holding SAKURA1/BG and SAKURA2/BG')
     ap.add_argument('--out')
-    ap.add_argument('--stride', type=int, default=24)
+    ap.add_argument('--stride', type=int, default=4)
     a = ap.parse_args()
+    if a.stride < 1:
+        ap.error('--stride must be positive')
     discs = {1: Iso(str(Path(a.prepared) / 'disc1' / 'Track 01.iso')), 2: Iso(str(Path(a.prepared) / 'disc2' / 'Track 01.iso'))}
     plan = json.loads((ROOT / 'config/hd-wide-bg-plan.json').read_text())['entries']
     todo = [r for r in plan if Path(r['saturn_file']).stem in

@@ -71,17 +71,6 @@ int main() {
         const auto middle = ScrollPcCrop(last, 76);
         assert(middle.x == 27 && middle.y == 149 && middle.w == 488 && middle.h == 264);
     }
-    {
-        // BG2093 (TP2a-size): whole 592x320 PC picture, 320-wide native, 33 integer offsets, the crop never leaves the PC art.
-        const auto& row = byName("BG2093");
-        assert(row.width == 320 && row.height == 144 && row.pcWidth == 592 && row.pcHeight == 320 && ScrollRange(row) == 32);
-        const auto first = ScrollPcCrop(row, 0), last = ScrollPcCrop(row, 32);
-        assert(first.x == 23 && first.y == 0 && first.w == 512 && first.h == 320);
-        assert(last.x == 80 && last.x + last.w == row.pcWidth && last.h == 320);
-        auto invalid = row;
-        invalid.fit.length = 513;
-        assert(!ScrollRowValid(invalid));
-    }
     // The hand-written pictures keep the crops they had before the table.
     {
         const auto& row = byName("BG1285");
@@ -115,13 +104,13 @@ int main() {
     assert(FindScrollPicture(byName("BG2533").palette, [&] { ++asked; return uint64_t(7); }) == &byName("BG2533") && asked == 0);
 
     // The matcher takes the row's width: a synthetic 456-wide picture pans and a wrong size is refused.
-    for (const unsigned width : {320u, 456u, 512u}) {
+    for (const unsigned width : {456u, 512u}) {
         std::vector<uint32_t> picture(width * 144);
         for (unsigned y = 0; y < 144; ++y)
             for (unsigned x = 0; x < width; ++x) picture[y * width + x] = (y << 12) | x;
         std::vector<uint32_t> frame(kPanFrameWidth * kPanFrameHeight);
         std::vector<uint8_t> top(frame.size(), 6);
-        for (const unsigned offset : {0u, (width - 288) / 2, width - 288}) {
+        for (const unsigned offset : {0u, 100u, width - 288}) {
             for (unsigned y = 0; y < 144; ++y)
                 for (unsigned x = 0; x < 288; ++x) {
                     const auto at = (y + kPanPictureOffsetY) * kPanFrameWidth + x + kPanPictureOffsetX;

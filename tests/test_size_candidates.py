@@ -1,5 +1,5 @@
-"""Synthetic tests for tools/measure_size_candidates.py and the BG2093 fit (TP2a-size). No game pixels."""
-import json, sys, unittest
+"""Synthetic tests for tools/measure_size_candidates.py (TP2a-size). No game pixels."""
+import sys, unittest
 from pathlib import Path
 
 import numpy as np
@@ -28,17 +28,6 @@ class SizeCandidates(unittest.TestCase):
     def test_unrelated_picture_stays_below_the_floor(self):
         score, _ = m.best_box(texture(288, 144, 7), texture(800, 320, 9), [2.0], [2.0], work=0.5)
         self.assertLess(score, m.FLOOR)
-
-    def test_bg2093_fit_stays_inside_the_pc_picture(self):
-        rows = {r['name']: r for r in json.loads((ROOT / 'config/hd-scroll-pictures.json').read_text())['rows']}
-        row = rows['BG2093']
-        fit = row['fit']
-        last = row['width'] - 288
-        start = lambda o: fit['origin'] + (fit['rate_milli'] * o + 500) // 1000
-        self.assertEqual((start(0), start(last)), (23, 80))
-        self.assertEqual(start(last) + fit['length'], row['pc_width'])
-        self.assertEqual(fit['cross_length'], row['pc_height'])
-        self.assertGreaterEqual(row['min_crop_correlation'], m.FLOOR)
 
 
 if __name__ == '__main__':
