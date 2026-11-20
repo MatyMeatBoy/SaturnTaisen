@@ -187,11 +187,11 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 7)
-        for name in ('BG1267', 'BG1268', 'BG2080'):
+        for name, verified in (('BG1267', False), ('BG1268', True), ('BG2080', True)):
             with self.subTest(scene=name):
                 scene = chapter['scene-pictures'][f'1:/SAKURA1/{name}.BIN']
                 self.assertEqual(scene['association'], 'observed')
-                self.assertFalse(scene.get('verified_in_game'))
+                self.assertEqual(bool(scene.get('verified_in_game')), verified)
                 self.assertIn(f'2:/SAKURA1/{name}.BIN', catalog['unassigned']['scene-pictures'])
         film = chapter['film']['1:/SAKURA4+164800512']
         self.assertEqual((film['association'], film['fad'], film['pc']), ('observed', 80874, 'MOVIE019'))
@@ -211,7 +211,7 @@ class ChapterCoverageTest(unittest.TestCase):
             with self.subTest(scene=name):
                 row = chapter['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
                 self.assertEqual((row['association'], row['status']), ('observed', status))
-                self.assertFalse(row.get('verified_in_game'))
+                self.assertEqual(bool(row.get('verified_in_game')), name == 'BG1050')
                 self.assertNotIn(f'1:/SAKURA1/{name}.BIN', chapter['scene-pictures'])
         self.assertNotIn('2:/SAKURA1/BG1341.BIN', chapter['scene-pictures'])
 
