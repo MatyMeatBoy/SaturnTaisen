@@ -1,0 +1,439 @@
+{
+ "BG1257": {
+  "native": [
+   456,
+   144
+  ],
+  "pc": [
+   1181,
+   320
+  ],
+  "pc_file": "SAKURA1/BG/BG1257.SPR",
+  "windows": 44,
+  "min": 0.863,
+  "mean": 0.8789,
+  "max": 0.8981,
+  "passes_floor": false,
+  "offsets_below_floor": [
+   0,
+   4,
+   8,
+   12,
+   16,
+   20,
+   24,
+   28,
+   32,
+   36,
+   40,
+   44,
+   48,
+   52,
+   56,
+   60,
+   64,
+   68,
+   72,
+   76,
+   80,
+   84,
+   88,
+   92,
+   96,
+   100,
+   104,
+   108,
+   112,
+   116,
+   120,
+   124,
+   128,
+   132,
+   136,
+   140,
+   144,
+   148,
+   152,
+   156,
+   160,
+   164,
+   168,
+   168
+  ],
+  "best_boxes": []
+ },
+ "BG1280": {
+  "native": [
+   512,
+   144
+  ],
+  "pc": [
+   1241,
+   320
+  ],
+  "pc_file": "SAKURA1/BG/BG1280.SPR",
+  "windows": 58,
+  "min": 0.7956,
+  "mean": 0.852,
+  "max": 0.902,
+  "passes_floor": false,
+  "offsets_below_floor": [
+   0,
+   4,
+   8,
+   12,
+   16,
+   20,
+   24,
+   28,
+   32,
+   36,
+   40,
+   44,
+   48,
+   52,
+   56,
+   60,
+   64,
+   68,
+   72,
+   76,
+   80,
+   84,
+   88,
+   92,
+   96,
+   100,
+   104,
+   108,
+   112,
+   116,
+   120,
+   124,
+   128,
+   132,
+   136,
+   140,
+   144,
+   148,
+   152,
+   156,
+   160,
+   164,
+   168,
+   172,
+   180,
+   188,
+   192,
+   196,
+   200,
+   204,
+   208,
+   212,
+   216,
+   220,
+   224,
+   224
+  ],
+  "best_boxes": []
+ },
+ "BG2093": {
+  "native": [
+   320,
+   144
+  ],
+  "pc": [
+   592,
+   320
+  ],
+  "pc_file": "SAKURA1/BG/BG2093.SPR",
+  "windows": 10,
+  "min": 0.9507,
+  "mean": 0.9673,
+  "max": 0.9753,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": []
+ },
+ "BG2247": {
+  "native": [
+   288,
+   296
+  ],
+  "pc": [
+   576,
+   592
+  ],
+  "pc_file": "SAKURA1/BG/BG2247.SPR",
+  "windows": 40,
+  "min": 0.3755,
+  "mean": 0.5492,
+  "max": 0.6707,
+  "passes_floor": false,
+  "offsets_below_floor": [
+   0,
+   4,
+   8,
+   12,
+   16,
+   20,
+   24,
+   28,
+   32,
+   36,
+   40,
+   44,
+   48,
+   52,
+   56,
+   60,
+   64,
+   68,
+   72,
+   76,
+   80,
+   84,
+   88,
+   92,
+   96,
+   100,
+   104,
+   108,
+   112,
+   116,
+   120,
+   124,
+   128,
+   132,
+   136,
+   140,
+   144,
+   148,
+   152,
+   152
+  ],
+  "best_boxes": []
+ },
+ "BG2290": {
+  "native": [
+   432,
+   144
+  ],
+  "pc": [
+   864,
+   320
+  ],
+  "pc_file": "SAKURA1/BG/BG2290.SPR",
+  "windows": 38,
+  "min": 0.8767,
+  "mean": 0.9721,
+  "max": 0.9899,
+  "passes_floor": false,
+  "offsets_below_floor": [
+   0,
+   4,
+   8
+  ],
+  "best_boxes": []
+ },
+ "BG2338": {
+  "native": [
+   320,
+   160
+  ],
+  "pc": [
+   592,
+   320
+  ],
+  "pc_file": "SAKURA1/BG/BG2238.SPR",
+  "windows": 1,
+  "min": 0.9426,
+  "mean": 0.9426,
+  "max": 0.9426,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    28,
+    0,
+    584,
+    320
+   ]
+  ]
+ },
+ "BBG238": {
+  "native": [
+   320,
+   224
+  ],
+  "pc": [
+   640,
+   480
+  ],
+  "pc_file": "SAKURA2/BG/BBG238.SPR",
+  "windows": 1,
+  "min": 0.9873,
+  "mean": 0.9873,
+  "max": 0.9873,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    74,
+    33,
+    615,
+    425
+   ]
+  ]
+ },
+ "BBG239": {
+  "native": [
+   320,
+   224
+  ],
+  "pc": [
+   640,
+   480
+  ],
+  "pc_file": "SAKURA2/BG/BBG239.SPR",
+  "windows": 1,
+  "min": 0.8475,
+  "mean": 0.8475,
+  "max": 0.8475,
+  "passes_floor": false,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    0,
+    28,
+    580,
+    479
+   ]
+  ]
+ },
+ "BBG240": {
+  "native": [
+   320,
+   224
+  ],
+  "pc": [
+   640,
+   480
+  ],
+  "pc_file": "SAKURA2/BG/BBG240.SPR",
+  "windows": 1,
+  "min": 0.9848,
+  "mean": 0.9848,
+  "max": 0.9848,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    66,
+    40,
+    639,
+    471
+   ]
+  ]
+ },
+ "BBG241": {
+  "native": [
+   320,
+   224
+  ],
+  "pc": [
+   640,
+   480
+  ],
+  "pc_file": "SAKURA2/BG/BBG241.SPR",
+  "windows": 1,
+  "min": 0.9261,
+  "mean": 0.9261,
+  "max": 0.9261,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    64,
+    20,
+    591,
+    479
+   ]
+  ]
+ },
+ "BBG242": {
+  "native": [
+   320,
+   224
+  ],
+  "pc": [
+   640,
+   480
+  ],
+  "pc_file": "SAKURA2/BG/BBG242.SPR",
+  "windows": 1,
+  "min": 0.9146,
+  "mean": 0.9146,
+  "max": 0.9146,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    0,
+    79,
+    610,
+    454
+   ]
+  ]
+ },
+ "BBG243": {
+  "native": [
+   320,
+   224
+  ],
+  "pc": [
+   640,
+   480
+  ],
+  "pc_file": "SAKURA2/BG/BBG243.SPR",
+  "windows": 1,
+  "min": 0.9885,
+  "mean": 0.9885,
+  "max": 0.9885,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    44,
+    37,
+    588,
+    453
+   ]
+  ]
+ },
+ "BBG300": {
+  "native": [
+   320,
+   224
+  ],
+  "pc": [
+   640,
+   480
+  ],
+  "pc_file": "SAKURA2/BG/BBG300.SPR",
+  "windows": 1,
+  "min": 0.9999,
+  "mean": 0.9999,
+  "max": 0.9999,
+  "passes_floor": true,
+  "offsets_below_floor": [],
+  "best_boxes": [
+   [
+    8,
+    0,
+    640,
+    473
+   ]
+  ]
+ }
+}
