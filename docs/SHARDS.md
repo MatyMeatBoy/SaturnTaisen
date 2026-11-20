@@ -9,9 +9,10 @@ Each shard is independent, has its own files and its own "done" test. Rules for 
 Playback regressions with slowdown, audio breakup or flicker have priority. Use the reported scene and settings for a before-and-after replay and verify the shared renderer or runtime paths before releasing. Independent HD work continues in parallel. Conflicts in shared files (`docs/PENDIENTES.md`, `docs/research/bg-matching-progress.md`, `config/hd-scene-bg-review.json`): rebase on `origin/main` and keep both sides (lists and keys are unions); the coordinator does the same when integrating.
 
 1. **Playback performance:** T86a and T86 for scene composition, S6 VDP (T103) and S7 SH-2 (T104) for measured emulation bottlenecks.
-2. **Runtime, visible in game:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106).
-3. **Data that feeds the runtime:** the background review shards (T76-T711), item and body maps.
-4. **Owner-only:** painted art (T87).
+2. **Chapter 1 HD:** start with the large NC character bodies and their expression, occlusion, and fade coverage. Use the 19 observed body entries to prioritize missing draws and incomplete poses, then cover the remaining scene backgrounds, battle pictures, HUD, and menus. Track witnessed draws and alternate routes in [Chapter 1 HD coverage](research/hd-chapter-1.md).
+3. **Runtime in later chapters:** S3 clip hook (T100), S4 clip audio (T101), S5 HUD and menus (T102), S8 scrolling/battle backgrounds (T105), S9 faces and body fade-in (T106).
+4. **Data that feeds the runtime:** the background review shards (T76-T711), item and body maps.
+5. **Owner-only:** painted art (T87).
 
 | Shard | Queue | Needs assets | Files it owns | Done when |
 |---|---|---|---|---|
