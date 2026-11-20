@@ -26,18 +26,21 @@ The same review corrected the existing quiz options to «Dama demonio» and «Ch
 
 ### Japanese-to-English divergence catalog
 
-The [opening catalog](../../config/es-japanese-bridge.json) records twelve
+The [divergence catalog](../../config/es-japanese-bridge.json) records 24
 findings by ISO path, table index and native record ID. Each entry carries
 a Spanish gloss of the Japanese meaning, the issue in English, proposed
 English wording, and the status of the Spanish correction. It contains
-no transcribed Japanese. This catalog is also the source for five Spanish
+no transcribed Japanese. This catalog is also the source for thirteen Spanish
 overrides applied to both discs. These restore Ogami's formal
 self-identification, Fukurokoji's encouragement, Sakura's escort orders
-in both copies of the line, and Iris's form of address. The builder checks
+in both copies of the line, and Iris's form of address. The follow-up
+restores Sumire's complaint about the opera company and Yoneda, Kohran's
+inventions, and Kanna's physical strength. Sakura's swimsuit item uses
+the neutral sense of the original. The builder checks
 the English text and native ID before applying each override.
 
 Both Spanish deltas were decoded and checked against their recorded digests.
-The five changed records retain their identifiers and fit in four lines
+The changed records retain their identifiers and fit in four lines
 of thirty CP1252 characters. The English suggestions remain queued for
 a future revision of that edition.
 
