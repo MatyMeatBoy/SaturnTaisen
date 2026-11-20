@@ -275,3 +275,12 @@ The setup helper built all 304 dialogue portrait identities directly from
 the two English Saturn data tracks and the PC archive. Both generated
 emblem variants match the replay pack. The
 catalog review found no other explicit native portrait exception.
+
+### Emblem 0169 on v0.2.24-alpha
+
+Four 65-field strict replays from the Spanish disc 1 letter state
+used the v0.2.24-alpha executable. Enhanced with the verified portrait
+pack logs `portrait replace: id=0169 density=2 patch=0 y=0` and differs
+from its missing-pack control only inside (404,1090)–(644,1378) in all
+four 1440p samples. The Original pair, guest hashes and SRAM match.
+This verifies the release runtime with a compatible portrait pack.
