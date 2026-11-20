@@ -196,6 +196,11 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (1, '/SAKURA1/BG1022.BIN'): (3, 'docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws'),
+    (1, '/SAKURA1/BG1008.BIN'): (3, 'docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws'),
+    (1, '/SAKURA1/BG1132.BIN'): (3, 'docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws'),
+    (1, '/SAKURA1/BG2381.BIN'): (3, 'docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws'),
+    (1, '/SAKURA1/BG1160.BIN'): (3, 'docs/research/th3-native-attribution.md#verified-chapter-3-scene-draws'),
     (2, '/SAKURA1/BG1071.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
     (2, '/SAKURA1/BG1125.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
     (2, '/SAKURA1/BG1013.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-scene-draws-on-the-0804-iris-route'),
@@ -307,8 +312,6 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/BG1025.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/BG4059.BIN'): (6, 'docs/research/th6-native-attribution.md'),
     (1, '/SAKURA1/TITLE3.BIN'): (3, 'docs/research/th3-native-attribution.md'),
-    (1, '/SAKURA1/BG1022.BIN'): (3, 'docs/research/th3-native-attribution.md'),
-    (1, '/SAKURA1/BG1008.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     **{(1, f'/SAKURA1/{name}.BIN'): (3, 'docs/research/bg2290-native-pan.md')
        for name in ('BG2123', 'BG3123', 'BG2289', 'BG3289', 'BG2290')},
     (1, '/SAKURA1/NC3290.BIN'): (3, 'docs/research/nc3290-stage-wing.md'),
