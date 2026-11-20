@@ -174,6 +174,9 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (1, '/SAKURA1/BG1243.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates'),
+    (1, '/SAKURA1/BG2132.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates'),
+    (1, '/SAKURA1/BG2133.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates'),
     **NARRATIVE_CUTOUT_DRAWS,
     (1, '/SAKURA1/BG1198.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-bg1198-replacement'),
     (1, '/SAKURA1/BG1031.BIN'): (3, 'docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1'),

@@ -3865,9 +3865,11 @@
           },
           "1:/SAKURA1/BG1243.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
+            "evidence": "docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates",
             "pc": "SAKURA1/BG/BG1243.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG2058.BIN": {
             "association": "observed",
@@ -3877,15 +3879,19 @@
           },
           "1:/SAKURA1/BG2132.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
+            "evidence": "docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates",
             "pc": "SAKURA1/BG/BG2132.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG2133.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
+            "evidence": "docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates",
             "pc": "SAKURA1/BG/BG2133.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG2533.BIN": {
             "association": "observed",
