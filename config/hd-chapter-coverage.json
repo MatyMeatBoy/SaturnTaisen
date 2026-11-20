@@ -8675,6 +8675,15 @@
         "pc_image_index": 3,
         "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110c-cd-2-emblem-in-the-load-menu",
         "status": "hd"
+      },
+      "pc:SAKURA1/SYSTEM/TUIKA_W.SPR#0": {
+        "association": "unknown",
+        "draw": "patch 0197, port/frontend_sdl.cpp: save confirmation frame border",
+        "pc": "SAKURA1/SYSTEM/TUIKA_W.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#hd-save-confirmation-frame",
+        "status": "hd",
+        "verified_in_game": true
       }
     },
     "portraits": {
