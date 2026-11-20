@@ -4916,11 +4916,59 @@
             "evidence": "docs/research/th8-native-attribution.md",
             "status": "unpaired"
           },
+          "2:/SAKURA1/BG1236.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "pc": "SAKURA1/BG/BG1236.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1237.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "pc": "SAKURA1/BG/BG1237.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2033.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "pc": "SAKURA1/BG/BG2033.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2077.BIN": {
             "association": "observed",
             "evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
             "pc": "SAKURA1/BG/BG2077.SPR",
             "runtime_evidence": "docs/research/scroll-table.md#bg1282-bg2077-and-bg2176-on-english-disc-2",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2081.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "pc": "SAKURA1/BG/BG2081.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2082.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "pc": "SAKURA1/BG/BG2082.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2083.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
+            "pc": "SAKURA1/BG/BG2083.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802",
             "status": "hd",
             "verified_in_game": true
           },
@@ -17050,16 +17098,6 @@
         "pc": "SAKURA1/BG/BG1235.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1236.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1236.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1237.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1237.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1238.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1238.SPR",
@@ -17685,11 +17723,6 @@
         "pc": "SAKURA1/BG/BG2032.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG2033.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2033.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG2034.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2034.SPR",
@@ -17903,21 +17936,6 @@
       "2:/SAKURA1/BG2080.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2080.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2081.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2081.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2082.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2082.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2083.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2083.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2084.BIN": {

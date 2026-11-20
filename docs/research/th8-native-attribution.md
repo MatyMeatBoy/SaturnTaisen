@@ -25,3 +25,35 @@ The 960,719 changed pixels per sample agree with the independent PC
 decode within two RGB levels. The 1,052,226 inset pixels that differ
 from the standalone native background remain exact. The private repro
 is under `local/work/codex-th1/ch7-ch8-hd-plates/`.
+
+## Verified festival scene draws on 0802
+
+Six physical PC scene pictures render in Enhanced Zoom on the natural English
+disc-2 Iris festival route. The checkpoints are from the 0802 play sequence
+recorded in [Iris route evidence](nc3517-route-evidence.md).
+
+| Physical PC donor | Saturn source FAD | Archived checkpoint under `nc3517-live/` | Changed pixels per sample |
+| --- | ---: | --- | ---: |
+| `BG1236.SPR` | 120467 | `iris-0802-monkey/terminal.state` | 2,010,472 |
+| `BG1237.SPR` | 120490 | `iris-0802-festival-exit/terminal.state` | 1,257,512 |
+| `BG2033.SPR` | 123593 | `iris-0802-deploy/f4320.state` | 2,031,150 |
+| `BG2081.SPR` | 124708 | `iris-0802-stall-mid/terminal.state` | 1,625,295 |
+| `BG2082.SPR` | 124731 | `iris-0802-stall-near/terminal.state` | 1,734,787 |
+| `BG2083.SPR` | 124754 | `iris-0802-after-shoot/terminal.state` | 1,859,777 |
+
+Each checkpoint was replayed with its own archived SRAM and neutral controller
+for 56 fields at 2560×1440 with strict native and D3D11. The two arms used the
+same cumulative 0213 runtime, SHA-256
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`,
+and differed only by the presence of the named PC donor. All 336 guest hashes
+and all six terminal SRAM pairs matched. Both arms reported zero interpreted
+execution. Captures at fields 8, 16, 30 and 50 yielded 24 positive pairs.
+
+All RGB changes were inside the existing Zoom viewport at (272, 29) to
+(2288, 1037). For each changed pixel the control matched the independently
+decoded Saturn picture after RGB555 quantization and nearest scaling. The
+replacement matched the independently decoded PC picture after bilinear scaling
+within two levels per channel. Interface and actor pixels outside the replaced
+picture samples were exact. The BG1238 terminal checkpoint produced no positive
+draw and is excluded. This batch verifies six scene pictures in the existing
+runtime. The continuous chapter exit and package status remain open.

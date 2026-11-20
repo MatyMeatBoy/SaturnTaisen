@@ -193,6 +193,12 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG1236.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
+    (2, '/SAKURA1/BG1237.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
+    (2, '/SAKURA1/BG2033.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
+    (2, '/SAKURA1/BG2081.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
+    (2, '/SAKURA1/BG2082.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
+    (2, '/SAKURA1/BG2083.BIN'): (8, 'docs/research/th8-native-attribution.md#verified-festival-scene-draws-on-0802'),
     (1, '/SAKURA1/BG1101.BIN'): (1, 'docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening'),
     (2, '/SAKURA1/BG2018.BIN'): (9, 'docs/research/scene-spot-check.md#isolated-donor-witnesses-for-iriss-room-and-the-chapter-9-opening'),
     (2, '/SAKURA1/BG1061.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route'),
