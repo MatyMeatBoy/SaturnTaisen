@@ -131,3 +131,34 @@ add new HD draws, certify later routes or change a package. The later [NC81 unde
 At block close the project measured 61,293,478,622 logical bytes
 with hard links counted once and reparse points excluded, above
 the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+## Verified Chapter 9 scene draws
+
+Four English disc 2 scenes in the archived Chapter 9 continuation have
+isolated-donor Enhanced witnesses at 2560 × 1440. The runtime includes
+patch 0213. The variant with the selected PC image and the stock variant
+share the same route checkpoint, settings and background pack. Only the
+named donor differs.
+
+| Saturn picture | Archived checkpoint | Changed RGB pixels per sampled field |
+| --- | --- | ---: |
+| BG1076 | Post-dream route terminal before the salon relay | 2,031,368 |
+| BG1176 | Storage briefing continuation | 1,280,324–1,280,618 |
+| BG2098 | Natural 0902 module relay terminal | 1,868,127 |
+| BG2100 | Reveal relay field 239 | 1,673,860 |
+
+The reveal checkpoint was regenerated from the public Chapter 9 slot's
+archived relay, with all 240 guest hashes matching the saved history.
+All four 56-field strict comparisons match their stock guest hashes and
+final SRAM, with zero interpreted blocks. The four sampled fields per
+scene are 8, 16, 30 and 50.
+
+Each changed output pixel lies in the picture viewport
+(272,29)–(2288,1037), belongs to the independently decoded stock Saturn
+plate, and agrees with the independently decoded bilinearly scaled PC
+art within two RGB levels. The rest of the frame retains stock RGB.
+BG1076's disc 1 witness remains in the registry; its donor is counted once.
+
+Local receipts and replay outputs remain under
+`local/work/codex-witness-441-review/hud/chapter9-plates/`.
+This verification covers these four appearances.

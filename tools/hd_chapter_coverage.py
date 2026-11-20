@@ -184,6 +184,10 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG1076.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws'),
+    (2, '/SAKURA1/BG1176.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws'),
+    (2, '/SAKURA1/BG2098.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws'),
+    (2, '/SAKURA1/BG2100.BIN'): (9, 'docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws'),
     (1, '/SAKURA1/BG1243.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates'),
     (1, '/SAKURA1/BG2132.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates'),
     (1, '/SAKURA1/BG2133.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-chapter-5-lower-scene-plates'),
