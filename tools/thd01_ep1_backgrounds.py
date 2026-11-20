@@ -53,5 +53,9 @@ dup = {k: v for k, v in spr.items() if len(v) > 1 and k != '-'}
 out += ['', f'SPR fisicos compartidos por varios BG Saturn: {dup or "ninguno"}.', '']
 from collections import Counter
 out.append('Resumen: ' + ', '.join(f'{k}: {v}' for k, v in Counter(r[2] for r in rows).items()))
-Path(sys.argv[1]).write_text('\n'.join(out) + '\n', encoding='utf-8')
+destination = Path(sys.argv[1])
+witness_heading = '\n\n## Verificacion en juego a 2560x1440'
+existing = destination.read_text(encoding='utf-8') if destination.is_file() else ''
+_, heading, evidence = existing.partition(witness_heading)
+destination.write_text('\n'.join(out) + (heading + evidence if heading else '\n'), encoding='utf-8', newline='\n')
 print(out[-1])
