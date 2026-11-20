@@ -358,6 +358,7 @@ EXACT_BODY_DRAWS = {
 }
 
 CHAPTER_WITNESSES = {
+    (2, '/SAKURA1/BG1360.BIN'): (9, 'docs/research/hd-chapter-9.md#bg1360-door-variant'),
     **EXACT_BODY_DRAWS,
     (1, '/SAKURA1/BG4351.BIN'): (6, 'docs/research/hd-chapter-6.md#west-staircase-and-file-0602'),
     (2, '/SAKURA1/IC08.BIN'): (8, 'docs/research/ic-intermission-table.md#ic08-on-english-disc-2'),
