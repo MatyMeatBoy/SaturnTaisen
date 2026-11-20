@@ -365,6 +365,10 @@ CHAPTER_WITNESSES = {
     STAGE15_MAP: (9, STAGE15_REPORT),
     STAGE16_MAP: (9, STAGE16_REPORT),
     (1, '/SAKURA2/UNIT04.BIN'): (3, 'docs/research/th3-native-attribution.md'),
+    (1, '/SAKURA1/NC31.BIN'): (3, 'docs/research/th3-native-attribution.md#cold-replay-trace'),
+    (1, '/SAKURA2/WKL04.BIN'): (3, 'docs/research/th3-native-attribution.md#cold-replay-trace'),
+    (1, '/SAKURA2/WKL05.BIN'): (3, 'docs/research/th3-native-attribution.md#cold-replay-trace'),
+    (1, '/SAKURA2/UNIT05.BIN'): (3, 'docs/research/th3-native-attribution.md#cold-replay-trace'),
     **{(1, f'/SAKURA1/{name}.BIN'): (1, CHAPTER1_ROUTE_REPORT)
        for name in CHAPTER1_ROUTE_SCENES + CHAPTER1_ROUTE_BODIES},
     **SCENE_DRAWS,
