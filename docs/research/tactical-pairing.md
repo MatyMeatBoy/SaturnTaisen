@@ -262,6 +262,14 @@ testing the ground at 1440p. Tile-based candidates MAP03, MAP20 and MAP23
 also need their exact PC placement data. The checkpoint paths and scan
 receipt are under `local/work/codex-th1/tactical-witness-refresh`.
 
+### Offline placement for MAP03, MAP20 and MAP23
+
+The owner PC assets now have independent placement references. MAP03 has 626 64 × 64 tiles and 631 placements. MAP20 has 96 128 × 128 tiles and 139 placements. Each table has distinct destination coordinates aligned to its tile grid. All references fit the 2048 × 2048 plane used by the existing tactical placement assembler. The 1024 × 1024 sampled RGBA SHA-256 prefixes are `c7fc082a987f` for MAP03 and `e54658e2c565` for MAP20.
+
+The placement directory in `MAP23_A.SPR` names four 1392 × 1232 images and places them at (0,0), (1392,0), (0,1232) and (1392,1232). This is a rectangular 2784 × 2464 assembly. The square tile assumption in the earlier proposal cannot reproduce this table. Use the full assembly as the reference when finding the Saturn viewport and playable scroll bounds. The live sampler dimensions and crop still require a natural MAP23 camera.
+
+This offline check leaves the live ground total unchanged. References stay in `local/work/codex-th1/tactical-multipart`. For MAP03 and MAP20 the next required evidence is an actual camera and source-layer match. For MAP23 preserve its placement order and compare at two camera positions before registering a runtime mapping.
+
 ### Published File 1 entrance
 
 The exact v0.2.15-alpha executable started cold from a copy of the
