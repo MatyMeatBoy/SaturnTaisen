@@ -1,0 +1,55 @@
+{
+ "ambiguous_leads": [
+  {
+   "image": 0,
+   "pc": "SAKURA2/UNIT/PLAYER/OOGAMI/BU_KOUBU.SPR",
+   "pc_image": 1,
+   "saturn": "1:/SAKURA2/UNIT04.BIN",
+   "score": 0.76,
+   "size": "32x40",
+   "slot": 0,
+   "status": "ambiguous"
+  },
+  {
+   "image": 8,
+   "pc": "SAKURA2/UNIT/PLAYER/OOGAMI/BU_KOUBU.SPR",
+   "pc_image": 5,
+   "saturn": "1:/SAKURA2/UNIT04.BIN",
+   "score": 0.72,
+   "size": "32x40",
+   "slot": 0,
+   "status": "ambiguous"
+  },
+  {
+   "image": 13,
+   "pc": "SAKURA2/UNIT/PLAYER/OOGAMI/BU_KOUBU.SPR",
+   "pc_image": 6,
+   "saturn": "1:/SAKURA2/UNIT04.BIN",
+   "score": 0.719,
+   "size": "32x40",
+   "slot": 0,
+   "status": "ambiguous"
+  }
+ ],
+ "coverage": {
+  "pc_files_scanned": 40,
+  "pc_files_total": 291,
+  "pc_folder": "PLAYER (first 40 files alphabetically)",
+  "saturn_bank": "1:/SAKURA2/UNIT04.BIN",
+  "saturn_pieces_tested": 43
+ },
+ "method": "8x8..32x40 Saturn pieces coloured with bank palette slot 12, greyscale; PC image box-reduced by 2, cyan (0,255,255) = clear; masked normalised cross-correlation of the piece inside each PC image (>=90% of the piece covered by opaque PC pixels). Tier content needs score >= 0.90 and a 0.05 margin.",
+ "pc_unit_files_status": {
+  "no-counterpart": 291
+ },
+ "saturn_distinct_images": 461,
+ "schema": 1,
+ "scope": "Content pairing of decoded Saturn unit pieces (UNIT04 slot 0 image set) with PC SAKURA2/UNIT SPR; scores only, no pixels.",
+ "summary": {
+  "ambiguous": 3,
+  "best_score": 0.76,
+  "no-counterpart": "all other Saturn pieces and all 291 PC files",
+  "paired": 0,
+  "reason": "Saturn images are body parts (torso, arms, legs of a Koubu), not whole frames; the layout tables that assemble them were not found, so a piece only matches part of a PC frame and scores stay below the 0.90 tier."
+ }
+}
