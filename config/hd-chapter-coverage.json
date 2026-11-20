@@ -16831,6 +16831,70 @@
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
+      "1:/SAKURA1/BGHANA.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/HANA/BG_HANA.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "1:/SAKURA1/BGKOIKOI.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/KOIKOI/BG_KOI.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "1:/SAKURA1/BGMAIGO.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/MAIGO/BG_MAIGO.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "1:/SAKURA1/BGRYORI.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/COOK/BG_RYORI.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "1:/SAKURA1/BGSLOT.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SLOT/BG_SLOT.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "1:/SAKURA1/BGSOUJI.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SOUJI/BG_SOUJI.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "1:/SAKURA1/BGSWIM.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SWIM/BG_SWIM.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "1:/SAKURA1/BGSYATE.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SHOT/BG_SYATE.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
       "1:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
@@ -20248,6 +20312,70 @@
         "pc": "SAKURA1/BG/BG4383.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
+      },
+      "2:/SAKURA1/BGHANA.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/HANA/BG_HANA.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "2:/SAKURA1/BGKOIKOI.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/KOIKOI/BG_KOI.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "2:/SAKURA1/BGMAIGO.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/MAIGO/BG_MAIGO.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "2:/SAKURA1/BGRYORI.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/COOK/BG_RYORI.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "2:/SAKURA1/BGSLOT.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SLOT/BG_SLOT.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "2:/SAKURA1/BGSOUJI.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SOUJI/BG_SOUJI.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "2:/SAKURA1/BGSWIM.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SWIM/BG_SWIM.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
+      },
+      "2:/SAKURA1/BGSYATE.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
+        "pc": "SAKURA3/CG/SHOT/BG_SYATE.SPR",
+        "pc_image_index": 0,
+        "reason": "The minigame layer viewport and transform still need an in-game witness.",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",

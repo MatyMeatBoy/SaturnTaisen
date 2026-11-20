@@ -22,7 +22,7 @@ In the file, the low bits of each pattern name give a 32-byte character number (
 index). Bit 30 flips horizontally and bit 31 vertically. The complete tile bytes in the file
 bound all reads because BG4302 declares more tiles than its file contains.
 
-The mini-game files (BGHANA, BGSLOT, ...) start with a palette and are not decoded here.
+The mini-game files start with a palette and store two adjacent pages (512+128 by 448).
 
 Usage:
   python tools/decode_saturn_bg.py DISC_TRACK01.iso OUTDIR [--prefix SAKURA1/BG]
@@ -59,7 +59,7 @@ def decode(data):
     if screen is not None:
         return screen
     layout = _fixed_cells(data)
-    return _cells(data, layout[2], HEADER, *layout[:2]) if layout else None
+    return _cells(data, layout[2], HEADER, *layout[:2]) if layout else decode_minigame_bg(data)
 
 
 def _fixed_cells(data):
@@ -91,8 +91,8 @@ def _variant_b_layout(data):
     return cells_w, cells_h, picture_at, names
 
 
-def _variant_b_image(data, cells_w, cells_h, picture_at, names):
-    words = struct.unpack_from('>256H', data, 0x10)
+def _variant_b_image(data, cells_w, cells_h, picture_at, names, palette_at=0x10):
+    words = struct.unpack_from('>256H', data, palette_at)
     palette = [((w & 31) * 255 // 31, ((w >> 5) & 31) * 255 // 31, ((w >> 10) & 31) * 255 // 31)
                for w in words]
     image = Image.new('RGB', (cells_w * 8, cells_h * 8))
@@ -106,6 +106,24 @@ def _variant_b_image(data, cells_w, cells_h, picture_at, names):
             row_at = base + (y ^ flip_y) * 8
             for x in range(8):
                 pixels[left + x, top + y] = palette[data[row_at + (x ^ flip_x)]]
+    return image
+
+
+def decode_minigame_bg(data):
+    """Decode the palette, two pattern-name pages and shared 8 bpp tile data."""
+    first_page_cells = 64 * 56
+    name_count = (64 + 16) * 56
+    picture_at = 512 + 4 * name_count
+    tile_count, remainder = divmod(len(data) - picture_at, 64)
+    if not 3500 <= tile_count <= 4096 or remainder:
+        return None
+    names = struct.unpack_from(f'>{name_count}I', data, 512)
+    supported_bits = FLIP_HORIZONTAL | FLIP_VERTICAL | (CHARACTER_NUMBER & ~1)
+    if any(name & ~supported_bits or (name & CHARACTER_NUMBER) // 2 >= tile_count for name in names):
+        return None
+    image = Image.new('RGB', (640, 448))
+    image.paste(_variant_b_image(data, 64, 56, picture_at, names[:first_page_cells], 0))
+    image.paste(_variant_b_image(data, 16, 56, picture_at, names[first_page_cells:], 0), (512, 0))
     return image
 
 

@@ -20,6 +20,19 @@ def sample():
 
 
 class SaturnBgTests(unittest.TestCase):
+    def test_minigame_pages_join_at_column_512(self):
+        data = bytearray(0x4800 + 3500 * 64)
+        struct.pack_into('>2H', data, 2, 31, 31 << 10)
+        data[0x4800:0x4840] = bytes([1]) * 64
+        data[0x4840:0x4880] = bytes([2]) * 64
+        struct.pack_into('>I', data, 512 + 64 * 56 * 4, 2)
+        image = bg.decode(data)
+        self.assertEqual(image.size, (640, 448))
+        self.assertEqual(image.getpixel((511, 0)), (255, 0, 0))
+        self.assertEqual(image.getpixel((512, 0)), (0, 0, 255))
+        struct.pack_into('>I', data, 512 + 64 * 56 * 4, 7000)
+        self.assertIsNone(bg.decode(data))
+
     def test_cells_palette_and_size(self):
         image = bg.decode(sample())
         self.assertEqual(image.size, (288, 144))

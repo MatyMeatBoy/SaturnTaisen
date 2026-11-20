@@ -956,3 +956,24 @@ Against the patch 0151 runtime, the existing NC4138 fixture matches both 1440p c
 The coverage register records fixture evidence for both disc entries. Natural scene draws, other animation phases and package validation remain open. [NC3290 subsequently received natural stage-wing registration](nc3290-stage-wing.md). NC3517 still awaits safe registration. Private fixtures and receipts are under `local/work/codex-tp3c/nc3125-subset/`.
 
 At block close the project measured 68,423,377,348 logical bytes, above the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+## Minigame background pages
+
+Eight native minigame backgrounds contain 256 RGB555 palette words at
+0x0000 and 4,480 two-word VDP2 names at 0x0200. The first 3,584 names
+describe a 64 × 56 page. The following 896 names describe a 16 × 56
+page immediately to its right. Both pages address the same 8 bpp
+tile data at 0x4800. The low bits address characters in units of
+32 bytes and the upper two bits flip the tile as in variant B.
+Joining the pages at x=512 reconstructs the complete 640 × 448 picture.
+
+Both English discs contain byte-identical native banks for each picture.
+Each of the eight PC files contains one 640 × 480 image. Comparing the
+decoded source side by side verifies the same composition and landmarks.
+Normalized luminance correlations range from 0.999702 to 0.999949. File
+SHA-256, paths, and PC subimage indices are in the
+[minigame correspondence catalog](../../config/hd-minigame-bg-pairs.json).
+
+The offline correspondence is approved for each file. The visible
+Saturn layer, viewport timing, active crop, and fade still need natural
+gameplay witnesses before an Enhanced replacement may be connected.
