@@ -258,3 +258,7 @@ names and terrain compare exactly.
 Spanish patch distribution remains pending. Other WKL panels, attack
 names and live disc-2 coverage stay open. Local receipts are under
 `local/work/codex-th1/thd22-es-audit`.
+
+## Installer patches for tactical status and inventory
+
+The two Spanish installer deltas include the eight tactical status labels in all 27 WKL banks and the three inventory labels from /SAKURA on both discs. The normal installer updated both prepared English v2.1 discs with subtitled video in an isolated install. The resulting Spanish images matched the candidate SHA-256 hashes. The regenerated manifest changes only the Spanish records, and LOAD.BIN compares byte for byte against the previous Spanish source on both discs. The full package and runtime regression remain pending.
