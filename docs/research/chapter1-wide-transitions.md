@@ -239,3 +239,9 @@ target. Full campaign coverage and release packaging remain pending.
 The 4K exit replay matches 24 RGB captures, 760 guest fields, SRAM
 and PCM. The Direct3D 12 entry matches 11 RGB captures, guest hashes
 and SRAM. Screenshot runs are excluded from the timing comparison.
+
+A separate alternating memory run recorded peak process commit of
+1.053–1.054 GB before and 1.054–1.055 GB after (decimal units). In that
+run, counts over 16.67 ms were 2 and 6 before and 3 and 4 after.
+The two timing runs show that host timing still varies. Process
+commit is a host metric and does not measure video memory.
