@@ -195,7 +195,8 @@
       "patches/0197-sakura-save-confirmation-frame.patch",
       "patches/0198-sakura-hd-room-choice-frame.patch",
       "patches/0199-sakura-iris-ogami-combo-pose.patch",
-      "patches/0200-sakura-hd-tactical-status-frame.patch"
+      "patches/0200-sakura-hd-tactical-status-frame.patch",
+      "patches/0201-sakura-iris-ogami-combo-blend.patch"
     ]
   }
 }
