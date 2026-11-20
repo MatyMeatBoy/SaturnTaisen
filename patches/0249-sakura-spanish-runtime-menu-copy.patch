@@ -1,0 +1,138 @@
+diff --git a/recomp-common/menu.cpp b/recomp-common/menu.cpp
+--- a/recomp-common/menu.cpp
++++ b/recomp-common/menu.cpp
+@@ -312,7 +312,7 @@
+         case kRowSlot:
+             title = "Ranura";
+             value = std::to_string(m_slot);
+-            rowDescription = "Left/Right: the slot (1-9) that Save state and Load state use.";
++            rowDescription = "Izquierda/Derecha: elige la ranura (1 a 9) para guardar o cargar.";
+             break;
+         case kRowSpeed:
+             title = "Velocidad";
+@@ -353,15 +353,15 @@
+                 }
+             }
+             if (onCount) {
+-                value = std::to_string(onCount) + " on  >";
++                value = std::to_string(onCount) + " activos >";
+                 valueColor = on;
+             }
+-            rowDescription = page && !page->description.empty() ? page->description : "The page of " + row.page + " choices.";
++            rowDescription = page && !page->description.empty() ? page->description : "Opciones de " + row.page + ".";
+             break;
+         }
+         case kRowBack:
+             title = "Atrás";
+-            rowDescription = Parent(m_page).empty() ? "To the first page (Left does the same)." : "To the " + Parent(m_page) + " page (Left does the same).";
++            rowDescription = Parent(m_page).empty() ? "Vuelve a la primera página. También puedes pulsar Izquierda." : "Vuelve a " + Parent(m_page) + ". También puedes pulsar Izquierda.";
+             break;
+         case kRowFeature: {
+             const MenuFeature &feature = m_config.features[row.index];
+@@ -407,7 +407,7 @@
+         const auto item=DescribeRow(row); title=item.title; value=item.value; description=item.description;
+     };
+     // (the hint is one line unless the picture is a narrow one)
+-    const std::string hint = "Up/Down: choose   Left/Right or " + m_config.confirmName + ": change   " + m_config.closeName + ": close";
++    const std::string hint = "Arriba/Abajo: elegir   Izquierda/Derecha o " + m_config.confirmName + ": ajustar   " + m_config.closeName + ": cerrar";
+     const int hintLines = TextLines(hint.c_str(), d, inner);
+     // (rows closer together when there are many; and when even that does not fit, the rows about the chosen
+     // one are shown)
+@@ -435,9 +435,9 @@
+ 
+     const float x = px + pad;
+     float y = py + pad;
+-    canvas.Text(x, y, 2 * d, 0, white, m_page.empty() ? "Menu" : m_page.c_str());
++    canvas.Text(x, y, 2 * d, 0, white, m_page.empty() ? "Menú" : m_page.c_str());
+     if (shown < m_rows.size()) {
+-        const std::string place = std::to_string(m_selected + 1) + " of " + std::to_string(m_rows.size());
++        const std::string place = std::to_string(m_selected + 1) + " de " + std::to_string(m_rows.size());
+         canvas.Text(x + inner - TextWidth(place.c_str(), d), y + 4 * d, d, 0, dim, place.c_str());
+     }
+     y += 16 * d + 6 * d;
+diff --git a/port/menu.cpp b/port/menu.cpp
+--- a/port/menu.cpp
++++ b/port/menu.cpp
+@@ -48,9 +48,9 @@
+     config.groups.push_back({{recomp::MenuRow::Pages}, {recomp::MenuRow::Speed}, {recomp::MenuRow::Mute}});
+     if (withStates) {
+         config.groups.back().push_back({recomp::MenuRow::Action, kSetResetPoint, "Marcar punto de práctica",
+-                                        "Keeps the game as it is now as the point to practise from (F2)."});
++                                        "Guarda el momento actual como punto de práctica (F2)."});
+         config.groups.back().push_back({recomp::MenuRow::Action, kGoToResetPoint, "Volver al punto de práctica",
+-                                        "Goes back to the reset point (F3, or the right stick's click)."});
++                                        "Vuelve al punto de práctica (F3 o al pulsar la palanca derecha)."});
+     }
+     if (satrecomp::TheGame().exportPictures) {
+         // A Pictures page under Game (the page of the game's own options; on the first page for a game without one),
+@@ -58,19 +58,19 @@
+         const bool gamePage = std::any_of(satrecomp::TheGame().features.begin(), satrecomp::TheGame().features.end(),
+                                           [](const satrecomp::Feature &f) { return std::string(f.category) == "Game"; });
+         const std::string folder = PicturesFolder();
+-        config.pages.push_back({"Pictures", gamePage ? "Game" : "",
+-                                "Export the game's pictures as JPEG files, and show the folder they go to.", false});
+-        config.commands.push_back({"Pictures", "Export pictures",
+-                                   "Writes the game's pictures (its gallery and the like) as JPEG files to " + folder +
+-                                       " (the pictures folder in your files: the launcher's Game page, YOUR FILES, Show). "
+-                                       "Files already there are written over."});
+-        config.commands.push_back({"Pictures", "Show pictures folder",
+-                                   "Opens " + folder + " (where Export pictures writes) in your file manager."});
++        config.pages.push_back({"Imágenes", gamePage ? "Game" : "",
++                                "Exporta las imágenes del juego en JPEG y abre su carpeta.", false});
++        config.commands.push_back({"Imágenes", "Exportar imágenes",
++                                   "Guarda las imágenes del juego en formato JPEG en " + folder +
++                                       " (consulta Tus archivos en el launcher). "
++                                       "Los archivos con el mismo nombre se reemplazan."});
++        config.commands.push_back({"Imágenes", "Abrir carpeta de imágenes",
++                                   "Abre " + folder + ", donde se guardan las imágenes exportadas."});
+     }
+     config.groups.push_back({});
+     if (withStates) {
+         config.groups.back().push_back({recomp::MenuRow::Action, kResetGame, "Reiniciar juego",
+-                                        "Starts the game again, as when it was switched on. Your saves are kept."});
++                                        "Vuelve al inicio del juego y conserva tus partidas guardadas."});
+     }
+     config.groups.back().push_back({recomp::MenuRow::Quit});
+     config.groups.back().push_back({recomp::MenuRow::Resume});
+@@ -81,10 +81,10 @@
+     config.value = [](size_t feature) { return satrecomp::FeatureSetting(satrecomp::TheGame().features[feature].name); };
+     config.setValue = [](size_t feature, int value) { satrecomp::SetFeatureValue(satrecomp::TheGame().features[feature].name, value); };
+     config.speeds.assign(std::begin(kSpeedNames), std::end(kSpeedNames));
+-    config.speedDescription = "Left/Right: how fast the game runs (- and = keys). F4 stops it and F8 goes on a frame at a time.";
++    config.speedDescription = "Izquierda/Derecha: ajusta la velocidad (- y =). F4 pausa y F8 avanza un fotograma.";
+     config.muted = [this] { return muted; };
+     config.setMuted = [this](bool to) { muted = to; };
+-    config.confirmName = "Enter or A";
++    config.confirmName = "Enter o A";
+     config.closeName = "Esc";
+     m_menu.Configure(std::move(config));
+ }
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -5174,14 +5174,14 @@
+     auto resetPoint = [&](bool set) {
+         std::string error;
+         if (set ? port.SetResetPoint(error) : port.GoToResetPoint(error)) {
+-            note(set ? "RESET POINT SET" : "RESET");
++            note(set ? "PUNTO DE PRÁCTICA GUARDADO" : "PUNTO DE PRÁCTICA RESTAURADO");
+         } else {
+             note(error);
+         }
+     };
+     auto setSpeed = [&](int speed) {
+         port.menu.SetSpeed(speed);
+-        note("SPEED " + std::to_string(port.menu.Speed()) + "%");
++        note("VELOCIDAD " + std::to_string(port.menu.Speed()) + "%");
+     };
+ 
+     const double kFrameNs = 1e9 / 59.8261; // NTSC Saturn field rate
+@@ -5555,7 +5555,7 @@
+             noteUntil = 0;
+         }
+         if (!noteUntil) { // (nothing just done to tell of: how things stand)
+-            showNote(paused ? "PAUSED  F8: A FRAME ON  F4: GO ON" : port.menu.Speed() != 100 ? "SPEED " + std::to_string(port.menu.Speed()) + "%" : "");
++            showNote(paused ? "PAUSA  F8: AVANZAR  F4: CONTINUAR" : port.menu.Speed() != 100 ? "VELOCIDAD " + std::to_string(port.menu.Speed()) + "%" : "");
+         }
+         const bool runs = !paused || stepFrame;
+         stepFrame = false;

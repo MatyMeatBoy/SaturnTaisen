@@ -78,8 +78,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/NC/NC3004.SPR",
+            "runtime_evidence": "docs/research/thd11-episode1-bodies.md#nc3004-at-the-episode-1-hanami",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC3173.BIN": {
             "association": "observed",
@@ -146,8 +147,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/NC/NC81.SPR",
+            "runtime_evidence": "docs/research/thd11-episode1-bodies.md#nc81-on-the-episode-1-late-theater-route",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC82.BIN": {
             "association": "observed",
@@ -162,8 +164,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/NC/NC95.SPR",
+            "runtime_evidence": "docs/research/thd11-episode1-bodies.md#nc95-on-the-episode-1-upstairs-route",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC96.BIN": {
             "association": "observed",
@@ -5783,10 +5786,11 @@
           },
           "2:/SAKURA1/NC3021.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-9.md#nc3021-face-registration-witness",
             "pc": "SAKURA1/NC/NC3021.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#nc3021-face-registration-witness",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "2:/SAKURA1/NC3031.BIN": {
             "association": "observed",
@@ -5824,6 +5828,15 @@
             "pc": "SAKURA1/NC/NC34.SPR",
             "status": "hd",
             "verified_in_game": false
+          },
+          "2:/SAKURA1/NC3517.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3517-route-evidence.md#natural-0904-body-and-faces",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC3517.SPR",
+            "runtime_evidence": "docs/research/nc3517-route-evidence.md#natural-0904-body-and-faces",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/NC41.BIN": {
             "association": "observed",
@@ -6330,11 +6343,27 @@
             "pc": "SAKURA1/BG/BG1143.SPR",
             "status": "hd"
           },
+          "2:/SAKURA1/BG1174.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "pc": "SAKURA1/BG/BG1174.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG1176.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG1176.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1180.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "pc": "SAKURA1/BG/BG1180.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
             "status": "hd",
             "verified_in_game": true
           },
@@ -6353,6 +6382,11 @@
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-lower-scene-plates-on-the-natural-0904-route",
             "status": "hd",
             "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1360.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#bg1360-door-variant",
+            "status": "unpaired"
           },
           "2:/SAKURA1/BG2017.BIN": {
             "association": "observed",
@@ -6450,6 +6484,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2103.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "pc": "SAKURA1/BG/BG2102.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2156.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
@@ -6473,6 +6515,14 @@
             "evidence": "docs/research/bg2238-still.md",
             "pc": "SAKURA1/BG/BG2238.SPR",
             "runtime_evidence": "docs/research/bg2238-still.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2517.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene",
+            "pc": "SAKURA1/BG/BG2517.SPR",
+            "runtime_evidence": "docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene",
             "status": "hd",
             "verified_in_game": true
           },
@@ -6788,15 +6838,19 @@
           },
           "2:/SAKURA1/BG2046.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-10.md#bg2046-ending-scene",
             "pc": "SAKURA1/BG/BG2046.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bg2046-ending-scene",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2057.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-10.md#bg2057-behind-nc3057",
             "pc": "SAKURA1/BG/BG2057.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bg2057-behind-nc3057",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2111.BIN": {
             "association": "observed",
@@ -7459,10 +7513,9 @@
       },
       "1:/SAKURA1/NC3517.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3517.SPR",
-        "reason": "The PC two-character strip uses a different crop and fills both native face openings.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
@@ -8094,13 +8147,6 @@
         "pc": "SAKURA1/NC/NC3516.SPR",
         "status": "hd",
         "verified_in_game": false
-      },
-      "2:/SAKURA1/NC3517.BIN": {
-        "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
-        "pc": "SAKURA1/NC/NC3517.SPR",
-        "reason": "The PC two-character strip uses a different crop and fills both native face openings.",
-        "status": "paired-not-wired"
       },
       "2:/SAKURA1/NC3518.BIN": {
         "association": "unknown",
@@ -17501,11 +17547,6 @@
         "pc": "SAKURA1/BG/BG1173.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1174.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1174.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1175.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1175.SPR",
@@ -17524,11 +17565,6 @@
       "2:/SAKURA1/BG1179.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1179.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1180.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1180.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1181.BIN": {
@@ -18152,10 +18188,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "2:/SAKURA1/BG1360.BIN": {
-        "association": "unknown",
-        "status": "unpaired"
-      },
       "2:/SAKURA1/BG1361.BIN": {
         "association": "unknown",
         "status": "unpaired"
@@ -18513,11 +18545,6 @@
       "2:/SAKURA1/BG2099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2099.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2103.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2102.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2104.BIN": {
@@ -19189,11 +19216,6 @@
       "2:/SAKURA1/BG2516.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2516.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2517.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2517.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2518.BIN": {

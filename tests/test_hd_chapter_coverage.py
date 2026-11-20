@@ -187,9 +187,12 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertTrue(sakura['verified_in_game'])
         self.assertTrue(sakura['native_face_fallback'])
         self.assertEqual(sakura['runtime_evidence'], 'docs/research/nc12-registered-faces.md')
-        unwitnessed = chapter1['bodies']['1:/SAKURA1/NC3004.BIN']
-        self.assertEqual(unwitnessed['association'], 'observed')
-        self.assertFalse(unwitnessed.get('verified_in_game'))
+        hanami = chapter1['bodies']['1:/SAKURA1/NC3004.BIN']
+        self.assertEqual(hanami['association'], 'observed')
+        self.assertTrue(hanami['verified_in_game'])
+        self.assertTrue(hanami['runtime_evidence'].endswith('#nc3004-at-the-episode-1-hanami'))
+        chapter8 = catalog['chapters'][7]['resources']
+        self.assertFalse(chapter8['bodies']['2:/SAKURA1/NC3004.BIN'].get('verified_in_game'))
         self.assertEqual(chapter1['portraits']['0001']['association'], 'observed')
         maria = chapter1['portraits']['0176']
         self.assertEqual((maria['association'], maria['status'], maria['pc_index']), ('observed', 'hd', 373))
@@ -291,7 +294,9 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertTrue(nc81['verified_in_game'])
         self.assertTrue(nc81['native_face_fallback'])
         self.assertEqual(nc81['runtime_evidence'], 'docs/research/nc81-nc90-1440p.md')
-        self.assertFalse(catalog['chapters'][0]['resources']['bodies']['1:/SAKURA1/NC81.BIN']['verified_in_game'])
+        theater = catalog['chapters'][0]['resources']['bodies']['1:/SAKURA1/NC81.BIN']
+        self.assertTrue(theater['verified_in_game'])
+        self.assertTrue(theater['runtime_evidence'].endswith('#nc81-on-the-episode-1-late-theater-route'))
         nc3018 = catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC3018.BIN']
         self.assertTrue(nc3018['verified_in_game'])
         self.assertEqual(nc3018['runtime_evidence'], 'docs/research/nc3018-registered-faces.md')
@@ -602,17 +607,6 @@ class ChapterCoverageTest(unittest.TestCase):
                     self.assertEqual(row['status'], 'hd')
                     self.assertFalse(row.get('verified_in_game'))
 
-    def test_short_body_pairs_keep_native_compositing(self):
-        root = Path(__file__).resolve().parents[1]
-        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
-        for disc in (1, 2):
-            for name in ('NC3517',):
-                with self.subTest(disc=disc, body=name):
-                    row = catalog['unassigned']['bodies'][f'{disc}:/SAKURA1/{name}.BIN']
-                    self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
-                    self.assertEqual(row['status'], 'paired-not-wired')
-                    self.assertFalse(row.get('verified_in_game'))
-
     def test_cutout_body_review_is_reflected_in_runtime_coverage(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
@@ -704,7 +698,13 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertTrue(body['native_face_fallback'])
                 self.assertFalse(body.get('verified_in_game'))
                 self.assertTrue(body['fixture_evidence'].endswith(anchor))
-            self.assertEqual(rows[f'{disc}:/SAKURA1/NC3517.BIN']['status'], 'paired-not-wired')
+            body = rows[f'{disc}:/SAKURA1/NC3517.BIN']
+            self.assertEqual((body['status'], body['pc']), ('hd', 'SAKURA1/NC/NC3517.SPR'))
+            self.assertTrue(body['native_face_fallback'])
+            self.assertEqual(bool(body.get('verified_in_game')), disc == 2)
+            if disc == 2:
+                self.assertEqual(body['association'], 'observed')
+                self.assertTrue(body['runtime_evidence'].endswith('#natural-0904-body-and-faces'))
             body = rows[f'{disc}:/SAKURA1/NC3290.BIN']
             self.assertEqual((body['status'], body['pc']), ('hd', 'SAKURA1/NC/NC3290.SPR'))
             self.assertTrue(body['native_face_fallback'])

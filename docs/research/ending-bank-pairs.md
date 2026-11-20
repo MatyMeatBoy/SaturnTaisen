@@ -407,3 +407,51 @@ The private receipts are under `local/work/codex-th1/tp3c-cg/maria-hd`.
 The coverage register credits the physical Maria donor once. The
 canonical shared cast photos still use END_SA. The native Maria route
 and package inclusion remain open.
+
+## Natural Sumire finale under the 1,411,614-block AOT build (THD08)
+
+PR #600 left an isolated strict AOT build (`sakura-end2.exe`, SHA-256 `155b255d79fe95ec16f1ff9a24e9670472e1e457a2d780eaa40d9780b6a0b34b`, 1,411,614 blocks, whole-module `ENDING_DISC2_EN_FULL`). Its public Finale case stopped at 45,000 frames before the credits. This run extends the same cold route to the end of the ending and the return to the title.
+
+Command (English disc 2, the `public-finale` backup, confirm mask `0400` held 4 fields every 75 fields: the old movie to frame 44,929, then the same cadence from 45,000):
+
+```powershell
+python tools/chapter_loads.py --exe local/build/sakura-ending/sakura-ending.exe --disc 2 --backup local/work/end2/run-public-finale/backup.bin --movie local/work/ending/finale-125k.movie --frames 125000 --interval 500 --out local/work/ending/run-cold-125k
+```
+
+`--disc 1` already gives a different frame hash at frame 3,000, so the case needs `--disc 2`. Result: exit 0, 125,000 frames, 125,000 frame hashes, `interpreted 0 (0.00%)`, blocks found this run 0. Frame-hash log SHA-256 `bd0b5197d24b33eb54cb3113453faff707c3d4fd053328ca43f4bb1b04141413`; extended movie SHA-256 `78183af17e9999e9b2939e0e4d474243890097745eb45984d3e45dd716a7c66b`; the first 44,929 frames use the previous movie, and the guest hashes of the first 45,000 frames equal those of the 45,000-frame run. The `art/` folder was beside the executable; the guest does not depend on it.
+
+Loads of the final stretch (`first_loads` of `loads.json`; frames are the trace estimate, states are the first saved state at or after it):
+
+| Cold frame | File | State | State SHA-256 |
+| ---: | --- | --- | --- |
+| 43,244 | `ADVSE10` | 43,499 | `d185d753…e7244e7` |
+| 43,430 | `ENDING.BIN`, `SU_CG.BIN`, `SU_SPR.BIN` (same Play Disc burst) | 43,499 | `d185d753a31dd5e4e39eea2254aaed454a774ac63165d25d5153dce37e7244e7` |
+| 43,616 | `OTOMEADP.DAT` | 43,999 | `361b632af00068ce0225da62327ee7aaea418b36be8e29b66e080b25c2be4da0` |
+| 62,942 | `VCEADV` | | |
+| 63,871 | `LOGO.SH2` (reset to the title) | | |
+| 64,057 and every ~8,500 fields after | `ADVSND`, `TITLESE`, `ADVBGM01`, `SAKURA4`, `OPSAKURA.CPK` (title and attract loop) | | |
+
+After the Fin the game returns to the title screen and loops its attract opening until frame 125,000. No other `*_CG.BIN` bank, FILM stream or credits stream is loaded: the credits and the Fin are drawn by `ENDING.BIN` itself. The other heroine banks and `GE_CG.BIN` stay unreachable on this route (the general ending needs all six completion bits, and the other routes need their own save). All 60 files of the run that are register resources are already attributed (`SU_CG.BIN` and the chapter 10 scene pictures, bodies and `1004FCE` of PR #600) or are `LOAD.BIN` (`unassigned`, loaded by the title). This route therefore adds no new attributed row.
+
+Timeline of the ending, measured from the saved state 43,999 of that cold run with native captures (frame `N` is `N` fields after loading it): staff credit pages to about +12,700, the colour group photograph with credit text over it from about +12,850, unobstructed from about +13,150 to +13,400, a fade, sepia group photograph from about +13,650 to +13,900, two route close-ups of Sumire from +14,000 to +14,800, the theatre exterior from +14,850, the copyright line at about +15,700 and the localized `Fin` visible by +16,000 (cold frame about 60,000). The photograph is a stable full rectangle only in the two windows above; with the credit text over the colour photograph before +13,150 the exact-signature draw would stay native.
+
+### Does the Enhanced draw run on this route?
+
+Not with this executable. `sakura-end2.exe` has no ending presentation code: the checked-out source tree it was linked from (`local/deps/satrecomp-end2`) accepts a reverse apply of the stack only up to about patch 0084, and the binary holds no `ending photo` string (patches 0137, 0189, 0192, 0194, 0233, 0239 add the ending draws). Four 2560x1440 pairs (Enhanced with the donor pack, Enhanced without it, Original) from the saved states at +13,249, +13,799, +14,299 and +14,719 give Enhanced equal to the missing-donor capture in all four (0 pixels differ) and the same guest hashes in all three configurations, strict, 0 interpreted. That is the executable, not the donors: the same states with a full-stack executable draw.
+
+A full-stack development executable of the same day (`sakura-thd01.exe`, SHA-256 prefix `f2fcb44a037b1427`, full presentation stack with 0137 but without the `END_SU` rows of 0189, no ENDING blocks, run with the interpreter `SATRECOMP_NO_BLOCKS=1`) loads the same states. With the donor pack `SAKURA1/ENDING/END_SA.SPR` (2,988,213 bytes, FNV `44DC7D66456C8105`):
+
+| State and frames | Picture | Enhanced differs from missing donor | Inside the (320,144)-(2240,1104) rectangle | Outside |
+| --- | --- | ---: | --- | --- |
+| +12,999, 250 fields (+13,249) | colour group photograph (record 6) | 1,792,224 px, all inside the rectangle | equals `END_SA` subimage 6 at 3x nearest, 100% | Enhanced equals missing donor |
+| +13,499, 300 fields (+13,799) | sepia group photograph (record 7) | 1,755,558 px, all inside the rectangle | equals `END_SA` subimage 7 at 3x nearest, 100% | Enhanced equals missing donor |
+
+A sweep every 50 fields (1280x720) shows the draw at +13,149 to +13,399 and +13,649 to +13,799 and no difference at +13,449 to +13,599 (the fade). The guest hash logs of Enhanced, missing donor and Original are identical in each pair, and equal to the strict AOT hash logs of the same segments (`5b4b17dd58b4da0d` and `c9ab75af77d67651`, first 16 hex digits of the SHA-256 of the hash log), so the 1,411,614-block build and the interpreter agree on the route. The two close-ups of Sumire (records 8 and 11, patch 0189) are not drawn by that executable (no `END_SU` in it), so the Sumire-only pictures are not re-witnessed here.
+
+These pictures are the shared END_SA photographs already `hd` and verified (see above). Nothing here changes a register row: the disc 2 `SU_CG.BIN` row stays `hd`, `observed`, chapter 10; the seven disc 1 rows stay `paired-not-wired` (this route is disc 2); no `wired-unverified` ending row is left in `config/hd-chapter-coverage.json`.
+
+### What is missing and who
+
+- Integration desk: link one executable with the full patch stack (through 0245) and the 1,411,614-block ENDING-complete registry (PR #600). That would show the Enhanced draw of all four photographs and the zero-interpreted hash parity in a single strict run. It needs a clean build of the generated blocks, which is hours, so it was not done here.
+- Owner (discs, natural play): Kanna, Maria, Iris and Kohran continuation replays, and the six-route general ending, as listed above. The Sumire route does not load their banks.
+- Fixtures, states, movies and captures stay under `local/work/ending`.

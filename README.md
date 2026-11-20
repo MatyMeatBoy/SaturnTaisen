@@ -1,7 +1,7 @@
 <h1 align="center">🌸 SaturnTaisen</h1>
 <p align="center"><strong>Sakura Wars / Sakura Taisen · Sega Saturn</strong><br>Static SH-2 recompilation · Windows x64</p>
 <p align="center">
-  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.3.1-alpha"><img alt="v0.2.3.1-alpha" src="https://img.shields.io/badge/release-v0.2.3.1--alpha-9a4564?style=flat-square"></a>
+  <a href="https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.17-alpha"><img alt="v0.2.17-alpha" src="https://img.shields.io/badge/release-v0.2.17--alpha-9a4564?style=flat-square"></a>
   <img alt="Windows x64 portable" src="https://img.shields.io/badge/Windows-x64_portable-77445b?style=flat-square">
   <a href="docs/research/chapter1-battle-progress.md"><img alt="Static SH-2 AOT" src="https://img.shields.io/badge/SH--2-static_AOT-bf914d?style=flat-square"></a>
   <a href="docs/releases/v0.2.0-test.3.md"><img alt="Local validation documented" src="https://img.shields.io/badge/testing-local_report-5d755d?style=flat-square"></a>
@@ -13,7 +13,7 @@ A return to the Imperial Theater with recompiled SH-2 code, integer-scaled pixel
 
 <a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
 
-**v0.2.3.1-alpha is a public alpha, not the certified complete game.** You bring only your own files — the two Sakura Taisen Saturn discs and, optionally, the PC edition — and the launcher prepares everything else on your PC: English or Spanish, and the HD mod. Chapter 1 end-to-end and the full campaign are not yet verified. [Scope of this release](docs/releases/v0.2.3.1-alpha.md). Earlier packages are kept intact.
+**Download the current Windows alpha, v0.2.17-alpha.** The launcher prepares the English or Spanish game and the optional HD mod from your own Saturn discs and PC edition. Campaign verification is ongoing. [Download v0.2.17-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.17-alpha) · [Release notes](docs/releases/v0.2.17-alpha.md).
 
 ## Play
 
@@ -62,7 +62,7 @@ Pixels are scaled with nearest-neighbor and integer multipliers. Output keeps th
 | Tactical 16:9/HUD | Stage01 enabled in Enhanced mode with corrected menus. Other stages, the full HUD, and the entire battle remain pending. |
 | RetroAchievements | Pending: no online/offline achievements are announced as available. |
 | PC | Assets are used for the Saturn HD mod; running and translating the PC version itself are on hold. |
-| Spanish translation | All ten chapters and the battle text of both discs, reviewed against the reconstructed Japanese; menus redrawn. Selected in the launcher. Played in the game: chapters 1 and 2 plus spot checks; chapters 3–6, 9 and 10 verified on the built image only. Episode cards, LOADING, the extra menu and video subtitles remain English. |
+| Spanish translation | All ten chapters and the battle text of both discs, reviewed against the reconstructed Japanese; menus redrawn. Selected in the launcher. Played in the game: chapters 1 and 2 plus spot checks; chapters 3–6, 9 and 10 verified on the built image only. Both Spanish discs include episode cards and CARGANDO. The extra menu and video subtitles are still being localized. |
 
 PC body assets will keep a single height-based scale, with the head/torso axis aligned to the original; they will not be stretched to fill a box. Full hardware compatibility across all M30 firmware revisions and the target machine's RX 6900 XT still needs checking there.
 
@@ -78,13 +78,13 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 304/304 (100%) | Sin dato |
-| Imágenes de escena | Sin dato | 146/1167 (12,5%) |
+| Imágenes de escena | Sin dato | 151/1167 (12,9%) |
 | Escenas y transiciones | Sin dato | Sin dato |
 | Vídeos | Sin dato | Sin dato |
 | Modo táctico | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | Sin dato | 45/147 (30,6%) |
+| Personajes grandes NC | Sin dato | 48/147 (32,6%) |
 
 | Sección | Integrado |
 | --- | --- |
@@ -95,9 +95,9 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Modo táctico | Sin dato |
 | HUD y menús PC/Saturn | 59/229 (25,7%) |
 | Fondos decorativos KABE | 19/19 (100%) |
-| Personajes grandes NC | 146/147 (99,3%) |
+| Personajes grandes NC | 147/147 (100%) |
 
-**HD total: 1188/1916 (62%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1189/1916 (62%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).

@@ -220,6 +220,12 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG2057.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2057-behind-nc3057'),
+    (2, '/SAKURA1/BG2517.BIN'): (9, 'docs/research/nc3517-route-evidence.md#bg2517-bedroom-scene'),
+    (2, '/SAKURA1/BG2046.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2046-ending-scene'),
+    (2, '/SAKURA1/BG1174.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias'),
+    (2, '/SAKURA1/BG1180.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias'),
+    (2, '/SAKURA1/BG2103.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias'),
     (2, '/SAKURA1/BG2101.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-warehouse-backgrounds'),
     (2, '/SAKURA1/BG2102.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-warehouse-backgrounds'),
     (2, '/SAKURA1/BG2021.BIN'): (9, 'docs/research/hd-chapter-9.md#bg2021-on-the-earned-iris-route'),
@@ -324,7 +330,14 @@ SCENE_DRAWS = {
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
+NATIVE_ROUTE_DRAWS = {
+    (1, 1, '/SAKURA1/NC95.BIN'): 'docs/research/thd11-episode1-bodies.md#nc95-on-the-episode-1-upstairs-route',
+}
+
 EXACT_BODY_DRAWS = {
+    (1, '/SAKURA1/NC81.BIN'): (1, 'docs/research/thd11-episode1-bodies.md#nc81-on-the-episode-1-late-theater-route'),
+    (1, '/SAKURA1/NC3004.BIN'): (1, 'docs/research/thd11-episode1-bodies.md#nc3004-at-the-episode-1-hanami'),
+    (2, '/SAKURA1/NC3021.BIN'): (9, 'docs/research/hd-chapter-9.md#nc3021-face-registration-witness'),
     (1, '/SAKURA1/NC24.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602'),
     (1, '/SAKURA1/NC42.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602'),
     (1, '/SAKURA1/NC26.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc26-body-in-0602'),
@@ -354,6 +367,8 @@ EXACT_BODY_DRAWS = {
 }
 
 CHAPTER_WITNESSES = {
+    (2, '/SAKURA1/NC3517.BIN'): (9, 'docs/research/nc3517-route-evidence.md#natural-0904-body-and-faces'),
+    (2, '/SAKURA1/BG1360.BIN'): (9, 'docs/research/hd-chapter-9.md#bg1360-door-variant'),
     **EXACT_BODY_DRAWS,
     (1, '/SAKURA1/BG4351.BIN'): (6, 'docs/research/hd-chapter-6.md#west-staircase-and-file-0602'),
     (2, '/SAKURA1/IC08.BIN'): (8, 'docs/research/ic-intermission-table.md#ic08-on-english-disc-2'),
@@ -908,8 +923,8 @@ def build(root, index_dir, portrait_audit):
                 'native_face_fallback': True,
             }
             proof = body_review['registered_silhouettes'][name]
-            if name == 'NC3290':
-                if disc == 1:
+            if name in ('NC3290', 'NC3517'):
+                if disc == (1 if name == 'NC3290' else 2):
                     row.update(verified_in_game=True, runtime_evidence=proof)
             else:
                 row['fixture_evidence'] = proof
@@ -995,7 +1010,10 @@ def build(root, index_dir, portrait_audit):
             for episode, evidence in witnesses:
                 if chapter != episode:
                     occurrence = {k: v for k, v in row.items() if k != 'runtime_evidence'}
-                    if 'verified_in_game' in occurrence:
+                    proof = NATIVE_ROUTE_DRAWS.get((episode, disc, path))
+                    if proof:
+                        occurrence.update(verified_in_game=True, runtime_evidence=proof)
+                    elif 'verified_in_game' in occurrence:
                         occurrence['verified_in_game'] = False
                     add(kind, key, occurrence, episode, 'observed', evidence)
 

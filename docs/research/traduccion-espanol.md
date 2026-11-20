@@ -264,3 +264,48 @@ names and live disc-2 coverage stay open. Local receipts are under
 The two Spanish installer deltas include the eight tactical status labels in all 27 WKL banks and the three inventory labels from /SAKURA on both discs. The normal installer updated both prepared English v2.1 discs with subtitled video in an isolated install. The resulting Spanish images matched the candidate SHA-256 hashes. The regenerated manifest changes only the Spanish records, and LOAD.BIN compares byte for byte against the previous Spanish source on both discs. The validated deltas are distributed in [v0.2.16.1-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.16.1-alpha). The release uses the v0.2.16-alpha executable. The ZIP passed CRC and SHA-256 checks for the 158 manifested files.
 
 Using the packaged v0.2.16.1-alpha executable and the Spanish disc 1 produced by the installer, the 2,940-field strict opening replay completed without interpreted blocks. The CARGANDO and fade captures at fields 2,440, 2,520, 2,600, 2,680 and 2,760 were pixel-identical at 2560 × 1440 to the v0.2.16-alpha legacy Spanish-disc replay. The guest hashes differ from field index 109 between these disc versions. This is a visual regression result.
+
+
+## Allied tactical special attacks in Spanish
+
+The WKL recipe translates six allied special-attack names across the 27 banks on both discs. The guarded 88 × 16 replacement preserves the native palette and record layout. All 162 PRS edits fit in their existing spans, with at least 33 bytes spare. Maria's Snegurochka retains its proper name. Other command and enemy labels are tracked separately.
+
+Sakura and Kohran displayed Divinidad floral and Minirrobots in natural MAP02 Info replays at 1440p. Controlled Original and Enhanced comparisons reproduced the translated texture inside the attack-name rectangle. The guest fields ran strictly and final SRAM agreed within each comparison.
+
+## Spanish episode and loading art on disc 2
+
+The previous Spanish disc 2 retained all ten English TITLE files and the English LOAD file. The Spanish language layer now carries the same localized title and loading files as disc 1. Both English discs have identical source resources for these eleven files. The replacements retain the palette and cell-table headers, file sizes and disc extents. Disc 2 uses the same ten Enhanced lettering keys as disc 1.
+
+The packaged v0.2.16.1-alpha executable was replayed from cold Continue for 6,600 strict fields with the old and corrected Spanish disc 2. Three 1440p samples covering steady loading and its fade match all 9,504 expected native letter texels per sample: English on the old disc and CARGANDO on the corrected disc. Other sampled frames match RGB and the two runs finish with identical SRAM. The title files and generated center keys match disc 1 exactly. Natural visual proof of all ten Episode cards remains open.
+
+## Tactical pause and confirmation in Spanish
+
+Seven WKL sprites now localize the return to title, restart, suspend and restart confirmations, affirmative response and Options entry. All 27 banks retain the original byte ranges outside the seven exact-size texture spans. The negative response already reads No. A controlled A/B from the natural MAP02 pause and Restart confirmation ran 170 strict fields at 1440p with matching SRAM. RGB differences stay inside the translated labels. The advanced Options panel reads its resources from two copies in `0SLG.BIN` and `SLG.BIN`. Both now use the matching Spanish options streams from the same disc. The preparation recipe verifies the original and translated signatures and preserves the fixed offsets. The 170-field MAP02 Options replay at 1440p changed only the translated panel, with zero interpreted blocks and matching SRAM.
+
+## Tactical name variants and short commands
+
+The exact attack texture from Sakura's alternate deployment slot now selects Divinidad floral in WKL02, WKL07 and WKL11. The six short allied commands are translated across 243 occurrence slots in 27 banks. Each PRS span keeps its extent and unrelated decompressed bytes. The command Podozhdi retains the name used in the Spanish battle tutorial. Exact short-command textures were found in the natural Info states, with the active draws still to be witnessed.
+
+The witnessed enemy labels Musket, Talon and Acidshot now read Mosquete, Garra and Tiro ácido. The 92 matching slots retain their file layout and decoded bytes outside the name. Controlled 1440p replays from natural MAP02, MAP13 and MAP16 checkpoints finish with matching SRAM and zero interpreted blocks. RGB changes are confined to the three name rectangles. Demon kept its English text in v0.2.17-alpha because the original compressed slot was too small for the translated graphic.
+
+## Tactical descriptive text and turn notices
+
+The WKL census covers 27 banks across both discs. The exact image role, dimensions and SHA-256 guard 43 source textures and 955 occurrences. The batch adds 42 Spanish translations for descriptive unit names, classes, commands and special attacks. Proper names retain their existing form. The two raw notices now read Actuando and En turno. Their layout and signed source textures passed the resource checks in all 27 banks. The notices still need an active in-game draw witness.
+
+When a new PRS stream exceeds its original slot, the builder repacks only the original contiguous name directory extent. All offsets outside that extent and all unrelated decoded bytes stay exact. In a controlled MAP16 replay, ordinary target changes read the repacked directory and display Demonio. Both 170-field profiles finish with matching guest hashes and SRAM and zero interpreted blocks. The two differing 1440p captures change 6,948 pixels within the name alone.
+
+## Inventory, weapons and equipment audit
+
+All 3,136 typed item descriptions in the v0.2.17-alpha installation match the Spanish translation memory or per-record override, including the pistol, prop sword and shield descriptions. The 80 Saturn cards and 85 PC item and icon images examined contain no English item labels. The current installed graphics separately contain Opc., Volver and Objetos on both discs. The inspected inventory and tactical Info paths did not show a separate equipment selector.
+
+The Episode 8 inventory replay selects Kohran's photo and displays its Spanish description at 1440p in Original and Enhanced. Its description matches the installed table bytes. Both 220-field runs match hashes and SRAM with zero interpreted blocks. The retained checkpoint carries old button artwork, so the current installed label textures were verified independently at their source.
+
+## Port settings and notices
+
+Patch 0249 translates the remaining English descriptions and counters in the port's settings menu and the speed, pause and practice-point notices. This covers both the regular UI and the fallback text menu without changing which key or command each label invokes. In the 2560 × 1440 comparison from the Episode 2 status screen, opening settings changes only the active-options count. The speed and pause tests change only their notice region. Both pairs retain the guest hashes and SRAM. The patch is integrated after v0.2.17-alpha.
+
+## Spanish movie gallery
+
+The unlocked Long Day theater previously opened the English movie gallery on a Spanish disc. The gallery reads its frame, five tabs and double-character text atlas from `OMALL.DAT`. Movie names come from the associated pointer table in `/SAKURA`. The preparation recipe verifies the exact source archive, table, pointer order and action map on each disc. It localizes Películas, Salir, the tabs and the film titles while preserving the original extents and movie actions. Intro 1 and Intro 2 remain separate entries.
+
+The controlled 1440p comparison starts from a naturally unlocked theater gallery checkpoint. Both 510-field runs report zero interpreted blocks and identical SRAM. All 16 RGB comparisons confine changes to the tab ink, list text and footer. The three frames after exiting the gallery match exactly. A separate 870-field first-title playback makes the same CD requests in both profiles and reproduces all four sampled frames and final SRAM. Both installer outputs contain the verified gallery archive and program table byte for byte. A cold disc 2 theater route from each install completed 13,440 strict fields with identical SRAM. The title and preceding theater choice match at 1440p. Each settled gallery capture changes exactly 165,528 pixels inside the translated labels. Other extras menus and the subtitles within movies remain open.

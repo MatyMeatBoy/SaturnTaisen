@@ -1,8 +1,8 @@
 """Does the runtime draw the PC scene picture in a headless run? Runs a state with and without the PC donor and says.
 
 A development runtime (no release.marker) is started hidden and unthrottled twice from the same state: once with
-`--pc-assets DONOR` (the PC picture can be drawn) and once without it (control). The picture is "drawn" when the donor run prints
-a `scene picture: FILE usable=1` line and the capture comparison is reported separately. An unexplained capture difference alone does not identify a scene.
+`--pc-assets DONOR` (the PC picture can be drawn) and once without it (control). The trace identifies the available
+scene texture or the drawn pan. A successful comparison also needs a visible RGB difference.
 
     python tools/scene_draw_probe.py --exe local/build/sakura-probe/sakura-probe.exe \
         --state local/work/probe-cold/b1209.state --pc-assets local/work/pc-cab/out-bg --size 2560x1440
@@ -12,6 +12,7 @@ executable never draws any scene picture (no floral backdrop, so the enhanced pr
 in that case. Never commit the captures or states it writes (they stay under --out, normally in local/).
 """
 import argparse
+import json
 import os
 import pathlib
 import re
@@ -34,6 +35,11 @@ TOOLCHAIN = ROOT.parent / 'toolkit' / 'msys64' / 'clang64' / 'bin'
 
 PICTURE = re.compile(r'^scene picture: (\S+) usable=(\d)\s*$')
 SHARED = re.compile(r'^scene picture with a shared palette (\S+): cells (\S+) -> (\S+\.SPR)\s*$')
+PAN = re.compile(r'^verified pan: (\S+) [xy]=\d+\s*$')
+PAN_DONORS = {
+    row['name']: row['pc_file']
+    for row in json.loads((ROOT / 'config/hd-scroll-pictures.json').read_text(encoding='utf-8'))['rows']
+}
 LAYOUT = re.compile(r'^presentation layout: (\S+)\s*$')
 ZOOM = re.compile(r'^scene zoom: ')
 
@@ -50,6 +56,10 @@ def parse_trace(text):
         match = PICTURE.match(line)
         if match:
             result['pictures'][match.group(1)] = max(result['pictures'].get(match.group(1), 0), int(match.group(2)))
+            continue
+        match = PAN.match(line)
+        if match and match[1] in PAN_DONORS:
+            result['pictures'][PAN_DONORS[match[1]]] = 1
             continue
         match = SHARED.match(line)
         if match:
@@ -87,16 +97,16 @@ def count_changed(path_a, path_b):
         return a.width * a.height - diff.histogram()[0]
 
 
-def verdict(trace, changed, identical_bytes):
+def verdict(trace, changed):
     """One line: whether the draw happened and which evidence says so."""
     files = drawn_files(trace)
     by_trace = bool(files)
-    by_capture = bool(changed) if changed is not None else (not identical_bytes)
+    by_capture = bool(changed)
     if by_trace and by_capture:
         return True, 'DRAWN: %s (trace and capture agree; %s)' % (
             ', '.join(files), '%d pixels differ from the control' % changed if changed is not None else 'the captures differ')
     if by_trace:
-        return True, 'DRAWN by trace only: %s (the capture equals the control; the picture may be under an overlay)' % ', '.join(files)
+        return False, 'trace only: %s (no changed RGB pixels were verified)' % ', '.join(files)
     if by_capture:
         return False, 'capture differs from the control (%s pixels) but no scene picture trace line identifies the cause' % changed
     why = []
@@ -140,15 +150,17 @@ def run_once(args, run, donor):
         backup.unlink(missing_ok=True)  # the runtime creates a fresh one; an empty file is rejected
     shot = run / 'shot.png'
     shot.unlink(missing_ok=True)
+    guest_hash = run / 'guest.hash'
+    guest_hash.unlink(missing_ok=True)
     env = {k: v for k, v in os.environ.items() if not k.startswith('SATRECOMP_')}
     extra = [str(args.exe.parent)] + [str(p) for p in (TOOLCHAIN, pathlib.Path('C:/msys64/clang64/bin')) if p.is_dir()]
     env['PATH'] = os.pathsep.join(extra + [env.get('PATH', '')])
     env.update(SATRECOMP_WINDOW_HIDDEN='1', SATRECOMP_SKIP_CHOOSER='1', SATRECOMP_BACKGROUND_WORKERS='0',
                SATRECOMP_BACKGROUND_STATS='1', SATRECOMP_PRESENTATION_TRACE='1', SATRECOMP_HD_STATS='1',
-               SATRECOMP_STRICT_NATIVE='1',
+               SATRECOMP_STRICT_NATIVE='1', SATRECOMP_PAN_TRACE='1',
                SATRECOMP_WINDOW_KEYS='2:SIZE=%s,%d:WINDOWSHOT=%s,%d:QUIT' % (args.size, args.frames - 3, shot.as_posix(), args.frames))
     command = [str(args.exe), '--disc', str(args.disc), '--settings', str(settings), '--backup', str(backup),
-               '--state-load', '0:' + str(args.state), '--mute', '--unthrottled']
+               '--state-load', '0:' + str(args.state), '--mute', '--unthrottled', '--hash-log', str(guest_hash), '--stats']
     if args.movie:
         command += ['--movie', str(args.movie)]
     assets = args.pc_assets if donor else args.control_pc_assets
@@ -166,6 +178,7 @@ def main(argv=None):
     ap.add_argument('--state', type=pathlib.Path, required=True)
     ap.add_argument('--pc-assets', type=pathlib.Path, required=True, help='extraction root holding SAKURA1/BG/*.SPR')
     ap.add_argument('--control-pc-assets', type=pathlib.Path, help='matched control pack without the scene SPR under test')
+    ap.add_argument('--expect', metavar='SPR', help='skip the control when this donor is not used, for example SAKURA1/BG/BG2057.SPR')
     ap.add_argument('--disc', type=pathlib.Path, default=local_path('local/prepared/disc1/game.cue'))
     ap.add_argument('--backup', type=pathlib.Path, help='backup RAM to copy (default: a fresh one is created)')
     ap.add_argument('--movie', type=pathlib.Path)
@@ -178,6 +191,8 @@ def main(argv=None):
         value = getattr(args, name)
         if value is not None:
             setattr(args, name, value.resolve())
+    if args.frames < 6:
+        ap.error('--frames must be at least 6')
     problems = preflight(args)
     if problems:
         print('\n'.join('preflight: ' + p for p in problems), file=sys.stderr)
@@ -188,15 +203,33 @@ def main(argv=None):
         if code != 0:
             print('%s run exited with %d, see %s' % (label, code, args.out / label / 'stderr.log'), file=sys.stderr)
             return 2
-        results[label] = (parse_trace(text), shot)
-    trace, donor_shot = results['donor']
-    control_shot = results['control'][1]
+        evidence = args.out / label
+        hashes = (evidence / 'guest.hash').read_bytes() if (evidence / 'guest.hash').is_file() else b''
+        if len(hashes.splitlines()) != args.frames or not re.search(r'interpreted 0 \(', text):
+            print(f'{label}: incomplete strict guest evidence', file=sys.stderr)
+            return 2
+        backup = evidence / 'backup.bin'
+        trace = parse_trace(text)
+        if donor and args.expect and args.expect not in drawn_files(trace):
+            print(f'SKIP: {args.expect} unused in this replay window; no control run')
+            return 1
+        results[label] = (trace, shot, hashes, backup.read_bytes() if backup.is_file() else None)
+    trace, donor_shot, donor_hashes, donor_backup = results['donor']
+    control_trace, control_shot, control_hashes, control_backup = results['control']
+    if donor_hashes != control_hashes or donor_backup != control_backup:
+        print('Donor and control guest evidence differs', file=sys.stderr)
+        return 2
     if not donor_shot.is_file() or not control_shot.is_file():
         print('Missing donor or control capture', file=sys.stderr)
         return 2
     changed = count_changed(donor_shot, control_shot)
-    identical = donor_shot.is_file() and control_shot.is_file() and donor_shot.read_bytes() == control_shot.read_bytes()
-    drew, message = verdict(trace, changed, identical)
+    if changed is None:
+        print('Cannot compare RGB captures. Check Pillow and the capture dimensions.', file=sys.stderr)
+        return 2
+    if args.expect and set(drawn_files(trace)) ^ set(drawn_files(control_trace)) != {args.expect}:
+        print(f'Cannot isolate {args.expect}; check the donor and control packs', file=sys.stderr)
+        return 2
+    drew, message = verdict(trace, changed)
     print(message)
     print('layouts: %s; zoom path: %s; control trace lines: %d' % (', '.join(trace['layouts']) or 'none', trace['zoom'],
                                                                    len(drawn_files(results['control'][0]))))

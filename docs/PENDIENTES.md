@@ -8,7 +8,7 @@ Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can 
 
 ## How to take a pending item
 
-1. `git fetch` and read this list on `origin/main`, plus open PRs (`gh pr list`). Treat an actively worked branch or PR as taken. Historical PRs listed in the HD queue are retained as evidence for the available lots.
+1. Run `git fetch origin` and use the queue from current `origin/main`. Run `python tools/shard_claims.py --available-hd` to list open HD work by priority, excluding reservations in the queue and IDs identified in open PRs. Check active worker branches before taking a lot. Historical PRs listed in the HD queue are retained as evidence for available lots.
 2. Choose the first `free` row (those marked `after Txx` wait for that row) by priority (P0 before P1…) whose **Type** can be resolved with what is available:
    - `agent`: code, synthetic tests, or documentation, with no private data.
    - `local`: requires the owner's `local/` (states, prepared discs); only on their PC and without uploading anything from `local/`.
@@ -16,10 +16,10 @@ Shared queue for MatyMeatBoy and the helping agents (Claude, Codex). Anyone can 
    - `decision`: needs a response from the owner before touching code.
 3. If the row does not fit in ~15 minutes, do the minimum verifiable part and split the rest into new rows.
 4. Work from `origin/main`, branch `pendientes/<id>-<topic>`, reusing the single auxiliary copy allowed by `AGENTS.md`. If it is busy, coordinate and wait; do not create more worktrees. Never mix uncommitted work from another copy.
-5. Open a draft PR as soon as the change is reviewable. Name the shard, mark outstanding checks and keep test results in that PR as they arrive. Workers can pick independent shards across the project. Record the final status when the change is verified.
+5. Name the shard ID in the branch and PR title. Reserve it on the queue branch with `python tools/shard_claims.py --claim THD38 --who <worker> --branch <branch>` and share the reservation with the coordinator. Submit the PR when the lot and its closure checks are complete. Run `python tools/shard_claims.py --release-stale --dry-run` to preview queue reservations idle for more than 30 minutes. Check active workers and open PRs before reassigning released work.
 6. Priority above all: blockers or progress loss > chapter 1 validation > presentation > decoration.
 
-Integration rules confirmed by the user on 2026-11-18: Claude and the workers send PRs early; coordinator Codex reviews, corrects, verifies and integrates them. A draft can be reviewed while tests or another independent shard are in progress. Do not ask for authorization again for each routine integration. An open PR claims the row; check its branch before duplicating work.
+Workers can pick independent lots across the project. The coordinator reviews, corrects, verifies and integrates complete PRs and records whether the result is implemented, tested and packaged. An open PR claims its lot; check its branch before duplicating work.
 
 Fixed rules: Author always MatyMeatBoy; never upload discs, BIOS, saves, original PC assets, `local/`, or the personal ZIP; v0.1.0, v0.1.5, and v0.1.2 are immutable; Saturn has priority over PC; no partial test is presented as a complete chapter or campaign.
 
@@ -31,7 +31,7 @@ Base de runtime publicada [v0.2.16-alpha](releases/v0.2.16-alpha.md). La actuali
 | Área | Pendiente en esta base |
 | --- | --- |
 | Imágenes de escena | 557 candidatos por conectar o resolver; 467 donantes ya conectados carecen de testigo natural registrado. |
-| Cuerpos grandes NC | 1 por conectar; 102 cuerpos sin verificación registrada, incluido el pendiente de conectar. Las poses adicionales tienen su propio control. |
+| Cuerpos grandes NC | 147 de 147 conectados; 99 cuerpos sin verificación registrada. Las poses adicionales tienen su propio control. |
 | Retratos | 304 integrados; falta contar y verificar las apariciones y tiras por identidad. |
 | Táctico | 11 de 27 suelos conectados; 16 pendientes. Los 542 SPR son el inventario de archivos, no el de suelos. |
 | HUD y menús | 170 de 229 imágenes candidatas por conectar o resolver; falta medir la verificación natural por imagen. |
@@ -47,11 +47,11 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 | THD01 | P0 | local | open | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | [Inventario de fondos](research/thd01-episode1-backgrounds.md) por donante. Quedan las muestras a 1440p con caja y primer plano nativos. La [prueba headless](research/headless-scene-draw.md) usa un control con el mismo fondo floral. |
 | THD02 | P1 | local | open | **Fondos normales del disco 1.** BG de episodios 2–5, lotes por ruta, excluyendo animaciones, panoramas y recortes. | Captura natural por donante nuevo y decisión explícita para los que no coinciden. |
 | THD03 | P1 | local | open | **Fondos normales del disco 2.** BG de episodios 6–10, mismos límites que THD02. | Mismo encuadre y capas en una prueba A/B por donante. |
-| THD04 | P1 | local | open | **Panoramas y escenas grandes.** BG1257, BG1280, BG2247 y variantes animadas de tamaño no estándar; apariciones restantes de BG2290. | Medir trayectoria, escala, límites y fundidos o justificar conservar Saturn. |
+| THD04 | P1 | local | open | **Panoramas y escenas grandes.** Apariciones restantes de BG2290 y variantes animadas de tamaño no estándar. | Medir trayectoria, escala, límites y fundidos por aparición. BG1257, BG1280 y BG2247 conservan el encuadre Saturn tras la [comparación de las composiciones PC](research/scroll-table.md#remaining-dispositions-tp2a12). |
 | THD05 | P1 | local | open | **Primeros planos y recortes.** BG3123 y otros BG3xxx/4xxx con silueta, transparencia o mezcla; BG4370 disco 2 como verificación. | Verificar sólo lo visible y proteger mezcla, máscara, actor y fondo. |
 | THD06 | P1 | local | open | **Inserciones de batalla.** EVE y BBG, incluyendo activaciones naturales de EVE102/105/207, EVE0101 disco 2 y disposición BBG238–243/300. | Confirmar activación, ventana y mismo arte; conservar Saturn si el PC cambia pose o composición. |
 | THD07 | P1 | local | open | **Eyecatch e intermedios.** IC por disco y variante de encuadre, fondos compartidos por donante, menús tratados por THD20/21. | Probar entrada, salida, fundido y anclajes en la intermisión natural. |
-| THD08 | P1 | local | open | **CG y finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. |
+| THD08 | P1 | local | open | **CG y finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. Final de Sumire hasta el título comprobado en AOT estricto; falta probar las cuatro fotos con el mismo ejecutable y la pila gráfica completa. |
 | THD09 | P1 | local | open | **Censo de imágenes sin equivalente.** Cruzar los candidatos SPR aún sin asociación con las ocurrencias Saturn; agrupar duplicados y exclusiones por motivo. | Un inventario reproducible con candidatos únicos, decisiones revisadas y huecos de evidencia. |
 
 ### Lotes de escenas listos para tomar
@@ -62,10 +62,10 @@ La reatribución de #592 da 38 filas de imagen HD conectadas para buscar en capt
 | --- | --- | --- | --- |
 | THD33 | open | Episodio 7: BG1178, BG1181, BG2014, BG2160 | [Trazas de salto](research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build). |
 | THD34 | open | Episodio 8: BG1001, BG1195, BG2004, BG2007 | [Trazas de salto](research/hd-chapter-8.md#re-attribution-with-the-evt-overlay-build). |
-| THD35 | open | Episodio 9: BG1143, BG2017, BG2021, BG2031, BG2091 | [Trazas de salto](research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build). |
+| THD35 | open | Episodio 9: BG1143, BG2017, BG2031, BG2091 | [Trazas de salto](research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build). [BG2021 verificado](research/hd-chapter-9.md#bg2021-on-the-earned-iris-route). |
 | THD36 | open | Episodio 9: BG2092, BG2156, BG2160, BG2236 | Mismas trazas. BG2156 ya suma globalmente por su aparición en el episodio 6. |
 | THD37 | open | Episodio 10: BG1284, BG1292, BG1293, BG2020, BG2023, BG2025, BG2026 | [Trazas de salto](research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build). |
-| THD38 | open | Episodio 10: BG2046, BG2057, BG2111, BG2163–BG2166 | Mismas trazas. |
+| THD38 | open | Episodio 10: BG2111, BG2163–BG2166 | [BG2046](research/hd-chapter-10.md#bg2046-ending-scene) y [BG2057](research/hd-chapter-10.md#bg2057-behind-nc3057) verificados. |
 | THD39 | open | Episodio 10: BG2167, BG2168, BG2248, BG2284–BG2286, BBG218 | Mismas trazas. Si BBG218 requiere otra composición, continúa en THD06. |
 
 Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, prioriza en THD01–THD09 los pares `paired-not-wired` que comparten el mismo compositor y pueden entrar juntos en un PR. THD09 atiende EVENT y CG por subimagen. En ambos casos sigue el [flujo de entrega](SHARDS.md#entrega-de-lotes-hd-y-porcentajes).
@@ -74,9 +74,9 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
-| THD10 | P0 | local | active · Iris 0904 | **Último cuerpo NC.** NC3517 en la ruta Iris 0904; la prueba controlada existente sirve de base. | Captura natural de cuerpo, dos caras, oclusión y fallback. |
-| THD11 | P0 | local | open | **Cuerpos grandes del episodio 1.** [Inventario de 19 cuerpos observados](research/thd11-episode1-bodies.md), con tres apariciones pendientes: NC95, NC81 y NC3004. | Capturar esas tres apariciones a 1440p. Para los cuerpos ya verificados, comprobar las expresiones y fundidos que indica el inventario. |
-| THD12 | P1 | local | open · NC81 lote activo | **Cuerpos grandes de otros episodios.** NC de episodios 2–10 fuera de THD10, lotes de 2–4 paquetes por ruta. | Registrar pose, ojos, boca y al menos un control de oclusión/fundido por familia. |
+| THD10 | P0 | local | implemented · natural 1440p | **Último cuerpo NC.** NC3517 y las expresiones de ambas caras. | [Ruta Iris 0904](research/nc3517-route-evidence.md#natural-0904-body-and-faces) verificada con el parche 0247. Pendiente de paquete. |
+| THD11 | P0 | local | 19/19 draw witnesses · variants open | **Cuerpos grandes del episodio 1.** [Inventario de 19 cuerpos observados](research/thd11-episode1-bodies.md), todos con al menos un dibujo verificado. | [NC81](research/thd11-episode1-bodies.md#nc81-on-the-episode-1-late-theater-route) verificado a 1440p en el teatro. La [primera aparición](research/thd11-episode1-bodies.md#nc81-on-the-first-episode-1-theater-appearance) conserva el fundido nativo y muestra el cuerpo HD. Quedan expresiones y fundidos adicionales. |
+| THD12 | P1 | local | open | **Cuerpos grandes de otros episodios.** NC de episodios 2–10 fuera de THD10, lotes de 2–4 paquetes por ruta. | Registrar pose, ojos, boca y al menos un control de oclusión/fundido por familia. [NC3021](research/hd-chapter-9.md#nc3021-face-registration-witness) verificado con el parche 0246. [NC12/NC32/NC51 en 0904](research/hd-chapter-9.md#body-blends-during-the-theater-briefing): medir la mezcla que conserva el cuerpo nativo antes de extender HD a esa escena. |
 | THD13 | P1 | local | open | **Retratos y animación del disco 1.** Atlas FCE de episodios 1–5 por identidad, iconos sin interlocutor aparte. | Validar base, parpadeo, boca y modos HD/Original, incluido el emblema inicial. |
 | THD14 | P1 | local | open | **Retratos y animación del disco 2.** Atlas FCE de episodios 6–10 por identidad, excluyendo FACE táctico. | Mismo control de base, cuadros animados, alfa y fallback con evidencia por identidad. |
 
@@ -105,8 +105,8 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 
 | Shard | Estado | Lote | Cierre comprobable |
 | --- | --- | --- | --- |
-| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. Ocho rótulos de la ficha de unidad distribuidos en v0.2.16.1-alpha. Quedan los nombres de ataques y las otras pantallas. |
-| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Los tres rótulos se distribuyen en v0.2.16.1-alpha. LOAD.BIN conserva su SHA-256 en ambos discos. La regresión de CARGANDO pasó en el paquete con cinco capturas de 1440p idénticas al referente publicado. |
+| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. Ocho rótulos de la ficha de unidad distribuidos en v0.2.16.1-alpha. Seis ataques aliados y siete rótulos de pausa y confirmación traducidos. También se tradujo la pantalla avanzada de opciones. Los comandos breves aliados, la variante de Divinidad floral y los rótulos Mosquete, Garra y Tiro ácido también están en ambos discos. El censo WKL añadió 42 traducciones descriptivas y los dos avisos de turno. Queda ampliar las capturas naturales por rótulo. |
+| THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Los tres rótulos se distribuyen en v0.2.16.1-alpha. La nueva capa española del disco 2 incorpora las diez tarjetas y CARGANDO. El disco 1 conserva sus gráficos. [Prueba a 1440p](research/traduccion-espanol.md#spanish-episode-and-loading-art-on-disc-2). Las [3.136 descripciones de objetos](research/traduccion-espanol.md#inventory-weapons-and-equipment-audit) coinciden con la traducción revisada en los discos instalados. La [galería de películas](research/traduccion-espanol.md#spanish-movie-gallery) ya tiene títulos, pestañas y salida en español. Quedan por revisar los otros extras. |
 
 Mantener el idioma español según el perfil. Registrar la fuente de cada rótulo (texto del juego, textura o interfaz del port) y dejar un PR por familia de activos o pantalla. La traducción sola no suma al porcentaje de integración HD.
 
@@ -117,7 +117,7 @@ Mantener el idioma español según el perfil. Registrar la fuente de cada rótul
 | THD26 | P1 | local | open | **Vídeos de montaje alternativo.** MOVIE004/009/011/020/102/105, ambos discos donde corresponda. | Validar ruta natural, puntos de corte y partes Saturn; conservar audio y montaje nativos. |
 | THD27 | P1 | local | open | **Vídeos con sustitución completa.** 44 clips, lotes por capítulo y disco. Preparación con la edición PC del jugador. | Validar inicio, skip, salida, audio, subtítulos cuando correspondan y fallback. |
 | THD28 | P0 | local | open · TW7 #566 activo | **Rutas y transiciones del disco 1.** Episodios 1–5, victoria de episodio 2 primero. Concordar cada aparición con el índice, sin contar de nuevo archivos. | Registro de apariciones por ruta reproducible, mapa/novela, combates, fundidos y salida natural. |
-| THD29 | P1 | local | open · ruta Iris activa | **Rutas y transiciones del disco 2.** Episodios 6–10, seguimiento Iris hasta 0904, variantes de final y escenas de vuelta. | Registro de apariciones por ruta reproducible y evidencia por etapa, sin duplicar activos. |
+| THD29 | P1 | local | open | **Rutas y transiciones del disco 2.** Episodios 6–10, variantes de final y escenas de vuelta. La ruta natural de Iris hasta 0904 ya cuenta con pruebas de [BG2517 y NC3517](research/nc3517-route-evidence.md#bg2517-bedroom-scene). | Registro de apariciones por ruta reproducible y evidencia por etapa, sin duplicar activos. |
 | THD30 | P0 | local | open | **Bloqueos de ejecución y rendimiento.** El [bloqueo EVT15 00209C7A](research/tactical-pairing.md#map15-pc-ground-on-the-authentic-prologue) ya pasó 9.600 campos nativos estrictos hasta MAP16. La inclusión de esas variantes en el paquete sigue pendiente. | Priorizar el replay continuo de MAP14 y medir antes/después los picos al hablar, entrar al mapa y cargar escenas HD a la resolución de pantalla. |
 | THD31 | P1 | local | open | **Paquete y preparación limpia.** Instalación previa, programa de preparación, RecompLauncher, discos/idiomas propios, HD opcional y manifiesto. | Reproducir desde un perfil limpio, sin recursos originales en el ZIP, con SHA, fuente y notas comprobadas. |
 | THD32 | P1 | local | open | **Denominadores y auditoría final.** Censo de apariciones y de los 542 SPR tácticos, sin duplicar ITEM o atlas con sección propia. | Cada unidad tiene estado explícito; publicar conteos de integrado y verificado por separado. |
