@@ -131,8 +131,14 @@ From the `long-6` state at frame 12499 (`--auto 2:0 --frames 9000`):
 | `?` | other | 212 | 3166 | - | - |
 | `SAKURA3/MINIMAIG.BIN` | other | 267957 | 3166 | - | - |
 
-Both continuations end with exit code 4 `strict AOT: untranslated master SH-2 block at 00204000` right after `LOADBGR.DAT` and `SAKURA3/MINIMAIG.BIN`: the chapter script enters the tactical stage and the EVT overlay that lands at `00204000` is not translated in this build (the same lock as the chapter 4 stage, see [chapter sweep](chapter-sweep.md)). The overlay, map and units for the stage were not read before the lock, so no `EVT`, `MAP` or `UNIT` file can be attributed to chapter 6 from this build.
+Both continuations end with exit code 4 `strict AOT: untranslated master SH-2 block at 00204000` right after `LOADBGR.DAT` and `SAKURA3/MINIMAIG.BIN`: the route reaches a new executable boundary. The PC address is shared with battle overlays and does not identify the loaded module. No `EVT`, `MAP` or `UNIT` file was read before the stop.
 
 Attributed to chapter 6 by this pass: scene pictures `BG1003` and `BG1047` and body `NC40` (disc-1 rows moved from `unassigned`, status `hd`, not verified in game) plus second-occurrence rows for `BG1008` (chapter 3 row kept), `BG1021` and `NC97` (chapter 1 rows kept). Already chapter 6 and re-confirmed: `TITLE6`, `BG1199`, `BG4119`, `BG1025`, `BG4059`, `BG2156`. 9 JSON entries changed. `0601FCE` is read at FAD 130596 (resident row kept). Chapter-neutral loads (`LOAD.BIN`, `TMAP*`, `KABE50`, `VDP1`, `NCOBJ`, `ADV*`, `VCEADV`, `LOADBGR.DAT`) are listed above but not attributed.
 
 Not verified: any HD draw of the new rows; the FILM clips of the chapter (none read after the opening FADs 405 and 166362, which precede the script); `0602FCE`..`0607FCE` (not read); the tactical stage; the chapter exit test. The random-input continuations show the branch the autopilot chose, not the canonical path.
+
+### Episode 6 execution boundary on the 678,135-variant candidate
+
+A fresh strict cold replay completed 14,000 fields. The first 12,000 field hashes equal the archived opening. From state 13999 and random input `1:0`, the candidate (SHA-256 prefix `f62001ee`) completed 4,405 fields before stopping at `00204000`. The last identified disc read is `/SAKURA3/MINIMAIG.BIN` (FAD 267957).
+
+A second strict run saved field 4404. Loading that boundary with `SATRECOMP_NO_BLOCKS=1` completed 180 fields and read `/SAKURA3/SDDRVS.BIN` and `/SAKURA3/MINIMAIG.SND` (FAD 270955 and 268304). There were no EVT, MAP or UNIT reads in that interval. The traces show entry into the minigame branch. The bytes at the missing PC still need an exact source mapping before registration. Captures and logs stay in `local/work/codex-th6-current`.
