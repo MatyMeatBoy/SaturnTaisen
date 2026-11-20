@@ -1,6 +1,6 @@
 # THD11: Chapter 1 large bodies (19 observed NC)
 
-This is the review table for the 19 NC bodies named in [Chapter 1 HD coverage](hd-chapter-1.md). It was compiled from the tracked evidence (coverage register, face reports, body-format report). **No new runtime capture was made for this table.** The first-frame brackets are from the full cold route (`hd-chapter-1.md`). The local checkpoints for the three unverified bodies (fields near 103,080, 245,940 and 255,900) were not available in this workspace, so they remain open.
+This is the review table for the 19 NC bodies named in [Chapter 1 HD coverage](hd-chapter-1.md). It was compiled from the tracked evidence (coverage register, face reports, body-format report). The first-frame brackets are from the full cold route (`hd-chapter-1.md`). Follow-up replay evidence for NC95 and NC3004 appears below.
 
 State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed in the route with a PC donor named; *connected* = runtime draws the PC body; *verified* = `verified_in_game` with a paired capture. Expression = how eyes (E) and mouth (M) are chosen. Fade and occlusion are only listed where a report witnesses them; "not witnessed" is not a negative result.
 
@@ -24,18 +24,18 @@ State columns follow `config/hd-chapter-coverage.json`: *attributed* = observed 
 | NC51 | Sortie, Iris (248,700) | 336x320 body 1 | verified | 3 E + 6 M (patch 0177) | earlier blend native | native blend |
 | NC21 | Sortie, Sumire (249,000) | 320x320 body 1 | verified | 3 E + 6 M (patch 0180) | blend identical | native blend |
 | NC32 | Sortie, Maria (249,240) | 304x320 body 2 | verified | 3 E + 6 M (patch 0182) | blend identical | native blend |
-| NC3004 | Hanami ending (255,900) | 9 parts, 2 runs | attributed + connected, **not verified, no face registration** | native fallback assumed, not observed | not witnessed | not witnessed |
+| NC3004 | Hanami ending (255,900) | 9 parts, 2 runs | **Episode 1 draw verified** | two eye phases and closed mouth verified | native transition and fallback verified | not witnessed |
 
 ## Findings
 
-- 17 of 19 are `verified_in_game`. **NC3004** (hanami) and **NC81** (theater sortie) still need chapter 1 verification.
+- 18 of 19 are `verified_in_game`. **NC81** (theater sortie) still needs chapter 1 verification.
 - Bodies with an extra pose without a control: NC3250 (mouths other than ordinal 4), NC11 (LIPS layouts other than the hallway), NC20 and NC30 (runs beyond the verified groups), NC25 (poses other than the closed-eye smile), NC55 (poses beyond the five observed textures), NC82 and NC97 (fallback frames).
 - Fade-in/out has a witness only for NC3250 and NC82; the other 17 need a fade control (dissolve plus donor-absent control) before the column can be "verified".
 - Neck/blend controls: only NC81 (chapter 9) and NC11 (LIPS) have neck or panel blend controls; the sortie bodies rely on "earlier blend identical".
 
 ## Proposed batches
 
-1. NC3004, NC81 (ch 1): natural-route checkpoints, 2560x1440 Enhanced vs Original, donor present vs absent, identical guest hashes with 0 interpreted.
+1. NC81 (ch 1): natural-route checkpoints, 2560x1440 Enhanced vs Original, donor present vs absent, identical guest hashes with 0 interpreted.
 2. NC3250, NC82, NC97 fade controls and extra poses.
 3. NC20, NC30, NC25, NC55 extra expression groups.
 
@@ -48,3 +48,15 @@ A retained checkpoint from the English disc 1 Chapter 1 cold route shows the 144
 At 2560 × 1440 on Direct3D11, supplying only NC95.SPR changes 673,463 pixels in each of 12 paired captures. All changes are within (853, 29)–(1840, 1037), right and bottom exclusive. Independent projection matches the 4,093 sampled flat eye pixels of ordinal 1 at body-relative (32, 73) and 1,408 mouth pixels of ordinal 4 at (96, 121) in each capture. Missing and truncated donor controls match in Enhanced. The Original profiles with and without the donor also match.
 
 The window verifies the observed Episode 1 body and face. The [Episode 6 occurrence](hd-chapter-6.md#verified-nc95-upstairs-body) remains independently verified. Other expressions and blends are outside the sampled window. There is no new integrated asset or runtime change.
+
+## NC3004 at the Episode 1 hanami
+
+Two retained checkpoints from the English disc 1 continuous route capture the appearance of NC3004. The relay begins at global field 239,080. The saved fields 16,820 and 17,150 correspond to approximately 255,900 and 256,230 on that route. The test replays the archived controller suffix and matches the corresponding 180 archived guest hashes from each checkpoint. Backup RAM matches every arm from the same checkpoint. Every strict run reports zero interpreted blocks.
+
+The native body is the 288 × 144 VDP1 sprite at (16, 8), texture FNV-1a `657B89AB9FA498BB`. The sole donor is NC3004.SPR, with a 576 × 320 PC body. At 2560 × 1440 on Direct3D11, the opaque checkpoint changes 1,043,890–1,043,984 pixels per capture, all within (272, 29)–(2288, 1037). Original with and without the donor and Enhanced with a truncated donor match their controls in all 12 samples.
+
+The transition checkpoint logs a blend over NC3004. Nine samples through offset 110 match the donor-absent control across the whole frame. The three later samples at 128, 145 and 172 show the expected donor area.
+
+The sampled eye phases correspond to PC ordinals 1 and 2. Projection at the authored (217, 63) matches 2,007/2,023 and 2,044/2,059 flat opaque samples. The current refine pass places these phases at (218, 63), one donor pixel to the right, with no visible seam in crops of either phase. The closed mouth matches all 862 projected pixels for ordinal 4 at the authored (251, 118). The unsampled closed-eye phase reports a different heuristic offset and was not visually certified. No runtime patch is required for the witnessed draw.
+
+Existing 0243 runtime SHA-256 `129E505D229EB3520A9AD4E52F6873C2BC87F609DF15F3A520ABFCB086EA5C19`. This evidence verifies the Episode 1 occurrence and the observed blend fallback. Other expressions and package inclusion remain open.
