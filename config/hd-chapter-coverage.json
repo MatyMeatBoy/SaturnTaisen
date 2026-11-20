@@ -4188,8 +4188,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-6.md#traced-attribution-th6",
             "pc": "SAKURA1/NC/NC40.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-nc40-body-draw",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC97.BIN": {
             "association": "observed",
