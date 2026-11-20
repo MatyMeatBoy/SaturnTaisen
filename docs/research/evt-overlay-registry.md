@@ -333,3 +333,27 @@ Strict native, English disc 2 public Finale, cold backup plus the #592 extended 
 Loads after the stop (first-load order, FAD): `ADVSE10` (114,694), `ENDING.BIN` (133,947), `SU_CG.BIN` (148,297), `SU_SPR.BIN` (148,497), `OTOMEADP.DAT` (143,267). `SU_CG.BIN` is the Sumire ending bank, so this route is the Sumire ending; no FILM stream and no further CG bank is read within 45,000 frames (the credits and `Fin` sequence is not reached by this movie). Attribution for the ending bank rows: `SU_CG`/`SU_SPR` are read here after `ENDING.BIN`.
 
 Not verified: frames past 45,000 (credits, `Fin`), other heroine endings under the full-module blocks, a run with the interpreter for all 45,000 frames, and package inclusion. The cold route here used the extended-movie confirm presses, not a human play-through.
+
+## Long Day shooting-gallery overlay
+
+The natural Spanish disc 2 route from the Captain's Quarter nap
+choice reads MINISHOT.BIN at FAD 260879 and maps it at 0x00204000.
+The previous candidate stops on 0x0027BAF8 after 940 complete fields.
+The Start/Practice screen is reached in the interpreter. Choosing
+Practice in the newly linked startup-only candidate reaches another
+missing entry, 0x0027B510.
+
+`MINISHOT_LONG_DAY` pins the exact 547,396-byte module and includes
+1,854 observed instruction extents from entry and practice. Every
+extent matches the entire instruction span in the module. The
+680,449-variant registry seed grows by 1,325 variants. A separate
+isolated link from the 680,541-variant gameplay baseline produced
+681,866 variants and covered both missing entry PCs.
+
+The isolated strict candidate completes 1,800 entry fields and 900
+practice fields from their respective natural checkpoints. Each replay
+matches every interpreter guest hash and its final SRAM, with zero
+interpreted blocks. Candidate SHA-256 prefix `000213953e16d21f`.
+Practice runs the native shooting range. The observed routes do not
+read MINISHOT.GCG or display BGSYATE. Regular timed play, the
+illustration draw, and public packaging remain open.
