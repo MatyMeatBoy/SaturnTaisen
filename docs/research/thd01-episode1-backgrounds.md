@@ -222,4 +222,4 @@ coincidieron y no hubo bloques interpretados.
 El ejecutable de prueba tiene SHA-256
 `0c194ffe6393ad975a6ad2051db878887f61ac2d8e57130c5b07309d0435388b`.
 El inventario del episodio 1 queda en 43 apariciones verificadas.
-El parche está pendiente de empaquetado.
+El parche se distribuye en [v0.2.23-alpha](../releases/v0.2.23-alpha.md).
