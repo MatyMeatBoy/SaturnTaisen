@@ -185,3 +185,7 @@ The next 2,400-field strict continuation reaches file 0602. At the first script 
 ### Verified NC26 body in 0602
 
 From continuation field 1199, an isolated PC `NC26.SPR` A/B at 2560 × 1440 matches all 56 strict guest hashes and final SRAM. Field 8 is identical during the blend. At fields 16, 30 and 50, the donor changes 701,770–701,773 pixels inside the body rectangle (671,29)–(1695,1037). The renderer reports nine PC face parts resident. This proves the body draw in this route; individual expressions and package inclusion remain open. BG4351, NC24 and NC42 are attributed only by the disc trace. BG4351 keeps the existing native cut-out policy. Captures are under `local/work/codex-th6-current/NC26-0602-early`.
+
+### Verified NC24 and NC42 in 0602
+
+Two isolated PC-donor A/B pairs continue from field 1199 with the original confirm cadence. Each pair completes 1,200 strict fields with identical guest hashes and final SRAM. At 2560 × 1440 the NC42 donor changes 956,281–956,282 pixels in seven samples (fields 180–360), within (496,29)–(2274,1037). NC24 changes 815,202–815,204 pixels in 16 samples within (496,29)–(1784,1037). The remaining samples of each pair match. The separate disc 2 NC24 witness remains in the ledger. This verifies the two body draws in 0602. Individual facial expressions and packaging remain open.
