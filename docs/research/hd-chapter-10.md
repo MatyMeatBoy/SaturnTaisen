@@ -85,3 +85,9 @@ Chapter 10 (disc 2) routes `1001` (`bank-10-battle-1`), tactical stage 19 (`bank
 Exit 4 on `public-finale`: the strict AOT stops at 41,684 frames with `untranslated master SH-2 block at 06080000` (an ending-side overlay at a different address, not `00204000`). The loads recorded before it (up to `ENDING.BIN`) are valid; the remaining ending frames need that overlay translated by the overlay-registry owner.
 
 Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
+
+## BG2046 ending scene
+
+Two strict 32-field replays from the Episode 10 ending-bank checkpoint at 2560 x 1440 isolate the PC BG2046 donor. Both profiles use the same floral backdrop. Guest hashes and final SRAM match, and the 1,357,034 changed pixels fall entirely inside the scene at (272,29) to (2288,1037). The screenshot shows the seated figure and curtains, with the dialogue frame preserving its original pixels. The executable is from v0.2.16.1-alpha. Private evidence: `local/work/codex-th1/thd01-probe/ep10-second-BG2046`.
+
+A scan for resident palette and cell data covered 2,456 private states across three archives. The BG2025, BG2057, BG2284, BG2285 and BG2286 checkpoints checked so far have no matching RGB difference. BG2284 logs a loaded texture in one of them. These occurrences still require a visible draw.

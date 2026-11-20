@@ -6818,9 +6818,11 @@
           },
           "2:/SAKURA1/BG2046.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-10.md#bg2046-ending-scene",
             "pc": "SAKURA1/BG/BG2046.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bg2046-ending-scene",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2057.BIN": {
             "association": "observed",
