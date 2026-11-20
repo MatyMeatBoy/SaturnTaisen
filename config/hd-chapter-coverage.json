@@ -5839,17 +5839,17 @@
       },
       "1:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3125.SPR",
-        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/NC3126.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3126.SPR",
-        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "1:/SAKURA1/NC3128.BIN": {
         "association": "unknown",
@@ -6652,17 +6652,17 @@
       },
       "2:/SAKURA1/NC3125.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3125.SPR",
-        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/NC3126.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "fixture_evidence": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3126.SPR",
-        "reason": "The PC edition fills the space outside the tilted native panel with painted scenery.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/NC3128.BIN": {
         "association": "unknown",

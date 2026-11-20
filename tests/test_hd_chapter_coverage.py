@@ -328,7 +328,7 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         for disc in (1, 2):
-            for name in ('NC3125', 'NC3126', 'NC3290', 'NC3517'):
+            for name in ('NC3290', 'NC3517'):
                 with self.subTest(disc=disc, body=name):
                     row = catalog['unassigned']['bodies'][f'{disc}:/SAKURA1/{name}.BIN']
                     self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
@@ -408,19 +408,24 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
             self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')
 
-    def test_nc4138_registered_body_has_fixture_scope_only(self):
+    def test_registered_short_bodies_have_fixture_scope_only(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         rows = dict(catalog['unassigned']['bodies'])
         for chapter in catalog['chapters']:
             rows.update(chapter['resources']['bodies'])
         for disc in (1, 2):
-            body = rows[f'{disc}:/SAKURA1/NC4138.BIN']
-            self.assertEqual((body['status'], body['pc']), ('hd', 'SAKURA1/NC/NC4138.SPR'))
-            self.assertTrue(body['native_face_fallback'])
-            self.assertFalse(body.get('verified_in_game'))
-            self.assertTrue(body['fixture_evidence'].endswith('#nc4138-registered-silhouette'))
-            for other in ('NC3125', 'NC3126', 'NC3290', 'NC3517'):
+            for name, anchor in (
+                ('NC4138', '#nc4138-registered-silhouette'),
+                ('NC3125', '#nc3125-and-nc3126-registered-subsets'),
+                ('NC3126', '#nc3125-and-nc3126-registered-subsets'),
+            ):
+                body = rows[f'{disc}:/SAKURA1/{name}.BIN']
+                self.assertEqual((body['status'], body['pc']), ('hd', f'SAKURA1/NC/{name}.SPR'))
+                self.assertTrue(body['native_face_fallback'])
+                self.assertFalse(body.get('verified_in_game'))
+                self.assertTrue(body['fixture_evidence'].endswith(anchor))
+            for other in ('NC3290', 'NC3517'):
                 self.assertEqual(rows[f'{disc}:/SAKURA1/{other}.BIN']['status'], 'paired-not-wired')
 
     def test_scene_corridor_aliases_use_existing_runtime_keys(self):

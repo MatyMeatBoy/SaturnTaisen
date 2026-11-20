@@ -41,11 +41,11 @@
   "NC3517": "short native body with separate face strips; the runtime table assumes a 144-row body"
  },
  "registered_silhouettes": {
+  "NC3125": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
+  "NC3126": "docs/research/saturn-bg-format.md#nc3125-and-nc3126-registered-subsets",
   "NC4138": "docs/research/saturn-bg-format.md#nc4138-registered-silhouette"
  },
  "paired_not_wired": {
-  "NC3125": "The PC edition fills the space outside the tilted native panel with painted scenery.",
-  "NC3126": "The PC edition fills the space outside the tilted native panel with painted scenery.",
   "NC3290": "The PC face close-up uses a different vertical crop and fills the native face openings.",
   "NC3517": "The PC two-character strip uses a different crop and fills both native face openings."
  },
