@@ -153,6 +153,8 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA2/MAP10.BIN'): (7, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
+    (2, '/SAKURA2/MAP19.BIN'): (10, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
     (1, '/SAKURA1/IC0501.BIN'): (5, 'docs/research/ic0501-intermission-witness.md'),
     (1, '/SAKURA1/NC3058.BIN'): (5, CHAPTER5_ROUTE_REPORT),
     (2, '/SAKURA1/BG2247.BIN'): (8, 'docs/research/bg2247-native-pan.md'),
@@ -438,6 +440,12 @@ def build(root, index_dir, portrait_audit):
                            + ('; the ground holds %d images (tiles or frames) and needs an assembler' % pair['ground_image_count']
                               if pair.get('ground_layout') == 'tiles' else '')),
             }
+            if (disc, path) == (1, '/SAKURA2/MAP10.BIN'):
+                row['reason'] = ('The PC facades and terrace require different offsets, and the PC roof '
+                                 'has a keyed span with a different boundary. Keep the native ground.')
+            elif (disc, path) == (2, '/SAKURA2/MAP19.BIN'):
+                row['reason'] = ('The PC ground places lamps and rails differently at the witnessed camera. '
+                                 'Keep the native ground.')
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
                    'verified_in_game': True, 'runtime_evidence': BBG204_REPORT}

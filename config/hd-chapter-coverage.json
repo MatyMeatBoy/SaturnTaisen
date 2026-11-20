@@ -4410,7 +4410,16 @@
             "status": "excluded"
           }
         },
-        "tactical-maps": {},
+        "tactical-maps": {
+          "1:/SAKURA2/MAP10.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/tactical-pairing.md#live-map10-and-map19-ground-review",
+            "pairing_evidence": "docs/research/tactical-pairing.md",
+            "pc": "SAKURA2/MAP/MAP10/MAP10_A.SPR",
+            "reason": "The PC facades and terrace require different offsets, and the PC roof has a keyed span with a different boundary. Keep the native ground.",
+            "status": "paired-not-wired"
+          }
+        },
         "tactical-units": {
           "1:/SAKURA2/UNIT10.BIN": {
             "association": "resident",
@@ -5449,7 +5458,16 @@
             "status": "unknown"
           }
         },
-        "tactical-maps": {},
+        "tactical-maps": {
+          "2:/SAKURA2/MAP19.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/tactical-pairing.md#live-map10-and-map19-ground-review",
+            "pairing_evidence": "docs/research/tactical-pairing.md",
+            "pc": "SAKURA2/MAP/MAP19/MAP19_A.SPR",
+            "reason": "The PC ground places lamps and rails differently at the witnessed camera. Keep the native ground.",
+            "status": "paired-not-wired"
+          }
+        },
         "tactical-units": {}
       }
     }
@@ -19809,13 +19827,6 @@
         "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
         "status": "paired-not-wired"
       },
-      "1:/SAKURA2/MAP10.BIN": {
-        "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
-        "pc": "SAKURA2/MAP/MAP10/MAP10_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
-      },
       "1:/SAKURA2/MAP11.BIN": {
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
@@ -19883,13 +19894,6 @@
         "association": "unknown",
         "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP18/MAP18_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
-      },
-      "2:/SAKURA2/MAP19.BIN": {
-        "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
-        "pc": "SAKURA2/MAP/MAP19/MAP19_A.SPR",
         "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
         "status": "paired-not-wired"
       },

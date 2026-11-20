@@ -154,7 +154,11 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual((film['association'], film['fad'], film['pc']), ('observed', 80874, 'MOVIE019'))
         self.assertEqual(chapter['tactical-units']['1:/SAKURA2/UNIT10.BIN']['association'], 'resident')
         self.assertEqual(chapter['menus-hud']['1:/SAKURA2/WKL10.BIN']['association'], 'resident')
-        self.assertNotIn('1:/SAKURA2/MAP10.BIN', chapter['tactical-maps'])
+        ground = chapter['tactical-maps']['1:/SAKURA2/MAP10.BIN']
+        self.assertEqual((ground['association'], ground['status']), ('observed', 'paired-not-wired'))
+        self.assertIn('different offsets', ground['reason'])
+        self.assertFalse(ground.get('verified_in_game'))
+        self.assertNotIn('runtime_evidence', ground)
 
     def test_chapter8_native_scenes_preserve_donor_decisions(self):
         root = Path(__file__).resolve().parents[1]
@@ -179,7 +183,11 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertFalse(scene.get('verified_in_game'))
         self.assertEqual(chapter['portraits']['2:/SAKURA1/1001FCE.BIN']['association'], 'resident')
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG1285.BIN']['verified_in_game'])
-        self.assertNotIn('2:/SAKURA2/MAP19.BIN', chapter['tactical-maps'])
+        ground = chapter['tactical-maps']['2:/SAKURA2/MAP19.BIN']
+        self.assertEqual((ground['association'], ground['status']), ('observed', 'paired-not-wired'))
+        self.assertIn('lamps and rails differently', ground['reason'])
+        self.assertFalse(ground.get('verified_in_game'))
+        self.assertNotIn('runtime_evidence', ground)
 
     def test_eve202_only_attributes_the_witnessed_disc(self):
         root = Path(__file__).resolve().parents[1]
