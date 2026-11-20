@@ -171,15 +171,15 @@ Therefore:
 2. **Completion follows the chapter.** Once a chapter has attributed resources, a worker finishing the type shards (TP1-TP7) takes the items of the lowest chapter first, then the next. Chapter 1 is done when its register shows no `unknown`/`paired-not-wired` row except the documented blocked ones (`00a1`, `0169`, the IC pictures).
 3. Until a chapter is attributed, the type shards (TP1-TP7) stay the way to make progress: they are chapter-independent (palette/cell matching).
 
-## Quick-win order (2026-11-19)
+## HD shard priority by expected coverage and time
 
-Take in this order; each line is what gains the most per hour of work with what we have today:
-1. **Scroll scenes without a 2x table row (TP2a, 10 pictures)**: data rows plus an offline alignment, no game needed.
-2. **Remaining scene pairings (TP3b BBG unknown 14, TP3c 8, TP1 non-ambiguous leftovers)**: palette/cell matching, no game needed.
-3. **Unpaired scene pictures (TP4a/b/c, 56)**: look again for a counterpart; where none exists, record the reason so the row stops counting as open.
-4. **Large bodies without a decoded Saturn side (TP5, NC3125/3126/4138) and the 2 bad strides (NC3290/NC3517)**: decode work, no game needed.
-5. **Chapter attribution TH2-TH10**: needs chapter jumps/replays; slower, but it unlocks the chapter order.
-6. **Needs the owner's saves**: IC02-IC1006, the CD-2 emblem (SIS_ICON), window frames and tab panels, title/logo screens, karaoke/extra menu, 0169, 00a1.
+Work through the earliest available batch. A worker who reaches a missing witness or incompatible donor can hand off that specific blocker and take the next ready batch. Keep chapter order for gameplay witnesses.
+
+1. **Finish proven batches.** Integrate complete PRs and group exact table entries that share a renderer, such as scroll pictures, item cards and the load-menu controls. Include the existing build, opening parity and generated registers for each batch. Leave the per-picture playthrough to the spot check.
+2. **Search scene pictures across PC folders.** Compare unmatched Saturn scene plates with the PC EVENT, CG, ENDING and ICATCH subimages in one offline pass. Review the strongest exact art and geometry matches together. Connect those covered by an existing compositor, and keep separate notes for components with distinct layer or camera requirements.
+3. **Group tactical grounds by decoder and geometry.** The exact BIN/TAB inventory pairs all 27 maps. Reuse the single-image sampler or the MAP04 mosaic approach for groups with compatible tile geometry, and check raw pattern and source-layer ownership at the archived cameras. Record tactical maps separately from scene pictures.
+4. **Use the remaining ready witnesses.** Close guarded body and menu variants from existing checkpoints. Prefer several compatible resources in one replay and retain the native pixels where a donor has gaps or art changes.
+5. **Resume blocked and longer routes in parallel.** IC02–IC1006, remaining endings, rewritten camera angles and other incomplete appearances need specific states or composition analysis. Prioritize checkpoints that expose multiple unresolved resources. Continue short TP9 spot checks when a suitable checkpoint is already available.
 
 ## Close the chapters in order (owner, 2026-11-19). Scene shards keep priority for the many bots arriving; chapter closing (TCH1) is one worker in parallel, not a reason to stop scene work
 

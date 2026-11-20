@@ -145,6 +145,7 @@ def apply_register(data, register_path):
         return
     register = json.loads(register_path.read_text(encoding='utf-8'))
     files = {kind: set() for kind in REGISTER_COUNTS.values()}
+    verified_scenes = set()
     body_inventory = set()
     matched_bodies = set()
     excluded = set()
@@ -167,6 +168,9 @@ def apply_register(data, register_path):
                     continue
                 files[kind].update(row['pc'] for row in rows.values() if row.get('status') == 'hd' and row.get('pc'))
                 if kind == 'scene-pictures':
+                    verified_scenes.update(row['pc'] for row in rows.values()
+                                           if row.get('status') == 'hd' and row.get('pc')
+                                           and row.get('verified_in_game') is True)
                     excluded.update(row['pc'] for row in rows.values() if row.get('status') == 'excluded' and row.get('pc'))
     hud_images, hud_excluded = set(), 0
     for group in groups:
@@ -192,6 +196,7 @@ def apply_register(data, register_path):
         if kind and row['integrated'] is not None and len(files[kind]) >= row['integrated']:
             row['integrated'] = len(files[kind])
         if row['id'] == 'scene-images' and row['total'] is not None:
+            row['verified'] = len(verified_scenes)
             # pictures excluded by design (Japanese-lettered title cards, key-colour cut-outs) are not part of the goal
             drop = len(excluded - files[kind])
             row['total'] -= drop
