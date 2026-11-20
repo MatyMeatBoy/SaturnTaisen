@@ -70,7 +70,7 @@ REGISTRY={
                  evidence='EVT family inference: observed overlays EVT01,02,04,05,06,19 load at 00204000 with exact byte equality; base inferred for this file, never executed. Strict AOT compares block code with memory before running, so a wrong inference cannot execute wrong code'),
     'EVT12':dict(file='/SAKURA2/EVT12.BIN',base=0x00204000,bytes=75984,
                  sha256='0d7a561da50c9a209157bf61b645b49b0ef37c70c5db409e8f8a1ea4cf02f11d',
-                 evidence='EVT family inference: observed overlays EVT01,02,04,05,06,19 load at 00204000 with exact byte equality; base inferred for this file, never executed. Strict AOT compares block code with memory before running, so a wrong inference cannot execute wrong code'),
+                 evidence='Disc 2 Chapter 8: live MAP12 states match the first 71,692 bytes at 00204000; observed EVT12_MAP12 spans match the pinned module'),
     'EVT13':dict(file='/SAKURA2/EVT13.BIN',base=0x00204000,bytes=75280,
                  sha256='cf7a5a275d4f5df853360da7c4d26ba48afc5d7037892205a42cdea79f1cbb67',
                  evidence='EVT family inference: observed overlays EVT01,02,04,05,06,19 load at 00204000 with exact byte equality; base inferred for this file, never executed. Strict AOT compares block code with memory before running, so a wrong inference cannot execute wrong code'),
@@ -113,6 +113,9 @@ REGISTRY={
 REGISTRY['EVT04_MAP04'] = dict(
     REGISTRY['EVT04'], observed_ranges='evt04-map04-aot-ranges.json',
     evidence='Disc 1 Chapter 3 second battle, the 180-frame MAP04 camera witness')
+REGISTRY['EVT12_MAP12'] = dict(
+    REGISTRY['EVT12'], observed_ranges='evt12-map12-aot-ranges.json',
+    evidence='Disc 2 Chapter 8, IC08 exit through MAP12 opening, deployment and first enemy phase')
 REGISTRY['EVT15_MAP15'] = dict(
     REGISTRY['EVT15'], observed_ranges='evt15-map15-aot-ranges.json',
     evidence='Disc 2 Chapter 9 theater defense, the observed deployment transition into EVT16')

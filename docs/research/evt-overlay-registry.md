@@ -72,3 +72,49 @@ The [Windows v0.2.11-alpha release](https://github.com/MatyMeatBoy/SaturnTaisen/
 includes these 591 variants. Its combined 675,229-block build with patch
 0193 matched all 18,900 reference guest fields and final SRAM again.
 The distributed executable also passed a 120-field strict Spanish boot.
+
+
+## Bounded MAP12 opening and first enemy phase on disc 2
+
+The natural English disc-2 Chapter 8 continuation from IC08 reads
+38 sectors of EVT12 at FAD 203377, then 151 sectors of MAP12 at
+FAD 219422. The initial sparse runtime stops at master SH-2 address
+`00205FB0`. The first 71,692 live bytes at `00204000` match the
+`/SAKURA2/EVT12.BIN` source in the retained MAP12 checkpoints.
+The complete 75,984-byte module has SHA-256
+`0d7a561da50c9a209157bf61b645b49b0ef37c70c5db409e8f8a1ea4cf02f11d`.
+
+Five recorded interpreter segments match the archived guest hashes
+and final SRAM. They yield 468 variants absent from the 674,638-block
+reference. Every complete instruction span matches the pinned disc
+module, including the opening strict miss. The canonical sorted
+variant delta has SHA-256
+`04bc31de45b19b6c846a0950bdf34a5bb5946895bbbbd5b71cfa6c7f20422ae6`.
+
+| Recorded continuation | Matching strict guest fields |
+| --- | ---: |
+| IC08 exit to MAP12 briefing | 3,600 |
+| Briefing through deployment | 2,520 |
+| Opening navigation preview | 540 |
+| Kohran's first-turn reposition | 4,200 |
+| First enemy phase | 4,800 |
+| Total | 15,660 |
+
+The strict 0193 candidate with the delta matches all five sets of
+guest hashes and final SRAM with zero interpreted blocks. Its SHA-256
+is `c0acc9fb441dd1375acb5adb05896cf8166b3c54e142dced10c47c55c2b759a9`.
+The narrow profile regenerates the exact variants from the pinned
+disc and the public offset/length pairs.
+
+The same candidate runs a strict 320-field Direct3D 11 donor/empty
+pair at 2560×1440. Guest hashes and final SRAM match. The five captures
+per variant match the corresponding portable outputs pixel for pixel.
+
+
+```powershell
+python tools/discover_registered_overlays.py --image "local/prepared/disc2/Track 01.iso" --module EVT12_MAP12 --seed-blocks local/work/map04-aot/blocks.txt --output local/work/map12-aot
+```
+
+These retained segments bound the proof. A fresh campaign route,
+remaining turns and package inclusion stay open. Inputs, states and
+binary evidence are private under `local/work/codex-th1/map-bulk-live/`.
