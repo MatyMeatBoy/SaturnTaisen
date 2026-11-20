@@ -128,6 +128,30 @@
    }
   },
   {
+   "min_crop_correlation": 0.9665,
+   "name": "BG2093",
+   "axis": "x",
+   "width": 320,
+   "height": 144,
+   "native_bytes": 50576,
+   "native_fnv": "F9952EE2F9E760E0",
+   "palette": "65D40E5ACD068572",
+   "cells": "AA8EA0A94CCA83C6",
+   "pc_file": "SAKURA1/BG/BG2093.SPR",
+   "pc_bytes": 2086990,
+   "pc_fnv": "7A3380B930D05FE9",
+   "pc_width": 592,
+   "pc_height": 320,
+   "crop_cross": 0,
+   "fit": {
+    "rate_milli": 1796,
+    "origin": 23,
+    "length": 512,
+    "cross": 0,
+    "cross_length": 320
+   }
+  },
+  {
    "min_crop_correlation": 0.9425,
    "name": "BG2130",
    "axis": "x",
@@ -383,7 +407,6 @@
  "skipped": {
   "BG1257": "PC 1181x320 is not 2x of native 456x144",
   "BG1280": "PC 1241x320 is not 2x of native 512x144",
-  "BG2093": "PC 592x320 is not 2x of native 320x144",
   "BG2247": "PC art does not follow the native picture (min crop correlation 0.200)",
   "BG2252": "PC art does not follow the native picture (min crop correlation 0.256)",
   "BG2290": "PC art does not follow the native picture (min crop correlation 0.731)",

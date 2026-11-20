@@ -41,6 +41,7 @@ BG1285_REPORT = 'docs/research/bg1285-pan.md'
 BG1207_REPORT = 'docs/research/bg1207-pan.md'
 BG2248_REPORT = 'docs/research/bg2248-pan.md'
 SCROLL_REPORT = 'docs/research/scroll-table.md'
+SCROLL_UNWITNESSED = {'BG2093'}  # no saved state reaches the picture (docs/research/size-candidates.md)
 STAGE01_REPORT = 'docs/research/stage01-pc-ground.md'
 CHAPTER1_ROUTE_REPORT = 'docs/research/hd-chapter-1.md#observations-from-the-full-cold-route'
 # The replay identifies active donors. BG2004 shares native cells and palette
@@ -529,9 +530,10 @@ def build(root, index_dir, portrait_audit):
                     row['status'] = 'hd'
                     if (disc, path) in SCENE_DRAWS:
                         row.update(verified_in_game=True, runtime_evidence=SCENE_DRAWS[(disc, path)][1])
-                elif name in scroll_rows:
+                elif name in scroll_rows and (disc, path) != (2, '/SAKURA1/BG2093.BIN'):  # the witnessed dream stays native
                     # TP2: a row of the scroll-picture table (config/hd-scroll-pictures.json) is drawn by the runtime's table path.
-                    row['status'] = 'hd'
+                    # TP2a-size: a calibrated row with no native witness in any saved state is `wired-unverified`, never `hd`.
+                    row['status'] = 'wired-unverified' if name in SCROLL_UNWITNESSED else 'hd'
                     row.setdefault('runtime_evidence', SCROLL_REPORT)
                 elif row['status'] == 'hd' and (disc, path) in SCENE_DRAWS:
                     row['verified_in_game'] = True
