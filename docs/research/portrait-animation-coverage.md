@@ -250,3 +250,28 @@ are in the ignored `local/work/codex-tp3c/t45-natural-iris` folder.
 
 At block close the project measured 64,374,989,543 logical bytes, above
 the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+## PC emblem 0169 in the letter scene
+
+The owner selected the PC artwork for Enhanced. KAO.SPR subimage 360
+has the same base as 348, and both of its RGBA strips reproduce base
+row 16 exactly. Each native strip also repeats that region byte for
+byte. This preserves the still emblem across strip draws without a
+new runtime path. The recipe has separate checksums for both prepared
+densities and uses the native transparency mask. Original retains the
+Saturn portrait.
+
+Four strict 65-field runs resume the Spanish disc 1 letter snapshot.
+The donor and absent controls match all guest hashes and final SRAM.
+The Enhanced draw places the portrait at (404,1090)–(644,1378) at
+2560×1440. All 69,120 RGB pixels inside match the prepared PC base in
+all four captured fields. Changes are confined to the portrait.
+Original matches with and without the pack in all four samples.
+The Spanish letter proves the displayed base. The repeated strips
+are verified offline. Other occurrences and package inclusion remain
+open. Private replays are in `local/work/codex-th1/emblem-0169/`.
+
+The setup helper built all 304 dialogue portrait identities directly from
+the two English Saturn data tracks and the PC archive. Both generated
+emblem variants match the replay pack. The
+catalog review found no other explicit native portrait exception.

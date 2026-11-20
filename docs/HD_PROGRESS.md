@@ -6,7 +6,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
-| Retratos y animación | identidades Saturn | 304/304 (100%) | 303/304 (99,6%) | 303/304 (99,6%) | 303/304 (99,6%) | Sin dato |
+| Retratos y animación | identidades Saturn | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | Sin dato |
 | Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1145/1145 (100%) | 712/1145 (62,1%) | Sin dato | 566/1145 (49,4%) | 33/1145 (2,8%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
@@ -19,7 +19,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 
 | Sección | Integrado |
 | --- | --- |
-| Retratos y animación | 303/304 (99,6%) |
+| Retratos y animación | 304/304 (100%) |
 | Imágenes de escena | 566/1145 (49,4%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 44/50 (88%) |
@@ -28,7 +28,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 146/147 (99,3%) |
 
-**HD total: 1125/1894 (59,3%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1126/1894 (59,4%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
 
 ## Qué cuenta en cada etapa
@@ -51,7 +51,7 @@ Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y b
 - Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.
 - Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.
 - 394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.
-- 0152 y 0153 conservan las tres regiones aprobadas. En la sala de mando del capítulo 1 se comprobaron la base y las dos tiras de Iris 00a1 a 1440p, incluido el fundido blanco. El emblema 0169 conserva el diseño de Saturn por decisión artística.
+- 0152 y 0153 conservan las tres regiones aprobadas. En la sala de mando del capítulo 1 se comprobaron la base y las dos tiras de Iris 00a1 a 1440p, incluido el fundido blanco. El emblema 0169 usa la versión PC aprobada y se comprobó en la carta española a 1440p.
 - **Siguiente paso**. Ampliar la verificación natural de parpadeos, boca, efectos y fallback por identidad y escena.
 
 - [portrait-animation-coverage.md](research/portrait-animation-coverage.md). SHA-256 del recibo local `f76f05657f88e9d37af6517e878ccdfd81abc9a8a0db38c899fa1e62bce13aac`.

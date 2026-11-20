@@ -2368,6 +2368,17 @@
    "native_raw_sha256": "470020418cce993e03018f3e25667e917629ebb739e1d56a83ed48afc37f7952"
   },
   {
+   "id": "0169",
+   "pc_index": 360,
+   "dx": 0,
+   "dy": 0,
+   "native_raw_sha256": "7c49ed4ae1e58fd0b126990c227b48b5fc0146e3fb3d0f09a2e4c93418712855",
+   "variants_rgba_sha256": {
+    "1": "6cd29181a4fe741dd1a327237a2d208d818f749c4f0e9d5818e2e2d3127b306d",
+    "2": "0af3c277802ce585fdabe5d05218a5383aabb1bdb362cb1e73fbb91c444ff36a"
+   }
+  },
+  {
    "id": "016a",
    "pc_index": 361,
    "dx": 0,
