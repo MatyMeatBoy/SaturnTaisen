@@ -1,0 +1,259 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -359,6 +359,10 @@
+     BackgroundWorkers backgroundWorkers;
+     bool backgroundWarmupStarted=false;
+     SDL_Texture *foreground=nullptr;
++    SDL_Texture* lipsBodyTexture=nullptr;
++    std::vector<uint32_t> lipsBodyPixels;
++    int lipsBodyWidth=0,lipsBodyHeight=0;
++    std::optional<uint64_t> lipsBodyHash;
+     struct MixedPixel {
+         uint32_t source = 0;
+         uint32_t topRgb = 0;
+@@ -373,6 +377,10 @@
+     };
+     MixedLayerCache panelMixCache, pictureMixCache, shadowMixCache;
+     const auto invalidateMixedLayers=[&] {
++        if (lipsBodyTexture) SDL_DestroyTexture(lipsBodyTexture);
++        lipsBodyTexture=nullptr;
++        lipsBodyWidth=lipsBodyHeight=0;
++        lipsBodyHash.reset();
+         panelMixCache.backdrop=pictureMixCache.backdrop=shadowMixCache.backdrop=nullptr;
+     };
+     const bool mixCacheEnabled = std::getenv("SATRECOMP_DISABLE_MIX_CACHE")==nullptr;
+@@ -1041,6 +1049,7 @@
+     };
+     struct BodyHd {
+         bool tried=false;BodyTexture body;unsigned bodyW=0,bodyH=0;
++        bool lipsBodyDonor=false;
+         bool cutout=false;SDL_Texture* maskTexture=nullptr;std::optional<uint64_t> maskHash;
+         std::vector<std::array<int,3>> maskRuns;
+         VerifiedBodyFaces verified;bool verifiedAssets=false, nc81NeckUnderlay=false;std::vector<unsigned> originalIndex;
+@@ -2431,6 +2440,8 @@
+                                             unsigned(frame.pcY)+decoded.partH[index]<=decoded.bodyH)
+                                             st.refinedPos.try_emplace(index,std::array{float(frame.pcX),float(frame.pcY)});
+                                     }
++                                    st.lipsBodyDonor=decoded.pcAsset==0x447A41CB0EBAC667ull &&
++                                        decoded.bodyW==294 && decoded.bodyH==320;
+                                     st.bodyW=decoded.bodyW;st.bodyH=decoded.bodyH;
+                                     st.bodyPixels=std::move(decoded.body);st.partPixels=std::move(decoded.parts);
+                                     st.partSig=std::move(decoded.partSig);st.partOpaque=std::move(decoded.partOpaque);
+@@ -3157,6 +3168,60 @@
+                                 SDL_RenderTexture(renderer,content,&source,&target);
+                             }
+                         }
++                        if (!port.videoRenderer->LipsBodyCover().empty() && !bodyDraw.valid &&
++                            !choosing && !port.menu.IsOpen() && zoom.picture.scale>0 &&
++                            port.videoRenderer->BackgroundPaletteFingerprint(3)==0x3CA9F51EFEDCF198ull) {
++                            const auto* body=planes.sprites.size()>2?&planes.sprites[2]:nullptr;
++                            const bool witnessed=body && body->x==104 && body->y==8 && body->command.words[5]==0x1590 &&
++                                body->command.words[2]==0x00a0 && body->command.words[3]==0x2000 &&
++                                AtlasFingerprint(body->pixels)==0xFD72520EDBF75ED5ull;
++                            if (witnessed) for (size_t slot=0;slot<bodyHd.size();++slot) {
++                                const auto& st=bodyHd[slot];
++                                if (!st.lipsBodyDonor || std::strcmp(kBodies[slot].disc,"NC11.BIN")!=0) continue;
++                                constexpr int x0=104,y0=8,width=168,height=144;
++                                const int scale=zoom.picture.scale,w=width*scale,h=height*scale;
++                                uint64_t key=14695981039346656037ull;
++                                const auto cover=port.videoRenderer->LipsBodyCover();
++                                uint32_t covered=0;
++                                for (const uint32_t pixel : cover) {
++                                    key=(key^pixel)*1099511628211ull;
++                                    if ((pixel>>24)==255) covered|=pixel;
++                                }
++                                if (!covered) break;
++                                if (!lipsBodyTexture || lipsBodyWidth!=w || lipsBodyHeight!=h) {
++                                    if (lipsBodyTexture) SDL_DestroyTexture(lipsBodyTexture);
++                                    lipsBodyTexture=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,
++                                        SDL_TEXTUREACCESS_STREAMING,w,h);
++                                    if (lipsBodyTexture && (!SDL_SetTextureBlendMode(lipsBodyTexture,SDL_BLENDMODE_BLEND) ||
++                                        !SDL_SetTextureScaleMode(lipsBodyTexture,SDL_SCALEMODE_NEAREST))) {
++                                        SDL_DestroyTexture(lipsBodyTexture);
++                                        lipsBodyTexture=nullptr;
++                                    }
++                                    lipsBodyWidth=w;lipsBodyHeight=h;lipsBodyHash.reset();
++                                }
++                                if (!lipsBodyTexture) break;
++                                if (key!=lipsBodyHash && ResizePanelBuffer(lipsBodyPixels,size_t(w)*h)) {
++                                    std::fill(lipsBodyPixels.begin(),lipsBodyPixels.end(),0);
++                                    for (int y=0;y<h;++y) for (int x=0;x<w;++x) {
++                                        const uint32_t top=cover[size_t(y/scale)*width+x/scale];
++                                        if (!(top>>24)) continue;
++                                        const size_t px=size_t(x)*st.bodyW/w;
++                                        const size_t py=size_t((y0-8)*scale+y)*st.bodyH/(144*scale);
++                                        const uint32_t donor=st.bodyPixels[py*st.bodyW+px];
++                                        if ((donor>>24)!=255) continue;
++                                        lipsBodyPixels[size_t(y)*w+x]=(top>>24)==255
++                                            ? CompositePanelPixel({top,11,{}},donor,0xff000000u) : donor;
++                                    }
++                                    if (SDL_UpdateTexture(lipsBodyTexture,nullptr,lipsBodyPixels.data(),w*sizeof(uint32_t)))
++                                        lipsBodyHash=key;
++                                }
++                                if (key==lipsBodyHash) {
++                                    const SDL_FRect area{imageTarget.x+float((x0-16)*scale),imageTarget.y+float((y0-8)*scale),float(w),float(h)};
++                                    SDL_RenderTexture(renderer,lipsBodyTexture,nullptr,&area);
++                                }
++                                break;
++                            }
++                        }
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawBrackets(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+@@ -4154,6 +4219,8 @@
+             port.stepping = paused; // (a frame at a time: no run-ahead)
+             {
+                 ProfileScope runScope(frameProfile.run);
++                if(port.videoRenderer) port.videoRenderer->CaptureLipsBody(
++                    satrecomp::FeatureValue("presentation_mode")==1 && !port.opt.pcAssetsPath.empty());
+                 port.RunFrame();
+             }
+ #ifdef SATRECOMP_OWN_MACHINE
+diff --git a/video/raster.cpp b/video/raster.cpp
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -107,6 +107,9 @@
+     GlyphPlateStamp* stamp=nullptr;
+     if(m_glyphCaptureActive && !m_presentRasterTarget && x<320 && y<212 && y>=48)
+         stamp=&m_glyphStamps[m_captureDrawFB][size_t(y)*320+size_t(x)];
++    if (m_lipsBodyCommand && !m_presentRasterTarget && x>=104 && x<272 && y>=8 && y<152)
++        m_lipsBodyOwner[m_captureDrawFB][size_t(y-8)*168+x-104]=
++            m_captureValid && m_captureCount==m_lipsBodyCommand && !(mode & kMsbOn) && (mode&3)==0;
+     if (mode & kMsbOn) {
+         fb[offset & ~1u] |= 0x80;
+         if(stamp)stamp->RecordWrite(0,0,0);
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -61,6 +61,9 @@
+     m_regs2.Decode(m_raw2);
+     m_regs1 = {};
+     m_ctx = {};
++    m_lipsBodyOwner={};
++    m_lipsBodyCover.clear();
++    m_lipsBodyCommand=0;
+     m_displayFB = 1;
+ }
+ 
+@@ -84,6 +87,11 @@
+     ar.Pod(m_regs2);
+     ar.Pod(m_ctx);
+     ar.Pod(m_displayFB);
++    if (!ar.Saving()) {
++        m_lipsBodyOwner={};
++        m_lipsBodyCover.clear();
++        m_lipsBodyCommand=0;
++    }
+     ar.Pod(m_width);
+     ar.Pod(m_height);
+     ar.Pod(m_exclusive);
+@@ -185,6 +193,8 @@
+ // --- VDP1 ---
+ 
+ void Renderer::InvalidateGlyphPlate(uint32 framebuffer) {
++    m_lipsBodyOwner[framebuffer].clear();
++    if (framebuffer==m_captureDrawFB) m_lipsBodyCommand=0;
+     m_drawnBrackets[framebuffer]={};
+     if(framebuffer==m_captureDrawFB)m_bracketCaptureActive=false;
+     m_drawnItemCard[framebuffer].reset();
+@@ -213,6 +223,8 @@
+ void Renderer::BeginDrawing() {
+     m_commands.clear();
+     m_captureDrawFB=m_displayFB^1u;m_captureCount=0;m_captureBytes=0;m_captureValid=m_capturePresentation;
++    m_lipsBodyCommand=0;
++    m_lipsBodyOwner[m_captureDrawFB].clear();
+     m_glyphPlateReady[m_captureDrawFB]=false;
+     m_glyphCaptureActive=m_captureGlyphPlate && m_capturePresentation && !m_gpu && !m_check &&
+         m_width==320 && m_height==224 && m_regs1.fbSizeH>=320 && m_regs1.fbSizeV>=224 &&
+@@ -272,6 +284,19 @@
+             const size_t start=size_t(cmd.words[4])*8;
+             for(size_t i=0;i<bytes;i++)shown.pixels[i]=m_mem.vram1[(start+i)&0x7FFFF];
+             m_captureBytes+=bytes;
++            if (m_captureLipsBody && m_captureCount==3 && !m_gpu && !m_check &&
++                m_width==320 && m_height==224 && !m_regs1.pixel8Bits && !m_regs1.fbRotEnable &&
++                !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable && !m_regs2.TVMD.IsInterlaced() &&
++                (cmd.words[0]&0x3F)==0 &&
++                shown.x==104 && shown.y==8 && cmd.words[5]==0x1590 &&
++                cmd.words[2]==0x00a0 && cmd.words[3]==0x2000) {
++                uint64 hash=14695981039346656037ull;
++                for(uint8 value:shown.pixels) hash=(hash^value)*1099511628211ull;
++                if(hash==0xFD72520EDBF75ED5ull) {
++                    m_lipsBodyOwner[m_captureDrawFB].assign(168*144,0);
++                    m_lipsBodyCommand=uint16(m_captureCount);
++                }
++            }
+             if(m_itemCaptureActive)TrackItemCommand(shown);
+             if(m_bracketCaptureActive)TrackBracketCommand(shown);
+         }
+@@ -553,6 +578,7 @@
+ 
+ void Renderer::BeginFrame() {
+     m_reuse.pending = true;
++    m_lipsBodyCover.clear();
+     m_reuse.mode = LineReuse::Off;
+     m_presentation.itemCard.reset();
+     m_itemFrameInvalid=false;
+@@ -879,6 +905,7 @@
+ // Lines that follow an item card or a menu's arrows from line to line (state kept between lines, and a drawn capture that
+ // changes every frame without the counter moving): always composed, never kept
+ bool Renderer::ReuseVolatileLine(uint32 y) const {
++    if (!m_lipsBodyCover.empty() && y>=8 && y<152) return true;
+     if (m_captureBrackets && m_drawnBrackets[m_displayFB].serial != 0 && y + 1 > static_cast<uint32>(system_hud::kY) &&
+         y < static_cast<uint32>(system_hud::kY + system_hud::kHeight)) {
+         return true;
+@@ -894,6 +921,9 @@
+     R.pending = false;
+     R.mode = LineReuse::Off;
+     R.frames++;
++    if (m_captureLipsBody && m_capturePresentation && m_width==320 && m_height==224 &&
++        m_lipsBodyOwner[m_displayFB].size()==168*144)
++        m_lipsBodyCover.assign(168*144,0);
+     if (!ReuseEligible()) {
+         R.ineligible++;
+         R.valid = false;
+@@ -1363,6 +1393,21 @@
+         const bool calcTop = top == kSprites ? sprite.colorCalcEnable[x] && !regs2.spriteParams.lineColorScreenEnable
+                            : top != kBack && regs2.bgParams[top - kRBG0].colorCalcEnable &&
+                              regs2.specialColorCalcMode[top - kRBG0] == 0 && !regs2.bgParams[top - kRBG0].lineColorScreenEnable;
++        if (!m_lipsBodyCover.empty() && !m_lipsBodyOwner[m_displayFB].empty() &&
++            &sprite==&m_sprite && x>=104 && x<272 && y>=8 && y<152 &&
++            sprite.special[x]==normal && !sprite.shadowOrWindow[x]) {
++            const size_t at=size_t(y-8)*168+x-104;
++            if (m_lipsBodyOwner[m_displayFB][at]) {
++                if (top==3 && second==kSprites && calcTop && !regs2.colorCalcExtended &&
++                    !regs2.colorCalcAdd && !regs2.colorCalcUseSecondRatio && !m_colorCalcWindow[x] &&
++                    (!regs2.colorOffsetEnable[3] || !regs2.colorOffset[regs2.colorOffsetSelect[3]].nonZero) &&
++                    regs2.colorCalcRatio[3]==10)
++                    m_lipsBodyCover[at]=color.u32|0xff000000u;
++                else if (top==kSprites && !calcTop &&
++                    (!regs2.colorOffsetEnable[kSprites] || !regs2.colorOffset[regs2.colorOffsetSelect[kSprites]].nonZero))
++                    m_lipsBodyCover[at]=0x80000000u;
++            }
++        }
+         if (calcTop && regs2.colorCalcExtended)whiteWeight=255;
+         if (calcTop && !regs2.colorCalcExtended && !m_colorCalcWindow[x]) {
+             // NBG3 can be the nominal top while colour calculation reveals the video below.
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -190,6 +190,8 @@
+                BackgroundColorOffset(layer) == std::array<int16_t, 3>{};
+     }
+     const Presentation& PresentationFrame() const { return m_presentation; }
++    void CaptureLipsBody(bool enabled) { m_captureLipsBody=enabled; }
++    std::span<const uint32> LipsBodyCover() const { return m_lipsBodyCover; }
+     void CapturePresentation(bool enabled) { m_capturePresentation=enabled; }
+     void CaptureGlyphPlate(bool enabled) {m_captureGlyphPlate=enabled;}
+     void CaptureSystemBrackets(bool enabled) {m_captureBrackets=enabled;}
+@@ -303,6 +305,10 @@
+ 
+ private:
+     Presentation m_presentation;
++    std::array<std::vector<uint8>,2> m_lipsBodyOwner;
++    std::vector<uint32> m_lipsBodyCover;
++    uint16 m_lipsBodyCommand=0;
++    bool m_captureLipsBody=false;
+     // --- reuse of unchanged VDP2 lines (T116) ---
+     // m_stateGen counts every change of what a composed line is made from (VDP2 VRAM and colour RAM, the VDP2
+     // and VDP1 registers, the picture size, the field, the latched display mode, the displayed VDP1 framebuffer).
