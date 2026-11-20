@@ -1,0 +1,52 @@
+diff --git a/port/verified_body_faces.h b/port/verified_body_faces.h
+--- a/port/verified_body_faces.h
++++ b/port/verified_body_faces.h
+@@ -386,7 +386,48 @@
+     {0x627963358592217Bull, 32, 24, 19, 158, 155},
+ };
+ 
++inline constexpr VerifiedBodyFace kNC11[] = {
++    {0xECDA8C708E4F102Aull, 56, 32, 20, 20, 66},
++    {0x3962F8D4E9CF30C5ull, 56, 32, 21, 20, 66},
++    {0x07BB0CBD2DD374C5ull, 56, 32, 22, 20, 66},
++    {0xCF82954BBFBDD0FFull, 56, 32, 23, 20, 66},
++    {0x0EAB408F6BB2F163ull, 16, 16, 65, 52, 116},
++    {0x8AE46FB4E12BB7B5ull, 16, 16, 66, 52, 116},
++    {0x85C0FBB507FB5CEBull, 16, 16, 67, 52, 116},
++    {0x35B6018184A27E40ull, 16, 16, 68, 52, 116},
++    {0xB760CDE1BD2D081Eull, 16, 16, 69, 52, 116},
++    {0xCFA8DCD1A087F9A9ull, 16, 16, 70, 52, 116},
++};
++
++inline constexpr VerifiedBodyFace kNC15[] = {
++    {0x859F50A3C37AF996ull, 56, 24, 7, 58, 66},
++    {0x98B07E572C492182ull, 56, 24, 8, 58, 66},
++    {0x6BDEFA40CF2564B5ull, 56, 24, 9, 58, 66},
++    {0xEC672C861FB23E59ull, 56, 24, 10, 58, 66},
++    {0xEDD6D16FC4252F3Dull, 16, 16, 41, 90, 116},
++    {0xF2AFC5C2FBFCA752ull, 16, 16, 42, 90, 116},
++    {0xD6AD90A9E05C6DB4ull, 16, 16, 43, 90, 116},
++    {0x85671025825DA21Aull, 16, 16, 44, 90, 116},
++    {0x2EEF2A091F954C84ull, 16, 16, 45, 90, 116},
++    {0x2C8E1A58BD112380ull, 16, 16, 46, 90, 116},
++};
++
++inline constexpr VerifiedBodyFace kNC22[] = {
++    {0x6D9DFD6F096D0D32ull, 48, 16, 8, 208, 49},
++    {0xC94F4381026AAD8Dull, 48, 16, 9, 208, 49},
++    {0xF87465D018F26F87ull, 48, 16, 10, 208, 49},
++    {0x9E31F5D77A20D5BCull, 24, 24, 39, 224, 97},
++    {0x6CF1C0A029A26B2Aull, 24, 24, 40, 224, 97},
++    {0x023C3CEE9BEA1FD8ull, 24, 24, 41, 224, 97},
++    {0xBD6772C2ED28751Cull, 24, 24, 42, 224, 97},
++    {0x1EAA6CE225D284DDull, 24, 24, 43, 224, 97},
++    {0x8959BDFAC69A6071ull, 24, 24, 44, 224, 97},
++};
++
+ inline VerifiedBodyFaces VerifiedFacesFor(std::string_view name) {
++    if (name == "NC11.BIN") return {0xAF9AD4C77A8622F4ull, 0x447A41CB0EBAC667ull, kNC11, true};
++    if (name == "NC15.BIN") return {0x1B41027D6CCE9FA7ull, 0xD20F0616415B8C6Aull, kNC15, true};
++    if (name == "NC22.BIN") return {0xB82134D076AB35CBull, 0x12DD0313FAB092C5ull, kNC22, true};
+     if (name == "NC94.BIN") return {0x3A6C7312E2003C49ull, 0xF27E60A83BF9C86Bull, kNC94, true};
+     if (name == "NC99.BIN") return {0x35F88B7424CA4073ull, 0xA6FF9162EB9844FFull, kNC99};
+     if (name == "NC91.BIN") return {0xE652087CDADEFB3Bull, 0xA7AE6D510897448Bull, kNC91, true};

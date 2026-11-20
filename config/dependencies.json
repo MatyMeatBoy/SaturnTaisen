@@ -218,7 +218,8 @@
       "patches/0223-sakura-nc3058-verified-faces.patch",
       "patches/0224-sakura-nc3285-nc3286-verified-faces.patch",
       "patches/0225-sakura-nc99-nc91-verified-faces.patch",
-      "patches/0226-sakura-nc91-nc94-additional-faces.patch"
+      "patches/0226-sakura-nc91-nc94-additional-faces.patch",
+      "patches/0227-sakura-nc11-nc15-nc22-verified-faces.patch"
     ]
   }
 }
