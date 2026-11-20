@@ -6098,6 +6098,30 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2244.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th10-native-attribution.md#verified-1001-monitor-draws",
+            "pc": "SAKURA1/BG/BG2244.SPR",
+            "runtime_evidence": "docs/research/th10-native-attribution.md#verified-1001-monitor-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2245.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th10-native-attribution.md#verified-1001-monitor-draws",
+            "pc": "SAKURA1/BG/BG2245.SPR",
+            "runtime_evidence": "docs/research/th10-native-attribution.md#verified-1001-monitor-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2246.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th10-native-attribution.md#verified-1001-monitor-draws",
+            "pc": "SAKURA1/BG/BG2246.SPR",
+            "runtime_evidence": "docs/research/th10-native-attribution.md#verified-1001-monitor-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2287.BIN": {
             "association": "observed",
             "evidence": "docs/research/th10-native-attribution.md#verified-scene-draws-on-the-archived-ending-route",
@@ -18618,21 +18642,6 @@
       "2:/SAKURA1/BG2243.BIN": {
         "association": "unknown",
         "status": "unpaired"
-      },
-      "2:/SAKURA1/BG2244.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2244.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2245.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2245.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2246.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2246.SPR",
-        "status": "hd"
       },
       "2:/SAKURA1/BG2248.BIN": {
         "association": "unknown",
