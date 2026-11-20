@@ -15,15 +15,14 @@ ch = cov['chapters'][0]['resources']['scene-pictures']
 cold = set(re.findall(r'BG\d+', (R / 'docs/research/hd-chapter-1.md').read_text(encoding='utf-8').split('### Bodies')[0]))
 disc1 = {
     key: row
-    for group in [cov['unassigned'], *(chapter['resources'] for chapter in cov['chapters'])]
-    for key, row in group['scene-pictures'].items()
+    for key, row in cov['unassigned']['scene-pictures'].items()
     if key.startswith('1:/SAKURA1/BG')
 }
 names = {k.split('/')[-1][:-4] for k in ch if '/BG' in k and k.split('/')[-1].startswith('BG')} | cold | {'BG1120'}
 rows = []
 for name in sorted(names):
     key = f'1:/SAKURA1/{name}.BIN'
-    row = disc1.get(key, {})
+    row = ch.get(key, disc1.get(key, {}))
     donor = Path(row['pc']).name if row.get('pc') else '-'
     reason = row.get('reason', '')
     if row.get('status') == 'hd':
