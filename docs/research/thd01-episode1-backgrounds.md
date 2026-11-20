@@ -1,7 +1,7 @@
 # THD01: fondos del episodio 1 (donantes PC de la ruta fría y variantes)
 
 Generado con `python tools/thd01_ep1_backgrounds.py docs/research/thd01-episode1-backgrounds.md`. Solo nombres y estados; sin pixeles.
-Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria de `hd-chapter-1.md`, y BG1120 (iluminacion nocturna). IC/EVE/BBG/TITLE se tratan aparte.
+Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la tabla de ruta fría de `hd-chapter-1.md` y las referencias de guion BG1016 y BG1120. IC/EVE/BBG/TITLE se tratan aparte.
 
 | Saturn BG | PC SPR | Estado | Motivo | Evidencia |
 |---|---|---|---|---|
@@ -35,7 +35,6 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 | BG1209 | BG1209.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
 | BG1216 | BG1216.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#observations-from-the-full-cold-route |
 | BG2004 | BG2004.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1143-and-bg2004-on-disc-1 |
-| BG2010 | BG2004.SPR | conectado sin verificar | reutiliza BG2004.SPR | - |
 | BG2034 | BG2034.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg2034-on-disc-1 |
 | BG2039 | BG2039.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1070-and-bg2039-on-disc-1 |
 | BG2159 | BG2159.SPR | conectado y verificado |  | docs/research/coverage-campaign-v026.md |
@@ -51,9 +50,8 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria
 | BG4370 | BG4370.SPR | conectado y verificado |  | docs/research/chapter-one-cutout-followup.md#bg4370-sortie-foreground |
 
 Donantes PC distintos: 43.
-- `BG2004.SPR` se reutiliza en BG2004, BG2010.
 
-Apariciones Saturn: conectado y verificado: 42, conectado sin verificar: 2
+Apariciones Saturn: conectado y verificado: 42, conectado sin verificar: 1
 
 ## Verificacion en juego a 2560x1440 (2026-11-20, con `art/` junto al exe)
 
@@ -87,17 +85,17 @@ Sustituye al intento anterior: no dibujaba porque la copia del exe no tenia la c
 
 Cobertura: 23 de las 34 conectadas y atribuidas dibujan en la ruta fria. BG1143 y BG1216 (atribuidas, ruta fria) no dibujaron en ningun tramo de la ruta fria (NOT DRAWN; no se probo un estado de continuacion distinto). No se probaron, por falta de estado o pelicula en este PC (`codex-witness-441-review`): BG1010, BG1011, BG1012, BG1036, BG1043, BG1055, BG1057, BG1059 (patrulla nocturna y extras), BG1101 (capitulo 9) y las 7 de ruta propia (scroll/recorte).
 
-### Resultado del barrido para las tres apariciones pendientes
+### Resultado histórico del barrido
 
 - BG1016: ningun `scene picture:` en los 49 tramos de la ruta fria. La aparición del disco 1 sigue sin atribuir. El mismo donante físico ya está verificado en [la ruta de Iris del disco 2](th8-native-attribution.md#verified-scene-draws-on-0801-and-early-0802).
 - BG1120: el registro da el cuadro frio 189.250; desde el estado del cuadro 186.000 (SHA-256 `b9802efd05286dd2...`), 3.400 cuadros: NOT DRAWN (hashes identicos, 0 interpretados). Sigue sin atribuir.
-- BG2010 usa el archivo HD compartido BG2004.SPR. La muestra del cuadro 256.031 verificó BG2004; queda por comprobar la aparición de BG2010 por separado.
+- BG2010 reutiliza BG2004.SPR en el inventario global. Las referencias encontradas a BG2010 son de los episodios 6, 8 y 10. La muestra del cuadro 256.031 acredita el donante compartido BG2004 en el episodio 1.
 
 ### Deltas
 
 Atribuidos 0, integrados nuevos 0, verificados nuevos 0: las 23 ya constan `verified_in_game` en `config/hd-chapter-coverage.json`, que no cambia (`docs/HD_PROGRESS.md` tampoco). Esto las reproduce con la herramienta correcta.
 
-No verificado: las 11 conectadas sin estado en este PC y las 7 de ruta propia; la lectura visual de cada captura (solo diferencia y rectangulo; BG2039 leido en #651); las tres apariciones de la subsección anterior, que necesitan una ruta específica.
+No verificado: las 11 conectadas sin estado en este PC y las 7 de ruta propia; la lectura visual de cada captura (solo diferencia y rectangulo; BG2039 leido en #651); las apariciones sin dibujo observado en ese barrido. Las secciones siguientes registran los resultados posteriores.
 
 La regeneración de la tabla conserva esta sección de evidencia.
 

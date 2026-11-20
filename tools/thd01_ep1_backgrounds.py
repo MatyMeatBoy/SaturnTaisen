@@ -12,13 +12,16 @@ from pathlib import Path
 R = Path(__file__).resolve().parents[1]
 cov = json.loads((R / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
 ch = cov['chapters'][0]['resources']['scene-pictures']
-cold = set(re.findall(r'BG\d+', (R / 'docs/research/hd-chapter-1.md').read_text(encoding='utf-8').split('### Bodies')[0]))
+route = (R / 'docs/research/hd-chapter-1.md').read_text(encoding='utf-8')
+cold = set(re.findall(r'^\| `/SAKURA1/(BG\d+)\.BIN`', route.split('### Bodies')[0], re.MULTILINE))
+# These backgrounds have episode 1 script references even when a replay has not drawn them.
+route_candidates = {'BG1016', 'BG1120'}
 disc1 = {
     key: row
     for key, row in cov['unassigned']['scene-pictures'].items()
     if key.startswith('1:/SAKURA1/BG')
 }
-names = {k.split('/')[-1][:-4] for k in ch if '/BG' in k and k.split('/')[-1].startswith('BG')} | cold | {'BG1120'}
+names = {k.split('/')[-1][:-4] for k in ch if '/BG' in k and k.split('/')[-1].startswith('BG')} | cold | route_candidates
 rows = []
 for name in sorted(names):
     key = f'1:/SAKURA1/{name}.BIN'
@@ -37,7 +40,7 @@ for name in sorted(names):
     rows.append((name, donor, state, reason, row.get('runtime_evidence', '-')))
 out = ['# THD01: fondos del episodio 1 (donantes PC de la ruta fría y variantes)', '',
        'Generado con `python tools/thd01_ep1_backgrounds.py docs/research/thd01-episode1-backgrounds.md`. Solo nombres y estados; sin pixeles.',
-       'Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la ruta fria de `hd-chapter-1.md`, y BG1120 (iluminacion nocturna). IC/EVE/BBG/TITLE se tratan aparte.', '',
+       'Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la tabla de ruta fría de `hd-chapter-1.md` y las referencias de guion BG1016 y BG1120. IC/EVE/BBG/TITLE se tratan aparte.', '',
        '| Saturn BG | PC SPR | Estado | Motivo | Evidencia |', '|---|---|---|---|---|']
 out += [f'| {a} | {b} | {c} | {d} | {e} |' for a, b, c, d, e in rows]
 spr = {}
