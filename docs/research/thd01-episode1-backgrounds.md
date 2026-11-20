@@ -180,3 +180,23 @@ capas terminaron en AOT estricto, con cero bloques interpretados.
 Esta secuencia permite investigar la transición con dos capas a
 partir del fondo exacto. La verificación HD del disco 1 sigue
 pendiente.
+
+### Mezcla floral durante BG1016
+
+Una compilación de diagnóstico basada en v0.2.22-alpha confirmó
+por qué el selector general no llega a BG1016. En los 38 cuadros
+desde el estado 8851, ambas capas tienen la clave exacta de celdas
+`C41EA21F6B54DAF3` y ajuste RGB neutro. En todos esos cuadros,
+`floralCoverMix` cubre los 41.472 píxeles de la escena y la ruta
+de mezcla dibuja antes que el selector de fondos HD. NBG0 y NBG2
+tienen cero píxeles de prioridad superior en esa zona.
+
+Desde 9011, la clave NBG0 que consulta el selector es cero y
+NBG2 tiene `BB5BC1088B3498F0` (BG1116). La mezcla floral aparece
+también en parte de esa continuación. Ambas pruebas de diagnóstico
+suman 76 cuadros AOT estrictos con cero bloques interpretados.
+
+Para esta transición, el punto de sustitución es la entrada de
+imagen de la mezcla floral. Saltarse la mezcla haría desaparecer
+la cobertura del fundido. BG1016 sigue pendiente de verificación HD
+en el disco 1.
