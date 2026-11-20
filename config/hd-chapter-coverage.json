@@ -2745,7 +2745,17 @@
       "chapter": 3,
       "disc": 1,
       "resources": {
-        "bodies": {},
+        "bodies": {
+          "1:/SAKURA1/NC3290.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc3290-stage-wing.md",
+            "native_face_fallback": true,
+            "pc": "SAKURA1/NC/NC3290.SPR",
+            "runtime_evidence": "docs/research/nc3290-stage-wing.md",
+            "status": "hd",
+            "verified_in_game": true
+          }
+        },
         "film": {},
         "menus-hud": {},
         "portraits": {
@@ -5986,13 +5996,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "1:/SAKURA1/NC3290.BIN": {
-        "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
-        "pc": "SAKURA1/NC/NC3290.SPR",
-        "reason": "The PC face close-up uses a different vertical crop and fills the native face openings.",
-        "status": "paired-not-wired"
-      },
       "1:/SAKURA1/NC33.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC33.SPR",
@@ -6815,10 +6818,9 @@
       },
       "2:/SAKURA1/NC3290.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/saturn-bg-format.md#tp5a-bounded-body-crops",
+        "native_face_fallback": true,
         "pc": "SAKURA1/NC/NC3290.SPR",
-        "reason": "The PC face close-up uses a different vertical crop and fills the native face openings.",
-        "status": "paired-not-wired"
+        "status": "hd"
       },
       "2:/SAKURA1/NC33.BIN": {
         "association": "unknown",

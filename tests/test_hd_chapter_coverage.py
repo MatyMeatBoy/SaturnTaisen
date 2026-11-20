@@ -333,7 +333,7 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         for disc in (1, 2):
-            for name in ('NC3290', 'NC3517'):
+            for name in ('NC3517',):
                 with self.subTest(disc=disc, body=name):
                     row = catalog['unassigned']['bodies'][f'{disc}:/SAKURA1/{name}.BIN']
                     self.assertEqual(row['pc'], f'SAKURA1/NC/{name}.SPR')
@@ -413,7 +413,7 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertEqual(chapter9['portraits'][identity]['association'], 'observed')
             self.assertEqual(catalog['chapters'][0]['resources']['portraits'][identity]['association'], 'observed')
 
-    def test_registered_short_bodies_have_fixture_scope_only(self):
+    def test_registered_short_bodies_record_witness_scope(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         rows = dict(catalog['unassigned']['bodies'])
@@ -430,8 +430,14 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertTrue(body['native_face_fallback'])
                 self.assertFalse(body.get('verified_in_game'))
                 self.assertTrue(body['fixture_evidence'].endswith(anchor))
-            for other in ('NC3290', 'NC3517'):
-                self.assertEqual(rows[f'{disc}:/SAKURA1/{other}.BIN']['status'], 'paired-not-wired')
+            self.assertEqual(rows[f'{disc}:/SAKURA1/NC3517.BIN']['status'], 'paired-not-wired')
+            body = rows[f'{disc}:/SAKURA1/NC3290.BIN']
+            self.assertEqual((body['status'], body['pc']), ('hd', 'SAKURA1/NC/NC3290.SPR'))
+            self.assertTrue(body['native_face_fallback'])
+            self.assertEqual(bool(body.get('verified_in_game')), disc == 1)
+            if disc == 1:
+                self.assertEqual(body['association'], 'observed')
+                self.assertEqual(body['runtime_evidence'], 'docs/research/nc3290-stage-wing.md')
 
     def test_scene_corridor_aliases_use_existing_runtime_keys(self):
         root = Path(__file__).resolve().parents[1]

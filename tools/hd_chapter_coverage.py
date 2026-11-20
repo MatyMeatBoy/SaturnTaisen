@@ -197,6 +197,7 @@ CHAPTER_WITNESSES = {
     (1, '/SAKURA1/BG1008.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     **{(1, f'/SAKURA1/{name}.BIN'): (3, 'docs/research/bg2290-native-pan.md')
        for name in ('BG2123', 'BG3123', 'BG2289', 'BG3289', 'BG2290')},
+    (1, '/SAKURA1/NC3290.BIN'): (3, 'docs/research/nc3290-stage-wing.md'),
     STAGE04_MAP: (3, 'docs/research/th3-native-attribution.md'),
     STAGE05_MAP: (3, STAGE05_REPORT),
     (1, '/SAKURA2/UNIT04.BIN'): (3, 'docs/research/th3-native-attribution.md'),
@@ -594,8 +595,13 @@ def build(root, index_dir, portrait_audit):
                 'status': 'hd',
                 'pc': f'SAKURA1/NC/{name}.SPR',
                 'native_face_fallback': True,
-                'fixture_evidence': body_review['registered_silhouettes'][name],
             }
+            proof = body_review['registered_silhouettes'][name]
+            if name == 'NC3290':
+                if disc == 1:
+                    row.update(verified_in_game=True, runtime_evidence=proof)
+            else:
+                row['fixture_evidence'] = proof
         elif kind == 'bodies' and name in body_review.get('paired_not_wired', {}):
             row = {
                 'status': 'paired-not-wired',
