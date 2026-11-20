@@ -258,7 +258,8 @@
       "patches/0266-sakura-bg2023-foreground-visibility.patch",
       "patches/0267-sakura-bg2092-native-mist.patch",
       "patches/0268-sakura-bg2026-ending.patch",
-      "patches/0269-sakura-hd-portraits-odd-scale.patch"
+      "patches/0269-sakura-hd-portraits-odd-scale.patch",
+      "patches/0270-sakura-anchor-first-dialogue-zoom.patch"
     ]
   }
 }

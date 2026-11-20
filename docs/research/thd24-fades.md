@@ -22,3 +22,19 @@ A 940-field strict English disc 1 replay from the Maria inspection checkpoint re
 ## Spanish letter to Sakura at 1440p
 
 The published v0.2.16.1-alpha executable and installer-produced Spanish disc completed a 6,361-field strict checkpoint replay from the letter through Sakura's park dialogue. The isolated runtime allowed checkpoint load. At 2560 x 1440 the 61 samples every five fields from 1,930 through 2,230 held the upper gold dialogue edge at y=1048 through the empty floral screen. Four corner pixels remained nonblack in each sample. The later sampled route reached Sakura at 4,560 and her Yoneda line at 5,280. Private evidence: `local/work/codex-th1/thd41-combined/letter-to-sakura-final/enhanced-1440`.
+
+## First letter dialogue panel in Zoom
+
+A Spanish disc 1 replay from cold-opening field 8650 showed the emblem
+for 27 fields before the picture appeared. The default whole-frame
+viewport drew the early panel at 4× at 1080p. The narrative viewport
+then moved the panel to its final 5× layout.
+
+Patch 0270 uses the same Zoom geometry for the witnessed standalone
+floral dialogue panel before the first picture. In the 220-field A/B,
+the emblem stays at (230,788), size 200 × 240, at 1080p and at
+(404,1090), size 240 × 288, at 1440p throughout the sampled fade and
+settled dialogue. Field 70 changes within the panel area, while the
+six captures after the picture appears match exactly at each resolution.
+All eight 1080p Original control captures match, as do guest hashes and
+save memory in each pair. Release packaging is pending.
