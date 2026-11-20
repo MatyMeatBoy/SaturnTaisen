@@ -35,6 +35,12 @@ Each segment started from the state; "hold" = direction held N frames. Presses: 
 | 5 | Start 20, UP hold 10 (cursor lands on card 3), A | Item cards: 1 Sakura, 2 Kanna, 3 Maria, 4 Iris (RIGHT/LEFT hold 10 moves one card). A opens a two-choice box: first = look (description line: "It's a photo of ..."), second (RIGHT then A) = hold the card over the scene as a cursor |
 | 6 | Held card, move LEFT 40 / RIGHT 25, A at 230 and 330 | Card stays held over the scene or returns to the menu; no reaction recorded; the cursor target while holding a card was not verified |
 
+| 7 | Start 20, UP 80 (card 3), A 110, A 170 (second A), then LEFT 40 / RIGHT 20 / LEFT 15 from 230, A | The first A opens a two-choice box and the look view; the second A shrinks the photo to a small held card for about 30 frames and then returns to the item menu by itself. The "use the card on the scene" mode was not observed; cards are look-only on this page. Cards 1, 2, 4 behave the same (descriptions only) |
+| 8 | Start, DOWN 20, A (Return) | The hand reaches Return (a pink block is drawn behind the hand, rendering artefact worth checking) but A does not close the menu; C closes it |
+| 9 | Start, DOWN 20, LEFT 45, A (Option) | The hand overshoots left of the box (the cursor is free, about 2 px per frame); Option was not hit |
+
+Result of the round: the "use a photo on Kanna or Sumire" hypothesis was not confirmed (no held-card cursor over the scene). Still untested: Option with a shorter hold (LEFT 30), Return with a different hold, B and Start inside the item menu, the Start menu opened after looking at both characters, and giving the photo of Sakura, then closing with C.
+
 Findings: the page has a Start command menu (Item cards with a "use on the scene" mode, Option, Return) besides the gaze cursor. Using a card on a character is the most likely way to leave the page ("You've got to stop those two!" asks for an action). Untested: each card (1-4) held over Kanna and over Sumire with A pressed while the card is shown (pass the hold with short taps of 5-10 frames), Option/Return effect, and Item use after the edge-hand line.
 
 ## Not done
