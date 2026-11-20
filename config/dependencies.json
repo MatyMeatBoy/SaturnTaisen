@@ -214,7 +214,8 @@
       "patches/0219-sakura-chapter-one-cutout-followup.patch",
       "patches/0220-sakura-iris-other-cutouts.patch",
       "patches/0221-sakura-wide-narrative-cutout.patch",
-      "patches/0222-sakura-nc3057-verified-faces.patch"
+      "patches/0222-sakura-nc3057-verified-faces.patch",
+      "patches/0223-sakura-nc3058-verified-faces.patch"
     ]
   }
 }
