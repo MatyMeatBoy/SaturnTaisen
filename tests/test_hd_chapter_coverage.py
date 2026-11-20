@@ -294,7 +294,9 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertTrue(nc81['verified_in_game'])
         self.assertTrue(nc81['native_face_fallback'])
         self.assertEqual(nc81['runtime_evidence'], 'docs/research/nc81-nc90-1440p.md')
-        self.assertFalse(catalog['chapters'][0]['resources']['bodies']['1:/SAKURA1/NC81.BIN']['verified_in_game'])
+        theater = catalog['chapters'][0]['resources']['bodies']['1:/SAKURA1/NC81.BIN']
+        self.assertTrue(theater['verified_in_game'])
+        self.assertTrue(theater['runtime_evidence'].endswith('#nc81-on-the-episode-1-late-theater-route'))
         nc3018 = catalog['chapters'][8]['resources']['bodies']['2:/SAKURA1/NC3018.BIN']
         self.assertTrue(nc3018['verified_in_game'])
         self.assertEqual(nc3018['runtime_evidence'], 'docs/research/nc3018-registered-faces.md')
