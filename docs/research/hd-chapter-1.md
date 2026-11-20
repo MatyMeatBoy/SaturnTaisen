@@ -224,3 +224,41 @@ The nearby deployment composition matched many BG1194 colors in an
 offline image search. VDP2 tiles and palettes identify BG1193 and BG4370
 in that checkpoint, and supplying BG1194 produced identical RGB in both
 arms. BG1194 remains outside the verified rows.
+
+## Additional night patrol doors
+
+Three other English disc-1 night patrol branches use the same archived
+`leave-dressing.state` and the same intermediate map checkpoint
+`leave-dressing-room-top-middle/terminal.state`. Each branch supplies
+ordinary controller input to move the cursor and select a room. The
+private input movies and field-619 checkpoints are under
+`local/work/codex-witness-441-review/hud/early-alt-plates/ch1-doors/room-landings-3/`.
+
+| Physical PC donor | Saturn source FAD | Replay label | Room | Changed RGB pixels per capture |
+| --- | ---: | --- | --- | ---: |
+| `BG1055.SPR` | 140284 | `library` | Dressing room | 1,979,667 |
+| `BG1036.SPR` | 139847 | `stage-east` | Auditorium | 1,780,498 |
+| `BG1059.SPR` | 140376 | `west-lower` | Office | 1,888,931 |
+
+At field 620, the native capture for each branch matches all 41,472 pixels
+of the independently decoded Saturn plate inside the scene viewport.
+All three checkpoint relays report zero interpreted blocks. The A/B
+tests replay 36 neutral fields per checkpoint in D3D11 at 2560×1440.
+Both arms use the cumulative 0213 runtime SHA-256
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`.
+Only the listed PC file differs between profiles. The 108 guest hashes
+and all three terminal SRAM pairs match, with zero interpreted blocks.
+
+In all six sample pairs at fields 8 and 30, RGB changes are confined to
+the Zoom rectangle (272, 29)–(2288, 1037). Each changed control pixel
+matches the independent Saturn decode, RGB555 quantized and nearest
+scaled. The replacement matches the independent bilinear PC decode
+within two RGB levels per channel. The capture pairs and receipts are
+under `local/work/codex-witness-441-review/hud/ch1-night-continuation-plates/`.
+
+A kitchen checkpoint in the same patrol shows BG1340. The same-number
+PC kitchen has shifted fixtures, and a single rectangular crop leaves
+the shelves, ceiling lights and refrigerator misaligned. A comparison
+of image gradients improves from 0.030 to 0.139 after fitting a crop
+for BG1340 and from 0.051 to 0.116 for BG1339. The kitchen pictures keep
+their existing native disposition.
