@@ -198,3 +198,17 @@ stable camera, movement or targeting, and a later camera before
 testing the ground at 1440p. Tile-based candidates MAP03, MAP20 and MAP23
 also need their exact PC placement data. The checkpoint paths and scan
 receipt are under `local/work/codex-th1/tactical-witness-refresh`.
+
+### Published File 1 entrance
+
+The exact v0.2.15-alpha executable started cold from a copy of the
+ordinary English disc 2 battery save. Recorded controller input used
+Continue, File 1 and the in-game Load confirmation. The game read
+EVT14 at FAD 203452 for 38 sectors and MAP14 at FAD 219751 for 158.
+The replay used the published runtime's normal save-loading path.
+
+The two 8,200-field runs differed only in availability of MAP14_A.SPR.
+The strict guest hashes and final SRAM matched. All five 1440p captures
+agreed before the HD draw or differed only inside the tactical viewport.
+3 captured fields show the replacement. The exact replay receipt is
+in `local/work/codex-th1/release-0215/map14-package-receipt.json`.
