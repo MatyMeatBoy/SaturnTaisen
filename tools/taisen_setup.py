@@ -1001,7 +1001,7 @@ def refresh_hd_portraits(paths: Paths, discs: list[Path]) -> bool:
     if (len(archive_data), fnv64(archive_data)) != (source_size, source_hash):
         raise SetupError('El archivo de retratos de PC no coincide con el registro del mod HD instalado.')
 
-    say(96, 'Mod HD: actualizando los retratos de tu instalación…')
+    say(98, 'Mod HD: actualizando los retratos de tu instalación…')
     with tempfile.TemporaryDirectory(prefix='.actualizar-retratos-', dir=pack.parent) as scratch:
         work = Path(scratch)
         staged = work / 'portraits'
@@ -1231,7 +1231,7 @@ def prepare_spanish_episode_art(paths, *, strict=False):
         except (OSError, ValueError) as error:
             if strict:
                 raise SetupError(f'Disco {disc}: no se pudo actualizar la rotulación de episodios: {error}') from error
-            say(97, f'Disco {disc}: no se pudo preparar la rotulación mejorada de episodios: {error}')
+            say(98, f'Disco {disc}: no se pudo preparar la rotulación mejorada de episodios: {error}')
             ready = False
     return outputs if ready else None
 
@@ -1575,7 +1575,7 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
                 raise SetupError('El mod HD necesita los discos preparados a partir del original o de la traducción inglesa.')
             hd = prepare_hd(paths, pc, [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)], 72, 25)
         elif pc is not None:
-            say(97, 'Mod HD: ya estaba preparado.')
+            say(98, 'Mod HD: ya estaba preparado.')
         refreshed_portraits = False
         if not wants_hd:
             tracks = [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)]
