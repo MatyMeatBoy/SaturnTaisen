@@ -31,7 +31,7 @@ Base de runtime publicada [v0.2.16-alpha](releases/v0.2.16-alpha.md). La actuali
 | Área | Pendiente en esta base |
 | --- | --- |
 | Imágenes de escena | 557 candidatos por conectar o resolver; 467 donantes ya conectados carecen de testigo natural registrado. |
-| Cuerpos grandes NC | 147 de 147 conectados; 100 cuerpos sin verificación registrada. Las poses adicionales tienen su propio control. |
+| Cuerpos grandes NC | 147 de 147 conectados; 99 cuerpos sin verificación registrada. Las poses adicionales tienen su propio control. |
 | Retratos | 304 integrados; falta contar y verificar las apariciones y tiras por identidad. |
 | Táctico | 11 de 27 suelos conectados; 16 pendientes. Los 542 SPR son el inventario de archivos, no el de suelos. |
 | HUD y menús | 170 de 229 imágenes candidatas por conectar o resolver; falta medir la verificación natural por imagen. |
@@ -75,7 +75,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
 | THD10 | P0 | local | implemented · natural 1440p | **Último cuerpo NC.** NC3517 y las expresiones de ambas caras. | [Ruta Iris 0904](research/nc3517-route-evidence.md#natural-0904-body-and-faces) verificada con el parche 0247. Pendiente de paquete. |
-| THD11 | P0 | local | open | **Cuerpos grandes del episodio 1.** [Inventario de 19 cuerpos observados](research/thd11-episode1-bodies.md), con dos apariciones pendientes: NC81 y NC3004. | Capturar las dos a 1440p. [NC95 verificado](research/thd11-episode1-bodies.md#nc95-on-the-episode-1-upstairs-route). Para los cuerpos ya verificados, comprobar las expresiones y fundidos que indica el inventario. |
+| THD11 | P0 | local | open | **Cuerpos grandes del episodio 1.** [Inventario de 19 cuerpos observados](research/thd11-episode1-bodies.md), con una aparición pendiente: NC81. | Capturar NC81 a 1440p. [NC95](research/thd11-episode1-bodies.md#nc95-on-the-episode-1-upstairs-route) y [NC3004](research/thd11-episode1-bodies.md#nc3004-at-the-episode-1-hanami) verificados. Para los cuerpos ya verificados, comprobar las expresiones y fundidos que indica el inventario. |
 | THD12 | P1 | local | open · NC81 lote activo | **Cuerpos grandes de otros episodios.** NC de episodios 2–10 fuera de THD10, lotes de 2–4 paquetes por ruta. | Registrar pose, ojos, boca y al menos un control de oclusión/fundido por familia. [NC3021](research/hd-chapter-9.md#nc3021-face-registration-witness) verificado con el parche 0246. [NC12/NC32/NC51 en 0904](research/hd-chapter-9.md#body-blends-during-the-theater-briefing): medir la mezcla que conserva el cuerpo nativo antes de extender HD a esa escena. |
 | THD13 | P1 | local | open | **Retratos y animación del disco 1.** Atlas FCE de episodios 1–5 por identidad, iconos sin interlocutor aparte. | Validar base, parpadeo, boca y modos HD/Original, incluido el emblema inicial. |
 | THD14 | P1 | local | open | **Retratos y animación del disco 2.** Atlas FCE de episodios 6–10 por identidad, excluyendo FACE táctico. | Mismo control de base, cuadros animados, alfa y fallback con evidencia por identidad. |

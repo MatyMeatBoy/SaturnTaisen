@@ -78,8 +78,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
             "pc": "SAKURA1/NC/NC3004.SPR",
+            "runtime_evidence": "docs/research/thd11-episode1-bodies.md#nc3004-at-the-episode-1-hanami",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC3173.BIN": {
             "association": "observed",
