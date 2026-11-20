@@ -616,6 +616,8 @@ def build(root, index_dir, portrait_audit):
                     row.update(verified_in_game=True, runtime_evidence='docs/research/nc81-nc90-1440p.md')
                 elif (disc, path) == (1, '/SAKURA1/NC56.BIN'):
                     row.update(verified_in_game=True, runtime_evidence='docs/research/nc56-registered-faces.md')
+                elif (disc, path) == (1, '/SAKURA1/NC51.BIN'):
+                    row.update(verified_in_game=True, native_face_fallback=True, runtime_evidence='docs/research/nc51-registered-faces.md')
                 elif (disc, path) == (2, '/SAKURA1/NC3018.BIN'):
                     row.update(verified_in_game=True, runtime_evidence='docs/research/nc3018-registered-faces.md')
                 else:

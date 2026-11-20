@@ -171,7 +171,8 @@
       "patches/0173-sakura-nc25-baked-eyes.patch",
       "patches/0174-sakura-reuse-vdp2-background-priority.patch",
       "patches/0175-sakura-legacy-spanish-loading.patch",
-      "patches/0176-sakura-registered-nc56-faces.patch"
+      "patches/0176-sakura-registered-nc56-faces.patch",
+      "patches/0177-sakura-registered-nc51-faces.patch"
     ]
   }
 }

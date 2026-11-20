@@ -105,9 +105,11 @@
           "1:/SAKURA1/NC51.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "native_face_fallback": true,
             "pc": "SAKURA1/NC/NC51.SPR",
+            "runtime_evidence": "docs/research/nc51-registered-faces.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC55.BIN": {
             "association": "observed",
