@@ -282,15 +282,17 @@ SCENE_DRAWS = {
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
-CUTOUT_DRAWS = {
+EXACT_BODY_DRAWS = {
     (1, '/SAKURA1/NC3173.BIN'): (1, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
     (2, '/SAKURA1/NC3285.BIN'): (10, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
     (2, '/SAKURA1/NC3286.BIN'): (10, 'docs/research/nc3286-ending-cutout.md'),
     (2, '/SAKURA1/NC3057.BIN'): (10, 'docs/research/nc3057-ending-faces.md'),
+    (1, '/SAKURA1/NC99.BIN'): (3, 'docs/research/nc99-nc91-registered-faces.md'),
+    (2, '/SAKURA1/NC91.BIN'): (8, 'docs/research/nc99-nc91-registered-faces.md'),
 }
 
 CHAPTER_WITNESSES = {
-    **CUTOUT_DRAWS,
+    **EXACT_BODY_DRAWS,
     (2, '/SAKURA1/IC08.BIN'): (8, 'docs/research/ic-intermission-table.md#ic08-on-english-disc-2'),
     (2, '/SAKURA1/NC3018.BIN'): (9, CHAPTER9_ROUTE_REPORT),
     (1, '/SAKURA1/NC90.BIN'): (5, CHAPTER5_ROUTE_REPORT),
@@ -825,8 +827,8 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/NC3058.BIN'):
                     row.update(verified_in_game=True, native_face_fallback=True,
                                runtime_evidence='docs/research/nc3058-cutout-1440p.md')
-                elif (disc, path) in CUTOUT_DRAWS:
-                    row.update(verified_in_game=True, runtime_evidence=CUTOUT_DRAWS[(disc, path)][1])
+                elif (disc, path) in EXACT_BODY_DRAWS:
+                    row.update(verified_in_game=True, runtime_evidence=EXACT_BODY_DRAWS[(disc, path)][1])
                 elif (disc, path) == (2, '/SAKURA1/NC81.BIN'):
                     row.update(verified_in_game=True, native_face_fallback=True, runtime_evidence='docs/research/nc81-nc90-1440p.md')
                 elif (disc, path) == (1, '/SAKURA1/NC90.BIN'):

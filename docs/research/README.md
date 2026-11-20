@@ -135,6 +135,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [NC3173 and NC3285 cut-outs at 1440p](nc3173-nc3285-cutout-1440p.md) records the native masks and the two verified poses.
 - [Chapter 10 NC3286 body and face](nc3286-ending-cutout.md)
 - [NC3057 ending face registration](nc3057-ending-faces.md)
+- [NC99 and NC91 face registration](nc99-nc91-registered-faces.md)
 - [NC81 neck underlay and NC90 at 1440p](nc81-nc90-1440p.md)
 - [Chapter 1 park speech performance](park-speech-performance.md)
 - [NC3018 face placement at 1440p](nc3018-registered-faces.md)
