@@ -78,6 +78,8 @@ Patch 0173 [preserves the eyes drawn on the NC25 PC body](nc25-baked-eyes.md) an
 
 Patch 0176 [registers the NC56 expression bank](nc56-registered-faces.md). Its first paired 1440p draw proof verifies the wink and both visible mouth poses at their authored coordinates. The earlier blink during the blend retains the native image.
 
+Patch 0177 [registers the NC51 theater sortie expression](nc51-registered-faces.md). The 900-field English replay verifies all three eyes and six mouths at their authored coordinates. The earlier blend retains the native image.
+
 Patch 0169 [registers Sakura’s ten NC10 park face textures](nc10-park-faces.md) at their authored PC positions. The English Yoneda replay exercised the full four-eye and six-mouth set. The Spanish park replay verified the same four eyes and three of those mouths.
 
 The NC11 overlap is the timed LIPS choice display over Sakura, rather than a missing face part. The first rejected command is at nominal (160,76), size 272×120, mode `00A0`, color `C500`, and texture fingerprint `4ADC5FF69258EF85`. It appears after the body in VDP1 draw order. The 1440p capture shows the translucent panel, timer, and ink over her face and shoulders. Any replacement must preserve the native overlay and its ordering, including the visible body through the panel. Simply accepting the intersecting sprite would erase or cover part of that display.
