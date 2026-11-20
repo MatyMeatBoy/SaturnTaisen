@@ -100,6 +100,17 @@ def main():
     review = json.loads((ROOT / 'config/es-japanese-bridge.json').read_text(encoding='utf-8'))
     japanese_fixes = {row['key']: row for row in review['entries']
                       if row['spanish_status'] == 'integrate-spanish'}
+    item_groups = json.loads((ROOT / 'config/es-japanese-item-groups.json').read_text(encoding='utf-8'))
+    for group in item_groups['groups']:
+        if group['status'] != 'integrate-spanish':
+            continue
+        for variant in group['variants']:
+            for member in variant['members']:
+                key = member['key']
+                if key in japanese_fixes:
+                    raise SystemExit(f'{key}: la corrección japonesa aparece dos veces')
+                japanese_fixes[key] = dict(member, english_current=variant['english_current'],
+                                           spanish_suggested=group['spanish_suggested'])
     target = WORK / f'builds/es-all/disc{args.disc}/files'
     if target.exists():
         shutil.rmtree(target)
