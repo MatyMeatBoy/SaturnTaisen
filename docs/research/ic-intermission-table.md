@@ -38,3 +38,17 @@ python -m unittest tests.test_gen_ic_table tests.test_hd_chapter_coverage
 ## Verification state
 
 See the pull request for the replay results. A status moves from `wired-unverified` to `hd` only after a real intermission has been seen drawn with this table (`SATRECOMP_IC_TRACE=1` prints `IC table ICxx plate matched`); a synthetic fixture is not enough.
+
+## Disc 2: why it is not derivable offline (TP1 follow-up)
+
+Compared offline, read-only, with `tools/gen_ic_table.py build`:
+
+- All 16 `IC*.BIN` files, `ICLOGO.BIN` and `ICATALL.DAT` are **byte-identical on both discs**. The same file therefore shows different RGB on different routes, so the palette choice is not in the picture files.
+- Own-palette plate of disc-2 IC06 = `0F85EDA8CE4B247D` and own palette key = `FEBAEA7B6E7CAC67`: both equal the patch 0183 in-game witness. The ICLOGO derivation gives `0D87B2D1DABE4DFD`, which was not seen.
+- Disc-1 IC0501 and IC03 equal their witnesses only with the ICLOGO palette (own palette: `C997599B21F685B5`, `7240B16ECBB05835`, not seen). Disc-1 IC01 (patch 0107) is witnessed with its own palette.
+- So both routes occur, on both discs (own palette: IC01 d1, IC06 d2; ICLOGO: IC0501 d1, IC03 d1). Which one an appearance takes is decided by code: `LOGO.SH2` carries the IC name table and differs between discs (only 1,514 bytes, mostly relocated pointers, so no disc-specific palette table is evident). Strings in all of SAKURA1 show no other module naming ICLOGO/IC files.
+- Consequence: the disc-1 IC06 row in the table (ICLOGO route) is itself unwitnessed, and the same file shows the own palette on disc 2. It stays `wired-unverified`; a disc-1 IC06 witness could be a mismatch.
+
+`config/hd-ic-table.json` now also lists `disc2_own_palette_candidates` (own-palette `plate`, `plate_dark`, palette key per file; IC06 `reproduces-witness`, the rest `candidate-unverified`). They are not entries, not in the generated header, not wired and not counted in coverage.
+
+**Missing datum:** per IC (at least disc-2 IC02-IC09, IC1001-IC1006, and disc-1 IC06), a layer-4 palette fingerprint (`E9107F892185CCC8` = ICLOGO route, or the file palette key in the candidates list) and the RGB hash from one real intermission, or a trace/disassembly of the SH-2 routine in `LOGO.SH2` that loads the IC file and decides whether ICLOGO.BIN is read afterwards (IC0501 doc: IC file then ICLOGO.BIN). With `SATRECOMP_IC_TRACE=1` / the layer-4 palette fingerprint the route is observable per appearance; a rule can then be written. Needs the owner's runtime (not done here).

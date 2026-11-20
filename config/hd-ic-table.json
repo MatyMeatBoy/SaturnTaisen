@@ -330,5 +330,136 @@
  ],
  "not_in_table": {
   "IC01": "handled by patch 0107 (own palette key, anchored backdrop)"
- }
+ },
+ "disc2_own_palette_candidates": [
+  {
+   "id": "IC01",
+   "palette": "530FF280499422C3",
+   "plate": "D0C5193BA86F0995",
+   "plate_dark": "BE31CB28783A722D",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC02",
+   "palette": "8C9C741FD2F47215",
+   "plate": "C16084ACB2C340FD",
+   "plate_dark": "2A501C6F93835C85",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC03",
+   "palette": "1E71B4F42F7495C4",
+   "plate": "7240B16ECBB05835",
+   "plate_dark": "2A3666E51C8252E5",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC04",
+   "palette": "C37978D12C4DB624",
+   "plate": "82CF78486CAB16FD",
+   "plate_dark": "F424C2867DC80FD5",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC0501",
+   "palette": "817AB4601F89ADFC",
+   "plate": "C997599B21F685B5",
+   "plate_dark": "64B1C737CD3776FD",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC0502",
+   "palette": "AEC8E152F0D00648",
+   "plate": "63B8CCC813316175",
+   "plate_dark": "FB8E38856488CBFD",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC06",
+   "palette": "FEBAEA7B6E7CAC67",
+   "plate": "0F85EDA8CE4B247D",
+   "plate_dark": "1769B83657244D25",
+   "status": "reproduces-witness",
+   "witness": "patch 0183, disc 2",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC07",
+   "palette": "3842BF7385B53F93",
+   "plate": "7932C2CBCEB1C44D",
+   "plate_dark": "CB0217CE53A7BE1D",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC08",
+   "palette": "E88FA69862FFF076",
+   "plate": "CF7BF25FE1E23E25",
+   "plate_dark": "ABC1FD0D76B8206D",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC09",
+   "palette": "531118F0C2D02ED5",
+   "plate": "D598B50EA75137BD",
+   "plate_dark": "FA8292BFBC7581DD",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC1001",
+   "palette": "D9AF4085601D00E2",
+   "plate": "FDEC804F8FED290D",
+   "plate_dark": "98B4811A05E253D5",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC1002",
+   "palette": "AA168F2CA5F098C6",
+   "plate": "E3D4335EDD81C6CD",
+   "plate_dark": "53E6CD3EC9BEA27D",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC1003",
+   "palette": "F162355A14BF7FDE",
+   "plate": "61B5030B2D2C2265",
+   "plate_dark": "C4AC24BCCB071EFD",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC1004",
+   "palette": "4DA993098618CCDA",
+   "plate": "6597710CC8C8F995",
+   "plate_dark": "2F41C4F127ED0045",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC1005",
+   "palette": "949913802E5770B6",
+   "plate": "69C81DDF36C543BD",
+   "plate_dark": "6ECC9CDE38A8F4AD",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  },
+  {
+   "id": "IC1006",
+   "palette": "7E9DB42265502C22",
+   "plate": "CE5A966499E1FE85",
+   "plate_dark": "1B20D59B5E6DAF2D",
+   "status": "candidate-unverified",
+   "same_file_on_disc1": true
+  }
+ ]
 }
