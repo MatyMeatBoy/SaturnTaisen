@@ -171,3 +171,30 @@ The Windows candidate passed 4,800 paired strict-native fields: 2,400 entering f
 The exact executable and the four input segments, profiles and receipt are under `local/work/codex-th1/map14-ground`. Original Saturn discs and PC art remain private. See also [EVT14 native coverage](evt-overlay-registry.md#chapter-8-map14-deployment-and-combat).
 
 The combined runtime (`c44443f6491b062695393e7a2fd05aeb0e4d749d25b4513ce5353e5e35afe860`, SDK tree `69c4fa3b6faea1749526dac946d05cf331a1fa5b`) reproduced all 4,800 guest fields, 19 positive captures and final SRAM from the isolated MAP14 trial. It also matched the four new narrative foregrounds and the existing combo, dialogue, LIPS and room-selection release gate.
+
+## Current tactical witness queue
+
+The chapter register contains 27 disc-and-path map entries.
+Nine draw the PC ground and 18 retain the Saturn ground. Of the latter,
+MAP10, MAP15 and MAP19 already have live composition comparisons and
+their current PC donors change the visible composition. The other
+15 need a natural entry and camera witness.
+
+| Disc | Next natural camera targets |
+| --- | --- |
+| 1 | MAP03, MAP07, MAP08, MAP09, MAP11, MAP22 |
+| 2 | MAP01, MAP16, MAP17, MAP18, MAP20, MAP23, MAP24, MAP25, MAP26 |
+
+The refreshed retained-state scan checked 2,021 state files against
+17 derived page keys. It found 70 MAP12 matches, 96 MAP13 matches and
+123 MAP14 matches. These three already have live verification.
+The six MAP15-key and 107 MAP16-key matches still come from the
+documented MAP15 battle. MAP16 needs a separate native entrance with
+its own disc read and camera composition. The other derived keys
+gave no hits in this retained set.
+
+For each prospective map, preserve the in-game entry read, an early
+stable camera, movement or targeting, and a later camera before
+testing the ground at 1440p. Tile-based candidates MAP03, MAP20 and MAP23
+also need their exact PC placement data. The checkpoint paths and scan
+receipt are under `local/work/codex-th1/tactical-witness-refresh`.
