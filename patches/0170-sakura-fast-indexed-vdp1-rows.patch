@@ -1,0 +1,37 @@
+diff --git a/video/raster.cpp b/video/raster.cpp
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -207,6 +207,33 @@
+     const uint32 width = std::max<uint32>(texture.width, 1);
+     auto byte = [&](uint32 address) -> uint32 { return vram[address & 0x7FFFF]; };
+     auto word = [&](uint32 address) -> uint32 { return (vram[address & 0x7FFFE] << 8) | vram[(address & 0x7FFFE) + 1]; };
++
++    // A horizontal 1:1 indexed row has one texel per dot and no extra fill dot.
++    // Let RasterPixel perform the same framebuffer writes and host ownership marks.
++    constexpr uint16 bank256 = kNoEndCodes | (4u << 3);
++    if ((mode == kNoEndCodes || mode == bank256) && texture.width && !texture.flipH &&
++        from.y() == to.y() && from.y() >= 0 && from.y() <= ctx.sysClipV &&
++        from.x() >= 0 && to.x() <= ctx.sysClipH && to.x() - from.x() == static_cast<sint32>(width) - 1) {
++        if (mode == kNoEndCodes) {
++            const uint32 start = texture.address + (row * width) / 2;
++            const uint16 bank = texture.color & 0xFFF0;
++            for (uint32 u = 0; u < width; u += 2) {
++                const uint32 packed = byte(start + u/2);
++                if (const uint32 high = packed >> 4)
++                    RasterPixel(from.x() + static_cast<sint32>(u), from.y(), kNoEndCodes, bank | high, nullptr);
++                if (const uint32 low = packed & 15)
++                    RasterPixel(from.x() + static_cast<sint32>(u) + 1, from.y(), kNoEndCodes, bank | low, nullptr);
++            }
++        } else {
++            const uint32 start = texture.address + row * width;
++            const uint16 bank = texture.color & 0xFF00;
++            for (uint32 u = 0; u < width; ++u) {
++                if (const uint32 ink = byte(start + u))
++                    RasterPixel(from.x() + static_cast<sint32>(u), from.y(), bank256, bank | ink, nullptr);
++            }
++        }
++        return true;
++    }
+ 
+     LineWalk line{from, to, true};
+     const uint32 skipped = line.Clip(ctx.sysClipH, ctx.sysClipV);

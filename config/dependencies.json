@@ -164,7 +164,8 @@
       "patches/0166-sakura-advance-voiced-enhanced-dialogue.patch",
       "patches/0167-sakura-isolate-inspection-hand-from-zoom.patch",
       "patches/0168-sakura-registered-nc55-faces.patch",
-      "patches/0169-sakura-register-nc10-park-faces.patch"
+      "patches/0169-sakura-register-nc10-park-faces.patch",
+      "patches/0170-sakura-fast-indexed-vdp1-rows.patch"
     ]
   }
 }

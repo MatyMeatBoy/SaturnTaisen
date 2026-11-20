@@ -66,7 +66,7 @@ Parity against `local/build/sakura-674182-validated.exe`: 1,200 of 1,200 identic
 identical 1280x720 RGB shot, 0 interpreted blocks (`vdp_parity_bench.py run` for both executables, then `compare`).
 `tests/test_vdp2_color.cpp` (built as `check-video` does) passes.
 
-## What would give more (not done)
+## Follow-up opportunities
 
 1. Frame/line reuse: in static scenes (office, dialogue) the whole `ComposeLine` work (about 3.5 ms) recomputes the same
    picture. It needs exact change tracking of VDP2 VRAM, colour RAM, registers and the VDP1 framebuffer, and a replay of
@@ -76,6 +76,31 @@ identical 1280x720 RGB shot, 0 interpreted blocks (`vdp_parity_bench.py run` for
    map columns every line although the map signature and scroll are unchanged most frames. T117.
 3. VDP1: `RasterTexturedLine` walks Bresenham state per pixel; a fast path for unclipped, ungouraud, unmeshed quads
    would cut the 13% in tactical scenes. T118.
+
+## T118 indexed VDP1 rows
+
+Patch 0170 specializes fully visible horizontal rows with one texel per pixel in the
+16- and 256-color bank modes with end codes disabled. VDP1 command widths are
+multiples of eight pixels. The specialized path reads each packed byte once in
+16-color mode and calls the existing pixel writer for nonzero indices, preserving
+framebuffer writes and presentation ownership. Clip, flip, scaling, end-code,
+mesh, and Gouraud cases continue through the existing walker.
+
+A/B on the composed stack through 0168, including the 0166 dialogue voice fix.
+Each replay used strict-native mode and a 2560×1440 hidden window. The Spanish
+Yoneda dialogue and Chapter 1 first attack each matched 240 guest hashes and five
+window RGB captures. A separate diagnostic link compared both physical VDP1
+framebuffers byte for byte in each of the 240 presented frames per replay. The
+glyph plate, VDP2 color, and VDP2 line reuse tests also passed.
+
+Three interleaved timing runs per binary measured average Yoneda VDP work at
+4.313 to 3.982 ms per frame by median. Four further interleaved runs per binary
+pinned to the same logical core measured 3.915 to 3.590 ms, with emulation at
+8.747 to 8.292 ms. Pinned first-attack medians measured 9.204 to 8.904 ms,
+while the raw-buffer control measured 8.360 to 8.361 ms. Host load also moved
+unrelated phases. These trials support the Yoneda improvement and leave the
+size and direction of the first-attack timing change unresolved. These
+incremental builds cover the two replays only. Release packaging remains pending.
 
 ## Not verified
 
