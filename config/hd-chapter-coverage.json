@@ -2812,6 +2812,14 @@
             "runtime_evidence": "docs/research/nc3290-stage-wing.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA1/NC99.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc99-nc91-registered-faces.md",
+            "pc": "SAKURA1/NC/NC99.SPR",
+            "runtime_evidence": "docs/research/nc99-nc91-registered-faces.md",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "film": {
@@ -4640,7 +4648,16 @@
       "chapter": 8,
       "disc": 2,
       "resources": {
-        "bodies": {},
+        "bodies": {
+          "2:/SAKURA1/NC91.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc99-nc91-registered-faces.md",
+            "pc": "SAKURA1/NC/NC91.SPR",
+            "runtime_evidence": "docs/research/nc99-nc91-registered-faces.md",
+            "status": "hd",
+            "verified_in_game": true
+          }
+        },
         "film": {},
         "menus-hud": {},
         "portraits": {
@@ -6827,12 +6844,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "1:/SAKURA1/NC99.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC99.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "2:/SAKURA1/NC10.BIN": {
         "association": "unknown",
         "native_face_fallback": true,
@@ -7650,12 +7661,6 @@
       "2:/SAKURA1/NC90.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC90.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "2:/SAKURA1/NC91.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC91.SPR",
         "status": "hd",
         "verified_in_game": false
       },
