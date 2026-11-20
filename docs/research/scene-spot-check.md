@@ -88,27 +88,39 @@ Two levels were tried. "In game" means the runtime drew the PC picture and a cap
 
 | # | Picture | Chapter | In game | Pair (offline, contact sheet) |
 |---|---|---|---|---|
-| 10 | `1:/SAKURA1/BG1022.BIN` | 3 | no comparable capture in this audit | OK |
-| 20 | `1:/SAKURA1/BG1193.BIN` | 1 | no comparable capture in this audit | OK |
-| 30 | `1:/SAKURA1/BG2039.BIN` | 1 | no comparable capture in this audit | OK |
-| 40 | `1:/SAKURA1/BG2533.BIN` | 5 | no comparable capture in this audit | OK (same scene, the PC picture is the cropped pan) |
-| 50 | `2:/SAKURA1/BG1072.BIN` | 9 | no comparable capture in this audit | OK (same room; the PC tint is lighter than the Saturn palette) |
+| 10 | `1:/SAKURA1/BG1022.BIN` | 3 | not reached (no state) | OK |
+| 20 | `1:/SAKURA1/BG1193.BIN` | 1 | DRAWN, hashes unchanged (below) | OK |
+| 30 | `1:/SAKURA1/BG2039.BIN` | 1 | DRAWN, hashes unchanged (below) | OK |
+| 40 | `1:/SAKURA1/BG2533.BIN` | 5 | not drawn on the reattr route (below) | OK (same scene, the PC picture is the cropped pan) |
+| 50 | `2:/SAKURA1/BG1072.BIN` | 9 | not drawn on the reattr route (below) | OK (same room; the PC tint is lighter than the Saturn palette) |
 
 Wrong pictures: 0, so no neighbour review was triggered.
 
 ### Numbers
 
-- PC-versus-native captures for this audit: 0 of 5. [BG2533 has separate verified 1440p gameplay evidence](bg2533-pan.md).
-- Error rate of what was reached in game: undefined (nothing reached).
+- PC-versus-native captures for this audit: 2 of 5 (BG1193, BG2039); the other three are not reached or not drawn. [BG2533 has separate verified 1440p gameplay evidence](bg2533-pan.md).
+- Error rate of what was drawn in game: 0 wrong of 2.
 - Pair level: five catalog matches and zero mismatches in the selected examples.
 
-### Why the in-game check failed
+### In-game half (2026-11-20, redone with the right preconditions)
 
-BG2039 (frames 143,040-143,100) and BG1193 (253,260-253,320) lie on the chapter 1 cold route, which the input movie `local/work/rb-full/input.movie` (297,107 frames) reaches from a cold start. Headless runs with a copy of an existing build at `local/build/sakura-tp9run/` and `--pc-assets local/work/pc-cab/out-bg` with `pc_hd_backgrounds=0` did not draw any PC scene picture: no `scene picture:` trace line appeared and a PC capture was pixel-identical to the native one, in a state saved at frame 143,070 and in the cold route at frame 8,850 (BG1209, which the coverage report records as drawn). The build of 2026-11-18 predates the PC scene draw; the later builds tried either crashed at startup (t118) or ran no recompiled blocks (t116, t120). The frame 143,070 capture also shows a bedroom, not a group photo, so the guest-frame bracket in `hd-chapter-1.md` is the callback frame, a separate displayed-frame witness requires additional replay. The attempted builds provided no positive HD draw control, so these runs provide no runtime verdict for these two backgrounds.
+The earlier runs drew nothing because the executable had no `art/` folder beside it ([headless-scene-draw.md](headless-scene-draw.md)). Redone with `tools/scene_draw_probe.py`: own copy `local/build/sakura-verify/sakura-verify.exe` (SHA-256 `2818e414...`, the isolated AOT build of #580) with `art/` beside it, `--pc-assets local/work/pc-cab/out-bg`, 2560x1440 Enhanced, `presentation_mode=1`, `scene_view=1`, `SATRECOMP_BACKGROUND_STATS=1`, strict native. Every sample runs twice (donor and no donor) from the same state; the per-frame guest hashes of the two runs are identical and both report 0 interpreted blocks. States replay with the cold-route movie `rb-full/input.movie` shifted to the state frame (the runtime does not index a movie by the saved frame), and the shifted run reproduces the original route hashes.
+
+| # | Picture | State and route | Frame | Result |
+|---|---|---|---|---|
+| 20 | BG1193 | cold route, state at frame 252,000, SHA-256 `dbf9a25fd658...`; also `tp9/st/f253290.state` (`f9571001...`) | first draw 253,312; capture 253,357 | DRAWN, 1,198,577 pixels differ from the control |
+| 30 | BG2039 | cold route, state at frame 138,000, SHA-256 `1c9021c787b2...`; also `tp9/st/f143070.state` (`c1b2dda1...`) | first draw 143,109; capture 143,154 | DRAWN, 2,019,152 pixels differ |
+| 10 | BG1022 (chapter 3) | no state, `loads.json` or movie in `local/work` reaches it | none | not reached |
+| 40 | BG2533 (chapter 5) | `reattr/run-bank-5-battle/state-11999.bin` (`38753899...`) with its movie, 700 frames (the load is at about frame 12,025) | 11,999-12,699 | NOT DRAWN: capture byte-identical to the control, no `scene picture:` line; a native scene was on screen. The PC picture is the cropped pan ([bg2533-pan.md](bg2533-pan.md)); this route does not show it |
+| 50 | BG1072 (disc 2, chapter 9) | `reattr/run-public-finale/state-36499.bin` (`1faca6ae...`), disc 2, 700 frames (load at about frame 36,740) | 36,499-37,199 | NOT DRAWN: BG2111 and BG2251 were drawn instead, BG1072 was not |
+
+For both drawn samples the changed pixels lie inside the Zoom picture rectangle (272,29)-(2288,1037); the dialogue box, the portrait and the lower frame are byte-identical to the control (read by eye on the BG2039 capture side by side: the photograph is the PC art, the box and the portrait are the native ones). Not checked: foreground sprites inside the picture rectangle (none were visible in these two captures), and a pixel-level comparison with the decoded PC subimage (done for BG2039 and BG1193 in the sections below).
+
+Numbers now: in-game 2 of 5 drawn (BG1193, BG2039), 0 wrong; 2 reached but not drawn (BG2533, BG1072, cause not established), 1 not reached (BG1022). The register already marks BG1193 and BG2039 `verified_in_game`, so the deltas are attributed 0, integrated new 0, verified new 0.
 
 ### Not verified
 
-The earlier audit adds only these five offline comparisons. The remaining spot checks stay open.
+For a follow-up on this route, reuse the separate [strict chapter 3 witness for BG1022](th3-native-attribution.md), the [verified BG2533 pan](bg2533-pan.md), and the [chapter 9 transition that captured the native BG1072 window](hd-chapter-9.md). The BG1072 capture supplies a starting point for a matched PC draw check.
 
 ## BG2034 on disc 1
 
