@@ -46,3 +46,23 @@ python tools/check_patch_stack.py
 ```
 
 `--check` needs no game data: it compares the table with `config/hd-tactical-map-pairs.json` and with the `.inc` carried by patch 0188. A new witnessed map moves its status in `config/hd-tactical-ground-table.json` and in `tools/hd_chapter_coverage.py` together.
+
+## Witness search over the retained routes (TW6b-confirm)
+
+Question: does any retained state or chapter jump reach one of the 17 `wired-unverified` maps? Method: for each of the 16 chapter-jump cases of `tools/chapter_jump.py` (their `backup.bin` plus `input.movie`), `tools/witness_sweep.py` was run cold (no saved state, `--from 99999` so no random input, 8,000 frames, checkpoint every 500) with the headless witness runtime, which maps every CD block `Play Disc` command to its ISO file (FAD = LBA + 150). This also covers the first 8,000 frames of each jump, which the earlier sweeps (started from `state-7999.bin`) did not watch.
+
+```powershell
+python tools/witness_sweep.py --exe local/build/sakura-witness/sakura-witness.exe --disc <1|2> --backup local/work/witness/jump-<case>/backup.bin --movie local/work/witness/jump-<case>/input.movie --seeds 1 --frames 8000 --from 99999 --interval 500 --out local/work/witness/cold-<case>
+```
+
+| Case | Disc | Map files loaded |
+| --- | ---: | --- |
+| bank-3-battle-2 | 1 | MAP04 (with EVT04) |
+| bank-3-battle-3 | 1 | MAP05 (with EVT05) |
+| bank-4-battle | 1 | MAP06 (with BBG204, EVT06) |
+| bank-10-battle-2, bank-10-final-battle | 2 | MAP19 (with EVT19) |
+| bank-5/6/7/8/9, bank-10-battle-1, public-7/9/finale | 1 or 2 | none (BG dialogue scenes only, or no load in 8,000 frames) |
+
+Result: the retained routes reach MAP04, MAP05, MAP06 and MAP19 only. MAP04, 05 and 06 already are `hd`; MAP19 is native by review. **None of MAP03, 07, 08, 09, 11-18, 20, 22, 24, 25, 26 is reached by any retained state or jump**, so none can be drawn, compared or promoted. All 17 stay `wired-unverified`; `config/hd-chapter-coverage.json`, `tools/hd_chapter_coverage.py` and `docs/HD_PROGRESS.md` are unchanged, and no patch 0188 run was made (there is no frame to run). The earlier sweeps from the saved states (12 sweeps and 3 long sweeps) agree: their only MAP is MAP06.
+
+What is missing: a route that finishes a dialogue and enters each of those battles (the random `--auto` input never completes one; the chapter jumps stop at the chapter's first battle or before it). Owner or a route worker: play or script the chapters that contain those maps, save a state at the battle start, then run the witness of `map04-pc-ground.md` with the patch 0188 build. Nothing was verified in game by this change.
