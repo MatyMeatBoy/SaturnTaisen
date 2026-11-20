@@ -252,7 +252,8 @@
       "patches/0260-sakura-blend-ogami-hd-handoff.patch",
       "patches/0261-sakura-repair-prepared-content.patch",
       "patches/0262-sakura-map03-pc-ground.patch",
-      "patches/0263-sakura-bg2014-behind-nc3014.patch"
+      "patches/0263-sakura-bg2014-behind-nc3014.patch",
+      "patches/0264-sakura-cooking-reward-hd.patch"
     ]
   }
 }

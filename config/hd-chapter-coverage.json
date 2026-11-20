@@ -17031,8 +17031,9 @@
         "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
         "pc": "SAKURA3/CG/COOK/BG_RYORI.SPR",
         "pc_image_index": 0,
-        "reason": "The minigame layer viewport and transform still need an in-game witness.",
-        "status": "paired-not-wired"
+        "runtime_evidence": "docs/research/saturn-bg-format.md#cooking-reward-in-long-day",
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/BGSLOT.BIN": {
         "association": "unknown",
@@ -20574,8 +20575,9 @@
         "pairing_evidence": "docs/research/saturn-bg-format.md#minigame-background-pages",
         "pc": "SAKURA3/CG/COOK/BG_RYORI.SPR",
         "pc_image_index": 0,
-        "reason": "The minigame layer viewport and transform still need an in-game witness.",
-        "status": "paired-not-wired"
+        "runtime_evidence": "docs/research/saturn-bg-format.md#cooking-reward-in-long-day",
+        "status": "wired-unverified",
+        "verified_in_game": false
       },
       "2:/SAKURA1/BGSLOT.BIN": {
         "association": "unknown",

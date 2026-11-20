@@ -1120,9 +1120,33 @@ interpreter and the candidate reports zero interpreted blocks.
 `MINICOOK_LONG_DAY` registers the observed address ranges for
 regeneration from the pinned module.
 
-This verification covers the menu entry. The scored cooking stages
-and the BGRYORI reward in Enhanced remain open. The candidate is
+This early verification covers the menu entry. The candidate is
 local and is not included in v0.2.23-alpha.
+
+### Cooking reward in Long Day
+
+The English disc 1 route scores 95 after cutting the carrot, answering
+five ingredient questions and holding medium heat. The reward loads
+MINICOOK.GCG at FAD 266889. Its unobscured 640 × 448 frame is identified
+by the complete RGB fingerprint. Patch 0264 uses the complete 640 × 480
+PC donor inside the existing native destination. Other frames keep the
+native composition, including ranking overlays.
+
+Six 64-field comparisons at 1440p used the natural reward checkpoint.
+The strict candidate with the 2,864 byte-verified MINICOOK ranges
+matched the stock interpreter's guest hashes and final SRAM.
+At each of four sampled fields exactly 2,579,481 pixels changed inside
+(320,48)–(2240,1392). Missing and same-size corrupt donor controls
+matched the stock Enhanced captures. Both Original profiles matched.
+All candidate profiles ran with zero interpreted blocks. The disc 2
+occurrence and public package remain pending.
+
+A separate strict replay followed all 15,634 fields from Maria's Room
+to the 95-point reward. It matched the entire archived interpreter
+hash log and final SRAM with zero interpreted blocks. The retained
+build and replay commands are in the private `SaturnTaisen-cook-v027`
+work folder. The range registry stores offsets and lengths and
+regenerates the instruction bytes from the owner's disc.
 
 ### Swimming menu in Long Day
 
