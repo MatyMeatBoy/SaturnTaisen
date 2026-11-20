@@ -194,7 +194,8 @@
         "patches/0196-sakura-map13-pc-ground.patch",
       "patches/0197-sakura-save-confirmation-frame.patch",
       "patches/0198-sakura-hd-room-choice-frame.patch",
-      "patches/0199-sakura-iris-ogami-combo-pose.patch"
+      "patches/0199-sakura-iris-ogami-combo-pose.patch",
+      "patches/0200-sakura-hd-tactical-status-frame.patch"
     ]
   }
 }

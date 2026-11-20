@@ -1,0 +1,237 @@
+diff --git a/port/tactical_status_frame.h b/port/tactical_status_frame.h
+new file mode 100644
+--- /dev/null
++++ b/port/tactical_status_frame.h
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include "item_card_table.h"
++
++namespace port {
++inline constexpr int kStatusFrameWidth = 96;
++inline constexpr int kStatusFrameHeight = 64;
++inline constexpr uint32_t kStatusFrameLutAddress = 0xFFEC * 8;
++inline constexpr ItemCardEntry kStatusFrame{
++    0xB9C4311ED95D0FC1ull, 0x316D5850CBF9E6ADull, "SAKURA2/SYSTEM/SLGSYS03.SPR", 0,
++};
++inline constexpr ItemCardEntry kStatusFrameBright = kStatusFrame;
++
++inline bool IsStatusFrame(const ItemCardEntry* entry) {
++    return entry == &kStatusFrame || entry == &kStatusFrameBright;
++}
++
++inline bool IsStatusFrameBorder(unsigned x, unsigned y) {
++    // The portrait, name and meters sit inside the two stepped wells.
++    return x < 8 || y < 8 || y >= 56 ||
++           (x >= 47 && (y < 24 || x >= 88 || y >= 54));
++}
++} // namespace port
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -6,6 +6,7 @@
+ #include "../runtime/state.h"
+ #include "../port/png_write.h"
+ #include "../port/load_disc_icon.h"
++#include "../port/tactical_status_frame.h"
+ 
+ #include <algorithm>
+ #include <cstdio>
+@@ -379,6 +380,16 @@
+                 break;
+             }
+         }
++    } else if ((command[0] & 0x3F) == 0 && command[2] == 0x0088 &&
++               command[3] * 8 == ::port::kStatusFrameLutAddress && command[5] == 0x0C40 &&
++               sprite.x >= 0 && sprite.x <= 320 - ::port::kStatusFrameWidth &&
++               sprite.y >= 0 && sprite.y <= 224 - ::port::kStatusFrameHeight &&
++               ItemFingerprint(sprite.pixels) == ::port::kStatusFrame.texture &&
++               ItemFingerprint(SpriteBytes(::port::kStatusFrameLutAddress, 32)) == ::port::kStatusFrame.palette) {
++        constexpr uint32 spriteLayer = 0;
++        const auto offset = BackgroundColorOffset(spriteLayer);
++        if (offset == std::array<int16_t, 3>{}) entry = &::port::kStatusFrame;
++        if (offset == std::array<int16_t, 3>{3, 3, 3}) entry = &::port::kStatusFrameBright;
+     } else if((command[0]&0x3F)==0 && command[2]==0x00A0 && command[3]==0xC600 &&
+               command[5]==0x0E70 && sprite.x>=0 && sprite.x<=320-kItemCardSize &&
+               sprite.y>=0 && sprite.y<=224-kItemCardSize) {
+@@ -391,6 +402,8 @@
+     }
+     if(!entry)return;
+     auto& captured=m_drawnItemCard[m_captureDrawFB];
++    if (captured && ::port::IsStatusFrame(entry) && !::port::IsStatusFrame(captured->entry)) return;
++    if (captured && ::port::IsStatusFrame(captured->entry) && !::port::IsStatusFrame(entry)) captured.reset();
+     if(captured) {
+         // A single sprite may own pixels for the overlay in a draw pass.
+         captured.reset();m_itemCaptureActive=false;
+@@ -847,20 +860,29 @@
+     const auto& drawn=m_drawnItemCard[m_displayFB];
+     auto& presented=m_presentation.itemCard;
+     const auto spriteSize=[](const auto& capture) {
++        if (::port::IsStatusFrame(capture->entry)) return ::port::kStatusFrameHeight;
+         return ::port::IsLoadDiscIcon(capture->entry) ? ::port::kLoadDiscIconSize : kItemCardSize;
+     };
+     const bool current=drawn && line>=uint32(drawn->y) && line<uint32(drawn->y+spriteSize(drawn));
+     if(!current && (!presented || line>=uint32(presented->y+spriteSize(presented))))return false;
+-    // Both witnessed sources use mode-1 CRAM and bank 0x600.
+-    // Verify those settings at scanout, where palette writes and sprite composition take effect.
++    // Check palette interpretation at scanout, including the status frame's direct-color VDP1 LUT.
+     const auto& sprite=m_regs2.spriteParams;
++    bool validPalette = false;
++    if (current && ::port::IsStatusFrame(drawn->entry)) {
++        const int16_t shift = drawn->entry == &::port::kStatusFrameBright ? 3 : 0;
++        validPalette = sprite.type == 3 && sprite.mixedFormat &&
++            BackgroundColorOffset(kSprites) == std::array<int16_t, 3>{shift, shift, shift} &&
++            ItemFingerprint(SpriteBytes(::port::kStatusFrameLutAddress, 32)) == drawn->entry->palette;
++    } else if (current) {
++        validPalette = sprite.type == (::port::IsLoadDiscIcon(drawn->entry) ? 0 : 1) &&
++            !sprite.mixedFormat && sprite.colorDataOffset == 0 && m_regs2.vramControl.colorRAMMode == 1 &&
++            ItemFingerprint(ColorBytes(0xC00,512)) == drawn->entry->palette;
++    }
+     if(!current || (presented && presented->serial!=drawn->serial) ||
+        (m_drawing && m_displayFB==m_captureDrawFB) ||
+        m_width!=320 || m_height!=224 || m_regs2.TVMD.IsInterlaced() || m_regs1.pixel8Bits ||
+        m_regs1.fbRotEnable || m_regs1.dblInterlaceEnable || m_regs1.hdtvEnable ||
+-       sprite.type!=(::port::IsLoadDiscIcon(drawn->entry) ? 0 : 1) || sprite.mixedFormat || sprite.colorDataOffset!=0 ||
+-       m_regs2.vramControl.colorRAMMode!=1 ||
+-       ItemFingerprint(ColorBytes(0xC00,512))!=drawn->entry->palette) {
++       !validPalette) {
+         m_itemFrameInvalid=true;presented.reset();
+         return false;
+     }
+@@ -1522,7 +1544,17 @@
+             }
+         }
+         const bool discIcon=drawnItem && ::port::IsLoadDiscIcon(drawnItem->entry);
+-        if(drawnItem && !discIcon && !m_itemFrameInvalid && x>=uint32(drawnItem->x) &&
++        const bool statusFrame = drawnItem && ::port::IsStatusFrame(drawnItem->entry);
++        if (statusFrame && !m_itemFrameInvalid && x >= uint32(drawnItem->x) &&
++            x < uint32(drawnItem->x + ::port::kStatusFrameWidth)) {
++            const unsigned column = x - drawnItem->x, row = y - drawnItem->y;
++            const size_t at = size_t(row) * kItemCardSize + column;
++            if (drawnItem->pixels[at] == 1 && ::port::IsStatusFrameBorder(column, row) &&
++                top == kSprites && !m_sprite.colorCalcEnable[x] && !m_sprite.shadowOrWindow[x] &&
++                (color.u32 & 0xFFFFFF) == (applyOffset(Color888{.u32 = m_sprite.color[x]}, kSprites).u32 & 0xFFFFFF)) {
++                m_presentation.itemCard->pixels[at] = 1;
++            }
++        } else if(drawnItem && !discIcon && !statusFrame && !m_itemFrameInvalid && x>=uint32(drawnItem->x) &&
+            x<uint32(drawnItem->x+kItemCardSize)) {
+             const size_t at=size_t(y-drawnItem->y)*kItemCardSize+(x-drawnItem->x);
+             const auto owner=drawnItem->pixels[at];
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -35,6 +35,7 @@
+ #include "verified_body_faces.h"
+ #include "film_clip_table.h"
+ #include "load_disc_icon.h"
++#include "tactical_status_frame.h"
+ #include "dev_states.h"
+ #include "window_policy.h"
+ #define PL_MPEG_IMPLEMENTATION
+@@ -1281,6 +1282,7 @@
+     };
+     std::array<ItemHdImage,std::size(kItemCards)> itemImages{};
+     std::array<ItemHdImage,std::size(kLoadDiscIcons)> loadDiscImages{};
++    ItemHdImage statusFrameImage;
+     SDL_Texture* itemOverlay=nullptr;
+     std::array<uint32_t,hdItemSize*hdItemSize> itemOverlayPixels{};
+     auto captureItems=[&]() {
+@@ -1434,28 +1436,31 @@
+             return;
+         const auto& card=*capture;
+         const bool discIcon=IsLoadDiscIcon(card.entry);
+-        const int size=discIcon ? kLoadDiscIconSize : nativeItemSize;
+-        const int hdSize=2*size;
++        const bool statusFrame = IsStatusFrame(card.entry);
++        const int width = statusFrame ? kStatusFrameWidth : discIcon ? kLoadDiscIconSize : nativeItemSize;
++        const int height = statusFrame ? kStatusFrameHeight : width;
++        const int hdWidth = 2 * width, hdHeight = 2 * height;
+         if(discIcon && (planes.width!=320 || planes.height!=224 || planes.underSprites.size()!=320*224))
+             return;
+-        if(card.rows!=size || card.x<crop.x || card.y<crop.y || card.x+size>crop.x+crop.w ||
+-           card.y+size>crop.y+crop.h)
++        if(card.rows!=height || card.x<crop.x || card.y<crop.y || card.x+width>crop.x+crop.w ||
++           card.y+height>crop.y+crop.h)
+             return;
+         if(std::none_of(card.pixels.begin(),card.pixels.end(),[](uint8_t visible){return visible!=0;}))
+             return;
+-        auto& image=discIcon ? loadDiscImages[card.entry-kLoadDiscIcons] : itemImages[card.entry-kItemCards];
++        auto& image=statusFrame ? statusFrameImage : discIcon ? loadDiscImages[card.entry-kLoadDiscIcons] : itemImages[card.entry-kItemCards];
+         if(!image.tried) {
+             image.tried=true;
+             std::vector<uint8_t> bytes;
+             const auto file=std::filesystem::u8path(port.opt.pcAssetsPath)/card.entry->file;
+             if(ReadPcBackdropFile(file,bytes,2u<<20) &&
+-               (!discIcon || (bytes.size()==42586 && AtlasFingerprint(bytes)==0x04BC9B0026CDB421ull))) {
++               (!discIcon || (bytes.size()==42586 && AtlasFingerprint(bytes)==0x04BC9B0026CDB421ull)) &&
++               (!statusFrame || (bytes.size()==61441 && AtlasFingerprint(bytes)==0x0E068D267553F37Aull))) {
+                 std::vector<PcSprite> sprites;
+                 std::string error;
+                 if(DecodePcSprites(bytes,sprites,error))for(auto& sprite:sprites) {
+-                    if(sprite.index==card.entry->index && sprite.width==hdSize && sprite.height==hdSize &&
+-                       sprite.pixels.size()==size_t(hdSize*hdSize) &&
+-                       (discIcon || std::all_of(sprite.pixels.begin(),sprite.pixels.end(),
++                    if(sprite.index==card.entry->index && sprite.width==hdWidth && sprite.height==hdHeight &&
++                       sprite.pixels.size()==size_t(hdWidth*hdHeight) &&
++                       (discIcon || statusFrame || std::all_of(sprite.pixels.begin(),sprite.pixels.end(),
+                                                [](uint32_t color){return (color>>24)==255;}))) {
+                         image.rgba=std::move(sprite.pixels);
+                         break;
+@@ -1466,15 +1471,23 @@
+         if(image.rgba.empty())return;
+ 
+         // An unowned native texel always leaves its complete 2x2 destination transparent.
+-        for(int y=0;y<size;y++)for(int x=0;x<size;x++) {
++        for(int y=0;y<height;y++)for(int x=0;x<width;x++) {
+             const bool visible=card.pixels[y*nativeItemSize+x]!=0;
+-            const size_t at=size_t(2*y)*hdSize+2*x;
++            const size_t at=size_t(2*y)*hdWidth+2*x;
+             uint32_t under=0;
+             if(discIcon && visible)
+                 under=planes.underSprites[(card.y+y)*320+card.x+x];
+-            for(const size_t sample:{at,at+1,at+hdSize,at+hdSize+1}) {
++            for(const size_t sample:{at,at+1,at+hdWidth,at+hdWidth+1}) {
+                 uint32_t color=visible?image.rgba[sample]:0;
+                 if(discIcon && visible)color=system_hud::LoadBlend(color,under);
++                if (statusFrame && visible) {
++                    const uint32_t rgb = color & 0xFFFFFFu;
++                    if ((color >> 24) != 255 || rgb == 0xFFFF00u || rgb == 0x00FF00u) color = 0;
++                    else if (card.entry == &kStatusFrameBright)
++                        color = 0xFF000000u | std::min((color & 255u) + 3, 255u) |
++                            (std::min(((color >> 8) & 255u) + 3, 255u) << 8) |
++                            (std::min(((color >> 16) & 255u) + 3, 255u) << 16);
++                }
+                 itemOverlayPixels[sample]=color;
+             }
+         }
+@@ -1488,11 +1501,11 @@
+                 return;
+             }
+         }
+-        const SDL_Rect update{0,0,hdSize,hdSize};
+-        if(!SDL_UpdateTexture(itemOverlay,&update,itemOverlayPixels.data(),hdSize*sizeof(uint32_t)))return;
+-        const SDL_FRect source{0.0f,0.0f,float(hdSize),float(hdSize)};
++        const SDL_Rect update{0,0,hdWidth,hdHeight};
++        if(!SDL_UpdateTexture(itemOverlay,&update,itemOverlayPixels.data(),hdWidth*sizeof(uint32_t)))return;
++        const SDL_FRect source{0.0f,0.0f,float(hdWidth),float(hdHeight)};
+         const SDL_FRect where{target.x+(card.x-crop.x)*scale,target.y+(card.y-crop.y)*scale,
+-                              float(size*scale),float(size*scale)};
++                              float(width*scale),float(height*scale)};
+         if(SDL_RenderTexture(renderer,itemOverlay,&source,&where) && std::getenv("SATRECOMP_ITEM_TRACE")) {
+             static const ItemCardEntry* traced=nullptr;
+             if(traced!=card.entry) {
+@@ -3586,6 +3599,13 @@
+                 presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
++            if (port.videoRenderer && satrecomp::FeatureValue("presentation_mode") == 1 &&
++                texW == 320 && texH == 224 && where.x == baseFit.x && where.y == baseFit.y &&
++                where.w == baseFit.w && where.h == baseFit.h) {
++                const auto& planes = port.videoRenderer->PresentationFrame();
++                if (planes.itemCard && IsStatusFrame(planes.itemCard->entry))
++                    drawItem(planes, {0, 0, 320, 224}, where, baseFit.scale);
++            }
+             if (!choosing && !port.menu.IsOpen() && port.videoRenderer &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
