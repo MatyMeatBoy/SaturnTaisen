@@ -274,6 +274,7 @@ SCENE_DRAWS = {
 CUTOUT_DRAWS = {
     (1, '/SAKURA1/NC3173.BIN'): (1, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
     (2, '/SAKURA1/NC3285.BIN'): (10, 'docs/research/nc3173-nc3285-cutout-1440p.md'),
+    (2, '/SAKURA1/NC3286.BIN'): (10, 'docs/research/nc3286-ending-cutout.md'),
 }
 
 CHAPTER_WITNESSES = {

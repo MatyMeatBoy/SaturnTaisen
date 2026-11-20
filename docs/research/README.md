@@ -133,6 +133,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [bg-matching-progress.md](bg-matching-progress.md): Running log of the PC BG scene-image matching by screenshot; counts only.
 - [NC3058 cut-out at 1440p](nc3058-cutout-1440p.md) records the natural scene, native mask and facial fallback.
 - [NC3173 and NC3285 cut-outs at 1440p](nc3173-nc3285-cutout-1440p.md) records the native masks and the two verified poses.
+- [Chapter 10 NC3286 body and face](nc3286-ending-cutout.md)
 - [NC81 neck underlay and NC90 at 1440p](nc81-nc90-1440p.md)
 - [Chapter 1 park speech performance](park-speech-performance.md)
 - [NC3018 face placement at 1440p](nc3018-registered-faces.md)

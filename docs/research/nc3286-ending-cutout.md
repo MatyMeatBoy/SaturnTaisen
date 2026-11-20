@@ -1,0 +1,7 @@
+# Chapter 10 NC3286 body and face
+
+The English disc 2 ending route starts from the archived Mednafen GameCompleted save. The 8999-field checkpoint identifies NC3286 by its byte-exact 288 × 144 VDP1 body texture, FNV-1a `EDEB190DB6BE8263`, and the disc palette. The original input suffix reproduces all 55 archived guest hashes in each of five muted Direct3D 11 profiles. Final SRAM matches. Original with and without the PC donor and Enhanced with a truncated or missing donor produce identical corresponding native RGB.
+
+At fields 3, 8, 16 and 36, the installed donor changes 1,631,402 to 1,631,513 pixels at 2560 × 1440. A mask rebuilt from the live Saturn command list, exact texture bytes and matching palette contains every changed pixel. It covers 33,355 opaque positions and includes two witnessed eye textures. The field-52 blend stays pixel-identical to native and logs the body blend guard. This verifies the sampled draw and blend fallback on disc 2. Other occurrences remain open.
+
+The same route's field-13799 NC3057 checkpoint exercises the existing PC body clip with four active face strips. The HD result has visible rectangular seams around the faces. The v0.2.14-alpha executable, SHA-256 `8232F966863A8872B19B5121996AC448EB5F8DC8641AA452449471F5ED5D5665`, reproduces all 55 archived guest hashes, final SRAM and five RGB samples per arm exactly against the current test executable. The seam is present in both versions. This capture does not qualify NC3057 as verified HD. Private files and commands are under local/work/codex-tp3c/residual0222.
