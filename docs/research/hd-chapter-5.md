@@ -182,3 +182,28 @@ outside the viewport matched exactly.
 
 The Chapter 3 occurrence retains its separate native observation. This
 verification covers only the named scene in the patched runtime.
+
+## Verified Chapter 5 lower scene plates
+
+Three physical PC scene pictures have natural English disc 1 Chapter 5 draw
+witnesses in the same continuation. The archived route provides guest
+history and exact CD reads. The replay starts directly from continuation
+fields 1799, 4799 and 5399 for BG1243, BG2132 and BG2133 respectively.
+The first checkpoint was regenerated from the archived route with all
+1,800 guest hashes matching.
+
+The same runtime through 0213 ran strict asset-present and asset-absent
+replays for 64, 16 and 64 guest fields. All hashes and final SRAM matched.
+The two foreground donors BG3132 and BG3133 were present in both arms for
+their corresponding lower-plate cases.
+
+Each of four captures per case at 2560 × 1440 was checked against an
+independent Saturn decode and bilinearly scaled PC decode. The 2,032,118,
+1,144,303 and 1,211,624 changed pixels per capture respectively were
+inside the (272,29)–(2288,1037) picture viewport, matched the exposed native
+plate in the stock capture and matched the PC donor within two RGB levels.
+The upper cut-outs, dialogue and margins retained their pixels.
+
+BG2058 had a native observation in the route. The tested checkpoint
+showed no donor RGB change, so it retains its prior verification state.
+This verification does not change the SDK or certify the whole chapter.
