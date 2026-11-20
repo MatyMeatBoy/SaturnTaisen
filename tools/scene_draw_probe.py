@@ -123,6 +123,9 @@ def preflight(args):
         problems.append('--pc-assets is not a folder: %s' % args.pc_assets)
     elif args.pc_assets and not (args.pc_assets / 'SAKURA1').is_dir():
         problems.append('--pc-assets has no SAKURA1/ inside (use the extraction root, e.g. local/work/pc-cab/out-bg): %s' % args.pc_assets)
+    control = getattr(args, 'control_pc_assets', None)
+    if control is not None and not (control / 'SAKURA1').is_dir():
+        problems.append('--control-pc-assets must contain SAKURA1/: %s' % control)
     return problems
 
 
@@ -148,8 +151,9 @@ def run_once(args, run, donor):
                '--state-load', '0:' + str(args.state), '--mute', '--unthrottled']
     if args.movie:
         command += ['--movie', str(args.movie)]
-    if donor:
-        command += ['--pc-assets', str(args.pc_assets)]
+    assets = args.pc_assets if donor else args.control_pc_assets
+    if assets is not None:
+        command += ['--pc-assets', str(assets)]
     done = subprocess.run(command, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=args.timeout)
     text = done.stderr.decode(errors='replace')
     (run / 'stderr.log').write_text(text, encoding='utf-8')
@@ -161,6 +165,7 @@ def main(argv=None):
     ap.add_argument('--exe', type=pathlib.Path, required=True)
     ap.add_argument('--state', type=pathlib.Path, required=True)
     ap.add_argument('--pc-assets', type=pathlib.Path, required=True, help='extraction root holding SAKURA1/BG/*.SPR')
+    ap.add_argument('--control-pc-assets', type=pathlib.Path, help='matched control pack without the scene SPR under test')
     ap.add_argument('--disc', type=pathlib.Path, default=local_path('local/prepared/disc1/game.cue'))
     ap.add_argument('--backup', type=pathlib.Path, help='backup RAM to copy (default: a fresh one is created)')
     ap.add_argument('--movie', type=pathlib.Path)
@@ -169,7 +174,7 @@ def main(argv=None):
     ap.add_argument('--out', type=pathlib.Path, default=local_path('local/work') / 'scene-draw-probe')
     ap.add_argument('--timeout', type=int, default=900)
     args = ap.parse_args(argv)
-    for name in ('exe', 'state', 'pc_assets', 'disc', 'backup', 'movie', 'out'):
+    for name in ('exe', 'state', 'pc_assets', 'control_pc_assets', 'disc', 'backup', 'movie', 'out'):
         value = getattr(args, name)
         if value is not None:
             setattr(args, name, value.resolve())

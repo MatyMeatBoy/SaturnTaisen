@@ -42,3 +42,7 @@ Parameters ruled out as the cause: the build (the other builds have no `art/` be
 ## Not verified
 
 Only BG1119 and BG1209 were drawn here. The other builds named in the reports were not rerun with an `art/` folder. A scene whose palette is not in the scene table, or one with a fade on screen, correctly gives `NOT DRAWN`.
+
+## Matched control packs
+
+For attributing pixel changes, give both runs a PC asset root. Construct two small roots with the same layout. Place the scene SPR under test in the donor root only and pass the other with `--control-pc-assets`. Both runs then select the same floral backdrop. With the packaged v0.2.16-alpha runtime and the Episode 1 corridor checkpoint, the 56-field 1440p comparison traced BG1119 only in the donor run. The matched comparison changed 2,032,062 pixels; the no-pack comparison also changed the floral backdrop and gave 3,558,000. BG1119 already had a verified row.
