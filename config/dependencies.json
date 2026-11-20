@@ -155,7 +155,8 @@
       "patches/0157-sakura-prime-guest-audio-at-startup.patch",
       "patches/0158-sakura-index-dialogue-ink.patch",
       "patches/0159-sakura-upload-selected-body-faces.patch",
-      "patches/0160-sakura-spanish-disc2-loading-ink.patch"
+      "patches/0160-sakura-spanish-disc2-loading-ink.patch",
+      "patches/0161-sakura-match-episode-surround-softness.patch"
     ]
   }
 }
