@@ -5325,15 +5325,19 @@
           },
           "2:/SAKURA1/BG1076.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
+            "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG1076.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG1176.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
+            "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG1176.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG1282.BIN": {
             "association": "observed",
@@ -5361,15 +5365,19 @@
           },
           "2:/SAKURA1/BG2098.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
+            "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG2098.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2100.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
+            "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG2100.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2238.BIN": {
             "association": "observed",
