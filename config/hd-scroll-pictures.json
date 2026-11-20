@@ -305,6 +305,32 @@
    "crop_cross": 0
   },
   {
+   "min_crop_correlation": 0.9897,
+   "name": "BG2290",
+   "axis": "x",
+   "width": 432,
+   "height": 144,
+   "native_bytes": 60544,
+   "native_fnv": "29608664A6E5B356",
+   "palette": "9215200C4EBC0C10",
+   "cells": "5B46D87CD7FC992D",
+   "pc_file": "SAKURA1/BG/BG2290.SPR",
+   "pc_bytes": 156712,
+   "pc_fnv": "AF6E19F3C646E4F5",
+   "pc_width": 864,
+   "pc_height": 320,
+   "crop_cross": 0,
+   "fit": {
+    "rate_milli": 2150,
+    "origin": -68,
+    "length": 620,
+    "cross": 0,
+    "cross_length": 320,
+    "min_offset": 32,
+    "clamp_end": true
+   }
+  },
+  {
    "min_crop_correlation": 0.9995,
    "name": "BG2295",
    "axis": "y",
@@ -386,7 +412,6 @@
   "BG2093": "PC 592x320 is not 2x of native 320x144",
   "BG2247": "PC art does not follow the native picture (min crop correlation 0.200)",
   "BG2252": "PC art does not follow the native picture (min crop correlation 0.256)",
-  "BG2290": "PC art does not follow the native picture (min crop correlation 0.731)",
   "BG2338": "native layout is not the variant-B name table",
   "BG4372": "cell key would read past the picture tile pool",
   "BBG238": "battle background: full 320x224 frame, not a 288x144 scroll window (TP2b)",

@@ -24,7 +24,7 @@ New rows, by data only (no in-game check): horizontal BG1282, BG2130, BG2515; ve
 Not added (the generator prints the reason, kept under `skipped` in the JSON):
 
 - BG1257, BG1280, BG2077, BG2093, BG2172: PC width/height is not 2× the native picture (needs a per-picture crop).
-- BG1283, BG1310, BG2247, BG2290, BG2518: sizes fit but the PC art does not follow the native picture (correlation 0.20..0.88), so the crop would need a measured offset.
+- BG1283, BG1310, BG2247, BG2290, BG2518: sizes fit but the PC art does not follow the native picture at the default 2x crop (correlation 0.20..0.88), so the crop needs a measured offset. BG1283, BG1310, BG2518 and BG2290 now have calibrated rows (below); BG2247 stays native.
 - BG2338 has no variant-B table. The separate BG2238 still uses its own path from patch 0123. The seven BBG pictures are 320×224 battle frames, not a 288×144 window (TP2b).
 
 ## Evidence and limits
@@ -46,7 +46,7 @@ Offline fit of the PC crop as an axis-aligned affine map of the native offset `o
 | BG2093 | 1.828, 22.5, 514.2, 0, 320 | 0.969 / 0.967 | isolated image alignment. The [live dream](bg2093-dream-transition.md) uses line offsets and two-source color calculation, so it stays native. |
 | BG1310 | 1.905, 36.2, 560.8, 8, 312 | 0.953 / 0.948 | alignable |
 | BG1283 | 1.991, 0, 570, 0, 320 | 0.947 / 0.929 | alignable (2x, full 320 height) |
-| BG2290 | about 2.18, about -18, about 620, 0, 319 | per-window 0.98-0.99 for o>=24 | the [live stage-wing pan](bg2290-native-pan.md) holds at x=0 below the crop floor, then reaches x=144. It stays native. |
+| BG2290 | about 2.18, about -18, about 620, 0, 319 | per-window 0.98-0.99 for o>=24 | the [live stage-wing pan](bg2290-native-pan.md) holds at x=0 below the crop floor, then reaches x=144. Now a calibrated row with a minimum offset (see the BG2290 section). |
 | BG1257 | 2.570, 4, 735, 0, 304 | 0.878 / 0.867 | not aligned: best free per-window fit 0.866-0.895 |
 | BG1280 | 2.089, 83, 598, 32, 288 | 0.865 / 0.809 | not aligned: first ~110 native px correlate 0.81-0.82 |
 | BG2247 | best 1.856, 35, 262, 30, 524 | 0.561 / 0.392 | the [live theatre pan](bg2247-native-pan.md) stays native because the PC camera changes the landmark positions. |
@@ -62,3 +62,22 @@ The Saturn source and the PC image match for BG2077, BG2172 and BG2518. The gene
 | BG2518 | Y | 153 | 488×264 | 10 to 288 | 0.9994 |
 
 The fixed cross-axis origins are 0, 26 and 27 respectively. A C++ test checks bounds at every position, selected crops, and the previous geometry for legacy rows. The candidate frontend compiled and linked with patch 0143. The 1,500 opening guest hashes matched the patch 0142 build byte for byte. The calibrated rows still need natural in-game witnesses and package verification. Patch 0145 adds BG1283 and BG1310 to the calibrated table. BG1283 covers 185 native positions with a 569×312 PC crop starting at x=0–367 (minimum correlation 0.9624). BG1310 covers 225 positions with a 559×312 PC crop starting at x=32–464 (minimum correlation 0.9475). Both use y=8 and retain the same exact viewport guard. The assembled patch 0145 runtime matched the patch 0144 build for all 1,500 strict opening guest hashes. Natural in-game appearances and package inclusion remain open. BG2290 retains the [native pan](bg2290-native-pan.md), including its exposed x=0 hold.
+
+## BG2290: minimum offset and end clamp (TP2a12, patch 0185)
+
+BG2290 is 432x144 with a 864x320 PC picture. The PC art does not start where the Saturn picture does: a single crop `start = -68 + 2.150 * offset`, 620 PC pixels wide and the full 320-pixel height, scores 0.9897 to 0.9993 (mean 0.9922) against every integer native offset from 32 to 144 (113 positions, generator signature). Below offset 32 the crop would begin left of the PC picture (start -68 at offset 0, 0 at offset 31), and the best crop that stays inside the PC picture (start 0) scores 0.70 at offset 0, 0.82 at 16 and only reaches 0.926 at 24, where the fitted start is still negative. The offsets below 32, the x=0 hold the [live stage-wing pan](bg2290-native-pan.md) shows for 4,000 to 4,250 frames and the x=18 sample, therefore stay native. The first HD crop appears at offset 32 and the rest of the witnessed pan (43 to 144) is covered.
+
+Two optional guards were added to the calibrated fit (`ScrollFit` in `port/scroll_pictures.h`, written by `tools/gen_scroll_pictures.py` from `FIT_OPTIONS`):
+
+- `min_offset`: native offsets below it are not drawn from the PC art (the native picture stays). `ScrollOffsetSupported` is checked by the frontend after the exact native viewport match, so the guard only removes draws.
+- `clamp_end`: the crop start is limited to `pcLength - length`, so the end of the crop never runs past the PC picture. BG2290 ends at 242 + 620 = 862 of 864, so the clamp does not move any crop today; it is the safety the review asked for.
+
+`origin` is now signed (BG2290 starts at -68). Rows without options are written exactly as before (`{rate, origin, length, cross, crossLength}`) and keep `minOffset 0`, `clampEnd false`, so every other row draws the same crops. `ScrollRowValid` requires the first supported crop to start inside the PC picture and, without the clamp, the last crop to end inside it. Tests: `tests/test_scroll_pictures.cpp` (real BG2290 row plus synthetic rows with negative origin, minimum offset, clamp and out-of-range minimum) and `tests/test_gen_scroll_pictures.py` (the generator's crop function).
+
+The entry is `wired-unverified` in the coverage register (`SCROLL_UNVERIFIED` in `tools/hd_chapter_coverage.py`), never `hd`: no replay in this workspace shows the HD crop (the stage-wing states of the native witness are not in `local/`, and a scan of the 131 saved states for the row's first-cell bytes found none holding BG2290 in VDP2 VRAM). It draws only when the live layer-4 palette (`9215200C4EBC0C10`), first-cell key and the exact native viewport match, otherwise the native composition stays.
+
+## Remaining dispositions (TP2a12)
+
+- BG2338 (320x160, PC `BG2238.SPR` subimage 17, 0.943 whole-picture): **stays native for now, not in this table.** It shares palette `5DEDEF54BF2F059D` with the BG2238 still but has its own cell key `9E591B2DBD322D38`, a fixed-cell (not variant-B) layout and a different PC subimage and box than the BG2238 crop (8,28,544,272 of subimage 0). It is not a pan, so it would need its own still path like patch 0123 (own palette, cell hash, viewport check and crop). Nothing records where, on which layer or how long the Saturn shows it: the replays that read BG2338 do not exist (FAD 128990 was never read in the archived continuations and 1,062 native screenshots do not contain it). Wiring it blind would guess the viewport, so the first step is a replay that reaches it; the keys above are what that still path needs.
+- BG1257 (456x144), BG1280 (512x144) and BG2247 (288x296) stay native. The default 2x rule fails by size (PC 1181x320, 1241x320) and a free per-window crop does not align: BG1257 scores 0.863 minimum and 0.879 mean, BG1280 0.796 and 0.852 (the first about 110 native pixels correlate 0.81 to 0.82), BG2247 0.376 and 0.549. The PC compositions differ from the Saturn ones, and the [witnessed theatre pan of BG2247](bg2247-native-pan.md) shows the PC perspective moves the architectural landmarks. The generator prints the reason for each in the `skipped` map of `config/hd-scroll-pictures.json`.
+

@@ -18212,8 +18212,8 @@
       "2:/SAKURA1/BG2290.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2290.SPR",
-        "reason": "size [432, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "wired-unverified"
       },
       "2:/SAKURA1/BG2291.BIN": {
         "association": "unknown",

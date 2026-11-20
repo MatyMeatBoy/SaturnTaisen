@@ -71,6 +71,44 @@ int main() {
         const auto middle = ScrollPcCrop(last, 76);
         assert(middle.x == 27 && middle.y == 149 && middle.w == 488 && middle.h == 264);
     }
+    // BG2290: negative origin, minimum supported offset and end clamp (TP2a12).
+    {
+        const auto& row = byName("BG2290");
+        assert(row.fit.minOffset == 32 && row.fit.clampEnd && row.fit.origin == -68);
+        assert(ScrollRange(row) == 144 && ScrollRowValid(row));
+        assert(!ScrollOffsetSupported(row, 0) && !ScrollOffsetSupported(row, 31) && ScrollOffsetSupported(row, 32));
+        for (unsigned offset = row.fit.minOffset; offset <= ScrollRange(row); ++offset) {
+            const auto crop = ScrollPcCrop(row, offset);
+            assert(crop.w == 620 && crop.h == 320 && crop.y == 0 && crop.x + crop.w <= row.pcWidth);
+        }
+        assert(ScrollPcCrop(row, 32).x == 1 && ScrollPcCrop(row, 144).x == 242);
+    }
+    // Synthetic rows: the guards act only when a row asks for them; rows without them keep the old behaviour.
+    {
+        ScrollPicture row = kScrollPictures[0];
+        row.axis = ScrollAxis::Horizontal; row.width = 432; row.height = 144; row.pcWidth = 864; row.pcHeight = 320;
+        row.fit = {2000, 0, 570, 0, 320};
+        assert(ScrollRowValid(row) && ScrollOffsetSupported(row, 0));
+        assert(ScrollPcCrop(row, 144).x == 288);
+        row.fit = {2000, 0, 570, 0, 320};
+        row.fit.rateMilli = 2200;                     // end would reach 316 + 570 > 864: invalid without the clamp
+        assert(!ScrollRowValid(row));
+        row.fit.clampEnd = true;
+        assert(ScrollRowValid(row) && ScrollPcCrop(row, 144).x == 864 - 570);
+        row.fit.origin = -20;                         // first crop starts before the PC picture: needs a minimum offset
+        assert(!ScrollRowValid(row));
+        row.fit.minOffset = 10;                       // -20 + 22 = 2
+        assert(ScrollRowValid(row) && ScrollPcCrop(row, 10).x == 2);
+        assert(!ScrollOffsetSupported(row, 9) && ScrollOffsetSupported(row, 10) && ScrollOffsetSupported(row, 144));
+        row.fit.minOffset = 145;                      // beyond the range
+        assert(!ScrollRowValid(row));
+        // Legacy rows never use the guards.
+        for (const auto& legacy : kScrollPictures)
+            if (!std::strcmp(legacy.name, "BG1283") || !std::strcmp(legacy.name, "BG1310")) {
+                assert(legacy.fit.minOffset == 0 && !legacy.fit.clampEnd && legacy.fit.origin >= 0);
+                assert(ScrollOffsetSupported(legacy, 0));
+            }
+    }
     // The hand-written pictures keep the crops they had before the table.
     {
         const auto& row = byName("BG1285");

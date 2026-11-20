@@ -31,12 +31,21 @@ FITTED_CROPS = {
     'BG2077': (2312, 0, 670, 0, 314),
     'BG2172': (2008, 5, 290, 26, 536),
     'BG2518': (1831, 10, 264, 27, 488),
+    # BG2290: the PC art starts 32 native pixels after the Saturn picture, so the crop would begin left of the PC image below
+    # offset 32 (the live pan holds at x=0, then runs to 144). Those offsets stay native; the end is clamped to the PC width.
+    'BG2290': (2150, -68, 620, 0, 320),
+}
+# Optional per-row guards of a calibrated crop: first offset the PC art covers, and clipping of the crop end to the PC picture.
+FIT_OPTIONS = {
+    'BG2290': {'min_offset': 32, 'clamp_end': True},
 }
 
 
-def affine_crop(axis, offset, fit):
+def affine_crop(axis, offset, fit, pc_scroll=None, clamp_end=False):
     rate, origin, length, cross, cross_length = fit
     start = origin + (rate * offset + 500) // 1000
+    if clamp_end and pc_scroll is not None and start + length > pc_scroll:
+        start = pc_scroll - length
     if axis == 'x':
         return start, cross, start + length, cross + cross_length
     return cross, start, cross + cross_length, start + length
@@ -97,7 +106,9 @@ def derive(name, discs, pc_root):
     cross = (ph - 2 * WINDOW[1]) // 2 if axis == 'x' else (pw - 2 * WINDOW[0]) // 2
     scores = []
     limit = w - WINDOW[0] if axis == 'x' else h - WINDOW[1]
-    for at in range(0, limit + 1, 1 if fit else 8):
+    options = FIT_OPTIONS.get(name, {})
+    min_offset = options.get('min_offset', 0)
+    for at in range(min_offset, limit + 1, 1 if fit else 8):
         if axis == 'x':
             wanted = native.crop((at, 0, at + 288, 144))
             box = (2 * at, cross, 2 * at + 576, cross + 288)
@@ -105,7 +116,7 @@ def derive(name, discs, pc_root):
             wanted = native.crop((0, at, 288, at + 144))
             box = (cross, 2 * at, cross + 576, 2 * at + 288)
         if fit:
-            box = affine_crop(axis, at, fit)
+            box = affine_crop(axis, at, fit, pw if axis == 'x' else ph, options.get('clamp_end', False))
             if not (0 <= box[0] < box[2] <= pw and 0 <= box[1] < box[3] <= ph):
                 return None, 'calibrated crop leaves the PC subimage'
         got = art.crop(box)
@@ -123,6 +134,7 @@ def derive(name, discs, pc_root):
     }
     if fit:
         row['fit'] = dict(zip(('rate_milli', 'origin', 'length', 'cross', 'cross_length'), fit))
+        row['fit'].update(options)
     return row, None
 
 
@@ -161,7 +173,12 @@ def main():
             cells = '0' if r['name'] == 'BG2533' else f"0x{r['cells']}ull"  # BG2533 was pinned by palette alone (patch 0098)
             axis = 'ScrollAxis::Horizontal' if r['axis'] == 'x' else 'ScrollAxis::Vertical'
             fit = r.get('fit')
-            calibrated = ', {' + ', '.join(map(str, fit.values())) + '}' if fit else ''
+            calibrated = ''
+            if fit:
+                values = [fit[k] for k in ('rate_milli', 'origin', 'length', 'cross', 'cross_length')]
+                if 'min_offset' in fit or 'clamp_end' in fit:
+                    values += [fit.get('min_offset', 0), 'true' if fit.get('clamp_end') else 'false']
+                calibrated = ', {' + ', '.join(map(str, values)) + '}'
             lines.append(f"{{\"{r['name']}\", {axis}, {r['width']}, {r['height']}, {r['native_bytes']}, 0x{r['native_fnv']}ull,\n"
                          f" 0x{r['palette']}ull, {cells}, \"{r['pc_file']}\", {r['pc_bytes']}, 0x{r['pc_fnv']}ull, {r['pc_width']}, {r['pc_height']},\n"
                          f" {style}{calibrated}}},")
