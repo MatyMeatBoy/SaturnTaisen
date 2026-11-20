@@ -1,0 +1,51 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1094,6 +1094,8 @@
+          "SAKURA1/ENDING/END_KO.SPR", 2925404, 0x1CA5866920ADDD55ull, {0, 0, 176, 208}, true},
+     };
+     std::array<SceneHd, std::size(endingPhotos)> endingPhotoImages;
++    SceneHd maigoPicture;
++    bool maigoTraced = false;
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
+     const auto finishSceneInset = [&](SceneHd& inset, SDL_BlendMode blend) {
+         if (!inset.pending.valid() || inset.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
+@@ -4202,6 +4204,38 @@
+                 presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
++            // The minigame reward uses the existing high-resolution Saturn frame.
++            if (!choosing && !port.menu.IsOpen() && !port.opt.pcAssetsPath.empty() &&
++                satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0) {
++                const auto prepareMaigo = [&] {
++                    loadEveInset(maigoPicture, "SAKURA3/CG/MAIGO/BG_MAIGO.SPR", 243292,
++                                 0xC3E6BE5ED7CD8ED7ull, {0, 0, 640, 480}, 0, 0);
++                };
++                if ((shownDisc == 1 && shownPlayStart == 268190) ||
++                    (shownDisc == 2 && shownPlayStart == 260521))
++                    prepareMaigo();
++
++                if (texW == 640 && texH == 448 && softwareShown.size() == 640 * 448 &&
++                    (softwareShown.front() & 0xFFFFFFu) == 0xA86020u &&
++                    (softwareShown.back() & 0xFFFFFFu) == 0xC8F0F8u) {
++                    uint64_t signature = 14695981039346656037ull;
++                    for (const auto pixel : softwareShown) {
++                        for (unsigned shift : {0u, 8u, 16u})
++                            signature = (signature ^ uint8_t(pixel >> shift)) * 1099511628211ull;
++                    }
++                    if (signature == 0x0D9D77957DB1BEE5ull) {
++                        prepareMaigo();
++                        if (maigoPicture.texture &&
++                            SDL_RenderTexture(renderer, maigoPicture.texture, nullptr, &where) &&
++                            !maigoTraced && std::getenv("SATRECOMP_BACKGROUND_STATS")) {
++                            std::fprintf(stderr, "minigame picture: BGMAIGO drew %.0f,%.0f %.0fx%.0f\n",
++                                         where.x, where.y, where.w, where.h);
++                            maigoTraced = true;
++                        }
++                    }
++                }
++            }
+             if (port.videoRenderer && satrecomp::FeatureValue("presentation_mode") == 1 &&
+                 texW == 320 && texH == 224 && where.x == baseFit.x && where.y == baseFit.y &&
+                 where.w == baseFit.w && where.h == baseFit.h) {

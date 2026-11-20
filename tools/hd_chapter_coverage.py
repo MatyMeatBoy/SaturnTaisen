@@ -814,6 +814,11 @@ def build(root, index_dir, portrait_audit):
             row = {'status': 'paired-not-wired', 'pc': pair['pc_file'], 'pc_image_index': pair['pc_image_index'],
                    'pairing_evidence': 'docs/research/saturn-bg-format.md#minigame-background-pages',
                    'reason': 'The minigame layer viewport and transform still need an in-game witness.'}
+            if runtime_evidence := pair.get('runtime_evidence'):
+                row.pop('reason')
+                witnessed = disc == pair['verified_disc']
+                row.update(status='hd' if witnessed else 'wired-unverified',
+                           verified_in_game=witnessed, runtime_evidence=runtime_evidence)
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (
