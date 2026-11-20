@@ -1,0 +1,7 @@
+# Wider BG3034 foreground in Chapter 1
+
+Patch 0221 verifies the PC BG3034 foreground on English disc 1 during the Chapter 1 letter exchange. The Saturn 288 × 144 fixed-cell picture is at FAD 152893. The donor is subimage 0 of the 651 × 326 PC file. A measured affine fit from the Saturn viewport into that source uses (2.09x + 22.5, 2.26y) and gives 0.974 sampled silhouette IoU. The compositor uses the row's exact donor dimensions for decoding, bounds and stride. It keeps the existing 576 × 288 registered raster, Saturn index-zero mask, ownership and opaque RGB guards, and the approved Zoom viewport.
+
+The retained natural replay produces 79 HD draws over 80 strict fields. Six muted Direct3D 11 arms preserve guest hashes and final SRAM. All five 2560 × 1440 samples show exactly 744,870 changed pixels. Every changed pixel matches an independent PC projection, including 13,742 pixels per sample that use source coordinates outside the previous 576 × 320 input bounds. Original with and without a donor and Enhanced with missing or altered donors match their native RGB controls.
+
+A separate 12-field item overlay replay preserves guest hashes and SRAM. All four 1440p samples preserve the menu rectangle and pointer while 240,891 pixels of the unobstructed foreground change behind them. Two earlier 576 × 320 donors, BG3036 and BG4084, reproduce 160 strict hashes, 10 RGB captures and SRAM. The witness covers this English disc 1 appearance. Package inclusion is pending. Private saves, captures, and replay commands are under local/work/codex-tp3c/fg-wide.
