@@ -6878,9 +6878,11 @@
           },
           "2:/SAKURA1/BG1292.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-10.md#bg1292-on-the-1001-route",
             "pc": "SAKURA1/BG/BG1292.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bg1292-on-the-1001-route",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG1293.BIN": {
             "association": "observed",
