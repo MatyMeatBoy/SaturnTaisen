@@ -1,0 +1,22 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -4344,12 +4344,15 @@
+                 // the original one. Any other screen ends the hold.
+                 if(splitZoom) {
+                     heldZoom={true,zoomX,zoomW,zoomLines,zoomGroup,zoomShadowRows};
+-                } else if(heldZoom.valid && satrecomp::FeatureValue("scene_view")==1 && !scene.movieOnly &&
++                } else if(satrecomp::FeatureValue("scene_view")==1 && !scene.recognized &&
+                           DialogueOnly(planes.source,planes.width,planes.height)) {
+-                    const auto zoom=FitSceneZoom(wide,high,heldZoom.width,heldZoom.lines,heldZoom.group,heldZoom.shadowRows);
++                    // A standalone native dialogue panel uses the same geometry as the narrative
++                    // group, including when the first picture has not entered the floral plane yet.
++                    const auto panel=heldZoom.valid?heldZoom:HeldZoom{true,9,306,67,212,2};
++                    const auto zoom=FitSceneZoom(wide,high,panel.width,panel.lines,panel.group,panel.shadowRows);
+                     if(zoom.valid) {
+                         splitZoom=true;
+-                        crop=SDL_FRect{float(heldZoom.x),153,float(heldZoom.width),float(heldZoom.lines)};fit=zoom.dialogue;
++                        crop=SDL_FRect{float(panel.x),153,float(panel.width),float(panel.lines)};fit=zoom.dialogue;
+                         choiceTextFit=zoom.picture;choiceCropX=16;choiceCropY=8;
+                         zoomForeground=hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground;
+                         SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
