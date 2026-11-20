@@ -95,10 +95,21 @@ by the sampled MAP16 camera. The separate MAP16 checkpoint reproduces
 the previous MAP16 rendering and final SRAM in four samples over
 80 fields.
 
-The MAP15 graphics checks use the portable interpreter. The strict
-probe on the same squad checkpoint stops at untranslated EVT15 master
-block `00209C7A`. The artifact and replay receipts are retained under
-`local/work/codex-th1/map15-0242`. Package inclusion is pending.
+The initial MAP15 graphics checks used the portable interpreter. The
+strict probe at the squad checkpoint stopped at EVT15 master block
+`00209C7A`. Matching the native code from the earned English disc 2
+route adds 330 EVT15 variants and one EVT16 variant. The strict candidate
+reproduces 6,000 prologue fields and 3,600 fields through the MAP16
+handoff. Guest hashes and both final SRAM files match the archived route.
+The squad replays also match the portable controls with and without the
+MAP15 donor. Each has 440 strict fields and six exact 1440p captures.
+All strict runs report zero interpreted blocks.
+
+The candidate SHA-256 is `f62001eef1c999fd48100b90faa20bccd968a1843b60fedd4222c0e8c3ce8c5f` and its linked
+runtime has 678,135 variants. Private receipts are retained under
+`local/work/codex-th1/map15-0242/strict-observations`.
+The ground shipped in [v0.2.16-alpha](../releases/v0.2.16-alpha.md).
+Packaging the new code variants and verifying other routes remain open.
 
 ## Live MAP16 PC ground
 

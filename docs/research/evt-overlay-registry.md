@@ -225,8 +225,10 @@ to the pinned EVT14 module. The observed MAP14 registry now contains
 1,349 variants, and the Windows release candidate links exactly
 677,804 variants across all modules.
 
-A continuous replay of the stitched controller inputs matches the
-archived guest hashes through at least field 62,000, with no
-intermediate state loads in that span. Full continuous verification
-is tracked separately from the release. The private clips, range
-comparison and replay receipt are in `local/work/codex-th1/map14-victory-aot`.
+The continuous replay starts from the turn-11 Iris checkpoint and
+reaches victory and IC08 in 136,600 fields with no intermediate state
+loads. Every guest hash and final SRAM match the archived route, with
+zero interpreted blocks. The v0.2.16-alpha executable also reproduces
+all 53,940 fields across the fifteen clips that previously stopped.
+The private clips, range comparison and replay receipt are in
+`local/work/codex-th1/map14-victory-aot`.
