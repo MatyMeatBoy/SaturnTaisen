@@ -22,6 +22,7 @@ from fuente import fit  # noqa: E402
 from red_lz import compress, decompress  # noqa: E402
 from tiras import T, strip_from, strip_into  # noqa: E402
 from wkl_attacks import traducir_ataques_wkl  # noqa: E402
+from wkl_descriptive import traducir_rotulos_wkl, traducir_turno_wkl  # noqa: E402
 from wkl_enemy_names import traducir_enemigos_wkl  # noqa: E402
 from wkl_pause import traducir_pausa_tactica  # noqa: E402
 from wkl_short_commands import traducir_comandos_aliados_wkl  # noqa: E402
@@ -481,6 +482,8 @@ def combate(files: Files, preview):
         traducir_comandos_aliados_wkl(wkl)
         traducir_enemigos_wkl(wkl)
         traducir_pausa_tactica(wkl)
+        traducir_rotulos_wkl(wkl)
+        traducir_turno_wkl(wkl)
         print(f'  combate {stage}: {len(sprites)} sprites, ficha de unidad, ataques y pausa traducidos')
 
 
