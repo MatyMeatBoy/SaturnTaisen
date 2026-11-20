@@ -82,3 +82,44 @@ At field 164, a visible street region (380,1044)–(650,1160) changes from
 mean RGB (110.0,121.4,144.1) to (16.1,16.6,15.0). The map retains the
 Saturn ground pending a snow-matched replacement. The pilot and captures
 are private under `local/work/codex-map15-0188/`.
+
+
+## Live MAP12 PC ground
+
+The natural English disc-2 Chapter 8 route loads 38 sectors of EVT12
+at FAD 203377 and 151 sectors of MAP12 at FAD 219422. The Saturn and
+PC MAP12 BIN files are byte-identical. The live source-4 pattern-name
+key `334C1BC64DDC4CEC` on page `0x40000` agrees with the proposed
+PR #440 MAP12 row. Patch 0193 uses that row. The official
+`MAP12_A.SPR` is one 2048×1280 image of 3,584,520 bytes, FNV-1a
+`945A598FB01534A3`, sampled at half resolution in the tactical
+world grid. The active viewport, VDP1 units and native overlays use
+their existing paths.
+
+Two portable 320-field donor/empty pairs replay the opening controls
+and later enemy dialogue from retained natural checkpoints at 2560×1440.
+The captures confirm Direct3D 11 and the `stage12-hd-ground` layout.
+All 640 paired guest fields and final backup RAM match. The opening
+Original donor/empty and same-size corrupt-donor controls retain the
+stock RGB at all five sampled fields. Across both camera cases the
+Enhanced changes are confined to (320,48)–(2240,1392). An interior
+navigation-preview crop at opening field 290 and dialogue-panel crop
+at enemy field 220 remain pixel-identical.
+
+The source-4 probes place the two cameras at (295,212) and (400,241).
+At the latter, a 500-texel exposed ground patch matches the
+independently decoded PC ground exactly with zero coordinate shift.
+The temple courtyard, statuary, torii and shadows align in both
+camera samples. The donor courtyard is brighter and more textured.
+An exposed enemy-camera patch at (980,758)–(1130,888) changes from
+mean RGB (117.5,112.7,83.4) to (149.9,143.0,100.5). The sampled
+courtyard views contain no snow or sky. This proof bounds the captured
+views and overlays. Full map traversal and other scene states remain
+open.
+
+The strict attempt on the same checkpoint stops at untranslated
+master SH-2 address `00205FB0` in EVT12. The replay evidence above
+uses the portable interpreter for the guest and the same tested
+Direct3D 11 frontend. The private candidate SHA-256 is
+`6cfb6c8e2c1bd22897a01fe2f58851f7922750ece2b9337ced28e2e3acc04757`.
+States and captures stay under `local/work/codex-th1/map12-0193/`.
