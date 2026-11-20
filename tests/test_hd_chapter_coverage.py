@@ -65,7 +65,10 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertEqual(row['status'], 'wired-unverified', key)
                 self.assertNotIn('fixture_evidence', row, key)
             disc2 = f"2:/SAKURA1/{entry['id']}.BIN"
-            if entry['id'] != 'IC06':
+            if entry['id'] == 'IC08':
+                self.assertEqual((rows[disc2]['status'], rows[disc2]['association']), ('hd', 'observed'))
+                self.assertTrue(rows[disc2]['verified_in_game'])
+            if entry['id'] not in ('IC06', 'IC08'):
                 self.assertEqual(rows[disc2]['status'], 'paired-not-wired', disc2)
 
     def test_published_catalog_keeps_replacement_and_occurrence_separate(self):

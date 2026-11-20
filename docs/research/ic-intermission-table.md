@@ -23,7 +23,7 @@ The IC0501 row reproduces the in-game measurement of patch 0144 exactly (`A5E349
 
 Since this work started, main gained witnessed IC03 (patch 0162) and disc-2 IC06 (patch 0183) in the same compositor. The generated table now supplies the disc-1 rows: IC0501 and IC03 reproduce their in-game hashes exactly (an independent check of the derivation), and the other 13 are offline-derived. Of those, IC06 on disc 1, IC02, IC04, IC0502, IC07-IC09 and IC1001-IC1006 (13 pictures, 13 coverage entries) initially moved from `paired-not-wired` to `wired-unverified`. Their [controlled runtime verification](#controlled-disc-1-runtime-verification) now certifies integration. Their natural occurrences remain unverified. IC01 continues to use its own path.
 
-**Disc 2 is not covered.** The witnessed disc-2 IC06 shows the picture with its own palette (`FEBAEA7B6E7CAC67`) and a different RGB hash (`0F85EDA8CE4B247D`) than the ICLOGO derivation gives (`0D87B2D1DABE4DFD`), so the disc-2 pictures cannot be derived from the files alone; they need witnesses, and disc-2 rows stay `paired-not-wired`. The hand-kept disc-2 IC06 row stays in the runtime.
+Disc 2 has exact native witnesses for IC06 and IC08. Both use their own palettes. Other disc-2 rows remain `paired-not-wired` while their observed palette and layer path are pending.
 
 ## Commands
 
@@ -55,13 +55,33 @@ Compared offline, read-only, with `tools/gen_ic_table.py build`:
 - All 16 `IC*.BIN` files, `ICLOGO.BIN` and `ICATALL.DAT` are **byte-identical on both discs**. The same file therefore shows different RGB on different routes, so the palette choice is not in the picture files.
 - Own-palette plate of disc-2 IC06 = `0F85EDA8CE4B247D` and own palette key = `FEBAEA7B6E7CAC67`: both equal the patch 0183 in-game witness. The ICLOGO derivation gives `0D87B2D1DABE4DFD`, which was not seen.
 - Disc-1 IC0501 and IC03 equal their witnesses only with the ICLOGO palette (own palette: `C997599B21F685B5`, `7240B16ECBB05835`, not seen). Disc-1 IC01 (patch 0107) is witnessed with its own palette.
-- The samples exhibit both palette routes (own palette: IC01 d1 and IC06 d2; ICLOGO: IC0501 d1 and IC03 d1). Which one an appearance takes is decided by code: `LOGO.SH2` carries the IC name table and differs between discs (only 1,514 bytes, mostly relocated pointers, so no disc-specific palette table is evident). Strings in all of SAKURA1 show no other module naming ICLOGO/IC files.
+- The samples exhibit both palette routes (own palette: IC01 d1 and IC06/IC08 d2; ICLOGO: IC0501 d1 and IC03 d1). Which one an appearance takes is decided by code: `LOGO.SH2` carries the IC name table and differs between discs (only 1,514 bytes, mostly relocated pointers, so no disc-specific palette table is evident). Strings in all of SAKURA1 show no other module naming ICLOGO/IC files.
 - Consequence: the disc-1 IC06 row in the table (ICLOGO route) is itself unwitnessed, and the same file shows the own palette on disc 2. Controlled disc-1 QA confirms the ICLOGO route. A natural disc-1 appearance could select a different route.
 
-`config/hd-ic-table.json` now also lists `disc2_own_palette_candidates` (own-palette `plate`, `plate_dark`, palette key per file; IC06 `reproduces-witness`, the rest `candidate-unverified`). They are not entries, not in the generated header, not wired and not counted in coverage.
+`config/hd-ic-table.json` records the own-palette hashes and which entries reproduce observed frames. The candidate metadata stays outside the generated header. The two witnessed disc-2 rows are registered in the frontend.
 
-**Missing datum:** per IC (at least disc-2 IC02-IC09, IC1001-IC1006, and disc-1 IC06), a layer-4 palette fingerprint (`E9107F892185CCC8` = ICLOGO route, or the file palette key in the candidates list) and the RGB hash from one real intermission, or a trace/disassembly of the SH-2 routine in `LOGO.SH2` that loads the IC file and decides whether ICLOGO.BIN is read afterwards (IC0501 doc: IC file then ICLOGO.BIN). The layer-4 palette is observable with `SATRECOMP_LAYER_PROBE` at the matching checkpoint. A natural replay of each candidate remains pending.
+The remaining IC candidates need a live layer-4 palette and RGB fingerprint or exact attribution of the palette selection routine in `LOGO.SH2`. Use `SATRECOMP_LAYER_PROBE` at the matching checkpoint.
 
+
+## IC08 on English disc 2
+
+The natural Iris route reads IC08 at FAD 135110 for 38 sectors before
+the Chapter 8 shrine battle. Layer 4 shows page `0x44000`, with palette
+`E88FA69862FFF076`. The raw plane and signed -16 menu plate match the
+independent disc decode across all 57,344 pixels outside the menu. Their
+hashes are `CF7BF25FE1E23E25` and `ABC1FD0D76B8206D`.
+
+Patch 0191 registers the exact disc, palette, unshifted/dark hashes and
+PC IC0800 donor. Five 300-field 1440p strict replays of Save/Status/Resume
+match the original route's guest hashes and final SRAM. The five steady
+samples match the independent PC decode with the native -16 offset
+across all 2,064,384 unprotected viewport pixels per sample. The menu,
+emblem and area outside the viewport remain exact. Missing and same-size
+corrupt assets match stock RGB. Original matches with and without the
+donor. From the first sampled return field (165) to the final sample,
+Enhanced matches the native control in full. The missing case also
+matches 0189 stock at all ten capture points. Private receipts are under
+`local/work/codex-th1/ic08-live/`.
 
 ## Controlled disc 1 runtime verification
 

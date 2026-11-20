@@ -45,11 +45,15 @@ class OwnPaletteCandidates(unittest.TestCase):
         with self.assertRaises(SystemExit):
             ic.own_palette_candidates('IC06.BIN', screen_file(words, indices))
 
-    def test_committed_candidates_reproduce_disc2_ic06(self):
+    def test_committed_candidates_reproduce_disc2_witnesses(self):
         table = json.loads((ROOT / 'config' / 'hd-ic-table.json').read_text(encoding='utf-8'))
         rows = {r['id']: r for r in table['disc2_own_palette_candidates']}
         self.assertEqual(rows['IC06']['plate'], '0F85EDA8CE4B247D')
         self.assertEqual(rows['IC06']['status'], 'reproduces-witness')
+        self.assertEqual(rows['IC08']['palette'], 'E88FA69862FFF076')
+        self.assertEqual(rows['IC08']['plate'], 'CF7BF25FE1E23E25')
+        self.assertEqual(rows['IC08']['plate_dark'], 'ABC1FD0D76B8206D')
+        self.assertEqual(rows['IC08']['status'], 'reproduces-witness')
         self.assertTrue(all(r['status'] != 'hd' for r in rows.values()))
 
 

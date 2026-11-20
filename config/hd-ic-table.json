@@ -402,7 +402,8 @@
    "palette": "E88FA69862FFF076",
    "plate": "CF7BF25FE1E23E25",
    "plate_dark": "ABC1FD0D76B8206D",
-   "status": "candidate-unverified",
+   "status": "reproduces-witness",
+   "witness": "patch 0191, disc 2",
    "same_file_on_disc1": true
   },
   {
