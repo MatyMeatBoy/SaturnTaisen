@@ -1,6 +1,6 @@
 # Chapter 9 Iris route evidence
 
-The Iris hallway event in `0904.BIN` requires heroine value 5 and an unset visit flag. The native Chapter 8 route below sets value 5 through ordinary input and reaches the Chapter 8 tactical rematch. The Chapter 9 hallway event and the live NC3517 draw remain open.
+The Iris hallway event in `0904.BIN` requires heroine value 5 and an unset visit flag. The English disc 2 replay sets value 5 in Chapter 8 by ordinary input, carries it through both chapters' battles, and reaches the live Chapter 9 NC3517 draw.
 
 ## Read the active heroine selector
 
@@ -30,7 +30,7 @@ At `0904.BIN` offset `0x17D2`, the waypoint handler checks `2053 == 5`. It then 
 
 The waypoint handler at `0x17CE` is entry `CF` of the table at `0x1572`. Opcode `0024` in the script calls the native resolver at `06022278`. The resolver uses current location and selected destination with its group table at `060594F8`. Its result is the next path node. The visible room label selects the destination and the path may visit several intermediate nodes.
 
-The chapter dispatch identifies Ogami's room as `D4` and Iris's room as `D9`. The route table gives `D4` a single exit through `CF`, so a natural route from Ogami's room toward Iris's room crosses the target waypoint. From other starting rooms, the forced Sakura or Sumire scenes can interrupt the route. Check current location again after those scenes before selecting Iris's room.
+The live second-floor dispatch identifies Ayame's Room as `D4`, Captain's Quarter as `D5`, and Iris's Room as `DA`. The route table gives `D4` a single exit through `CF`. After the Sakura balcony and Sumire salon scenes, enter Ayame's Room from the second-floor map. Move the door cursor down until it turns into a walking-person icon and confirm. This returns to the map with current node `D4`. Selecting Iris's Room then takes the hallway route through `CF`.
 
 The handler calls the encounter at `0x3322`, where the script sets `102B`, shows BG1129 and NC55, then selects BG2517, BG2053 and NC3517. The first NC3517 operand is at `0x33CE`. There are 14 calls to this body in `0904.BIN`, and the other four-digit story BIN files across both prepared English discs contain no identical body opcode. These are script observations.
 
@@ -50,7 +50,24 @@ The festival cursor moves to the far right edge and confirms to leave the stalls
 
 The tactical route records Kohran's attack and subsequent enemy attack, then the allies' retreat through the shrine gate. Kanna retreats after taking damage before the remaining party clears the gate. The next tactical map opens and gives Iris the first move. The tactical receipts use the portable interpreter through this boundary. [Bounded EVT12 strict coverage](evt-overlay-registry.md) has its own witness scope.
 
-The states, battery images, inputs, screenshots and logs stay in the private archive at `local/work/codex-th1/nc3517-live/`. The two story-route journals record the exact sequence, inputs and state hashes through MAP12 turn 2. This evidence establishes a natural Iris-selected start for further replay. NC3517 rendering, the natural Chapter 9 draw, and package coverage remain open.
+The states, battery images, inputs, screenshots and logs stay in the private archive at `local/work/codex-th1/nc3517-live/`. The two story-route journals record the exact sequence, inputs and state hashes through MAP12 turn 2. This evidence establishes the natural Iris-selected start for the Chapter 9 replay below.
+
+## Natural Chapter 9 witness
+
+The English disc 2 replay won the MAP16 theater defense with all seven allies active. Maria's normal shot reduced Shika from 37 HP to 0. The in-game File 1 save after 0903 has battery image SHA-256 `b38873d51699152082efce9e9778f3e1b2b81a9feca6c0a5ac20480c4b5fb68b`. Resuming reads 12 sectors of `0904.BIN` at FAD 109650. The checkpoints before and after that read retain `2053=5` and `102B=0`.
+
+Exiting Ayame's door returns to the map with `10F0=10F1=10F2=D4` and `102B=0`. Selecting Iris's Room starts the `CF` handler, which redirects the next location to `D0`. The visit flag changes from 0 at field 320 to 1 at field 480 of the click replay, and the game reads BG1129 at FAD 118748. This is the hallway encounter before the bedroom picture.
+
+The next input slice reads BG2517 at FAD 129192, BG2053 at FAD 124053, and NC3517 at FAD 140992. Starting from its field-900 checkpoint, the rebased input reproduced all 240 archived frame hashes across those reads. At field 30 of the rebased replay, the BG2517 tiles are in VDP2 and the BG2053 tiles are in Low WRAM. By field 60 both plate textures are in VDP2 and the NC3517 texture is in VDP1.
+
+| Private checkpoint | SHA-256 | Observation |
+| --- | --- | --- |
+| `iris-0904-earned-from-d4-hover/terminal.state` | `57b1f99e50a546de38a020edd494e78286d27dfb8a13e6d93bec74073f0d4a92` | Before the click into the hallway route from D4. |
+| `iris-0904-earned-nightmare1/f900.state` | `c9e40ec05ecb2bb6d360617dedeeabaec2a3df5e3dbe85633e24007f0e998253` | Before the two plate reads and body read. |
+| `iris-0904-earned-nightmare1/f1260.state` | `b1d855e8f057b586364c1e24c2b05acef49f6a4dcabd6e8d240cdb3bcbc2391b` | Both faces are visible. The left mouth selects authored index 4. |
+| `iris-0904-earned-nightmare1/f1440.state` | `f7a35c629ce74e7489d2e92514f34145a71122c796a2166e0b3e61d939197b51` | The left mouth selects authored index 6. |
+
+Nine sampled states draw the exact 200 × 80 NC3517 body at `(48,8)` with palette bank 0. Their native face sprites align at `(112,16)`, `(56,48)`, `(184,24)`, and `(192,56)` for left eyes, left mouth, right eyes, and right mouth, respectively. The journal `iris-natural-0904-nc3517-journal.json` records 35 clips and 62,820 fields from the 0903 continuation through the first bedroom draw. The states, inputs, screenshots and palette scan are retained privately under `local/work/codex-th1/nc3517-live/`.
 
 ## Offline body and face registration checkpoint
 
@@ -76,10 +93,7 @@ donor region contains opaque art and passes the chroma check.
 
 The four candidate groups consume the 26,496-byte native tail exactly.
 Each slot has a distinct byte fingerprint. The PC face origins come
-from the authored frame tables. Natural command positions, rendered
-face pairing and coverage during dialogue are pending the live 0904
-witness. Capture the frame before the FAD read and settled frames
-covering both characters' expressions. The fit scripts and private
+from the authored frame tables. The natural 0904 witness above identifies the four command positions and records distinct dialogue expressions. The fit scripts and private
 image evidence are under `local/work/codex-th1/nc3517-registration`.
 
 ### Compositor fixture and retained-state search
@@ -97,5 +111,10 @@ The retained-state search read VDP1 VRAM from 2,252 Sakura version-9
 states and found no resident match for the exact 16,000-byte texture.
 The constructed fixture separately confirmed the scanner identifies the
 active command and CRAM bank. The fixture and build receipts are private
-under `local/work/codex-th1/nc3517-registration`. Native 0904 placement
-and face animation still require the natural route witness.
+under `local/work/codex-th1/nc3517-registration`. The later natural route provides separate live sprite and expression evidence.
+
+## Natural 0904 body and faces
+
+Patch 0247 registers the PC body and four expression groups against the native draw commands. It draws each expression only when the corresponding body overlay was drawn and the native command, geometry, palette and visible pixels match. Transparent texels and unsupported overlap retain the native draw.
+
+At 2560 × 1440 the ordinary-input English disc 2 Iris route produced the body and both faces. The alternate-expression checkpoint comparison changed 650,429 pixels inside (535, 40)–(1896, 589). Original, the truncated PC donor, and the pre-body checkpoint each matched their control RGB exactly. Each donor/control pair matched all 48 guest hashes and final SRAM with zero interpreted blocks. The missing-donor control used the same checkpoint and settings. The earlier controlled fixture exercised native occlusion. Package inclusion is pending.
