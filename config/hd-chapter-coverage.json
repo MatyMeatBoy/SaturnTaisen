@@ -4186,10 +4186,11 @@
         "bodies": {
           "1:/SAKURA1/NC24.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-6.md#west-staircase-and-file-0602",
+            "evidence": "docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602",
             "pc": "SAKURA1/NC/NC24.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC26.BIN": {
             "association": "observed",
@@ -4209,10 +4210,11 @@
           },
           "1:/SAKURA1/NC42.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-6.md#west-staircase-and-file-0602",
+            "evidence": "docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602",
             "pc": "SAKURA1/NC/NC42.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC95.BIN": {
             "association": "observed",
