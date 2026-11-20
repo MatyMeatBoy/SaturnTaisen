@@ -2,6 +2,8 @@
 
 Workers can pick independent shards across scenes, character art, menus, tactical mode or performance. A shard may cover one complete image or a group of images that share the same runtime path and can be tested together. Rules for every shard: author MatyMeatBoy, PRs only (the coordinator reviews and merges), never commit discs, BIOS, saves, game pixels, `local/` or original PC assets (names, hashes, scores and code are fine), do not move the approved Zoom framing, guest hashes must stay identical (`interpreted 0`, same per-frame hashes as `main`), update `docs/PENDIENTES.md` with what is implemented, tested and packaged. Read `docs/HANDOFF.md` and `docs/research/hd-completion-handoff.md` first. Runtime code lives in the satrecomp dependency as a numbered patch in `patches/` (see `tools/build_runtime.py`); do not run it while someone else has unrecorded dependency changes.
 
+Pick new HD work from the [resource queue THD01–THD32](PENDIENTES.md#hd-pendiente-por-recurso). The sections below retain the earlier task IDs, render paths and evidence. Use the new queue for assignments and the 30-minute claim check.
+
 "Needs assets" means the shard cannot be finished without the owner's own Saturn discs and PC edition; a bot without them can still do the **code and tests** half (use the synthetic tests) and leave the data half to the owner.
 
 ## Priority: playback performance and HD
