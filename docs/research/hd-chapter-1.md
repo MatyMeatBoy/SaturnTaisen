@@ -185,3 +185,42 @@ about the unassigned pool no longer describe chapter 1.
 - Other occurrences of the `0169` emblem: only the Spanish letter scene is witnessed.
 - `00a1` evidence covers only the English disc 1 route; disc 2 and Chapter 7 are outside it.
 - Tactical units and menus/HUD have no chapter 1 data in the register.
+
+## Night patrol scene draws
+
+Three English disc-1 night patrol branches begin from the archived
+`leave-dressing.state` after the dressing room visit. Each uses only
+controller movies to move the theater map cursor and confirm a room.
+The branch saves and input movies are under
+`local/work/codex-witness-441-review/hud/early-alt-plates/ch1-doors/`.
+
+| Physical PC donor | Saturn source FAD | First branch | Continuation and checkpoint field | Changed RGB pixels per capture |
+| --- | ---: | --- | --- | ---: |
+| `BG1043.SPR` | 140008 | `leave-dressing-room-top-middle` | `door-landings/room-top-middle-14`, 299 | 1,961,600 |
+| `BG1057.SPR` | 140330 | `leave-dressing-return-upstairs` | `stairs-landings/return-upstairs-1000-16`, 299 | 2,032,051 |
+| `BG1010.SPR` | 139249 | `leave-dressing-room-top-middle` | `room-landings/foyer`, 619 | 2,029,148 |
+
+The native room images at each captured checkpoint match the corresponding
+decoded Saturn plate across all 41,472 viewport pixels. The rooms are a
+storage area, a tatami room and the entrance hall respectively. All branch
+relays completed in strict-native mode without interpreted blocks.
+
+Each A/B pair used neutral input for 36 fields at 2560×1440 with D3D11,
+the same saved checkpoint and the same runtime. Only the listed donor
+was added to the second profile. The 108 guest hashes and all three
+terminal SRAM pairs match with zero interpreted blocks. Both arms used
+the cumulative 0213 runtime SHA-256
+`02AC1AAAB7D0CBDFEA8A3E1950D1583B7FEBF765AC5D0B67319678BC93C0E89C`.
+
+All six A/B samples at fields 8 and 30 show the corresponding donor.
+Changes stay within the existing Zoom rectangle (272, 29)–(2288, 1037).
+All changed control pixels match independently decoded Saturn RGB555
+nearest samples. All changed donor pixels match an independently decoded
+bilinear PC sample within two levels per channel. The 1440p captures and
+receipts are under
+`local/work/codex-witness-441-review/hud/ch1-night-plates/`.
+
+The nearby deployment composition matched many BG1194 colors in an
+offline image search. VDP2 tiles and palettes identify BG1193 and BG4370
+in that checkpoint, and supplying BG1194 produced identical RGB in both
+arms. BG1194 remains outside the verified rows.

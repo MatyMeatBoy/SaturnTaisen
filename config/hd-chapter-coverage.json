@@ -2149,6 +2149,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1010.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#night-patrol-scene-draws",
+            "pc": "SAKURA1/BG/BG1010.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-1.md#night-patrol-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1011.BIN": {
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
@@ -2190,6 +2198,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1043.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#night-patrol-scene-draws",
+            "pc": "SAKURA1/BG/BG1043.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-1.md#night-patrol-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1045.BIN": {
             "association": "observed",
             "evidence": "docs/research/coverage-campaign-v026.md",
@@ -2203,6 +2219,14 @@
             "evidence": "docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1",
             "pc": "SAKURA1/BG/BG1046.SPR",
             "runtime_evidence": "docs/research/scene-spot-check.md#bg1007-bg1046-and-bg1058-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG1057.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-1.md#night-patrol-scene-draws",
+            "pc": "SAKURA1/BG/BG1057.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-1.md#night-patrol-scene-draws",
             "status": "hd",
             "verified_in_game": true
           },
@@ -12697,11 +12721,6 @@
         "pc": "SAKURA1/BG/BG1009.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1010.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1010.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1013.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1013.SPR",
@@ -12822,11 +12841,6 @@
         "pc": "SAKURA1/BG/BG1042.SPR",
         "status": "hd"
       },
-      "1:/SAKURA1/BG1043.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1043.SPR",
-        "status": "hd"
-      },
       "1:/SAKURA1/BG1044.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1044.SPR",
@@ -12880,11 +12894,6 @@
       "1:/SAKURA1/BG1056.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1056.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1057.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1057.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1059.BIN": {
