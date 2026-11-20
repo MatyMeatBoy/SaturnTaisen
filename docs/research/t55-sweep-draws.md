@@ -105,4 +105,4 @@ pixels. At field 16499, the patched 72-field donor and control
 comparison produces identical PNGs with the figure present. Guest
 hashes and final SRAM match within both pairs, with zero interpreted
 blocks. This verifies the opaque donor and the translucent fallback.
-Mixing the figure with the HD plate and public packaging remain open.
+Patch 0255 ships in [v0.2.24-alpha](../releases/v0.2.24-alpha.md). Mixing the figure with the HD plate remains open.
