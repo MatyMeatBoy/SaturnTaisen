@@ -10,6 +10,7 @@ English bytes are exactly the expected ones, so a wrong offset fails loudly.
 from __future__ import annotations
 
 import argparse
+from hashlib import sha256
 import os
 import struct
 import sys
@@ -353,6 +354,53 @@ def pixel_word(text: str, w: int, h: int = 16, rise: int = 0):
     return [''.join(r) for r in out]
 
 
+# Block 3, sprite 1 is the unit-information panel; the guest draws its
+# title, bars, values and special-move name separately.
+TACTICAL_STATUS_LABELS = (
+    ((9, 34, 43, 15), 'Salud'),
+    ((9, 50, 43, 14), 'Ánimo'),
+    ((49, 72, 24, 15), 'Atq'),
+    ((9, 88, 39, 15), 'Piloto'),
+    ((9, 104, 39, 15), 'Armad.'),
+    ((9, 120, 39, 15), 'Conf.'),
+    ((9, 136, 39, 15), 'Poder'),
+    ((9, 160, 39, 15), 'Especial'),
+)
+
+
+def traducir_estado_tactico(wkl: bytearray):
+    """Translate only the confirmed English label boxes of a WKL status panel."""
+    from rotulos import read_indices, replace_text, write_indices
+
+    if len(wkl) < 0xEC:
+        raise ValueError('WKL: cabecera truncada')
+    directory = struct.unpack_from('>I', wkl, 0xE8)[0]
+    if directory + 32 > len(wkl):
+        raise ValueError('WKL: directorio gráfico truncado')
+    offset, length = struct.unpack_from('>II', wkl, directory + 3 * 8)
+    start, end = directory + offset, directory + offset + length
+    if length < 40 or end > len(wkl):
+        raise ValueError('WKL: bloque de estado inválido')
+    count = struct.unpack_from('>H', wkl, start)[0]
+    if count < 2 or 16 + count * 16 > length:
+        raise ValueError('WKL: tabla de imágenes de estado inválida')
+    relative, previous, width, height, _ = struct.unpack_from('>IIHHI', wkl, start + 24)
+    panel = start + 16 + count * 16 + relative + previous
+    size = width * height // 2
+    if (width, height) != (152, 184) or panel + size > end or sha256(
+        wkl[panel:panel + size]
+    ).hexdigest() != '41c2da377699bd8e619c972918ea31788d9dfc0a87a0abb097d21f2dd36c4db8':
+        raise ValueError('WKL: panel de estado inglés desconocido')
+
+    rows = read_indices(wkl, panel, width, height, 4)
+    # The verified panel uses white, muted outline and indigo ground.
+    palette = {1: (208, 208, 208), 3: (56, 56, 72), 4: (40, 40, 80)}
+    for box, text in TACTICAL_STATUS_LABELS:
+        replace_text(rows, palette, box, text, 'georgiab.ttf', 11,
+                     ink=1, bg=4, allowed=(1, 3, 4))
+    write_indices(wkl, panel, rows, 4)
+
+
 def combate(files: Files, preview):
     """Battle command bar, every stage (WKL01..WKL26.BIN): raw uncompressed 4bpp sprites, no LZ budget to
     respect. Every word is composed with the bar's own condensed pixel font (see _PIXEL_FONT) so it looks
@@ -379,7 +427,8 @@ def combate(files: Files, preview):
                         wkl[i_byte] = (v << 4) | (b & 0x0F)
                     else:
                         wkl[i_byte] = (b & 0xF0) | v
-        print(f'  combate {stage}: {len(sprites)} sprites traducidos')
+        traducir_estado_tactico(wkl)
+        print(f'  combate {stage}: {len(sprites)} sprites y ficha de unidad traducidos')
 
 
 def estado(files: Files, preview):

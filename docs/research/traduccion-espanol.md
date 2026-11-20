@@ -223,3 +223,38 @@ The uploaded ZIP digest is
 The closure snapshot counted 101,509,576,559 project bytes after removing
 5,144,675,840 bytes of superseded local diagnostic executables. The retained
 development ZIP measures 6,315,009,692 bytes.
+
+## Tactical unit information in Spanish
+
+A 2560 × 1440 strict replay of the prepared Spanish disc 1 opens the
+MAP02 command menu and selects Info. The command labels already read
+Mov, Atq, Def, Aviso and Mapa. The unit information panel still displays
+Health, Will, Atk, Pilot, Armor, Trust, Power and Special.
+
+The panel is the 152 × 184 indexed bitmap in WKL block 3, image 1.
+The live MAP02 sprite matches WKL02 at offset `0x3D6B0`. A read-only
+census found the same panel payload in all 27 WKL file instances across
+the two prepared Spanish discs. `tools/es/menus_es.py` now validates its
+dimensions and exact English payload hash before drawing Salud, Ánimo,
+Atq, Piloto, Armad., Conf., Poder and Especial. The eight label boxes
+use the existing panel ink and background indices. The frame, meter
+graphics and numeric readouts keep their original data. The unit title
+and special-attack name are separate textures.
+
+The usual Spanish menu builder reproduces all 27 prepared WKL file
+instances byte for byte outside those label boxes. A cold run from the
+ordinary Episode 2 battery save loads the patched Spanish disc-1 ISO.
+Its field-6999 checkpoint contains two exact copies of the new sprite
+and none of the English panel.
+
+A controlled A/B starts from the same archived natural Spanish battle
+checkpoint before opening Info and changes only the two exact resident
+copies of the WKL sprite in the donor state. Both 280-field strict
+replays finish with the same SRAM. Six 1440p samples before Info match
+pixel for pixel. The two Info samples differ by 61,740 pixels each,
+confined to the eight label boxes. The visible bars, values, units,
+names and terrain compare exactly.
+
+Spanish patch distribution remains pending. Other WKL panels, attack
+names and live disc-2 coverage stay open. Local receipts are under
+`local/work/codex-th1/thd22-es-audit`.
