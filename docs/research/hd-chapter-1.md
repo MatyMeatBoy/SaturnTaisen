@@ -74,6 +74,8 @@ The NC11 overlap is the timed LIPS choice display over Sakura, rather than a mis
 
 A strict replay of the frame-20 checkpoint captured the sprite plane and the separate VDP2 panel. In native rectangle (40,48)–(280,121), 6,316 of 7,811 distinct-color pixels with both planes present match `(panel × 21 + sprite × 11) / 32` with per-channel truncation. Another 168 match a sprite weight of 31, and 1,327 match no single ratio in that pair of source planes. The sprite plane already contains text, timer and chrome as well as the character, so a uniform overlay cannot recover their individual ownership. The local layer captures are under `local/work/codex-ch1-body-triage/save-prebattle-3000/`.
 
+A priority trace on the same checkpoint recorded 6,341 pixels with the panel above the sprite and the exact 11/32 sprite weight. The other 1,495 pixels with both planes present had the sprite above the panel without color calculation. The diagnostic capture matches the uninstrumented RGB exactly. This separates actual panel blends from coincidental matches to the weight of 31. The remaining requirement is VDP1 command ownership within the sprite plane, so the remaster can replace body and expression samples while retaining the glyph, timer and frame writes.
+
 
 The trace also named 62 portrait IDs after successful replacement texture upload. Each row preserves its first appearance bracket and the trace line. The separately observed viewport and blend traces can be used for renderer review.
 
