@@ -1,0 +1,757 @@
+{
+ "schema": 1,
+ "screens": {
+  "copy-select": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "288x184",
+     "texture_fnv": "621BD33F6CF0DACA"
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "144x32",
+     "texture_fnv": "E60BBF3F6AFC4E4A"
+    },
+    {
+     "colr": "0600",
+     "commands": 4,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "52C0DBB1EA90290A",
+     "pmod": "00A0",
+     "size": "40x40",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02D0",
+     "commands": 46,
+     "distinct_textures": 25,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02F0",
+     "commands": 2,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 2,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "delete-select": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "176x24",
+     "texture_fnv": "7EB44FE1D8684661"
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "288x184",
+     "texture_fnv": "621BD33F6CF0DACA"
+    },
+    {
+     "colr": "02D0",
+     "commands": 38,
+     "distinct_textures": 31,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "144x32",
+     "texture_fnv": "E60BBF3F6AFC4E4A"
+    },
+    {
+     "colr": "0600",
+     "commands": 4,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "52C0DBB1EA90290A",
+     "pmod": "00A0",
+     "size": "40x40",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02F0",
+     "commands": 17,
+     "distinct_textures": 16,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 4,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "load-confirm": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "176x24",
+     "texture_fnv": "7EB44FE1D8684661"
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "288x184",
+     "texture_fnv": "621BD33F6CF0DACA"
+    },
+    {
+     "colr": "02D0",
+     "commands": 40,
+     "distinct_textures": 31,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "0600",
+     "commands": 4,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "52C0DBB1EA90290A",
+     "pmod": "00A0",
+     "size": "40x40",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02F0",
+     "commands": 17,
+     "distinct_textures": 16,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 4,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "144x24",
+     "texture_fnv": "AF0B0D45608D9D9D"
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "144x32",
+     "texture_fnv": "E60BBF3F6AFC4E4A"
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "load-disc1": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "176x24",
+     "texture_fnv": "7EB44FE1D8684661"
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "288x184",
+     "texture_fnv": "621BD33F6CF0DACA"
+    },
+    {
+     "colr": "02D0",
+     "commands": 39,
+     "distinct_textures": 32,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "144x32",
+     "texture_fnv": "E60BBF3F6AFC4E4A"
+    },
+    {
+     "colr": "0600",
+     "commands": 4,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "52C0DBB1EA90290A",
+     "pmod": "00A0",
+     "size": "40x40",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02F0",
+     "commands": 15,
+     "distinct_textures": 14,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 2,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "load-disc2": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "176x24",
+     "texture_fnv": "7EB44FE1D8684661"
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "288x184",
+     "texture_fnv": "621BD33F6CF0DACA"
+    },
+    {
+     "colr": "02D0",
+     "commands": 39,
+     "distinct_textures": 19,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "144x32",
+     "texture_fnv": "E60BBF3F6AFC4E4A"
+    },
+    {
+     "colr": "0600",
+     "commands": 4,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "52C0DBB1EA90290A",
+     "pmod": "00A0",
+     "size": "40x40",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02F0",
+     "commands": 14,
+     "distinct_textures": 10,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "02C0",
+     "commands": 2,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "loading": {
+   "cram_banks_nonempty": 109,
+   "drawn_by": "VDP2 only (NBG0+NBG1+NBG2+NBG3)",
+   "vdp1_groups": [],
+   "vdp2": {
+    "BGON": "000F",
+    "CCCTL": "0042",
+    "CHCTLA": "0010",
+    "CHCTLB": "0022",
+    "CLOFEN": "007F",
+    "PRINA": "0000",
+    "PRINB": "0004",
+    "PRISA": "0307",
+    "SPCTL": "0001"
+   },
+   "vdp2_layers": [
+    "NBG0",
+    "NBG1",
+    "NBG2",
+    "NBG3"
+   ]
+  },
+  "options": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "A2C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "288x144",
+     "texture_fnv": "3B1D76464A70DBA4"
+    },
+    {
+     "colr": "A2F0",
+     "commands": 11,
+     "distinct_textures": 9,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "A2F0",
+     "commands": 2,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "A2D0",
+     "commands": 33,
+     "distinct_textures": 26,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "A2D0",
+     "commands": 6,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "options-controls": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "A2C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "288x144",
+     "texture_fnv": "3B1D76464A70DBA4"
+    },
+    {
+     "colr": "A2D0",
+     "commands": 70,
+     "distinct_textures": 43,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "A2D0",
+     "commands": 6,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "A2F0",
+     "commands": 14,
+     "distinct_textures": 11,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "A2F0",
+     "commands": 2,
+     "distinct_textures": 2,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "8x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "A2C0",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "809F8438D9925B74",
+     "pmod": "0080",
+     "size": "112x176",
+     "texture_fnv": "8D70DF237527E4F8"
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "program-new-continue-options": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "0500",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 1,
+     "palette_fnv": "EB0E8FBCD10F6A6A",
+     "pmod": "00A0",
+     "size": "208x152",
+     "texture_fnv": "B22B9B9708089A65"
+    },
+    {
+     "colr": "0020",
+     "commands": 13,
+     "distinct_textures": 10,
+     "kind": 1,
+     "palette_fnv": "A34A4A3675D9F164",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    },
+    {
+     "colr": "0040",
+     "commands": 8,
+     "distinct_textures": 5,
+     "kind": 1,
+     "palette_fnv": "D5E6859F7CCE70F2",
+     "pmod": "0080",
+     "size": "16x16",
+     "texture_fnv": null
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2000"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  },
+  "title": {
+   "cram_banks_nonempty": 97,
+   "drawn_by": "VDP1 sprites over VDP2 NBG3",
+   "vdp1_groups": [
+    {
+     "colr": "0600",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 2,
+     "palette_fnv": "DC1F1B06C3693D3E",
+     "pmod": "00A0",
+     "size": "112x136",
+     "texture_fnv": "22938CC575A4203F"
+    },
+    {
+     "colr": "0060",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 0,
+     "palette_fnv": "C2EF3818B85A08C6",
+     "pmod": "0080",
+     "size": "168x24",
+     "texture_fnv": "2F8AB7BB11D65EDF"
+    },
+    {
+     "colr": "0600",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 2,
+     "palette_fnv": "DC1F1B06C3693D3E",
+     "pmod": "00A0",
+     "size": "96x96",
+     "texture_fnv": "32769A3A84B30582"
+    },
+    {
+     "colr": "0600",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 2,
+     "palette_fnv": "DC1F1B06C3693D3E",
+     "pmod": "00A0",
+     "size": "152x56",
+     "texture_fnv": "6D7633E7078FA1F1"
+    },
+    {
+     "colr": "0600",
+     "commands": 2,
+     "distinct_textures": 1,
+     "kind": 2,
+     "palette_fnv": "DC1F1B06C3693D3E",
+     "pmod": "00A0",
+     "size": "64x80",
+     "texture_fnv": "CA40C2997C6F79B4"
+    },
+    {
+     "colr": "0600",
+     "commands": 1,
+     "distinct_textures": 1,
+     "kind": 2,
+     "palette_fnv": "DC1F1B06C3693D3E",
+     "pmod": "00A0",
+     "size": "24x24",
+     "texture_fnv": "97A87CF219F582CC"
+    }
+   ],
+   "vdp2": {
+    "BGON": "0808",
+    "CCCTL": "0040",
+    "CHCTLA": "1000",
+    "CHCTLB": "0020",
+    "CLOFEN": "0000",
+    "PRINA": "0600",
+    "PRINB": "0200",
+    "PRISA": "0303",
+    "SPCTL": "2020"
+   },
+   "vdp2_layers": [
+    "NBG3"
+   ]
+  }
+ }
+}
