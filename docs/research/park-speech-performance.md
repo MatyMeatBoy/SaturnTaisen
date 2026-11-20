@@ -83,3 +83,53 @@ letter checkpoint and does not isolate the delay in foreground play.
 The NC3250/BG2250 salute handoff was replayed separately with patch
 0270. All 46 captures per mode at 1440p match the archived patch
 0260 combined-build reference, with identical guest hashes.
+
+## Patch 0275 cross-route profile at 1440p
+
+Three runs of the integrated candidate used a hidden window, dummy
+audio and strict native execution. The routes covered the opening
+(1,500 fields), the park dialogue (240 fields) and tactical MAP03
+(600 fields). The numbers below exclude the first 30 fields of each
+route. Each timing run logged guest hashes. The first candidate
+run matched the archived patch 0272 hashes on all three routes.
+
+| Route | Candidate p95 range | Candidate fields over 16.67 ms per run | Patch 0272 p95 in the fresh control |
+| --- | ---: | ---: | ---: |
+| Opening | 9.70–16.35 ms | 0 / 62 / 0 | 10.22 ms |
+| Park dialogue | 11.66–15.94 ms | 1 / 9 / 0 | 12.23 ms |
+| MAP03 | 12.48–13.99 ms | 0 / 9 / 6 | 13.43 ms |
+
+The same candidate varied substantially between runs. During the
+park replay, field 33 reached 20.91 and 21.99 ms in two runs,
+of which 9.88 and 10.15 ms were VDP work. The slower tactical
+bursts moved between fields 240–243 and 370–375. These tests leave
+minimum-hardware and wider campaign coverage open. Private logs
+are in the retained release staging area under the whole-port profile
+folders.
+
+A follow-up park replay without guest hashing ran line reuse in
+default, disabled, check and default modes. Field 33 varied from
+10.84 to 25.72 ms between the two default runs. The check replay
+compared 23,088 reused lines with zero mismatches. Both default runs
+and check recorded the same 87 unstable, 42 build and 111 reuse
+fields. The observed late field alone does not isolate a correctness
+problem or a performance regression in line reuse.
+
+### Park replay with background CPU load
+
+Four alternating 1440p runs used the same integrated patch 0275
+runtime with no guest hashing and a hidden window. The two loaded
+runs started four independent normal-priority CPU loops and stopped
+them when the replay ended. All four replays finished in strict mode.
+
+| Run | p95 | Fields over 16.67 ms after field 30 |
+| --- | ---: | ---: |
+| Idle A | 22.43 ms | 29 |
+| CPU load A | 19.33 ms | 20 |
+| CPU load B | 19.95 ms | 66 |
+| Idle B | 15.28 ms | 6 |
+
+Host variation also appeared in the idle controls. The capture fixes
+and test rig remain the same across all four runs. Load on a separate
+GPU and audible WASAPI playback were outside this comparison. Private
+logs are in the park-contention-0275 staging directory.
