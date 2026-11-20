@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from tools.discover_battle_overlays import analyze_modules
-from tools.discover_registered_overlays import ROOT, build, observed_candidates, registered_module
+from tools.discover_registered_overlays import REGISTRY, ROOT, build, observed_candidates, registered_module
 
 
 class RegisteredOverlayTests(unittest.TestCase):
@@ -50,6 +50,17 @@ class RegisteredOverlayTests(unittest.TestCase):
         self.assertEqual(calls,[0x204000,0x6004000])
         self.assertEqual(blocks,{(0x204000,raw[:4]),(0x6004000,raw[:4])})
         self.assertEqual([row['base'] for row in rows],['00204000','06004000'])
+
+    def test_evt12_map12_profile_pins_the_opening_miss(self):
+        full = REGISTRY['EVT12']
+        narrow = REGISTRY['EVT12_MAP12']
+        for key in ('base', 'file', 'bytes', 'sha256'):
+            self.assertEqual(narrow[key], full[key])
+        ranges = json.loads((ROOT / 'config' / narrow['observed_ranges']).read_text(encoding='ascii'))
+        self.assertEqual(len(ranges), 468)
+        self.assertIn([0x1FB0, 18], ranges)
+        self.assertEqual(len(observed_candidates(dict(base=narrow['base'], raw=bytes(narrow['bytes'])), ranges)),
+                         468)
 
     def test_observed_candidates_read_only_registered_ranges(self):
         module = dict(base=0x06080000, raw=bytes(range(16)))

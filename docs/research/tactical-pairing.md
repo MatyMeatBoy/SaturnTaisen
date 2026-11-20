@@ -123,3 +123,15 @@ uses the portable interpreter for the guest and the same tested
 Direct3D 11 frontend. The private candidate SHA-256 is
 `6cfb6c8e2c1bd22897a01fe2f58851f7922750ece2b9337ced28e2e3acc04757`.
 States and captures stay under `local/work/codex-th1/map12-0193/`.
+
+
+### Retained map signature scan
+
+A read-only scan checks the 8,192 pattern-name bytes at VRAM page
+`0x40000` in 1,672 retained states against all 17 derived #440 keys.
+The MAP12 key occurs in 42 states. The proposed MAP15 key occurs in
+six early MAP15 states. The proposed MAP16 key occurs in 107 states
+from the later MAP15 battle. The page bytes identify a cached pattern
+layout and can change during that same battle. Route and layer evidence
+are required before assigning a donor to another key. No other proposed
+key occurs in this archive.
