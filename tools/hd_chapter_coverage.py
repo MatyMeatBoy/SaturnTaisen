@@ -166,7 +166,13 @@ MENU_CENSUS = 'docs/research/pc-menu-hud-inventory.json'
 # The documented draws include partial native faces and conditional fallbacks.
 BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'NC97', 'NC3250'}  # NC10, NC50, NC3250: docs/research/coverage-campaign-v026.md
 # Draw evidence applies to the exact disc, resource, and chapter observed.
+NARRATIVE_CUTOUT_DRAWS = {
+    (1, f'/SAKURA1/{name}.BIN'): (5, 'docs/research/narrative-foreground-cutouts.md')
+    for name in ('BG3132', 'BG3133')
+}
+
 SCENE_DRAWS = {
+    **NARRATIVE_CUTOUT_DRAWS,
     (1, '/SAKURA1/BG1198.BIN'): (5, 'docs/research/hd-chapter-5.md#verified-bg1198-replacement'),
     (1, '/SAKURA1/BG1031.BIN'): (3, 'docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1'),
     (1, '/SAKURA1/BG1076.BIN'): (3, 'docs/research/scene-spot-check.md#bg1031-and-bg1076-on-english-disc-1'),
@@ -629,6 +635,8 @@ def build(root, index_dir, portrait_audit):
                         row.update(verified_in_game=True, runtime_evidence=EVE0101_REPORT)
                 elif (disc, path) == (1, '/SAKURA2/EVE202.BIN'):
                     row.update(status='hd', verified_in_game=True, runtime_evidence=EVE202_REPORT)
+                elif (disc, path) in NARRATIVE_CUTOUT_DRAWS:
+                    row.update(status='hd', verified_in_game=True, runtime_evidence=NARRATIVE_CUTOUT_DRAWS[(disc, path)][1])
                 elif path == '/SAKURA1/BG2295.BIN' or name in bg_review.get('guarded_viewport', []):
                     row['status'] = 'hd'
                 elif path == '/SAKURA1/BG1285.BIN':

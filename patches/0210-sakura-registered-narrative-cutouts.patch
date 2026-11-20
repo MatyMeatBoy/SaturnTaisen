@@ -1,0 +1,164 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -404,6 +404,7 @@
+     SDL_Texture *mapBackdropTexture=nullptr;
+     SDL_Texture* irisComboTexture = nullptr;
+     SDL_Texture* comboCardTexture = nullptr;
++    SDL_Texture* narrativeCutoutTexture = nullptr;
+     SDL_Texture* bg2093Composite = nullptr;
+     std::vector<uint32_t> tacticalPatch,tacticalPixels;
+     SakuraUi sakuraUi;
+@@ -681,6 +682,8 @@
+         irisComboTexture = nullptr;
+         if (comboCardTexture) SDL_DestroyTexture(comboCardTexture);
+         comboCardTexture = nullptr;
++        if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
++        narrativeCutoutTexture = nullptr;
+         if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
+         bg2093Composite = nullptr;
+         if (shaded) {
+@@ -835,6 +838,42 @@
+     std::array<SceneHd, 2> comboCards;
+     std::array<std::vector<uint32_t>, 2> comboCardArt;
+     std::vector<uint32_t> comboCardPixels;
++    struct NarrativeCutout {
++        uint64_t palette, cells, nativeHash, donorHash;
++        const char* discFile;
++        const char* pcFile;
++        size_t donorBytes;
++        int scaleX, scaleY, offsetX, offsetY;
++    };
++    constexpr std::array<NarrativeCutout, 2> narrativeCutouts{{
++        {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
++            "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 2055, 2220, -10500, -5000},
++        {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
++            "BG3133.BIN", "SAKURA1/BG/BG3133.SPR", 83377, 2080, 2235, -30000, -1000},
++    }};
++    struct NarrativeCutoutArt {
++        SceneHd hd;
++        std::vector<uint32_t> native, registered;
++    };
++    std::array<NarrativeCutoutArt, narrativeCutouts.size()> narrativeCutoutArt;
++    std::vector<uint8_t> cutoutVisibility, uploadedCutoutVisibility;
++    std::vector<uint32_t> cutoutPixels;
++    size_t uploadedCutout = narrativeCutouts.size();
++    const auto decodeNarrativeCutout = [](std::span<const uint8_t> bytes, uint64_t fingerprint) {
++        constexpr int w = 288, h = 144, tiles = 0x50, palette = tiles + w * h;
++        std::vector<uint32_t> rgb;
++        if (bytes.size() != 45120 || AtlasFingerprint(bytes) != fingerprint)
++            return rgb;
++        rgb.resize(w * h);
++        for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
++            const int tile = (y / 8) * (w / 8) + x / 8;
++            const int dot = bytes[tiles + tile * 64 + (y % 8) * 8 + x % 8];
++            const uint16_t word = (uint16_t(bytes[palette + 2 * dot]) << 8) | bytes[palette + 2 * dot + 1];
++            rgb[size_t(y) * w + x] = uint32_t(word & 31) << 3 | uint32_t(word & 0x3E0) << 6 |
++                uint32_t(word & 0x7C00) << 9;
++        }
++        return rgb;
++    };
+     // TP2: one slot per row of kScrollPictures (native pixels decoded once, PC texture loaded once).
+     struct ScrollState {SceneHd hd; std::vector<uint32_t> pixels;};
+     std::array<ScrollState, kScrollPictureCount> scrollState;
+@@ -3404,6 +3443,91 @@
+                                     SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+                             }
+                         }
++                        if (shownDisc == 1 && !choosing && !port.menu.IsOpen() && port.videoRenderer &&
++                            !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++                            imageTarget.w >= 576 && planes.source.size() == 320 * 224 &&
++                            planes.topSource.size() == planes.source.size() && softwareShown.size() == planes.source.size()) {
++                            constexpr int w = 288, h = 144, width2 = w * 2;
++                            constexpr uint32_t nativeKey = 0xF8F800;
++                            const auto palette = port.videoRenderer->BackgroundPaletteFingerprint(4);
++                            for (size_t slot = 0; slot < narrativeCutouts.size(); ++slot) {
++                                const auto& row = narrativeCutouts[slot];
++                                if (row.palette != palette || !port.videoRenderer->BackgroundIsOpaque(4) ||
++                                    port.videoRenderer->BackgroundCellFingerprint(4, w * h) != row.cells)
++                                    continue;
++                                auto& art = narrativeCutoutArt[slot];
++                                if (!art.hd.tried) {
++                                    art.hd.tried = true;
++                                    std::vector<uint8_t> native;
++                                    if (port.discFiles.ReadBounded(row.discFile, native, 45120))
++                                        art.native = decodeNarrativeCutout(native, row.nativeHash);
++                                    if (!art.native.empty())
++                                        queuePinnedPan(art.hd, row.pcFile, row.donorBytes, row.donorHash, width2, 320);
++                                }
++                                if (art.hd.pending.valid() &&
++                                    art.hd.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                                    auto donor = art.hd.pending.get();
++                                    if (!donor.pixels.empty()) {
++                                        art.registered.resize(width2 * h * 2);
++                                        for (int y = 0; y < h * 2; ++y) for (int x = 0; x < width2; ++x) {
++                                            const int sx = row.scaleX * (2 * x + 1) + 4 * row.offsetX;
++                                            const int sy = row.scaleY * (2 * y + 1) + 4 * row.offsetY;
++                                            if (sx < 0 || sy < 0 || sx / 4000 >= width2 || sy / 4000 >= 320) continue;
++                                            const uint32_t pixel = donor.pixels[size_t(sy / 4000) * width2 + sx / 4000];
++                                            if ((pixel & 0xFFFFFF) != 0xFFFF00)
++                                                art.registered[size_t(y) * width2 + x] = pixel | 0xFF000000;
++                                        }
++                                    }
++                                }
++                                if (art.registered.empty()) break;
++                                cutoutVisibility.resize(w * h);
++                                bool visible = false;
++                                for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
++                                    const size_t offset = size_t(y) * w + x;
++                                    const size_t at = size_t(y + 8) * 320 + x + 16;
++                                    const uint32_t rgb = art.native[offset];
++                                    // Retain the native edge and any overlapping actors or color calculation.
++                                    const bool owns = rgb != nativeKey && planes.topSource[at] == 4 &&
++                                        planes.source[at] == 4 && (softwareShown[at] & 0xFFFFFF) == rgb &&
++                                        (x == 0 || art.native[offset - 1] != nativeKey) &&
++                                        (x + 1 == w || art.native[offset + 1] != nativeKey) &&
++                                        (y == 0 || art.native[offset - w] != nativeKey) &&
++                                        (y + 1 == h || art.native[offset + w] != nativeKey);
++                                    cutoutVisibility[offset] = owns;
++                                    visible |= owns;
++                                }
++                                if (!visible) break;
++                                if (!narrativeCutoutTexture) {
++                                    narrativeCutoutTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                        SDL_TEXTUREACCESS_STREAMING, width2, 2 * h);
++                                    if (narrativeCutoutTexture &&
++                                        (!SDL_SetTextureScaleMode(narrativeCutoutTexture, SDL_SCALEMODE_NEAREST) ||
++                                         !SDL_SetTextureBlendMode(narrativeCutoutTexture, SDL_BLENDMODE_BLEND))) {
++                                        SDL_DestroyTexture(narrativeCutoutTexture);
++                                        narrativeCutoutTexture = nullptr;
++                                    }
++                                    uploadedCutout = narrativeCutouts.size();
++                                }
++                                if (!narrativeCutoutTexture) break;
++                                if (uploadedCutout != slot || cutoutVisibility != uploadedCutoutVisibility) {
++                                    cutoutPixels = art.registered;
++                                    for (int y = 0; y < h * 2; ++y) for (int x = 0; x < width2; ++x)
++                                        if (!cutoutVisibility[size_t(y / 2) * w + x / 2])
++                                            cutoutPixels[size_t(y) * width2 + x] = 0;
++                                    if (!SDL_UpdateTexture(narrativeCutoutTexture, nullptr, cutoutPixels.data(),
++                                                           width2 * sizeof(uint32_t))) {
++                                        uploadedCutout = narrativeCutouts.size();
++                                        break;
++                                    }
++                                    uploadedCutout = slot;
++                                    uploadedCutoutVisibility = cutoutVisibility;
++                                }
++                                if (SDL_RenderTexture(renderer, narrativeCutoutTexture, nullptr, &imageTarget) &&
++                                    std::getenv("SATRECOMP_NARRATIVE_CUTOUT_TRACE"))
++                                    std::fprintf(stderr, "verified narrative cut-out: %s\n", row.discFile);
++                                break;
++                            }
++                        }
+                         if (!bodyDraw.valid && !choosing && !port.menu.IsOpen() &&
+                             satrecomp::FeatureValue("pc_hd_backgrounds") == 0 && !port.opt.pcAssetsPath.empty() &&
+                             imageTarget.w >= 576.0f && imageTarget.w == 288.0f * std::floor(imageTarget.w / 288.0f) &&
+@@ -4857,6 +4981,8 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
++                narrativeCutoutTexture = nullptr;
+                 for (auto& overlay : loadPanelOverlays) {
+                     if (overlay.texture) SDL_DestroyTexture(overlay.texture);
+                     overlay.texture = nullptr;
