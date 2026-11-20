@@ -101,3 +101,20 @@ The donor and missing-donor profiles from that checkpoint ran 48 strict fields a
 The two previous covered-plate cases still match their recorded 1440p RGB difference counts on the new executable. BG2140 changes 505,778 pixels and BG2523 changes 450,169. Both 48-field pairs match guest hashes and SRAM with zero interpreted blocks.
 
 Private evidence: `local/work/codex-th1/thd38-ep10/bg2057-final-*` and `bg2057-regression-*`. Release packaging is pending.
+
+## BG2025 in the ending route
+
+The English disc 2 ending checkpoints at fields 7199 and 9599 show
+BG2025 on source 2 and source 4 respectively. Each exposes 8,953
+background pixels. Patch 0265 permits the exact plate to use the
+registered PC donor when the visible source and top layer agree.
+
+In seven samples at 2560 × 1440, exactly 438,697 pixels change inside
+the exposed plate. The changes match the Saturn decode before and
+the registered BG2025 donor after. The foreground and dialogue
+remain exact, and the captures after the cut match the control.
+The invalid donor and Original controls also match. After rebasing
+onto patch 0263, 60 captures across BG2025, BG2014 and their controls
+match the independent results, with identical guest hashes and final
+SRAM and zero interpreted blocks. BG2025 adds one unique verification.
+Package inclusion is pending.

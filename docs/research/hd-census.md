@@ -23,7 +23,7 @@ python -m unittest tests.test_hd_census
 
 | Tipo | Denominador (candidatos) | Excluidos por diseño | Meta | hd | wired-unverified | Bloqueados | Sin pareja / sin conectar | % integrado | Verificado | % verificado |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Fondos de escena (BG) | 665 | 87 | 578 | 525 | 0 | 0 | 53 | 90,8% | 157 | 27,1% |
+| Fondos de escena (BG) | 665 | 87 | 578 | 525 | 0 | 0 | 53 | 90,8% | 158 | 27,3% |
 | Fondos EVE/BBG (batalla y evento) | 50 | 0 | 50 | 36 | 0 | 8 | 6 | 72,0% | 6 | 12,0% |
 | EVENT (SAKURA2/EVENT) | 214 | 0 | 214 | 0 | 0 | 0 | 214 | 0,0% | 0 | 0,0% |
 | CG (SAKURA3/CG) | 219 | 0 | 219 | 3 | 0 | 5 | 211 | 1,3% | 3 | 1,3% |
@@ -59,7 +59,7 @@ python -m unittest tests.test_hd_census
 | Fondos decorativos KABE | - | - | Sin fila por tema en el registro; el recuento viene de hd-progress.json. 25 WALL PC, 19 temas usados. Verificación: THD25.  |
 | Tarjetas de episodio | - | - | Marco y rótulo español de los 10 episodios en el paquete; solo el episodio 1 tiene testigo de dibujo. Los 10 TITLE PC se excluyen (letras japonesas).  |
 
-Escena (7 carpetas SPR): candidatos 1192, excluidos 97, meta 1095, hd 587 (53,6%), verificados 173 (15,7%), bloqueados 13, sin pareja o sin fila 495; de los hd, 24 aún tienen otra clave pendiente (parcial).
+Escena (7 carpetas SPR): candidatos 1192, excluidos 97, meta 1095, hd 587 (53,6%), verificados 174 (15,8%), bloqueados 13, sin pareja o sin fila 495; de los hd, 24 aún tienen otra clave pendiente (parcial).
 
 Donantes de escena que cuentan en dos estados: 22 hd y excluido a la vez, 24 hd con otra clave pendiente. Rutas físicas extra de familias exactas presentes en el registro: 23. Comparten una identidad de conteo y conservan sus rutas del runtime.
 
