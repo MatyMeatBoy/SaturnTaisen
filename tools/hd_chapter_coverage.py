@@ -225,6 +225,7 @@ SCENE_DRAWS = {
     (1, '/SAKURA1/BG1181.BIN'): (7, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (1, '/SAKURA1/BG1178.BIN'): (7, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (1, '/SAKURA1/BG2160.BIN'): (7, 'docs/research/hd-chapter-7.md#verified-bg2160-on-the-episode-7-route'),
+    (1, '/SAKURA1/BG2014.BIN'): (7, 'docs/research/hd-chapter-7.md#bg2014-behind-nc3014'),
     (2, '/SAKURA1/BG1195.BIN'): (8, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (2, '/SAKURA1/BG2160.BIN'): (9, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (2, '/SAKURA1/BG2166.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),

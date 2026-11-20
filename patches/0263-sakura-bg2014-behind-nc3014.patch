@@ -1,0 +1,58 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -3086,6 +3086,7 @@
+                         for(int y=153;y<156;y++)for(int x=20;x<308;x++)
+                             if(IsOldPictureShadow(x,y,planes.source[y*320+x]))zoomForeground[y*320+x]=0;
+                         BodyDraw bodyDraw;
++                        bool nativeBg2014Actor=false;
+                         bool salutePair=false,salutePlate=false;
+                         if(!port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 && port.videoRenderer &&
+                            planes.source.size()==320*224 && planes.spriteWhiteWeight.size()==320*224 && zoomForeground.size()==320*224) {
+@@ -3101,6 +3102,7 @@
+                             if(slot>=0) {
+                                 auto& st=bodyHd[size_t(slot)];
+                                 const auto& entry=kBodies[slot];
++                                nativeBg2014Actor=entry.hash==0x9848E2350C555F67ull;
+                                 salutePair=entry.hash==0x21177A047AEA5DA5ull &&
+                                     port.videoRenderer->BackgroundPaletteFingerprint(2)==0x9C0FF162F58EEF08ull &&
+                                     port.videoRenderer->BackgroundCellFingerprint(2,41472)==0xC4C7F645EC52ABC2ull;
+@@ -3759,7 +3761,23 @@
+                                         }
+                                         if (!exactPlate) continue;
+                                     }
+-                                    if (visible < 12000) {
++                                    const bool bg2014 = layer == 2 && fingerprint == 0x64FFEF3B3722EFB9ull &&
++                                        slot >= kSceneBgCount && kSceneBgAmbiguous[slot-kSceneBgCount].cells == 0xF9044D5647376C35ull;
++                                    bool underNc3014 = visible >= 11000 && visible < 12000 && bg2014 &&
++                                        shownDisc == 1 && nativeBg2014Actor && !choosing && !port.menu.IsOpen() &&
++                                        planes.topSource.size() == planes.source.size() && port.videoRenderer->BackgroundIsOpaque(2);
++                                    if (underNc3014) {
++                                        // The large opaque character covers most of this plate. Only use the
++                                        // PC pixels where the actual top layer is the recognized background.
++                                        for (int y=8;y<152 && underNc3014;++y) for (int x=16;x<304;++x) {
++                                            const auto at = size_t(y)*320+x;
++                                            if ((planes.source[at] == layer) != (planes.topSource[at] == layer)) {
++                                                underNc3014=false;
++                                                break;
++                                            }
++                                        }
++                                    }
++                                    if (visible < 12000 && !underNc3014) {
+                                         if (layer != 2 || shownDisc != 2 || visible < 9500 || choosing || port.menu.IsOpen())
+                                             continue;
+                                         uint64_t lowerCells = 0, upperPalette = 0, upperCells = 0;
+@@ -3794,10 +3812,12 @@
+                                         // Decode the PC picture on a worker thread: doing it here cost about 20 ms
+                                         // the first time a picture appeared. Until it is ready the native one shows.
+                                         hd.tried=true;
+-                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex,nightCorridor,offset]() {
++                                        hd.pending=std::async(std::launch::async,[file=std::filesystem::u8path(port.opt.pcAssetsPath)/sceneFile,index=sceneIndex,nightCorridor,offset,bg2014]() {
+                                             SceneHdPixels result;
+                                             std::vector<uint8_t> bytes;
+                                             if(!ReadPcBackdropFile(file,bytes,64u<<20))return result;
++                                            if (bg2014 && (bytes.size() != 53146 || AtlasFingerprint(bytes) != 0x8B72773A31DA24ADull))
++                                                return result;
+                                             std::vector<PcSprite> images;std::string error;
+                                             if(!DecodePcSprites(bytes,images,error))return result;
+                                             for(auto& image:images)if(image.index==index && image.width && image.height) {

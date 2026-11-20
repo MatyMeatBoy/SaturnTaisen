@@ -103,3 +103,22 @@ within two channel levels with it. The changes stayed inside
 matching guest hashes across 5,100 fields, identical save memory and
 zero interpreted blocks. BG2160 was already counted through its disc 2
 witness, so this adds the Episode 7 appearance to the evidence.
+
+## BG2014 behind NC3014
+
+At the opening of the retained Episode 7 continuation, NC3014 covers
+most of the background. Only 11,137 native image pixels are attributed
+to BG2014, below the ordinary 12,000-pixel HD threshold. Patch 0263
+accepts this exact disc, palette, cells and actor identity at 11,000
+exposed pixels when source and top-layer ownership agree. It also
+checks the donor size and full file fingerprint.
+
+In the native-actor tests at 1440p, 239,408–241,941 changed pixels
+matched the Saturn RGB before and the independent PC decode within
+two channel levels after. With the HD actor active, 195,833 pixels
+changed, including approximately 840 along the anti-aliased face
+contour where it blends with the new background. The opaque actor
+and protected areas matched. Missing and invalid donor controls and
+both Original profiles matched. Each 200-field strict pair had the
+same guest hashes and save memory with zero interpreted blocks.
+This adds one unique verified PC file. Package inclusion is pending.
