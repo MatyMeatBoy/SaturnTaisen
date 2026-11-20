@@ -174,7 +174,8 @@
       "patches/0176-sakura-registered-nc56-faces.patch",
       "patches/0177-sakura-registered-nc51-faces.patch",
       "patches/0178-sakura-compact-aligned-mixed-textures.patch",
-      "patches/0179-sakura-registered-nc96-faces.patch"
+      "patches/0179-sakura-registered-nc96-faces.patch",
+      "patches/0180-sakura-registered-nc21-faces.patch"
     ]
   }
 }
