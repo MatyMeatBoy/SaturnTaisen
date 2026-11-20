@@ -462,7 +462,8 @@ def disc_for(chapter):
 def asset_category(path):
     name = Path(path).name
     for pattern, category in (
-        (r'(?:BG\d+|BBG\d+|EVE\d+|(?!LIPS_)\w+_CG|CG\d+|TITLE\d+|IC\d+)\.BIN', 'scene-pictures'),
+        (r'(?:BG(?:\d+|HANA|KOIKOI|MAIGO|RYORI|SLOT|SOUJI|SWIM|SYATE)|BBG\d+|EVE\d+|'
+         r'(?!LIPS_)\w+_CG|CG\d+|TITLE\d+|IC\d+)\.BIN', 'scene-pictures'),
         (r'NC\d+\.BIN', 'bodies'),
         (r'\d{4}FCE\.BIN', 'portraits'),
         (r'MAP\d+\.BIN', 'tactical-maps'),
@@ -599,6 +600,7 @@ def build(root, index_dir, portrait_audit):
     bounded_films = {(edit['disc'], edit['movie']): edit['spans']
                      for edit in config('film-video-spans')['edits']}
     bg = pairs(config('hd-scene-bg-map'))
+    minigame_backgrounds = pairs(config('hd-minigame-bg-pairs'))
     bg_review = config('hd-scene-bg-review')
     native_bg_aliases = {}
     for alias, canonical in bg_review.get('exact_native_aliases', {}).items():
@@ -807,6 +809,11 @@ def build(root, index_dir, portrait_audit):
             row = ending_bank_row(bank, disc, ending_photo_keys, ending_verified)
             if disc == 2 and path == '/SAKURA1/SU_CG.BIN' and row.get('verified_in_game'):
                 chapter, association, report = 10, 'observed', 'docs/research/ending-bank-pairs.md#natural-sumire-ending-and-unique-pc-photographs'
+        elif path in minigame_backgrounds and resource['sha256'] == minigame_backgrounds[path]['saturn_sha256']:
+            pair = minigame_backgrounds[path]
+            row = {'status': 'paired-not-wired', 'pc': pair['pc_file'], 'pc_image_index': pair['pc_image_index'],
+                   'pairing_evidence': 'docs/research/saturn-bg-format.md#minigame-background-pages',
+                   'reason': 'The minigame layer viewport and transform still need an in-game witness.'}
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (
