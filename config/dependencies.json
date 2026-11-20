@@ -161,6 +161,7 @@
       "patches/0163-sakura-preserve-dialogue-zoom-shadow-rows.patch",
       "patches/0164-sakura-compose-map-fade-exterior-strips.patch",
       "patches/0165-sakura-retain-prepared-backdrop-surfaces.patch",
+      "patches/0166-sakura-advance-voiced-enhanced-dialogue.patch",
       "patches/0167-sakura-isolate-inspection-hand-from-zoom.patch"
     ]
   }
