@@ -154,6 +154,8 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA1/NC90.BIN'): (5, CHAPTER5_ROUTE_REPORT),
+    (2, '/SAKURA1/NC81.BIN'): (9, CHAPTER9_ROUTE_REPORT),
     (1, '/SAKURA2/MAP10.BIN'): (7, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
     (2, '/SAKURA2/MAP19.BIN'): (10, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
     (1, '/SAKURA1/IC0501.BIN'): (5, 'docs/research/ic0501-intermission-witness.md'),
@@ -582,6 +584,10 @@ def build(root, index_dir, portrait_audit):
                 if (disc, path) == (1, '/SAKURA1/NC3058.BIN'):
                     row.update(verified_in_game=True, native_face_fallback=True,
                                runtime_evidence='docs/research/nc3058-cutout-1440p.md')
+                elif (disc, path) == (2, '/SAKURA1/NC81.BIN'):
+                    row.update(verified_in_game=True, native_face_fallback=True, runtime_evidence='docs/research/nc81-nc90-1440p.md')
+                elif (disc, path) == (1, '/SAKURA1/NC90.BIN'):
+                    row.update(verified_in_game=True, runtime_evidence='docs/research/nc81-nc90-1440p.md')
                 else:
                     row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:

@@ -13,7 +13,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 229/229 (100%) | Sin dato | Sin dato | 45/229 (19,6%) | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
-| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 147/147 (100%) | Sin dato | 143/147 (97,2%) | 11/147 (7,4%) |
+| Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 147/147 (100%) | Sin dato | 143/147 (97,2%) | 13/147 (8,8%) |
 
 ## Resumen global de integración
 
@@ -142,7 +142,7 @@ Los 19 temas decorativos únicos del catálogo KABE con alternativas HD, incluid
 Cuerpos Saturn fuera del retrato de diálogo. La cara y sus cuadros se auditan aparte.
 
 - Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. El registro cuenta los cuerpos emparejados e integrados por archivo Saturn, una vez aunque lo compartan ambos discos.
-- Hay apariciones documentadas para 11 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos.
+- Hay apariciones documentadas para 13 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos.
 - **Siguiente paso**. Comprobar los cuerpos restantes y las expresiones con fallback nativo.
 
 - [saturn-hd-characters.md](research/saturn-hd-characters.md).
