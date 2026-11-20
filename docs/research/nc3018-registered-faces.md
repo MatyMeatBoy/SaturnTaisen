@@ -1,0 +1,9 @@
+# NC3018 face placement at 1440p
+
+The English disc 2 Chapter 9 cold replay checkpoint at frame 12000 has the exact native 240×144 NC3018 body and its 56×40 eye and 80×56 mouth strips. The native file's entire 33,600-byte animation payload contains three eye frames and six mouth frames. The PC resource has corresponding subimages 1–3 and 4–9. The two original archives are pinned by fingerprints. An unrecognized frame retains its native sprite.
+
+All three PC eye images register at (62,49) against PC body subimage 0; all six mouth images register at (32,170). Stable border RGB at those coordinates matches 190–225 of 225 eye samples and 273–280 of 280 mouth samples, with a unique maximum for every image. The previous mouth search used (49,171), which displaced the nose, chin and vertical hair contours. Patch 0151 extends the existing verified face map with the exact source indices and positions. The body geometry and sampling are unchanged.
+
+At 2560×1440, four strict muted captures have the same rendered eye and mouth indices before and after the fix. The four sampled mouth phases are 5, 8, 7 and 7. All 6,107 checked flat eye samples and 14,498–14,657 checked flat mouth samples per capture match the original PC textures at the registered location. Every changed pixel relative to the prior HD run is within (718,564)–(1362,1040), covered by the old or registered mouth placement. The missing PC asset and Original controls are pixel-exact. The comparisons preserve all 55 guest hashes and execute with zero interpreted blocks. The existing NC81 and NC90 body witnesses also match their earlier capture.
+
+The Chapter 9 register credits this tested occurrence. Additional expressions, disc 1 presentation and package validation remain open. Local captures and native frame receipts are kept under `local/work/codex-body-witness-batch/`.

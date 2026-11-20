@@ -4820,8 +4820,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
             "pc": "SAKURA1/NC/NC3018.SPR",
+            "runtime_evidence": "docs/research/nc3018-registered-faces.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "2:/SAKURA1/NC81.BIN": {
             "association": "observed",
