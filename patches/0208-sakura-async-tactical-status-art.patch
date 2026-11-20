@@ -1,0 +1,50 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -840,7 +840,7 @@
+     std::array<ScrollState, kScrollPictureCount> scrollState;
+     auto queuePinnedPan = [&](SceneHd& pan, const char* relativePath, size_t fileSize,
+                               uint64_t fingerprint, unsigned width, unsigned height, unsigned index = 0) {
+-        const auto file = std::filesystem::path(port.opt.pcAssetsPath) / relativePath;
++        const auto file = std::filesystem::u8path(port.opt.pcAssetsPath) / relativePath;
+         pan.pending = std::async(std::launch::async, [file, fileSize, fingerprint, width, height, index] {
+             SceneHdPixels decoded;
+             std::vector<uint8_t> bytes;
+@@ -1297,6 +1297,7 @@
+     std::array<ItemHdImage,std::size(kItemCards)> itemImages{};
+     std::array<ItemHdImage,std::size(kLoadDiscIcons)> loadDiscImages{};
+     ItemHdImage statusFrameImage;
++    SceneHd statusFrameSource;
+     SDL_Texture* itemOverlay=nullptr;
+     std::array<uint32_t,hdItemSize*hdItemSize> itemOverlayPixels{};
+     auto captureItems=[&]() {
+@@ -1595,19 +1596,26 @@
+         if(std::none_of(card.pixels.begin(),card.pixels.end(),[](uint8_t visible){return visible!=0;}))
+             return;
+         auto& image=statusFrame ? statusFrameImage : discIcon ? loadDiscImages[card.entry-kLoadDiscIcons] : itemImages[card.entry-kItemCards];
++        if (statusFrame && !image.tried) {
++            image.tried = true;
++            queuePinnedPan(statusFrameSource, card.entry->file, 61441, 0x0E068D267553F37Aull,
++                           hdWidth, hdHeight, card.entry->index);
++        }
++        if (statusFrame && statusFrameSource.pending.valid() &&
++            statusFrameSource.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++            image.rgba = statusFrameSource.pending.get().pixels;
+         if(!image.tried) {
+             image.tried=true;
+             std::vector<uint8_t> bytes;
+             const auto file=std::filesystem::u8path(port.opt.pcAssetsPath)/card.entry->file;
+             if(ReadPcBackdropFile(file,bytes,2u<<20) &&
+-               (!discIcon || (bytes.size()==42586 && AtlasFingerprint(bytes)==0x04BC9B0026CDB421ull)) &&
+-               (!statusFrame || (bytes.size()==61441 && AtlasFingerprint(bytes)==0x0E068D267553F37Aull))) {
++               (!discIcon || (bytes.size()==42586 && AtlasFingerprint(bytes)==0x04BC9B0026CDB421ull))) {
+                 std::vector<PcSprite> sprites;
+                 std::string error;
+                 if(DecodePcSprites(bytes,sprites,error))for(auto& sprite:sprites) {
+                     if(sprite.index==card.entry->index && sprite.width==hdWidth && sprite.height==hdHeight &&
+                        sprite.pixels.size()==size_t(hdWidth*hdHeight) &&
+-                       (discIcon || statusFrame || std::all_of(sprite.pixels.begin(),sprite.pixels.end(),
++                       (discIcon || std::all_of(sprite.pixels.begin(),sprite.pixels.end(),
+                                                [](uint32_t color){return (color>>24)==255;}))) {
+                         image.rgba=std::move(sprite.pixels);
+                         break;

@@ -153,3 +153,11 @@ English disc 1 contains WKL01–11 and WKL21–22 with the exact packed source. 
 The three natural 1440p A/B replays each ran for 110 fields with no interpreted blocks. Guest hashes and final SRAM matched across each map's runs. MAP02 and MAP13 used the neutral offset and tracked 740 native rail pixels. MAP12 used +3 RGB offsets and tracked 736. Captures at fields 8, 20, 50 and 100 changed only independently decoded PC rail pixels within their expected placements. No sampled portrait, localized label, meter, grid or world pixel changed. Original with and without the donor matched exactly on MAP12. The same MAP12 captures also matched stock when the donor was absent, the donor failed its fingerprint, or PC HD backgrounds were disabled.
 
 The local receipt is `local/work/codex-witness-441-review/hud/status-ab/receipt.json`. The replay and pixel verification entry points in the same trial directory are `replay-status.py` and `verify-status.py`. This verifies the scoped HUD component. Package inclusion remains open.
+
+### Asynchronous status-frame decode
+
+Patch 0208 routes the pinned SLGSYS03 decode through the existing background loader. The first frame can use the native rails while the future is pending. Texture allocation and upload remain on the draw thread.
+
+In three paired 1440p Direct3D 11 measurements on the stable MAP12 checkpoint, the earlier synchronous candidate used 6.33–8.84 ms of presentation on field 2 with the donor. The async prototype used 2.69–3.72 ms on that field and drew its first HD rails on field 3. These local cold-entry measurements vary with host load.
+
+The exact combined patch 0208 build reproduced all 110 fields and final SRAM in seven profiles, with 28 sampled RGB buffers matching the existing 1440p controls. The load-menu rails, both combo poses and cards, and LIPS, dialogue and room-choice rails also matched their prior positive witnesses. A separate CLI test of a non-ASCII PC asset path hit the same locale error in the baseline and the candidate. Package inclusion is pending.
