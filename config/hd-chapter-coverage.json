@@ -5217,6 +5217,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG2139.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/th8-native-attribution.md#bg2139-ambush-draw",
+            "pc": "SAKURA1/BG/BG2139.SPR",
+            "runtime_evidence": "docs/research/th8-native-attribution.md#bg2139-ambush-draw",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG2159.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2159-disc2-visual.md",
@@ -18283,11 +18291,6 @@
       "2:/SAKURA1/BG2138.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2138.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2139.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2139.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2140.BIN": {
