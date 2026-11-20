@@ -9,6 +9,8 @@ from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
 IC_TABLE_IDS = {row['id'] for row in json.loads((ROOT / 'config/hd-ic-table.json').read_text(encoding='utf-8'))['entries']}
+IC_CONTROLLED_IDS = {'IC02', 'IC04', 'IC0502', 'IC06', 'IC07', 'IC08', 'IC09',
+                     'IC1001', 'IC1002', 'IC1003', 'IC1004', 'IC1005', 'IC1006'}
 sys.path.insert(0, str(ROOT / 'tools'))
 import gen_item_table  # noqa: E402
 CHAPTERS = range(1, 11)
@@ -641,12 +643,14 @@ def build(root, index_dir, portrait_audit):
                            runtime_evidence='docs/research/ic0501-intermission-witness.md#enhanced-presentation')
             elif (disc, path) == (2, '/SAKURA1/IC06.BIN'):
                 row.update(status='hd', verified_in_game=True, runtime_evidence='docs/research/ic06-intermission-witness.md')
-            elif disc == 1 and path.rsplit('/', 1)[-1][:-4] in IC_TABLE_IDS:
-                # Patch 0185: disc-1 plates of the generated IC table. No in-game witness for these pictures yet.
+            elif disc == 1 and name in IC_TABLE_IDS:
                 row.update(status='wired-unverified', verified_in_game=False,
-                           runtime_table='config/hd-ic-table.json',
-                           reason=('in the runtime IC table (patch 0185, disc 1, same draw and native fallback as IC0501); '
-                                   'not seen drawn in game; see docs/research/ic-intermission-table.md'))
+                           runtime_table='config/hd-ic-table.json')
+                if name in IC_CONTROLLED_IDS:
+                    row.update(status='hd',
+                               fixture_evidence='docs/research/ic-intermission-table.md#controlled-disc-1-runtime-verification')
+                else:
+                    row['reason'] = 'The disc-1 runtime IC table contains this plate. A displayed draw awaits verification.'
             else:
                 row['reason'] = ('no saved state or route reaches this intermission, so its palette key, '
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')
