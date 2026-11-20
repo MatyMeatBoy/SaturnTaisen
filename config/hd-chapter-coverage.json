@@ -6330,11 +6330,27 @@
             "pc": "SAKURA1/BG/BG1143.SPR",
             "status": "hd"
           },
+          "2:/SAKURA1/BG1174.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "pc": "SAKURA1/BG/BG1174.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG1176.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG1176.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG1180.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "pc": "SAKURA1/BG/BG1180.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
             "status": "hd",
             "verified_in_game": true
           },
@@ -6370,9 +6386,11 @@
           },
           "2:/SAKURA1/BG2021.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-9.md#bg2021-on-the-earned-iris-route",
             "pc": "SAKURA1/BG/BG2021.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-9.md#bg2021-on-the-earned-iris-route",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2031.BIN": {
             "association": "observed",
@@ -6429,6 +6447,30 @@
             "evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
             "pc": "SAKURA1/BG/BG2100.SPR",
             "runtime_evidence": "docs/research/hd-chapter-9.md#verified-chapter-9-scene-draws",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2101.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "pc": "SAKURA1/BG/BG2101.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2102.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "pc": "SAKURA1/BG/BG2102.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-warehouse-backgrounds",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2103.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
+            "pc": "SAKURA1/BG/BG2102.SPR",
+            "runtime_evidence": "docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias",
             "status": "hd",
             "verified_in_game": true
           },
@@ -17483,11 +17525,6 @@
         "pc": "SAKURA1/BG/BG1173.SPR",
         "status": "hd"
       },
-      "2:/SAKURA1/BG1174.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1174.SPR",
-        "status": "hd"
-      },
       "2:/SAKURA1/BG1175.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1175.SPR",
@@ -17506,11 +17543,6 @@
       "2:/SAKURA1/BG1179.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1179.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG1180.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1180.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG1181.BIN": {
@@ -18495,21 +18527,6 @@
       "2:/SAKURA1/BG2099.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2099.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2101.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2101.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2102.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2102.SPR",
-        "status": "hd"
-      },
-      "2:/SAKURA1/BG2103.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2102.SPR",
         "status": "hd"
       },
       "2:/SAKURA1/BG2104.BIN": {

@@ -215,3 +215,17 @@ Shard TH-reattribution repeated the traced attribution with the isolated AOT bui
 Chapter 9 (disc 2) routes `0900` (`bank-9-battle-1` and `public-9`, identical reads) and `0904` (`bank-9-battle-2`). Twenty-one `unassigned` rows are now chapter 9: BG1143, BG2017, BG2021, BG2031, BG2091, BG2092, BG2156, BG2160, BG2236, BG3091, NC12, NC20, NC21, NC3017, NC3021, NC3031, NC32, NC34, NC41, NC50, NC51. `LOAD.BIN` stays `unassigned`.
 
 Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
+
+## BG2021 on the earned Iris route
+
+After Shika, the natural Iris route reads the Saturn BG2021 from FAD 123317. The state saved at field 480 of the post-film segment runs for 32 strict fields from the same initial SRAM in two 1440p profiles. The donor-only profile loads BG2021.SPR. The matched control reports the texture missing and uses the same floral backdrop. The 32 guest hashes and final SRAM match. The 546,597 changed pixels lie within the scene rectangle (272,29) to (2288,1037), leaving the dialogue and floral border identical. The tested executable is from v0.2.16.1-alpha. Private receipts: `local/work/codex-th1/thd01-probe/bg2021-ep9-proof`.
+
+## Iris warehouse backgrounds
+
+The natural 0903 route after Shika reads BG2101 and BG2102 at FAD 125124 and 125147. From the revelation segment at field 2160 and its terminal state, separate donor-only Enhanced 1440p runs draw BG2101 and BG2102. The corresponding controls keep the same floral backdrop with the individual donor absent. Each 32-field strict pair has identical guest hashes and SRAM. BG2101 changes 1,003,073 pixels within (272,29) to (2288,1032). BG2102 changes 360,855 within (309,29) to (2288,944). The dialogue and outer border compare exactly. The receipts are in `local/work/codex-th1/thd01-probe/iris-BG2101-f2160` and `iris-BG2102-terminal`. BG2103 shares a donor mapping and requires separate native attribution.
+
+## Iris 0903 street and warehouse alias
+
+The natural 0903 resume reads BG1180 at FAD 119484 and BG1174 at FAD 119346. The states at fields 1920 and 2400 respectively draw the corresponding PC donor at 1440p. The 0903 ending relay also reads BG2103 at FAD 125170. Its native disc bytes have the same SHA-256 as BG2102, and the field-1680 state has their exact resident cells and palette. The matched donor/profile comparison uses the existing BG2102 SPR for that second native file occurrence.
+
+All three comparisons have matching 32-field strict guest hashes and SRAM, with RGB changes confined to the scene. BG1174 changes 1,357,463 pixels, BG1180 changes 2,032,121, and the BG2103 occurrence changes 323,079. The BG2103 occurrence uses an already counted physical donor. Private receipts are under `local/work/codex-th1/thd01-probe` in `iris-BG1174-f2400`, `iris-BG1180-f1920` and `iris-BG2103-f1680`.

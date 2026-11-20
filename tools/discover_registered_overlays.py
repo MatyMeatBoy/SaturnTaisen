@@ -114,6 +114,16 @@ REGISTRY={
 }
 
 
+# Full-module profile of the same English disc-2 ENDING.BIN: no observed_ranges, so the SDK analyzer emits
+# every aligned valid prefix (eager). Needed by the cold public-finale route, which first executes the module
+# at 06080000 + 0x0 (not one of the 353 observed Sakura-route extents). The block code is still compared
+# with memory before it runs, so unused candidates cannot execute wrong code.
+REGISTRY['ENDING_DISC2_EN_FULL'] = {key: value for key, value in REGISTRY['ENDING_DISC2_EN'].items()
+                                    if key != 'observed_ranges'}
+REGISTRY['ENDING_DISC2_EN_FULL']['evidence'] = (
+    'English disc 2 cold public Finale replay: strict AOT stops on master SH-2 PC 06080000 after the '
+    '/SAKURA1/ENDING.BIN load (FAD 133947); whole file is the High WRAM module at 06080000')
+
 REGISTRY['EVT04_MAP04'] = dict(
     REGISTRY['EVT04'], observed_ranges='evt04-map04-aot-ranges.json',
     evidence='Disc 1 Chapter 3 second battle, the 180-frame MAP04 camera witness')
