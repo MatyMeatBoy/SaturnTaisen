@@ -255,7 +255,8 @@
       "patches/0263-sakura-bg2014-behind-nc3014.patch",
       "patches/0264-sakura-cooking-reward-hd.patch",
       "patches/0265-sakura-bg2025-foreground-visibility.patch",
-      "patches/0266-sakura-bg2023-foreground-visibility.patch"
+      "patches/0266-sakura-bg2023-foreground-visibility.patch",
+      "patches/0267-sakura-bg2092-native-mist.patch"
     ]
   }
 }

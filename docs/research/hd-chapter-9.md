@@ -214,6 +214,21 @@ Shard TH-reattribution repeated the traced attribution with the isolated AOT bui
 
 Chapter 9 (disc 2) routes `0900` (`bank-9-battle-1` and `public-9`, identical reads) and `0904` (`bank-9-battle-2`). Twenty-one `unassigned` rows are now chapter 9: BG1143, BG2017, BG2021, BG2031, BG2091, BG2092, BG2156, BG2160, BG2236, BG3091, NC12, NC20, NC21, NC3017, NC3021, NC3031, NC32, NC34, NC41, NC50, NC51. `LOAD.BIN` stays `unassigned`.
 
+## BG2092 mist transition
+
+In the retained disc 2 dream sequence the steady BG2092 plate
+switches into native color calculation as mist appears. The v0.2.28
+HD draw otherwise covers that blend. Patch 0267 keeps the HD donor
+on the opaque plate and preserves the native mist and dissolve.
+
+Three steady samples at 1440p each changed 1,709,553 pixels between
+the native and PC decodes. All eleven sampled fields from the
+start of the mist through the BG2236 transition matched the
+native control, including with the BG2236 donor present. Original
+with and without the donor matched at all fourteen samples. The
+strict 220-field profiles preserve guest hashes and save memory
+with zero interpreted blocks. Package inclusion is pending.
+
 Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
 
 ## BG2021 on the earned Iris route
