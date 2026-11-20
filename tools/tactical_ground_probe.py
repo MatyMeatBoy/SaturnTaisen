@@ -108,8 +108,9 @@ def guest_evidence_valid(guest_hash_bytes, stderr_text, frames):
 def build_control_root(donor, control, map_name):
     """A copy of the extraction root made of hard links (or copies) without the `MAPnn_A.SPR` under test."""
     skip = pathlib.Path(donor, *ground_file(map_name).parts).resolve()
-    if control.exists():
-        shutil.rmtree(control)
+    if control.resolve().is_relative_to(donor.resolve()):
+        raise ValueError('control root must be outside the donor tree')
+    control.mkdir(parents=True)
     for base, _, names in os.walk(donor):
         for name in names:
             source = pathlib.Path(base, name)
@@ -219,10 +220,15 @@ def main(argv=None):
     if problems:
         print('\n'.join('preflight: ' + p for p in problems), file=sys.stderr)
         return 2
-    control_root = build_control_root(args.pc_assets, args.out / 'control-root', args.map)
+    if args.out.is_relative_to(args.pc_assets):
+        ap.error('--out must be outside the donor tree')
+    args.out.mkdir(parents=True, exist_ok=True)
+    trial = pathlib.Path(tempfile.mkdtemp(prefix='trial-', dir=args.out))
+    print('Evidence directory: %s' % trial)
+    control_root = build_control_root(args.pc_assets, trial / 'control-root', args.map)
     runs = {}
     for label, assets in (('donor', args.pc_assets), ('control', control_root)):
-        runs[label] = run_once(args, args.out / label, assets)
+        runs[label] = run_once(args, trial / label, assets)
     # Two executables at once at most (donor and control), well below the three-process limit.
     processes = {label: subprocess.Popen(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
                  for label, (cmd, env, _, _) in runs.items()}

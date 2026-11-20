@@ -23,3 +23,12 @@ Add `--expect not-drawn` for MAP19. Tests: `python -m unittest tests.test_tactic
 | other 15 of the 17 | no retained state loads them | not reached | n/a |
 
 MAP14 captures were read by eye: PC ground drawn, units, centre sprites and the floral border unchanged. MAP14 was already `hd` in `main` (`tactical-pairing.md#live-map14-pc-ground`); this is a reproducible re-witness, not a promotion. The 17 `wired-unverified` rows of the generated table (PR #440, not in `main`) other than MAP14 still need a state that reaches them (MAP03, 07, 08, 09, 11, 17, 18, 20, 22, 24, 25, 26 and the rest). No register delta.
+
+## Published runtime cross-check
+
+On v0.2.20-alpha, a retained disc 2 MAP14 turn-nine save reached 90 strict
+fields with matching donor and control guest hashes and final SRAM, and zero
+interpreted blocks. At 2560x1440 the two samples changed 1,854,972 and
+1,854,792 centre pixels respectively, with zero changes outside the centre.
+The probe creates a separate trial directory for each invocation so earlier
+captures and shared assets are preserved.

@@ -61,6 +61,11 @@ class ControlRootTests(unittest.TestCase):
             self.assertFalse((control / 'SAKURA2/MAP/MAP14/MAP14_A.SPR').exists())
             self.assertTrue((control / 'SAKURA2/MAP/MAP14/MAP14_B.SPR').exists())
             self.assertTrue((control / 'SAKURA1').is_dir())
+            with self.assertRaises(FileExistsError):
+                probe.build_control_root(donor, control, 'MAP14')
+            self.assertTrue((control / 'SAKURA2/MAP/MAP14/MAP14_B.SPR').exists())
+            with self.assertRaises(ValueError):
+                probe.build_control_root(donor, donor / 'control', 'MAP14')
 
 
 class RegionTests(unittest.TestCase):
