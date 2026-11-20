@@ -320,6 +320,20 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertFalse(catalog['unassigned']['scene-pictures']['1:/SAKURA1/BG2093.BIN'].get('verified_in_game'))
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG2238.BIN']['verified_in_game'])
 
+    def test_registered_narrative_cutouts_are_disc_one_only(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 5)
+        for name in ('BG3132', 'BG3133'):
+            with self.subTest(name=name):
+                row = chapter['scene-pictures'][f'1:/SAKURA1/{name}.BIN']
+                self.assertEqual(row['status'], 'hd')
+                self.assertTrue(row['verified_in_game'])
+                self.assertEqual(row['runtime_evidence'], 'docs/research/narrative-foreground-cutouts.md')
+                row = catalog['unassigned']['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
+                self.assertEqual(row['status'], 'excluded')
+                self.assertFalse(row.get('verified_in_game'))
+
     def test_three_disc_two_scroll_witnesses(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))

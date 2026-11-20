@@ -121,8 +121,7 @@ The VDP1 command payloads match their identities in the resident
 existing chapter-1 inference. BG1198 also keeps its earlier
 chapter-3 observation. These multiple chapter occurrences leave
 the global replacement totals unchanged. BG2533 keeps its
-separate HD witness, and the BG3132/BG3133 layers keep their
-existing exclusions. Later chapter phases, tactical attribution,
+separate HD witness. [BG3132 and BG3133 now have verified HD foreground draws](narrative-foreground-cutouts.md) in the observed disc-1 appearances. Later chapter phases, tactical attribution,
 full chapter parity and packaging remain open.
 
 At block close the main workspace measured 61,107,185,170 logical bytes
