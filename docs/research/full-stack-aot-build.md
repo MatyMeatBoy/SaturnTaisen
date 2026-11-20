@@ -72,4 +72,20 @@ What changed against the #440 branch (it predates MAP12 to MAP16 and the 0214/02
 | Block list | the same 1,411,614 blocks, `local/work/fullstack/blocks.txt` copied to `local/work/rebuild-full2`, SHA-256 `461933eb...` (byte-identical to #600 and #621) |
 | Build | `local/work/rebuild-full2/run.py` (same wrapper as above, `-full2` paths), `local/build/rebuild-full2`, 16 threads, one process |
 
-RESULTS_PLACEHOLDER
+### Result of the second build
+
+| Item | Value |
+| --- | --- |
+| Executable SHA-256 | `914167a20edd7c5f52fbb866d2d82270979c78b7e30dd3a6d4874401b44e3c9d` (1,773,575,680 bytes), `local/build/sakura-full2/sakura-full2.exe` with `art/` beside it |
+| Blocks | 1,411,614, all with native code, 0 skipped; 14,749,860 instructions, 3,530 generated files |
+| Compile | 7,190 ninja steps, 16 threads, one process, about 27.5 minutes from start of the recomp generation to the link (1,651 s) |
+
+Verification (strict native, no `SATRECOMP_NO_BLOCKS`, at most two executables at a time):
+
+- Opening film `tests/opening.movie`, English disc 1, cold, 10,500 frames, headless: exit 0, `interpreted 0`, the 10,500 hashes are byte-identical (`cmp`) to those of `sakura-full`; hash log SHA-256 `c3bac7be0ee0d895f98baf9762cffd0229be650b934b12680dad835e98b35351` (same as the first build).
+- Public Finale (Sumire ending), English disc 2, `tools/chapter_loads.py --disc 2 --frames 45000` with the cold backup (SHA-256 `efe16833...`) and the extended movie (SHA-256 `e0cdea12...`): exit 0, 45,000 hashes, `interpreted 0`; `frames.hash` identical (`cmp`) to the `sakura-end2` run (so identical to `sakura-full`, which matched it); its SHA-256 is `837014384090cc006f9b7026319e85d334ec651ac2630edeeae4f1396d3f29b5`.
+- Draw probe: `python tools/scene_draw_probe.py --exe local/build/sakura-full2/sakura-full2.exe --state local/work/rb-full/a.state --pc-assets local/work/pc-cab/out-bg --size 2560x1440`: `DRAWN: SAKURA1/BG/BG1119.SPR (trace and capture agree; 2032066 pixels differ from the control)`.
+- Signatures: the 12 new 8-byte map signatures (MAP03, 07, 08, 09, 11, 17, 18, 20, 22, 24, 25, 26) and the 12 `MAPnn_A.SPR` path strings are in `sakura-full2.exe`; the MAP07 signature is not in `sakura-full.exe`.
+- Ground probe (THD16 version of `tools/tactical_ground_probe.py`, PR #677; 240 frames, 2560x1440, guest hashes identical with and without the donor, same SRAM, `interpreted 0`): MAP14 (`local/work/sweep/run2-bank-8-battle-2/state-6999.bin`, disc 2) `DRAWN`, 1,859,328 of 2,580,480 centre pixels (72.1%), 0 outside; MAP19 (`run2-bank-10-battle-2/state-6999.bin`) `NOT-DRAWN`, 0 changed pixels (native by review).
+
+Not verified: no state reaches any of the 12 new maps, so none has been seen drawn (they stay `wired-unverified`); the table itself changes only host code, so guest hashes of the opening and the Finale are unaffected, which is what the identical hash logs show. Frames past 45,000, other endings and package inclusion are open. The executable is a development runtime, never to be committed.
