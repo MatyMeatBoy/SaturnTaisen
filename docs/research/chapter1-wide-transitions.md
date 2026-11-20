@@ -53,3 +53,24 @@ The intermission accepts the logo's secondary palette only if the native IC01 im
 At 2560×1440, entering the first chapter's dining room from the map switches to the backdrop composition at replay frame 404. On v0.2.9, that frame took 51.90 ms on a fresh profile cache and 47.32 ms on a repeat with the disk cache intact. The backdrop and composite portion accounted for 31.04 and 29.85 ms. Much of the remaining transition continued to spend about 12–15 ms per frame in composition. The game entered narrative layout at frame 482 in both runs. Raw traces are in `local/work/codex-ogami-map-perf/`.
 
 This reproduces the entry hitch independently of whether an on-disk cache is present. Same-session repeat visits and return-to-map still need separate measurements. The owner also reported an inspection cursor at any of the four screen edges changing the Zoom geometry, and a brief dark interval in the early letter-to-Sakura transition. Those visual reports have separate replays in progress.
+
+## Held empty dialogue position
+
+During Chapter 1, the Enhance Zoom dialogue box rose briefly when a picture
+finished fading and only the empty box remained over the floral background.
+The hold remembered the native crop and discarded the bottom shadow row count.
+The viewport then used zero shadow rows to recompute the box position.
+Patch 0163 retains the shadow row count of the last displayed Zoom layout.
+
+In a 2560×1440 disc-1 relay from the archived letter checkpoint, the dialogue
+top moved from y=1048 to y=1038 during frames 77–115 and 941–1118 and returned
+to y=1048 with the next image. The candidate keeps y=1048 in both intervals.
+Six sampled RGB changes were confined to x=362–2197 and y=1038–1439.
+The six before/after samples and all twelve Original samples matched.
+Each mode preserved all 1,150 guest hashes with zero interpreted blocks.
+The replay candidate used the 0160 runtime plus the local change. The full
+pinned stack through the later 0161 also applied with the 0163 patch.
+
+The separate reported black flash did not occur in the local 2,200-frame
+English letter-to-park trace or the 1,600-frame Spanish Sakura-entrance
+trace. The floral plane remained selected throughout those replays.
