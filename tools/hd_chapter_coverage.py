@@ -304,6 +304,9 @@ EXACT_BODY_DRAWS = {
     (2, '/SAKURA1/NC22.BIN'): (8, 'docs/research/nc11-nc15-nc22-registered-faces.md'),
     (2, '/SAKURA1/NC40.BIN'): (8, 'docs/research/nc40-nc71-registered-faces.md'),
     (2, '/SAKURA1/NC71.BIN'): (8, 'docs/research/nc40-nc71-registered-faces.md'),
+    (2, '/SAKURA1/NC60.BIN'): (9, 'docs/research/nc60-nc61-nc3038-registered-faces.md'),
+    (2, '/SAKURA1/NC61.BIN'): (9, 'docs/research/nc60-nc61-nc3038-registered-faces.md'),
+    (2, '/SAKURA1/NC3038.BIN'): (9, 'docs/research/nc60-nc61-nc3038-registered-faces.md'),
 }
 
 CHAPTER_WITNESSES = {

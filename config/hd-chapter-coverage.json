@@ -5374,6 +5374,30 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/NC3038.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc60-nc61-nc3038-registered-faces.md",
+            "pc": "SAKURA1/NC/NC3038.SPR",
+            "runtime_evidence": "docs/research/nc60-nc61-nc3038-registered-faces.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/NC60.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc60-nc61-nc3038-registered-faces.md",
+            "pc": "SAKURA1/NC/NC60.SPR",
+            "runtime_evidence": "docs/research/nc60-nc61-nc3038-registered-faces.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/NC61.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/nc60-nc61-nc3038-registered-faces.md",
+            "pc": "SAKURA1/NC/NC61.SPR",
+            "runtime_evidence": "docs/research/nc60-nc61-nc3038-registered-faces.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/NC81.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
@@ -7232,12 +7256,6 @@
         "status": "hd",
         "verified_in_game": false
       },
-      "2:/SAKURA1/NC3038.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC3038.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
       "2:/SAKURA1/NC3040.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC3040.SPR",
@@ -7665,18 +7683,6 @@
       "2:/SAKURA1/NC56.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/NC/NC56.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "2:/SAKURA1/NC60.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC60.SPR",
-        "status": "hd",
-        "verified_in_game": false
-      },
-      "2:/SAKURA1/NC61.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/NC/NC61.SPR",
         "status": "hd",
         "verified_in_game": false
       },
