@@ -299,3 +299,7 @@ When a new PRS stream exceeds its original slot, the builder repacks only the or
 All 3,136 typed item descriptions in the v0.2.17-alpha installation match the Spanish translation memory or per-record override, including the pistol, prop sword and shield descriptions. The 80 Saturn cards and 85 PC item and icon images examined contain no English item labels. The current installed graphics separately contain Opc., Volver and Objetos on both discs. The inspected inventory and tactical Info paths did not show a separate equipment selector.
 
 The Episode 8 inventory replay selects Kohran's photo and displays its Spanish description at 1440p in Original and Enhanced. Its description matches the installed table bytes. Both 220-field runs match hashes and SRAM with zero interpreted blocks. The retained checkpoint carries old button artwork, so the current installed label textures were verified independently at their source.
+
+## Port settings and notices
+
+Patch 0249 translates the remaining English descriptions and counters in the port's settings menu and the speed, pause and practice-point notices. This covers both the regular UI and the fallback text menu without changing which key or command each label invokes. In the 2560 × 1440 comparison from the Episode 2 status screen, opening settings changes only the active-options count. The speed and pause tests change only their notice region. Both pairs retain the guest hashes and SRAM. The patch is integrated after v0.2.17-alpha.
