@@ -159,4 +159,4 @@ pareja 1440p. En modo Original, las capturas, hashes y SRAM con y sin
 donante coincidieron. Las pruebas fueron estrictas, con cero bloques
 interpretados. El candidato tiene SHA-256
 `8446a95bb0485a77f0d58589d64b1c034d8d41d3ab7424ff01708bf6b4660b19`.
-Queda pendiente incluir el parche en una versión pública.
+El parche se distribuye en [v0.2.21-alpha](../releases/v0.2.21-alpha.md).
