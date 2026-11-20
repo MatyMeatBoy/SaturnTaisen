@@ -220,6 +220,9 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG1174.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias'),
+    (2, '/SAKURA1/BG1180.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias'),
+    (2, '/SAKURA1/BG2103.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-0903-street-and-warehouse-alias'),
     (2, '/SAKURA1/BG2101.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-warehouse-backgrounds'),
     (2, '/SAKURA1/BG2102.BIN'): (9, 'docs/research/hd-chapter-9.md#iris-warehouse-backgrounds'),
     (2, '/SAKURA1/BG2021.BIN'): (9, 'docs/research/hd-chapter-9.md#bg2021-on-the-earned-iris-route'),
