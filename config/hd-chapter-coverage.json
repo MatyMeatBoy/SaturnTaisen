@@ -4899,6 +4899,54 @@
             "reason": "The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.",
             "status": "unsupported-size"
           },
+          "2:/SAKURA1/BG3081.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/iris-route-foregrounds.md",
+            "pc": "SAKURA1/BG/BG3081.SPR",
+            "runtime_evidence": "docs/research/iris-route-foregrounds.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG3082.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/iris-route-foregrounds.md",
+            "pc": "SAKURA1/BG/BG3082.SPR",
+            "runtime_evidence": "docs/research/iris-route-foregrounds.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG3083.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/iris-route-foregrounds.md",
+            "pc": "SAKURA1/BG/BG3083.SPR",
+            "runtime_evidence": "docs/research/iris-route-foregrounds.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG3086.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/iris-route-foregrounds.md",
+            "pc": "SAKURA1/BG/BG3086.SPR",
+            "runtime_evidence": "docs/research/iris-route-foregrounds.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG3140.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/iris-route-foregrounds.md",
+            "pc": "SAKURA1/BG/BG3140.SPR",
+            "runtime_evidence": "docs/research/iris-route-foregrounds.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "2:/SAKURA1/BG3523.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/iris-route-foregrounds.md",
+            "pc": "SAKURA1/BG/BG3523.SPR",
+            "runtime_evidence": "docs/research/iris-route-foregrounds.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "2:/SAKURA1/BG4187.BIN": {
             "association": "observed",
             "evidence": "docs/research/narrative-foreground-followup.md",
@@ -18865,24 +18913,6 @@
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
-      "2:/SAKURA1/BG3081.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3081.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "2:/SAKURA1/BG3082.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3082.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "2:/SAKURA1/BG3083.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3083.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "2:/SAKURA1/BG3084.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3084.SPR",
@@ -18892,12 +18922,6 @@
       "2:/SAKURA1/BG3085.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3085.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "2:/SAKURA1/BG3086.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3086.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
@@ -19023,12 +19047,6 @@
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
-      "2:/SAKURA1/BG3140.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3140.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "2:/SAKURA1/BG3143.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3143.SPR",
@@ -19132,12 +19150,6 @@
       "2:/SAKURA1/BG3522.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG3522.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "2:/SAKURA1/BG3523.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG3523.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },

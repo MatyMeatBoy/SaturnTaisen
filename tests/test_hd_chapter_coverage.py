@@ -337,6 +337,21 @@ class ChapterCoverageTest(unittest.TestCase):
                 self.assertEqual(other['status'], 'excluded')
                 self.assertFalse(other.get('verified_in_game'))
 
+    def test_iris_route_foregrounds_are_disc_two_only(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
+        rows = dict(catalog['unassigned']['scene-pictures'])
+        for chapter in catalog['chapters']:
+            rows.update(chapter['resources']['scene-pictures'])
+        chapter_eight = catalog['chapters'][7]['resources']['scene-pictures']
+        for name in ('BG3081', 'BG3082', 'BG3083', 'BG3086', 'BG3140', 'BG3523'):
+            with self.subTest(name=name):
+                row = chapter_eight[f'2:/SAKURA1/{name}.BIN']
+                self.assertEqual(row['status'], 'hd')
+                self.assertTrue(row['verified_in_game'])
+                self.assertEqual(row['runtime_evidence'], 'docs/research/iris-route-foregrounds.md')
+                self.assertFalse(rows[f'1:/SAKURA1/{name}.BIN'].get('verified_in_game'))
+
     def test_registered_narrative_cutouts_are_disc_one_only(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))

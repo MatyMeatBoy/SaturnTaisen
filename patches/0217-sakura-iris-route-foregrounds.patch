@@ -1,0 +1,31 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -845,7 +845,7 @@
+         size_t donorBytes;
+         int disc, scaleX, scaleY, offsetX, offsetY;
+     };
+-    constexpr std::array<NarrativeCutout, 6> narrativeCutouts{{
++    constexpr std::array<NarrativeCutout, 12> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -858,6 +858,18 @@
+             "BG4187.BIN", "SAKURA1/BG/BG4187.SPR", 84202, 2, 2010, 2145, 8500, 10500},
+         {0xEE577064B871B27Full, 0xC044AAC668B30974ull, 0x8401F864FD92FD62ull, 0x03ABC2C8174692B5ull,
+             "BG3289.BIN", "SAKURA1/BG/BG3289.SPR", 96721, 1, 2025, 2210, -4500, 500},
++        {0x4060B8A11B3DAFC8ull, 0x4C4FEEB6885F29C1ull, 0xF4BE87540D4651CCull, 0x7AE3A3397AA3A68Cull,
++            "BG3081.BIN", "SAKURA1/BG/BG3081.SPR", 68151, 2, 2040, 2205, -3500, -8000},
++        {0xD834340D2E6D0F82ull, 0x9F64395CD4AA5580ull, 0xE6D557E3431E73D3ull, 0xD3BC7FDB3BD5A0F5ull,
++            "BG3082.BIN", "SAKURA1/BG/BG3082.SPR", 56562, 2, 1995, 2200, 12500, -1500},
++        {0xA4C3410DB83C8172ull, 0xE0885ECD42B040FDull, 0x174D57CAA58E4402ull, 0xB5A16F1A6EB35AC6ull,
++            "BG3083.BIN", "SAKURA1/BG/BG3083.SPR", 54791, 2, 1990, 2165, -4000, -500},
++        {0x102389CBC3C5C2E5ull, 0x5B949D227D30D675ull, 0x261C8E303CA7704Dull, 0x181C9D8E8CACD022ull,
++            "BG3086.BIN", "SAKURA1/BG/BG3086.SPR", 122636, 2, 2070, 2240, -10000, -10500},
++        {0xB0065B5C935114C4ull, 0x8D8A0C5474F43E9Cull, 0xF937A564FAE860F9ull, 0x702FDEC74FC9BAE4ull,
++            "BG3140.BIN", "SAKURA1/BG/BG3140.SPR", 125578, 2, 2080, 2235, -26000, 1500},
++        {0x502826E43B92F6F3ull, 0x32EA2B55C3A51E89ull, 0x2E12DC2B0CCB72CFull, 0xAE29C966348915AEull,
++            "BG3523.BIN", "SAKURA1/BG/BG3523.SPR", 107602, 2, 2080, 2240, -17000, -4000},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
