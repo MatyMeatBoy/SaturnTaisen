@@ -54,6 +54,10 @@ At 2560×1440, entering the first chapter's dining room from the map switches to
 
 This reproduces the entry hitch independently of whether an on-disk cache is present. Same-session repeat visits and return-to-map still need separate measurements. The owner also reported an inspection cursor at any of the four screen edges changing the Zoom geometry, and a brief dark interval in the early letter-to-Sakura transition. Those visual reports have separate replays in progress.
 
+Patch 0164 composes and uploads only the strips outside the native viewport. Within a strip it reuses rows and runs of columns that sample the same integer source pixels. This renderer path runs on any verified map fade, independently of chapter, language or map identity.
+
+Two alternating real-time runs per executable at 1440p reduced median whole-frame work on the first transition frame from 42.45 to 38.38 ms. The fade had 61 frames above 16.67 ms in each baseline run and 22 and 55 in the candidate runs. Among subsequent frames captured by the slow-frame logger, median composition was 11.22 versus 3.68 ms. The first-frame spike is still present. Separate strict runs at 1440p and 1080p matched 1,100 guest hashes and 18 sampled RGB pairs, including fade boundaries, with zero interpreted blocks.
+
 ## Held empty dialogue position
 
 During Chapter 1, the Enhance Zoom dialogue box rose briefly when a picture
