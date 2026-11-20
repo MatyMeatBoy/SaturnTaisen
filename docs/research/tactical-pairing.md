@@ -135,3 +135,9 @@ from the later MAP15 battle. The page bytes identify a cached pattern
 layout and can change during that same battle. Route and layer evidence
 are required before assigning a donor to another key. No other proposed
 key occurs in this archive.
+
+## Live MAP13 PC ground
+
+English Saturn disc 2 Chapter 8 reads MAP13 at FAD 219573 for 178 sectors after the shrine-gate retreat. The settled Iris movement checkpoint has source-4 page `0x40000` and an 8,192-byte fingerprint `62C7F53B0136508A`. The PC ground is `SAKURA2/MAP/MAP13/MAP13_A.SPR` (3,656,187 bytes, fingerprint `2A90980F7060988E`), using its native 1024 × 640 map footprint.
+
+Two natural checkpoint replays use a 2560 × 1440 Direct3D 11 window and the portable interpreter. The opening comparison matches 320 guest fields and SRAM across five modes. Five Enhanced captures change only the tactical viewport, and the Original pair and same-size corrupt donor match their native controls exactly. The second comparison begins from the same checkpoint and uses five ordinary camera-navigation presses over 540 fields. All six sampled views preserve the gate, fence and stall placement and the native unit and movement grid positions. The PC ground is brighter and more textured, and exposes stall awnings that Saturn partly covers with foliage. Sampled camera travel confirms the map placement. EVT13 strict coverage and other camera positions remain open.

@@ -135,6 +135,10 @@ class ChapterCoverageTest(unittest.TestCase):
             self.assertEqual((wired['status'], wired['pc']), ('hd', f'SAKURA2/BG/{name}.SPR'))
             self.assertFalse(wired.get('verified_in_game'))
         chapter8 = by_chapter[8]['resources']['scene-pictures']
+        ground13 = by_chapter[8]['resources']['tactical-maps']['2:/SAKURA2/MAP13.BIN']
+        self.assertEqual((ground13['association'], ground13['status']), ('observed', 'hd'))
+        self.assertIs(ground13['verified_in_game'], True)
+        self.assertEqual(ground13['runtime_evidence'], coverage.STAGE13_REPORT)
         ground12 = by_chapter[8]['resources']['tactical-maps']['2:/SAKURA2/MAP12.BIN']
         self.assertEqual((ground12['association'], ground12['status']), ('observed', 'hd'))
         self.assertIs(ground12['verified_in_game'], True)
