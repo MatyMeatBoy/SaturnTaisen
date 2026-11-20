@@ -1,0 +1,94 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -828,6 +828,10 @@
+     // The software picture through the SDL renderer, fitted as the Display page says
+     ParallelRows parallelRows;
+     struct HeldZoom {bool valid=false;int x=0,width=0,lines=0,group=0,shadowRows=0;} heldZoom;
++    struct SaluteHandoff {
++        uint64_t last=0,start=0;
++        bool mixed=false;
++    } saluteHandoff;
+     // T74: the PC picture of a recognised Saturn scene picture (palette fingerprint -> PC SPR), loaded once.
+     struct SceneHdPixels {unsigned width=0,height=0;std::vector<uint32_t> pixels;};
+     struct SceneHd {uint64_t palette=0;SDL_Texture* texture=nullptr;bool tried=false;std::future<SceneHdPixels> pending;};
+@@ -3044,6 +3048,7 @@
+                         for(int y=153;y<156;y++)for(int x=20;x<308;x++)
+                             if(IsOldPictureShadow(x,y,planes.source[y*320+x]))zoomForeground[y*320+x]=0;
+                         BodyDraw bodyDraw;
++                        bool salutePair=false,salutePlate=false;
+                         if(!port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds")==0 && port.videoRenderer &&
+                            planes.source.size()==320*224 && planes.spriteWhiteWeight.size()==320*224 && zoomForeground.size()==320*224) {
+                             const PresentationSprite* bodySprite=nullptr;int slot=-1;
+@@ -3058,6 +3063,14 @@
+                             if(slot>=0) {
+                                 auto& st=bodyHd[size_t(slot)];
+                                 const auto& entry=kBodies[slot];
++                                salutePair=entry.hash==0x21177A047AEA5DA5ull &&
++                                    port.videoRenderer->BackgroundPaletteFingerprint(2)==0x9C0FF162F58EEF08ull &&
++                                    port.videoRenderer->BackgroundCellFingerprint(2,41472)==0xC4C7F645EC52ABC2ull;
++                                if (salutePair) {
++                                    if (port.frame<saluteHandoff.last || port.frame-saluteHandoff.last>1)
++                                        saluteHandoff={};
++                                    saluteHandoff.last=port.frame;
++                                }
+                                 if(!st.tried) {
+                                     st.tried=true;
+                                     for(unsigned c=0;c<kCutoutBodyCount;c++)if(std::strcmp(kCutoutBodies[c],entry.disc)==0)st.cutout=true;
+@@ -3353,7 +3366,13 @@
+                                 if(ok && (hasBakedFace || !bodyDraw.faces.empty() || !keep.empty())) {
+                                     for(int y=std::max(by,0);y<std::min(by+bh,152) && ok;y++)for(int x=std::max(bx,0);x<std::min(bx+bw,320);x++) {
+                                         const size_t at=size_t(y)*320+x;
+-                                        if(planes.source[at]==0 && planes.spriteWhiteWeight[at]!=0) {ok=false;why="a blend over the body";break;}
++                                        if(planes.source[at]==0 && planes.spriteWhiteWeight[at]!=0) {
++                                            if (salutePair) {
++                                                saluteHandoff.mixed=true;
++                                                saluteHandoff.start=0;
++                                            }
++                                            ok=false;why="a blend over the body";break;
++                                        }
+                                     }
+                                     for(uint32_t layer=0;layer<7 && ok;layer++) {
+                                         const auto offset=port.videoRenderer->BackgroundColorOffset(layer);
+@@ -3768,7 +3787,8 @@
+                                     sceneHdForeground=zoomForeground;
+                                     for(int y=8;y<152;y++)for(int x=16;x<304;x++)
+                                         if(planes.source[size_t(y)*320+x]==layer)sceneHdForeground[size_t(y)*320+x]=0;
+-                                    SDL_RenderTexture(renderer,hd.texture,nullptr,&imageTarget);
++                                    const bool drawnScene=SDL_RenderTexture(renderer,hd.texture,nullptr,&imageTarget);
++                                    salutePlate=salutePair && drawnScene && std::strcmp(sceneFile,"SAKURA1/BG/BG2250.SPR")==0;
+                                     SDL_UpdateTexture(content,nullptr,sceneHdForeground.data(),320*sizeof(uint32_t));
+                                     SDL_RenderTexture(renderer,content,&imageCrop,&imageTarget);
+                                     SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+@@ -4202,6 +4222,31 @@
+                                 break;
+                             }
+                         }
++                        // The native color calculation finishes before the exact HD pair can take over.
++                        // Blend away the current opaque native inset over the completed HD composition.
++                        if (salutePair && salutePlate && bodyDraw.valid && saluteHandoff.mixed) {
++                            constexpr uint64_t fields=8;
++                            if (!saluteHandoff.start) saluteHandoff.start=port.frame;
++                            const uint64_t elapsed=port.frame-saluteHandoff.start;
++                            if (elapsed>=fields) {
++                                saluteHandoff.mixed=false;
++                            } else if (texture && texW==320 && texH==224) {
++                                Uint8 alpha=255;
++                                SDL_BlendMode blend=SDL_BLENDMODE_NONE;
++                                SDL_ScaleMode scale=SDL_SCALEMODE_NEAREST;
++                                if (SDL_GetTextureAlphaMod(texture,&alpha) &&
++                                    SDL_GetTextureBlendMode(texture,&blend) &&
++                                    SDL_GetTextureScaleMode(texture,&scale)) {
++                                    if (SDL_SetTextureBlendMode(texture,SDL_BLENDMODE_BLEND) &&
++                                        SDL_SetTextureScaleMode(texture,SDL_SCALEMODE_NEAREST) &&
++                                        SDL_SetTextureAlphaMod(texture,static_cast<Uint8>(255*(fields-elapsed)/fields)))
++                                        SDL_RenderTexture(renderer,texture,&imageCrop,&imageTarget);
++                                    SDL_SetTextureAlphaMod(texture,alpha);
++                                    SDL_SetTextureScaleMode(texture,scale);
++                                    SDL_SetTextureBlendMode(texture,blend);
++                                }
++                            }
++                        }
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawBrackets(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;

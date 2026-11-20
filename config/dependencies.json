@@ -246,7 +246,10 @@
       "patches/0254-sakura-bg1016-floral-blend.patch",
       "patches/0255-sakura-preserve-bg2236-figure.patch",
       "patches/0256-sakura-refresh-installed-portraits.patch",
-      "patches/0257-sakura-refresh-prepared-game-on-update.patch"
+      "patches/0257-sakura-refresh-prepared-game-on-update.patch",
+      "patches/0258-sakura-dark-native-transition-edges.patch",
+      "patches/0259-sakura-foreground-runtime-priority.patch",
+      "patches/0260-sakura-blend-ogami-hd-handoff.patch"
     ]
   }
 }
