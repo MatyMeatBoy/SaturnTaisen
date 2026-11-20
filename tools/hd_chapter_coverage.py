@@ -656,6 +656,15 @@ def build(root, index_dir, portrait_audit):
                 'scope': 'source-4 ground only',
                 'extension': 'STAGE01-right-v1.png',
             }
+        elif (disc, path) == (1, '/SAKURA2/WKL02.BIN'):
+            row = {
+                'status': 'unknown',
+                'verified_components': [
+                    {'pc': 'SAKURA2/SYSTEM/SLGSYS02.SPR', 'pc_image_index': index,
+                      'scope': 'vertical command submenu shell', 'runtime_evidence': 'docs/research/hd-chapter-2.md#verified-wkl02-command-submenus'}
+                    for index in (2, 4)
+                ],
+            }
         elif (disc, path) == TH2_GROUND:
             row = {
                 'status': 'hd',

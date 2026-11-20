@@ -2516,7 +2516,21 @@
           "1:/SAKURA2/WKL02.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-2.md",
-            "status": "unknown"
+            "status": "unknown",
+            "verified_components": [
+              {
+                "pc": "SAKURA2/SYSTEM/SLGSYS02.SPR",
+                "pc_image_index": 2,
+                "runtime_evidence": "docs/research/hd-chapter-2.md#verified-wkl02-command-submenus",
+                "scope": "vertical command submenu shell"
+              },
+              {
+                "pc": "SAKURA2/SYSTEM/SLGSYS02.SPR",
+                "pc_image_index": 4,
+                "runtime_evidence": "docs/research/hd-chapter-2.md#verified-wkl02-command-submenus",
+                "scope": "vertical command submenu shell"
+              }
+            ]
           }
         },
         "portraits": {
