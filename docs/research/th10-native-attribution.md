@@ -14,3 +14,20 @@ The retained muted relay starts from the chapter sweep's frame 9000 state and re
 The [existing BG1285 witness](bg1285-pan.md) remains the separately verified HD draw. The opening boot's `SAKURA4` bank and `OPSAKURA.CPK` reads precede Finale selection. A separate public save route for the final battle reaches EVT19 (FAD 203643), MAP19 (220633), UNIT19 (244259), and WKL19 (246866), then reaches the untranslated master SH-2 block at `00204000`. Its trace establishes load order. A separate [live ground review](tactical-pairing.md#live-map10-and-map19-ground-review) shows MAP19 with units and records why it retains the native ground. The complete HD exit test remains open.
 
 Local evidence is under `local/work/codex-th10-attribution/`, `local/work/codex-tp2a/bank10-1001/`, and `local/work/codex-tw2-fullscreen-bbg/final-battle-relay/`.
+
+## BG1160 HD draw
+
+The 0188 runtime replays the final 2,000 fields of the same English disc 2
+Chapter 10 relay at 2560×1440. The starting checkpoint is the retained
+field-3000 state. The runtime reads BG1160 at FAD 119024 and the foreground
+BG4055 at FAD 131357. Installing only the PC `BG1160.SPR` changes the
+background inside the existing Zoom rectangle (272,29)–(2288,1037).
+Both runs match all 2,000
+archived guest hashes and final SRAM, with zero interpreted blocks.
+
+In each of the two stable samples at replay fields 1,900 and 1,994, all
+1,743,327 changed pixels agree within two RGB levels with the independently
+decoded PC background. All 284,935 uniquely identified Saturn BG4055
+foreground pixels remain pixel-exact. The seven preceding sampled
+captures match in full. This verifies BG1160 on disc 2 for this occurrence.
+The private repro is under `local/work/codex-th1/bg1160-live/`.

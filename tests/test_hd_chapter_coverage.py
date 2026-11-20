@@ -219,11 +219,14 @@ class ChapterCoverageTest(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / 'config/hd-chapter-coverage.json').read_text(encoding='utf-8'))
         chapter = next(row['resources'] for row in catalog['chapters'] if row['chapter'] == 10)
-        for name in ('BG1213', 'BG1160', 'BG4055'):
+        for name in ('BG1213', 'BG4055'):
             with self.subTest(scene=name):
                 scene = chapter['scene-pictures'][f'2:/SAKURA1/{name}.BIN']
                 self.assertEqual(scene['association'], 'observed')
                 self.assertFalse(scene.get('verified_in_game'))
+        background = chapter['scene-pictures']['2:/SAKURA1/BG1160.BIN']
+        self.assertEqual((background['association'], background['status']), ('observed', 'hd'))
+        self.assertTrue(background['verified_in_game'])
         self.assertEqual(chapter['portraits']['2:/SAKURA1/1001FCE.BIN']['association'], 'resident')
         self.assertTrue(chapter['scene-pictures']['2:/SAKURA1/BG1285.BIN']['verified_in_game'])
         ground = chapter['tactical-maps']['2:/SAKURA2/MAP19.BIN']
