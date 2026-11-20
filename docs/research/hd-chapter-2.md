@@ -191,4 +191,32 @@ Tool: `tools/chapter_loads.py` (every `Play Disc` command mapped to its ISO file
 
 Result: 1 row moved from `unassigned` to chapter 2 (`WKL02.BIN`, menus-hud, status unknown); the other five were already chapter 2. Four random-input continuations from the last state (24,000 frames each) only restarted stage 2 (same EVT02/MAP02/UNIT02 reloads) and added no scene, body, portrait or film. `LIPS_CG.BIN` is read during the stage but is a shared tactical file and is not attributed. The route draws no NC body, no `02xxFCE` atlas and no FILM clip, so `0201FCE`..`0206FCE` stay inferred. The unit files `N0xx/H0xx/K0xx` are not register categories.
 
-Blocker: the chapter's story after the stage-2 victory needs a state or save at the end of the battle (or a full winning play). Without it NC bodies, BG scenes, `02xxFCE` and FILM clips cannot be attributed. Not verified in game: any HD draw of WKL02.
+Blocker: the chapter's story after the stage-2 victory needs a state or save at the end of the battle (or a full winning play). Without it NC bodies, BG scenes, `02xxFCE` and FILM clips cannot be attributed.
+
+## Verified WKL02 command submenus
+
+Patch 0244 uses the PC `SAKURA2/SYSTEM/SLGSYS02.SPR` images 2 and 4
+for the two visible vertical command shells in the natural English MAP02
+battle. The exact VDP1 texture bytes occur in the attributed
+`SAKURA2/WKL02.BIN` at offsets `0x3A3C0` and `0x3AC80` respectively.
+Their native sizes are 40 × 48 and 40 × 80. The PC images are twice that
+size on each axis. The runtime pins the PC file, both native textures,
+their native LUT, and the observed mixed sprite scanout at a −4 RGB
+offset. Unsupported palettes and composition states use Saturn pixels.
+
+At 2560 × 1440, seven profiles each repeated 72 strict guest fields
+with identical final SRAM in the Cancel and Advice menu checkpoints.
+Only Enhanced with the exact donor drew the new shells. Four sampled
+fields per case change 17,451 pixels for Cancel and 40,788 pixels for
+Advice. Every change matches the independently decoded PC pixel after
+the native color offset, replaces a matching native texture pixel, and
+stays in the exact command rectangle. The localized labels, selection
+highlight, units, cursor, terrain and grid retain their sampled native
+pixels. Original and the missing, corrupt and disabled donor controls
+match their respective references.
+
+The horizontal frame shapes and remaining WKL02 content stay native.
+The two new PC subimages are tactical HUD components and outside the
+measured SAKURA1 menu inventory. Package inclusion remains open. The
+private states, A/B captures and exact receipt are in
+`local/work/codex-th1/thd22-wkl02`.

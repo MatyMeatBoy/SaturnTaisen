@@ -216,6 +216,8 @@ The three natural 1440p A/B replays each ran for 110 fields with no interpreted 
 
 The local receipt is `local/work/codex-witness-441-review/hud/status-ab/receipt.json`. The replay and pixel verification entry points in the same trial directory are `replay-status.py` and `verify-status.py`. This verifies the scoped HUD component. Package inclusion remains open.
 
+Patch 0244 verifies two additional [WKL02 command submenu images](hd-chapter-2.md#verified-wkl02-command-submenus) in MAP02. The status frame remains a separate component.
+
 ### Asynchronous status-frame decode
 
 Patch 0208 routes the pinned SLGSYS03 decode through the existing background loader. The first frame can use the native rails while the future is pending. Texture allocation and upload remain on the draw thread.
