@@ -79,6 +79,8 @@ STAGE05_REPORT = 'docs/research/map05-pc-ground.md'
 STAGE06_MAP = (1, '/SAKURA2/MAP06.BIN')
 STAGE12_MAP = (2, '/SAKURA2/MAP12.BIN')
 STAGE12_REPORT = 'docs/research/tactical-pairing.md#live-map12-pc-ground'
+STAGE13_MAP = (2, '/SAKURA2/MAP13.BIN')
+STAGE13_REPORT = 'docs/research/tactical-pairing.md#live-map13-pc-ground'
 CHAPTER5_ROUTE_REPORT = 'docs/research/hd-chapter-5.md#native-opening-observations'
 CHAPTER5_ROUTE_FILES = {
     'BG1031', 'BG1198', 'BG1243', 'BG2058', 'BG2132', 'BG2133', 'BG3132', 'BG3133',
@@ -226,6 +228,7 @@ CHAPTER_WITNESSES = {
     STAGE04_MAP: (3, 'docs/research/th3-native-attribution.md'),
     STAGE05_MAP: (3, STAGE05_REPORT),
     STAGE12_MAP: (8, STAGE12_REPORT),
+    STAGE13_MAP: (8, STAGE13_REPORT),
     (1, '/SAKURA2/UNIT04.BIN'): (3, 'docs/research/th3-native-attribution.md'),
     **{(1, f'/SAKURA1/{name}.BIN'): (1, CHAPTER1_ROUTE_REPORT)
        for name in CHAPTER1_ROUTE_SCENES + CHAPTER1_ROUTE_BODIES},
@@ -533,12 +536,13 @@ def build(root, index_dir, portrait_audit):
                 'scope': 'source-4 ground only',
                 'pairing_evidence': CHAPTER4_TACTICAL_REPORT,
             }
-        elif (disc, path) == STAGE12_MAP:
+        elif (disc, path) in (STAGE12_MAP, STAGE13_MAP):
+            stage = 'MAP12' if (disc, path) == STAGE12_MAP else 'MAP13'
             row = {
                 'status': 'hd',
                 'verified_in_game': True,
-                'runtime_evidence': STAGE12_REPORT,
-                'pc': 'SAKURA2/MAP/MAP12/MAP12_A.SPR',
+                'runtime_evidence': STAGE12_REPORT if stage == 'MAP12' else STAGE13_REPORT,
+                'pc': f'SAKURA2/MAP/{stage}/{stage}_A.SPR',
                 'scope': 'source-4 ground only',
             }
         elif kind == 'tactical-maps' and tactical_maps.get(f'{disc}:{path}', {}).get('status') == 'paired':
