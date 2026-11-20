@@ -6030,10 +6030,11 @@
           "2:/SAKURA2/MAP15.BIN": {
             "association": "observed",
             "evidence": "docs/research/tactical-pairing.md#live-map15-ground-review",
-            "pairing_evidence": "docs/research/tactical-pairing.md",
             "pc": "SAKURA2/MAP/MAP15/MAP15_A.SPR",
-            "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-            "status": "paired-not-wired"
+            "runtime_evidence": "docs/research/tactical-pairing.md#live-map15-ground-review",
+            "scope": "source-4 ground only",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA2/MAP16.BIN": {
             "association": "observed",

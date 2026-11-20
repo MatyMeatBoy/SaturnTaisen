@@ -69,9 +69,36 @@ before the next battle has the source-4 fingerprint
 The earlier 1440p pilot applied MAP15_A.SPR to a later snow battlefield
 using key `388594B7DBCB32C6`. That key is now tied to MAP16 by a separate
 CD trace and camera witness. The pilot's dark street was the MAP15 art
-over the MAP16 snow composition. MAP15 keeps its native prologue ground
-until its own art and camera are compared. The earlier pilot remains
-under `local/work/codex-map15-0188`.
+over the MAP16 snow composition. The earlier pilot remains under
+`local/work/codex-map15-0188`.
+
+### MAP15 PC ground on the authentic prologue
+
+Patch 0242 registers the MAP15 donor from PR #440 on the verified key.
+The pinned file `SAKURA2/MAP/MAP15/MAP15_A.SPR` has 3,613,340 bytes
+and fingerprint `67000D2031CCBEA3`. Its 2048 × 2048 image uses the
+1024 × 1024 Saturn map grid. The rooftop and street have the same
+building footprint and camera registration. The PC adds roof posts,
+clearer signs and window detail, and renders the street with more texture.
+
+Uninstrumented Direct3D 11 runs at 2560 × 1440 compare the 1,100-field
+rooftop entrance, 440-field squad arrival and 240-field street dialogue.
+All three match the archived guest hashes and paired final SRAM. At
+camera (516,340), 6,725 sampled changed squad texels and 4,707 dialogue
+texels match the independently decoded donor exactly. The sampled RGB
+differences are inside the tactical viewport. Original, missing, corrupt
+and disabled controls match their respective stock output.
+
+A separate 3,600-field input replay proceeds from MAP15 to MAP16 with the
+same MAP16 donor in both profiles. The initial MAP15 change disappears
+by the sampled MAP16 camera. The separate MAP16 checkpoint reproduces
+the previous MAP16 rendering and final SRAM in four samples over
+80 fields.
+
+The MAP15 graphics checks use the portable interpreter. The strict
+probe on the same squad checkpoint stops at untranslated EVT15 master
+block `00209C7A`. The artifact and replay receipts are retained under
+`local/work/codex-th1/map15-0242`. Package inclusion is pending.
 
 ## Live MAP16 PC ground
 
@@ -199,10 +226,9 @@ The combined runtime (`c44443f6491b062695393e7a2fd05aeb0e4d749d25b4513ce5353e5e3
 ## Current tactical witness queue
 
 The chapter register contains 27 disc-and-path map entries.
-Ten draw the PC ground and 17 retain the Saturn ground. MAP10 and MAP19
-have live composition comparisons and retain their native art. MAP15
-has a natural prologue checkpoint and still needs its own donor
-comparison. Fourteen other maps need a natural entry and camera witness.
+Eleven draw the PC ground and 16 retain the Saturn ground. MAP10 and
+MAP19 have live composition comparisons and retain their native art.
+Fourteen other maps need a natural entry and camera witness.
 
 | Disc | Next natural camera targets |
 | --- | --- |
