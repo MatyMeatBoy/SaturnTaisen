@@ -1,0 +1,20 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -621,13 +621,15 @@
+         std::vector<uint32_t> donor, pixels;
+         SDL_Texture* texture = nullptr;
+     };
+-    // Disc-1 rows come from the generated table (tools/gen_ic_table.py); the disc-2 IC06 row was witnessed.
++    // Disc-1 rows come from the generated table; the disc-2 rows use their observed native palettes.
+     std::vector<IntermissionPlate> intermissionPlates = [] {
+         std::vector<IntermissionPlate> rows;
+         for (const auto& row : kIcPlates)
+             rows.push_back({row.disc, row.palette, row.file, row.bytes, row.fileHash, row.nativeRgb, row.darkRgb});
+         rows.push_back({2, 0xFEBAEA7B6E7CAC67ull, "SAKURA1/ICATCH/IC0600.SPR", 179506, 0xD6AEB7F7E04B94DAull,
+                         0x0F85EDA8CE4B247Dull, 0});
++        rows.push_back({2, 0xE88FA69862FFF076ull, "SAKURA1/ICATCH/IC0800.SPR", 185067, 0x172242F4CF71EC08ull,
++                        0xCF7BF25FE1E23E25ull, 0xABC1FD0D76B8206Dull});
+         return rows;
+     }();
+     const auto resetIntermissionTextures = [&]() {

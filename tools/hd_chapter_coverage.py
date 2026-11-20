@@ -188,6 +188,7 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (2, '/SAKURA1/IC08.BIN'): (8, 'docs/research/ic-intermission-table.md#ic08-on-english-disc-2'),
     (2, '/SAKURA1/NC3018.BIN'): (9, CHAPTER9_ROUTE_REPORT),
     (1, '/SAKURA1/NC90.BIN'): (5, CHAPTER5_ROUTE_REPORT),
     (2, '/SAKURA1/NC81.BIN'): (9, CHAPTER9_ROUTE_REPORT),
@@ -658,6 +659,9 @@ def build(root, index_dir, portrait_audit):
                            runtime_evidence='docs/research/ic0501-intermission-witness.md#enhanced-presentation')
             elif (disc, path) == (2, '/SAKURA1/IC06.BIN'):
                 row.update(status='hd', verified_in_game=True, runtime_evidence='docs/research/ic06-intermission-witness.md')
+            elif (disc, path) == (2, '/SAKURA1/IC08.BIN'):
+                row.update(status='hd', verified_in_game=True,
+                           runtime_evidence='docs/research/ic-intermission-table.md#ic08-on-english-disc-2')
             elif disc == 1 and name in IC_TABLE_IDS:
                 row.update(status='wired-unverified', verified_in_game=False,
                            runtime_table='config/hd-ic-table.json')

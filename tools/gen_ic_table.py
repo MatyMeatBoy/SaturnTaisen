@@ -4,7 +4,8 @@ The intermission screens of chapters 2-10 share one layout with IC0501, the firs
 (docs/research/ic0501-intermission-witness.md): a 320x224 picture on VDP2 layer 4, the Save/Status/Resume panel in the
 native rectangle (184,16)-(296,144) on layer 0, and a signed -16 colour offset while it fades. The game paints the
 picture's 8 bpp cells with the palette of ICLOGO.BIN (not the palette stored in the IC file), so the visible RGB
-of every IC picture follows from its cells and that one palette. This tool derives, from the decoded disc-1 files (disc 2 is not wired: its witnessed IC06 uses its own palette; `disc2_own_palette_candidates` lists the own-palette hashes, never wired):
+of every IC picture on that route follows from its cells and that one palette. The generated table uses the disc-1
+files. The distinct disc-2 own-palette hashes are recorded as metadata, with individually witnessed rows wired in the frontend.
 
   * `plate`: FNV-1a 64 of the RGB bytes (red, green, blue per pixel, five bits shifted up by three) of the 320x224
     plate outside the panel rectangle, with no colour offset, and `plate_dark` with the -16 offset.
@@ -47,8 +48,12 @@ WITNESSED = {'IC0501': {'plate': 0xA5E3498BEDDC1305, 'plate_dark': 0x1F7A14C3474
              'IC03': {'plate': 0x6469CD72E7963265, 'pc_bytes': 185398, 'pc_fnv': 0x7A7ED93DF49A6CE5}}
 LOGO_PALETTE_FNV = 0xE9107F892185CCC8  # what BackgroundPaletteFingerprint(4) reports for the IC layer
 # Not in the table: own palette key and anchored draw (patch 0107).
-# In-game witness of the own-palette route: disc-2 IC06 (patch 0183): layer-4 palette key and unshifted plate.
-OWN_PALETTE_WITNESS = {'IC06': {'palette': 0xFEBAEA7B6E7CAC67, 'plate': 0x0F85EDA8CE4B247D}}
+# The two disc-2 witnesses distinguish the unshifted IC06 and dark IC08 paths.
+OWN_PALETTE_WITNESS = {
+    'IC06': ({'palette': 0xFEBAEA7B6E7CAC67, 'plate': 0x0F85EDA8CE4B247D}, 'patch 0183, disc 2'),
+    'IC08': ({'palette': 0xE88FA69862FFF076, 'plate': 0xCF7BF25FE1E23E25,
+              'plate_dark': 0xABC1FD0D76B8206D}, 'patch 0191, disc 2'),
+}
 SEPARATE = {'IC01': 'handled by patch 0107 (own palette key, anchored backdrop)'}
 
 
@@ -138,9 +143,9 @@ def registration(saturn, pc, max_shift=MAX_SHIFT):
 def own_palette_candidates(name, data):
     """Plate hashes if the game shows the picture with the palette stored in the IC file itself (hypothesis, per disc).
 
-    Evidence for this route: disc-2 IC06 (patch 0183) and disc-1 IC01 (patch 0107). Evidence for the ICLOGO route:
+    Evidence for this route: disc-2 IC06 and IC08, and disc-1 IC01 (patch 0107). Evidence for the ICLOGO route:
     disc-1 IC0501 and IC03. Which route a given appearance takes is decided by the game module (LOGO.SH2, which
-    differs between discs), not by the picture files, so these rows are candidates and are never wired.
+    differs between discs), not by the picture files, so this metadata does not generate runtime rows.
     """
     cells = screen_cells(data)
     if cells is None:
@@ -151,12 +156,13 @@ def own_palette_candidates(name, data):
            'status': 'candidate-unverified'}
     witnessed = OWN_PALETTE_WITNESS.get(row['id'])
     if witnessed:
-        got = {'palette': int(row['palette'], 16), 'plate': int(row['plate'], 16)}
-        if got != witnessed:
+        expected, witness = witnessed
+        got = {key: int(row[key], 16) for key in expected}
+        if got != expected:
             raise SystemExit('%s own-palette route no longer reproduces the disc-2 witness: %r vs %r' %
-                             (row['id'], got, witnessed))
+                             (row['id'], got, expected))
         row['status'] = 'reproduces-witness'
-        row['witness'] = 'patch 0183, disc 2'
+        row['witness'] = witness
     return row
 
 
