@@ -950,6 +950,61 @@ def hd_ready(paths: Paths) -> bool:
         return False
 
 
+def refresh_hd_portraits(paths: Paths, discs: list[Path]) -> bool:
+    """Refresh portrait assets from the prepared PC files without recopying the HD pack."""
+    pack = paths.hd
+    report_file = pack / 'prepared-manifest.json'
+    receipt_file = pack / 'hd-pack.stfp'
+    pc_root = pack / 'pc'
+    archive = pc_root / 'SAKURA1/SYSTEM/KAO.SPR'
+    if not (receipt_file.is_file() and archive.is_file()):
+        return False
+    try:
+        report = json.loads(report_file.read_text(encoding='utf-8'))
+        receipt = receipt_file.read_bytes()
+    except (OSError, ValueError) as error:
+        raise SetupError('No se pudo leer el registro del mod HD instalado.') from error
+    recipe_hash = sha256(paths.recipe)
+    if report.get('stamp') == hd_stamp(paths) or report.get('portrait_recipe_sha256') == recipe_hash:
+        return False
+    portraits = pack / 'portraits'
+    if not (portraits.is_dir() and all(disc.is_file() for disc in discs)):
+        raise SetupError('Faltan los retratos instalados o los discos preparados para actualizar el mod HD.')
+    header = struct.Struct('<8sIIQQQII')
+    if len(receipt) < header.size:
+        raise SetupError('El registro del mod HD instalado está incompleto.')
+    magic, version, backgrounds, source_size, source_hash, _, _, reserved = header.unpack_from(receipt)
+    if magic != b'STFHD01\0' or version != 1 or len(receipt) != header.size + backgrounds * 32:
+        raise SetupError('El registro del mod HD instalado no es compatible.')
+    archive_data = archive.read_bytes()
+    if (len(archive_data), fnv64(archive_data)) != (source_size, source_hash):
+        raise SetupError('El archivo de retratos de PC no coincide con el registro del mod HD instalado.')
+
+    say(96, 'Mod HD: actualizando los retratos de tu instalación…')
+    with tempfile.TemporaryDirectory(prefix='.actualizar-retratos-', dir=pack.parent) as scratch:
+        work = Path(scratch)
+        staged = work / 'portraits'
+        count, manifest = build_portraits(paths, pc_root, discs, work, staged)
+        new_receipt = work / 'hd-pack.stfp'
+        new_receipt.write_bytes(header.pack(magic, version, backgrounds, source_size, source_hash,
+                                            fnv64(manifest.read_bytes()), count, reserved) + receipt[header.size:])
+        previous = work / 'previous-portraits'
+        os.replace(portraits, previous)
+        try:
+            os.replace(staged, portraits)
+            os.replace(new_receipt, receipt_file)
+        except OSError:
+            if portraits.exists():
+                os.replace(portraits, staged)
+            os.replace(previous, portraits)
+            raise
+        report.update(portraits=count, portrait_recipe_sha256=recipe_hash)
+        staged_report = work / 'prepared-manifest.json'
+        staged_report.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+        os.replace(staged_report, report_file)
+    return True
+
+
 def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: int) -> dict:
     rows = json.loads(paths.provenance.read_text(encoding='utf-8'))['backgrounds']
     paths.hd.parent.mkdir(parents=True, exist_ok=True)
@@ -998,6 +1053,7 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
                       pc_files=pc['files'], pc_bytes=pc['bytes'], pc_videos=pc['videos'], pc_categories=pc['categories'],
                       stamp=hd_stamp(paths))
         (staged / 'prepared-manifest.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+        (staged / '.portrait-refresh-v1').touch()
         if paths.hd.exists():
             shutil.rmtree(paths.hd)
         os.rename(staged, paths.hd)
@@ -1137,6 +1193,17 @@ def prepare_spanish_episode_art(paths):
             say(97, f'Disco {disc}: no se pudo preparar la rotulación mejorada de episodios: {error}')
 
 
+def refresh_installed_portraits(paths: Paths) -> None:
+    """Run the one-time migration from the launcher without scanning for source discs."""
+    if not prepared_english(paths, load_manifest(paths)):
+        raise SetupError('No se pudieron validar los discos preparados para actualizar el mod HD.')
+    tracks = [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)]
+    refresh_hd_portraits(paths, tracks)
+    marker = paths.hd / '.portrait-refresh-v1'
+    marker.touch()
+    say(100, 'Mod HD revisado. Ya puedes jugar.')
+
+
 def prepare(paths: Paths, given: list[Path], language: str, force: bool = False) -> dict:
     """Everything the player's files allow; what is already prepared and current is left alone."""
     manifest = load_manifest(paths)
@@ -1160,6 +1227,10 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
             hd = prepare_hd(paths, pc, [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)], 72, 25)
         elif pc is not None:
             say(97, 'Mod HD: ya estaba preparado.')
+        refreshed_portraits = False
+        if not wants_hd:
+            tracks = [paths.game / f'disc{n}' / 'Track 01.iso' for n in (1, 2)]
+            refreshed_portraits = refresh_hd_portraits(paths, tracks)
     if not (paths.game / f'disc1{LANGUAGES[language]}' / 'game.cue').is_file():
         language = 'es' if language == 'en' else 'en'
     disc = set_language(paths, language)
@@ -1170,8 +1241,9 @@ def prepare(paths: Paths, given: list[Path], language: str, force: bool = False)
             say(99, 'Vistas previas de la presentación listas.')
     except (OSError, subprocess.SubprocessError):
         pass  # (the chooser shows plain cards without them; never a reason to fail the setup)
-    if hd_ready(paths):  # the profile always points at this install's own pack (a moved or copied profile too)
+    if refreshed_portraits or hd_ready(paths):  # the profile always points at this install's own pack (a moved or copied profile too)
         set_values(paths.home / 'launcher.ini', {('sakura', 'pc_assets'): str(paths.hd)})
+        (paths.hd / '.portrait-refresh-v1').touch()
     return dict(disc=str(disc), language=language, hd=hd, hd_ready=hd_ready(paths))
 
 
@@ -1231,7 +1303,7 @@ def info(paths: Paths) -> dict:
 def main() -> int:
     global _recomplauncher_progress
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=('scan', 'prepare', 'language', 'info', 'frontend', 'help'))
+    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-portraits', 'language', 'info', 'frontend', 'help'))
     parser.add_argument('--folder', type=Path)
     parser.add_argument('--rom', '--disc', '--pc', dest='rom', type=Path, action='append', default=[])
     parser.add_argument('--language', choices=tuple(ALL_LANGUAGES))
@@ -1261,6 +1333,8 @@ def main() -> int:
         elif args.command == 'frontend':
             frontend(paths, args)
             print('OK', flush=True)
+        elif args.command == 'refresh-portraits':
+            refresh_installed_portraits(paths)
         else:
             given = list(args.rom) + ([args.folder] if args.folder else [])
             if not given and discs_folder(paths.program).is_dir():
