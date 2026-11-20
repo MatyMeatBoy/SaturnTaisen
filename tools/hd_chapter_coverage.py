@@ -1156,6 +1156,7 @@ def build(root, index_dir, portrait_audit):
         },
         'hud_census': hud_census,
         'scene_file_aliases': scene_aliases,
+        'scene_file_duplicate_groups': config('hd-scene-file-duplicates')['groups'],
         'chapters': list(chapters.values()),
         'unassigned': unassigned,
     }

@@ -46,3 +46,22 @@ with five aliases already shared by the earlier table, fourteen duplicate
 filenames leave the denominator and nine leave the integrated numerator.
 This changes the scene-image figure from 610/1167 to 601/1153. The number of
 verified PC resources remains 152. The patch is outside v0.2.18-alpha.
+
+## Work inventory by PC resource
+
+The full PC census covered all 1,267 scene SPR filenames. SHA-256 of the
+complete containers identifies 1,219 distinct byte sequences. Applying the
+100 native-by-design exclusions leaves 1,123 eligible resources after
+collapsing 44 duplicate filenames. The scene table and standard progress
+report count 601 linked resources, leaving 522 to link or classify. The
+existing 601 canonical paths have 1,187 recorded disc/resource links.
+526 targets have more than one such link. These links are dependencies for
+a resource, with separate in-game evidence kept where it exists.
+
+Use one worker claim per PC file or exact file family. Start from the
+already linked path when one exists. In the register, retain each Saturn
+key and the correct PC subimage index. The byte groups reduce the work
+inventory. Connecting a remaining Saturn key still requires compositor
+eligibility and a route test. The inventory hash groups do not enable any
+new runtime substitutions. The [byte-identical file catalog](../../config/hd-scene-file-duplicates.json)
+records only filenames, with no source pixels or disc data.

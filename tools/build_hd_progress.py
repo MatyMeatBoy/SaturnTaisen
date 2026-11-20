@@ -199,14 +199,26 @@ def apply_register(data, register_path):
                 row['verified'] = len(verified_bodies)
                 row['integrated'] = len(files[kind])
             continue
-        if kind and row['integrated'] is not None and (
-                kind == 'scene-pictures' or len(files[kind]) >= row['integrated']):
+        if kind and row['integrated'] is not None and len(files[kind]) >= row['integrated']:
             row['integrated'] = len(files[kind])
         if row['id'] == 'scene-images' and row['total'] is not None:
-            row['verified'] = len(verified_scenes)
             alias_count = len(register.get('scene_file_aliases', {}))
+            duplicate_groups = [set(group) for group in register.get('scene_file_duplicate_groups', [])]
+            excluded_only = excluded - files[kind]
+            if duplicate_groups:
+                inventory_duplicates = sum(max(0, len(group - excluded_only) - 1)
+                                           for group in duplicate_groups)
+                linked_duplicates = sum(max(0, len(group & files[kind]) - 1)
+                                        for group in duplicate_groups)
+                verified_duplicates = sum(max(0, len(group & verified_scenes) - 1)
+                                          for group in duplicate_groups)
+            else:
+                inventory_duplicates = alias_count
+                linked_duplicates = verified_duplicates = 0
+            row['integrated'] = len(files[kind]) - linked_duplicates
+            row['verified'] = len(verified_scenes) - verified_duplicates
             # pictures excluded by design (Japanese-lettered title cards, key-colour cut-outs) are not part of the goal
-            drop = len(excluded - files[kind]) + alias_count
+            drop = len(excluded_only) + inventory_duplicates
             row['total'] -= drop
             if row.get('inventory') is not None:
                 row['inventory'] = min(row['inventory'], row['total'])
