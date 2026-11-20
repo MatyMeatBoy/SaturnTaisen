@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Episodes 1 through 5 and verified mirrors. Includes applied Spanish edits and pending bilingual editorial proposals.",
+  "scope": "Episodes 1 through 6 and verified mirrors. Includes applied Spanish edits and pending bilingual editorial proposals.",
   "evidence": "Reconstructed Japanese compared by aligned native record ID with both hash-identified Spanish/English prepared discs. Japanese source text is not included.",
   "entries": [
     {
@@ -2184,6 +2184,404 @@
       "confidence": "high",
       "spanish_status": "pending-spanish",
       "mirror_of": "0501-0153"
+    },
+    {
+      "key": "0601-0042",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 42,
+      "record_id": 10015,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Muchísimos libros como siempre: sociología, estrategia militar, revistas femeninas, novelas y libros ilustrados.",
+      "english_current": "There are a lot of books here.\nFrom economy to military\ntactics, recipes, novels and\nchildren's books.",
+      "english_issue": "El inglés sustituye sociología por economía y revistas femeninas por recetas. Los términos españoles ya coinciden con el original.",
+      "english_suggested": "So many books, as always. Sociology, military strategy, women’s magazines, novels and picture books…",
+      "spanish_current": "Siguen los libros de siempre.\nDe sociología a estrategia\nmilitar, revistas femeninas,\nnovelas y libros ilustrados.",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0601-0063",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 63,
+      "record_id": 10036,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Hay muchos trajes de escena de la División Flor.",
+      "english_current": "The room is full of costumes.",
+      "english_issue": "El inglés conserva los trajes y omite de qué división son. El español ya conserva el nombre.",
+      "english_suggested": "There are a lot of the Flower Division’s stage costumes in here.",
+      "spanish_current": "Hay muchísimos trajes de\nescena de la División Flor.",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0601-0581",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 581,
+      "record_id": 10554,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Después de todo, Maria también es una chica.",
+      "english_current": "So underneath her usual\nexterior, she's just a girl\nafter all.",
+      "english_issue": "El inglés y el español convierten la inclusión de Maria en «solo es una chica» y añaden una fachada exterior que el original no menciona.",
+      "english_suggested": "Maria is a young woman too, after all…",
+      "spanish_current": "Así que, bajo su apariencia de\nsiempre, al fin y al cabo es\nsolo una chica.",
+      "spanish_suggested": "Al fin y al cabo, Maria también es una chica…",
+      "confidence": "high",
+      "spanish_status": "pending-spanish",
+      "mirror_of": "0601-0633"
+    },
+    {
+      "key": "0601-0605",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 605,
+      "record_id": 10578,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Me quedé admirándote. Maria, esa ropa también te queda bien.",
+      "english_current": "Ah… I was staring… Maria, \nthose clothes really suit you,\ndon't they?",
+      "english_issue": "El inglés y el español hacen que Ogami diga solo que estaba mirando. El original expresa que se quedó absorto al verla y que esa ropa también le queda bien.",
+      "english_suggested": "Ah… I couldn’t take my eyes off you. Maria, that outfit suits you too.",
+      "spanish_current": "Ah… estaba mirando…\nMaria, esa ropa te queda muy\nbien, ¿no?",
+      "spanish_suggested": "Ah… me quedé admirándote. Maria, esa ropa también te queda bien.",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0607",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 607,
+      "record_id": 10580,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "No me burlo. Eres guapa, Maria. Podrías interpretar un papel femenino alguna vez.",
+      "english_current": "I wasn't teasing you. You're\nbeautiful, Maria. You should\nwear feminine clothes more\noften.",
+      "english_issue": "El original sugiere interpretar papeles femeninos. Ambas versiones lo convierten en aconsejarle vestir distinta ropa en la vida diaria.",
+      "english_suggested": "I’m not teasing. You’re beautiful, Maria. You could play a woman’s role once in a while.",
+      "spanish_current": "No te estaba molestando.\nEres hermosa, Maria. Deberías\nusar ropa femenina más a\nmenudo.",
+      "spanish_suggested": "No me burlo. Eres hermosa, Maria. De vez en cuando podrías interpretar un papel femenino.",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0608",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 608,
+      "record_id": 10581,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "No podría. Además, el público espera verme vestida de hombre.",
+      "english_current": "That's impossible for me.\nBesides, the patrons all \nexpect me to dress like a man,\nright?",
+      "english_issue": "El inglés y el español hablan de vestirse sin recuperar que sigue la discusión de sus papeles en escena. La réplica describe las expectativas del público del teatro.",
+      "english_suggested": "I couldn’t… Besides, the audience expects to see me dressed as a man onstage.",
+      "spanish_current": "Eso es imposible para mí.\nAdemás, los espectadores\nesperan que vista de hombre,\n¿no?",
+      "spanish_suggested": "No podría… Además, el público espera verme vestida de hombre en escena.",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0633",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 633,
+      "record_id": 10606,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Después de todo, Maria también es una chica.",
+      "english_current": "So underneath that exterior,\nshe's just a girl after all.",
+      "english_issue": "El inglés y el español convierten la inclusión de Maria en «solo es una chica» y añaden una fachada exterior que el original no menciona.",
+      "english_suggested": "Maria is a young woman too, after all…",
+      "spanish_current": "Así que debajo de ese\nexterior, al fin y al cabo\nsolo es una chica.",
+      "spanish_suggested": "Al fin y al cabo, Maria también es una chica…",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0679",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 679,
+      "record_id": 10652,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Le instalé un procesador de vapor que interpreta los dos papeles de un dúo cómico.",
+      "english_current": "Noooo! I'd fitted him with a\nsteam processor that could do\nboth sides of a double act\nroutine…",
+      "english_issue": "El inglés reconoce un dúo cómico. El español presenta «bobo y listo» como modos de pensamiento y pierde que son dos papeles de un número.",
+      "english_suggested": null,
+      "spanish_current": "¡Noooo! ¡Le había puesto una\ncalculadora de vapor con\npensamiento doble, de bobo y\nde listo…!",
+      "spanish_suggested": "¡Noooo! ¡Le había puesto un procesador de vapor para hacer los dos papeles de un dúo cómico…!",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0680",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 680,
+      "record_id": 10653,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Tiene un brazo para un número con una cortina de bambú, función de baile desnudo y mecanismo de cocina.",
+      "english_current": "He was equipped with an arm\njust for card tricks… He had\nthe body of a stripper and the\nmind of a philosopher…",
+      "english_issue": "El inglés inventa los trucos con cartas, la bailarina y la mente de filósofo. El español ya conserva el arte con el tamasudare y las funciones descritas.",
+      "english_suggested": "A tamasudare bamboo-screen arm, a body for nude dancing, and a cooking function…",
+      "spanish_current": "¡Brazo de «tamasudare»\n(cortina de bambú), cuerpo de\nbaile desnudo con función de\ncocina…!",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0601-0681",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 681,
+      "record_id": 10654,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Mi robot invencible de trucos de fiesta de doce países, Chico Fiesta, ha quedado hecho pedazos.",
+      "english_current": "And now my Party Boy, an\nentertainment robot built to\nperform party routines from 12\ncountries, lies in pieces…",
+      "english_issue": "Ambas versiones conservan los doce países y los pedazos. Omiten que Kohran presume de su robot invencible justo cuando lo ve destruido.",
+      "english_suggested": "And now Party Boy, my invincible party robot with tricks from twelve countries, lies in pieces…",
+      "spanish_current": "Y ahora mi Chico Fiesta,\nrobot de rutinas de fiesta\nde 12 países, está en\npedazos…",
+      "spanish_suggested": "Y ahora mi Chico Fiesta, el robot invencible con trucos de doce países, está hecho pedazos…",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0686",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 686,
+      "record_id": 10659,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Jefecito, escucha bien a los demás. Te lo pido en serio.",
+      "english_current": "Chief… Next time someone tells\nyou to shut up, you better\nlisten. Please, I mean it…",
+      "english_issue": "El inglés añade que alguien le ordena callarse y el español lo repite. Kohran pide que preste atención a lo que le dicen.",
+      "english_suggested": "Chief… Listen properly when people tell you something. Please, I mean it…",
+      "spanish_current": "Jefecito… la próxima vez que\nalguien te diga que te calles,\nmejor haz caso. Por favor, lo\ndigo en serio…",
+      "spanish_suggested": "Jefecito… Presta atención a lo que te dicen. Te lo pido en serio…",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0697",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 697,
+      "record_id": 10670,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Jefecito, viniste hasta aquí y te hice ver algo bochornoso. Perdona.",
+      "english_current": "Oh, and… I'm really sorry you\nhad to witness this disaster…\nSorry.",
+      "english_issue": "Las versiones conservan la disculpa pero pierden el apelativo y que Ogami se tomó la molestia de venir.",
+      "english_suggested": "Ch-Chief… You came all this way, and I made you see me like this. I’m sorry.",
+      "spanish_current": "Ah, y… de verdad perdón\npor hacerte presenciar este\ndesastre… perdón.",
+      "spanish_suggested": "J-Jefecito… Viniste hasta aquí y te hice ver este desastre… Perdona.",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0715",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 715,
+      "record_id": 10688,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Con un lo siento no basta. Mi querido Chico Fiesta está hecho pedazos.",
+      "english_current": "Don't you \"sorry\" me! Just \nlook what you did to Party \nBoy! He's a pile of bolts now!",
+      "english_issue": "El inglés inventa un montón de tornillos. En español se omiten además el nombre del robot y el cariño de Kohran.",
+      "english_suggested": "An apology won’t cut it! My poor Party Boy is in pieces!",
+      "spanish_current": "¡No me digas «lo\nsiento»! ¡Mira lo que le\nhiciste! ¡Es un montón de\ntornillos ahora!",
+      "spanish_suggested": "¡Con un «lo siento» no basta! ¡Mi querido Chico Fiesta está hecho pedazos!",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0721",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 721,
+      "record_id": 10694,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Si hubiera estado haciendo una bomba de energía espiritual, habrían desaparecido el teatro y todo Ginza.",
+      "english_current": "If I'd been working on my\nSpirit Energy Bomb, all of\nGinza might be gone now.",
+      "english_issue": "Ambas versiones conservan Ginza como posible pérdida y omiten que Kohran nombra explícitamente el teatro.",
+      "english_suggested": "If I’d been building a Spirit Energy Bomb, the theater and all of Ginza might be gone now.",
+      "spanish_current": "Si hubiera trabajado en mi\nBomba de Energía\nEspiritual, Ginza entero\npodría haber desaparecido.",
+      "spanish_suggested": "Si hubiera estado fabricando una Bomba de Energía Espiritual, ya no quedarían ni el teatro ni Ginza.",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0724",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 724,
+      "record_id": 10697,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Este Chico Fiesta que saltó en pedazos era un robot de números para animar banquetes.",
+      "english_current": "See these pieces everywhere?\nThat's the most advanced\nentertainment robot the world\nhas ever seen.",
+      "english_issue": "The most advanced robot the world has ever seen introduce un superlativo que no está aquí. El español ya preserva el uso concreto del robot.",
+      "english_suggested": "This Party Boy that blew to pieces was a robot for doing tricks at parties!",
+      "spanish_current": "Estos pedazos que ves por\ntodas partes eran Chico\nFiesta, ¡un robot para animar\nbanquetes!",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0601-0727",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 727,
+      "record_id": 10700,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Chico Fiesta llevaba un procesador de vapor que interpretaba los dos papeles de un dúo cómico.",
+      "english_current": "Thanks to his steam processor\nhe was able to simulate both\nsides of a double act routine…",
+      "english_issue": "El español repite «bobo y listo» donde Kohran menciona las dos funciones de un dúo cómico. El inglés ya captura el número.",
+      "english_suggested": null,
+      "spanish_current": "Chico Fiesta llevaba una\ncalculadora de vapor con\npensamiento doble, de bobo y\nde listo…",
+      "spanish_suggested": "Chico Fiesta llevaba un procesador de vapor para hacer los dos papeles de un dúo cómico…",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0729",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 729,
+      "record_id": 10702,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Lleva brazo para tamasudare, un número de baile desnudo con mecanismo de cocina y recolector de propinas.",
+      "english_current": "A customized card-trick arm, a\nfamily-friendly exotic dance\nfunction, and even an \nautomatic tip collector!",
+      "english_issue": "El tamasudare se convierte en cartas en inglés. También omite la cocina y presenta el baile como apto para familias. El español conserva los tres detalles.",
+      "english_suggested": "A tamasudare bamboo-screen arm, nude dancing with a cooking mechanism, and a tip collector!",
+      "spanish_current": "¡Brazo de «tamasudare»,\nfunción de baile desnudo con\nmecanismo de cocina… y\nrecolector de propinas!",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0601-0732",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 732,
+      "record_id": 10705,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Basta. Ya lo entendí. Fue culpa mía.",
+      "english_current": "OK, OK, I get it! I'm really\nsorry.",
+      "english_issue": "Las versiones acaban con una disculpa genérica. Ogami reconoce explícitamente que él tuvo la culpa.",
+      "english_suggested": "E-Enough! I get it… It was my fault.",
+      "spanish_current": "¡Bien, bien, entiendo!\nDe verdad lo siento.",
+      "spanish_suggested": "¡B-Basta! Ya lo entendí… Fue culpa mía.",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0737",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 737,
+      "record_id": 10710,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Lo que se rompe se puede volver a fabricar.",
+      "english_current": "You can always fix something\nthat's broken.",
+      "english_issue": "El inglés dice que puede arreglarse. Kohran ya dijo que este robot no tiene arreglo; el original habla de hacer otro, como conserva el español.",
+      "english_suggested": "If something breaks, you can always build it again… right?",
+      "spanish_current": "Lo que se rompe se puede\nvolver a construir, ¿no?",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0601-0738",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 738,
+      "record_id": 10711,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Pero necesito que respetes un mínimo de cortesía.",
+      "english_current": "But really… exercising the \nbare minimum of decorum\nshouldn't be too hard.",
+      "english_issue": "Ambas versiones sustituyen la petición por una burla sobre si tener modales es difícil.",
+      "english_suggested": "But I need you to observe at least a little courtesy.",
+      "spanish_current": "Pero en serio… tener un mínimo\nde educación no debería ser\ntan difícil.",
+      "spanish_suggested": "Pero sí te pido que respetes un mínimo de cortesía.",
+      "confidence": "high",
+      "spanish_status": "pending-spanish"
+    },
+    {
+      "key": "0601-0945",
+      "table": "/SAKURA1/0601TBL.BIN",
+      "index": 945,
+      "record_id": 10918,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sigue así, capitán.",
+      "english_current": "Keep up the good work, Ensign.",
+      "english_issue": "El inglés llama alférez a Ogami donde Ayame le habla en su función de capitán. El español ya lo conserva.",
+      "english_suggested": "Keep up the good work, Captain.",
+      "spanish_current": "Sigue así, capitán.",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored"
+    },
+    {
+      "key": "0603-0300",
+      "table": "/SAKURA1/0603TBL.BIN",
+      "index": 300,
+      "record_id": 10273,
+      "discs": [
+        1,
+        2
+      ],
+      "japanese_literal_gloss_es": "Sigue así, capitán.",
+      "english_current": "Keep up the good work, Ensign.",
+      "english_issue": "El inglés llama alférez a Ogami donde Ayame le habla en su función de capitán. El español ya lo conserva.",
+      "english_suggested": "Keep up the good work, Captain.",
+      "spanish_current": "Sigue así, capitán.",
+      "spanish_suggested": null,
+      "confidence": "high",
+      "spanish_status": "already-restored",
+      "mirror_of": "0601-0945"
     }
   ]
 }
