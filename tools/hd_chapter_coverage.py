@@ -171,6 +171,14 @@ BODY_DRAWS = {'NC10', 'NC11', 'NC20', 'NC25', 'NC30', 'NC50', 'NC55', 'NC82', 'N
 NARRATIVE_CUTOUT_DRAWS = {
     (1, f'/SAKURA1/{name}.BIN'): (5, 'docs/research/narrative-foreground-cutouts.md')
     for name in ('BG3132', 'BG3133')
+} | {
+    (disc, f'/SAKURA1/{name}.BIN'): (chapter, 'docs/research/narrative-foreground-followup.md')
+    for disc, chapter, name in (
+        (1, 3, 'BG3289'),
+        (1, 6, 'BG4059'),
+        (1, 6, 'BG4119'),
+        (2, 8, 'BG4187'),
+    )
 }
 
 SCENE_DRAWS = {

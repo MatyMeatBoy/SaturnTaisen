@@ -1,0 +1,80 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -843,13 +843,21 @@
+         const char* discFile;
+         const char* pcFile;
+         size_t donorBytes;
+-        int scaleX, scaleY, offsetX, offsetY;
++        int disc, scaleX, scaleY, offsetX, offsetY;
+     };
+-    constexpr std::array<NarrativeCutout, 2> narrativeCutouts{{
++    constexpr std::array<NarrativeCutout, 6> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+-            "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 2055, 2220, -10500, -5000},
++            "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+-            "BG3133.BIN", "SAKURA1/BG/BG3133.SPR", 83377, 2080, 2235, -30000, -1000},
++            "BG3133.BIN", "SAKURA1/BG/BG3133.SPR", 83377, 1, 2080, 2235, -30000, -1000},
++        {0x431FA4F03E5DBD5Cull, 0xD87F1A3ACABC7053ull, 0x730DAB71ED01FC17ull, 0x7AD46B6C5E6D2CF3ull,
++            "BG4059.BIN", "SAKURA1/BG/BG4059.SPR", 58943, 1, 2040, 2265, -6000, -5500},
++        {0x74B456D0C840E902ull, 0x534360B87CE599ABull, 0x6DD451915FC27F5Cull, 0x5FA506CD2080CA36ull,
++            "BG4119.BIN", "SAKURA1/BG/BG4119.SPR", 56723, 1, 1985, 2145, 1500, 5000},
++        {0xAC54B5F501C3A32Cull, 0x7D09C3CB0E9E6393ull, 0x62AFC37DD2D7AF6Aull, 0x8CE627D1B35D2EF4ull,
++            "BG4187.BIN", "SAKURA1/BG/BG4187.SPR", 84202, 2, 2010, 2145, 8500, 10500},
++        {0xEE577064B871B27Full, 0xC044AAC668B30974ull, 0x8401F864FD92FD62ull, 0x03ABC2C8174692B5ull,
++            "BG3289.BIN", "SAKURA1/BG/BG3289.SPR", 96721, 1, 2025, 2210, -4500, 500},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
+@@ -868,8 +876,10 @@
+         for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
+             const int tile = (y / 8) * (w / 8) + x / 8;
+             const int dot = bytes[tiles + tile * 64 + (y % 8) * 8 + x % 8];
++            // Saturn transparency uses palette index zero, regardless of its RGB value.
++            if (!dot) continue;
+             const uint16_t word = (uint16_t(bytes[palette + 2 * dot]) << 8) | bytes[palette + 2 * dot + 1];
+-            rgb[size_t(y) * w + x] = uint32_t(word & 31) << 3 | uint32_t(word & 0x3E0) << 6 |
++            rgb[size_t(y) * w + x] = 0xFF000000u | uint32_t(word & 31) << 3 | uint32_t(word & 0x3E0) << 6 |
+                 uint32_t(word & 0x7C00) << 9;
+         }
+         return rgb;
+@@ -3478,16 +3488,16 @@
+                                     SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+                             }
+                         }
+-                        if (shownDisc == 1 && !choosing && !port.menu.IsOpen() && port.videoRenderer &&
++                        if (!choosing && !port.menu.IsOpen() && port.videoRenderer &&
+                             !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
+                             imageTarget.w >= 576 && planes.source.size() == 320 * 224 &&
+                             planes.topSource.size() == planes.source.size() && softwareShown.size() == planes.source.size()) {
+                             constexpr int w = 288, h = 144, width2 = w * 2;
+-                            constexpr uint32_t nativeKey = 0xF8F800;
+                             const auto palette = port.videoRenderer->BackgroundPaletteFingerprint(4);
+                             for (size_t slot = 0; slot < narrativeCutouts.size(); ++slot) {
+                                 const auto& row = narrativeCutouts[slot];
+-                                if (row.palette != palette || !port.videoRenderer->BackgroundIsOpaque(4) ||
++                                if (row.disc != shownDisc || row.palette != palette ||
++                                    !port.videoRenderer->BackgroundIsOpaque(4) ||
+                                     port.videoRenderer->BackgroundCellFingerprint(4, w * h) != row.cells)
+                                     continue;
+                                 auto& art = narrativeCutoutArt[slot];
+@@ -3522,12 +3532,12 @@
+                                     const size_t at = size_t(y + 8) * 320 + x + 16;
+                                     const uint32_t rgb = art.native[offset];
+                                     // Retain the native edge and any overlapping actors or color calculation.
+-                                    const bool owns = rgb != nativeKey && planes.topSource[at] == 4 &&
+-                                        planes.source[at] == 4 && (softwareShown[at] & 0xFFFFFF) == rgb &&
+-                                        (x == 0 || art.native[offset - 1] != nativeKey) &&
+-                                        (x + 1 == w || art.native[offset + 1] != nativeKey) &&
+-                                        (y == 0 || art.native[offset - w] != nativeKey) &&
+-                                        (y + 1 == h || art.native[offset + w] != nativeKey);
++                                    const bool owns = rgb && planes.topSource[at] == 4 && planes.source[at] == 4 &&
++                                        ((softwareShown[at] ^ rgb) & 0xFFFFFF) == 0 &&
++                                        (x == 0 || art.native[offset - 1]) &&
++                                        (x + 1 == w || art.native[offset + 1]) &&
++                                        (y == 0 || art.native[offset - w]) &&
++                                        (y + 1 == h || art.native[offset + w]);
+                                     cutoutVisibility[offset] = owns;
+                                     visible |= owns;
+                                 }
