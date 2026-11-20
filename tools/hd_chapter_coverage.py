@@ -329,6 +329,10 @@ SCENE_DRAWS = {
 }
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
+NATIVE_ROUTE_DRAWS = {
+    (1, 1, '/SAKURA1/NC95.BIN'): 'docs/research/thd11-episode1-bodies.md#nc95-on-the-episode-1-upstairs-route',
+}
+
 EXACT_BODY_DRAWS = {
     (2, '/SAKURA1/NC3021.BIN'): (9, 'docs/research/hd-chapter-9.md#nc3021-face-registration-witness'),
     (1, '/SAKURA1/NC24.BIN'): (6, 'docs/research/hd-chapter-6.md#verified-nc24-and-nc42-in-0602'),
@@ -1003,7 +1007,10 @@ def build(root, index_dir, portrait_audit):
             for episode, evidence in witnesses:
                 if chapter != episode:
                     occurrence = {k: v for k, v in row.items() if k != 'runtime_evidence'}
-                    if 'verified_in_game' in occurrence:
+                    proof = NATIVE_ROUTE_DRAWS.get((episode, disc, path))
+                    if proof:
+                        occurrence.update(verified_in_game=True, runtime_evidence=proof)
+                    elif 'verified_in_game' in occurrence:
                         occurrence['verified_in_game'] = False
                     add(kind, key, occurrence, episode, 'observed', evidence)
 
