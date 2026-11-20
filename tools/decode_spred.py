@@ -52,6 +52,8 @@ def decode(data):
     if not bitmaps or bitmaps[1] < 16:
         raise ValueError('missing image table')
     count = word(bitmaps[0]); table = 16 + count * 16
+    if table > bitmaps[1]:
+        raise ValueError('SPRED image table exceeds bitmap chunk')
     colors = []
     if palette and palette[1] >= 16:
         wide = word(palette[0] + 2) == 4; step = 4 if wide else 2
@@ -70,7 +72,10 @@ def decode(data):
         rel, size = long_(p + 8), long_(p + 12)
         if not w or not h or not size:
             continue
-        bpp = BITS[fmt & 15]; need = (w * h * bpp + 7) // 8
+        pixel_format = fmt & 15
+        if pixel_format >= len(BITS):
+            raise ValueError(f'invalid SPRED pixel format {pixel_format} at image {n}')
+        bpp = BITS[pixel_format]; need = (w * h * bpp + 7) // 8
         start = bitmaps[0] + table + rel
         comp = data[start:start + size]
         raw = _lz(comp, need) if fmt >> 4 else comp[:need]
