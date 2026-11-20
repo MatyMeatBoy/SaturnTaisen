@@ -47,3 +47,9 @@ Initial audit status: the plate was not yet implemented. The later implementatio
 ## Fixes after the audit
 
 The intermission accepts the logo's secondary palette only if the native IC01 image matches the displayed framebuffer: at least 80% of samples, at least 60% per quadrant, and sufficient visible diversity. A uniform fade does not satisfy this check. All three affected states and the battle-exit menu with the `anchored-menu` layout were verified. The LOAD.BIN screen now has a provisional generative background and keeps its original animated column. The phase alignment between its tiles and the protected center still needs visual polishing; having a widescreen layout does not prove a finished visual transition.
+
+## Ogami map entry performance
+
+At 2560×1440, entering the first chapter's dining room from the map switches to the backdrop composition at replay frame 404. On v0.2.9, that frame took 51.90 ms on a fresh profile cache and 47.32 ms on a repeat with the disk cache intact. The backdrop and composite portion accounted for 31.04 and 29.85 ms. Much of the remaining transition continued to spend about 12–15 ms per frame in composition. The game entered narrative layout at frame 482 in both runs. Raw traces are in `local/work/codex-ogami-map-perf/`.
+
+This reproduces the entry hitch independently of whether an on-disk cache is present. Same-session repeat visits and return-to-map still need separate measurements. The owner also reported an inspection cursor at any of the four screen edges changing the Zoom geometry, and a brief dark interval in the early letter-to-Sakura transition. Those visual reports have separate replays in progress.
