@@ -86,7 +86,7 @@ The second pass decoded 1,218 of the 1,219 byte-distinct PC files with
 `tools/decode_spred.py`. Its comparison includes each image index, width,
 height and full RGBA bytes in container order. It confirms 23 equivalent
 groups that span multiple distinct byte signatures. The sole unresolved
-file, EV19S03.SPR, remains a separate candidate.
+file, EV19S03.SPR, remains a separate candidate. Its first bitmap entry advertises unsupported pixel format 8 and is rejected before decoding. The adjacent EV19S03A.SPR decodes three images, so it remains a distinct candidate.
 
 For example, BG1143.SPR and BG1144.SPR have different container checksums
 and the same single 576×320 image. Four corridor files BG1132/34/35/36 also
