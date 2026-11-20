@@ -144,7 +144,8 @@
       "patches/0146-sakura-hd-cd2-load-icon.patch",
       "patches/0147-sakura-add-inventory-cards.patch",
       "patches/0148-sakura-registered-nc4138-body.patch",
-      "patches/0149-sakura-nc81-native-neck-underlay.patch"
+      "patches/0149-sakura-nc81-native-neck-underlay.patch",
+      "patches/0150-sakura-load-selector-arrows.patch"
     ]
   }
 }
