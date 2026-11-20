@@ -79,6 +79,23 @@ class HdProgressTests(unittest.TestCase):
             report.apply_register(data, path)
         self.assertEqual((body['matched'], body['integrated'], body['verified']), (4, 3, 1))
 
+    def test_scene_verification_deduplicates_both_discs_and_requires_an_hd_witness(self):
+        data = specimen()
+        scene = next(row for row in data['categories'] if row['id'] == 'scene-images')
+        scene.update(total=3, inventory=3, matched=3, prepared=None, integrated=2, verified=None)
+        witness = {'status': 'hd', 'pc': 'BG/A.SPR', 'verified_in_game': True}
+        data_by_disc = {
+            '1:/BG/A.BIN': witness,
+            '2:/BG/A.BIN': witness,
+            '1:/BG/B.BIN': {'status': 'hd', 'pc': 'BG/B.SPR'},
+            '2:/BG/C.BIN': {'status': 'paired-not-wired', 'pc': 'BG/C.SPR', 'verified_in_game': True},
+        }
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'coverage.json'
+            path.write_text(json.dumps({'unassigned': {'scene-pictures': data_by_disc}}), encoding='utf-8')
+            report.apply_register(data, path)
+        self.assertEqual((scene['integrated'], scene['verified']), (2, 1))
+
     def test_committed_report_and_readme_are_current(self):
         config = json.loads((ROOT / 'config/hd-progress.json').read_text(encoding='utf-8'))
         report.apply_register(config, ROOT / 'config/hd-chapter-coverage.json')

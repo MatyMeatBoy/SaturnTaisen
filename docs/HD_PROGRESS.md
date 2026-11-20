@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 303/304 (99,6%) | 303/304 (99,6%) | 303/304 (99,6%) | Sin dato |
-| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1145/1145 (100%) | 712/1145 (62,1%) | Sin dato | 564/1145 (49,2%) | Sin dato |
+| Imágenes de escena | archivos SPR PC candidatos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1145/1145 (100%) | 712/1145 (62,1%) | Sin dato | 564/1145 (49,2%) | 25/1145 (2,1%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 44/50 (88%) | Sin dato |
 | Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
@@ -66,7 +66,7 @@ Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que susti
 
 - El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.
 - El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El total integrado de la tabla se calcula desde el registro por capítulo y cuenta una vez los archivos PC compartidos por ambos discos.
-- La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. El recuento de recursos preparados y la auditoría completa de apariciones en juego siguen pendientes.
+- La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. La columna de verificación en juego cuenta un archivo PC por cada imagen con al menos una aparición HD observada. Es un mínimo documentado. El recuento de recursos preparados y la auditoría de todas las apariciones siguen pendientes.
 - **Siguiente paso**. Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
