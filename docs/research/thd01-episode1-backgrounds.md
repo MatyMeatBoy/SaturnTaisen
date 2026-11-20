@@ -12,7 +12,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la tabla de 
 | BG1010 | BG1010.SPR | conectado y verificado |  | docs/research/hd-chapter-1.md#night-patrol-scene-draws |
 | BG1011 | BG1011.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
 | BG1012 | BG1012.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
-| BG1016 | BG1016.SPR | conectado sin verificar |  | - |
+| BG1016 | BG1016.SPR | conectado y verificado |  | docs/research/thd01-episode1-backgrounds.md#bg1016-hd-en-el-fundido-floral |
 | BG1017 | BG1017.SPR | conectado y verificado |  | docs/research/saturn-bg-format.md |
 | BG1021 | BG1021.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#bg1021-on-disc-1 |
 | BG1030 | BG1030.SPR | conectado y verificado |  | docs/research/scene-spot-check.md#late-chapter-1-backgrounds-on-disc-1 |
@@ -51,7 +51,7 @@ Alcance: BG de `config/hd-chapter-coverage.json` capitulo 1, los de la tabla de 
 
 Donantes PC distintos: 43.
 
-Apariciones Saturn: conectado y verificado: 42, conectado sin verificar: 1
+Apariciones Saturn: conectado y verificado: 43
 
 ## Verificacion en juego a 2560x1440 (2026-11-20, con `art/` junto al exe)
 
@@ -200,3 +200,26 @@ Para esta transición, el punto de sustitución es la entrada de
 imagen de la mezcla floral. Saltarse la mezcla haría desaparecer
 la cobertura del fundido. BG1016 sigue pendiente de verificación HD
 en el disco 1.
+
+### BG1016 HD en el fundido floral
+
+El parche 0254 usa BG1016 como entrada de la mezcla floral en el
+disco 1. La sustitución requiere las celdas y paleta exactas en
+ambas capas, RGB neutro y una cobertura floral válida en toda
+la ventana de escena. El archivo de PC se verifica y decodifica
+fuera del hilo de presentación. Se conservan la proporción
+de mezcla, el fondo floral y el ajuste de color registrados.
+
+Desde el estado 8851, dos parejas de 32 cuadros en Mejorado
+cambiaron 2.018.066 píxeles a 2560×1440 y 1.029.663 a 1920×1080.
+Los cambios se limitaron a los rectángulos Zoom
+(272,29)–(2288,1037) y (240,24)–(1680,744). El modo Original
+con y sin donante produjo capturas idénticas. Desde el estado
+9011, la pareja de 24 cuadros conservó la misma captura tras el
+cambio de capa a BG1116. Los hashes y el SRAM de los controles
+coincidieron y no hubo bloques interpretados.
+
+El ejecutable de prueba tiene SHA-256
+`0c194ffe6393ad975a6ad2051db878887f61ac2d8e57130c5b07309d0435388b`.
+El inventario del episodio 1 queda en 43 apariciones verificadas.
+El parche está pendiente de empaquetado.

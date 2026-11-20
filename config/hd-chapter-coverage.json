@@ -2176,6 +2176,14 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG1016.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/thd01-episode1-backgrounds.md#bg1016-hd-en-el-fundido-floral",
+            "pc": "SAKURA1/BG/BG1016.SPR",
+            "runtime_evidence": "docs/research/thd01-episode1-backgrounds.md#bg1016-hd-en-el-fundido-floral",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/BG1017.BIN": {
             "association": "observed",
             "evidence": "docs/research/saturn-bg-format.md",
@@ -13703,11 +13711,6 @@
       "1:/SAKURA1/BG1015.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1015.SPR",
-        "status": "hd"
-      },
-      "1:/SAKURA1/BG1016.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG1016.SPR",
         "status": "hd"
       },
       "1:/SAKURA1/BG1018.BIN": {

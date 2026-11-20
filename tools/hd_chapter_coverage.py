@@ -322,6 +322,7 @@ SCENE_DRAWS = {
     BBG204_INSET: (4, BBG204_REPORT),
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, BODY_REPORT) for number in (1011, 1012, 1017)},
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, CAMPAIGN_REPORT) for number in (1001, 1006, 1045, 1209, 2159, 2250, 2251)},
+    (1, '/SAKURA1/BG1016.BIN'): (1, 'docs/research/thd01-episode1-backgrounds.md#bg1016-hd-en-el-fundido-floral'),
     (1, '/SAKURA1/BG1120.BIN'): (1, 'docs/research/thd01-episode1-backgrounds.md#bg1120-hd-con-la-iluminacion-nocturna'),
     (1, '/SAKURA1/BG1021.BIN'): (1, 'docs/research/scene-spot-check.md#bg1021-on-disc-1'),
     (1, '/SAKURA1/BG1119.BIN'): (1, CHAPTER1_ROUTE_REPORT),

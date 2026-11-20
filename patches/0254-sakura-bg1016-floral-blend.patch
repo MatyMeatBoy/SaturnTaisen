@@ -1,0 +1,162 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -970,6 +970,10 @@
+         finishPinnedPan(state.hd);
+     };
+     std::vector<SceneHd> sceneHd(kSceneBgCount+kSceneBgAmbiguousCount+1);
++    std::future<SceneHdPixels> staircaseFadePending;
++    SceneHdPixels staircaseFade;
++    bool staircaseFadeRequested = false;
++    bool staircaseFadeTraced = false;
+     std::vector<uint32_t> sceneHdForeground;
+     SceneHd ic01;
+     bool ic01Traced=false,ic01Examined=false;
+@@ -2762,7 +2766,7 @@
+                 const auto uploadLayer=[&](SDL_Texture*& cachedTexture,int& cachedWidth,int& cachedHeight,
+                         std::vector<uint32_t>& pixels,MixedLayerCache& cache,const IntegerViewport& fit,const SDL_FRect& crop,
+                         const std::vector<uint32_t>& sourcePixels,const PanelMix* solidRecipe=nullptr,
+-                        bool replaceIntermission=false) -> bool {
++                        bool replaceIntermission=false, const SceneHdPixels* sceneFade=nullptr) -> bool {
+                     const SDL_FRect target{float(fit.x),float(fit.y),float(fit.w),float(fit.h)};
+                 if(selectedBackdrop && planes.panelMix.size()==320*224 &&
+                    planes.underPanelMix.size()==320*224 && fit.scale>0 && fit.w>0 && fit.h>0 &&
+@@ -2792,7 +2796,7 @@
+                             }
+                             return MixedPixel{source};
+                         };
+-                        if (mixCacheEnabled && !replaceIntermission && cachedTexture &&
++                        if (mixCacheEnabled && !replaceIntermission && !sceneFade && cachedTexture &&
+                             cache.backdrop==selectedBackdrop && cache.geometry==geometry) {
+                             auto previous=cache.pixels.begin();
+                             bool same=true;
+@@ -2809,7 +2813,7 @@
+                                 return SDL_RenderTexture(renderer,cachedTexture,nullptr,&target);
+                             }
+                         }
+-                        bool mayMix=replaceIntermission;
++                        bool mayMix=replaceIntermission || sceneFade;
+                         for(int ly=0;ly<lines && !mayMix;ly++) {
+                             const int sy=top+ly;if(sy<0 || sy>=224)continue;
+                             for(int lx=0;lx<columns;lx++) {
+@@ -2841,7 +2845,7 @@
+                             uint32_t* row=pixels.data()+size_t(py)*fit.w;
+                             const int64_t by=backRow(fit.y+py);
+                             if(py>firstRow && sy==previousNative && by==previousBack &&
+-                                (!replaceIntermission || (2*py+1)/scale==(2*py-1)/scale)) {std::copy_n(row-fit.w,fit.w,row);continue;}
++                                ((!replaceIntermission && !sceneFade) || (2*py+1)/scale==(2*py-1)/scale)) {std::copy_n(row-fit.w,fit.w,row);continue;}
+                             previousNative=sy;previousBack=by;
+                             if(sy<0 || sy>=224) {std::fill_n(row,fit.w,0u);continue;}
+                             for(int px=0;px<fit.w;) {
+@@ -2850,10 +2854,12 @@
+                                 const size_t at=size_t(sy)*320+sx;
+                                 const auto& recipe=recipeAt(at);
+                                 const uint32_t source=solidRecipe?0xFF000000:sourcePixels[at];
+-                                if (replaceIntermission && !inIntermissionMenu(sx, sy) && by>=0) {
++                                if ((sceneFade || (replaceIntermission && !inIntermissionMenu(sx, sy))) && by>=0) {
+                                     const auto& cover=planes.floralCoverMix[at];
+                                     const unsigned weight=planes.topSource[at]==4?0:cover.lowerWeight;
+-                                    const size_t donorRow=size_t((2*py+1)/scale)*640;
++                                    const size_t donorRow = sceneFade
++                                        ? size_t(((2*py+1)/scale) * sceneFade->height / 288) * sceneFade->width
++                                        : size_t((2*py+1)/scale)*640;
+                                     while (px<end) {
+                                         const int64_t dx=int64_t(fit.x+px)-backX;
+                                         if (weight && (dx<0 || dx>=int64_t(backW)*backScale)) {
+@@ -2865,8 +2871,10 @@
+                                         const int donorColumn=(2*px+1)/scale;
+                                         int stop=std::min(end,(donorColumn+1)*scale/2);
+                                         if (weight) stop=int(std::min<int64_t>(stop,px+(backScale-dx%backScale)));
+-                                        const uint32_t donor=icPlate->donor[donorRow+donorColumn];
+-                                        const PanelMix pc{donor,uint8_t(weight?weight:32),icOffset};
++                                        const uint32_t donor = sceneFade ? sceneFade->pixels[donorRow+donorColumn]
++                                                                          : icPlate->donor[donorRow+donorColumn];
++                                        const PanelMix pc{donor, uint8_t(weight ? weight : 32),
++                                                          sceneFade ? cover.postMixOffset : icOffset};
+                                         const auto below=weight?back[size_t(by)*backW+size_t(dx/backScale)]:donor;
+                                         std::fill(row+px,row+stop,CompositePanelPixel(pc,below,0xFF000000u));
+                                         px=stop;
+@@ -2896,7 +2904,7 @@
+                             // Each texel in the compact texture represents a block delimited by
+                             // both the native-pixel grid and the backdrop sampling grid.
+                             const auto step=[&](int offset,int size) {
+-                                return backOk && !replaceIntermission
++                                return backOk && !replaceIntermission && !sceneFade
+                                     ? std::gcd(std::gcd(scale,backScale),std::gcd(offset,size)) : 1;
+                             };
+                             const int stepX=step(fit.x-backX,fit.w), stepY=step(fit.y-backY,fit.h);
+@@ -2919,7 +2927,7 @@
+                             if(cachedTexture && SDL_UpdateTexture(cachedTexture,nullptr,pixels.data(),uploadW*sizeof(uint32_t))) {
+                                 ++mixUploads;
+                                 mixUploadedBytes+=size_t(uploadW)*uploadH*sizeof(uint32_t);
+-                                if (mixCacheEnabled && !replaceIntermission) {
++                                if (mixCacheEnabled && !replaceIntermission && !sceneFade) {
+                                     try {
+                                         cache.pixels.resize(size_t(stopX-startX)*(stopY-startY));
+                                         auto saved=cache.pixels.begin();
+@@ -3412,7 +3420,64 @@
+                             SDL_RenderFillRect(renderer,&shadow);
+                             SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+                         }
+-                        if(!uploadLayer(pictureMixTexture,pictureMixWidth,pictureMixHeight,pictureMixPixels,pictureMixCache,zoom.picture,imageCrop,zoomForeground)) {
++                        const auto staircaseMix = [&]() -> const SceneHdPixels* {
++                            if (shownDisc != 1 || choosing || port.menu.IsOpen() || !port.videoRenderer ||
++                                port.opt.pcAssetsPath.empty() || satrecomp::FeatureValue("pc_hd_backgrounds") != 0 ||
++                                imageCrop.x != 16 || imageCrop.y != 8 || imageCrop.w != 288 || imageCrop.h != 144 ||
++                                zoom.picture.w != zoom.picture.scale * 288 || zoom.picture.h != zoom.picture.scale * 144 ||
++                                planes.source.size() != 320*224 || planes.topSource.size() != 320*224 ||
++                                planes.floralCoverMix.size() != 320*224)
++                                return nullptr;
++                            const auto& video = *port.videoRenderer;
++                            constexpr uint64_t palette = 0x07B8E8D0D41C119Full;
++                            constexpr uint64_t cells = 0xC41EA21F6B54DAF3ull;
++                            for (unsigned layer : {2u, 4u}) {
++                                if (video.BackgroundPaletteFingerprint(layer) != palette ||
++                                    video.BackgroundColorOffset(layer) != std::array<int16_t, 3>{} ||
++                                    video.BackgroundCellFingerprint(layer, 41472) != cells)
++                                    return nullptr;
++                            }
++                            for (int y = 8; y < 152; ++y) {
++                                for (int x = 16; x < 304; ++x) {
++                                    const auto at = size_t(y) * 320 + x;
++                                    const auto& cover = planes.floralCoverMix[at];
++                                    if (planes.topSource[at] != 5 || (planes.source[at] != 2 && planes.source[at] != 4) ||
++                                        !cover.lowerWeight || cover.lowerWeight > 32)
++                                        return nullptr;
++                                }
++                            }
++                            if (!staircaseFadeRequested) {
++                                staircaseFadeRequested = true;
++                                staircaseFadePending = std::async(std::launch::async, [root=std::filesystem::u8path(port.opt.pcAssetsPath)] {
++                                    SceneHdPixels result;
++                                    std::vector<uint8_t> bytes;
++                                    std::vector<PcSprite> images;
++                                    std::string error;
++                                    constexpr size_t donorBytes = 237402;
++                                    if (ReadPcBackdropFile(root/"SAKURA1/BG/BG1016.SPR", bytes, donorBytes) &&
++                                        bytes.size() == donorBytes && PcBackdropHash(bytes) == 0xEC1E51F9E2FF2473ull &&
++                                        DecodePcSprites(bytes, images, error)) {
++                                        for (auto& image : images) {
++                                            if (image.index != 0 || image.width != 576 || image.height != 320) continue;
++                                            result = {image.width, image.height, std::move(image.pixels)};
++                                            break;
++                                        }
++                                    }
++                                    return result;
++                                });
++                            }
++                            if (staircaseFadePending.valid() &&
++                                staircaseFadePending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                                staircaseFade = staircaseFadePending.get();
++                            return staircaseFade.pixels.empty() ? nullptr : &staircaseFade;
++                        }();
++                        const bool drewMix = uploadLayer(pictureMixTexture,pictureMixWidth,pictureMixHeight,pictureMixPixels,
++                            pictureMixCache,zoom.picture,imageCrop,zoomForeground,nullptr,false,staircaseMix);
++                        if (drewMix && staircaseMix && !staircaseFadeTraced && std::getenv("SATRECOMP_BACKGROUND_STATS")) {
++                            std::fprintf(stderr, "scene picture: SAKURA1/BG/BG1016.SPR usable=1\n");
++                            staircaseFadeTraced = true;
++                        }
++                        if(!drewMix) {
+                             // T74: when the picture on screen is a recognised Saturn scene picture and nothing
+                             // blends over it, draw the PC picture under the native overlays (actors, clock).
+                             bool drewHd=false;
