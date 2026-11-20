@@ -1,0 +1,120 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -959,7 +959,7 @@
+         SceneHd image;
+         std::vector<WindowRail> rails;
+     };
+-    std::array<WindowFrame, 3> windowFrames;
++    std::array<WindowFrame, 5> windowFrames;
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+@@ -3680,6 +3680,10 @@
+                     int width, height, anchorX, anchorY;
+                     uint64_t texture, palette;
+                     std::array<uint32_t, 4> inks;
++                    unsigned systemImage = 0;
++                    uint64_t alternateTexture = 0;
++                    uint16_t right = 0, bottom = 0;
++                    int footer = 0;
+                 };
+                 constexpr WindowVariant variants[] = {
+                     {0, 1, {24, 16, 273, 121}, 272, 120, 160, 76, 0x4ADC5FF69258EF85ull,
+@@ -3688,6 +3692,10 @@
+                      0x3CA9F51EFEDCF198ull, {0, 0x3898D8, 0x003858, 0x287098}},
+                     {2, 2, {32, 40, 257, 89}, 256, 88, 160, 84, 0x79B376CDE20172A5ull,
+                      0x5AB92AFB3C366AFEull, {0, 0x3898D8, 0x003858, 0}},
++                    {3, 1, {16, 16, 288, 144}, 288, 144, 16, 16, 0x3B1D76464A70DBA4ull,
++                     0x809F8438D9925B74ull, {}, 11, 0xD33908A56103E1C2ull, 0x008F, 0x002F, 120},
++                    {4, 1, {24, 16, 112, 88}, 112, 88, 24, 16, 0x1DF6267AC7E483C6ull,
++                     0x809F8438D9925B74ull, {}, 14, 0, 0xFFE7, 0xFFF7, 72},
+                 };
+                 const auto& frame = port.videoRenderer->PresentationFrame();
+                 const auto rasterAxis = [](int source, int output) {
+@@ -3707,18 +3715,26 @@
+                 };
+                 if (frame.topSource.size() == 320 * 224) {
+                     const auto palette = PcBackdropHash(std::span{frame.palette}.subspan(0xA00, 512));
++                    const auto systemPalette = std::span{frame.palette}.subspan(0x580, 32);
++                    const auto systemPaletteHash = PcBackdropHash(systemPalette);
+                     for (const auto& variant : variants) {
+-                        if (shownDisc != variant.disc || palette != variant.palette) continue;
+-                        const bool scaled = variant.index != 1;
++                        const bool system = variant.systemImage != 0;
++                        if (shownDisc != variant.disc || (system ? systemPaletteHash : palette) != variant.palette) continue;
++                        const bool scaled = !system && variant.index != 1;
+                         const auto sprite = std::ranges::find_if(frame.sprites, [&](const auto& candidate) {
+                             const auto& cmd = candidate.command.words;
+-                            return cmd[0] == (scaled ? 0x1A01 : 0x1A00) &&
+-                                cmd[2] == 0x00A0 && cmd[3] == 0xC500 &&
+-                                cmd[5] == ((variant.width / 8) << 8 | variant.height) &&
+-                                candidate.x == variant.anchorX && candidate.y == variant.anchorY &&
+-                                (!scaled || (cmd[8] == variant.width && cmd[9] == variant.height)) &&
+-                                candidate.pixels.size() == size_t(variant.width * variant.height) &&
+-                                PcBackdropHash(candidate.pixels) == variant.texture;
++                            if (cmd[0] != (system ? 0x1001 : scaled ? 0x1A01 : 0x1A00) ||
++                                cmd[2] != (system ? 0x0080 : 0x00A0) ||
++                                cmd[3] != (system ? 0xA2C0 : 0xC500) ||
++                                cmd[5] != ((variant.width / 8) << 8 | variant.height) ||
++                                candidate.x != variant.anchorX || candidate.y != variant.anchorY ||
++                                (scaled && (cmd[8] != variant.width || cmd[9] != variant.height)) ||
++                                (system && (cmd[10] != variant.right || cmd[11] != variant.bottom)) ||
++                                candidate.pixels.size() != size_t(variant.width * variant.height) / (system ? 2 : 1))
++                                return false;
++                            const auto texture = PcBackdropHash(candidate.pixels);
++                            return texture == variant.texture ||
++                                (variant.alternateTexture && texture == variant.alternateTexture);
+                         });
+                         if (sprite == frame.sprites.end()) continue;
+                         const auto box = variant.target;
+@@ -3729,7 +3745,21 @@
+                             for (int y = 0; y < box.height; ++y) {
+                                 for (int x = 0; x < box.width; ++x) {
+                                     const int sx = columns[x], sy = rows[y];
+-                                    const unsigned ink = sprite->pixels[size_t(sy) * variant.width + sx];
++                                    const size_t source = size_t(sy) * variant.width + sx;
++                                    if (system) {
++                                        // Keep the localized tab and the spaces used by cursor and labels.
++                                        if (sy >= variant.footer || (variant.systemImage == 11 &&
++                                            sx >= 8 && sx < 280 && sy % 24 >= 8)) continue;
++                                        const unsigned ink = (sprite->pixels[source / 2] >> (source % 2 ? 0 : 4)) & 15;
++                                        if (!ink || ink == 9) continue;
++                                        const unsigned color = (unsigned(systemPalette[2 * ink]) << 8) |
++                                            systemPalette[2 * ink + 1];
++                                        const uint32_t rgb = ((color & 31) << 3) |
++                                            ((color & 0x3E0) << 6) | ((color & 0x7C00) << 9);
++                                        window.rails.push_back({x, y, sx, sy, rgb});
++                                        continue;
++                                    }
++                                    const unsigned ink = sprite->pixels[source];
+                                     // Preserve the timer, its lettering and the center ornament.
+                                     if (variant.index == 0 && ((sx >= 77 && sx < 194 && sy < 34) ||
+                                         (sx >= 113 && sx < 159 && sy >= 99))) continue;
+@@ -3745,17 +3775,21 @@
+                         if (!window.image.tried) {
+                             window.image.tried = true;
+                             window.image.pending = std::async(std::launch::async,
+-                                [file = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/WINDOW.SPR",
+-                                 rails = window.rails, variant]() {
++                                [file = std::filesystem::u8path(port.opt.pcAssetsPath) /
++                                     (system ? "SAKURA1/SYSTEM/SISTEM.SPR" : "SAKURA1/SYSTEM/WINDOW.SPR"),
++                                 rails = window.rails, variant, system]() {
+                                     SceneHdPixels result;
+                                     std::vector<uint8_t> bytes;
+-                                    if (!ReadPcBackdropFile(file, bytes, 93941) || bytes.size() != 93941 ||
+-                                        PcBackdropHash(bytes) != 0xAF9AB06AB9D017A2ull) return result;
++                                    const unsigned size = system ? 285236 : 93941;
++                                    const uint64_t fingerprint = system ? 0x0DBC9A3C989D369Bull : 0xAF9AB06AB9D017A2ull;
++                                    if (!ReadPcBackdropFile(file, bytes, size) || bytes.size() != size ||
++                                        PcBackdropHash(bytes) != fingerprint) return result;
+                                     std::vector<PcSprite> images;
+                                     std::string error;
+                                     if (!DecodePcSprites(bytes, images, error)) return result;
+                                     for (const auto& image : images) {
+-                                        if (image.index != variant.index || image.width != 2 * variant.width ||
++                                        if (image.index != (system ? variant.systemImage : variant.index) ||
++                                            image.width != 2 * variant.width ||
+                                             image.height != 2 * variant.height) continue;
+                                         result.width = 2 * variant.target.width;
+                                         result.height = 2 * variant.target.height;
