@@ -62,6 +62,8 @@ Patch 0165 keeps the CPU-only logical surfaces prepared by existing background w
 
 Three alternating real-time runs at 1440p reduced the median first entry frame from 35.81 to 29.61 ms relative to 0164 on the same profile. The backdrop operation on that frame dropped from 8.94 to 2.31 ms median. Separate 1440p and 1080p comparisons matched all 1,100 strict guest hashes and 18 sampled RGB pairs. Presentation still exceeded the frame budget on the first fade frame. Raw timings and the rejected compact-texture experiment remain local.
 
+A separate instrumented 0165 replay broke down transition frame 404 at 31.85 ms. It spent 9.60 ms on guest work, 3.00 ms on the retained backdrop upload and 5.50 ms on the fade exterior, within 22.25 ms of presentation. The native-size mixed layer first appeared in the trace at frame 406 and took 1.06 ms of composition plus 3.87 ms for upload and cache bookkeeping. Optimizing that later mixed layer cannot account for the earlier peak. First-frame allocation, upload, and presentation remain under investigation. The isolated trace is `local/work/codex-ogami-map-perf/warm-first-frame-breakdown/run.log`.
+
 ## Held empty dialogue position
 
 During Chapter 1, the Enhance Zoom dialogue box rose briefly when a picture
