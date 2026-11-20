@@ -22,6 +22,8 @@ First goal: all menus and chapter 1. The tools live in `tools/es/`; the script, 
 
 The Spanish script now keeps «Onii-chan» when Iris addresses Ogami. The opening lobby line uses that affectionate form in the Saturn voice and text. The Spanish version had carried over «Mon Frère» from the English adaptation. The correction covers dialogue and battle messages on both discs. Local read-back found 474 occurrences updated on disc 1 and 465 on disc 2. The check covered record IDs, prefixes, unrelated text, lip-sync footers and the position of every modified table. Both Spanish xdelta layers reproduce the new images.
 
+The same review corrected the existing quiz options to «Dama demonio» and «Chico Fiesta», the terms used elsewhere in the Spanish dialogue. Kohran’s line after her invention breaks now starts with «¡Yo estoy bien!». Both discs retain the same option order and text limits.
+
 ## Menus
 
 Custom LZ compression (SH-2 routine `0x0600A164`), implemented in `tools/es/red_lz.py` and verified against all known streams. When reinserting, a stream can only occupy its original length plus the zero padding that already followed it: palettes or tables usually sit behind it.

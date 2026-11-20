@@ -32,8 +32,15 @@ MARKER = re.compile(r'^\d{4}TBL:\d+\s*$')
 IRIS_ADDRESS = re.compile(r'\bMon[ \n]Frère\b')
 
 
-def restore_iris_address(text: str) -> str:
-    return IRIS_ADDRESS.sub('Onii-chan', text)
+def restore_localized_terms(text: str) -> str:
+    text = IRIS_ADDRESS.sub('Onii-chan', text)
+    for original, localized in (
+        ('Madame Youki', 'Dama demonio'),
+        ('Señor Fiesta', 'Chico Fiesta'),
+        ('¡Yo qué más da!', '¡Yo estoy bien!'),
+    ):
+        text = text.replace(original, localized)
+    return text
 
 
 def quotes(text: str) -> str:
@@ -121,7 +128,7 @@ def main():
                     if es is None:
                         untranslated[name].append(record.index)
                         continue
-                    es = restore_iris_address(es)
+                    es = restore_localized_terms(es)
                     lips = kinds[chapter].get(english) == 'LIPS'
                     for issue in es_tables.check(es, keep_lines=lips):
                         problems.append(f'{base}-{record.index}: {issue}')
@@ -140,7 +147,7 @@ def main():
                     if es is None:
                         untranslated[name].append(record['index'])
                         continue
-                    es = restore_iris_address(es)
+                    es = restore_localized_terms(es)
                     for issue in es_tables.check(es):
                         problems.append(f'{base}-{record["index"]}: {issue}')
                     texts[record['index']] = '\n'.join(es_tables.wrap(es))
