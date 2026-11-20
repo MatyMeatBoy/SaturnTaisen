@@ -285,3 +285,31 @@ The strict guest hashes and final SRAM matched. All five 1440p captures
 agreed before the HD draw or differed only inside the tactical viewport.
 3 captured fields show the replacement. The exact replay receipt is
 in `local/work/codex-th1/release-0215/map14-package-receipt.json`.
+
+## Tactical event animation dependencies
+
+The PC `SAKURA2/EVENTANM.TAB` maps each active `(MAP, NPCID)` entry to
+an EVENT SPR. It has 431 distinct references to 211 of the 235 EVENT files.
+All 48 files in EVENT/MAP00 appear in the table, with 190 references.
+For example, EV00S24.SPR is used by MAP02/NPC8, MAP03/NPC6, MAP06/NPC21
+and MAP07/NPC0. The [file queue](hd-chapter-coverage.md#work-inventory-by-pc-resource)
+exports the numeric PC references under one file claim. The remaining 24
+EVENT files are candidates whose usage is still open.
+
+On the archived English MAP02 tactical continuation, the CD trace loads
+EVS02100.BIN from FAD 221287 (16 sectors) and EVS02101.BIN from FAD
+221303 (32 sectors). At the natural middle checkpoint, five active 8 bpp
+VDP1 strips from EVS02100 form the actor associated with EV00S24.SPR
+image 0. The strip sources are 0x51300, 0x51580, 0x517C0, 0x51900 and
+0x51B40. Their corresponding bank offsets are 29176, 29816, 30392,
+30712 and 31288. Each strip is 8 pixels wide and has PMOD 0x0090 and
+COLR 0x21C0. Reassembled at the active command coordinates and normalized
+to 72×96, the opaque silhouette has intersection over union 0.96885 with
+the PC image after removal of its cyan key. The next candidate in the
+48-image MAP00/MAP02 comparison scores 0.63003.
+
+This identifies a native dependency for one PC animation resource.
+A replacement must group the VDP1 commands for one actor, preserve
+priority and anchoring, and use the correct frame. The probe supplies
+the input for that compositor work. No HD draw or package is claimed
+for EVENT on the basis of this investigation.
