@@ -163,8 +163,8 @@ The regenerated coverage catalog and runtime scene table are byte-identical to t
 
 | Saturn | Best PC | Score | Runner-up | Margin | Decision |
 |---|---|---|---|---|---|
-| BG1130 | BG1132 | 0.1756 | BG1134 | 0.000 | stays unpaired: tie between door-sign variants |
-| BG1131 | BG1132 | 0.1754 | BG1134 | 0.000 | stays unpaired: tie between door-sign variants |
+| BG1130 | BG1132 | 0.1756 | BG1134 | 0.000 | initially ambiguous; see [exact corridor aliases](#exact-corridor-aliases) |
+| BG1131 | BG1132 | 0.1754 | BG1134 | 0.000 | initially ambiguous; see [exact corridor aliases](#exact-corridor-aliases) |
 | BG1211 | BG1211 | 0.0472 | BG4110 | 0.154 | same-number picture, English text vs Japanese text baked in; rejected |
 | BG1212 | BG1212 | 0.1561 | BG2212 | 0.036 | rejected as in the review (baked text) |
 | BG1213 | BG2282 | 0.0818 | BG2525 | 0.092 | no same-number match; candidate not confirmed |
@@ -176,3 +176,37 @@ The regenerated coverage catalog and runtime scene table are byte-identical to t
 | BG1359, BG1361 | BG1082 | 0.1412, 0.1455 | BG1095 | 0.000 | tie; room variant differs |
 
 No pair was added: every best score is `ambiguous` and the earlier eye review reasons (baked text, lighting, room variant) still stand. BG0000 and BG1341 are blank placeholders. A counterpart would need a side-by-side review of the tied candidates, which the eye review of 2026-11-19 already did for the same-number files.
+
+
+## Exact corridor aliases
+
+BG1130 and BG1131 lacked same-number PC files and had been left unpaired
+after the visual donor search. The native decoder finds exact aliases
+to assets that already draw through the scene table. This comparison
+extracts the complete 512-byte palette and all 41,472 ordered native
+picture bytes from each prepared English disc. Each alias and its
+canonical scene is byte-identical in both ranges and decodes to the
+same 288×144 RGBA. The complete BIN files have distinct SHA-256 values.
+
+| Alias on both discs | Canonical scene | Existing PC donor, index 0 | Palette FNV-1a | Ordered picture FNV-1a |
+|---|---|---|---|---|
+| BG1130 | BG1134 | BG1134.SPR | `BB7563B90D97452C` | `B53D8DEC91D04064` |
+| BG1131 | BG1135 | BG1135.SPR | `CBC722D4324FC4E1` | `55B9607B535ABB3C` |
+
+The PC corridor files BG1132, BG1134, BG1135 and BG1136 have the same
+decoded 576×320 RGBA SHA-256
+`613f0c2167716f2616e0c55a6a425c91fca9bfd6670748f4b6d806a9e71abba6`.
+The alias validation checks dimensions, palette and both picture
+fingerprints against the accepted catalog row. The generated runtime
+header remains byte-identical, with 468 entries and 59 ambiguous-palette
+entries. Its SHA-256 is
+`aa52e4dab4c885c669397b3d8e6fb3743abc79b3ed4a8871a69e7e1c20350e6a`.
+
+The chapter catalog now credits the four English disc alias rows for
+their existing runtime selection. Neither alias had an exact archived
+palette witness, so the in-game verification field stays unset.
+The analogous BG4049/BG4094 identity is a tactical key-color cut-out
+and remains outside the scene compositor.
+
+At block close the project measured 62,873,366,654 logical bytes, above
+the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

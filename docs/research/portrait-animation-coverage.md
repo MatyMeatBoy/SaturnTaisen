@@ -116,8 +116,7 @@ captures show each strip active, with every changed pixel confined
 to the verified portrait rectangle. The strip controls in Original
 match in RGB with the pack present and absent, and
 each run reports zero interpreted blocks. These fixtures verify
-the three draw paths. The natural 00a1 chapter scene remains
-to be observed.
+the three draw paths. The later [natural Command Room replay](#iris-00a1-command-room-portrait) covers all three.
 
 The owner decision keeps the Saturn emblem `0169` by design.
 There are 303 HD identities and one native choice. Coverage now
@@ -165,8 +164,7 @@ this occurrence without expanding the claim to other portraits.
 The T45 Iris route remains separate. The English Chapter 1
 `0102.BIN` selects `00a1` at file offset `0x2DEE` and then
 requests table record 10312 in the underground Command Room.
-This is a static route lead. The exact natural Iris display
-still needs a checkpoint that reaches that branch.
+The [natural Command Room replay](#iris-00a1-command-room-portrait) later reached that branch.
 
 At block close the project measured 63,129,173,134 logical bytes
 with hard links counted once and reparse points excluded, above the
@@ -199,9 +197,56 @@ strips stay outside this verification scope.
 The bounded Iris Command Room investigation replayed the
 unmodified `prebattle-3000` state with normal A inputs. The trace
 reached English record 10261 before the wall-clock limit, short
-of the 10312 selector for `00a1`. A natural activation of
-the swapped Iris strips remains open.
+of the 10312 selector for `00a1`. The [later relay](#iris-00a1-command-room-portrait) verified both strips.
 
 At block close the project measured 63,922,050,823 logical bytes
 after removing the duplicate trial pack. The delivered development
 ZIP remains 6,315,009,692 bytes.
+
+
+## Iris 00a1 Command Room portrait
+
+The English disc-1 route resumed the unmodified `prebattle-3000.state`.
+Seven short segments advanced the dialogue through (10252, 10260, 10268,
+10300, 10307) to 10312, with 420, 650, 720, 630, 800, 535 and 340 guest
+frames respectively. The first segment used ordinary A presses every
+45 frames from frame 20 and the subsequent segments used A every
+25 frames from frame 15, with a six-frame hold. The last checkpoint,
+`route06/f337.state`, has SHA-256
+`57e7ba5a9ef7dd468b73d634f02413db7d6c6ef466f872d86cc78f495fe9f5c8`.
+Its `0102TBL` cursor at `0x0606851C` holds `0x00229FFA`.
+The associated LIPS cursor at `0x060685B4` starts at `0x00206E60`.
+The complete English `0102FCE.BIN` is resident at `0x00251000` in the
+three sampled snapshots. Its SHA-256 is
+`a92e1f3e10355f51c2d54061df38a5688502133d5d0fc3ba9522e1edcfed6992`.
+
+With no further input, frame 8 has the exact 40×48 `00a1` base
+(FNV-1a `F9026B5B4506D108`). Frames 33 and 36 each add the exact
+40×16 native strip at row 16 in order 1 then 2. The prepared 2× atlas
+uses PC `KAO.SPR` index 160 with the strips exchanged. Its SHA-256 is
+`8c5ca642b8e8f2b1bfbd0bc845b0ce83b93fd134325f8e559f5bcaf997217c3f`.
+
+The patch 0141 executable replayed each unmodified snapshot for 12 muted,
+strict-native guest frames with the portrait pack present and absent in
+Enhanced and Original. The bundled `KABE00` background selected the
+normal narrative layout. At pass 2, the runtime picked patch 0, 1 and 2
+respectively. Each 2560×1440 Enhanced capture matches all 69,120 expected
+prepared pixels in the rectangle (404,1090) to (644,1378) and has zero
+differences outside it. Strip 2 carries the measured VDP2 white mix of
+3/32 toward RGB555 white (248), applied to the prepared pixels.
+The Original captures match in full, all four guest logs match per
+snapshot, and every run reports zero interpreted blocks.
+
+| Native activation | Local snapshot | Snapshot SHA-256 | 12-frame guest log SHA-256 |
+|---|---|---|---|
+| Base | `lip-8/f8.state` | `2aeed5f460bd57c59de6930f6c247bda6f22122cf29fc9d90de07d0921916621` | `16aa6a0d8914f184607a2bce917ac09e073679021f7fd0716296a6a2918fbc8a` |
+| Strip 1 | `lip-33/f33.state` | `7632ddb1b5dc80bff9db19d45fc108764640f1f5f9e8d402ab34724f8f241c31` | `e23dd64b711f81bd17e0210d3b2c19b01fc5c7fc91dae6bcc1915267ed46f061` |
+| Strip 2 | `lip-36/f36.state` | `977294ba87417194020e48d88ebd82f7ece276fe3e129fc42c490f6715a9fca6` | `c50ee5c18668af88cf867c2fffaa412221615e81c295884fc5caa311e87a6136` |
+
+The Chapter 1 occurrence has verified HD draws and the atlas file has
+resident status. Chapter 7, disc-2 playback and full Chapter 1 parity
+remain outside this sample. The inputs, snapshots, captures and logs
+are in the ignored `local/work/codex-tp3c/t45-natural-iris` folder.
+
+At block close the project measured 64,374,989,543 logical bytes, above
+the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

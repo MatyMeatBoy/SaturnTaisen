@@ -107,8 +107,7 @@ NC60 matches 11,273 opaque pixels at (120,8) in continuation frame 4200,
 following its read at FAD 165138. NC3058 has an exact 288×144 body
 command in the terminal state and all 27,544 opaque pixels match
 the frame-7200 capture. These are native body observations. The
-coverage register retains their existing HD integration status
-and records no new HD body draw.
+coverage register retains their HD integration status. The separate [NC3058 cut-out replay](nc3058-cutout-1440p.md) verifies the HD draw and the native face fallback for this appearance.
 
 | State / image | Portrait | Base FNV-1a | Native RGB comparison |
 | --- | --- | --- | --- |
@@ -129,3 +128,41 @@ full chapter parity and packaging remain open.
 At block close the main workspace measured 61,107,185,170 logical bytes
 with hard links counted once and reparse points excluded, above the
 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.
+
+
+## Verified 0501FCE portrait bases
+
+Two unmodified English disc-1 Chapter 5 checkpoints contain the complete
+`0501FCE.BIN` at low WRAM address `0x00251000`, with SHA-256
+`237c0f7e31a5e93a2ac0c74ce0b40f476a57cb5247a125c5eb9755702957024f`.
+The `0501TBL` file is resident at `0x00224000` in both. The cursor
+at `0x0606851C` identifies the record in each checkpoint. The active
+40×48 VDP1 portrait matches the exact native base with no active strip.
+
+| Archive checkpoint | Record and cursor | Identity | VDP1 base FNV-1a | PC KAO.SPR index |
+|---|---|---|---|---|
+| `codex-tw3/bg2533-witness/f13999.state` | 10131, `0x00227874` | `010f` | `47658F2AA81A82AB` | 270 |
+| `codex-eve205-route/episode5-7200/finish.state` | 50019, `0x0022C34E` | `016a` | `09C1A8436F3C1C63` | 361 |
+
+Patch 0141 replayed 12 muted strict-native frames from each checkpoint
+with the verified single-portrait pack present and absent, in Enhanced
+and Original. The bundled `KABE41` and `KABE40` backgrounds respectively
+selected the narrative layout. At pass 2 the renderer drew each base
+as patch 0, density 2, white mix 0. At 2560×1440, every one of the
+69,120 RGB pixels at (404,1090)–(644,1378) matches the corresponding
+prepared portrait. All pixels outside match, the Original pairs match
+in full, and all four 12-frame guest hash logs match per checkpoint.
+Every arm reports zero interpreted blocks.
+
+| Identity | Checkpoint SHA-256 | Matching guest log SHA-256 | Prepared 2× PNG SHA-256 |
+|---|---|---|---|
+| `010f` | `c3332e20ec2522e062d1d903efbd5711f1606404abf5be32edf6ce179c96a421` | `b978992916d2a4e8718f7e55a4d15fdba41f6bf636dc8f79b86be8982c30b6ef` | `c7db44e78c4d667cf2aa81e11d7ae1af5ba4fb06c1391238d7da8dbc91507ea4` |
+| `016a` | `632815e2976bfffe5b687cbd03ed3c7cdb8809e0f13d5feed1d71926a7e51237` | `3db122fd65444b8385640895ff44fd56fd85783401c76ddfb5ce530176641866` | `bb8da70c2ecb58e2ea6a28c3ce21b71ddbd6389cf883c4dc138154bae110c0a4` |
+
+The chapter register records these two base draws. The archive
+observation for `00ff` and the native `0169` emblem keep their prior statuses.
+Evidence for strips and a complete chapter replay remains open.
+Private logs and images are in `local/work/codex-tp3c/th4-portraits`.
+
+At block close the project measured 66,801,458,366 logical bytes, above
+the 20 GB cap. The delivered development ZIP remains 6,315,009,692 bytes.

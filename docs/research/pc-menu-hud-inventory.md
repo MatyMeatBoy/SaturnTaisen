@@ -75,7 +75,7 @@ Start on 700–707. The remaining inputs and observed results are:
 | Case | Input after opening inventory | Frame 1000 |
 | --- | --- | --- |
 | ITEM07 with cursor | Up+Left 810–827, Left 828–841, A 890–897, Right 930–954 | HD color replaces 280,575 destination pixels. All 171 cursor-covered native texels and 1,051 transparent texels retain their original RGB blocks. No RGB difference extends past the card rectangle. |
-| ITEM12, excluded bear | Up+Left 810–827, A 890–897 | Fully native. Active command 0x5C0 uses the same geometry and mode as ITEM07. Texture FNV `2E3976D6862A7486`, palette FNV `235B09AEB829FB4C`. The PC asset is an icon-only match. |
+| ITEM12, bear before patch 0147 | Up+Left 810–827, A 890–897 | Fully native. Active command 0x5C0 uses the same geometry and mode as ITEM07. Texture FNV `2E3976D6862A7486`, palette FNV `235B09AEB829FB4C`. The earlier audit selected the 72×72 menu icon. |
 
 Strict-native windowed runs compared all 190 guest hashes of the first letter
 route and all 1,010 guest hashes of each dressing-room route. Across the relevant
@@ -84,6 +84,23 @@ runtime pixel for pixel, and the ITEM07 asset-absent Enhanced viewport matched
 it as well. Every run reported zero interpreted blocks. The other 37 approved
 cards have offline evidence and still need direct in-game witnesses. There was
 no release package change.
+
+
+### ITEM03, ITEM12 and ITEM27
+
+The original item ranking allowed 72×72 menu icons to outrank complete item cards. A reverse search limited to full 224×224 cards found Maria’s photograph (`ITEM03`), Iris’s teddy bear (`ITEM12`) and Ogami’s photograph (`ITEM27`). Each PC file has a complete same-number picture, with one opaque image at index 0 and the same border and key geometry as the previously verified letter card. The two prepared discs have byte-identical 112×112 pictures and 512-byte palettes for each item.
+
+| Card | Native texture FNV-1a | Native palette FNV-1a | PC file |
+| --- | --- | --- | --- |
+| ITEM03 | `987FF4B5CDFCC8F7` | `303817C07D8AD3EA` | `ITEM03.SPR` |
+| ITEM12 | `2E3976D6862A7486` | `235B09AEB829FB4C` | `ITEM12.SPR` |
+| ITEM27 | `69495E754C680B31` | `61BE6F092AD8446C` | `ITEM27.SPR` |
+
+The existing item-card draw path matches the exact texture and palette and uses the presented VDP1 write mask. Patch 0147 adds three generated table rows. The review pins the complete PC file SHA-256 for each approved card.
+
+An English disc 1 resume of the archived bear-card route verified ITEM12 at 2560×1440. The destination was (888,141), 784×784. All 549,927 visible card pixels match the selected PC image at the existing integer scale. Exactly 549,736 pixels differ from the native capture, all inside the card. Every pixel outside the native card mask is preserved. The missing, disabled and previous-renderer Enhanced captures match, as do both Original captures. The six runs have identical SRAM and 80 identical guest hashes (SHA-256 `aefc784b2fefa2f9f9eac5a2373d9c80feeded9767258eaa178c35fa4f99295a`), with zero interpreted blocks. The 190-frame ITEM07 control and 1,200-frame opening also match the previous renderer in guest hashes, SRAM and the sampled captures.
+
+ITEM03 and ITEM27 are checked offline. Their natural display and package inclusion for all three cards remain open. Private captures and receipts are under `local/work/codex-th1/hud-item-candidates/`.
 
 ## T110 offline geometry and palette review
 
@@ -167,6 +184,12 @@ The 2560×1440 comparison replayed the same settings, PC data and guest inputs o
 
 SIS_ICON subimage 1 also matches the System RAM icon's silhouette. Its 2×2 blocks are all uniform, and the candidate keeps that icon native. Private captures and receipts are in `local/work/codex-tw5-next`. Other menu layouts, palette variants and disc 2 remain open. No package change.
 
+### T110c CD-2 emblem in the load menu
+
+The English disc 2 title replay opened **Data to load** with two Chapter 8 slots and one Chapter 7 slot. The top CD-2 emblem uses the same 40×40 Saturn command and position (24,64) as the verified CD-1 call. Its complete texture fingerprint is `9AF2CC56D5CAEB11` and palette fingerprint is `52C0DBB1EA90290A`. The corresponding pink CD-2 subimage is 3 of the existing pinned `SIS_ICON.SPR`. The 80×80 alpha silhouette matches the doubled Saturn indices.
+
+Patch 0146 uses the previous VDP1 ownership and VDP2 blend checks. Each exact emblem has its own decoded cache entry. The renderer keeps the lower slots on the native path. At 2560×1440, the independent 31/32 PC and 1/32 background reconstruction reproduced the entire result, with 1,122 native-owned texels in the tested draw and preserved pixels outside the emblem. All seven 30-frame runs shared the same strict guest hash log. Original, disabled, missing and corrupt-donor controls passed. The existing disc 1 HD emblem retained identical output and guest hashes. Other slot positions, other variants and package inclusion remain open.
+
 ## HD measure of the menu/HUD category (TW5)
 
 The register (`config/hd-chapter-coverage.json`, category `menus-hud`) now carries the runtime-drawn menu/HUD pictures, and `tools/build_hd_progress.py` takes the `hud-menus` integrated count from it. The map is explicit in `tools/hd_chapter_coverage.py` (`SYSTEM_HUD_DRAWS`, `SYSTEM_HUD_EXCLUDED`; item cards come from the same selection as `tools/gen_item_table.py`). A picture counts once per PC image, whatever the disc.
@@ -175,16 +198,16 @@ Denominator: 572 SYSTEM images, minus the 394 KAO faces (portrait atlas, counted
 
 | Piece | PC images | Patch / table | State |
 | --- | --- | --- | --- |
-| Inventory item cards | 38 `SAKURA1/ITEM/ITEMnn.SPR` (of 50 candidates) | 0090, `item_card_table.h` | drawn; the other 12 have no accepted pair or a duplicate palette |
+| Inventory item cards | 41 `SAKURA1/ITEM/ITEMnn.SPR` (of 51 candidate pictures) | 0090, `item_card_table.h` | drawn; ten candidate pictures remain open |
 | Inventory brackets | FONT_CSL 2 of 2 | 0093, `system_brackets.h` | drawn (idle/hover/confirm) |
-| CD-1 load emblem | SIS_ICON 1 of 10 (subimage 2) | 0112, `load_disc_icon.h` | drawn on disc 1; subimage 1 (System RAM icon) kept native |
+| CD-1 and CD-2 load emblems | SIS_ICON 2 of 10 (subimages 2 and 3) | 0112 and 0146, `load_disc_icon.h` | verified for the top load slot; subimage 1 (System RAM icon) kept native |
 | KAO | 394, excluded here | portrait pack | counted in portraits |
 
-Not drawn (open, 187 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 9, SISTEM 45, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 3 (needs layout), WINDOW 6; plus 12 item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
+Not drawn (open, 184 images), per SYSTEM file: BURO_W 2, CAUTION 8, EXIT_W 1, JYOUKI 19 (steam, no native witness), KARAOKE 17, MINISAKU 1, MSTAFF 1, NOWLOAD 1, OMKMOV_W 7, OMKSND_W 5, OP_WIN 1 (keep native), OPTION 4, R_HARI 7 (keep native), REDLOGO 1, SEGALOGO 1, SHADE_WA 1, SHADE_WB 1 (keep native), SIS_BG 1, SIS_BG2 1, SIS_BG3 1, SIS_ICON 8, SISTEM 45, TITLE 29, TL_BG0 1, TL_ROGO0 1, TUIKA_W 3 (needs layout), WINDOW 6; plus ten item pictures. Already drawn from other categories and not counted here: IC01 (patch 0107, ICATCH, scene-images), the battle insets (0125/0134, SAKURA2/BG, scene-images). The Spanish CARGANDO lettering (0117) is generated text, with no PC image. The tactical category lists ITEM files in its own unit; that category is not measured yet, so check for overlap when it is.
 
 ## TW5 wiring audit: which open families the existing mechanisms can reach
 
-Patches 0090, 0093 and 0112 all recognise their Saturn picture from a **witnessed VDP1 draw call**: a saved state where the menu is open gives the command geometry, the texture bytes (FNV of the unpacked indices) and the CRAM bank, and the renderer then tracks the actual framebuffer writes and VDP2 scanout. Data alone (a table row) is enough only when the new picture goes through a call that is already witnessed and guarded. The 187 open images were checked against that rule, using the exports in `local/work/audit-pc-menus` and the earlier search (`local/work/codex-tw5-next/search.py`, which ranked every SYSTEM image against every VDP1 command in all saved states and found only the emblem and the brackets). **Result: no further family can be wired by data with these mechanisms, so this change wires 0 images (41/228 unchanged, no patch recorded).** Wiring the following blind would be a guess on geometry or on the Saturn texture identity, so each family lists what it needs.
+Patches 0090, 0093 and 0112 all recognise their Saturn picture from a **witnessed VDP1 draw call**: a saved state where the menu is open gives the command geometry, the texture bytes (FNV of the unpacked indices) and the CRAM bank, and the renderer then tracks the actual framebuffer writes and VDP2 scanout. Data alone (a table row) is enough only when the new picture goes through a call that is already witnessed and guarded. The original audit checked 187 open images against that rule, using the exports in `local/work/audit-pc-menus` and the earlier search (`local/work/codex-tw5-next/search.py`, which ranked every SYSTEM image against every VDP1 command in all saved states and found only the emblem and the brackets). That audit predated the CD-2 emblem and the three full cards above. Wiring the following blind would be a guess on geometry or on the Saturn texture identity, so each family lists what it needs.
 
 | Family (open images) | What the PC images are | Why it is not wired | What it needs |
 |---|---|---|---|
@@ -194,6 +217,6 @@ Patches 0090, 0093 and 0112 all recognise their Saturn picture from a **witnesse
 | KARAOKE 17, OMKMOV_W 7, OMKSND_W 5, MINISAKU 1, MSTAFF 1 | Extra-menu labels and per-tab panels | The Saturn extra menu has no pointer table (T25) and no witnessed draw call; OMAKE11/12/13 against WALL/SIS_BG3 are only 0.71 to 0.74 correlation candidates (SIS_BG3 ties with WALL/OMAKE1). | A saved extra-menu state, an eye check of the three OMAKE pairs, then the screen-picture path of the IC01 type. |
 | JYOUKI 19 | Steam animation | No native steam sequence identified. | A frame sequence where the steam is on screen. |
 | R_HARI 7, SHADE_WB 1, OP_WIN 1, SHADE_WA 1 | Clock hand with face, dialogue shadow, program frame, scene shadow | Kept native on purpose (aspect, colour, baked Japanese labels) or no same native texture. | Nothing unless the keep-native decision changes. |
-| 12 item pictures | ITEM files without an accepted pair | Duplicate palette or no accepted pair (see T109). | A palette-disambiguating witness per picture. |
+| Ten item pictures | Nine compact icon subimages and the full ITEM09 flower card | The card path requires a full-card counterpart. | Native icon command evidence or an ITEM09 full-card pair. |
 
 Nothing was built or replayed for this change (documentation and register notes only), so the opening-film hashes are untouched by construction.

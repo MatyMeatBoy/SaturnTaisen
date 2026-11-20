@@ -39,11 +39,15 @@ class PresentationRuntimeTests(unittest.TestCase):
             native=original.crop((404,84,2132,948)).resize((288,144),Image.Resampling.NEAREST)
             self.assertEqual(native.resize((2016,1008),Image.Resampling.NEAREST).tobytes(),
                              zoom.crop((272,29,2288,1037)).tobytes())
-            # The translucent box reveals a different part of the background after moving.
-            # Compare the black dialogue ink, rather than requiring that background to match.
-            def ink(image):return bytes(max(pixel[:3])<32 for pixel in image.getdata())
-            self.assertEqual(ink(original.crop((644,996,2132,1284))),
-                             ink(zoom.crop((644,1090,2132,1378))))
+            # Compare the dark glyph cores. Antialiased edge pixels blend with
+            # the different OSD underlays and may straddle a threshold of 32.
+            def ink_core(image):
+                return bytes(max(pixel[:3]) <= 24 for pixel in image.getdata())
+
+            normal_ink = ink_core(original.crop((644, 996, 2132, 1284)))
+            zoom_ink = ink_core(zoom.crop((644, 1090, 2132, 1378)))
+            self.assertTrue(any(normal_ink), 'the fixture must contain visible dialogue')
+            self.assertEqual(normal_ink, zoom_ink)
 
     def test_multicore_preparation_keeps_scene_identical_and_prepares_future_themes(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'local/work') as directory:

@@ -22,6 +22,9 @@ CHAPTER2_FACE_REPORT = 'docs/research/hd-chapter-2.md#stage-02-tactical-portrait
 CHAPTER2_FACE_RUNTIME_REPORT = 'docs/research/hd-chapter-2.md#face02-pc-runtime'
 CHAPTER2_FACE_BANK = '1:/SAKURA2/FACE02.BIN:253500278286bc8a8d6e7c28bdee4d7ee199cc3b48f5b61c18ebab517ada49bb'
 CHAPTER2_FACE_BASE_PAIRS = {0: 10, 30: 208, 31: 209}
+IRIS_COMMAND_ROOM_REPORT = PORTRAIT_REPORT + '#iris-00a1-command-room-portrait'
+CHAPTER3_PORTRAIT_REPORT = 'docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases'
+CHAPTER3_PORTRAIT_DRAWS = ('0068', '00fe', '0116', '013d')
 MARIA_STRIP_REPORT = PORTRAIT_REPORT + '#maria-0176-natural-strip-verification'
 YONEDA_STORAGE_REPORT = PORTRAIT_REPORT + '#yoneda-00e9-storage-portrait'
 
@@ -74,6 +77,8 @@ CHAPTER5_ROUTE_FILES = {
     'NC60', 'NC90', 'NC3058',
 }
 CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
+CHAPTER5_PORTRAIT_DRAWS = ('010f', '016a')
+CHAPTER5_PORTRAIT_REPORT = 'docs/research/hd-chapter-5.md#verified-0501fce-portrait-bases'
 CHAPTER9_ROUTE_REPORT = 'docs/research/hd-chapter-9.md#native-route-observations'
 CHAPTER9_ROUTE_FILES = {'BG1072', 'BG1076', 'BG1176', 'BG2098', 'BG2100', 'NC81', 'NC3018'}
 NATIVE_ROUTE_FILES = {
@@ -81,6 +86,7 @@ NATIVE_ROUTE_FILES = {
     9: (CHAPTER9_ROUTE_FILES, CHAPTER9_ROUTE_REPORT),
 }
 NATIVE_ROUTE_PORTRAITS = {
+    3: ({name: '1:/SAKURA1/0301FCE.BIN' for name in CHAPTER3_PORTRAIT_DRAWS}, CHAPTER3_PORTRAIT_REPORT),
     5: ({name: '1:/SAKURA1/0501FCE.BIN' for name in CHAPTER5_ROUTE_PORTRAITS}, CHAPTER5_ROUTE_REPORT),
     9: ({
         '0001': '2:/SAKURA1/0900FCE.BIN',
@@ -91,6 +97,8 @@ NATIVE_ROUTE_PORTRAITS = {
     }, CHAPTER9_ROUTE_REPORT),
 }
 CHAPTER_FILE_RESIDENCIES = {
+    '1:/SAKURA1/0102FCE.BIN:a92e1f3e10355f51c2d54061df38a5688502133d5d0fc3ba9522e1edcfed6992':
+        (1, IRIS_COMMAND_ROOM_REPORT),
     '2:/SAKURA1/1001FCE.BIN:fa55a01f09bc3a43956bf9507fae1b0ec08c002b9d36bdd16aac3486ca76ae49': (10, 'docs/research/th10-native-attribution.md'),
     '2:/SAKURA1/0901FCE.BIN:bad07425e09a84a31c5b578fda68f9b685d2380328f3a0e5991faa33647bb522':
         (9, CHAPTER9_ROUTE_REPORT),
@@ -102,6 +110,7 @@ CHAPTER_FILE_RESIDENCIES = {
         (4, CHAPTER4_TACTICAL_REPORT),
 }
 BBG204_INSET = (1, '/SAKURA2/BBG204.BIN')
+TACTICAL_PAIRING_REPORT = 'docs/research/tactical-pairing.md'
 BBG204_REPORT = 'docs/research/bbg204-tactical-inset.md'
 BBG_INSET_REPORT = 'docs/research/disc1-battle-insets.md'
 BBG_INSET_PAIRS = {'BBG002', 'BBG003', 'BBG004', 'BBG005', 'BBG006', 'BBG007', 'BBG008', 'BBG103', 'BBG104', 'BBG106', 'BBG205', 'BBG235'}
@@ -122,6 +131,7 @@ SYSTEM_HUD_DRAWS = {
     ('SAKURA1/SYSTEM/FONT_CSL.SPR', 0): ('patch 0093, port/system_brackets.h: left inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
     ('SAKURA1/SYSTEM/FONT_CSL.SPR', 1): ('patch 0093, port/system_brackets.h: right inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
     ('SAKURA1/SYSTEM/SIS_ICON.SPR', 2): ('patch 0112, port/load_disc_icon.h: CD-1 load emblem', MENU_REPORT + '#t110b-cd-1-emblem-in-the-load-menu'),
+    ('SAKURA1/SYSTEM/SIS_ICON.SPR', 3): ('patch 0146, port/load_disc_icon.h: CD-2 load emblem in the top slot', MENU_REPORT + '#t110c-cd-2-emblem-in-the-load-menu'),
 }
 # SYSTEM files that belong to another category and must not be counted twice in hud-menus.
 SYSTEM_HUD_EXCLUDED = {
@@ -135,6 +145,7 @@ SCENE_DRAWS = {
     BBG204_INSET: (4, BBG204_REPORT),
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, BODY_REPORT) for number in (1011, 1012, 1017)},
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, CAMPAIGN_REPORT) for number in (1001, 1006, 1045, 1209, 2159, 2250, 2251)},
+    (1, '/SAKURA1/BG1021.BIN'): (1, 'docs/research/scene-spot-check.md#bg1021-on-disc-1'),
     (1, '/SAKURA1/BG1119.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (1, '/SAKURA1/BG1216.BIN'): (1, CHAPTER1_ROUTE_REPORT),
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
@@ -143,6 +154,12 @@ SCENE_DRAWS = {
 # Exact file witnesses with a documented chapter. Shared disc residency and
 # the sequence of files in a cold run are insufficient for chapter placement.
 CHAPTER_WITNESSES = {
+    (1, '/SAKURA2/MAP10.BIN'): (7, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
+    (2, '/SAKURA2/MAP19.BIN'): (10, 'docs/research/tactical-pairing.md#live-map10-and-map19-ground-review'),
+    (1, '/SAKURA1/IC0501.BIN'): (5, 'docs/research/ic0501-intermission-witness.md'),
+    (1, '/SAKURA1/NC3058.BIN'): (5, CHAPTER5_ROUTE_REPORT),
+    (2, '/SAKURA1/BG2247.BIN'): (8, 'docs/research/bg2247-native-pan.md'),
+    (2, '/SAKURA1/BG2093.BIN'): (9, 'docs/research/bg2093-dream-transition.md'),
     (2, '/SAKURA1/BG1213.BIN'): (10, 'docs/research/th10-native-attribution.md'),
     (2, '/SAKURA1/BG1160.BIN'): (10, 'docs/research/th10-native-attribution.md'),
     (2, '/SAKURA1/BG4055.BIN'): (10, 'docs/research/th10-native-attribution.md'),
@@ -277,12 +294,26 @@ def build(root, index_dir, portrait_audit):
     films = {(r['disc'], r['fad']): r for r in config('film-fad-map')['streams']}
     bg = pairs(config('hd-scene-bg-map'))
     bg_review = config('hd-scene-bg-review')
+    native_bg_aliases = {}
+    for alias, canonical in bg_review.get('exact_native_aliases', {}).items():
+        alias_path, canonical_path = (f'/SAKURA1/{name}.BIN' for name in (alias, canonical))
+        source, target = bg[alias_path], bg[canonical_path]
+        exact_keys = ('palette_fnv', 'cells_fnv', 'cells_sha256')
+        if (
+            source['size'] != [288, 144] or target['size'] != source['size']
+            or any(not source.get(key) or source[key] != target.get(key) for key in exact_keys)
+            or any(name[2:3] in '34' or name in bg_review['rejected'] for name in (alias, canonical))
+            or target.get('tier') != 'content'
+        ):
+            raise ValueError(f'Invalid exact native background alias {alias} -> {canonical}')
+        native_bg_aliases[alias_path] = (canonical, target)
     scroll_rows = {row['name'] for row in config('hd-scroll-pictures')['rows']}
     bg_table, bg_cell_table = runtime_bg_entries(root)
     donor_hashes = {
         (row['pc_file'], str(row['pc_image_index'])): row.get('pc_sha256')
         for row in bg.values() if row.get('pc_file') and 'pc_image_index' in row
     }
+    tactical_maps = {r['saturn']: r for r in config('hd-tactical-map-pairs')['maps']}
     screens = pairs(config('hd-screen-map'))
     endings = pairs(config('hd-ending-bank-map'))
     bodies = pairs(config('hd-body-map'))
@@ -399,10 +430,27 @@ def build(root, index_dir, portrait_audit):
                 'scope': 'source-4 ground only',
                 'pairing_evidence': CHAPTER4_TACTICAL_REPORT,
             }
+        elif kind == 'tactical-maps' and tactical_maps.get(f'{disc}:{path}', {}).get('status') == 'paired':
+            pair = tactical_maps[f'{disc}:{path}']
+            row = {
+                'status': 'paired-not-wired',
+                'pc': pair['pc_ground'],
+                'pairing_evidence': TACTICAL_PAIRING_REPORT,
+                'reason': ('PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the '
+                           'runtime has no pattern-name fingerprint or ground sampler for this map'
+                           + ('; the ground holds %d images (tiles or frames) and needs an assembler' % pair['ground_image_count']
+                              if pair.get('ground_layout') == 'tiles' else '')),
+            }
+            if (disc, path) == (1, '/SAKURA2/MAP10.BIN'):
+                row['reason'] = ('The PC facades and terrace require different offsets, and the PC roof '
+                                 'has a keyed span with a different boundary. Keep the native ground.')
+            elif (disc, path) == (2, '/SAKURA2/MAP19.BIN'):
+                row['reason'] = ('The PC ground places lamps and rails differently at the witnessed camera. '
+                                 'Keep the native ground.')
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
                    'verified_in_game': True, 'runtime_evidence': BBG204_REPORT}
-        elif title := re.fullmatch(r'/SAKURA1/(TITLE[1-9])\.BIN', path):
+        elif title := re.fullmatch(r'/SAKURA1/(TITLE(?:[1-9]|10))\.BIN', path):
             row = {
                 'status': 'excluded',
                 'pc': f'SAKURA1/TITLE/{title[1]}.SPR',
@@ -422,7 +470,7 @@ def build(root, index_dir, portrait_audit):
                 'decision_evidence': 'docs/research/ending-bank-pairs.md',
             }
         elif path in bg:
-            pair = bg[path]
+            alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (
                 pair.get('tier') == 'content' or name in bg_review['eye_confirmed_number_tier']
             )
@@ -436,6 +484,8 @@ def build(root, index_dir, portrait_audit):
                     donor is not None and name in bg_review.get('shared_cell_choice', {}) and pair['size'] == [288, 144])
                 row = {'status': 'hd' if key in bg_table or same_image else 'paired-not-wired',
                        'pc': donor[0] if same_image else pair['pc_file']}
+                if alias:
+                    row['native_alias_of'] = alias
                 if (disc, path) == (1, '/SAKURA1/BG2533.BIN'):
                     row['status'] = 'hd'
                     row['runtime_evidence'] = 'docs/research/bg2533-pan.md'
@@ -485,6 +535,10 @@ def build(root, index_dir, portrait_audit):
                         # The runtime draws a 288x144 picture only; wide and tall ones need scroll support (T105c).
                         row['status'] = 'unsupported-size'
                         row['reason'] = 'size %s, the runtime draws 288x144 pictures only' % (pair.get('size'),)
+                        if (disc, path) == (2, '/SAKURA1/BG2093.BIN'):
+                            row['reason'] = 'The witnessed dream uses a per-line viewport origin on NBG0 under a variable NBG2 blend; a single opaque crop cannot reproduce the composite.'
+                        elif (disc, path) == (2, '/SAKURA1/BG2247.BIN'):
+                            row['reason'] = 'The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.'
                     else:
                         row['reason'] = 'palette shared with a picture that maps to another PC file (ambiguous)'
             elif name in bg_review['rejected'] or pair.get('tier') == 'missing':
@@ -496,6 +550,9 @@ def build(root, index_dir, portrait_audit):
                 row['verified_in_game'] = disc == 1
                 if disc == 1:
                     row['runtime_evidence'] = 'docs/research/ic01-hd-intermission.md'
+            elif (disc, path) == (1, '/SAKURA1/IC0501.BIN'):
+                row.update(status='hd', verified_in_game=True,
+                           runtime_evidence='docs/research/ic0501-intermission-witness.md#enhanced-presentation')
             else:
                 row['reason'] = ('no saved state or route reaches this intermission, so its palette key, '
                                  'menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md')
@@ -515,7 +572,11 @@ def build(root, index_dir, portrait_audit):
             elif name in body_runtime:
                 row = {'status': 'hd',
                        'pc': 'SAKURA1/NC/' + (pair['best_pc'] if pair['tier'] == 'content' else pair['same_name_pc'])}
-                row['verified_in_game'] = name in BODY_DRAWS
+                if (disc, path) == (1, '/SAKURA1/NC3058.BIN'):
+                    row.update(verified_in_game=True, native_face_fallback=True,
+                               runtime_evidence='docs/research/nc3058-cutout-1440p.md')
+                else:
+                    row['verified_in_game'] = name in BODY_DRAWS
                 if name in BODY_DRAWS:
                     row['native_face_fallback'] = True
                     row['runtime_evidence'] = BODY_REPORT
@@ -525,6 +586,10 @@ def build(root, index_dir, portrait_audit):
                 row = {'status': 'paired-not-wired', 'pc': pair['pc_file'], 'pc_image_index': pair['pc_image_index']}
                 if pair['palette_fnv'].upper() in item_runtime:
                     row.update(status='hd', runtime_evidence=MENU_REPORT + '#item-detail-sprite-witness-t109')
+                    if name in ('ITEM03', 'ITEM12', 'ITEM27'):
+                        row['runtime_evidence'] = MENU_REPORT + '#item03-item12-and-item27'
+                    if (disc, name) == (1, 'ITEM12'):
+                        row['verified_in_game'] = True
             elif path in item_review:
                 row['status'] = 'unpaired'
         if kind == 'portraits' and f'{disc}:{path}' in fce_atlases and row['status'] == 'unknown':
@@ -612,7 +677,10 @@ def build(root, index_dir, portrait_audit):
             row.update(NATIVE_PORTRAIT_DECISIONS[ident], pairing_evidence=RESIDUAL_PORTRAIT_REPORT)
         if sources:
             row['atlases'] = sources
-        if ident in CHAPTER1_ROUTE_PORTRAITS:
+        if ident == '00a1':
+            occurrence = dict(row, verified_in_game=True, runtime_evidence=IRIS_COMMAND_ROOM_REPORT)
+            add('portraits', ident, occurrence, 1, 'observed', IRIS_COMMAND_ROOM_REPORT)
+        elif ident in CHAPTER1_ROUTE_PORTRAITS:
             chapter1_portrait = row
             if ident == '0176':
                 chapter1_portrait = dict(row, verified_in_game=True, runtime_evidence=MARIA_STRIP_REPORT)
@@ -623,7 +691,11 @@ def build(root, index_dir, portrait_audit):
         for episode, (atlases, evidence) in NATIVE_ROUTE_PORTRAITS.items():
             if ident in atlases:
                 occurrence = dict(row, atlases=[atlases[ident]])
-                if episode == 9 and ident == '00e9':
+                if episode == 3 and ident in CHAPTER3_PORTRAIT_DRAWS:
+                    occurrence.update(verified_in_game=True, runtime_evidence=CHAPTER3_PORTRAIT_REPORT)
+                elif episode == 5 and ident in CHAPTER5_PORTRAIT_DRAWS:
+                    occurrence.update(verified_in_game=True, runtime_evidence=CHAPTER5_PORTRAIT_REPORT)
+                elif episode == 9 and ident == '00e9':
                     occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
                 add('portraits', ident, occurrence, episode, 'observed', evidence)
 

@@ -14,9 +14,11 @@ The IC catalog was rechecked against both discs and the extracted PC directory. 
 
 ## Other IC identities (TP1, 2026-11-19): not wired, and why
 
+The later [IC0501 witness](ic0501-intermission-witness.md) reaches the Chapter 5 intermission naturally on disc 1. Its [HD draw and fades](ic0501-intermission-witness.md#enhanced-presentation) are verified separately.
+
 The pairs for IC02, IC03, IC04, IC0501, IC0502, IC06-IC09 and IC1001-IC1006 are unchanged in `config/hd-screen-map.json` (palette fingerprints and PC counterparts are listed there). They were not wired in this pass because nothing could be witnessed:
 
-- Every saved state under `local/work` that shows an intermission is chapter 1 (IC01). No state or route reaches the intermission of another chapter, so none of the other palettes has been seen in a running guest.
+- The original sweep found only chapter 1 (IC01) intermission states. At that point the other IC palettes had no live witness.
 - Patch 0107 is not a table lookup. IC01 needs an anchored native screen backdrop (`kScreenBackdrops` PAUSE01, with a second palette during loading), an exact layer check (menu rectangle on layer 0, everything else on layer 4), a hash of the native RGB outside the menu, and values fitted by eye to one witnessed frame (five-pixel anchor, perimeter blend, the 17/17/16 darkening). Each of those would have to be measured again per picture, and the menu rectangle itself is only known for IC01.
 - Wiring them blind would draw an unverified, possibly misaligned picture over a screen the owner has not seen. Original is unaffected either way.
 

@@ -1,4 +1,4 @@
-# PC counterparts for the first nine episode title cards
+# PC counterparts for the ten episode title cards
 
 The PC files contain the same episode artwork as the prepared Saturn English cards. Each PC SPR has one 640×480 image at index 0 with Japanese lettering baked into its pixels. The Saturn English cards contain their lettering in their 320×224 image. The catalog marks the PC donors `excluded` under the existing [TCODEX episode card decision](saturn-bg-format.md#approved-episode-cards-only-tcodex).
 
@@ -19,7 +19,10 @@ Both prepared English discs contain identical copies of each Saturn BIN below. T
 | 7 | `TITLE7.BIN` / `TITLE7.SPR` | `FDCEEE68F831DE9F` | `bc8d47159384fc3aa87f9cf906a497addaf684bd32154303c3fe82574eb3b64e` | `5f387b4708dd6049d104ed7eaadd4d62dacade1d50cc98cc9278e85b6245d8b2` |
 | 8 | `TITLE8.BIN` / `TITLE8.SPR` | `ECA61ED3EEA4FABB` | `97a59df1aeb21ab59d05e61c27d095b22eecc47a85091e9ee113003ee244017a` | `0fbcad3303278bb073111dd4bf3472ab39645d6564a76b08049118d2fa6a0110` |
 | 9 | `TITLE9.BIN` / `TITLE9.SPR` | `E8DCC5B80A127438` | `2990d2ebba1324af802a4a36054042edc91a68c296c679f7f3fdf0118a0b6fb0` | `4881d950d6361bfeb86107328ce30296743e8726efa6985001c175bb0db81b75` |
+| 10 | `TITLE10.BIN` / `TITLE10.SPR` | `36BDFD7BBC63CCE7` | `a1e2c8f1a2dd6204ee5e7a8b692c8f6b8ab853fbf164aec924bce27f5a31f918` | `db61dc8ddc287955dfde917ad54f97a1edb0d203ff5771ec3a364f1b891f19ce` |
 
 The offline audit read each Saturn file at its inventory LBA, checked the full file against the inventory SHA, and decoded it with `tools/decode_saturn_bg.py`. It decoded the PC files with `tools/decode_spred.py` and compared the cards side by side. The contact sheet and metadata receipt stay in `local/work/codex-th1/tp3a-title-ledger`.
 
-This resolves the catalog choice for TITLE1–TITLE9. The regenerated progress totals retain the existing integrated count.
+The Episode 10 English BIN is byte-identical across both prepared discs (SHA-256 `564b90a8d399b272a2c7e3403264447815d9accc66435eb54833b0c858fac65b`). The Saturn decode is 320×224 and the single PC image is 640×480. Both show the same fortress view. The PC lettering is Japanese and the exact Saturn palette matches the tenth key in the existing runtime. Both approved Episode 10 PNG layers are already tracked. The Episode 10 audit images stay in `local/work/codex-tw2-fullscreen-bbg/title10-ledger`.
+
+The catalog now applies the policy to all ten episode cards. Excluding the Japanese-lettered Episode 10 PC donor reduces the candidate inventory by one. The number of PC pictures integrated and the approved English and Spanish rendering are unchanged.

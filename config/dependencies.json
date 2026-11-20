@@ -136,7 +136,13 @@
       "patches/0138-sakura-map02-pc-ground.patch",
       "patches/0139-sakura-map06-pc-ground.patch",
       "patches/0140-sakura-map04-tiled-ground.patch",
-      "patches/0141-sakura-face02-tactical-portraits.patch"
+      "patches/0141-sakura-face02-tactical-portraits.patch",
+      "patches/0142-sakura-body-cutout-clip.patch",
+      "patches/0143-sakura-calibrated-scroll-pictures.patch",
+      "patches/0144-sakura-ic0501-hd-compositor.patch",
+      "patches/0145-sakura-two-calibrated-scroll-rows.patch",
+      "patches/0146-sakura-hd-cd2-load-icon.patch",
+      "patches/0147-sakura-add-inventory-cards.patch"
     ]
   }
 }

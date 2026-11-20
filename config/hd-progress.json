@@ -28,13 +28,13 @@
           "receipt_sha256": "e1653a18a41ae3f68acce1fde82c4fba82f6a00228353d160a402d1e5a940b5f"
         }
       ],
-      "next": "Validar las tiras de Iris 00a1 en su escena y ampliar la comprobación de parpadeo, boca, efectos y fallback en juego.",
+      "next": "Ampliar la verificación natural de parpadeos, boca, efectos y fallback por identidad y escena.",
       "details": [
         "Checkpoint reproducible. 201 identidades con base, ojos y boca disponibles. Se comprobaron 402 PNG a dos densidades. El paquete v0.1.2 entregado conserva 191 retratos.",
         "Capítulo 1. 91/123 identidades con las tres regiones preparadas y 32 pendientes. Los seis FCE de alcance figuran en la auditoría.",
         "Se verificaron en juego las bases de Sakura 0013 y 0014, Sumire 0045 y María 0064. En Sumire 0040 y 0041 se observó la primera tira a Y=16. En el tercer lote quedan pendientes las tiras en juego y la verificación de las otras cuatro bases.",
         "394 candidatos PC. La disponibilidad de las tiras en el paquete deja pendiente la cobertura acumulada por identidad durante gameplay.",
-        "0152 y 0153 conservan las tres regiones aprobadas. Se prepara a Iris 00a1 con las dos tiras invertidas. El emblema 0169 conserva el diseño de Saturn por decisión artística. Falta observar los dos comandos de tiras de 00a1 en juego."
+        "0152 y 0153 conservan las tres regiones aprobadas. En la sala de mando del capítulo 1 se comprobaron la base y las dos tiras de Iris 00a1 a 1440p, incluido el fundido blanco. El emblema 0169 conserva el diseño de Saturn por decisión artística."
       ],
       "total": 304,
       "inventory": 304,
@@ -62,7 +62,7 @@
       "next": "Confirmar los pares restantes y validar variantes de iluminación, desplazamiento y fundidos en juego.",
       "details": [
         "El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.",
-        "El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El registro por capítulo contiene 530 archivos PC distintos en las rutas de sustitución HD, contando una vez los archivos que comparten ambos discos.",
+        "El cruce TH0 registra 712 archivos PC con correspondencia aceptada. El total integrado de la tabla se calcula desde el registro por capítulo y cuenta una vez los archivos PC compartidos por ambos discos.",
         "La integración incluye la búsqueda por paleta, la segunda clave de celdas y las sustituciones con reglas específicas como BG2533 e IC01. El recuento de recursos preparados y la auditoría completa de apariciones en juego siguen pendientes."
       ],
       "total": 1267,
@@ -142,12 +142,24 @@
         },
         {
           "path": "docs/research/stage01-pc-ground.md"
+        },
+        {
+          "path": "docs/research/map02-pc-ground.md"
+        },
+        {
+          "path": "docs/research/map04-pc-ground.md"
+        },
+        {
+          "path": "docs/research/map06-pc-ground.md"
+        },
+        {
+          "path": "docs/research/stage21-pc-ground.md"
         }
       ],
       "next": "Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.",
       "details": [
         "El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.",
-        "El suelo de Stage01 usa MAP01_A de PC y está verificado en juego con cámara fija y en movimiento. Falta un recuento por archivo SPR que cubra todas las sustituciones de mapa, unidad y objeto."
+        "Se verificó el suelo de MAP01, MAP02, MAP04, MAP06 y MAP21 con la cámara de Saturn. La verificación cubre la capa de suelo. El inventario completo de sustituciones por archivo para mapas, unidades y objetos sigue pendiente."
       ],
       "total": 542,
       "inventory": 542,
@@ -176,7 +188,7 @@
       "details": [
         "Las pruebas de presentación de Saturn cubrieron menús tácticos. Las sustituciones de recursos se verifican por pieza y por pantalla.",
         "El censo PC reúne 29 archivos y 572 entradas de imagen con cabeceras validadas.",
-        "El censo PC reúne 572 imágenes SYSTEM; las 394 de KAO cuentan como retratos y se suman las 50 imágenes de objeto candidatas: 228. Integradas 41 (38 tarjetas de objeto, 2 marcos FONT_CSL, 1 emblema CD-1), medidas desde el registro."
+        "El censo PC reúne 572 imágenes SYSTEM; las 394 de KAO cuentan como retratos y se suman las 50 imágenes de objeto candidatas: 228. La tabla calcula las integraciones desde el registro. Incluye tarjetas de objeto, los dos marcos FONT_CSL y los emblemas CD-1 y CD-2."
       ],
       "total": 228,
       "inventory": 228,
@@ -235,14 +247,14 @@
       "next": "Comprobar los cuerpos restantes y las expresiones con fallback nativo.",
       "details": [
         "Se auditaron 147 paquetes de cuerpos Saturn frente a 147 paquetes PC que contienen 3.596 imágenes. El registro cuenta los cuerpos emparejados e integrados por archivo Saturn, una vez aunque lo compartan ambos discos.",
-        "Hay apariciones documentadas para 9 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos."
+        "Hay apariciones documentadas para 11 cuerpos, incluidas 3 que registra la traza de la campaña v0.2.6. Algunas expresiones conservan ojos o boca de Saturn. Quedan por comprobar otras poses, expresiones y fundidos."
       ],
       "total": 147,
       "inventory": 147,
       "matched": 137,
       "prepared": null,
       "integrated": 137,
-      "verified": 9
+      "verified": 11
     }
   ]
 }

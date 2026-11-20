@@ -9,7 +9,7 @@
 
 int main() {
     using namespace port;
-    // The common rule holds for every row; keys never collide.
+    // Every registered crop is bounded. Keys never collide.
     std::set<std::pair<uint64_t, uint64_t>> keys;
     std::set<std::string> names;
     for (const auto& row : kScrollPictures) {
@@ -19,6 +19,14 @@ int main() {
         assert(row.nativeBytes > 0x610 + (row.width / 8) * (row.height / 8) * 4);
         const auto last = ScrollPcCrop(row, ScrollRange(row));
         assert(last.x + last.w <= row.pcWidth && last.y + last.h <= row.pcHeight);
+        if (row.fit.rateMilli) {
+            for (unsigned offset = 0; offset <= ScrollRange(row); ++offset) {
+                const auto crop = ScrollPcCrop(row, offset);
+                assert(crop.w && crop.h);
+                assert(crop.x + crop.w <= row.pcWidth && crop.y + crop.h <= row.pcHeight);
+            }
+            continue;
+        }
         assert(ScrollPcCrop(row, 0).w == 576 && ScrollPcCrop(row, 0).h == 288);
         if (row.axis == ScrollAxis::Horizontal) {
             assert(row.height == 144 && row.pcWidth == 2 * row.width);
@@ -38,13 +46,32 @@ int main() {
     for (const char* name : {"BG1306", "BG2238", "BG2260"})
         assert(!names.contains(name));
 
-    // The hand-written pictures keep the crops they had before the table.
+    // The calibrated rows use independently measured start and end crops.
     const auto byName = [](const char* name) -> const ScrollPicture& {
         for (const auto& row : kScrollPictures)
             if (!std::strcmp(row.name, name)) return row;
         assert(false);
         return kScrollPictures[0];
     };
+    {
+        const auto& horizontal = byName("BG2077");
+        const auto start = ScrollPcCrop(horizontal, 0);
+        const auto last = ScrollPcCrop(horizontal, ScrollRange(horizontal));
+        assert(start.x == 0 && start.y == 0 && start.w == 670 && start.h == 314);
+        assert(last.x == 351 && last.y == 0);
+        auto invalid = horizontal;
+        invalid.fit.origin = horizontal.pcWidth;
+        assert(!ScrollRowValid(invalid));
+    }
+    {
+        const auto& first = byName("BG2172");
+        const auto second = ScrollPcCrop(first, ScrollRange(first));
+        assert(second.x == 26 && second.y == 278 && second.w == 536 && second.h == 290);
+        const auto& last = byName("BG2518");
+        const auto middle = ScrollPcCrop(last, 76);
+        assert(middle.x == 27 && middle.y == 149 && middle.w == 488 && middle.h == 264);
+    }
+    // The hand-written pictures keep the crops they had before the table.
     {
         const auto& row = byName("BG1285");
         const auto crop = ScrollPcCrop(row, 75);

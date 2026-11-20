@@ -121,6 +121,92 @@ def generated_backgrounds(folder,pc=False,screen=False,tactical=False):
         raise RuntimeError('Empty generated background manifest')
     return result
 
+# Strict TS12 gate: exact content of every generated-art folder that may ship (names, counts, pixel sizes).
+ART_FOLDER_RULES = {
+    'backgrounds': dict(kwargs={}, count=20),
+    'pc-backgrounds': dict(kwargs=dict(pc=True), count=19),
+    'screen-backgrounds': dict(kwargs=dict(screen=True), count=26),
+    'tactical-extensions': dict(kwargs=dict(tactical=True), count=1),
+}
+SCREEN_SIZES = {'OPENING-v1.png': (1672, 941), 'TITLE-v1.png': (1672, 941), 'STATUS-v1.png': (1672, 941),
+                'PAUSE01-v1.png': (1672, 941), 'LOADING-v1.png': (1672, 941),
+                'LOAD-es-lettering-v1.png': (48, 198)}
+ART_SIDE_FILES = {'provenance.json', 'PROMPTS.md', 'README.md'}
+
+
+def png_size(file):
+    with Path(file).open('rb') as stream:
+        header = stream.read(24)
+    if header[:8] != b'\x89PNG\r\n\x1a\n' or header[12:16] != b'IHDR':
+        raise RuntimeError('Not a PNG: ' + Path(file).name)
+    return struct.unpack('>II', header[16:24])
+
+
+def expected_art_size(folder_name, name, row):
+    """The exact pixel size a shipped image must have; unknown names are rejected, never guessed."""
+    if folder_name == 'screen-backgrounds':
+        if re.fullmatch(r'EPISODE(?:0[1-9]|10)-surround-v2\.png', name):
+            return (640, 360)
+        if re.fullmatch(r'EPISODE(?:0[1-9]|10)-es-lettering-v1\.png', name):
+            return (320, 224)
+        return SCREEN_SIZES[name]
+    if folder_name == 'tactical-extensions':
+        return (39, 224)
+    master = row.get('master_size')
+    if not (isinstance(master, list) and len(master) == 2 and master[1] == 941 and master[0] in (1671, 1672)):
+        raise RuntimeError('Missing or unexpected master_size in provenance: ' + name)
+    return tuple(master)
+
+
+def verify_generated_art_tree(root):
+    """Check every generated-art folder as a whole: exact count, no unlisted files, sizes match provenance and pins."""
+    root = Path(root)
+    result = {}
+    for folder_name, rule in ART_FOLDER_RULES.items():
+        folder = root / folder_name
+        if not (folder / 'provenance.json').is_file():
+            raise RuntimeError(f'Missing provenance.json: {folder_name}')
+        images = generated_backgrounds(folder, **rule['kwargs'])
+        if len(images) != rule['count']:
+            raise RuntimeError(f'Unexpected generated image count in {folder_name}: {len(images)} != {rule["count"]}')
+        extras = sorted(f.name for f in folder.iterdir()
+                        if f.name not in images and f.name not in ART_SIDE_FILES)
+        if extras or any(f.is_dir() for f in folder.iterdir()):
+            raise RuntimeError(f'Unlisted file in generated art {folder_name}: {", ".join(extras) or "subfolder"}')
+        rows = {r['file']: r for r in json.loads((folder / 'provenance.json').read_text(encoding='utf-8'))['backgrounds']}
+        for name, file in images.items():
+            if png_size(file) != expected_art_size(folder_name, name, rows[name]):
+                raise RuntimeError(f'Unexpected image size: {folder_name}/{name} {png_size(file)}')
+        result[folder_name] = sorted(images)
+    return result
+
+
+def verify_scroll_table(path, patches_folder=None):
+    """Strict check of config/hd-scroll-pictures.json: hashes and sizes only, no pixels, unique rows, 288x144 window."""
+    data = json.loads(Path(path).read_text(encoding='utf-8'))
+    if data.get('window') != [288, 144] or not data.get('rows'):
+        raise RuntimeError('Unexpected scroll-picture window or empty table')
+    seen = set()
+    hexed = lambda value: isinstance(value, str) and re.fullmatch('[0-9A-F]{16}', value) is not None
+    for row in data['rows']:
+        name = row.get('name')
+        if not (isinstance(name, str) and re.fullmatch(r'BG[0-9]{4}', name)) or name in seen:
+            raise RuntimeError(f'Invalid or duplicate scroll row: {name}')
+        seen.add(name)
+        ints = ('width', 'height', 'native_bytes', 'pc_bytes', 'pc_width', 'pc_height', 'crop_cross')
+        if (row.get('axis') not in ('x', 'y') or any(not isinstance(row.get(k), int) or row[k] < 0 for k in ints)
+                or not all(hexed(row.get(k)) for k in ('native_fnv', 'palette', 'cells', 'pc_fnv'))
+                or not re.fullmatch(r'SAKURA[12]/BG/BG[0-9]{4}\.SPR', str(row.get('pc_file')))
+                or not isinstance(row.get('min_crop_correlation'), (int, float))
+                or any(key in row for key in ('pixels', 'data', 'rgba', 'image'))):
+            raise RuntimeError(f'Unverified scroll row: {name}')
+    if patches_folder is not None:
+        text = ''.join(p.read_text(encoding='utf-8', errors='replace') for p in sorted(Path(patches_folder).glob('*scroll*.patch')))
+        missing = sorted(n for n in seen if n not in text)
+        if missing:
+            raise RuntimeError('Scroll rows absent from the runtime table patches: ' + ', '.join(missing))
+    return sorted(seen)
+
 
 def release_file_manifest(destination, allowed_art, allowed_patches, required_data=None):
     """Validate the staged public tree and record the exact bytes that will ship."""
@@ -128,7 +214,10 @@ def release_file_manifest(destination, allowed_art, allowed_patches, required_da
         '.iso', '.cue', '.bin', '.img', '.mdf', '.mds', '.chd', '.cdd', '.ccd', '.bup',
         '.sro', '.xdelta', '.state', '.png', '.jpg', '.jpeg', '.bmp', '.wav', '.flac', '.mp3',
         '.mpg', '.mpeg', '.cpk', '.spr', '.stfb', '.stfp', '.zip', '.7z', '.rar',
+        '.rom', '.bios', '.sav', '.bkr', '.avi', '.mp4', '.ogg', '.tga', '.dds', '.psd',
     }
+    forbidden_parts = {'movie', 'sakura1', 'sakura2', 'local', '.research'}
+    art_folders = {'backgrounds', 'pc-backgrounds', 'screen-backgrounds', 'tactics'}
     private_folders = {'data/game', 'data/hd-resources', 'data/user'}
     pinned = allowed_art | allowed_patches | (required_data or {})
     allowed = {f'data/{path}': checksum for path, checksum in pinned.items()}
@@ -139,8 +228,13 @@ def release_file_manifest(destination, allowed_art, allowed_patches, required_da
         if file.is_symlink() or any(normalized == folder or normalized.startswith(folder + '/')
                                     for folder in private_folders):
             raise RuntimeError(f'Unexpected game/resource file in package: {relative}')
+        if forbidden_parts & set(normalized.split('/')):
+            raise RuntimeError(f'Unexpected game/resource file in package: {relative}')
         if not file.is_file():
             continue
+        parts = normalized.split('/')
+        if parts[:2] == ['data', 'art'] and len(parts) > 3 and parts[2] not in art_folders:
+            raise RuntimeError(f'Unexpected art folder in package: {relative}')
         checksum = digest(file)
         if relative in allowed:
             if allowed[relative] != checksum:
@@ -165,6 +259,8 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         if relative not in tracked or not source.is_file():
             raise RuntimeError(f'Missing tracked package recipe: {relative}')
         required_data[relative] = digest(source)
+    verify_scroll_table(ROOT / 'config/hd-scroll-pictures.json', ROOT / 'patches')
+    verify_generated_art_tree(ROOT / 'assets/generated')
     destination=destination.resolve()
     destination.mkdir(parents=True,exist_ok=False)
     # The release root shows only what the player touches: SaturnTaisen.exe (the launcher, linked statically so

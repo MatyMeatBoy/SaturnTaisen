@@ -1,0 +1,113 @@
+diff --git a/port/scroll_picture_rows.h b/port/scroll_picture_rows.h
+--- a/port/scroll_picture_rows.h
++++ b/port/scroll_picture_rows.h
+@@ -9,9 +9,15 @@
+ {"BG1285", ScrollAxis::Horizontal, 512, 144, 77648, 0x84BEAAAE2A751658ull,
+  0x8B6362BE73FB2551ull, 0xBE01460AC7277CC6ull, "SAKURA1/BG/BG1285.SPR", 228628, 0x6C426261DECC3F7Eull, 1024, 320,
+  ScrollStyle::Plain},
++{"BG2077", ScrollAxis::Horizontal, 440, 144, 68296, 0xDF74A3948CC82F4Full,
++ 0xC8472F16A1D8EDBFull, 0x9611D0429CB4967Cull, "SAKURA1/BG/BG2077.SPR", 217097, 0x66E7E23F89A0E79Full, 1024, 320,
++ ScrollStyle::Plain, {2312, 0, 670, 0, 314}},
+ {"BG2130", ScrollAxis::Horizontal, 512, 144, 79952, 0xC7751BEE11E98229ull,
+  0xB23A4255D836A48Aull, 0x3AFD3CC847F04D75ull, "SAKURA1/BG/BG2130.SPR", 325884, 0x832A6FCCD781FC55ull, 1024, 320,
+  ScrollStyle::Plain},
++{"BG2172", ScrollAxis::Vertical, 288, 280, 84992, 0xE8770A77B0C2AE0Eull,
++ 0xC3DDD60B21EBD1A9ull, 0x162AB11691B27D01ull, "SAKURA1/BG/BG2172.SPR", 239974, 0x16585B25FA8C18C4ull, 576, 592,
++ ScrollStyle::Plain, {2008, 5, 290, 26, 536}},
+ {"BG2176", ScrollAxis::Vertical, 288, 296, 91168, 0x9AF2822587C0F342ull,
+  0x2D7CB74664182158ull, 0x2D1213A77CB7485Full, "SAKURA1/BG/BG2176.SPR", 229338, 0xE6DD8D8BC1103F92ull, 576, 592,
+  ScrollStyle::Plain},
+@@ -42,6 +48,9 @@
+ {"BG2515", ScrollAxis::Horizontal, 512, 144, 75536, 0xAA77B77FAA462F81ull,
+  0x9D943456BFD21B9Aull, 0xECD461679DC68BDDull, "SAKURA1/BG/BG2515.SPR", 238005, 0x0ED1B186B5EE536Aull, 1024, 320,
+  ScrollStyle::Plain},
++{"BG2518", ScrollAxis::Vertical, 288, 296, 80992, 0x59CF77DD4F52A6AFull,
++ 0x87B5B9962558B0C2ull, 0x3C1C61D2B0C5978Full, "SAKURA1/BG/BG2518.SPR", 267486, 0xF3BB6F95F6C014A4ull, 576, 592,
++ ScrollStyle::Plain, {1831, 10, 264, 27, 488}},
+ {"BG2533", ScrollAxis::Horizontal, 512, 144, 64016, 0x2DCA5B2CA73F65DDull,
+  0x09884FF240CB5BF3ull, 0, "SAKURA1/BG/BG2533.SPR", 266190, 0x006D2C402DBBFE05ull, 1024, 320,
+  ScrollStyle::EdgeRamp},
+diff --git a/port/scroll_pictures.h b/port/scroll_pictures.h
+--- a/port/scroll_pictures.h
++++ b/port/scroll_pictures.h
+@@ -3,7 +3,7 @@
+ 
+ // TP2: one table for every scroll picture the Saturn shows through its 288x144 NBG2 window.
+ //
+-// Rule shared by all rows. The Saturn window (kPanInsetWidth x kPanPictureHeight, at 16,8 of the 320x224 frame) slides over a larger
++// Default rule. The Saturn window (kPanInsetWidth x kPanPictureHeight, at 16,8 of the 320x224 frame) slides over a larger
+ // native picture along ONE axis. The PC art is the same picture at 2x, so for a verified native offset n:
+ //   scroll axis: PC start 2n, length 2 x window length
+ //   cross axis : the PC art is larger than 2x the window by an even margin; the crop is centred in it
+@@ -25,6 +25,12 @@
+ // EdgeRamp: the last two tile columns of the native file are game-supplied edge, eased in with a ramp (BG2533, pinned by palette alone).
+ enum class ScrollStyle : uint8_t { Plain, ActorForeground, EdgeRamp };
+ 
++struct ScrollFit {
++    unsigned rateMilli = 0;
++    unsigned origin = 0, length = 0;
++    unsigned cross = 0, crossLength = 0;
++};
++
+ struct ScrollPicture {
+     const char* name;
+     ScrollAxis axis;
+@@ -38,6 +44,7 @@
+     uint64_t pcFnv;
+     unsigned pcWidth, pcHeight;   // subimage 0 of the PC file
+     ScrollStyle style;
++    ScrollFit fit{};
+ };
+ 
+ inline constexpr ScrollPicture kScrollPictures[] = {
+@@ -53,20 +60,43 @@
+     return row.axis == ScrollAxis::Horizontal ? row.width - kPanInsetWidth : row.height - kPanPictureHeight;
+ }
+ 
+-// PC rectangle for a native scroll offset (the rule above).
++inline constexpr uint64_t CalibratedScrollStart(const ScrollFit& fit, unsigned offset) {
++    return uint64_t(fit.origin) + (uint64_t(fit.rateMilli) * offset + 500) / 1000;
++}
++
++// PC rectangle for a proven native scroll offset.
+ inline constexpr ScrollCrop ScrollPcCrop(const ScrollPicture& row, unsigned offset) {
++    if (row.fit.rateMilli) {
++        const auto& fit = row.fit;
++        const unsigned start = static_cast<unsigned>(CalibratedScrollStart(fit, offset));
++        return row.axis == ScrollAxis::Horizontal
++            ? ScrollCrop{start, fit.cross, fit.length, fit.crossLength}
++            : ScrollCrop{fit.cross, start, fit.crossLength, fit.length};
++    }
+     return row.axis == ScrollAxis::Horizontal
+         ? ScrollCrop{2 * offset, (row.pcHeight - 2 * kPanPictureHeight) / 2, 2 * kPanInsetWidth, 2 * kPanPictureHeight}
+         : ScrollCrop{(row.pcWidth - 2 * kPanInsetWidth) / 2, 2 * offset, 2 * kPanInsetWidth, 2 * kPanPictureHeight};
+ }
+ 
+-// The row obeys the rule: the window scrolls on one axis only, the PC art is 2x on it and leaves an even centred margin on the other.
++// The native window scrolls on one axis. Both ends of the calibrated crop must fit.
+ inline constexpr bool ScrollRowValid(const ScrollPicture& row) {
+-    if (row.axis == ScrollAxis::Horizontal)
+-        return row.height == kPanPictureHeight && row.width > kPanInsetWidth && row.pcWidth == 2 * row.width &&
+-               row.pcHeight >= 2 * kPanPictureHeight && (row.pcHeight - 2 * kPanPictureHeight) % 2 == 0;
+-    return row.width == kPanInsetWidth && row.height > kPanPictureHeight && row.pcHeight == 2 * row.height &&
+-           row.pcWidth >= 2 * kPanInsetWidth && (row.pcWidth - 2 * kPanInsetWidth) % 2 == 0;
++    const bool horizontal = row.axis == ScrollAxis::Horizontal;
++    if (horizontal ? (row.height != kPanPictureHeight || row.width <= kPanInsetWidth)
++                   : (row.width != kPanInsetWidth || row.height <= kPanPictureHeight))
++        return false;
++    if (row.fit.rateMilli) {
++        const auto& fit = row.fit;
++        const unsigned pcScroll = horizontal ? row.pcWidth : row.pcHeight;
++        const unsigned pcCross = horizontal ? row.pcHeight : row.pcWidth;
++        return fit.length && fit.crossLength &&
++               CalibratedScrollStart(fit, ScrollRange(row)) + fit.length <= pcScroll &&
++               uint64_t(fit.cross) + fit.crossLength <= pcCross;
++    }
++    if (horizontal)
++        return row.pcWidth == 2 * row.width && row.pcHeight >= 2 * kPanPictureHeight &&
++               (row.pcHeight - 2 * kPanPictureHeight) % 2 == 0;
++    return row.pcHeight == 2 * row.height && row.pcWidth >= 2 * kPanInsetWidth &&
++           (row.pcWidth - 2 * kPanInsetWidth) % 2 == 0;
+ }
+ 
+ // The row whose live layer-4 keys match. `cellKey` is only called when a palette matches (it walks the map page).

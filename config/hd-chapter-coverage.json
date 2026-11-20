@@ -1134,14 +1134,16 @@
             "status": "hd"
           },
           "00a1": {
-            "association": "inferred",
+            "association": "observed",
             "atlases": [
               "1:/SAKURA1/0102FCE.BIN",
               "2:/SAKURA1/0102FCE.BIN"
             ],
-            "evidence": "docs/research/portrait-animation-coverage.md",
+            "evidence": "docs/research/portrait-animation-coverage.md#iris-00a1-command-room-portrait",
             "pc_index": 160,
-            "status": "hd"
+            "runtime_evidence": "docs/research/portrait-animation-coverage.md#iris-00a1-command-room-portrait",
+            "status": "hd",
+            "verified_in_game": true
           },
           "00c0": {
             "association": "inferred",
@@ -1879,9 +1881,9 @@
             "status": "hd"
           },
           "1:/SAKURA1/0102FCE.BIN": {
-            "association": "inferred",
+            "association": "resident",
             "decision_evidence": "docs/research/portrait-animation-coverage.md#residual-portraits-00a1-and-0169",
-            "evidence": "config/hd-portrait-recipe.json",
+            "evidence": "docs/research/portrait-animation-coverage.md#iris-00a1-command-room-portrait",
             "identities": [
               "0001",
               "0002",
@@ -2160,9 +2162,11 @@
           "1:/SAKURA1/BG1021.BIN": {
             "association": "observed",
             "cold_run_frame": 59750,
-            "evidence": "docs/research/hd-chapter-1.md#observations-from-the-full-cold-route",
+            "evidence": "docs/research/scene-spot-check.md#bg1021-on-disc-1",
             "pc": "SAKURA1/BG/BG1021.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/scene-spot-check.md#bg1021-on-disc-1",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/BG1030.BIN": {
             "association": "observed",
@@ -2731,6 +2735,50 @@
         "film": {},
         "menus-hud": {},
         "portraits": {
+          "0068": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 103,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "00fe": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 253,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "0116": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 277,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "013d": {
+            "association": "observed",
+            "atlases": [
+              "1:/SAKURA1/0301FCE.BIN"
+            ],
+            "evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "pc_index": 316,
+            "runtime_evidence": "docs/research/th3-native-attribution.md#witnessed-0301fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/0301FCE.BIN": {
             "association": "resident",
             "decision_evidence": "docs/research/portrait-animation-coverage.md#residual-portraits-00a1-and-0169",
@@ -3412,9 +3460,11 @@
           "1:/SAKURA1/NC3058.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
+            "native_face_fallback": true,
             "pc": "SAKURA1/NC/NC3058.SPR",
+            "runtime_evidence": "docs/research/nc3058-cutout-1440p.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "1:/SAKURA1/NC60.BIN": {
             "association": "observed",
@@ -3450,7 +3500,9 @@
             ],
             "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
             "pc_index": 270,
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-5.md#verified-0501fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
           },
           "0169": {
             "association": "observed",
@@ -3473,7 +3525,9 @@
             ],
             "evidence": "docs/research/hd-chapter-5.md#native-opening-observations",
             "pc_index": 361,
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-5.md#verified-0501fce-portrait-bases",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/0501FCE.BIN": {
             "association": "resident",
@@ -3759,6 +3813,14 @@
             "pc": "SAKURA1/BG/BG3133.SPR",
             "reason": "cut-out on a key colour or blank picture, not replaced by design",
             "status": "excluded"
+          },
+          "1:/SAKURA1/IC0501.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/ic0501-intermission-witness.md",
+            "pc": "SAKURA1/ICATCH/IC0501.SPR",
+            "runtime_evidence": "docs/research/ic0501-intermission-witness.md#enhanced-presentation",
+            "status": "hd",
+            "verified_in_game": true
           },
           "1:/SAKURA1/TITLE5.BIN": {
             "association": "inferred",
@@ -4348,7 +4410,16 @@
             "status": "excluded"
           }
         },
-        "tactical-maps": {},
+        "tactical-maps": {
+          "1:/SAKURA2/MAP10.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/tactical-pairing.md#live-map10-and-map19-ground-review",
+            "pairing_evidence": "docs/research/tactical-pairing.md",
+            "pc": "SAKURA2/MAP/MAP10/MAP10_A.SPR",
+            "reason": "The PC facades and terrace require different offsets, and the PC roof has a keyed span with a different boundary. Keep the native ground.",
+            "status": "paired-not-wired"
+          }
+        },
         "tactical-units": {
           "1:/SAKURA2/UNIT10.BIN": {
             "association": "resident",
@@ -4711,6 +4782,13 @@
             "runtime_evidence": "docs/research/bg2159-disc2-visual.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "2:/SAKURA1/BG2247.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2247-native-pan.md",
+            "pc": "SAKURA1/BG/BG2247.SPR",
+            "reason": "The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.",
+            "status": "unsupported-size"
           },
           "2:/SAKURA1/BG4187.BIN": {
             "association": "observed",
@@ -5158,6 +5236,13 @@
             "pc": "SAKURA1/BG/BG1176.SPR",
             "status": "hd"
           },
+          "2:/SAKURA1/BG2093.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/bg2093-dream-transition.md",
+            "pc": "SAKURA1/BG/BG2093.SPR",
+            "reason": "The witnessed dream uses a per-line viewport origin on NBG0 under a variable NBG2 blend; a single opaque crop cannot reproduce the composite.",
+            "status": "unsupported-size"
+          },
           "2:/SAKURA1/BG2098.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#native-route-observations",
@@ -5370,16 +5455,28 @@
           },
           "2:/SAKURA1/TITLE10.BIN": {
             "association": "inferred",
-            "status": "unknown"
+            "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+            "pc": "SAKURA1/TITLE/TITLE10.SPR",
+            "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
+            "status": "excluded"
           }
         },
-        "tactical-maps": {},
+        "tactical-maps": {
+          "2:/SAKURA2/MAP19.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/tactical-pairing.md#live-map10-and-map19-ground-review",
+            "pairing_evidence": "docs/research/tactical-pairing.md",
+            "pc": "SAKURA2/MAP/MAP19/MAP19_A.SPR",
+            "reason": "The PC ground places lamps and rails differently at the witnessed camera. Keep the native ground.",
+            "status": "paired-not-wired"
+          }
+        },
         "tactical-units": {}
       }
     }
   ],
   "hud_census": {
-    "item_images": 50,
+    "item_images": 51,
     "system_images": 572
   },
   "schema": 1,
@@ -7419,7 +7516,10 @@
       },
       "1:/SAKURA1/ITEM03.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM03.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM04.BIN": {
         "association": "unknown",
@@ -7476,7 +7576,11 @@
       },
       "1:/SAKURA1/ITEM12.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM12.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/ITEM13.BIN": {
         "association": "unknown",
@@ -7578,7 +7682,10 @@
       },
       "1:/SAKURA1/ITEM27.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM27.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM28.BIN": {
         "association": "unknown",
@@ -7909,7 +8016,10 @@
       },
       "2:/SAKURA1/ITEM03.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM03.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM04.BIN": {
         "association": "unknown",
@@ -7966,7 +8076,10 @@
       },
       "2:/SAKURA1/ITEM12.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM12.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM13.BIN": {
         "association": "unknown",
@@ -8068,7 +8181,10 @@
       },
       "2:/SAKURA1/ITEM27.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM27.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item03-item12-and-item27",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM28.BIN": {
         "association": "unknown",
@@ -8428,6 +8544,14 @@
         "pc": "SAKURA1/SYSTEM/SIS_ICON.SPR",
         "pc_image_index": 2,
         "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110b-cd-1-emblem-in-the-load-menu",
+        "status": "hd"
+      },
+      "pc:SAKURA1/SYSTEM/SIS_ICON.SPR#3": {
+        "association": "unknown",
+        "draw": "patch 0146, port/load_disc_icon.h: CD-2 load emblem in the top slot",
+        "pc": "SAKURA1/SYSTEM/SIS_ICON.SPR",
+        "pc_image_index": 3,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#t110c-cd-2-emblem-in-the-load-menu",
         "status": "hd"
       }
     },
@@ -8977,11 +9101,6 @@
         "pc_index": 247,
         "status": "hd"
       },
-      "00fe": {
-        "association": "unknown",
-        "pc_index": 253,
-        "status": "hd"
-      },
       "0100": {
         "association": "unknown",
         "pc_index": 255,
@@ -9067,11 +9186,6 @@
         "pc_index": 276,
         "status": "hd"
       },
-      "0116": {
-        "association": "unknown",
-        "pc_index": 277,
-        "status": "hd"
-      },
       "0117": {
         "association": "unknown",
         "pc_index": 278,
@@ -9140,11 +9254,6 @@
       "0137": {
         "association": "unknown",
         "pc_index": 310,
-        "status": "hd"
-      },
-      "013d": {
-        "association": "unknown",
-        "pc_index": 316,
         "status": "hd"
       },
       "013e": {
@@ -12013,7 +12122,9 @@
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -12562,11 +12673,15 @@
       },
       "1:/SAKURA1/BG1130.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1134",
+        "pc": "SAKURA1/BG/BG1134.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1135",
+        "pc": "SAKURA1/BG/BG1135.SPR",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
@@ -13031,8 +13146,8 @@
       "1:/SAKURA1/BG1283.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1283.SPR",
-        "reason": "size [472, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1284.BIN": {
         "association": "unknown",
@@ -13147,8 +13262,8 @@
       "1:/SAKURA1/BG1310.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1310.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG1311.BIN": {
         "association": "unknown",
@@ -13734,8 +13849,8 @@
       "1:/SAKURA1/BG2077.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2077.SPR",
-        "reason": "size [440, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2078.BIN": {
         "association": "unknown",
@@ -14113,8 +14228,8 @@
       "1:/SAKURA1/BG2172.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2172.SPR",
-        "reason": "size [288, 280], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2174.BIN": {
         "association": "unknown",
@@ -14629,8 +14744,8 @@
       "1:/SAKURA1/BG2518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2518.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "1:/SAKURA1/BG2519.BIN": {
         "association": "unknown",
@@ -15487,12 +15602,6 @@
         "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
         "status": "paired-not-wired"
       },
-      "1:/SAKURA1/IC0501.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/ICATCH/IC0501.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
-      },
       "1:/SAKURA1/IC0502.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/ICATCH/IC0502.SPR",
@@ -15565,7 +15674,9 @@
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15577,7 +15688,9 @@
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15589,7 +15702,9 @@
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15601,7 +15716,9 @@
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15613,7 +15730,9 @@
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -15621,7 +15740,10 @@
       },
       "1:/SAKURA1/TITLE10.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "decision_evidence": "docs/research/episode-title-pc-pairings.md",
+        "pc": "SAKURA1/TITLE/TITLE10.SPR",
+        "reason": "Japanese lettering is baked into the PC image. The approved episode cards use localized centers.",
+        "status": "excluded"
       },
       "1:/SAKURA1/TITLE8.BIN": {
         "association": "unknown",
@@ -15739,7 +15861,9 @@
         "pc": "SAKURA1/ENDING/END_AI.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -16366,11 +16490,15 @@
       },
       "2:/SAKURA1/BG1130.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1134",
+        "pc": "SAKURA1/BG/BG1134.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1131.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "native_alias_of": "BG1135",
+        "pc": "SAKURA1/BG/BG1135.SPR",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1132.BIN": {
         "association": "unknown",
@@ -16862,8 +16990,8 @@
       "2:/SAKURA1/BG1283.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1283.SPR",
-        "reason": "size [472, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1284.BIN": {
         "association": "unknown",
@@ -16973,8 +17101,8 @@
       "2:/SAKURA1/BG1310.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG1310.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG1311.BIN": {
         "association": "unknown",
@@ -17575,8 +17703,8 @@
       "2:/SAKURA1/BG2077.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2077.SPR",
-        "reason": "size [440, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2078.BIN": {
         "association": "unknown",
@@ -17642,12 +17770,6 @@
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2092.SPR",
         "status": "hd"
-      },
-      "2:/SAKURA1/BG2093.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2093.SPR",
-        "reason": "size [320, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2094.BIN": {
         "association": "unknown",
@@ -17959,8 +18081,8 @@
       "2:/SAKURA1/BG2172.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2172.SPR",
-        "reason": "size [288, 280], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2173.BIN": {
         "association": "unknown",
@@ -18209,12 +18331,6 @@
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2246.SPR",
         "status": "hd"
-      },
-      "2:/SAKURA1/BG2247.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG2247.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
       },
       "2:/SAKURA1/BG2248.BIN": {
         "association": "unknown",
@@ -18490,8 +18606,8 @@
       "2:/SAKURA1/BG2518.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG2518.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "runtime_evidence": "docs/research/scroll-table.md",
+        "status": "hd"
       },
       "2:/SAKURA1/BG2519.BIN": {
         "association": "unknown",
@@ -19457,7 +19573,9 @@
         "pc": "SAKURA1/ENDING/END_KA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19469,7 +19587,9 @@
         "pc": "SAKURA1/ENDING/END_KO.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19481,7 +19601,9 @@
         "pc": "SAKURA1/ENDING/END_MA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19493,7 +19615,9 @@
         "pc": "SAKURA1/ENDING/END_SA.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19505,7 +19629,9 @@
         "pc": "SAKURA1/ENDING/END_SU.SPR",
         "pc_image_indices": [
           6,
-          7
+          7,
+          8,
+          10
         ],
         "reason": "Requires ending-layer composition and viewport evidence.",
         "scope": "ending-bank subimages",
@@ -19701,91 +19827,143 @@
     "tactical-maps": {
       "1:/SAKURA2/MAP03.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP03/MAP03_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 626 images (tiles or frames) and needs an assembler",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA2/MAP05.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP05/MAP05_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 46 images (tiles or frames) and needs an assembler",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA2/MAP07.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP07/MAP07_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA2/MAP08.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP08/MAP08_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA2/MAP09.BIN": {
         "association": "unknown",
-        "status": "unknown"
-      },
-      "1:/SAKURA2/MAP10.BIN": {
-        "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP09/MAP09_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA2/MAP11.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP11/MAP11_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "1:/SAKURA2/MAP22.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP22/MAP22_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP01.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP01/MAP01_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP12.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP12/MAP12_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP13.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP13/MAP13_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP14.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP14/MAP14_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP15.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP15/MAP15_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP16.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP16/MAP16_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP17.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP17/MAP17_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP18.BIN": {
         "association": "unknown",
-        "status": "unknown"
-      },
-      "2:/SAKURA2/MAP19.BIN": {
-        "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP18/MAP18_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP20.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP20/MAP20_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 96 images (tiles or frames) and needs an assembler",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP23.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP23/MAP23_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 4 images (tiles or frames) and needs an assembler",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP24.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP24/MAP24_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP25.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP25/MAP25_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       },
       "2:/SAKURA2/MAP26.BIN": {
         "association": "unknown",
-        "status": "unknown"
+        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pc": "SAKURA2/MAP/MAP26/MAP26_A.SPR",
+        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
+        "status": "paired-not-wired"
       }
     },
     "tactical-units": {

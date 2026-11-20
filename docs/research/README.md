@@ -47,6 +47,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [bg2295-pan.md](bg2295-pan.md) — Exact crop and runtime wiring for the damaged Koubu panorama.
 - [forest-vertical-pans.md](forest-vertical-pans.md) — Exact pairing of six Chapter 10 forest variants.
 - [scroll-table.md](scroll-table.md) — Shared scroll geometry and four additional registered panoramas.
+- [BG2093 dream transition](bg2093-dream-transition.md) records its live line offsets and two-source blend.
+- [BG2247 native pan](bg2247-native-pan.md) compares the witnessed Chapter 8 theatre viewport and the PC redraw.
 - [bg2159-disc2-visual.md](bg2159-disc2-visual.md) — Disc 2 Chapter 8 city view at 1440p.
 - [v011-floral-background.md](v011-floral-background.md) — v0.1.1 panoramic floral background ([kabe-backgrounds.json](kabe-backgrounds.json)).
 
@@ -76,6 +78,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [chapter1-wide-transitions.md](chapter1-wide-transitions.md) — evidence or report of the presentation block and chapter 1 coverage.
 - [dialogue-catalog.md](dialogue-catalog.md) — evidence or report of the presentation block and chapter 1 coverage.
 - [portrait-animation-coverage.md](portrait-animation-coverage.md) — evidence or report of the presentation block and chapter 1 coverage.
+- [Tactical map, unit and item pairings](tactical-pairing.md)
 - [tactical-menu-independent-reference.md](tactical-menu-independent-reference.md) — evidence or report of the presentation block and chapter 1 coverage.
 
 - [dialogue-panel-compositing.md](dialogue-panel-compositing.md): Exact Saturn blend and background continuity inside the panel.
@@ -118,6 +121,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Chapter 2 tactical progression](chapter2-tactical-progression.md) — Continue, orders, enemy phase, and ally attack with AOT/interpreter comparison.
 - [EVT overlay registry](evt-overlay-registry.md)
 - [bg-matching-progress.md](bg-matching-progress.md): Running log of the PC BG scene-image matching by screenshot; counts only.
+- [NC3058 cut-out at 1440p](nc3058-cutout-1440p.md) records the natural scene, native mask and facial fallback.
 - [saturn-bg-format.md](saturn-bg-format.md): Saturn BG*.BIN/BBG*.BIN layouts (three variants) and the mass BG pairing by file number (`config/hd-scene-bg-map.json`).
 - [bg-matching-shards.md](bg-matching-shards.md): Split of the 766 PC BG images into shards so the matching can run in parallel.
 - [pc-asset-census.md](pc-asset-census.md): Header-level census of the PC edition cabinet that sizes the HD categories.
@@ -129,7 +133,8 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [EVE202 tactical inset](eve202-tactical-inset.md)
 - [EVE0116 tactical inset](eve0116-tactical-inset.md): disc-1 episode-1 tactical close-up in HD with 1440p verification.
 - [EVE0118 tactical inset](eve0118-tactical-inset.md): disc-1 farewell picture in HD with 1440p verification.
-- [IC01 HD intermission](ic01-hd-intermission.md): the verified EVE202 picture drawn in HD inside the tactical inset (patch 0099), evidence and limits.
+- [IC01 HD intermission](ic01-hd-intermission.md) — Verified Chapter 1 intermission backdrop.
+- [IC0501 intermission witness](ic0501-intermission-witness.md) — Chapter 5 menu, emblem and both floral fades at 1440p, with verified Enhanced substitution.
 - [Jumping to a chapter or scene](scene-jump.md) (test tool only): Continue from a copied save, states along the way, random exploration; what is not done.
 - [HD chapter 1 report](hd-chapter-1.md): what chapter 1 shows per resource class, its status, ranked next actions and what needs the owner's discs.
 - [HD chapter 2 report](hd-chapter-2.md): what chapter 2 shows per resource class, its status, ranked next actions and what needs the owner's discs.
