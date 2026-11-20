@@ -139,6 +139,7 @@ One line per document. The JSON files are the machine-readable evidence for thei
 - [Additional NC91 and NC94 face groups](nc91-nc94-additional-faces.md)
 - [NC11, NC15 and NC22 face registration](nc11-nc15-nc22-registered-faces.md)
 - [NC40 and NC71 face registration](nc40-nc71-registered-faces.md)
+- [NC31, NC62 and NC70 face registration](nc31-nc62-nc70-registered-faces.md)
 - [NC36 and NC72 face registration](nc36-nc72-registered-faces.md)
 - [NC24 and NC3250 mouth placement](nc24-nc3250-mouth-placement.md)
 - [NC60, NC61 and NC3038 face registration](nc60-nc61-nc3038-registered-faces.md)
