@@ -650,6 +650,24 @@
         "evidence": "docs/research/ending-bank-pairs.md#controlled-iris-and-kohran-theatre-insets",
         "controlled": true
       }
+    },
+    "general_ending": {
+      "saturn_file": "SAKURA1/GE_CG.BIN",
+      "records": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "runtime_patch": "patches/0233-sakura-general-ending-hd.patch",
+      "evidence": "docs/research/ending-bank-pairs.md#general-ending-hd-composition",
+      "native_rect_ltrb": [
+        0,
+        0,
+        320,
+        224
+      ],
+      "controlled": true
     }
   }
 }

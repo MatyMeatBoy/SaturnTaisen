@@ -346,3 +346,34 @@ is retained in `local/work/codex-th1/tp3c-cg`.
 
 This is a controlled reproduction of the original branch. A natural
 six-route completion, HD composition and package inclusion remain open.
+
+## General ending HD composition
+
+Patch 0233 identifies the four general ending plates by their exact
+palette and cell fingerprints and checks their winning VDP2 layers.
+It draws the PC donor inside the Saturn rectangle at the current
+integer fit. The theatre uses a 600 × 440 crop at (24,16). The three
+cast plates use the centered 640 × 448 crop at (0,16). The registered
+theatre crop keeps the arch and aisle close to Saturn. The cast crops
+keep the cast, logo and final mark in their original positions.
+
+The independently drawn native characters remain over the theatre.
+The HD background uses the VDP2 color offset during the opening
+fade and the original 32-step color calculation weights during the
+theatre-to-cast and logo-to-final-mark dissolves. The PC bank is
+decoded once in a background task after the first plate is identified.
+
+The controlled English disc 2 route matches all 3,300 guest fields and
+final SRAM across the Enhanced and Original profiles. Twenty 1440p
+samples with the donor absent match the previous runtime. Original
+captures match with and without the donor. Enhanced changes are
+confined to the viewport (320,48)–(2240,1392). At 1080p, eight
+normal and fade samples draw within (320,92)–(1600,988), with the
+lead-in sample unchanged. Independently decoded PC colors agree with
+all changed native-center samples in the theatre, character overlays,
+cast variants and both measured dissolves.
+
+The coverage register credits the physical donor once. The proof is
+from a controlled save, and package inclusion and the natural
+six-route completion remain open. Private receipts and renders are
+under `local/work/codex-th1/tp3c-cg/ge-render`.

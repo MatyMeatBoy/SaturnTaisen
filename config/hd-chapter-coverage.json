@@ -16076,7 +16076,7 @@
           2,
           3
         ],
-        "reason": "The four GE pictures are whole-screen theatre variants; the ending viewport, fade and overlay layers have no live witness, so no replacement is selected.",
+        "reason": "The general ending composition is supported on disc 2.",
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
@@ -19726,6 +19726,7 @@
       "2:/SAKURA1/GE_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
+        "fixture_evidence": "docs/research/ending-bank-pairs.md#general-ending-hd-composition",
         "pc": "SAKURA1/ENDING/END_GE.SPR",
         "pc_image_indices": [
           0,
@@ -19733,9 +19734,10 @@
           2,
           3
         ],
-        "reason": "The four GE pictures are whole-screen theatre variants; the ending viewport, fade and overlay layers have no live witness, so no replacement is selected.",
+        "runtime_patch": "patches/0233-sakura-general-ending-hd.patch",
         "scope": "ending-bank subimages",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/IC01.BIN": {
         "association": "unknown",
