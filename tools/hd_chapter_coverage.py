@@ -90,8 +90,9 @@ STAGE16_REPORT = 'docs/research/tactical-pairing.md#live-map16-pc-ground'
 CHAPTER5_ROUTE_REPORT = 'docs/research/hd-chapter-5.md#native-opening-observations'
 CHAPTER5_ROUTE_FILES = {
     'BG1031', 'BG1198', 'BG1243', 'BG2058', 'BG2132', 'BG2133', 'BG3132', 'BG3133',
-    'NC60', 'NC90', 'NC3058',
+    'NC60', 'NC90', 'NC3058', 'BG2156',
 }
+TH5_TRACE_REPORT = 'docs/research/hd-chapter-5.md#traced-attribution-th5'
 CHAPTER5_ROUTE_PORTRAITS = {'00ff', '010f', '0169', '016a'}
 CHAPTER5_PORTRAIT_DRAWS = ('010f', '016a')
 CHAPTER5_PORTRAIT_REPORT = 'docs/research/hd-chapter-5.md#verified-0501fce-portrait-bases'
@@ -336,6 +337,8 @@ CHAPTER_WITNESSES = {
     (2, '/SAKURA1/IC06.BIN'): (9, 'docs/research/ic06-intermission-witness.md'),
     (1, '/SAKURA1/IC0501.BIN'): (5, 'docs/research/ic0501-intermission-witness.md'),
     (1, '/SAKURA1/NC3058.BIN'): (5, CHAPTER5_ROUTE_REPORT),
+    **{(1, f'/SAKURA1/{name}.BIN'): (5, TH5_TRACE_REPORT)
+       for name in ('BG1051', 'BG2258', 'NC91', 'NC92', 'NC4182')},
     (2, '/SAKURA1/BG2247.BIN'): (8, 'docs/research/bg2247-native-pan.md'),
     (2, '/SAKURA1/BG2093.BIN'): (9, 'docs/research/bg2093-dream-transition.md'),
     (2, '/SAKURA1/BG1213.BIN'): (10, 'docs/research/th10-native-attribution.md'),
