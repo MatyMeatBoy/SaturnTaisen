@@ -2363,6 +2363,30 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "1:/SAKURA1/BG4088.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/chapter-one-cutout-followup.md",
+            "pc": "SAKURA1/BG/BG4088.SPR",
+            "runtime_evidence": "docs/research/chapter-one-cutout-followup.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG4165.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/chapter-one-cutout-followup.md",
+            "pc": "SAKURA1/BG/BG4165.SPR",
+            "runtime_evidence": "docs/research/chapter-one-cutout-followup.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG4171.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/chapter-one-cutout-followup.md",
+            "pc": "SAKURA1/BG/BG4171.SPR",
+            "runtime_evidence": "docs/research/chapter-one-cutout-followup.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
           "1:/SAKURA1/IC01.BIN": {
             "association": "observed",
             "evidence": "docs/research/chapter1-wide-transitions.md",
@@ -3277,6 +3301,14 @@
             "evidence": "docs/research/narrative-foreground-followup.md",
             "pc": "SAKURA1/BG/BG3289.SPR",
             "runtime_evidence": "docs/research/narrative-foreground-followup.md",
+            "status": "hd",
+            "verified_in_game": true
+          },
+          "1:/SAKURA1/BG4114.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/chapter-one-cutout-followup.md",
+            "pc": "SAKURA1/BG/BG4114.SPR",
+            "runtime_evidence": "docs/research/chapter-one-cutout-followup.md",
             "status": "hd",
             "verified_in_game": true
           },
@@ -15465,12 +15497,6 @@
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
-      "1:/SAKURA1/BG4088.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4088.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "1:/SAKURA1/BG4092.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4092.SPR",
@@ -15531,12 +15557,6 @@
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
-      "1:/SAKURA1/BG4114.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4114.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "1:/SAKURA1/BG4116.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4116.SPR",
@@ -15589,21 +15609,9 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/BG4165.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4165.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
       "1:/SAKURA1/BG4168.BIN": {
         "association": "unknown",
         "pc": "SAKURA1/BG/BG4168.SPR",
-        "reason": "cut-out on a key colour or blank picture, not replaced by design",
-        "status": "excluded"
-      },
-      "1:/SAKURA1/BG4171.BIN": {
-        "association": "unknown",
-        "pc": "SAKURA1/BG/BG4171.SPR",
         "reason": "cut-out on a key colour or blank picture, not replaced by design",
         "status": "excluded"
       },
