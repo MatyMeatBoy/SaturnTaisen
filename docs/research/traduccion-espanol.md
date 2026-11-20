@@ -277,3 +277,7 @@ Sakura and Kohran displayed Divinidad floral and Minirrobots in natural MAP02 In
 The previous Spanish disc 2 retained all ten English TITLE files and the English LOAD file. The Spanish language layer now carries the same localized title and loading files as disc 1. Both English discs have identical source resources for these eleven files. The replacements retain the palette and cell-table headers, file sizes and disc extents. Disc 2 uses the same ten Enhanced lettering keys as disc 1.
 
 The packaged v0.2.16.1-alpha executable was replayed from cold Continue for 6,600 strict fields with the old and corrected Spanish disc 2. Three 1440p samples covering steady loading and its fade match all 9,504 expected native letter texels per sample: English on the old disc and CARGANDO on the corrected disc. Other sampled frames match RGB and the two runs finish with identical SRAM. The title files and generated center keys match disc 1 exactly. Natural visual proof of all ten Episode cards remains open.
+
+## Tactical pause and confirmation in Spanish
+
+Seven WKL sprites now localize the return to title, restart, suspend and restart confirmations, affirmative response and Options entry. All 27 banks retain the original byte ranges outside the seven exact-size texture spans. The negative response already reads No. A controlled A/B from the natural MAP02 pause and Restart confirmation ran 170 strict fields at 1440p with matching SRAM. RGB differences stay inside the translated labels. The advanced Options screen remains separate.
