@@ -160,6 +160,7 @@ SCENE_DRAWS = {
     **{(1, f'/SAKURA1/BG{number}.BIN'): (1, 'docs/research/scene-spot-check.md#bg1002-and-bg1116-on-disc-1')
        for number in (1002, 1116)},
     (1, '/SAKURA1/BG1216.BIN'): (1, CHAPTER1_ROUTE_REPORT),
+    (2, '/SAKURA1/BG2053.BIN'): (9, 'docs/research/scene-spot-check.md#bg2053-on-disc-2'),
     (2, '/SAKURA1/BG2159.BIN'): (8, 'docs/research/bg2159-disc2-visual.md'),
     (2, '/SAKURA1/BG2238.BIN'): (9, 'docs/research/bg2238-still.md'),
 }
