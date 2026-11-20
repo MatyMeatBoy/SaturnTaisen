@@ -63,7 +63,10 @@ already linked path when one exists. In the register, retain each Saturn
 key and the correct PC subimage index. The byte groups reduce the work
 inventory. Connecting a remaining Saturn key still requires compositor
 eligibility and a route test. The inventory hash groups do not enable any
-new runtime substitutions. The [byte-identical file catalog](../../config/hd-scene-file-duplicates.json)
+new runtime substitutions. The register assigns one `pc_identity` per exact
+scene donor family. The separate `pc` field records the path selected by its
+runtime row. The `pc_body_alternates` index records higher-resolution
+PC donor candidates with the same Saturn body identity. The [byte-identical file catalog](../../config/hd-scene-file-duplicates.json)
 records only filenames, with no source pixels or disc data.
 
 Regenerate the file queue after each batch using the same extracted PC

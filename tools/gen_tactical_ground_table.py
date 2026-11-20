@@ -60,6 +60,7 @@ NATIVE = {
 }
 # Tile grids the placement assembler of patch 0140/0153 draws (square tiles on the 2048 x 2048 plane).
 PLANE = 2048
+LIVE_GENERATED = {'MAP03'}
 
 
 def fnv1a64(data):
@@ -137,7 +138,8 @@ def classify(pair, derived, plane=None):
         return row
     count, size = pair['ground_image_count'], pair['ground_image0_size']
     if len(pair['ground_image_sizes']) == 1 and size[0] == size[1] and count > 4 and plane == [PLANE, PLANE]:
-        row.update(status='candidate', world=[PLANE // 2, PLANE // 2], tile_px=size[0],
+        row.update(status='hd' if stem in LIVE_GENERATED else 'candidate',
+                   world=[PLANE // 2, PLANE // 2], tile_px=size[0],
                    centre_layout=stage_name(stem), plane=plane)
         return row
     row.update(status='needs-assembler',

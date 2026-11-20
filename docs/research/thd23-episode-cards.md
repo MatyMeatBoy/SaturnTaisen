@@ -43,4 +43,21 @@ The corrected Spanish disc 2 media and the Spanish disc 1 media
 independently generated the same ten keyed centers with the release
 art. An older retained Spanish disc 2 image contains all ten English
 TITLE files. It still needs its Spanish media layer refreshed.
-The new setup helper is pending packaging.
+The helper and the installed-media migration shipped in v0.2.25-alpha.
+In v0.2.26-alpha the launcher also restores missing generated centers.
+
+## Published Spanish Episode 1 at 1440p
+
+An A/B of v0.2.26-alpha used the same Spanish opening with and without
+the installed center. During sampled fade-in fields 8160, 8180 and 8200,
+the center contribution increased. The corresponding fade-out fields
+8580, 8600 and 8620 show it decreasing. In the sampled steady interval,
+fields 8220–8560, all 2,580,480 center pixels matched the installed PNG
+at integer 6× scaling. The center occupies (320,48)–(2240,1392).
+All changes between these two profiles were confined to that rectangle.
+The widescreen surround was unchanged by the presence of the center.
+No black pixels appeared in the exterior strips in the sampled fade and
+steady fields. In Original, 26 full-window captures matched exactly with
+and without the installed center. All 8,810 guest hashes and the final
+save memory matched across the four cold runs, with zero interpreted
+blocks. The report lives in the private v0.2.26 card verification folder.

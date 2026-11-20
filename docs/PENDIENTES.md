@@ -128,7 +128,7 @@ Mantener el idioma español según el perfil. Registrar la fuente de cada rótul
 | THD42 | P1 | local | open | **Donantes `hd` parciales y mixtos.** 23 donantes `hd` con otra clave pendiente y 22 `hd`+`excluded` ([censo](research/hd-census.md)). El 586/1095 los cuenta enteros. | Separar filas o subimágenes; publicar integrado estricto junto al actual. |
 | THD43 | P1 | local | open | **Filas `hd` sin evidencia por fila.** Escenas 935/1196, cuerpos 207/296, retratos 172/419, vídeo 41/45 solo llevan entrada de tabla. | Un enlace de evidencia o `verified_in_game` explícito por fila; el generador deja de contarlas como observadas. |
 | THD44 | P1 | local | open | **Denominador táctico solapado.** ITEM (57 SPR) cuenta en el 542 y en HUD (51); 168 SPR de MAP sin función; 291 UNIT sin estado. | Mover ITEM fuera del 542, asignar rol a cada SPR de MAP y estado explícito a cada UNIT; medir la fila táctica en HD_PROGRESS. |
-| THD45 | P2 | local | open | **Registro: duplicados y NC fuera de denominador.** 23 miembros de duplicados exactos figuran como donantes separados; 19 NC de SAKURA3 sin fila; SHARDS.md omite los 12 minijuegos y el par BBG en `paired-not-wired`. | Alinear registro, SHARDS.md y el [censo](research/hd-census.md); `python tools/hd_census.py --check` limpio. |
+| THD45 | P2 | local | verified · offline inventory | **Identidad de donantes y alternos NC.** Las 23 familias exactas con más de una ruta comparten identidad de conteo. Los 19 alternos SAKURA3 quedaron inventariados sobre las identidades Saturn existentes; el denominador sigue en 147. | [Censo y evidencia](research/hd-census.md). SHARDS incluye 12 minijuegos y el BBG pendiente. Sin cambio de enlaces, verificación en juego ni paquete. |
 
 ### Reservas y actividad
 

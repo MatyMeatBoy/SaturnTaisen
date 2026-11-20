@@ -1,0 +1,17 @@
+diff --git a/port/tactical_ground.h b/port/tactical_ground.h
+--- a/port/tactical_ground.h
++++ b/port/tactical_ground.h
+@@ -73,7 +73,13 @@
+     0x446FB372F79EDD04ull, 0x40000, 559, 455, 559, "stage21-hd-ground",
+ };
+ 
++inline constexpr Entry kStage03{
++    "SAKURA2/MAP/MAP03/MAP03_A.SPR", 2415344, 0x70A1A621311CCC80ull,
++    0x3150DAC84F35E1AEull, 0x40000, 1024, 1024, 1024, "stage03-hd-ground", 64,
++};
++
+ inline const Entry* Find(uint64_t signature) {
++    if (signature == kStage03.mapSignature) return &kStage03;
+     if (signature == kStage01.mapSignature) return &kStage01;
+     if (signature == kStage02.mapSignature) return &kStage02;
+     if (signature == kStage04.mapSignature) return &kStage04;

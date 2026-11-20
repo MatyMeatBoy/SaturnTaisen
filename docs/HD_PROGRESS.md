@@ -105,7 +105,7 @@ Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y 
 
 - El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.
 - MAP01 usa un archivo de PC común a ambos discos. MAP05 se verificó con cámara fija. MAP10 y MAP19 conservan el suelo Saturn por diferencias de composición. El marco táctico de SLGSYS03 se verificó en MAP02, MAP12 y MAP13 y se cuenta en HUD.
-- Suelos por archivo PC único: 11/26 (42,3%) integrados y 11/26 (42,3%) verificados. Los 26 archivos emparejados cubren 27 referencias Saturn.
+- Suelos por archivo PC único: 12/26 (46,1%) integrados y 12/26 (46,1%) verificados. Los 26 archivos emparejados cubren 27 referencias Saturn.
 - **Siguiente paso**. Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.
 
 - [pc-asset-census.md](research/pc-asset-census.md).
