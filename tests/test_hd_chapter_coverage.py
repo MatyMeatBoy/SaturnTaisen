@@ -123,7 +123,14 @@ class ChapterCoverageTest(unittest.TestCase):
         self.assertEqual(scene['association'], 'observed')
         self.assertTrue(scene['verified_in_game'])
         self.assertFalse(catalog['unassigned']['scene-pictures']['2:/SAKURA1/BG1116.BIN'].get('verified_in_game'))
-        self.assertIn('1:/SAKURA1/BG2004.BIN', catalog['unassigned']['scene-pictures'])
+        for name in ('BG1143', 'BG2004'):
+            scene = chapter1['scene-pictures'][f'1:/SAKURA1/{name}.BIN']
+            self.assertEqual(scene['association'], 'observed')
+            self.assertTrue(scene['verified_in_game'])
+        for name in ('BG1144', 'BG2005'):
+            sibling = catalog['unassigned']['scene-pictures'][f'1:/SAKURA1/{name}.BIN']
+            self.assertEqual(sibling['association'], 'unknown')
+            self.assertFalse(sibling.get('verified_in_game'))
         self.assertIn('2:/SAKURA1/BG1116.BIN', catalog['unassigned']['scene-pictures'])
         body = chapter1['bodies']['1:/SAKURA1/NC51.BIN']
         self.assertEqual(body['association'], 'observed')

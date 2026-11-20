@@ -247,3 +247,31 @@ in R, G and B.
 BG1193 now has the live draw missing from the earlier offline audit.
 Private replay commands, states, hashes and captures are under
 `local/work/codex-th1/ch1-scene-draws/final-film-late/`.
+
+## BG1143 and BG2004 on disc 1
+
+A strict English Chapter 1 continuation from field 239,080 requested
+23 sectors each at FAD 142078 and 146095. The disc directory identifies
+`BG1143.BIN` and `BG2004.BIN` respectively. The replay did not request
+the other files in either shared palette and cell group. This identifies
+the exact disc-1 files behind the observed PC draws.
+
+The two muted 2560×1440 Enhanced pairs use the 0188 renderer
+(SHA-256 `fce7584605deda7351ae628f3568169436d890228aaaa5e135054ab11904ebf3`).
+Each pair compares a PC folder containing only the named donor with an
+empty control. All guest fields match the traced relay, backups match
+within each pair, and all runs report zero interpreted blocks. Pixels
+changed only within the Zoom rectangle (272,29)–(2288,1037).
+The RGB errors are means for a foreground-free 192×84 tile against the
+independently decoded donor resized to the Zoom picture.
+
+| Scene | Relay anchor | Matching fields | Changed captures | With donor | Empty folder |
+| --- | ---: | ---: | ---: | --- | --- |
+| BG1143 | 253,100 | 560 | 1 of 5 | 0.151/0.146/0.156 | 46.162/45.101/43.838 |
+| BG2004 | 255,900 | 630 | 4 of 6 | 0.006/0.008/0.007 | 6.658/7.592/9.092 |
+
+BG1143 is visible at field 20 and the later samples match in full RGB.
+BG2004 first changes at sampled field 170, after two matching samples.
+Private replay commands, state anchors, CD trace, RGB captures and
+comparison outputs are retained under
+`local/work/codex-th1/ch1-scene-draws/aliases-0188/`.
