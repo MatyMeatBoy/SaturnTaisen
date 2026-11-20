@@ -215,7 +215,10 @@ frames 2440, 2520, 2600, 2680 and 2760 match the current release's Spanish
 ink pixel for pixel. RGB differences are inside the lettering window.
 The before/after checkpoints and all seven English Enhanced captures match.
 Three Spanish Original captures and all 2,840 guest hashes also match.
-A new public package remains pending.
+The public v0.2.10-alpha Windows runtime matches the private combined
+0174/0175 build at all five 1440p checkpoints and all 2,940 guest hashes.
+The uploaded ZIP digest is
+`9c60da39b0dfd444bcb1300a719012db3ed70499bf35da79e19b07fd6cf5ad36`.
 
 The closure snapshot counted 101,509,576,559 project bytes after removing
 5,144,675,840 bytes of superseded local diagnostic executables. The retained
