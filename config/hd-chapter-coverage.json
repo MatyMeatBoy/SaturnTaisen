@@ -6371,6 +6371,11 @@
             "status": "hd",
             "verified_in_game": true
           },
+          "2:/SAKURA1/BG1360.BIN": {
+            "association": "observed",
+            "evidence": "docs/research/hd-chapter-9.md#bg1360-door-variant",
+            "status": "unpaired"
+          },
           "2:/SAKURA1/BG2017.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build",
@@ -18164,10 +18169,6 @@
         "status": "unpaired"
       },
       "2:/SAKURA1/BG1359.BIN": {
-        "association": "unknown",
-        "status": "unpaired"
-      },
-      "2:/SAKURA1/BG1360.BIN": {
         "association": "unknown",
         "status": "unpaired"
       },
