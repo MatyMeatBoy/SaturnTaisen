@@ -66,3 +66,19 @@ The controlled results certify the draw and fallback for those plate
 identities. Their natural chapter occurrences remain open. Private
 evidence is under `local/work/codex-tw5-next/refresh-audit/eve-0190/`
 and `local/work/codex-th1/eve105-controlled/`.
+
+## BBG203 partial PC coverage
+
+A comparison against 46 decoded 2:1 candidates from the PC battle
+background directory ranked BBG203.SPR image 0 first. The best
+sampled 2:1 crop was (74,69)–(576,320), with luminance correlation
+0.660. The next file scored 0.465. The existing landmark alignment
+identifies the same artwork and its incomplete coverage. The pair
+is recorded for the shared portion, with the render path pending.
+
+On the prepared English disc 1, EVT03 contains the BBG203 filename
+at offset 0x35C. The disc read to look for begins at FAD 220667.
+The exact 33,792 tile bytes and 512 palette bytes were separately
+searched in 319 retained local states around three Chapter 3 research
+routes, with no match. The live inset must still be reached to check
+its geometry and decide how to present the missing Saturn edges.
