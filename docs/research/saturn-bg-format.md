@@ -1105,3 +1105,21 @@ match guest hashes and final SRAM at 2560 × 1440. All samples in
 Original match. Enhanced matches before the reward and changes
 2,428,371 pixels within (320,48)–(2240,1392) at each of the three
 stable reward samples. No additional AOT extents were needed.
+
+### Cooking menu in Long Day
+
+On English disc 1, entering Maria's Room and choosing to help her cook
+loads MINICOOK.BIN at FAD 266529. In v0.2.23-alpha the strict replay
+stops after 876 fields at master SH-2 address `0029EB2C`. The observed
+code at that address maps to offset `0x9AB2C` within the module.
+
+The isolated candidate adds 1,151 byte-exact variants beyond the
+v0.2.23 runtime. The 1,280-field controller replay reaches the
+Start and Practice menu. All guest hashes and final SRAM match the
+interpreter and the candidate reports zero interpreted blocks.
+`MINICOOK_LONG_DAY` registers the observed address ranges for
+regeneration from the pinned module.
+
+This verification covers the menu entry. The scored cooking stages
+and the BGRYORI reward in Enhanced remain open. The candidate is
+local and is not included in v0.2.23-alpha.
