@@ -181,6 +181,8 @@ rebuilt for these comparisons. Release packaging remains separate.
 Private replays and captures are in
 `local/work/codex-th1/package-loading-v028/`.
 
+The packaged v0.2.9-alpha executable repeated the cold Spanish disc 2 Continue at 2560×1440. Its loading captures at frames 6300, 6420 and 6540, all 6,600 guest hashes and the final SRAM matched the verified 0160 candidate. The test ran with the public release marker in place and used a separate settings and backup directory.
+
 ### Spanish draft cards in game (T107a)
 
 The ten TITLE files in the prepared Spanish disc 1 are byte-identical to the
