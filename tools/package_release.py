@@ -416,9 +416,9 @@ Solo necesitas **tus propios archivos**: los dos discos originales de Sakura Tai
 3. Copia en esta carpeta `roms` tus tres archivos (los dos discos de Saturn y, para el mod HD, la imagen de PC): el launcher los reconoce y prepara el juego solo (unos minutos, una sola vez). También puedes elegirlos en **Preparar juego**.
 4. Pulsa **Jugar**. F11 cambia pantalla completa; Esc/F1 o Start+Select abre los ajustes.
 
-**Idiomas.** «Inglés v0.1 Taisen» y «Español v0.1 Taisen» se aplican sobre una copia de tus discos; cada paso se comprueba con SHA-256 y tus archivos solo se leen. El idioma se cambia en el launcher al instante. Créditos de la traducción inglesa y detalle de las capas: `parches/CREDITOS.md`. La presentación Mejorada usa letras de pincel generadas en la pantalla CARGANDO del disco 1 español. El menú de extras y los subtítulos de vídeo siguen en inglés.
+**Idiomas.** «Inglés v0.1 Taisen» y «Español v0.1 Taisen» se aplican sobre una copia de tus discos; cada paso se comprueba con SHA-256 y tus archivos solo se leen. El idioma se cambia en el launcher al instante. Créditos de la traducción inglesa y detalle de las capas: `parches/CREDITOS.md`. Ambos discos españoles incluyen CARGANDO y las tarjetas de episodio. La traducción del menú de extras y los subtítulos de vídeo en español siguen pendientes.
 
-**Mod HD.** Con tu edición de PC se prepara una sola vez todo el material HD (imágenes de fondos, escenas, eventos, CG, mapas, unidades, personajes, menús y las películas) en `data/hd-resources`, solo en tu PC y nunca compartido. Hoy ya se ven 19 fondos y los retratos HD; el resto se irá activando en próximas versiones sin volver a preparar nada.
+**Mod HD.** Con tu edición de PC se prepara una sola vez todo el material HD (imágenes de fondos, escenas, eventos, CG, mapas, unidades, personajes, menús y las películas) en `data/hd-resources`, solo en tu PC y nunca compartido. El registro HD del proyecto indica qué recursos están conectados y cuáles se han verificado en juego.
 
 **Presentación.** Escala entera sin suavizado. Original conserva la composición de Saturn; Mejorada recompone las escenas reconocidas hasta 16:9 y vuelve a la original cuando no reconoce la escena. Los fondos generados son preliminares.
 

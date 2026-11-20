@@ -62,7 +62,7 @@ La reatribución de #592 da 38 filas de imagen HD conectadas para buscar en capt
 | --- | --- | --- | --- |
 | THD33 | open | Episodio 7: BG1178, BG1181, BG2014, BG2160 | [Trazas de salto](research/hd-chapter-7.md#re-attribution-with-the-evt-overlay-build). |
 | THD34 | open | Episodio 8: BG1001, BG1195, BG2004, BG2007 | [Trazas de salto](research/hd-chapter-8.md#re-attribution-with-the-evt-overlay-build). |
-| THD35 | open | Episodio 9: BG1143, BG2017, BG2021, BG2031, BG2091 | [Trazas de salto](research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build). |
+| THD35 | open | Episodio 9: BG1143, BG2017, BG2031, BG2091 | [Trazas de salto](research/hd-chapter-9.md#re-attribution-with-the-evt-overlay-build). [BG2021 verificado](research/hd-chapter-9.md#bg2021-on-the-earned-iris-route). |
 | THD36 | open | Episodio 9: BG2092, BG2156, BG2160, BG2236 | Mismas trazas. BG2156 ya suma globalmente por su aparición en el episodio 6. |
 | THD37 | open | Episodio 10: BG1284, BG1292, BG1293, BG2020, BG2023, BG2025, BG2026 | [Trazas de salto](research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build). |
 | THD38 | open | Episodio 10: BG2111, BG2163–BG2166 | [BG2046](research/hd-chapter-10.md#bg2046-ending-scene) y [BG2057](research/hd-chapter-10.md#bg2057-behind-nc3057) verificados. |
@@ -105,7 +105,7 @@ Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, 
 
 | Shard | Estado | Lote | Cierre comprobable |
 | --- | --- | --- | --- |
-| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. Ocho rótulos de la ficha de unidad distribuidos en v0.2.16.1-alpha. Seis ataques aliados y siete rótulos de pausa y confirmación traducidos. También se tradujo la pantalla avanzada de opciones. Los comandos breves aliados, la variante de Divinidad floral y Mosquete también están en ambos discos. La auditoría de otros enemigos sigue abierta. |
+| THD40 | open | Inglés residual en batalla y mapa: turno, selección, estado, submenús y avisos | Inventario por pantalla y estado. Comparar español e inglés a 1440p, conservar iconos, cursor y anclaje. Ocho rótulos de la ficha de unidad distribuidos en v0.2.16.1-alpha. Seis ataques aliados y siete rótulos de pausa y confirmación traducidos. También se tradujo la pantalla avanzada de opciones. Los comandos breves aliados, la variante de Divinidad floral y los rótulos Mosquete, Garra y Tiro ácido también están en ambos discos. La auditoría de otros enemigos sigue abierta. |
 | THD41 | open | Inglés residual en sistema e inventario: opciones, guardado, carga, confirmaciones y tarjetas | Verificar controles y valores, texto variable, ancho y fallback. Inventario: Opc., Volver y Objetos implementados en ambos discos, con carga en frío verificada en el disco 1 y capturas controladas a 1440p. Los tres rótulos se distribuyen en v0.2.16.1-alpha. La nueva capa española del disco 2 incorpora las diez tarjetas y CARGANDO. El disco 1 conserva sus gráficos. [Prueba a 1440p](research/traduccion-espanol.md#spanish-episode-and-loading-art-on-disc-2). |
 
 Mantener el idioma español según el perfil. Registrar la fuente de cada rótulo (texto del juego, textura o interfaz del port) y dejar un PR por familia de activos o pantalla. La traducción sola no suma al porcentaje de integración HD.
