@@ -179,3 +179,16 @@ Still open for Chapter 4 (nobody has this witness yet): a save or jump into
 the story part (`0400FCE`..`0403FCE`, `TITLE4`, backgrounds and bodies of
 Chapter 4), FILM clips of the chapter, the battle that follows the
 `00204000` stop, and the translated build that would let the route pass it.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 1 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-4-battle` | 0 | 45000 | yes | `ed2f71f1` | `5bfe6029` | `9f81e42a` |
+
+The route runs past the former `00204000` stop through the `EVT21` overlay (`EVT21`, `MAP21`, `WKL21`, `UNIT21`, all already attributed to chapter 4) and ends in a tactical module without story files. The only new register-class read is `SAKURA2/LIPS_CG.BIN` at frame 13,326, which the Chapter 2 route also reads, so it stays `unassigned`. No row moved.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.

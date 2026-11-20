@@ -165,3 +165,16 @@ The same English disc 1 field 1499 checkpoint shows NC40 over BG1047. At 2560 ×
 ### NC40 mouth frames on the episode 6 route
 
 Patch 0245 adds the 24 × 16 native strips at file offsets 40336 and 41488, paired to PC atlas ordinals 42 and 45. Both exact identities appear in the runtime face trace. In the 56-field checkpoint replay, 17 of the 53 sampled fields change only within (1168, 421) to (1336, 533). The other 36 samples are exact. The changed pixels show ordinal 45. A separate 300-field strict A/B from the same checkpoint confirms ordinal 42 at fields 60, 100 and 290. All 682 independently projected flat opaque texels from that PC part match in each sample. The complete guest hashes and final SRAM match. At 24 sampled fields the RGB differences stay within the mouth and chin rectangle (1168, 421) to (1336, 535). This witness is under `local/work/codex-th6-current/nc40-mouth-extended-*`. The Original profiles with and without donor match, as do the Enhanced missing and truncated donor profiles. Final SRAM and all 56 strict guest hashes match across profiles. Both registered mouth draws are visually verified. Evidence is in `local/work/codex-th6-current/nc40-mouth-full-*` and `nc40-faces-candidate/captures-vfs`. Other expressions and package inclusion remain open.
+
+
+## Re-attribution with the EVT overlay build
+
+Shard TH-reattribution repeated the traced attribution with the isolated AOT build of [the EVT overlay registry](evt-overlay-registry.md) (1,357,536 blocks, which unblocks `00204000`; exe SHA-256 `2818e414...`, copied to `local/build/sakura-reattr/`). Each chapter-jump case (`backup.bin` plus the archived `input.movie`, extended with a confirm press every 75 frames) ran cold, strict native, headless, 45,000 frames, with `tools/chapter_loads.py --exe <exe> --disc 1 --backup <backup.bin> --movie <extended.movie> --frames 45000 --interval 500 --out local/work/reattr/run-<case>`. States and movies stay in `local/work`.
+
+| Case | Exit | Frames | Interpreted 0 | Backup | Movie | Hash log |
+| --- | ---: | ---: | --- | --- | --- | --- |
+| `bank-6-battle` | 0 | 45000 | yes | `6633cfb0` | `5bfe6029` | `e283cbd2` |
+
+The route reproduces the TH6 list (TITLE6, BG1199, BG4119, BG2156, BG1021, BG1025, BG4059, NC97), all already attributed. No row moved.
+
+Association is `observed`: a disc read shows the game asked for the file, not that it drew. Not verified in game: any draw of the moved rows.
