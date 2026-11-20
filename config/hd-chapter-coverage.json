@@ -5602,10 +5602,11 @@
           },
           "2:/SAKURA1/BG2247.BIN": {
             "association": "observed",
+            "decision_evidence": "docs/research/scroll-table.md#remaining-dispositions-tp2a12",
             "evidence": "docs/research/bg2247-native-pan.md",
             "pc": "SAKURA1/BG/BG2247.SPR",
-            "reason": "The PC facade uses a different camera; its dome, tower, cornice and rails do not stay aligned over the native pan.",
-            "status": "unsupported-size"
+            "reason": "The PC composition does not follow the native camera.",
+            "status": "excluded"
           },
           "2:/SAKURA1/BG2523.BIN": {
             "association": "observed",
@@ -14371,9 +14372,10 @@
       },
       "1:/SAKURA1/BG1257.BIN": {
         "association": "unknown",
+        "decision_evidence": "docs/research/scroll-table.md#remaining-dispositions-tp2a12",
         "pc": "SAKURA1/BG/BG1257.SPR",
-        "reason": "size [456, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "The PC composition does not follow the native camera.",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG1259.BIN": {
         "association": "unknown",
@@ -14422,9 +14424,10 @@
       },
       "1:/SAKURA1/BG1280.BIN": {
         "association": "unknown",
+        "decision_evidence": "docs/research/scroll-table.md#remaining-dispositions-tp2a12",
         "pc": "SAKURA1/BG/BG1280.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "The PC composition does not follow the native camera.",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG1281.BIN": {
         "association": "unknown",
@@ -15735,9 +15738,10 @@
       },
       "1:/SAKURA1/BG2247.BIN": {
         "association": "unknown",
+        "decision_evidence": "docs/research/scroll-table.md#remaining-dispositions-tp2a12",
         "pc": "SAKURA1/BG/BG2247.SPR",
-        "reason": "size [288, 296], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "The PC composition does not follow the native camera.",
+        "status": "excluded"
       },
       "1:/SAKURA1/BG2249.BIN": {
         "association": "unknown",
@@ -17995,9 +17999,10 @@
       },
       "2:/SAKURA1/BG1257.BIN": {
         "association": "unknown",
+        "decision_evidence": "docs/research/scroll-table.md#remaining-dispositions-tp2a12",
         "pc": "SAKURA1/BG/BG1257.SPR",
-        "reason": "size [456, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "The PC composition does not follow the native camera.",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG1259.BIN": {
         "association": "unknown",
@@ -18051,9 +18056,10 @@
       },
       "2:/SAKURA1/BG1280.BIN": {
         "association": "unknown",
+        "decision_evidence": "docs/research/scroll-table.md#remaining-dispositions-tp2a12",
         "pc": "SAKURA1/BG/BG1280.SPR",
-        "reason": "size [512, 144], the runtime draws 288x144 pictures only",
-        "status": "unsupported-size"
+        "reason": "The PC composition does not follow the native camera.",
+        "status": "excluded"
       },
       "2:/SAKURA1/BG1281.BIN": {
         "association": "unknown",

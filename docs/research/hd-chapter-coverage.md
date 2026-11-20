@@ -65,3 +65,17 @@ inventory. Connecting a remaining Saturn key still requires compositor
 eligibility and a route test. The inventory hash groups do not enable any
 new runtime substitutions. The [byte-identical file catalog](../../config/hd-scene-file-duplicates.json)
 records only filenames, with no source pixels or disc data.
+
+Regenerate the file queue after each batch using the same extracted PC
+edition used by the census. The CSV keeps each canonical file, its current
+state, its byte-identical filenames and its known Saturn references.
+
+```powershell
+python tools/scene_file_queue.py --pc-root <private-pc-extraction> --output <private-output.csv>
+```
+
+BG1257, BG1280 and BG2247 are native decisions on both discs. The register
+excludes their PC compositions from the file queue because the measured
+camera does not align. This leaves 1,120 eligible files and 519 pending
+at the time of this audit. The seven full-frame BBG candidates retain
+their separate framing review.
