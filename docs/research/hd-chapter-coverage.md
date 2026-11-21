@@ -87,9 +87,9 @@ their separate framing review.
 
 ### Alcance principal y extras
 
-El inventario principal tiene 584 de 661 donantes enlazados.
-Quedan 77, con una pareja parcial, siete encuadres BBG
-pendientes y 69 sin clasificación definitiva. Las rutas
+El inventario principal tiene 584 de 655 donantes enlazados.
+Quedan 71, con una pareja parcial, siete encuadres BBG
+pendientes y 63 sin clasificación definitiva. Las rutas
 EVE se cuentan por su archivo donante BBG. Los 26 suelos
 tácticos únicos se suman al total principal una sola vez.
 El desglose del mismo CSV principal queda así.
@@ -98,7 +98,7 @@ El desglose del mismo CSV principal queda así.
 | --- | ---: | ---: |
 | BG | 525 / 580 | 55 |
 | EVE/BBG | 36 / 48 | 12 |
-| ENDING | 7 / 13 | 6 |
+| ENDING | 7 / 7 | 0 |
 | ICATCH | 16 / 20 | 4 |
 
 Los sprites tácticos forman parte del alcance. Su integración

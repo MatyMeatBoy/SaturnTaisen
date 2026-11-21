@@ -1206,6 +1206,14 @@ def build(root, index_dir, portrait_audit):
         'reason': 'All 25 bases are exact copies of KAO.SPR base regions counted as portraits.',
     }, evidence='docs/research/ic-intermission-table.md#remaining-icatch-file-roles')
 
+    for heroine in ('AI', 'KA', 'KO', 'MA', 'SA', 'SU'):
+        staff = f'SAKURA1/ENDING/STAFF_{heroine}.SPR'
+        add('scene-pictures', 'pc:' + staff, {
+            'status': 'excluded',
+            'pc': staff,
+            'reason': 'PC-specific precomposed credits omit native credits and change the copyright line.',
+        }, evidence='docs/research/ending-bank-pairs.md#staff-banks-and-native-credits')
+
     duplicate_groups = config('hd-scene-file-duplicates')['groups']
     duplicate_identities = {path: min(group) for group in duplicate_groups for path in group}
     for resources in [unassigned, *(chapter['resources'] for chapter in chapters.values())]:
