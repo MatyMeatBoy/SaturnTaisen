@@ -1,0 +1,204 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -20,6 +20,7 @@
+ #include "narrative_text.h"
+ #include "kabe.h"
+ #include "backdrop.h"
++#include <functional>
+ #include <future>
+ #include <set>
+ #include "pc_backdrop.h"
+@@ -28,6 +29,7 @@
+ #include "scroll_pictures.h"
+ #include "bg2238_verified_still.h"
+ #include "bg1306_viewport.h"
++#include "bounded_plate.h"
+ #include "scene_bg_table.h"
+ #include "eve_inset.h"
+ #include "body_table.h"
+@@ -976,8 +978,14 @@
+         size_t donorBytes;
+         int disc, scaleX, scaleY, offsetX, offsetY;
+         int donorWidth = 576, donorHeight = 320;
++        const port::BoundedPlateRegistration* bounded = nullptr;
+     };
+-    constexpr std::array<NarrativeCutout, 22> narrativeCutouts{{
++    static constexpr port::BoundedPlateRegistration corridorRegistration{
++        1.7894, 1.8712, 23.0, -13.2,
++        {0.7923898, 0.8043546, 0.8327943}, {9.471343, 6.408276, 4.975564},
++        8, 16, 4
++    };
++    constexpr std::array<NarrativeCutout, 23> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -1022,6 +1030,8 @@
+             "BG3034.BIN", "SAKURA1/BG/BG3034.SPR", 85496, 1, 2090, 2260, 22500, 0, 651, 326},
+         {0x94BD21B161800B97ull, 0x1F142C3EEA47ED6Eull, 0x5C37DD13B222E404ull, 0xB1569B2B7E7CAA06ull,
+             "BG4370.BIN", "SAKURA1/BG/BG4370.SPR", 70732, 1, 1940, 2270, -500, -6000},
++        {0x236F0FED8B2059E7ull, 0xD2893F728AEC809Eull, 0xE486914D51F27538ull, 0xFD0E68C4B1A958C2ull,
++            "BG1338.BIN", "SAKURA1/BG/BG1338.SPR", 183109, 2, 0, 0, 0, 0, 576, 320, &corridorRegistration},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
+@@ -1051,10 +1061,13 @@
+     // TP2: one slot per row of kScrollPictures (native pixels decoded once, PC texture loaded once).
+     struct ScrollState {SceneHd hd; std::vector<uint32_t> pixels;};
+     std::array<ScrollState, kScrollPictureCount> scrollState;
++    using PreparePinnedPan = std::function<SceneHdPixels(SceneHdPixels)>;
+     auto queuePinnedPan = [&](SceneHd& pan, const char* relativePath, size_t fileSize,
+-                              uint64_t fingerprint, unsigned width, unsigned height, unsigned index = 0) {
++                              uint64_t fingerprint, unsigned width, unsigned height, unsigned index = 0,
++                              PreparePinnedPan prepare = {}) {
+         const auto file = std::filesystem::u8path(port.opt.pcAssetsPath) / relativePath;
+-        pan.pending = std::async(std::launch::async, [file, fileSize, fingerprint, width, height, index] {
++        pan.pending = std::async(std::launch::async,
++            [file, fileSize, fingerprint, width, height, index, prepare = std::move(prepare)] {
+             SceneHdPixels decoded;
+             std::vector<uint8_t> bytes;
+             if (!ReadPcBackdropFile(file, bytes, fileSize) || AtlasFingerprint(bytes) != fingerprint) return decoded;
+@@ -1068,6 +1081,7 @@
+                 decoded.width = part->width;
+                 decoded.height = part->height;
+                 decoded.pixels = std::move(part->pixels);
++                if (prepare) return prepare(std::move(decoded));
+             }
+             return decoded;
+         });
+@@ -4739,14 +4753,28 @@
+                                     std::vector<uint8_t> native;
+                                     if (port.discFiles.ReadBounded(row.discFile, native, 45120))
+                                         art.native = decodeNarrativeCutout(native, row.nativeHash);
+-                                    if (!art.native.empty())
++                                    if (!art.native.empty()) {
++                                        PreparePinnedPan prepare;
++                                        if (row.bounded) {
++                                            prepare = [native = art.native, geometry = *row.bounded](SceneHdPixels donor) {
++                                                SceneHdPixels registered;
++                                                registered.pixels = port::RegisterBoundedPlate(native, donor.pixels,
++                                                    w, h, donor.width, donor.height, geometry);
++                                                registered.width = width2;
++                                                registered.height = 2 * h;
++                                                return registered;
++                                            };
++                                        }
+                                         queuePinnedPan(art.hd, row.pcFile, row.donorBytes, row.donorHash,
+-                                            row.donorWidth, row.donorHeight);
++                                            row.donorWidth, row.donorHeight, 0, std::move(prepare));
++                                    }
+                                 }
+                                 if (art.hd.pending.valid() &&
+                                     art.hd.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+                                     auto donor = art.hd.pending.get();
+-                                    if (!donor.pixels.empty()) {
++                                    if (row.bounded) {
++                                        art.registered = std::move(donor.pixels);
++                                    } else if (!donor.pixels.empty()) {
+                                         art.registered.resize(width2 * h * 2);
+                                         for (int y = 0; y < h * 2; ++y) for (int x = 0; x < width2; ++x) {
+                                             const int sx = row.scaleX * (2 * x + 1) + 4 * row.offsetX;
+diff --git a/port/bounded_plate.h b/port/bounded_plate.h
+new file mode 100644
+--- /dev/null
++++ b/port/bounded_plate.h
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++
++#include <algorithm>
++#include <array>
++#include <cmath>
++#include <cstdint>
++#include <span>
++#include <vector>
++
++namespace port {
++struct BoundedPlateRegistration {
++    double scaleX, scaleY, offsetX, offsetY;
++    std::array<double, 3> gain, lift;
++    int preserveTopRows, topFeather, rimFeather;
++};
++
++inline std::vector<uint32_t> RegisterBoundedPlate(std::span<const uint32_t> native,
++        std::span<const uint32_t> donor, int width, int height, int donorWidth, int donorHeight,
++        const BoundedPlateRegistration& geometry) {
++    if (width <= 0 || height <= 0 || donorWidth < 2 || donorHeight < 2 ||
++        native.size() != size_t(width) * height || donor.size() != size_t(donorWidth) * donorHeight) return {};
++    using Rgb = std::array<double, 3>;
++    const auto unpack = [](uint32_t pixel) -> Rgb {
++        return {double(pixel & 255), double((pixel >> 8) & 255), double((pixel >> 16) & 255)};
++    };
++    const auto smoothstep = [](double t) {
++        t = std::clamp(t, 0.0, 1.0);
++        return t * t * (3 - 2 * t);
++    };
++    const int w = width * 2, h = height * 2;
++    std::vector<Rgb> registered(size_t(w) * h), toneDelta(registered.size()), scratch(registered.size());
++    std::vector<double> weight(registered.size());
++    for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
++        const auto at = size_t(y) * w + x;
++        const double nx = (x + 0.5) / 2, ny = (y + 0.5) / 2;
++        const double px = nx * geometry.scaleX + geometry.offsetX - 0.5;
++        const double py = ny * geometry.scaleY + geometry.offsetY - 0.5;
++        const int ix = std::clamp(int(px), 0, donorWidth - 2);
++        const int iy = std::clamp(int(py), 0, donorHeight - 2);
++        const double xf = std::clamp(px - ix, 0.0, 1.0), yf = std::clamp(py - iy, 0.0, 1.0);
++        const auto first = size_t(iy) * donorWidth + ix;
++        const auto a = unpack(donor[first]), b = unpack(donor[first + 1]);
++        const auto c = unpack(donor[first + donorWidth]), d = unpack(donor[first + donorWidth + 1]);
++        const auto nativeRgb = unpack(native[size_t(y / 2) * width + x / 2]);
++        for (int channel = 0; channel < 3; ++channel) {
++            const auto top = a[channel] * (1 - xf) + b[channel] * xf;
++            const auto bottom = c[channel] * (1 - xf) + d[channel] * xf;
++            registered[at][channel] = std::clamp((top * (1 - yf) + bottom * yf) *
++                geometry.gain[channel] + geometry.lift[channel], 0.0, 255.0);
++            toneDelta[at][channel] = nativeRgb[channel] - registered[at][channel];
++        }
++        if (px < 0 || py < 0 || px >= donorWidth - 1 || py >= donorHeight - 1) continue;
++        const auto top = smoothstep((ny - geometry.preserveTopRows) / geometry.topFeather);
++        const auto rim = smoothstep(std::min({nx - 1, width - 1 - nx, height - 1 - ny}) / geometry.rimFeather);
++        weight[at] = top * rim;
++    }
++    // Three separable box passes approximate a Gaussian and leave the donor's fine detail intact.
++    constexpr int radius = 13, diameter = 2 * radius + 1;
++    const auto blur = [&](bool vertical) {
++        const int lineCount = vertical ? w : h;
++        const int lineLength = vertical ? h : w;
++        for (int line = 0; line < lineCount; ++line) {
++            const auto at = [&](int n) {
++                n = std::clamp(n, 0, lineLength - 1);
++                return vertical ? size_t(n) * w + line : size_t(line) * w + n;
++            };
++            Rgb sum{};
++            for (int n = -radius; n <= radius; ++n)
++                for (int c = 0; c < 3; ++c) sum[c] += toneDelta[at(n)][c];
++            for (int n = 0; n < lineLength; ++n) {
++                for (int c = 0; c < 3; ++c) {
++                    scratch[at(n)][c] = sum[c] / diameter;
++                    sum[c] += toneDelta[at(n + radius + 1)][c] - toneDelta[at(n - radius)][c];
++                }
++            }
++        }
++        toneDelta.swap(scratch);
++    };
++    for (int pass = 0; pass < 3; ++pass) {
++        blur(false);
++        blur(true);
++    }
++    std::vector<uint32_t> result(registered.size());
++    for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
++        const auto at = size_t(y) * w + x;
++        if (weight[at] == 0) continue;
++        const uint32_t original = native[size_t(y / 2) * width + x / 2];
++        const auto nativeRgb = unpack(original);
++        uint32_t pixel = 0xFF000000u;
++        for (int c = 0; c < 3; ++c) {
++            const auto corrected = std::clamp(registered[at][c] + toneDelta[at][c], 0.0, 255.0);
++            pixel |= uint32_t(std::lround(nativeRgb[c] * (1 - weight[at]) + corrected * weight[at])) << (8 * c);
++        }
++        if (pixel != original) result[at] = pixel;
++    }
++    return result;
++}
++} // namespace port

@@ -920,6 +920,10 @@ def build(root, index_dir, portrait_audit):
                 witnessed = disc in pair['verified_discs']
                 row.update(status='hd' if witnessed else 'wired-unverified',
                            verified_in_game=witnessed, runtime_evidence=runtime_evidence)
+        elif (disc, path) == (2, '/SAKURA1/BG1338.BIN'):
+            row = {'status': 'hd', 'pc': 'SAKURA1/BG/BG1338.SPR', 'pc_image_index': 0,
+                   'verified_in_game': False,
+                   'pairing_evidence': 'docs/research/bg1338-bounded-hd.md'}
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (

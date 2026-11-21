@@ -486,3 +486,11 @@ to native pictures already served by another donor. Two lack usable art
 for their full native draw. These remain in the 1,430-resource target.
 The queue separates reviewed cases from areas that still need first-pass
 matching and preserves the original register status for each case.
+
+## Bounded HD airship corridor (0311)
+
+BG1338 adds one integrated PC scene identity on disc 2. The registration
+task runs asynchronously and consults the existing native owner mask at
+draw time. See [evidence](research/bg1338-bounded-hd.md). The four-field
+offline comparison and C++ syntax passed. Disc 1, beta playback and
+package inclusion remain pending.
