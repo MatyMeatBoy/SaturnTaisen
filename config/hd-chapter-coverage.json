@@ -21004,6 +21004,13 @@
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG101.SPR",
         "status": "hd"
+      },
+      "pc:SAKURA1/ICATCH/KAO_P.SPR": {
+        "association": "unknown",
+        "evidence": "docs/research/ic-intermission-table.md#remaining-icatch-file-roles",
+        "pc": "SAKURA1/ICATCH/KAO_P.SPR",
+        "reason": "All 25 bases are exact copies of KAO.SPR base regions counted as portraits.",
+        "status": "excluded"
       }
     },
     "tactical-maps": {

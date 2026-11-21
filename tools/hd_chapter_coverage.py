@@ -1200,6 +1200,12 @@ def build(root, index_dir, portrait_audit):
         'verified_in_game': True, 'runtime_evidence': map02_event_report,
     }, 2, 'observed', map02_event_report)
 
+    add('scene-pictures', 'pc:SAKURA1/ICATCH/KAO_P.SPR', {
+        'status': 'excluded',
+        'pc': 'SAKURA1/ICATCH/KAO_P.SPR',
+        'reason': 'All 25 bases are exact copies of KAO.SPR base regions counted as portraits.',
+    }, evidence='docs/research/ic-intermission-table.md#remaining-icatch-file-roles')
+
     duplicate_groups = config('hd-scene-file-duplicates')['groups']
     duplicate_identities = {path: min(group) for group in duplicate_groups for path in group}
     for resources in [unassigned, *(chapter['resources'] for chapter in chapters.values())]:

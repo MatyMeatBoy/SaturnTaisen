@@ -156,3 +156,27 @@ matches the absent donor and Original matches with and without
 the PC file. The evidence covers this controlled appearance.
 The natural disc-2 trigger and release packaging remain pending.
 IC0900.SPR was already counted through disc 1.
+
+### Remaining ICATCH file roles
+
+KAO_P.SPR has 25 frames of 80 × 96. All 25 decoded RGBA
+images match the top 80 × 96 base of at least one KAO.SPR
+image byte for byte. The larger KAO records also carry
+animation strips. KAO_P supplies no new scene or portrait
+base, so the picture queue counts its contents under the
+portrait inventory and removes the redundant scene donor.
+
+IC01.SPR contains two 224 × 256 emblem cards, solid and pale.
+IC0100.SPR is the distinct 640 × 480 eyecatch already used
+for IC01.BIN. The emblem variants need scene attribution.
+SHINRAI.SPR is a 640 × 480 floral plate and SHINRIAD.SPR
+contains six 288 × 128 window pieces. Both need a Saturn
+layer witness before integration.
+
+LOAD.SPR matches the 2× loading composition, including the
+logos outside the scroll. On English disc 1, the average
+absolute RGB difference outside the scroll versus the 2×
+native decode is approximately 2.3, 2.3 and 5.0 levels.
+The PC card has Japanese lettering baked into the middle.
+Any use must preserve the approved localized scroll and
+transition behaviour. It remains a candidate.
