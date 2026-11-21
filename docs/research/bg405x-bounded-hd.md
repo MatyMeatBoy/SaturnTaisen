@@ -27,3 +27,13 @@ samples in the offline composition. The native seated figure and
 silhouette boundaries remain in place. Preparation uses the same
 async decoder and exact owner gate as BG4055 and BG4056. Linked HD
 playback and packaging remain pending.
+
+## BG4054 disc 1
+
+A controlled 121-field strict-native replay starts from the
+retained 0504 checkpoint with only the script cursor advanced
+to the original loading block. The game reads BG1160 and BG4054
+and displays all 1,488 native opaque BG4054 cells. The compositor
+registers the two matching figure regions with the existing
+per-cell ownership guard and asynchronous PC preparation.
+Natural branch reachability and linked HD playback remain open.

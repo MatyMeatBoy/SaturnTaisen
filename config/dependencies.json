@@ -316,7 +316,8 @@
       "patches/0324-sakura-hd-bg4053-picnic.patch",
       "patches/0325-sakura-hd-bg4162-actors.patch",
       "patches/0326-sakura-hd-mini-hud.patch",
-      "patches/0327-sakura-hd-bg4071-character.patch"
+      "patches/0327-sakura-hd-bg4071-character.patch",
+      "patches/0328-sakura-hd-bg4054-picnic.patch"
     ]
   }
 }

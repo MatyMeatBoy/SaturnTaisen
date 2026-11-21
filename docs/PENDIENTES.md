@@ -622,3 +622,10 @@ BG4071 adds the disc 2 character after a controlled strict-native
 replay of its original loading block. See [evidence](research/bg4071-bounded-hd.md).
 Offline compositor, syntax, coverage and patch application passed.
 Natural route, linked HD playback and packaging remain pending.
+
+## Bounded HD picnic variant (0328)
+
+BG4054 adds the disc 1 variant using two matched figure regions and
+a controlled strict-native witness. See [evidence](research/bg405x-bounded-hd.md#bg4054-disc-1).
+Syntax, coverage and patch application passed. Natural route, linked HD
+playback and packaging remain pending.
