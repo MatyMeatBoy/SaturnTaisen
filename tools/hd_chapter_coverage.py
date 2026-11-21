@@ -165,6 +165,8 @@ EVE_CONTROLLED_REPORT = 'docs/research/disc1-battle-insets.md#controlled-eve-pla
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
+    ('SAKURA1/SYSTEM/TITLE.SPR', 0): ('trim of title plaque', MENU_REPORT + '#placa-y-petalo-del-titulo'),
+    ('SAKURA1/SYSTEM/TITLE.SPR', 11): ('detached title petal', MENU_REPORT + '#placa-y-petalo-del-titulo'),
     ('SAKURA1/SYSTEM/TL_BG0.SPR', 0): ('patch 0304: PC floral title backdrop', MENU_REPORT + '#pc-floral-title-backdrop'),
     ('SAKURA1/SYSTEM/SIS_BG.SPR', 0): ('patch 0307: PC save menu backdrop', MENU_REPORT + '#pc-save-menu-backdrop'),
     ('SAKURA1/SYSTEM/SIS_BG3.SPR', 0): ('patch 0299: Extras movie theater backdrop', MENU_REPORT + '#extras-movie-theater-backdrop'),

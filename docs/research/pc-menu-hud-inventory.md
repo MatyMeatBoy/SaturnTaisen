@@ -525,6 +525,33 @@ disabled controls preserved native output. The Sound gallery
 did not activate the theater. The 50-field profiles matched
 guest hashes and SRAM. This adds one HUD image. Pending packaging.
 
+## Placa y pétalo del título
+
+TITLE.SPR #0 aporta solo el borde de la placa. El marco nativo
+de 112 × 136 se verificó en los estados de título inglés y
+japonés. La región útil del marco mide 112 × 127 y se encuadra
+con la región PC de 257 × 284. El interior, los rótulos del
+título, el escudo y los textos de derechos y de inicio siguen
+dibujados por el juego.
+
+TITLE.SPR #11 aporta el pétalo suelto. La textura nativa
+97A87CF219F582CC es la misma en ambos estados y su posición
+sigue al comando del juego. La zona visible de 19 × 18 se
+encuadra con el recorte PC de 35 × 37 cuyo origen es (1,0).
+Las dos piezas comparten la paleta DC1F1B06C3693D3E. El compositor
+comprueba la textura y la geometría exactas, la capa ganadora
+y la mezcla nativa 31:1. Cualquier comando posterior que cubra
+un píxel de la pieza conserva la imagen compuesta del juego.
+
+La comparación offline de la captura inglesa identifica 2064
+píxeles nativos seguros del borde y los 234 píxeles nativos
+visibles del pétalo. Las máscaras producen 8256 y 856 muestras
+HD dentro de esas regiones. La comprobación del reemplazo en
+el runtime queda pendiente. TITLE #2–10 son letras japonesas,
+#12 tiene derechos distintos, #13–28 son indicaciones del
+ratón en PC y #29 es enteramente transparente tras el recorte
+por color.
+
 ## PC floral title backdrop
 
 Patch 0304 links the full floral TL_BG0 image behind the native title

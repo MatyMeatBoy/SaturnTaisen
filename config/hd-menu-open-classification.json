@@ -1,9 +1,9 @@
 {
  "schema": 1,
  "scope": "THD21 offline classification of open SYSTEM images (no KAO); ITEM images are counted separately",
- "open_system_images": 154,
+ "open_system_images": 152,
  "open_item_pictures": 2,
- "open_total": 156,
+ "open_total": 154,
  "connectable_by_data_alone": 0,
  "item_pictures": "Distinct ITEM donor subimages without an integrated row in the chapter register.",
  "families": {
@@ -435,7 +435,7 @@
   "title-logo": {
    "connect": "witness+mechanism",
    "note": "Title/logo/caution screens at 640x480 with baked Japanese or PC-only text; Saturn builds them from LOGO.SH2 16x16 tiles. Needs one witnessed frame per screen and a text decision.",
-   "open": 41,
+   "open": 39,
    "files": {
     "CAUTION": {
      "open": 8,
@@ -535,15 +535,8 @@
      ]
     },
     "TITLE": {
-     "open": 29,
+     "open": 27,
      "images": [
-      {
-       "index": 0,
-       "size": [
-        257,
-        298
-       ]
-      },
       {
        "index": 2,
        "size": [
@@ -605,13 +598,6 @@
        "size": [
         134,
         158
-       ]
-      },
-      {
-       "index": 11,
-       "size": [
-        36,
-        38
        ]
       },
       {
