@@ -476,3 +476,13 @@ ownership. The donor decodes on a background task. Archived command analysis,
 an offline compositor model, syntax and patch application passed. See
 [steam atlas evidence](research/pc-menu-hud-inventory.md#jyouki-steam-frames).
 Linked build, beta playback and packaging remain pending.
+
+## Reviewed core scene queue
+
+The batch queue retains 68 pending core scene identities with individual
+review notes in [the scene queue review](../config/hd-scene-queue-review.json).
+Fifty-five require a different donor, crop, or composition. Eleven point
+to native pictures already served by another donor. Two lack usable art
+for their full native draw. These remain in the 1,430-resource target.
+The queue separates reviewed cases from areas that still need first-pass
+matching and preserves the original register status for each case.
