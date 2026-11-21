@@ -445,3 +445,10 @@ Implemented offline: the intermission emblem and STATUS backdrop add two PC
 file identities. See [layer matching](research/ic-intermission-table.md#core-intermission-layers).
 Patch stack application and coverage tests passed. A linked build, beta
 playback and package inclusion remain pending.
+
+## HD save menu backdrop (0307)
+
+Implemented with the native panel and layer fingerprints. PC decoding is
+asynchronous. See [source matching](research/pc-menu-hud-inventory.md#pc-save-menu-backdrop).
+Syntax and patch application passed. A linked build, beta playback and package
+inclusion remain pending.

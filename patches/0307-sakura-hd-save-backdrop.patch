@@ -1,0 +1,77 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1859,6 +1859,9 @@
+     using LoadPanelImages = std::array<std::vector<uint32_t>, std::size(loadPanels)>;
+     std::future<LoadPanelImages> pendingLoadPanels;
+     bool loadPanelsTried = false;
++    SDL_Texture* saveBackdrop = nullptr;
++    SceneHd saveBackdropSource;
++    std::vector<uint32_t> saveBackdropDonor, saveBackdropPixels;
+     const auto drawLoadPanels = [&](const satrecomp::video::Renderer::Presentation& planes,
+                                     std::span<const uint32_t> native, const SDL_FRect& crop, const SDL_FRect& target, int scale) {
+         if (!port.videoRenderer || choosing || port.menu.IsOpen() || satrecomp::FeatureValue("presentation_mode") != 1 ||
+@@ -1882,6 +1885,47 @@
+         constexpr std::array<int16_t, 3> neutral{};
+         constexpr std::array<int16_t, 3> dark{-16, -16, -16};
+         const bool darkSave = upperOffset == dark && lowerOffset == dark;
++        const auto& video = *port.videoRenderer;
++        if (savePlate && (darkSave || (upperOffset == neutral && lowerOffset == neutral)) &&
++            planes.source.size() == 320 * 224 &&
++            video.BackgroundPaletteFingerprint(5) == 0x0A42F1691B513AFEull &&
++            video.BackgroundCellFingerprint(5, 320 * 224) == 0x891E20711A32C8EFull) {
++            if (!saveBackdropSource.tried) {
++                saveBackdropSource.tried = true;
++                queuePinnedPan(saveBackdropSource, "SAKURA1/SYSTEM/SIS_BG.SPR",
++                    162807, 0x9072CE047173319Aull, 640, 480);
++            }
++            if (saveBackdropSource.pending.valid() &&
++                saveBackdropSource.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                auto art = saveBackdropSource.pending.get();
++                if (!art.pixels.empty()) {
++                    const auto origin = art.pixels.begin() + 20 * 640;
++                    saveBackdropDonor.assign(origin, origin + 640 * 448);
++                }
++            }
++            if (!saveBackdropDonor.empty() && !saveBackdrop) {
++                saveBackdrop = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                                  SDL_TEXTUREACCESS_STREAMING, 640, 448);
++                if (saveBackdrop) {
++                    SDL_SetTextureScaleMode(saveBackdrop, SDL_SCALEMODE_NEAREST);
++                    SDL_SetTextureBlendMode(saveBackdrop, SDL_BLENDMODE_BLEND);
++                }
++            }
++            if (saveBackdrop) {
++                saveBackdropPixels.assign(640 * 448, 0);
++                for (size_t y = 0; y < 224; ++y) for (size_t x = 0; x < 320; ++x) {
++                    const size_t at = y * 320 + x;
++                    if (planes.topSource[at] != 5 || planes.source[at] != 5) continue;
++                    const size_t pixel = y * 1280 + x * 2;
++                    for (size_t row : {size_t(0), size_t(640)})
++                        for (size_t dx = 0; dx < 2; ++dx)
++                            saveBackdropPixels[pixel + row + dx] =
++                                OffsetBackdropPixel(saveBackdropDonor[pixel + row + dx], lowerOffset);
++                }
++                if (SDL_UpdateTexture(saveBackdrop, nullptr, saveBackdropPixels.data(), 640 * sizeof(uint32_t)))
++                    SDL_RenderTexture(renderer, saveBackdrop, nullptr, &target);
++            }
++        }
+         const auto offsetBlend = [](uint32_t upper, uint32_t lower, int offset) {
+             const uint32_t rgb = system_hud::LoadBlend(upper, lower);
+             return 0xFF000000u | (uint32_t(std::max(0, int(rgb & 255) + offset))) |
+@@ -6302,6 +6346,7 @@
+                 if(eventActor)SDL_DestroyTexture(std::exchange(eventActor,nullptr));
+                 if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
+                 narrativeCutoutTexture = nullptr;
++                if (saveBackdrop) SDL_DestroyTexture(std::exchange(saveBackdrop, nullptr));
+                 for (auto& overlay : loadPanelOverlays) {
+                     if (overlay.texture) SDL_DestroyTexture(overlay.texture);
+                     overlay.texture = nullptr;
+@@ -6737,6 +6782,7 @@
+     resetRegisteredBodies();
+     if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);
+     if(loadArrowOverlay)SDL_DestroyTexture(loadArrowOverlay);
++    if (saveBackdrop) SDL_DestroyTexture(saveBackdrop);
+     for (auto& overlay : loadPanelOverlays)
+         if (overlay.texture) SDL_DestroyTexture(overlay.texture);
+     if (texture) {
