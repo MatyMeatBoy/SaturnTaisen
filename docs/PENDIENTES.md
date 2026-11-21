@@ -530,3 +530,11 @@ The donor decodes asynchronously and the texture is recreated after a
 renderer reset. See [offline evidence](research/pc-menu-hud-inventory.md#bordes-del-menu-programa).
 Syntax, coverage and patch application passed. Linked HD playback and
 packaging remain pending.
+
+## Bounded HD stage wings (0317)
+
+BG2123 on disc 1 replaces only the settled composition's side strips.
+The native center and actor layer remain intact during the draw, and the
+native floral blend is used during the transition. See [comparison](research/bg2123-bounded-hd.md).
+Offline comparison, coverage and C++ syntax passed. Linked HD playback
+and package inclusion remain pending.
