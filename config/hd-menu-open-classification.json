@@ -1,16 +1,16 @@
 {
  "schema": 1,
  "scope": "THD21 offline classification of open SYSTEM images (no KAO); ITEM images are counted separately",
- "open_system_images": 156,
+ "open_system_images": 155,
  "open_item_pictures": 2,
- "open_total": 158,
+ "open_total": 157,
  "connectable_by_data_alone": 0,
  "item_pictures": "Distinct ITEM donor subimages without an integrated row in the chapter register.",
  "families": {
   "system-frames": {
    "connect": "witness+mechanism",
    "note": "Frames and tab panels. The 0197-0213 patches draw rails from VDP1/VDP2 ownership per menu; the rest has no VDP1 texture witness. Needs the menu open in a state to read which layer draws it.",
-   "open": 49,
+   "open": 48,
    "files": {
     "BURO_W": {
      "open": 2,
@@ -370,15 +370,8 @@
      ]
     },
     "WINDOW": {
-     "open": 3,
+     "open": 2,
      "images": [
-      {
-       "index": 3,
-       "size": [
-        16,
-        32
-       ]
-      },
       {
        "index": 4,
        "size": [

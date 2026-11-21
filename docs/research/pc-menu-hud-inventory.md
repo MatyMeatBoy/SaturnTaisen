@@ -324,6 +324,31 @@ The English disc 1 replay ran 75 strict fields for each of seven profiles. Guest
 
 Local proof and commands are in `local/work/codex-witness-441-review/hud/window01-ab/receipt.json`, `local/work/codex-witness-441-review/replay-window01.py`, and `local/work/codex-witness-441-review/verify-window01.py`. Package inclusion remains open.
 
+### Péndulo de LIPS
+
+WINDOW.SPR #3 contiene el péndulo PC aislado de 16 × 32. El
+comando nativo de LIPS usa código 0x1A01, modo 0x00A0, color
+0xC500 y fuente de 8 × 16 con huella 60012FBF7CD7164D. Con
+ancla (160,32) y extremos inclusivos se dibuja a 9 × 17 en
+(156,24). Las capturas nativas de los campos 8 y 16 coinciden
+en los 87 píxeles visibles, reconstruidos con la paleta de
+huella 3CA9F51EFEDCF198 y el recorrido de texeles VDP1.
+
+El compositor reutiliza el recorrido de las ventanas LIPS.
+Comprueba el comando, la paleta, la capa ganadora y los colores
+de cada píxel antes de presentar el péndulo PC. Un comando
+posterior que pueda cubrir el rectángulo conserva el dibujo
+nativo. Las zonas transparentes y las demás posiciones de la
+animación usan la composición Saturn. La geometría se comprobó
+offline a partir de estados y capturas retenidos. Falta verificar
+la sustitución en el runtime.
+
+EXIT_W #0 corresponde al banner nativo de guardado completado
+ya cubierto por TUIKA_W #0 y se contabiliza una sola vez.
+OPTION #0, #2 y #3 tienen interiores y divisiones distintos de
+los atlas nativos revisados. BURO_W y las barras de color WINDOW
+#4 y #5 siguen pendientes de una orden de dibujo compatible.
+
 ## HD Options and System panel rails
 
 Patch 0205 uses SISTEM images 11 and 14 on the disc 1 Options and System panels. The PC images register at exactly 2× to the verified 288 × 144 and 112 × 88 VDP1 frames. The two localized Options textures share an identical mask. The exact source, palette, command placement, winning layer and composed native colors guard each draw.
