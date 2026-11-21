@@ -464,3 +464,52 @@ del búfer que contiene el actor alterna entre las muestras.
 Los campos 1500, 1510, 1750, 1950 y 2100 sirven para comprobar
 el diálogo por delante, la figura visible, el recorte, el final
 de la animación y la desaparición.
+
+#### Prueba de composición del donante a 1440p
+
+El rectángulo opaco de Saturn mide 37 × 80 dentro de las
+cinco tiras. El donante PC mide exactamente el doble en ambos
+ejes. La prueba local compuso el donante a 3× sobre la captura
+nativa a 6×, utilizando solo las posiciones donde el valor VDP1
+coincidía con un texel de Saturn. El efecto siguió bajando en las
+muestras 1510, 1750 y 1950.
+
+La coincidencia VDP1 no basta como máscara final. Al comparar
+también el color visible contra la paleta de la pose aprendida en
+1510, la cobertura resultante fue 1261, 1235, 204, 103 y 2 celdas
+en 1510, 1700, 1750, 1850 y 1950. VDP1 por sí solo devolvió
+1261, 1254, 212, 115 y 3. La ruta del renderizador debe consultar
+la procedencia del píxel compuesto, además de asociar los
+comandos de la pose. El prototipo sobre capturas deja los bordes
+originales donde el donante es transparente y no se incluye
+como implementación final.
+
+#### Prueba aislada en el renderizador
+
+Compilé un frontend privado sobre los objetos verificados de
+v0.3.3. Reconoce los cinco hashes, posiciones relativas y
+atributos del grupo, valida el donante local y aplica un recorte
+por máscara de sprite y color compuesto. La comparación con el
+binario de referencia a 1440p dio 45396, 37260 y 1368 píxeles
+distintos al reanudar desde los campos 1510, 1750 y 1950,
+respectivamente. Desde el campo 2100 toda la captura coincidió.
+Las cuatro pruebas del candidato completaron 12 campos cada una
+sin bloques interpretados. Las capturas se tomaron tras reanudar,
+por lo que los conteos no corresponden al campo del guardado.
+
+El candidato aún requiere conectar la textura al ciclo de vida
+del renderizador, sustituir el ajuste fijo de color por el estado
+VDP2 de cada cuadro y verificar el respaldo al faltar el donante.
+El prototipo y las capturas quedan fuera del repositorio.
+
+Patch 0284 aplica el recorte por procedencia de sprite y color
+visible, lee el ajuste de color VDP2 del cuadro y libera su
+textura con el frontend o al reiniciar el dispositivo. El
+candidato dibujó MAP02 a 720p, 1080p y 1440p. A 1440p, las
+capturas con el donante ausente y después de desaparecer la
+figura coincidieron con v0.3.3. En el ensayo con reinicio SDL,
+la imagen posterior al reinicio coincidió con la corrida sin
+reinicio. Los controles usaron perfiles privados, audio nulo y
+ejecución nativa estricta. EVS02100#36 se registra como un
+recurso PC integrado, con las demás rutas PC del mismo archivo
+aún pendientes de comprobar.

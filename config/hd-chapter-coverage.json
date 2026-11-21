@@ -2877,6 +2877,15 @@
             "runtime_evidence": "docs/research/eve202-tactical-inset.md",
             "status": "hd",
             "verified_in_game": true
+          },
+          "1:/SAKURA2/EVS02100.BIN#36": {
+            "association": "observed",
+            "evidence": "docs/research/tactical-pairing.md#prueba-aislada-en-el-renderizador",
+            "pc": "SAKURA2/EVENT/MAP00/EV00S24.SPR",
+            "pc_index": 0,
+            "runtime_evidence": "docs/research/tactical-pairing.md#prueba-aislada-en-el-renderizador",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-maps": {

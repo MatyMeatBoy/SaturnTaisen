@@ -1,0 +1,112 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -442,6 +442,11 @@
+     } fadeExteriorCache;
+     std::vector<uint32_t> panelPixels;std::vector<uint8_t> hdErased;
+     SDL_Texture *tacticalCanvas=nullptr;
++    SDL_Texture* eventActor=nullptr;
++    bool eventDonorTried=false;
++    std::vector<PcSprite> eventDonors;
++    std::array<uint32_t,74*160> eventLayer{};
++
+     SDL_Texture *mapBackdropTexture=nullptr;
+     SDL_Texture* generalEndingTexture = nullptr;
+     SDL_Texture* generalEndingSprites = nullptr;
+@@ -744,6 +749,7 @@
+         shadowMixTexture=nullptr;shadowMixWidth=shadowMixHeight=0;
+         pictureMixTexture=nullptr;
+         pictureMixWidth=pictureMixHeight=fadeBackdropWidth=fadeBackdropHeight=0;
++        if(eventActor)SDL_DestroyTexture(std::exchange(eventActor,nullptr));
+         if(tacticalCanvas)SDL_DestroyTexture(tacticalCanvas);
+         tacticalCanvas=nullptr;
+         if(mapBackdropTexture)SDL_DestroyTexture(mapBackdropTexture);
+@@ -4641,6 +4647,80 @@
+                 presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
++            // MAP02 EVENT follows the native pose and only covers visible actor texels.
++            if (nativeGroundComposite && presentationKind == std::string_view("stage02-hd-ground") &&
++                texW == 320 && texH == 224) {
++                const auto& frame = port.videoRenderer->PresentationFrame();
++                constexpr std::array<uint64_t,5> keys{0x995e471eaba34d0cull,0xf2277ccffe3dd3a7ull,
++                    0x2d27e6d46946742eull,0x9f628b8bdd26bbd7ull,0x9d0063b719938b5eull};
++                constexpr std::array<int,5> xs{16,24,32,8,0}, ys{0,7,22,5,14}, heights{80,72,40,72,48};
++                for(size_t i=0;i+keys.size()<=frame.sprites.size();++i) {
++                    const auto& first=frame.sprites[i];
++                    const int left=first.x-xs[0],top=first.y;
++                    if(first.command.words[3]!=0x21c0 || first.pixels.size()!=640 || left<0 || left+40>320 || top<0 || top+80>224)continue;
++                    bool match=true;
++                    for(size_t j=0;j<keys.size();++j) {
++                        const auto& sp=frame.sprites[i+j];
++                        const auto* words=sp.command.words;
++                        const auto coord=[](uint16_t word) {return (int(word&8191)^4096)-4096;};
++                        const int x=coord(words[6]),y=coord(words[7]),bottom=y+heights[j]-1;
++                        if(coord(words[8])!=x+7 || coord(words[9])!=y || coord(words[10])!=x+7 ||
++                           coord(words[11])!=bottom || coord(words[12])!=x || coord(words[13])!=bottom ||
++                           (sp.command.words[0]&0x3f)!=2 || sp.command.words[2]!=0x90 || sp.command.words[3]!=0x21c0 ||
++                           sp.x!=left+xs[j] || sp.y!=top+ys[j] || sp.pixels.size()!=size_t(8*heights[j]) ||
++                           AtlasFingerprint(sp.pixels)!=keys[j]) {match=false;break;}
++                    }
++                    if(!match)continue;
++                    if(!eventDonorTried) {
++                        eventDonorTried=true;
++                        std::vector<uint8_t> bytes;
++                        std::string error;
++                        if(ReadPcBackdropFile(std::filesystem::path(port.opt.pcAssetsPath)/"SAKURA2/EVENT/MAP00/EV00S24.SPR",bytes,10315) &&
++                           AtlasFingerprint(bytes)==0xfb45fa998d082634ull)
++                            DecodePcSprites(bytes,eventDonors,error);
++                    }
++                    if(eventDonors.size()!=1 || eventDonors[0].width!=74 || eventDonors[0].height!=160 || frame.scrollSpriteMask.size()!=398*224)break;
++                    eventLayer.fill(0);
++                    const auto offset = port.videoRenderer->BackgroundColorOffset(0);
++                    unsigned coverage=0;
++                    for(size_t j=0;j<keys.size();++j) {
++                        const auto& sp=frame.sprites[i+j];
++                        for(size_t n=0;n<sp.pixels.size();++n) {
++                            const unsigned texel=sp.pixels[n];
++                            const int x=xs[j]+n%8,y=ys[j]+n/8;
++                            if(!texel || x>=37)continue;
++                            const int at=(top+y)*398+39+left+x;
++                            const int pal=0x380+2*(texel&63);
++                            const unsigned rgb=(unsigned(frame.palette[pal])<<8)|frame.palette[pal+1];
++                            const auto channel=[&](unsigned c){return unsigned(std::clamp(int((rgb>>(5*c))&31)*8+offset[c],0,255));};
++                            const auto color=channel(0)|(channel(1)<<8)|(channel(2)<<16);
++                            if(!frame.scrollSpriteMask[at] || (frame.scrollPixels[at]&0xffffffu)!=color)continue;
++                            ++coverage;
++                            for(int dy=0;dy<2;++dy)for(int dx=0;dx<2;++dx) {
++                                const auto pixel=eventDonors[0].pixels[(y*2+dy)*74+x*2+dx];
++                                if((pixel&0xffffffu)!=0xffff00u) {
++                                    uint32_t corrected = pixel & 0xff000000u;
++                                    for(unsigned c=0;c<3;++c)
++                                        corrected |= unsigned(std::clamp(int((pixel>>(8*c))&255)+offset[c],0,255))<<(8*c);
++                                    eventLayer[(y*2+dy)*74+x*2+dx]=corrected;
++                                }
++                            }
++                        }
++                    }
++                    if(coverage && !eventActor) {
++                        eventActor=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,74,160);
++                        if(eventActor && (!SDL_SetTextureScaleMode(eventActor,SDL_SCALEMODE_NEAREST) ||
++                            !SDL_SetTextureBlendMode(eventActor,SDL_BLENDMODE_BLEND)))
++                            SDL_DestroyTexture(std::exchange(eventActor,nullptr));
++                    }
++                    if(coverage && eventActor && SDL_UpdateTexture(eventActor,nullptr,eventLayer.data(),74*4)) {
++                        const SDL_FRect dst{where.x+left*where.w/320,where.y+top*where.h/224,37*where.w/320,80*where.h/224};
++                        SDL_RenderTexture(renderer,eventActor,nullptr,&dst);
++                        if(std::getenv("SATRECOMP_EVE_TRACE"))fprintf(stderr,"MAP02 EVENT top=%d visible=%u\n",top,coverage);
++                    }
++                    break;
++                }
++            }
+             // The minigame reward uses the existing high-resolution Saturn frame.
+             if (!choosing && !port.menu.IsOpen() && !port.opt.pcAssetsPath.empty() &&
+                 satrecomp::FeatureValue("presentation_mode") == 1 &&
+@@ -5780,6 +5860,7 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                if(eventActor)SDL_DestroyTexture(std::exchange(eventActor,nullptr));
+                 if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
+                 narrativeCutoutTexture = nullptr;
+                 for (auto& overlay : loadPanelOverlays) {
