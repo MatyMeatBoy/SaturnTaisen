@@ -71,7 +71,7 @@ Los suelos y sprites tácticos forman parte del mod principal junto con los fina
 | THD06 | P0 | local | open | **Inserciones de batalla.** EVE y BBG, incluyendo activaciones naturales de EVE102/105/207, EVE0101 disco 2 y disposición BBG238–243/300. | Confirmar activación, ventana y mismo arte; conservar Saturn si el PC cambia pose o composición. |
 | THD07 | P0 | local | open | **Eyecatch e intermedios.** IC por disco y variante de encuadre, fondos compartidos por donante, menús tratados por THD20/21. | Probar entrada, salida, fundido y anclajes en la intermisión natural. |
 | THD08 | P0 | local | open | **Finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. Final de Sumire hasta el título comprobado en AOT estricto; falta probar las cuatro fotos con el mismo ejecutable y la pila gráfica completa. |
-| THD09 | P2 | local | deferred | **Extras EVENT y CG.** Conservar las sustituciones existentes y su inventario aparte del porcentaje principal. | Retomar el cotejo por imagen y la validación en juego después de los lotes principales. |
+| THD09 | P2 | local | deferred | **Extras CG y EVENT.** CG queda en su cola de extras. EVENT conserva las sustituciones PC existentes y admite coincidencias confirmadas que aparezcan durante otro shard. | EVENT queda sin búsqueda, pruebas de ruta ni shards propios. Ambos inventarios quedan fuera del porcentaje principal. |
 
 ### Lotes de escenas listos para tomar
 
