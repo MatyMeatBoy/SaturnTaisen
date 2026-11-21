@@ -411,3 +411,26 @@ antes de buscar equivalencias. Las 573 subimágenes incluyen
 componentes y estados del propio juego de PC. Se requiere
 identificar sus equivalentes Saturn antes de usar ese número
 como denominador del mod. Este lote deja el total medido intacto.
+
+## Extras panel rails
+
+Patch 0297 replaces the decorative rails of the Sound and Movie
+panels. The native 240 × 184 sprite sits at (40,24). The replacement
+requires the matching panel geometry, palette and independently drawn
+footer. The compositor checks pixel ownership. Tabs, list, footer,
+localized text and interior use their native drawing paths.
+
+The eight natural English cases cover OMKSND_W ordinals 7–11 and
+OMKMOV_W ordinals 0–2. An archived Spanish Sound state and controlled
+Spanish Movie and Japanese Sound replays exercised the protected
+language elements. In 1,900 strict fields across 38 profiles, each
+positive 2560 × 1440 sample changed exactly 127,872 pixels, with zero
+residual against the independent rail projection. Original,
+disabled, missing and corrupt controls preserved native output in
+their tested cases. Guest hashes and SRAM matched within each case.
+
+The candidate used the private WKL and BBG218 baseline. SHA-256:
+`f1c3cf3944fcd744fcc103158ab9680f75c70ffe64026ccfacdac56b9bfcfd65`.
+These are bounded decorative replacements. OMKMOV_W ordinals 3–6
+keep native handling. The eight panel images do not enter the
+full-image numerator from this verification. Packaging is pending.
