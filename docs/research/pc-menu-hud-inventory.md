@@ -359,6 +359,15 @@ admiten 246 y 84 muestras PC a 2×, respectivamente. La unidad
 del catálogo sigue siendo WINDOW #3. Falta la comparación HD
 del runtime con el parche aplicado.
 
+La misma repetición nativa registra las cuatro fases finales
+de caída en (159,54), (159,60), (160,66) y (160,72). Sus
+rectángulos nativos son 4 × 7, 3 × 5, 2 × 3 y 1 × 1.
+La reconstrucción del campo visible siguiente confirma
+17, 9, 4 y 1 texeles respectivamente. Las poses conservan
+la misma textura y paleta de caída y reutilizan la misma
+carga del donante. Al desaparecer el comando se mantiene el
+cuadro Saturn. El recuento de imágenes HD sigue igual.
+
 EXIT_W #0 corresponde al banner nativo de guardado completado
 ya cubierto por TUIKA_W #0 y se contabiliza una sola vez.
 OPTION #0, #2 y #3 tienen interiores y divisiones distintos de

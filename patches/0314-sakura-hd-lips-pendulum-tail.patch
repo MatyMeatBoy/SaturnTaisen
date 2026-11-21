@@ -1,0 +1,26 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1198,7 +1198,7 @@
+         SceneHd image;
+         std::vector<WindowRail> rails;
+     };
+-    constexpr unsigned kPendulumFrame = 15, kPendulumPoseCount = 3;
++    constexpr unsigned kPendulumFrame = 15, kPendulumPoseCount = 7;
+     std::array<WindowFrame, kPendulumFrame + kPendulumPoseCount> windowFrames;
+     std::future<PcSprite> pendulumPending;
+     PcSprite pendulumArt;
+@@ -5531,6 +5531,14 @@
+                      0x574CAC6648603F3Bull, {}},
+                     {kPendulumFrame + 2, 1, {158, 48, 5, 9}, 8, 16, 160, 52, 0x60012FBF7CD7164Dull,
+                      0x376A2B4AB6CB7E7Dull, {}},
++                    {kPendulumFrame + 3, 1, {159, 54, 4, 7}, 8, 16, 160, 57, 0x60012FBF7CD7164Dull,
++                     0x376A2B4AB6CB7E7Dull, {}},
++                    {kPendulumFrame + 4, 1, {159, 60, 3, 5}, 8, 16, 160, 62, 0x60012FBF7CD7164Dull,
++                     0x376A2B4AB6CB7E7Dull, {}},
++                    {kPendulumFrame + 5, 1, {160, 66, 2, 3}, 8, 16, 160, 67, 0x60012FBF7CD7164Dull,
++                     0x376A2B4AB6CB7E7Dull, {}},
++                    {kPendulumFrame + 6, 1, {160, 72, 1, 1}, 8, 16, 160, 72, 0x60012FBF7CD7164Dull,
++                     0x376A2B4AB6CB7E7Dull, {}},
+                     {12, 0, {40, 24, 240, 184}, 240, 184, 40, 24, 0x124A604EE6C4CE8Full,
+                      0x32769A58EF881806ull, {}, 0, 0, 0x0077, 0x005F, 168, false, WindowVariant::Gallery::Movie, 0},
+                     {13, 0, {40, 24, 240, 184}, 240, 184, 40, 24, 0x124A604EE6C4CE8Full,

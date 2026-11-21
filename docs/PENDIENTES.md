@@ -508,3 +508,9 @@ BG1331 uses the async bounded plate compositor on disc 1 and retains the
 native floor, perimeter and pointer. The offline model and C++ syntax passed.
 See [hatch evidence](research/bg1331-bounded-hd.md). Linked comparison,
 disc 2 and packaging remain pending.
+
+## HD LIPS pendulum terminal poses (0314)
+
+Four final native poses of WINDOW ordinal 3 reuse the same async donor and
+palette. The short native comparisons reproduce all 31 owned pixels.
+Linked HD playback and packaging remain pending.
