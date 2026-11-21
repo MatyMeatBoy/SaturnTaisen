@@ -378,3 +378,36 @@ changed pixels stayed within the card rectangle
 without the donor. A scan of 3753 archived states found no direct
 natural draw of ITEM09. The controlled test verifies the renderer
 and fallback, and natural acquisition remains unverified.
+
+## Inventario táctico SYSTEM
+
+El directorio PC `SAKURA2/SYSTEM` contiene 19 archivos SPRED
+con 737 subimágenes no vacías. KAOSLG aporta 164 retratos y se
+mantiene en el análisis de retratos. Quedan 573 candidatos de
+interfaz táctica. Se decodificaron todos y se compararon por
+dimensiones y SHA-256 de RGBA. No hubo duplicados exactos entre
+los 573 ni contra las 177 imágenes distintas decodificadas de
+SAKURA1/SYSTEM sin KAO.
+
+| Lote de donantes | Imágenes PC | Sustituciones verificadas |
+| --- | ---: | ---: |
+| Marcos y componentes SLGSYS00–03 | 155 | 3 |
+| Medidores BS_GAUGE, BS_KIAI y BS_LIFE | 212 | 0 registradas |
+| Daño, texto y nombres BS_MOJIB, BSDAMAGE, NAMECHR, NAMESP y NAMEUNIT | 127 | 0 registradas |
+| Avisos START, CONTINUE y YES_NO | 50 | 0 registradas |
+| Mapa y marcadores ALLMAP, POINT y SHADOW | 29 | 0 registradas |
+
+Las tres verificadas son SLGSYS02#2 para Cancel y SLGSYS02#4
+para Advice, y SLGSYS03#0 para el marco de estado táctico.
+Los dos submenús usan la ruta WKL02 y el marco de estado tiene
+testigos en MAP02, MAP12 y MAP13. Sus pruebas permanecen en
+[WKL02](hd-chapter-2.md#verified-wkl02-command-submenus) y en
+[el marco de estado](tactical-pairing.md#live-tactical-status-frame).
+
+El primer lote reutiliza esos guardados para capturar los
+restantes marcos y cotejar máscara, aspecto y orden de dibujo.
+Los medidores, animaciones y nombres se agrupan por función
+antes de buscar equivalencias. Las 573 subimágenes incluyen
+componentes y estados del propio juego de PC. Se requiere
+identificar sus equivalentes Saturn antes de usar ese número
+como denominador del mod. Este lote deja el total medido intacto.
