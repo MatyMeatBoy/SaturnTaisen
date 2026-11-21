@@ -321,7 +321,8 @@
       "patches/0329-sakura-hd-bg2119-garden.patch",
       "patches/0330-sakura-cache-program-trim-upload.patch",
       "patches/0331-sakura-rectangular-ground-tiles.patch",
-      "patches/0332-sakura-hd-bg4057-briefing.patch"
+      "patches/0332-sakura-hd-bg4057-briefing.patch",
+      "patches/0333-sakura-hd-bg3119-garden-figures.patch"
     ]
   }
 }
