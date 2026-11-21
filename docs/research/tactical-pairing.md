@@ -367,3 +367,20 @@ registros del conjunto 36 de EVS02100. El barrido adicional de 153
 estados del disco 1 y seis del disco 2 no dio más grupos con la misma
 firma de comandos. El inventario identifica tiras e imágenes
 SATURN, con emparejamiento PC pendiente por actor y pose.
+
+### Comparación de una pose EVENT con el catálogo PC
+
+`tools/rank_event_pose.py` toma un estado, un banco y un conjunto
+EVS. Reconstruye la silueta en las posiciones VDP1 observadas y
+compara el área ocupada con las imágenes SPRED tras quitar su clave
+cian. Admite una lista de donantes o un barrido de rutas MAP.
+El informe conserva el ordinal de cada candidato y los archivos
+que el decodificador no pudo abrir.
+
+Para EVS02100, conjunto 36, el barrido de 2061 imágenes en 159
+donantes situó MAP00/EV00S24.SPR, imagen 0, primero con IoU
+0.97131. La siguiente silueta, MAP18/EV18S18.SPR, imagen 17,
+quedó por debajo de 0.64. MAP19/EV19S03.SPR usa un formato SPRED
+8 que el decodificador actual no admite. La pareja corresponde
+a la pose observada. El reemplazo y la selección de otros
+cuadros de animación siguen pendientes.
