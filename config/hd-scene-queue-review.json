@@ -93,10 +93,6 @@
       "disposition": "incompatible-full",
       "reason": "composition or colour grading differs"
     },
-    "SAKURA1/BG/BG2123.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
-    },
     "SAKURA1/BG/BG2240.SPR": {
       "disposition": "incompatible-full",
       "reason": "composition or colour grading differs"

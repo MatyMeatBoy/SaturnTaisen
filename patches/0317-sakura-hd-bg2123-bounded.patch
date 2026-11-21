@@ -1,0 +1,67 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -996,7 +996,12 @@
+         {0.69583418, 0.74757926, 0.90282559}, {4.98282265, -3.16337749, -14.51599715},
+         24, 10, 4, 0, 92, 8, 0, true
+     };
+-    constexpr std::array<NarrativeCutout, 25> narrativeCutouts{{
++    static constexpr port::BoundedPlateRegistration wingRegistration{
++        2.07358287, 2.24531696, 10.8276134, -3.35445944,
++        {0.95664430, 0.96472653, 0.93522120}, {2.56245288, 1.91434166, 2.38560466},
++        3, 6, 4, 4, 0, 0, 0, false, 46, 250, 6
++    };
++    constexpr std::array<NarrativeCutout, 26> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -1047,6 +1052,8 @@
+             "BG1331.BIN", "SAKURA1/BG/BG1331.SPR", 115581, 1, 0, 0, 0, 0, 576, 320, &hatchRegistration, 2},
+         {0x42D894F3710A8866ull, 0x8A4F7344C4657970ull, 0xE99622626467CD17ull, 0x5C09EBF776195F33ull,
+             "BG1212.BIN", "SAKURA1/BG/BG1212.SPR", 165247, 2, 0, 0, 0, 0, 576, 320, &shrineRegistration},
++        {0x10E8D86446F4E8EBull, 0xACA83B8C01FDD0B1ull, 0x6BBC58740DD2557Full, 0xCE0D6522C2F6C336ull,
++            "BG2123.BIN", "SAKURA1/BG/BG2123.SPR", 167329, 1, 0, 0, 0, 0, 576, 320, &wingRegistration, 2},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
+diff --git a/port/bounded_plate.h b/port/bounded_plate.h
+--- a/port/bounded_plate.h
++++ b/port/bounded_plate.h
+@@ -17,6 +17,7 @@
+     int bottomLimit = 0, bottomFeather = 0;
+     int outputOffset = 0;
+     bool protectToneOutsideBounds = false;
++    int protectedLeft = 0, protectedRight = 0, sideFeather = 0;
+ };
+ 
+ inline std::vector<uint32_t> RegisterBoundedPlate(std::span<const uint32_t> native,
+@@ -62,7 +63,10 @@
+             py / geometry.scaleY, (donorHeight - 1 - py) / geometry.scaleY}) / geometry.sourceFeather) : 1.0;
+         const auto bottom = geometry.bottomFeather ?
+             smoothstep((geometry.bottomLimit - ny) / geometry.bottomFeather) : 1.0;
+-        weight[at] = top * rim * source * bottom;
++        const auto side = geometry.sideFeather ?
++            smoothstep(std::max(geometry.protectedLeft - nx, nx - geometry.protectedRight) /
++                       geometry.sideFeather) : 1.0;
++        weight[at] = top * rim * source * bottom * side;
+     }
+     if (geometry.protectToneOutsideBounds) {
+         // Keep caption colors outside the replacement band out of the tone filter.
+@@ -72,6 +76,17 @@
+             std::copy_n(toneDelta.begin() + size_t(first) * w, w, toneDelta.begin() + size_t(y) * w);
+         for (int y = last + 1; y < h; ++y)
+             std::copy_n(toneDelta.begin() + size_t(last) * w, w, toneDelta.begin() + size_t(y) * w);
++    }
++    if (geometry.sideFeather && geometry.protectedLeft > 0 &&
++        geometry.protectedLeft < geometry.protectedRight && geometry.protectedRight < width) {
++        // Keep the baked actors out of the tone filter on either side of the protected band.
++        const int first = geometry.protectedLeft * 2, last = geometry.protectedRight * 2;
++        const int middle = (first + last) / 2;
++        for (int y = 0; y < h; ++y) {
++            auto row = toneDelta.begin() + size_t(y) * w;
++            std::fill(row + first, row + middle, row[first - 1]);
++            std::fill(row + middle, row + last, row[last]);
++        }
+     }
+     // Three separable box passes approximate a Gaussian and leave the donor's fine detail intact.
+     constexpr int radius = 13, diameter = 2 * radius + 1;

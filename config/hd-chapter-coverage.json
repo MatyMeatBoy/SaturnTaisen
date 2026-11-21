@@ -3447,7 +3447,11 @@
           "1:/SAKURA1/BG2123.BIN": {
             "association": "observed",
             "evidence": "docs/research/bg2290-native-pan.md",
-            "status": "unpaired"
+            "pairing_evidence": "docs/research/bg2123-bounded-hd.md",
+            "pc": "SAKURA1/BG/BG2123.SPR",
+            "pc_image_index": 0,
+            "status": "hd",
+            "verified_in_game": false
           },
           "1:/SAKURA1/BG2172.BIN": {
             "association": "observed",
