@@ -220,6 +220,7 @@ NARRATIVE_CUTOUT_DRAWS = {
 }
 
 SCENE_DRAWS = {
+    (2, '/SAKURA1/BG2111.BIN'): (10, 'docs/research/hd-chapter-10.md#bg2111-final-battle'),
     (2, '/SAKURA1/BG1284.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),
     (2, '/SAKURA1/BG1292.BIN'): (10, 'docs/research/hd-chapter-10.md#bg1292-on-the-1001-route'),
     (2, '/SAKURA1/BG2020.BIN'): (10, 'docs/research/t55-sweep-draws.md#verified-scene-draws-from-the-t55-sweep'),

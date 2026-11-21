@@ -159,3 +159,20 @@ decoded Saturn source before replacement and the PC donor within two
 channel levels after replacement. The foreground remains exact. The
 Original and invalid donor controls match across all sampled fields.
 Release packaging is pending.
+
+### BG2111 final battle
+
+The English disc 2 public-finale route supplies a visible natural
+witness for the already integrated BG2111. At 720p, 16 samples
+across fields 36310–36760 change 358139 pixels within the scene.
+The two runs match all 2200 guest hashes and final SRAM.
+
+At 1440p, the four runs resume from field 36500 with the same
+330 fields of input. Enhanced donor/absent differs by 1948968
+pixels only within (272,29)–(2288,1037) in nine samples. The
+changed pixels match the corresponding independent PC and Saturn
+decodes within two RGB levels per channel for PC and exactly for
+Saturn. Later Enhanced samples and all 11 Original pairs match
+pixel for pixel. All four runs match guest hashes and SRAM with
+zero interpreted blocks on the v0.3.3 executable. This confirms
+the existing draw and leaves the integrated donor count unchanged.
