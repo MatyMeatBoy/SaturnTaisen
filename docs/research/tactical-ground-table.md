@@ -11,9 +11,12 @@ stopped after 6,685 fields at the master SH-2 entry `0x00204000`. A
 340-field recording from the field-6500 checkpoint found 57 additional
 instruction spans with exact byte matches in the disc's EVT19 module. The
 registered range list now includes those spans and the 28-byte entry block.
-An interpreter diagnostic reached field 9,000 and still read MAP19. A
-strict replay with the expanded table and a playable MAP23 camera are
-pending. The MAP23 ground remains pending in the HD count.
+An interpreter diagnostic reached field 9,000 and still read MAP19.
+From the same checkpoint, the expanded table passed all 340 fields in
+strict mode. Its first 185 guest hashes matched the v0.3.7 run exactly
+before the released executable stopped. The local candidate SHA-256 is
+`5761967c0a4836435a67ac32c8fd1a26173292b83bccf6d0dc744f51a80743df`.
+The MAP23 ground remains pending until a playable camera is reached.
 
 ## MAP03 at 1440p
 
