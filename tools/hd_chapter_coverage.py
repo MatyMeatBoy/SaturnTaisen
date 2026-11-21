@@ -1194,6 +1194,20 @@ def build(root, index_dir, portrait_audit):
                 }:
                     row['verified_in_game'] = True
                 unassigned['menus-hud'][f"pc:{name}#{image['index']}"] = row
+    for native_slot, name, ordinal in (
+        (0, 'SAKURA1/ITEM/BUROICON.SPR', 1),
+        (2, 'SAKURA1/ITEM/BUROICON.SPR', 2),
+        (25, 'SAKURA1/ITEM/BUROICON.SPR', 9),
+        (26, 'SAKURA1/ITEM/BUROICON.SPR', 13),
+        (18, 'SAKURA1/ITEM/ITEMICON.SPR', 19),
+        (19, 'SAKURA1/ITEM/ITEMICON.SPR', 20),
+        (27, 'SAKURA1/ITEM/ITEMICON.SPR', 28),
+    ):
+        unassigned['menus-hud'][f'pc:{name}#{ordinal}'] = {
+            'status': 'hd', 'pc': name, 'pc_image_index': ordinal, 'association': 'unknown',
+            'draw': f'NCOBJ.BIN compact icon {native_slot}', 'verified_in_game': False,
+            'runtime_evidence': MENU_REPORT + '#iconos-compactos-de-inventario',
+        }
     hud_census = {
         'system_images': sum(len(file['images']) for file in census['menus']),
         'item_images': len({(p['pc_file'], p['pc_image_index']) for p in config('hd-item-map')['pairs']}),

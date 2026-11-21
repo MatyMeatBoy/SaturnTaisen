@@ -10214,6 +10214,69 @@
         "association": "unknown",
         "status": "unknown"
       },
+      "pc:SAKURA1/ITEM/BUROICON.SPR#1": {
+        "association": "unknown",
+        "draw": "NCOBJ.BIN compact icon 0",
+        "pc": "SAKURA1/ITEM/BUROICON.SPR",
+        "pc_image_index": 1,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#iconos-compactos-de-inventario",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "pc:SAKURA1/ITEM/BUROICON.SPR#13": {
+        "association": "unknown",
+        "draw": "NCOBJ.BIN compact icon 26",
+        "pc": "SAKURA1/ITEM/BUROICON.SPR",
+        "pc_image_index": 13,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#iconos-compactos-de-inventario",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "pc:SAKURA1/ITEM/BUROICON.SPR#2": {
+        "association": "unknown",
+        "draw": "NCOBJ.BIN compact icon 2",
+        "pc": "SAKURA1/ITEM/BUROICON.SPR",
+        "pc_image_index": 2,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#iconos-compactos-de-inventario",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "pc:SAKURA1/ITEM/BUROICON.SPR#9": {
+        "association": "unknown",
+        "draw": "NCOBJ.BIN compact icon 25",
+        "pc": "SAKURA1/ITEM/BUROICON.SPR",
+        "pc_image_index": 9,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#iconos-compactos-de-inventario",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "pc:SAKURA1/ITEM/ITEMICON.SPR#19": {
+        "association": "unknown",
+        "draw": "NCOBJ.BIN compact icon 18",
+        "pc": "SAKURA1/ITEM/ITEMICON.SPR",
+        "pc_image_index": 19,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#iconos-compactos-de-inventario",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "pc:SAKURA1/ITEM/ITEMICON.SPR#20": {
+        "association": "unknown",
+        "draw": "NCOBJ.BIN compact icon 19",
+        "pc": "SAKURA1/ITEM/ITEMICON.SPR",
+        "pc_image_index": 20,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#iconos-compactos-de-inventario",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "pc:SAKURA1/ITEM/ITEMICON.SPR#28": {
+        "association": "unknown",
+        "draw": "NCOBJ.BIN compact icon 27",
+        "pc": "SAKURA1/ITEM/ITEMICON.SPR",
+        "pc_image_index": 28,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#iconos-compactos-de-inventario",
+        "status": "hd",
+        "verified_in_game": false
+      },
       "pc:SAKURA1/SYSTEM/FONT_CSL.SPR#0": {
         "association": "unknown",
         "draw": "patch 0093, port/system_brackets.h: left inventory bracket",

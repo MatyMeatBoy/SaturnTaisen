@@ -289,7 +289,8 @@
       "patches/0297-sakura-extras-hd-panel-rails.patch",
       "patches/0298-sakura-map09-pc-ground.patch",
       "patches/0299-sakura-extras-hd-theater.patch",
-      "patches/0300-sakura-tactical-single-ground-batch.patch"
+      "patches/0300-sakura-tactical-single-ground-batch.patch",
+      "patches/0301-sakura-hd-compact-inventory-icons.patch"
     ]
   }
 }
