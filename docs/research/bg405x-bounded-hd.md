@@ -37,3 +37,15 @@ and displays all 1,488 native opaque BG4054 cells. The compositor
 registers the two matching figure regions with the existing
 per-cell ownership guard and asynchronous PC preparation.
 Natural branch reachability and linked HD playback remain open.
+
+## BG4057 disc 1
+
+A controlled 181-field strict-native replay from the medical dialogue
+advances the chapter 7 script cursor to its original loading block. The
+game reads BG4057 and BG1160. All 6,249 opaque BG4057 cells match the
+native framebuffer at scene origin (16, 8). The saved state contains the
+exact palette and cell data. Five bounded registrations accept 2,488
+interior native cells in the offline compositor comparison, with zero
+samples outside the native silhouette. The table and the unmatched
+figures retain their native art. Linked HD playback and packaging remain
+pending.
