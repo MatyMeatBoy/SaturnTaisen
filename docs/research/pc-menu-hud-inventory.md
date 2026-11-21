@@ -30,6 +30,16 @@ pairings. The batch queue retains both identities in the pending count and
 puts them on hold so workers can seek different donors instead of repeating
 the same comparisons.
 
+A contact sheet of all 112 non-empty images decoded from the 57 PC
+`SAKURA1/ITEM` files confirmed that this directory has no direct counterpart
+for either card. Saturn `ITEM45` depicts a closed blue book with a gold
+cover design, while the PC book at `ITEM75.SPR[0]` is open and depicts a
+different object. Saturn `ITEM53` depicts a tall clear bottle with an orange
+label and blue cap. The PC bottles in `ITEM82.SPR` through `ITEM86.SPR`
+have different silhouettes and labels. The blank pink swatch at
+`BUROICON.SPR[0]` also appears at `ITEMICON.SPR[0]`. Both queues still
+require another source or an HD treatment based on the Saturn art.
+
 For each candidate with `found=true`: decode both images (PC via the native exporter `sakura.exe --export-pc-spr`, Saturn via the tools already existing in `tools/es/`), compare geometry, and check whether the PC separates text from the background in a way Saturn does not. No name match here demonstrates compatible composition, palette, or geometry — this is a list of candidates to verify, not an integration.
 
 ### Item detail sprite witness (T109)
