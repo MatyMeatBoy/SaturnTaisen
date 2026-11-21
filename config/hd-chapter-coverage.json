@@ -5523,7 +5523,11 @@
           "2:/SAKURA1/BG1212.BIN": {
             "association": "observed",
             "evidence": "docs/research/th8-native-attribution.md",
-            "status": "unpaired"
+            "pairing_evidence": "docs/research/bg1212-bounded-hd.md",
+            "pc": "SAKURA1/BG/BG1212.SPR",
+            "pc_image_index": 0,
+            "status": "hd",
+            "verified_in_game": false
           },
           "2:/SAKURA1/BG1236.BIN": {
             "association": "observed",
