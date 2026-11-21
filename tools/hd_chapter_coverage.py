@@ -770,6 +770,14 @@ def build(root, index_dir, portrait_audit):
                 'pc': 'SAKURA2/MAP/MAP03/MAP03_A.SPR',
                 'scope': 'source-4 ground only',
             }
+        elif (disc, path) == (1, '/SAKURA2/MAP07.BIN'):
+            row = {
+                'status': 'hd',
+                'verified_in_game': True,
+                'runtime_evidence': 'docs/research/tactical-ground-table.md#map07-at-1440p',
+                'pc': 'SAKURA2/MAP/MAP07/MAP07_A.SPR',
+                'scope': 'source-4 ground only',
+            }
         elif (disc, path) == STAGE04_MAP:
             row = {
                 'status': 'hd',
