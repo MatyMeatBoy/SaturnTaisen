@@ -6953,9 +6953,11 @@
           },
           "2:/SAKURA1/BG2111.BIN": {
             "association": "observed",
-            "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
+            "evidence": "docs/research/hd-chapter-10.md#bg2111-final-battle",
             "pc": "SAKURA1/BG/BG2111.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bg2111-final-battle",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG2162.BIN": {
             "association": "observed",
