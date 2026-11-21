@@ -600,3 +600,10 @@ One new PC identity based on the Chapter 3 Maria route. See
 [offline comparison](research/bg405x-bounded-hd.md#bg4053-disc-1).
 Syntax, coverage and patch application passed. Linked HD playback
 and packaging remain pending.
+
+## Bounded HD stage figures (0325)
+
+BG4162 on disc 1 uses the exact natural stage appearance and two
+color-guarded character registrations. See [replay and comparison](research/bg4162-bounded-hd.md).
+Syntax, coverage and patch application passed. Linked HD playback
+and packaging remain pending.
