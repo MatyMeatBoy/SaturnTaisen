@@ -1,0 +1,125 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -984,6 +984,7 @@
+         const port::BoundedPlateRegistration* bounded = nullptr;
+         uint8_t layer = 4;
+         std::span<const port::RegisteredCutoutRegion> regions;
++        bool floralTransition = false;
+     };
+     static constexpr port::BoundedPlateRegistration corridorRegistration{
+         1.7894, 1.8712, 23.0, -13.2,
+@@ -1073,7 +1074,10 @@
+         {0, 103, 195, 144, 1.99, 2.225, 3.5, 0.5, 28},
+         {253, 103, 288, 144, 1.99, 2.225, 3.5, 0.5, 28},
+     }};
+-    constexpr std::array<NarrativeCutout, 41> narrativeCutouts{{
++    static constexpr std::array<port::RegisteredCutoutRegion, 1> cave2059{{
++        {148, 4, 191, 122, 2.00000, 2.21000, 0.50000, 0.75000, 23}
++    }};
++    constexpr std::array<NarrativeCutout, 42> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -1156,6 +1160,8 @@
+             "BG3097.BIN", "SAKURA1/BG/BG3097.SPR", 162378, 2, 0, 0, 0, 0, 576, 320, nullptr, 4, chapterNine3097},
+         {0x0CBDFFEC96075844ull, 0xDC31C85625C963ADull, 0x0D255310F8F99015ull, 0xC1642577A519A6D1ull,
+             "BG4375.BIN", "SAKURA1/BG/BG4375.SPR", 203601, 1, 0, 0, 0, 0, 576, 320, nullptr, 2, dressingRoom4375},
++        {0x5C4F34289FD6B5AFull, 0xEA7DE43D593086CDull, 0xE5181C47227589DFull, 0x85171B84E8A3194Cull,
++            "BG2059.BIN", "SAKURA1/BG/BG2059.SPR", 131944, 1, 0, 0, 0, 0, 576, 320, nullptr, 4, cave2059, true},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
+@@ -5244,7 +5250,11 @@
+                                     !bg.shadowEnable && !bg.scrollAmountH && !bg.scrollAmountV &&
+                                     bg.scrollIncH == 256 && bg.scrollIncV == 256 &&
+                                     video.BackgroundColorOffset(row.layer) == colorOffset;
+-                                if ((shift ? !shiftedOpaque : !video.BackgroundIsOpaque(row.layer)) ||
++                                const bool opaque = shift ? shiftedOpaque : video.BackgroundIsOpaque(row.layer);
++                                const bool floralTransition = row.floralTransition && !regs.colorCalcExtended &&
++                                    !regs.colorCalcAdd && planes.floralCoverMix.size() == planes.source.size() &&
++                                    planes.floralCoverRgb.size() == planes.source.size();
++                                if ((!opaque && !floralTransition) ||
+                                     video.BackgroundCellFingerprint(row.layer, w * h) != row.cells)
+                                     continue;
+                                 claimedLayers[layerSlot] = true;
+@@ -5299,20 +5309,38 @@
+                                 }
+                                 if (art.registered.empty()) continue;
+                                 cutoutVisibility.resize(w * h);
+-                                bool visible = false;
++                                bool visible = false, mixed = false;
++                                const auto floralRecipe = [&](size_t at) {
++                                    const auto& cover = planes.floralCoverMix[at];
++                                    return PanelMix{planes.floralCoverRgb[at], uint8_t(32 - cover.lowerWeight), cover.postMixOffset};
++                                };
+                                 for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
+                                     const size_t offset = size_t(y) * w + x;
+                                     const size_t at = size_t(y + 8) * 320 + x + 16;
+                                     const uint32_t rgb = art.native[offset];
+                                     // Retain the native edge and any overlapping actors or color calculation.
+-                                    const bool owns = rgb && planes.topSource[at] == row.layer && planes.source[at] == row.layer &&
+-                                        ((softwareShown[at] ^ (shift ? OffsetBackdropPixel(rgb, colorOffset) : rgb)) & 0xFFFFFF) == 0 &&
++                                    const bool ownsCell = rgb && planes.source[at] == row.layer &&
+                                         (x == 0 || art.native[offset - 1]) &&
+                                         (x + 1 == w || art.native[offset + 1]) &&
+                                         (y == 0 || art.native[offset - w]) &&
+                                         (y + 1 == h || art.native[offset + w]);
+-                                    cutoutVisibility[offset] = owns;
+-                                    visible |= owns;
++                                    uint8_t draw = 0;
++                                    if (ownsCell) {
++                                        const auto stock = softwareShown[at] | 0xFF000000u;
++                                        if (opaque && planes.topSource[at] == row.layer &&
++                                            ((stock ^ (shift ? OffsetBackdropPixel(rgb, colorOffset) : rgb)) & 0xFFFFFF) == 0) {
++                                            draw = 1;
++                                        } else if (floralTransition && planes.topSource[at] == 5 &&
++                                                   (planes.floralCoverRgb[at] >> 24) &&
++                                                   planes.floralCoverMix[at].lowerWeight < 32 &&
++                                                   planes.floralCoverMix[at].topRgb == (rgb & 0xFFFFFFu) &&
++                                                   CompositePanelPixel(floralRecipe(at), rgb, stock) == stock) {
++                                            draw = 2;
++                                        }
++                                    }
++                                    cutoutVisibility[offset] = draw;
++                                    visible |= draw != 0;
++                                    mixed |= draw == 2;
+                                 }
+                                 if (!visible) continue;
+                                 auto& narrativeCutoutTexture = narrativeCutoutTextures[layerSlot];
+@@ -5330,11 +5358,16 @@
+                                     uploadedCutout = narrativeCutouts.size();
+                                 }
+                                 if (!narrativeCutoutTexture) continue;
+-                                if (uploadedCutout != slot || cutoutVisibility != uploadedCutoutVisibility) {
++                                if (mixed || uploadedCutout != slot || cutoutVisibility != uploadedCutoutVisibility) {
+                                     cutoutPixels = art.registered;
+-                                    for (int y = 0; y < h * 2; ++y) for (int x = 0; x < width2; ++x)
+-                                        if (!cutoutVisibility[size_t(y / 2) * w + x / 2])
+-                                            cutoutPixels[size_t(y) * width2 + x] = 0;
++                                    for (int y = 0; y < h * 2; ++y) for (int x = 0; x < width2; ++x) {
++                                        auto& pixel = cutoutPixels[size_t(y) * width2 + x];
++                                        const auto draw = cutoutVisibility[size_t(y / 2) * w + x / 2];
++                                        if (!draw) pixel = 0;
++                                        else if (draw == 2 && pixel)
++                                            pixel = CompositePanelPixel(floralRecipe(size_t(y / 2 + 8) * 320 + x / 2 + 16),
++                                                                        pixel, 0xFF000000u);
++                                    }
+                                     if (!SDL_UpdateTexture(narrativeCutoutTexture, nullptr, cutoutPixels.data(),
+                                                            width2 * sizeof(uint32_t))) {
+                                         uploadedCutout = narrativeCutouts.size();
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -978,7 +978,10 @@
+     static const bool off = setting && setting[0] == '0';
+     static const bool probing = getenv("SATRECOMP_LAYER_PROBE") != nullptr;
+     return m_reuseOn && !off && !probing && m_compose && !m_gpu && !m_check && m_regs2.displayEnabledLatch &&
+-           !(m_capturePresentation && m_presentation.scrollWidth) && !m_regs2.TVMD.IsInterlaced() &&
++           !(m_capturePresentation && m_presentation.scrollWidth) &&
++           !(m_capturePresentation && m_regs2.bgParams[3].pageBaseAddresses[0] == 0x44000 &&
++             BackgroundPaletteFingerprint(4) == 0x5C4F34289FD6B5AFull) &&
++           !m_regs2.TVMD.IsInterlaced() &&
+            !m_regs2.bgEnabled[4] && !m_regs2.bgEnabled[5] && m_width <= 704 && m_height <= 512;
+ }
+ 

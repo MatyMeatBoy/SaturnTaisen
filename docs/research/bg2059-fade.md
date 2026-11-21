@@ -22,8 +22,20 @@ matches the following counts in the 288 × 144 viewport.
 | 105 | 8 | 15,670 |
 | 120 | Inactive | 0 |
 
-The existing floral-cover recipe can reconstruct the confirmed region.
-The remaining visible area needs its own source and blend attribution.
-An opaque replacement would discard the transition. BG2059 stays pending
-until a linked candidate reproduces the complete visible blend and the
-transition back to the native scene.
+The other pixels use the VDP1 sprite layer as the lower source under
+the same floral cover. Using either lower layer according to the native
+composition reconstructs all 41,472 viewport pixels at each of the seven
+active checkpoints.
+
+The HD path registers only the cave between the baked figures in the PC
+donor. It checks the native lower RGB and fully reconstructed blended
+pixel before drawing, then applies the live floral mix to the HD samples.
+Sprite-owned pixels are left to the guest compositor. The line cache is
+bypassed during this identified scene to retain the cover RGB.
+
+Linked candidate `0d42d63473f98a9ef0b7858be27d35d01b50c86e743787039847b123239b7ec7`
+completed four strict 160-field passes at 2560 × 1440 with identical
+guest hashes. Seven active samples changed only within the registered
+cave strip. At fields 120 and 150, after the fade, the Enhanced captures
+matched exactly with and without the donor. The Original captures were
+pixel-identical at all nine samples. Package inclusion remains pending.
