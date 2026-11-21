@@ -1,0 +1,89 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1163,6 +1163,8 @@
+     bool eve202Examined = false;
+     SceneHd eve002;
+     bool eve002Traced = false;
++    SceneHd bbg203;
++    bool bbg203Traced = false;
+     SceneHd bbg204;
+     bool bbg204Traced = false;
+     std::array<SceneHd, 8> bbgInsetImages;
+@@ -1187,12 +1189,17 @@
+         port::EveRect rect = port::kEve202NativeRect;
+         std::optional<port::EveRect> drawRect;
+         unsigned feather = 0;
++        std::optional<port::BoundedPlateRegistration> registration;
+     };
+     const NativeEveInset nativeEveInsets[]{
+         {"EVE202", port::kEve202Palette, 0x9B31BCF15EF165E9ull, port::kEve202PcFile, 97616,
+          0x622D0EBC1CEA8E03ull, port::kEve202PcCrop, eve202, eve202Traced},
+         {"EVE002", 0x5D66F0207B8DD266ull, 0xCE6250F015B307EDull, "SAKURA2/BG/BBG002.SPR", 175825,
+          0x7FF1A8354F5328C7ull, {0, 24, 576, 288}, eve002, eve002Traced},
++        {"BBG203", 0x26944E45315837B3ull, 0x563357CBBB296DD9ull, "SAKURA2/BG/BBG203.SPR", 85393,
++         0xEA823B5175AAB5EBull, {0, 0, 576, 320}, bbg203, bbg203Traced, port::kEve202NativeRect,
++         std::nullopt, 0, port::BoundedPlateRegistration{2.3292, 2.3332, 2.0, -2.8,
++             {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, 0, 8, 4, 14}},
+         {"BBG204", 0xFB7D81F5464F27B2ull, 0xD3B104F491C0C105ull, "SAKURA2/BG/BBG204.SPR", 101141,
+          0x7218D90427AB8E97ull, {0, 0, 568, 284}, bbg204, bbg204Traced},
+         {"BBG003", 0x197A8477C531433Bull, 0xB8FB2814F4AC9659ull, "SAKURA2/BG/BBG003.SPR", 115917,
+@@ -1327,12 +1334,15 @@
+     };
+     auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop,
+                            unsigned feather = 0, unsigned index = port::kEve202PcImage,
+-                           std::vector<uint32_t> theatreUnder = {}, int colorOffset = 0) {
++                           std::vector<uint32_t> theatreUnder = {}, int colorOffset = 0,
++                           std::optional<port::BoundedPlateRegistration> registration = {},
++                           port::EveRect nativeRect = {}, std::vector<uint32_t> nativePixels = {}) {
+         if (!inset.tried) {
+             inset.tried = true;
+             inset.pending = std::async(std::launch::async,
+                 [path = std::filesystem::u8path(port.opt.pcAssetsPath) / file, size, hash, crop, feather, index,
+-                 theatreUnder = std::move(theatreUnder), colorOffset]() {
++                 theatreUnder = std::move(theatreUnder), colorOffset, registration, nativeRect,
++                 nativePixels = std::move(nativePixels)]() {
+                     SceneHdPixels result;
+                     std::vector<uint8_t> bytes;
+                     if (!ReadPcBackdropFile(path, bytes, size) || bytes.size() != size ||
+@@ -1343,6 +1353,13 @@
+                     for (auto& image : images) {
+                         if (image.index != index ||
+                             !port::EveCropFits(crop, image.width, image.height)) continue;
++                        if (registration) {
++                            result.width = nativeRect.width * 2;
++                            result.height = nativeRect.height * 2;
++                            result.pixels = port::RegisterBoundedPlate(nativePixels, image.pixels,
++                                nativeRect.width, nativeRect.height, image.width, image.height, *registration);
++                            break;
++                        }
+                         result.width = crop.width;
+                         result.height = crop.height;
+                         result.pixels.reserve(size_t(crop.width) * crop.height);
+@@ -1379,7 +1396,7 @@
+                     return result;
+                 });
+         }
+-        finishSceneInset(inset, feather ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
++        finishSceneInset(inset, feather || registration ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE);
+     };
+ 
+     struct GeneralEndingPlate {
+@@ -6509,7 +6526,16 @@
+                 }
+                 if (knownInset) {
+                     if (nativeRgb == inset->rgb) {
+-                        loadEveInset(inset->image, inset->file, inset->size, inset->fileHash, inset->crop, inset->feather);
++                        std::vector<uint32_t> nativePixels;
++                        if (inset->registration && !inset->image.tried) {
++                            nativePixels.reserve(size_t(inset->rect.width) * inset->rect.height);
++                            for (int y = inset->rect.y; y < inset->rect.y + inset->rect.height; ++y) {
++                                const auto first = softwareShown.begin() + size_t(y) * 320 + inset->rect.x;
++                                nativePixels.insert(nativePixels.end(), first, first + inset->rect.width);
++                            }
++                        }
++                        loadEveInset(inset->image, inset->file, inset->size, inset->fileHash, inset->crop, inset->feather,
++                                     port::kEve202PcImage, {}, 0, inset->registration, inset->rect, std::move(nativePixels));
+                         if (inset->image.texture) {
+                             const auto fit = port::EveInsetDestination(inset->drawRect.value_or(inset->rect),
+                                 baseFit.x, baseFit.y, baseFit.scale);

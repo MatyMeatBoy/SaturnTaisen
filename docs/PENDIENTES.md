@@ -570,3 +570,10 @@ scroll and localized lettering. It recovers the presented fade and
 keeps the texture at a steady shade. See [evidence](research/loading-side-art.md).
 Syntax, coverage and patch application passed. Linked HD playback and
 packaging remain pending.
+
+## Bounded HD MAP03 inset (0320)
+
+BBG203 adds one PC identity through the existing exact inset route,
+with native boundaries. See [archived comparison](research/disc1-battle-insets.md#bbg203-bounded-registration).
+Syntax, coverage and patch application passed. Linked HD playback
+and packaging remain pending.

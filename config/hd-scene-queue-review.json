@@ -193,10 +193,6 @@
       "disposition": "incompatible-full",
       "reason": "Six PC windows bake Japanese ordinals in place of native Roman numeral panel art. Separate decorative mask would be partial."
     },
-    "SAKURA2/BG/BBG203.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "Known matching donor lacks ~41 native columns and five rows."
-    },
     "SAKURA2/BG/BBG206.SPR": {
       "disposition": "incompatible-full",
       "reason": "No approved full native counterpart across 806 distinct decoded native BIN pictures."

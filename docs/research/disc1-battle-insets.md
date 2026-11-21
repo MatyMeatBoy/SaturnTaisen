@@ -82,3 +82,17 @@ The exact 33,792 tile bytes and 512 palette bytes were separately
 searched in 319 retained local states around three Chapter 3 research
 routes, with no match. The live inset must still be reached to check
 its geometry and decide how to present the missing Saturn edges.
+
+## BBG203 bounded registration
+
+Patch 0320 adds the disc 1 MAP03 battle inset. The exact NBG3
+footprint matches all 648 mapped cell names and all 41,472 visible
+native pixels in the archived route. The donor is registered over
+the native overlap and feathered before the uncovered right and lower
+edges. The C++ compositor changes 100,215 pixels at 2x and writes
+zero pixels outside the overlap.
+
+The runtime prepares the texture asynchronously after the source-5
+and exact final RGB checks. The native inset supplies pixels outside
+the aligned area. Syntax and patch application passed. Linked HD
+playback and package inclusion remain pending.
