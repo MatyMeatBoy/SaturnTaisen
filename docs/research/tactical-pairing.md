@@ -436,3 +436,31 @@ Por ello, la coincidencia del búfer VDP1 debe complementarse
 con una captura donde el actor quede expuesto en la salida
 final. El informe no identifica el búfer activo ni prueba la
 prioridad VDP2.
+
+### Pose visible y descenso de MAP02
+
+La reproducción parte de continuous-tactical/middle.state y
+reutiliza el tramo de input.movie desde el campo 8001. En v0.3.3
+salió del diálogo y siguió 2350 campos con ejecución nativa
+estricta. Las capturas de ventana desde el campo 2 son 2560 ×
+1440. En el campo 1510 se ve por primera vez en las muestras
+la figura azul junto a la abertura del suelo. El donante
+EV00S24 tiene 74 × 160 píxeles y un solo ordinal.
+
+| Campo desde el guardado | Y superior | Texels de la pose que conserva VDP1 |
+| ---: | ---: | ---: |
+| 1510 | 55 | 1261 / 1262 |
+| 1700 | 76 | 1254 / 1262 |
+| 1750 | 89 | 212 / 1262 |
+| 1850 | 114 | 115 / 1262 |
+| 1950 | 139 | 3 / 1262 |
+| 2100 | — | Pose ausente |
+
+Las cinco tiras conservan el mismo conjunto y se trasladan
+juntas durante el descenso. La fuerte reducción de cobertura
+antes de desaparecer indica que una máscara de visibilidad
+debe acompañar al donante durante toda la animación. El índice
+del búfer que contiene el actor alterna entre las muestras.
+Los campos 1500, 1510, 1750, 1950 y 2100 sirven para comprobar
+el diálogo por delante, la figura visible, el recorte, el final
+de la animación y la desaparición.
