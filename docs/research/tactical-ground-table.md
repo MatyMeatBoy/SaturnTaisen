@@ -25,6 +25,13 @@ completed the same 2,500 fields in strict mode with no discovered blocks.
 The strict and interpreter guest hash logs matched in full.
 The MAP23 ground remains pending until a playable camera is reached.
 
+The runtime ground loader now accepts separate placement width and height.
+The four 1392 × 1232 PC pieces produced a 1392 × 1232 world atlas at the
+existing 2:1 sampling scale. The loader and an independent decoder with
+descriptor offsets matched every RGBA byte
+(`7ea1de12169a22134fb70a70bb03deeed71e4dba54826a0ee2ce903343df7af0`).
+The MAP23 world origin and crop still need a live camera comparison.
+
 ## MAP03 at 1440p
 
 MAP03 has 626 square 64-pixel donor tiles on a 2,048-pixel placement plane. Its derived key 3150DAC84F35E1AE matches the natural Episode 3 disc 1 Tsukiji battle reached by saving after the sortie card and continuing from File 1 after restart. Patch 0262 binds that key to the PC ground with the existing source-4 sampler.

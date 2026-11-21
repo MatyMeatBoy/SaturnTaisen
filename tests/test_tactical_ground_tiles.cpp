@@ -24,7 +24,7 @@ std::vector<uint8_t> descriptor() {
 }
 
 int main() {
-    const Entry entry{"fixture", 0, 0, 0, 0x40000, 64, 64, 64};
+    const Entry entry{"fixture", 0, 0, 0, 0x40000, 64, 64, 64, nullptr, 64};
     PcSprite color{0,64,64,0,std::vector<uint32_t>(4096,0xFF302010)};
     color.pixels[0]=0xFFFFFF00;
     PcSprite invisible{1,64,64,0,std::vector<uint32_t>(4096,0x00302010)};
@@ -57,4 +57,20 @@ int main() {
     auto reserved=bytes;
     putWord(reserved,112+8,1);
     assert(AssembleGroundTiles(reserved,sprites,entry).empty());
+
+    const Entry rectangle{"fixture", 0, 0, 0, 0x40000, 64, 48, 64, nullptr, 64, 48};
+    PcSprite red{0, 64, 48, 0, std::vector<uint32_t>(64 * 48, 0xFF0000FF)};
+    PcSprite blue{1, 64, 48, 0, std::vector<uint32_t>(64 * 48, 0xFFFF0000)};
+    red.pixels[2 * 64 + 4] = 0xFF123456;
+    const std::vector<PcSprite> rectangles{red, blue};
+    auto rectangular = descriptor();
+    putWord(rectangular, 112 + 6, 48);
+    const auto mosaic = AssembleGroundTiles(rectangular, rectangles, rectangle);
+    assert(mosaic.size() == 64 * 48);
+    assert(mosaic[0] == 0xFFFF0000 && mosaic[32] == 0xFF0000FF);
+    assert(mosaic[64 + 32 + 2] == 0xFF123456);
+    assert(mosaic[24 * 64] == 0xFF0000FF && mosaic[47 * 64 + 31] == 0xFF0000FF);
+    assert(mosaic[24 * 64 + 32] == 0);
+    assert(AssembleGroundTiles(bytes, rectangles, rectangle).empty());
+    assert(AssembleGroundTiles(rectangular, sprites, rectangle).empty());
 }
