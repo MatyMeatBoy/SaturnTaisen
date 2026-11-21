@@ -1,16 +1,16 @@
 {
  "schema": 1,
- "scope": "THD21 offline classification of open SYSTEM images (no KAO); the ten open item pictures are listed separately",
- "open_system_images": 158,
- "open_item_pictures": 10,
- "open_total": 168,
+ "scope": "THD21 offline classification of open SYSTEM images (no KAO); ITEM images are counted separately",
+ "open_system_images": 156,
+ "open_item_pictures": 2,
+ "open_total": 158,
  "connectable_by_data_alone": 0,
- "item_pictures": "ITEM09 full card plus nine compact icons: the card path needs a full-card counterpart; the 40 unpaired Saturn ITEM BINs have no PC card in hd-item-review.json",
+ "item_pictures": "Distinct ITEM donor subimages without an integrated row in the chapter register.",
  "families": {
   "system-frames": {
    "connect": "witness+mechanism",
    "note": "Frames and tab panels. The 0197-0213 patches draw rails from VDP1/VDP2 ownership per menu; the rest has no VDP1 texture witness. Needs the menu open in a state to read which layer draws it.",
-   "open": 50,
+   "open": 49,
    "files": {
     "BURO_W": {
      "open": 2,
@@ -350,18 +350,6 @@
       }
      ]
     },
-    "SIS_BG3": {
-     "open": 1,
-     "images": [
-      {
-       "index": 0,
-       "size": [
-        640,
-        480
-       ]
-      }
-     ]
-    },
     "TUIKA_W": {
      "open": 2,
      "images": [
@@ -411,7 +399,7 @@
   },
   "disc-icons": {
    "connect": "witness",
-   "note": "CD-1/CD-2 pink done (0112, 0146). Blue selected variants need a selected-slot state; CD-3/CD-4 never appear on a two-disc Saturn; System RAM and cartridge stay native.",
+   "note": "Pink and blue CD-1/CD-2 are linked. CD-3/CD-4 have no corresponding two-disc Saturn slot; System RAM and cartridge need a matching donor.",
    "open": 6,
    "files": {
     "SIS_ICON": {
@@ -466,7 +454,7 @@
   "title-logo": {
    "connect": "witness+mechanism",
    "note": "Title/logo/caution screens at 640x480 with baked Japanese or PC-only text; Saturn builds them from LOGO.SH2 16x16 tiles. Needs one witnessed frame per screen and a text decision.",
-   "open": 42,
+   "open": 41,
    "files": {
     "CAUTION": {
      "open": 8,
@@ -773,18 +761,6 @@
       }
      ]
     },
-    "TL_BG0": {
-     "open": 1,
-     "images": [
-      {
-       "index": 0,
-       "size": [
-        640,
-        480
-       ]
-      }
-     ]
-    },
     "TL_ROGO0": {
      "open": 1,
      "images": [
@@ -801,7 +777,7 @@
   },
   "extra-menu": {
    "connect": "witness+mechanism",
-   "note": "Extra (omake) menu labels and panels; no pointer table and no witnessed draw call. Needs an extra-menu saved state.",
+   "note": "Sound and Movie already have guarded decorative rails. Full image replacements must preserve the native localized labels and tab layout.",
    "open": 31,
    "files": {
     "KARAOKE": {
