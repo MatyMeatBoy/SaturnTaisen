@@ -9675,10 +9675,6 @@
         "association": "unknown",
         "status": "unpaired"
       },
-      "1:/SAKURA1/LOAD.BIN": {
-        "association": "unknown",
-        "status": "unknown"
-      },
       "1:/SAKURA1/TMAP.BIN": {
         "association": "unknown",
         "status": "unknown"
@@ -10157,10 +10153,6 @@
       "2:/SAKURA1/ITEM91.BIN": {
         "association": "unknown",
         "status": "unpaired"
-      },
-      "2:/SAKURA1/LOAD.BIN": {
-        "association": "unknown",
-        "status": "unknown"
       },
       "2:/SAKURA1/TMAP.BIN": {
         "association": "unknown",
@@ -17575,6 +17567,14 @@
         "scope": "ending-bank subimages",
         "status": "paired-not-wired"
       },
+      "1:/SAKURA1/LOAD.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/loading-side-art.md",
+        "pc": "SAKURA1/ICATCH/LOAD.SPR",
+        "pc_image_index": 0,
+        "status": "hd",
+        "verified_in_game": false
+      },
       "1:/SAKURA1/MA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
@@ -21134,6 +21134,14 @@
           7
         ],
         "shared_runtime_donor": "SAKURA1/ENDING/END_SA.SPR",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "2:/SAKURA1/LOAD.BIN": {
+        "association": "unknown",
+        "pairing_evidence": "docs/research/loading-side-art.md",
+        "pc": "SAKURA1/ICATCH/LOAD.SPR",
+        "pc_image_index": 0,
         "status": "hd",
         "verified_in_game": false
       },

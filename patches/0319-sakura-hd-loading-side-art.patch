@@ -1,0 +1,106 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1154,6 +1154,9 @@
+     bool staircaseFadeTraced = false;
+     std::vector<uint32_t> sceneHdForeground;
+     SceneHd ic01;
++    SceneHd loadingSides;
++    SceneHdPixels loadingSidesArt, loadingSidesTint;
++    std::array<int16_t, 3> loadingSidesOffset{-256, -256, -256};
+     bool ic01Traced=false,ic01Examined=false;
+     SceneHd eve202;
+     bool eve202Traced = false;
+@@ -3266,6 +3269,68 @@
+             SDL_RenderTexture(renderer, plate.texture, nullptr, &target);
+         };
+ 
++        const auto drawLoadingSides = [&](const SDL_FRect& target, int scale) {
++            if (screenBackdrop != "LOADING" || scale < 2 || choosing || port.menu.IsOpen() ||
++                port.opt.pcAssetsPath.empty() || satrecomp::FeatureValue("pc_hd_backgrounds") != 0)
++                return;
++            constexpr size_t width = 320, height = 224;
++            constexpr size_t leftEnd = 128, rightStart = 192;
++            constexpr size_t stride = width * 2;
++            constexpr size_t inkSample = 20 * width + 157;
++            const auto& planes = port.videoRenderer->PresentationFrame();
++            const auto& native = selectedBackdrop->nativeScreen;
++            if (native.size() != width * height || softwareShown.size() != width * height ||
++                planes.source.size() != width * height || planes.topSource.size() != width * height ||
++                planes.source[inkSample] != 4 || planes.topSource[inkSample] != 4)
++                return;
++            if (!loadingSides.tried) {
++                loadingSides.tried = true;
++                queuePinnedPan(loadingSides, "SAKURA1/ICATCH/LOAD.SPR",
++                    118847, 0xF1D708F01CF8360Eull, 640, 448);
++            }
++            if (loadingSides.pending.valid() &&
++                loadingSides.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                loadingSidesArt = loadingSides.pending.get();
++            if (loadingSidesArt.pixels.size() != stride * height * 2)
++                return;
++
++            // Recover the fade from the presented picture, which can lag the VDP registers.
++            const auto shade = static_cast<int16_t>(int(softwareShown[inkSample] & 255u) - 248);
++            const std::array<int16_t, 3> offset{shade, shade, shade};
++            if (shade <= -248 || softwareShown[inkSample] != OffsetBackdropPixel(native[inkSample], offset))
++                return;
++            constexpr size_t centerWidth = rightStart - leftEnd;
++            for (size_t y = 0; y < height; ++y) for (size_t x = 0; x < width; ++x) {
++                if (x == leftEnd) x += centerWidth;
++                const size_t at = y * width + x;
++                if (planes.source[at] != 4 || planes.topSource[at] != 4 ||
++                    softwareShown[at] != OffsetBackdropPixel(native[at], offset))
++                    return;
++            }
++            if (!loadingSides.texture || loadingSidesOffset != offset) {
++                if (loadingSidesTint.pixels.empty()) {
++                    loadingSidesTint.width = stride;
++                    loadingSidesTint.height = height * 2;
++                    loadingSidesTint.pixels.resize(stride * height * 2);
++                }
++                for (size_t y = 0; y < height * 2; ++y) for (size_t x = 0; x < stride; ++x) {
++                    if (x == leftEnd * 2) x += centerWidth * 2;
++                    const size_t at = y * stride + x;
++                    loadingSidesTint.pixels[at] = OffsetBackdropPixel(loadingSidesArt.pixels[at], offset);
++                }
++                if (loadingSides.texture) {
++                    if (!SDL_UpdateTexture(loadingSides.texture, nullptr, loadingSidesTint.pixels.data(),
++                                          stride * sizeof(uint32_t)))
++                        return;
++                } else {
++                    publishSceneInset(loadingSides, loadingSidesTint, SDL_BLENDMODE_BLEND);
++                    if (!loadingSides.texture) return;
++                }
++                loadingSidesOffset = offset;
++            }
++            SDL_RenderTexture(renderer, loadingSides.texture, nullptr, &target);
++        };
++
+         if (texture && floral && port.videoRenderer && satrecomp::FeatureValue("presentation_mode")==1) {
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(anchoredBackdrop && planes.width==320 && planes.height==224) {
+@@ -3275,6 +3340,7 @@
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
+                 drawNativeIntermission(nativeTarget);
+                 drawIntermissionCard(nativeTarget);
++                drawLoadingSides(nativeTarget, native.scale);
+                 if (screenBackdrop == "LOADING" && spanishLoadingInk && native.scale > 0 &&
+                     !choosing && !port.menu.IsOpen() && planes.topSource.size() == 320 * 224 &&
+                     softwareShown.size() == 320 * 224) {
+@@ -6927,6 +6993,7 @@
+                 if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
+                 narrativeCutoutTexture = nullptr;
+                 if (saveBackdrop) SDL_DestroyTexture(std::exchange(saveBackdrop, nullptr));
++                if (loadingSides.texture) SDL_DestroyTexture(std::exchange(loadingSides.texture, nullptr));
+                 for (auto& overlay : loadPanelOverlays) {
+                     if (overlay.texture) SDL_DestroyTexture(overlay.texture);
+                     overlay.texture = nullptr;
+@@ -7368,6 +7435,7 @@
+     if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);
+     if(loadArrowOverlay)SDL_DestroyTexture(loadArrowOverlay);
+     if (saveBackdrop) SDL_DestroyTexture(saveBackdrop);
++    if (loadingSides.texture) SDL_DestroyTexture(loadingSides.texture);
+     for (auto& overlay : loadPanelOverlays)
+         if (overlay.texture) SDL_DestroyTexture(overlay.texture);
+     if (texture) {

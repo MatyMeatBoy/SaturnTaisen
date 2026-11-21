@@ -562,3 +562,11 @@ can overwrite that cell. The report identifies resident candidates
 for a short draw probe. It does not promote them in the HD census.
 The local benchmark indexed 3,753 snapshots in 7.0 seconds and recovered
 both known positive controls. Keep reports and state lists local.
+
+## HD loading side decoration (0319)
+
+The loading side overlay uses ICATCH/LOAD ordinal 0 under the native
+scroll and localized lettering. It recovers the presented fade and
+keeps the texture at a steady shade. See [evidence](research/loading-side-art.md).
+Syntax, coverage and patch application passed. Linked HD playback and
+packaging remain pending.
