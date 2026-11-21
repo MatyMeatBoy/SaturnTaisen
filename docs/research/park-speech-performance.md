@@ -184,3 +184,32 @@ narrative-to-backdrop transitions at 1440p. In these captures the HD
 line cleared directly and the empty box maintained its placement.
 The reported momentary native text and box movement entering video
 remain open. Private evidence is staged outside the repository.
+
+## v0.3.3 park checkpoint first use
+
+Replayed the same park checkpoint for 240 fields twice in each of two
+private profiles with the v0.3.3 runtime, hidden SDL and dummy audio.
+Each profile started with an empty generated cache and then reused it
+on a fresh process. All four runs finished in strict native mode.
+
+| Profile | First field, empty cache | First field, retained cache | Composite, empty → retained |
+| --- | ---: | ---: | ---: |
+| A | 123.60 ms | 63.78 ms | 79.09 → 22.14 ms |
+| B | 110.04 ms | 64.16 ms | 69.63 → 21.24 ms |
+
+The requested window dimensions differed, but the first field reported
+the same 3× Zoom geometry, so these are cache comparisons only.
+Subsequent fields still varied between runs. The replay begins by
+restoring a checkpoint and passes the unpacked PC files directly.
+These results do not characterize audible playback or a launcher-prepared
+installation. The repeatable first-field cost in composition warrants a
+comparison with the prepared-pack path before changing runtime loading.
+
+A separate run with an existing prepared HD pack and startup preloading
+enabled finished its first field in 58.95 ms (11.46 ms in composition,
+44.18 ms in emulation). This changes both the asset source and preload
+setting, so it is a reference point rather than an isolated A/B. The
+remaining first-field time is now predominantly in emulation. The
+replay restores its checkpoint at field zero, so a continuous route
+through the park entrance is needed to distinguish checkpoint restore
+from an in-game transition.
