@@ -504,12 +504,12 @@ def asset_category(path):
     name = Path(path).name
     for pattern, category in (
         (r'(?:BG(?:\d+|HANA|KOIKOI|MAIGO|RYORI|SLOT|SOUJI|SWIM|SYATE)|BBG\d+|EVE\d+|'
-         r'(?!LIPS_)\w+_CG|CG\d+|TITLE\d+|IC\d+)\.BIN', 'scene-pictures'),
+         r'(?!LIPS_)\w+_CG|CG\d+|TITLE\d+|IC\d+|LOAD)\.BIN', 'scene-pictures'),
         (r'NC\d+\.BIN', 'bodies'),
         (r'\d{4}FCE\.BIN', 'portraits'),
         (r'MAP\d+\.BIN', 'tactical-maps'),
         (r'UNIT\d+\.BIN', 'tactical-units'),
-        (r'(?:WKL\d+|WALL\d+|ITEM\d+|LOAD|OMAKE|TMAP|LIPS_CG)\.BIN', 'menus-hud'),
+        (r'(?:WKL\d+|WALL\d+|ITEM\d+|OMAKE|TMAP|LIPS_CG)\.BIN', 'menus-hud'),
     ):
         if re.fullmatch(pattern, name):
             return category
@@ -1017,6 +1017,10 @@ def build(root, index_dir, portrait_audit):
                         row['reason'] = 'palette shared with a picture that maps to another PC file (ambiguous)'
             elif name in bg_review['rejected'] or pair.get('tier') == 'missing':
                 row['status'] = 'unpaired'
+        elif path == '/SAKURA1/LOAD.BIN':
+            row = {'status': 'hd', 'pc': 'SAKURA1/ICATCH/LOAD.SPR', 'pc_image_index': 0,
+                   'verified_in_game': False,
+                   'pairing_evidence': 'docs/research/loading-side-art.md'}
         elif path in screens and screens[path]['tier'] == 'content':
             row = {'status': 'paired-not-wired', 'pc': screens[path]['pc_file']}
             if path == '/SAKURA1/IC01.BIN':
