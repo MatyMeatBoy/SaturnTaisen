@@ -375,3 +375,30 @@ Spanish deltas retain disc extents, accept the existing English
 inputs and round-trip to the recorded blank-video target. Windows
 1440p cold title captures cover both Spanish discs and include
 Original on disc 1. The release is pending.
+
+## Cobertura principal de v0.3.4
+
+Se compararon directamente los dos discos españoles cuyos SHA-256
+coinciden con los destinos de `parches/parches.json` y sus tablas
+inglesas. Se excluyeron registros fuente vacíos y marcadores. Las dos
+ediciones conservan los identificadores y marcadores. Las 56 tablas
+narrativas están presentes en cada disco, con el mismo recuento en ambos,
+y los 26 archivos de mensajes de batalla se reparten entre los dos.
+
+| Subcategoría | Evidencia actual | Pendiente |
+| --- | --- | --- |
+| Guion y elecciones | 10 episodios publicados. En cada disco, 22.321 registros narrativos no vacíos y 21.598 distintos del inglés. | Revisar calidad y recorridos completos por episodio. |
+| Mensajes de batalla | 26/26 tablas presentes. 3.557 de 3.638 registros difieren del inglés y todos tienen texto. | Revisar el texto coincidente y la cobertura de situaciones. |
+| Objetos y equipo | 3.136/3.136 descripciones auditadas contra la traducción, con inventario localizado. | Comprobar pantallas y rótulos contextuales fuera del inventario auditado. |
+| HUD táctico | 27/27 bancos WKL auditados para los grupos traducidos. | Inventariar el inglés restante por pantalla y estado antes de dar un porcentaje. |
+| Presentación | 10/10 tarjetas de episodio, CARGANDO y Pulsa Start en ambos discos. | Completar verificación en juego de todas las tarjetas. |
+| Menús principales y del port | Menús básicos y opciones del port localizados. | Censo y prueba de pantallas restantes antes de dar un porcentaje. |
+| Subtítulos de historia | La capa de vídeo opcional distribuida está en inglés. | Inventario de clips con diálogo, traducción, sincronía y prueba en juego. |
+
+El porcentaje de registros modificados no mide por sí solo la traducción.
+Nombres e interjecciones pueden ser iguales. El filtro de dos palabras
+funcionales inglesas no encontró candidatos entre los registros idénticos
+y el tratamiento antiguo de Iris no aparece entre ellos. El filtro no
+sustituye una lectura en contexto. No hay denominador global comprobado
+hasta terminar el censo de HUD, menús y subtítulos. Las galerías y los
+minijuegos opcionales quedan fuera de ese objetivo.
