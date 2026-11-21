@@ -71,7 +71,7 @@ Los suelos y sprites tácticos forman parte del mod principal junto con los fina
 | THD06 | P0 | local | open | **Inserciones de batalla.** EVE y BBG, incluyendo activaciones naturales de EVE102/105/207, EVE0101 disco 2 y disposición BBG238–243/300. | Confirmar activación, ventana y mismo arte; conservar Saturn si el PC cambia pose o composición. |
 | THD07 | P0 | local | open | **Eyecatch e intermedios.** IC por disco y variante de encuadre, fondos compartidos por donante, menús tratados por THD20/21. | Probar entrada, salida, fundido y anclajes en la intermisión natural. |
 | THD08 | P0 | local | open | **Finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. Final de Sumire hasta el título comprobado en AOT estricto; falta probar las cuatro fotos con el mismo ejecutable y la pila gráfica completa. |
-| THD09 | P2 | local | deferred | **Extras CG y EVENT.** CG queda en su cola de extras. EVENT conserva las sustituciones PC existentes y admite coincidencias confirmadas que aparezcan durante otro shard. | EVENT queda sin búsqueda, pruebas de ruta ni shards propios. Ambos inventarios quedan fuera del porcentaje principal. |
+| THD09 | P2 | local | closed | **Extras CG y EVENT.** Se conservan las sustituciones PC existentes. Solo se incorporan coincidencias confirmadas que aparezcan mientras se trabaja en otro shard. | Ambos quedan fuera del porcentaje principal y sin búsqueda ni shards propios. |
 
 ### Lotes de escenas listos para tomar
 
@@ -87,7 +87,7 @@ La reatribución de #592 da 38 filas de imagen HD conectadas para buscar en capt
 | THD38 | open | Episodio 10: BG2111, BG2163–BG2166 | [BG2046](research/hd-chapter-10.md#bg2046-ending-scene) y [BG2057](research/hd-chapter-10.md#bg2057-behind-nc3057) verificados. |
 | THD39 | open | Episodio 10: BG2167, BG2168, BG2248, BG2284–BG2286, BBG218 | Mismas trazas. Si BBG218 requiere otra composición, continúa en THD06. |
 
-Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, prioriza en THD01–THD09 los pares `paired-not-wired` que comparten el mismo compositor y pueden entrar juntos en un PR. THD09 atiende EVENT y CG por subimagen. En ambos casos sigue el [flujo de entrega](SHARDS.md#entrega-de-lotes-hd-y-porcentajes).
+Los lotes anteriores elevan **verificado en juego**. Para elevar **integrado**, prioriza en THD01–THD09 los pares `paired-not-wired` que comparten el mismo compositor y pueden entrar juntos en un PR. THD09 queda cerrado para búsqueda dedicada de EVENT y CG. En ambos casos sigue el [flujo de entrega](SHARDS.md#entrega-de-lotes-hd-y-porcentajes).
 
 ### Personajes y retratos
 
