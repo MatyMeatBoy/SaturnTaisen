@@ -29,3 +29,34 @@ The observed footer is a normal VDP1 sprite with no rotation or flip, mode `00A0
 The intersection of exact module match, known cursor, absence of image layers and a closed sprite list delimits the suppression. In sample 807, layer 0 occupies 1,214 pixels, layer 3 occupies 16,922 and layer 5 occupies 53,544. During the video, layer 1 occupies the 288 × 144 region. On reaching the episode title, `00204EE6` is still present and layer 4 occupies the full 71,680 native pixels. These cases require the image-layer veto even with an accepted cursor.
 
 Of 160 archived states, 29 matched the full module. A single state was found outside the intro sampling with one of the verified initial cursors. `cold-load-discovery.state` shows this same film, with 41,472 layer-1 pixels. The theater, later dialogue and conversation-with-Maria checks use `0020582C`, `00205990` and `00205FA8`, respectively. The sampling covers this English path and its local checks. On the host, the script identity and cursor must be captured with the same presented frame to preserve this relationship with run-ahead.
+
+## Current wide background in the first story film
+
+The 1440p replay from the title exposed the native floral pattern
+inside the movie rectangle during the entry and exit fades. The
+renderer had captured Saturn's blend recipe but bypassed composition
+for movie-only scenes. Patch 0281 uses that recipe over the selected
+wide floral background during the verified first-film phase. The
+shadow opacity follows the film. A registered PC clip follows uniform
+fade weights with texture alpha. Native colour mixing covers the
+nonuniform case.
+
+Packaged background lookups use the shipped asset roots for screen,
+floral and PC backgrounds. A stale profile image can no longer
+override these in a packaged run. A development profile can supply a
+fixture when the executable has no bundled image.
+
+The 1440p replay retained all 6,072 strict guest hashes and SRAM
+in the native and PC donor paths. Before/after RGB differences
+were confined to the film rectangle and its shadow. Captures of
+the fully opaque film and the floral scene after the film matched
+within their respective playback paths. The PC trace opened
+MOVIE001 and its image was retained during the measured fade.
+
+## Shared movie blend
+
+Patch 0282 applies the captured floral recipe to all recognized movie
+rectangles with an active wide backdrop. This removes the script
+test from compositing while keeping the first-film ornament witness
+specific to its original scene. A known story movie keeps the last
+Zoom box for its return to dialogue. Changing out of Zoom clears it.

@@ -1,0 +1,58 @@
+diff --git a/launcher/CMakeLists.txt b/launcher/CMakeLists.txt
+--- a/launcher/CMakeLists.txt
++++ b/launcher/CMakeLists.txt
+@@ -46,6 +46,12 @@
+ set(GAME_COMBOS "")
+ set(GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../games/${GAME_EXE}" CACHE PATH "The game's directory (game.cfg)")
+ set(GAME_CFG "${GAME_DIR}/game.cfg")
++if(WIN32 AND GAME_EXE STREQUAL "sakura" AND EXISTS "${GAME_DIR}/windows.rc.in")
++    enable_language(RC)
++    configure_file("${GAME_DIR}/windows.rc.in" "${CMAKE_CURRENT_BINARY_DIR}/SaturnTaisen.rc" @ONLY)
++    target_sources(launcher PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/SaturnTaisen.rc")
++endif()
++
+ if (EXISTS "${GAME_CFG}")
+     file(STRINGS "${GAME_CFG}" GAME_COMBOS REGEX "^combos[ \t]*=")
+     string(REGEX REPLACE "^combos[ \t]*=[ \t]*" "" GAME_COMBOS "${GAME_COMBOS}")
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -492,7 +492,7 @@
+         }
+         flags |= SDL_WINDOW_RESIZABLE | (port.gpu || shade ? SDL_WINDOW_HIGH_PIXEL_DENSITY : 0) | (shade ? SDL_WINDOW_OPENGL : 0) |
+                  (testHidden ? SDL_WINDOW_HIDDEN : 0);
+-        window = SDL_CreateWindow("SaturnTaisenFirst 0.2.0-test.1", width, height, flags);
++        window = SDL_CreateWindow("SaturnTaisen", width, height, flags);
+         if (!window) {
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
+@@ -655,7 +655,7 @@
+             const size_t total=backgroundCount+portraitCount;
+             auto progress=[&](size_t done) {
+                 int w=0,h=0;SDL_GetRenderOutputSize(renderer,&w,&h);
+-                SDL_SetWindowTitle(window,("SaturnTaisenFirst - Precargando HD " + std::to_string(done)+"/"+std::to_string(total)).c_str());
++                SDL_SetWindowTitle(window,("SaturnTaisen - Precargando HD " + std::to_string(done)+"/"+std::to_string(total)).c_str());
+                 SDL_SetRenderDrawColor(renderer,244,225,221,255);SDL_RenderClear(renderer);
+                 const SDL_FRect rail{w*.15f,h*.48f,w*.7f,16},fill{rail.x,rail.y,total?rail.w*float(done)/float(total):rail.w,rail.h};
+                 SDL_SetRenderDrawColor(renderer,220,185,191,255);SDL_RenderFillRect(renderer,&rail);
+@@ -674,7 +674,7 @@
+             if(usePortraits)portraitPack.Preload([&](size_t ready,size_t){progress(backgroundCount+ready);});
+             backgroundWarmupStarted=true;
+             if(std::getenv("SATRECOMP_HD_STATS"))fprintf(stderr,"HD preload: backgrounds=%zu/%zu portrait_variants=%zu\n",loaded,backgroundCount,portraitCount);
+-            SDL_SetWindowTitle(window,"SaturnTaisenFirst 0.2.0-test.1");
++            SDL_SetWindowTitle(window,"SaturnTaisen");
+         }
+         applyDisplaySync();
+         return true;
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+--- a/port/sakura_ui.cpp
++++ b/port/sakura_ui.cpp
+@@ -183,7 +183,7 @@
+     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding,26);
+     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{28,22});
+     ImGui::Begin("Sakura settings",nullptr,ImGuiWindowFlags_NoDecoration|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoMove);
+-    ui::text("SAKURA WARS  /  SATURNTAISENFIRST",ui::Font::Semibold,11,p.accent);
++    ui::text("SAKURA WARS  /  SATURNTAISEN",ui::Font::Semibold,11,p.accent);
+     ui::gap(7); ui::text(view.title.c_str(),ui::Font::Semibold,29,p.primary);
+     ui::text("Un respiro antes de volver al escenario",ui::Font::Regular,13,p.secondary);
+     ui::gap(18);

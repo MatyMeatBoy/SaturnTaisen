@@ -1,0 +1,112 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -553,6 +553,9 @@
+             }
+             if(!tacticalPatch.empty())break;
+         }
++        std::vector<std::filesystem::path> backdropRoots{std::filesystem::path(SDL_GetBasePath())};
++        if (port.DevelopmentStatesAllowed() && !port.opt.settingsPath.empty())
++            backdropRoots.push_back(std::filesystem::path(port.opt.settingsPath).parent_path());
+         for(const auto& name:port.discFiles.Names()) if(name.find("KABE")!=std::string::npos && name.ends_with(".BIN")) {
+             std::vector<uint8_t> data;std::vector<uint32_t> pixels;
+             if(!port.discFiles.Read(name,data) || !DecodeKabe(data,pixels)) continue;
+@@ -563,14 +566,14 @@
+             if(std::any_of(backdrops.begin(),backdrops.end(),[&](const auto& item){return item.palette==backdrop.palette;}))continue;
+             backdrop.nativePalette.assign(data.begin(),data.begin()+512);
+             backdrop.cacheDir=port.opt.settingsPath.empty()?std::filesystem::path():std::filesystem::path(port.opt.settingsPath).parent_path()/"cache"/"backgrounds";
+-            for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++            for(const auto& folder:backdropRoots) {
+                 const auto file=folder/"art"/"backgrounds"/(id+".png");
+                 std::error_code error;
+                 if(std::filesystem::is_regular_file(file,error))backdrop.files.push_back(file);
+             }
+             if(!port.opt.pcAssetsPath.empty())if(const auto* info=PcBackdropFor(id)) {
+                 auto pc=backdrop;pc.pc=true;pc.id=id;pc.files.clear();
+-                for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++                for(const auto& folder:backdropRoots) {
+                     const auto file=folder/"art"/"pc-backgrounds"/(std::string(info->id)+"-v1.png");
+                     std::error_code error;if(std::filesystem::is_regular_file(file,error))pc.files.push_back(file);
+                 }
+@@ -598,7 +601,7 @@
+             item.nativeScreen=original;
+             item.nativePalette.assign(palette.begin(),palette.end());
+             item.cacheDir=port.opt.settingsPath.empty()?std::filesystem::path():std::filesystem::path(port.opt.settingsPath).parent_path()/"cache/backgrounds";
+-            for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
++            for(const auto& folder:backdropRoots) {
+                 const auto file=folder/"art/screen-backgrounds"/(item.id+"-v1.png");
+                 std::error_code error;if(std::filesystem::is_regular_file(file,error))item.files.push_back(file);
+             }
+@@ -4487,29 +4490,59 @@
+                 choiceViewport=!hdChoiceLines.empty();
+                 textFit=fit;textCropX=static_cast<int>(crop.x);textCropY=static_cast<int>(crop.y);
+                 const SDL_FRect target{static_cast<float>(fit.x),static_cast<float>(fit.y),static_cast<float>(fit.w),static_cast<float>(fit.h)};
++                unsigned movieWeight=32, minimumMovieWeight=32;
++                bool movieFloralFade=false;
++                if (scene.movieOnly && shownFirstMoviePhase &&
++                    planes.floralCoverMix.size()==planes.source.size()) {
++                    movieWeight=0;
++                    for (size_t at=0;at<planes.source.size();++at) {
++                        if (planes.source[at]!=1) continue;
++                        const unsigned weight=planes.floralCoverMix[at].lowerWeight;
++                        movieWeight=std::max(movieWeight,32u-weight);
++                        minimumMovieWeight=std::min(minimumMovieWeight,32u-weight);
++                        movieFloralFade|=weight!=0;
++                    }
++                    if (!movieFloralFade) movieWeight=32;
++                }
+                 if(scene.movieOnly) {
+                     // Native video shadow: four source pixels right/down, tied to the new rectangle.
+                     const float offset=4.0f*fit.scale;
+                     const SDL_FRect shadow{target.x+offset,target.y+offset,target.w,target.h};
+                     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+-                    SDL_SetRenderDrawColor(renderer,80,80,80,166);
++                    SDL_SetRenderDrawColor(renderer,80,80,80,static_cast<Uint8>(166*movieWeight/32));
+                     SDL_RenderFillRect(renderer,&shadow);
+                     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+                 }
+                 const auto& mixedSource=splitZoom?zoomForeground:(!hdNarrativeErased&&hdChoiceLines.empty()?planes.foreground:hdForeground);
+-                if(scene.movieOnly && UpdateClip(planes.source)) {
+-                    // T113/S3: the PC clip in the video rectangle; the native frame is drawn over it without the film plane.
+-                    clipForeground=mixedSource;
+-                    for(int y=0;y<224;y++)for(int x=0;x<320;x++)
+-                        if(planes.source[size_t(y)*320+x]==1)clipForeground[size_t(y)*320+x]=0;
+-                    drewPcClip = SDL_RenderTexture(renderer, clipTexture, nullptr, &target);
+-                    // (`content` is the opaque native frame here; the layer texture keeps its transparency.)
+-                    SDL_UpdateTexture(foreground,nullptr,clipForeground.data(),320*sizeof(uint32_t));
+-                    SDL_RenderTexture(renderer,foreground,&crop,&target);
+-                } else
+-                if(scene.movieOnly || !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,panelMixCache,fit,crop,mixedSource,
++                bool drewMovieClip=false;
++                if (scene.movieOnly && UpdateClip(planes.source) &&
++                    (!movieFloralFade || movieWeight==minimumMovieWeight)) {
++                    // Keep the PC donor through a uniform Saturn fade, using
++                    // the selected wide backdrop as the lower colour.
++                    if (movieFloralFade) {
++                        SDL_BlendMode blend=SDL_BLENDMODE_NONE;
++                        Uint8 alpha=255;
++                        if (SDL_GetTextureBlendMode(clipTexture,&blend) && SDL_GetTextureAlphaMod(clipTexture,&alpha)) {
++                            if (SDL_SetTextureBlendMode(clipTexture,SDL_BLENDMODE_BLEND) &&
++                                SDL_SetTextureAlphaMod(clipTexture,static_cast<Uint8>(255*movieWeight/32)))
++                                drewMovieClip=SDL_RenderTexture(renderer,clipTexture,nullptr,&target);
++                            SDL_SetTextureAlphaMod(clipTexture,alpha);
++                            SDL_SetTextureBlendMode(clipTexture,blend);
++                        }
++                    } else drewMovieClip=SDL_RenderTexture(renderer,clipTexture,nullptr,&target);
++                    if (drewMovieClip) {
++                        drewPcClip=true;
++                        clipForeground=mixedSource;
++                        for (size_t at=0;at<planes.source.size();++at)
++                            if (planes.source[at]==1) clipForeground[at]=0;
++                        SDL_UpdateTexture(foreground,nullptr,clipForeground.data(),320*sizeof(uint32_t));
++                        SDL_RenderTexture(renderer,foreground,&crop,&target);
++                    }
++                }
++                if (!drewMovieClip && ((scene.movieOnly && !movieFloralFade) ||
++                    !uploadLayer(panelTexture,panelWidth,panelHeight,panelPixels,panelMixCache,fit,crop,mixedSource,
+                     nullptr, icReady && !splitZoom && crop.x == 0 && crop.y == 0 && crop.w == 320 && crop.h == 224 &&
+-                    fit.x == baseFit.x && fit.y == baseFit.y && fit.w == baseFit.w && fit.h == baseFit.h))
++                    fit.x == baseFit.x && fit.y == baseFit.y && fit.w == baseFit.w && fit.h == baseFit.h)))
+                     SDL_RenderTexture(renderer,content,&crop,&target);
+                 if (splitZoom && scene.recognized && inspectionHand) {
+                     // The existing picture and panel draw their in-crop cursor pixels.

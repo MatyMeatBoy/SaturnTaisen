@@ -700,6 +700,35 @@ def carga(files: Files, preview):
     print(f'  marco de carga: {used} bytes comprimidos de {marco_end - marco_start}')
 
 
+def compose_pulsa_start(rows):
+    """Keep the source P and Start. Draw clean lowercase glyphs in the same palette."""
+    from letras import compose, cut
+
+    def lowercase(mask, top):
+        ink = {(x + 1, y + top) for y, row in enumerate(mask)
+               for x, mark in enumerate(row) if mark == '#'}
+        glyph = [[None] * (len(mask[0]) + 2) for _ in range(24)]
+        for x, y in ink:
+            for dx, dy in ((0, -1), (-1, 0), (1, 0), (0, 1)):
+                glyph[y + dy][x + dx] = 4
+        for x, y in ink:
+            glyph[y][x] = 6 if y < 17 else 7 if y < 20 else 8
+        return glyph
+
+    box = (0, 0, 152, 24)
+    P = cut(rows, box, 3, 15, lambda value: value == 0)
+    for row in P[17:]:  # the adjacent r shares P's rightmost column below the bowl
+        row[-1] = None
+    start = cut(rows, box, 49, 89, lambda value: value == 0)
+    u = lowercase(("##....##",) * 8 + (".######.", "..####.."), 13)
+    l = lowercase(("###",) * 15, 8)
+    s = lowercase((".######.", "########", "##......", "##......", ".######.",
+                   "......##", "......##", "......##", "########", ".######."), 13)
+    a = lowercase((".######.", ".#######", "......##", "......##", ".#######",
+                   "##....##", "##....##", "##....##", "########", ".#####.#"), 13)
+    compose(rows, box, [P, u, l, s, a, start], [1, 1, 1, 1, 6], 0)
+
+
 def titulo_rotulos(files: Files, preview, compare):
     """Painted labels on the title: frame header/banner (8 bpp) and Press Start (4 bpp)."""
     from rotulos import load_palette, read_indices, replace_text, to_image, write_indices
@@ -741,14 +770,7 @@ def titulo_rotulos(files: Files, preview, compare):
     rows = read_indices(raw, 81760, 152, 24, 4)
     pal = load_palette(('title', 'cram', 0x60), 4)
     before = to_image([r[:] for r in rows], pal)
-    # «Pulsa Start» from the English letters: P, u, s, a cut out; l from the B stem; «Start» kept whole.
-    box = (0, 0, 152, 24)
-    bg0 = lambda v: v == 0
-    c = lambda x0, x1: cut(rows, box, x0, x1, bg0)
-    P, u, s, a, start = c(3, 15), c(101, 113), c(40, 47), c(63, 76), c(48, 89)
-    stem = c(90, 93)  # B stem: outline, ink, ink; close it with a mirrored outline column
-    l = [r + [r[0]] for r in stem]
-    compose(rows, box, [P, u, l, s, a, start], [0, 0, 0, 0, 6], 0)
+    compose_pulsa_start(rows)
     compare.append(('pulsa start', before, to_image(rows, pal)))
     write_indices(raw, 81760, rows, 4)
     used = put_stream(logo, 0x25410, 0x29940 - 0x25410, bytes(raw), 'logo del título')

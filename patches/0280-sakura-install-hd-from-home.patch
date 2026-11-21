@@ -1,0 +1,119 @@
+diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
+--- a/launcher/src/sakura_setup.cpp
++++ b/launcher/src/sakura_setup.cpp
+@@ -15,7 +15,9 @@
+     bool dialog=false,closed=false,finished=true,error=false;
+     std::string pending;
+     std::array<char,2048> source{};
+-    std::unique_ptr<GameProcess> worker;
++    std::unique_ptr<GameProcess> worker, pcProbe;
++    Uint64 nextPcProbe=0;
++    bool pcFound=false, hdDialog=false, enableHd=false;
+     std::filesystem::path log;
+     std::string message,progress;
+     Uint64 lastRead=0;
+@@ -204,8 +206,45 @@
+     }
+     return !checked || !applied.eof();
+ }
+-void StartPrepare(launcher::PageContext& page,SetupState& s,bool refresh=false) {
++void PickSource(launcher::PageContext& page, SetupState& s, bool hd) {
++    static const SDL_DialogFileFilter filters[]={{"Discos e imágenes","cue;iso;bin;img;mdf;zip"}};
++    {
++        std::lock_guard<std::mutex> lock(s.mutex);
++        if (s.dialog) return;
++        s.dialog=true;
++        s.hdDialog=hd;
++    }
++    SDL_ShowOpenFileDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,filters,1,nullptr,false);
++}
++void ProbePcEdition(launcher::PageContext& page, SetupState& s) {
++    if (s.pcProbe) {
++        if (s.pcProbe->running()) {
++            ui::request_frames(2);
++            return;
++        }
++        s.pcFound=s.pcProbe->exit_code()==0;
++        s.pcProbe.reset();
++        s.nextPcProbe=SDL_GetTicks()+15000;
++        return;
++    }
++    if (SDL_GetTicks()<s.nextPcProbe) return;
++    const auto folder=DiscsFolder(page.program_folder);
++    std::vector<std::string> args={"find-pc"};
++    std::error_code ec;
++    if (s.source[0] && std::filesystem::exists(std::filesystem::u8path(s.source.data()),ec))
++        args.insert(args.end(),{"--rom",s.source.data()});
++    if (!folder.empty()) args.insert(args.end(),{"--folder",Utf8(folder)});
++    s.nextPcProbe=SDL_GetTicks()+15000;
++    if (args.size()==1) {s.pcFound=false;return;}
++    std::string error;
++    s.pcProbe=std::make_unique<GameProcess>();
++    if (!s.pcProbe->start(page.program_folder/"preparar-juego.exe",args,page.program_folder,error))
++        s.pcProbe.reset();
++    else ui::request_frames(2);
++}
++void StartPrepare(launcher::PageContext& page,SetupState& s,bool refresh=false,bool enableHd=false) {
+     s.refreshing=refresh;
++    s.enableHd=enableHd;
+     std::vector<std::string> args={refresh?"refresh-prepared":"prepare","--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
+     if(!refresh) {
+         page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
+@@ -229,11 +268,12 @@
+         state->language=LanguageIndex(page.prefs.get("sakura","language"));
+         SDL_strlcpy(state->source.data(),page.prefs.get("sakura","setup_source").c_str(),state->source.size());
+     }
+-    auto& s=*state;bool picked=false;
++    auto& s=*state;bool picked=false,pickedForHd=false;
+     {
+         std::lock_guard<std::mutex> lock(s.mutex);
+         if(!s.pending.empty()) {
+             if(s.pending.size()<s.source.size()) {SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());picked=true;}
++            pickedForHd=s.hdDialog;
+             s.pending.clear();
+         }
+     }
+@@ -256,6 +296,8 @@
+             s.language=LanguageIndex(page.prefs.get("sakura","language"));
+             if(HdPack(page)) // a prepared HD pack is switched on; the MODO HD bubble turns it off
+                 Save(page,{{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},{"hd_preload","1"}});
++            if (s.enableHd && HdPack(page))
++                Save(page,{{"presentation_mode","1"},{"presentation_chosen","1"}});
+             s.message=HdPack(page)?"Juego y mod HD preparados. Ya puedes jugar.":"Juego preparado. Ya puedes jugar. Para el mod HD, añade tu edición de PC en Opciones.";
+             const auto disc=LanguageDisc(page.program_folder,s.language);
+             if(Exists(disc) && page.use_file)page.use_file(Utf8(disc));
+@@ -263,7 +305,7 @@
+         s.progress.clear();
+     }
+     // A file just chosen is the request to prepare with it.
+-    if(picked && !running && !page.playing)StartPrepare(page,s);
++    if(picked && !running && !page.playing)StartPrepare(page,s,false,pickedForHd);
+     return s;
+ }
+ // The bar and the line under it while the helper works, or its last word.
+@@ -330,8 +372,12 @@
+         else Save(page,{{"text_style","0"},{"presentation_mode","1"},{"presentation_chosen","1"}}); // (HD text belongs to the enhanced presentation)
+     }
+     place(2);
+-    if(Bubble("hd","MODO HD",!pack?"Sin preparar":hd?"Activado":"Desactivado",hd,each,!page.playing)) {
+-        if(!pack) {s.error=true;s.message="El modo HD necesita tu edición de PC: añádela en Opciones › Tus archivos.";}
++    if (!pack && !locked) ProbePcEdition(page,s);
++    const char* hdLabel=pack?(hd?"Activado":"Desactivado"):
++        locked?"Preparando…":s.pcProbe?"Buscando…":s.pcFound?"Instalar mod HD":"Elegir edición de PC";
++    if(Bubble("hd","MODO HD",hdLabel,hd,each,!locked && !s.pcProbe)) {
++        if(!pack && s.pcFound) StartPrepare(page,s,false,true);
++        else if(!pack) PickSource(page,s,true);
+         else if(hd)Save(page,{{"pc_hd_backgrounds","1"},{"pc_hd_portraits","1"}});
+         else Save(page,{{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},{"hd_preload","1"},{"presentation_mode","1"},{"presentation_chosen","1"}});
+     }
+@@ -360,9 +406,7 @@
+         else where+=".";
+         layout::row(page.width,running?"Preparando…":done?"Juego preparado":"Preparar el juego",where.c_str(),210,36,[&] {
+             if(ui::button("Elegir…",ui::Kind::Secondary,100,!locked)) {
+-                static const SDL_DialogFileFilter filters[]={{"Discos e imágenes","cue;iso;bin;img;mdf;zip"}};
+-                {std::lock_guard<std::mutex> lock(s.mutex);s.dialog=true;}
+-                SDL_ShowOpenFileDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,filters,1,nullptr,false);
++                PickSource(page,s,false);
+             }
+             ImGui::SameLine(0,ui::px(6));
+             if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,!locked))StartPrepare(page,s);

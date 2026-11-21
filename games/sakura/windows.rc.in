@@ -1,0 +1,24 @@
+#include <winver.h>
+
+101 ICON "@GAME_DIR@/SaturnTaisen.ico"
+
+1 VERSIONINFO
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileDescription", "SaturnTaisen"
+            VALUE "ProductName", "SaturnTaisen"
+            VALUE "OriginalFilename", "SaturnTaisen.exe"
+            VALUE "FileVersion", "@GAME_VERSION@"
+            VALUE "ProductVersion", "@GAME_VERSION@"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

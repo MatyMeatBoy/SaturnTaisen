@@ -1669,7 +1669,7 @@ def self_test() -> None:
 def main() -> int:
     global _recomplauncher_progress
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-prepared', 'language', 'info', 'frontend', 'help', 'self-test'))
+    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-prepared', 'language', 'info', 'frontend', 'help', 'self-test', 'find-pc'))
     parser.add_argument('--folder', type=Path)
     parser.add_argument('--rom', '--disc', '--pc', dest='rom', type=Path, action='append', default=[])
     parser.add_argument('--language', choices=tuple(ALL_LANGUAGES))
@@ -1690,6 +1690,10 @@ def main() -> int:
         if args.command == 'self-test':
             self_test()
             return 0
+        if args.command == 'find-pc':
+            given = list(args.rom) + ([args.folder] if args.folder else [])
+            _, pc = gather(given)
+            return 0 if pc is not None else 1
         paths = Paths(args)
         if args.command == 'info':
             print(json.dumps(info(paths), indent=2, ensure_ascii=False))
