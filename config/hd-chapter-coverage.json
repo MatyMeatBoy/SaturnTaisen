@@ -10439,6 +10439,22 @@
         "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#emblemas-azules-de-los-discos-de-carga",
         "status": "hd"
       },
+      "pc:SAKURA1/SYSTEM/TITLE.SPR#0": {
+        "association": "unknown",
+        "draw": "trim of title plaque",
+        "pc": "SAKURA1/SYSTEM/TITLE.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#placa-y-petalo-del-titulo",
+        "status": "hd"
+      },
+      "pc:SAKURA1/SYSTEM/TITLE.SPR#11": {
+        "association": "unknown",
+        "draw": "detached title petal",
+        "pc": "SAKURA1/SYSTEM/TITLE.SPR",
+        "pc_image_index": 11,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#placa-y-petalo-del-titulo",
+        "status": "hd"
+      },
       "pc:SAKURA1/SYSTEM/TL_BG0.SPR#0": {
         "association": "unknown",
         "draw": "patch 0304: PC floral title backdrop",

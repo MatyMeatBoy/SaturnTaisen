@@ -1,0 +1,190 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2248,6 +2248,153 @@
+                 fprintf(stderr,"hd item: %s target %.0f,%.0f,%.0f,%.0f owned=%td\n",card.entry->file,
+                         where.x,where.y,where.w,where.h,std::count(card.pixels.begin(),card.pixels.end(),uint8_t(1)));
+             }
++        }
++    };
++    std::vector<PcSprite> titleParts;
++    std::vector<uint32_t> titlePartPixels;
++    SDL_Texture* titlePartTexture = nullptr;
++    bool titlePartsTried = false;
++    std::future<std::vector<PcSprite>> pendingTitleParts;
++    auto drawTitleParts = [&](const satrecomp::video::Renderer::Presentation& planes,
++                              const SDL_FRect& crop, const SDL_FRect& target, int scale) {
++        constexpr int frameWidth = 320, frameHeight = 224;
++        if (scale < 2 || choosing || port.menu.IsOpen() || port.opt.pcAssetsPath.empty() ||
++            satrecomp::FeatureValue("presentation_mode") != 1 || satrecomp::FeatureValue("pc_hd_backgrounds") != 0 ||
++            planes.width != frameWidth || planes.height != frameHeight ||
++            planes.topSource.size() != frameWidth * frameHeight || planes.underSprites.size() != frameWidth * frameHeight ||
++            softwareShown.size() != frameWidth * frameHeight) return;
++        const auto palette = std::span{planes.palette}.subspan(0xC00, 512);
++        if (PcBackdropHash(palette) != 0xDC1F1B06C3693D3Eull) return;
++
++        struct Part {
++            unsigned index;
++            uint64_t texture;
++            int width, height, donorWidth, donorHeight;
++            EveRect native, donor;
++        };
++        constexpr Part parts[]{
++            {0, 0x22938CC575A4203Full, 112, 136, 257, 298, {0, 0, 112, 127}, {0, 0, 257, 284}},
++            {11, 0x97A87CF219F582CCull, 24, 24, 36, 38, {1, 0, 19, 18}, {1, 0, 35, 37}},
++        };
++        const auto coord = [](uint16_t v) { return (int(v & 0x1FFF) ^ 0x1000) - 0x1000; };
++        const auto mix = [](uint32_t foreground, uint32_t background) {
++            uint32_t color = 0xFF000000u;
++            for (unsigned shift : {0u, 8u, 16u})
++                color |= ((31 * ((foreground >> shift) & 255u) + ((background >> shift) & 255u)) >> 5) << shift;
++            return color;
++        };
++        const auto rectangle = [&](const auto& s, const Part& p) {
++            const auto& w = s.command.words;
++            const int x = coord(w[6]), y = coord(w[7]), right = x + p.width - 1, bottom = y + p.height - 1;
++            return w[0] == 0x1002 && w[2] == 0x00A0 && w[3] == 0x0600 &&
++                w[5] == ((p.width / 8) << 8 | p.height) && coord(w[8]) == right && coord(w[9]) == y &&
++                coord(w[10]) == right && coord(w[11]) == bottom &&
++                coord(w[12]) == x && coord(w[13]) == bottom &&
++                s.pixels.size() == size_t(p.width * p.height) && PcBackdropHash(s.pixels) == p.texture;
++        };
++        const auto plate = std::ranges::find_if(planes.sprites, [&](const auto& s) {
++            return s.x == 72 && s.y == 40 && rectangle(s, parts[0]);
++        });
++        if (plate == planes.sprites.end()) return;
++        if (!titlePartsTried) {
++            titlePartsTried = true;
++            constexpr size_t bytesExpected = 247979;
++            const auto path = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/TITLE.SPR";
++            pendingTitleParts = std::async(std::launch::async, [path] {
++                std::vector<uint8_t> bytes;
++                std::vector<PcSprite> images;
++                std::string error;
++                if (ReadPcBackdropFile(path, bytes, bytesExpected) && bytes.size() == bytesExpected &&
++                    PcBackdropHash(bytes) == 0xB1022AECB5BE9B43ull && DecodePcSprites(bytes, images, error))
++                    std::erase_if(images, [](const auto& img) { return img.index != 0 && img.index != 11; });
++                else images.clear();
++                return images;
++            });
++        }
++        if (pendingTitleParts.valid() &&
++            pendingTitleParts.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++            titleParts = pendingTitleParts.get();
++        if (titleParts.empty()) return;
++
++        for (const auto& part : parts) {
++            const auto command = part.index == 0 ? plate :
++                std::find_if(std::next(plate), planes.sprites.end(), [&](const auto& s) { return rectangle(s, part); });
++            if (command == planes.sprites.end()) continue;
++            const auto& box = part.native;
++            const int left = command->x + box.x, top = command->y + box.y;
++            if (left < 0 || top < 0 || left + box.width > frameWidth || top + box.height > frameHeight ||
++                left < crop.x || top < crop.y || left + box.width > crop.x + crop.w || top + box.height > crop.y + crop.h)
++                continue;
++            const auto art = std::ranges::find_if(titleParts, [&](const auto& image) {
++                return image.index == part.index && image.width == part.donorWidth && image.height == part.donorHeight &&
++                    image.pixels.size() == size_t(part.donorWidth * part.donorHeight);
++            });
++            if (art == titleParts.end()) continue;
++
++            // Later non-rectangular draws keep the part native. For
++            // standard later commands, mask their bounds before RGB checks.
++            std::vector<EveRect> covers;
++            bool known = true;
++            for (auto later = std::next(command); later != planes.sprites.end(); ++later) {
++                const auto& w = later->command.words;
++                const auto type = w[0] & 15;
++                if (type >= 8) continue;
++                int width = ((w[5] >> 8) & 63) * 8, height = w[5] & 255;
++                if (type == 2) {
++                    const int x = coord(w[6]), y = coord(w[7]), right = coord(w[8]), bottom = coord(w[11]);
++                    if (right < x || bottom < y || coord(w[9]) != y || coord(w[10]) != right ||
++                        coord(w[12]) != x || coord(w[13]) != bottom) { known = false; break; }
++                    width = right - x + 1; height = bottom - y + 1;
++                } else if (type != 0) { known = false; break; }
++                covers.push_back({later->x, later->y, std::max(width, 1), std::max(height, 1)});
++            }
++            if (!known) continue;
++            const int w2 = 2 * box.width, h2 = 2 * box.height;
++            titlePartPixels.assign(w2 * h2, 0);
++            bool drew = false;
++            for (int y = 0; y < box.height; ++y) for (int x = 0; x < box.width; ++x) {
++                // Use the outer plaque bevel alone. All lettering and
++                // the central crest come from the native title commands.
++                if (part.index == 0 && x >= 8 && x < 104 && y >= 7 && y < 121) continue;
++                const auto ink = command->pixels[(box.y + y)*part.width + box.x + x];
++                if (!ink || std::ranges::any_of(covers, [&](const auto& cover) {
++                    return left + x >= cover.x && left + x < cover.x + cover.width &&
++                           top + y >= cover.y && top + y < cover.y + cover.height;
++                })) continue;
++                const auto at = size_t(top + y)*frameWidth + left + x;
++                if (planes.topSource[at] != 0) continue;
++                const unsigned word = (unsigned(palette[2 * ink]) << 8) | palette[2 * ink + 1];
++                const uint32_t native = ((word & 31) << 3) | ((word & 0x3E0) << 6) | ((word & 0x7C00) << 9);
++                const auto background = planes.underSprites[at];
++                if ((softwareShown[at] & 0xFFFFFFu) != (mix(native, background) & 0xFFFFFFu)) continue;
++                for (int dy = 0; dy < 2; ++dy) for (int dx = 0; dx < 2; ++dx) {
++                    const auto& source = part.donor;
++                    const int sx = source.x + (2 * (2 * x + dx) + 1)*source.width/(2 * w2);
++                    const int sy = source.y + (2 * (2 * y + dy) + 1)*source.height/(2 * h2);
++                    const auto pixel = art->pixels[sy*part.donorWidth + sx];
++                    const auto rgb = pixel & 0xFFFFFFu;
++                    if ((pixel >> 24) != 255 || rgb == 0x00FF00u || (rgb & 0xFFFFF0u) == 0xFFFF00u) continue;
++                    titlePartPixels[(2*y + dy)*w2 + 2*x + dx] = mix(pixel, background);
++                    drew = true;
++                }
++            }
++            if (!drew) continue;
++            if (!titlePartTexture) {
++                titlePartTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, 224, 254);
++                if (!titlePartTexture) return;
++                if (!SDL_SetTextureScaleMode(titlePartTexture, SDL_SCALEMODE_NEAREST) ||
++                    !SDL_SetTextureBlendMode(titlePartTexture, SDL_BLENDMODE_BLEND)) {
++                    SDL_DestroyTexture(titlePartTexture);
++                    titlePartTexture = nullptr;
++                    return;
++                }
++            }
++            const SDL_Rect update{0, 0, w2, h2};
++            if (!SDL_UpdateTexture(titlePartTexture, &update, titlePartPixels.data(), w2 * sizeof(uint32_t))) continue;
++            const SDL_FRect source{0, 0, float(w2), float(h2)};
++            const SDL_FRect dest{target.x + (left - crop.x)*scale, target.y + (top - crop.y)*scale,
++                float(box.width*scale), float(box.height*scale)};
++            SDL_RenderTexture(renderer, titlePartTexture, &source, &dest);
+         }
+     };
+     using PresentationSprite=satrecomp::video::Renderer::PresentationSprite;
+@@ -4946,6 +5093,7 @@
+                     drawItem(planes,crop,target,fit.scale,true);
+                     drawItem(planes,crop,target,fit.scale);
+                     drawCompactIcons(planes,crop,target,fit.scale);
++                    if (screenBackdrop == "TITLE") drawTitleParts(planes, crop, target, fit.scale);
+                     drawLoadPanels(planes,softwareShown,crop,target,fit.scale);
+                     drawBrackets(planes,crop,target,fit.scale);
+                 }
+@@ -4980,6 +5128,8 @@
+                 presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
++            if (port.videoRenderer && texW == 320 && texH == 224 && where.w == baseFit.w && where.h == baseFit.h)
++                drawTitleParts(port.videoRenderer->PresentationFrame(), {0, 0, 320, 224}, where, baseFit.scale);
+             // MAP02 EVENT follows the native pose and only covers visible actor texels.
+             if (nativeGroundComposite && presentationKind == std::string_view("stage02-hd-ground") &&
+                 texW == 320 && texH == 224) {
+@@ -6343,6 +6493,7 @@
+             case SDL_EVENT_RENDER_DEVICE_RESET:
+                 if (horizontalCommandOverlay) SDL_DestroyTexture(std::exchange(horizontalCommandOverlay, nullptr));
+                 if (itemOverlay) SDL_DestroyTexture(std::exchange(itemOverlay, nullptr));
++                if (titlePartTexture) SDL_DestroyTexture(std::exchange(titlePartTexture, nullptr));
+                 if(eventActor)SDL_DestroyTexture(std::exchange(eventActor,nullptr));
+                 if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
+                 narrativeCutoutTexture = nullptr;
+@@ -6777,6 +6928,7 @@
+         SDL_CloseGamepad(gp);
+     }
+     if(itemOverlay)SDL_DestroyTexture(itemOverlay);
++    if(titlePartTexture)SDL_DestroyTexture(titlePartTexture);
+     if (horizontalCommandOverlay) SDL_DestroyTexture(horizontalCommandOverlay);
+     for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);
+     resetRegisteredBodies();

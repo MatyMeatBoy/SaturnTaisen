@@ -452,3 +452,10 @@ Implemented with the native panel and layer fingerprints. PC decoding is
 asynchronous. See [source matching](research/pc-menu-hud-inventory.md#pc-save-menu-backdrop).
 Syntax and patch application passed. A linked build, beta playback and package
 inclusion remain pending.
+
+## HD title plaque and petal (0308)
+
+Implemented the outer trim and detached petal with preserved native game
+lettering and crest. Decode runs in the background. The ownership model and
+syntax checks passed. See [title atlas evidence](research/pc-menu-hud-inventory.md#placa-y-petalo-del-titulo).
+Linked build, beta playback and packaging remain pending.
