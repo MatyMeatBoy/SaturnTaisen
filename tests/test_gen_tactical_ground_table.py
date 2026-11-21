@@ -69,10 +69,10 @@ class SignatureTests(unittest.TestCase):
 
 
 class ClassifyTests(unittest.TestCase):
-    def test_single_image_is_wired_unverified_never_hd(self):
-        row = gt.classify(pair('MAP07'), 'AA' * 8)
+    def test_unregistered_single_image_is_a_candidate(self):
+        row = gt.classify(pair('MAP99'), 'AA' * 8)
         self.assertEqual((row['status'], row['world'], row['tile_px'], row['centre_layout']),
-                         ('candidate', [1024, 1024], 0, 'stage07-hd-ground'))
+                         ('candidate', [1024, 1024], 0, 'stage99-hd-ground'))
 
     def test_odd_size_needs_assembler(self):
         self.assertEqual(gt.classify(pair('MAP07', size=(2047, 1024)), 'AA' * 8)['status'], 'needs-assembler')
@@ -111,12 +111,12 @@ class BuildTests(unittest.TestCase):
             gt.build(pairs, {'MAP07': 'AA' * 8, 'MAP08': 'AA' * 8}, {})
 
     def test_inc_lists_only_candidate_entries(self):
-        pairs = {'maps': [pair('MAP07'), pair('MAP10'), pair('MAP21')]}
-        table = gt.build(pairs, {'MAP07': 'AA' * 8, 'MAP10': 'BB' * 8, 'MAP21': 'CC' * 8}, {})
+        pairs = {'maps': [pair('MAP99'), pair('MAP10'), pair('MAP21')]}
+        table = gt.build(pairs, {'MAP99': 'AA' * 8, 'MAP10': 'BB' * 8, 'MAP21': 'CC' * 8}, {})
         lines = [l for l in gt.inc_text(table).splitlines() if l.startswith('{')]
         self.assertEqual(len(lines), 1)
         self.assertIn('0xAAAAAAAAAAAAAAAAull', lines[0])
-        self.assertIn('"stage07-hd-ground", 0}', lines[0])
+        self.assertIn('"stage99-hd-ground", 0}', lines[0])
 
 
 
@@ -140,13 +140,15 @@ class CommittedTableTests(unittest.TestCase):
         counts = {}
         for row in self.table['maps']:
             counts[row['status']] = counts.get(row['status'], 0) + 1
-        self.assertEqual(counts, {'hd': 15, 'candidate': 8, 'native': 2, 'needs-assembler': 1})
+        self.assertEqual(counts, {'hd': 22, 'candidate': 1, 'native': 2, 'needs-assembler': 1})
         self.assertEqual(self.table['summary'], counts)
 
-    def test_generated_entries_need_live_verification(self):
+    def test_integrated_entries_distinguish_live_and_offline_evidence(self):
         for row in self.table['maps']:
             if row['table'] == 'generated':
-                self.assertEqual(row['status'] == 'hd', row['map'] in gt.LIVE_GENERATED)
+                stem = row['map']
+                self.assertEqual(row['status'] == 'hd', stem in gt.LIVE_GENERATED | gt.BETA_SINGLE)
+                self.assertEqual(row.get('verified_in_game') is False, stem in gt.BETA_SINGLE)
             else:
                 self.assertEqual(row['status'], 'hd')
 
@@ -162,7 +164,7 @@ class CommittedTableTests(unittest.TestCase):
 
     def test_geometry_of_candidate_entries(self):
         for row in self.table['maps']:
-            if row['status'] != 'candidate':
+            if row['status'] != 'candidate' and row['map'] not in gt.BETA_SINGLE:
                 continue
             self.assertLessEqual(max(row['world']), 1024)
             if row['tile_px']:

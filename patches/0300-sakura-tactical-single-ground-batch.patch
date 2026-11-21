@@ -1,0 +1,53 @@
+diff --git a/port/tactical_ground.h b/port/tactical_ground.h
+--- a/port/tactical_ground.h
++++ b/port/tactical_ground.h
+@@ -93,7 +93,49 @@
+     0x16F7C2CBA831B3CCull, 0x40000, 1024, 896, 1024, "stage09-hd-ground",
+ };
+ 
++inline constexpr Entry kStage11{
++    "SAKURA2/MAP/MAP11/MAP11_A.SPR", 3120168, 0xA376D5D99FBBEEB8ull,
++    0x51F16F840299873Eull, 0x40000, 1024, 1024, 1024, "stage11-hd-ground",
++};
++
++inline constexpr Entry kStage17{
++    "SAKURA2/MAP/MAP17/MAP17_A.SPR", 3797354, 0x4A42EDA5053264D3ull,
++    0xEF0D324CBB36FA91ull, 0x40000, 1024, 1024, 1024, "stage17-hd-ground",
++};
++
++inline constexpr Entry kStage18{
++    "SAKURA2/MAP/MAP18/MAP18_A.SPR", 2528919, 0x93EA60160A54774Aull,
++    0xAABF931F9960EDBAull, 0x40000, 1024, 720, 1024, "stage18-hd-ground",
++};
++
++inline constexpr Entry kStage22{
++    "SAKURA2/MAP/MAP22/MAP22_A.SPR", 1701128, 0x4C3D4DCB63C619E1ull,
++    0xCCD72F646DC72847ull, 0x40000, 864, 521, 864, "stage22-hd-ground",
++};
++
++inline constexpr Entry kStage24{
++    "SAKURA2/MAP/MAP24/MAP24_A.SPR", 1651067, 0x08F8C419783CDBB1ull,
++    0x8A03B78AA817DF0Cull, 0x40000, 696, 480, 696, "stage24-hd-ground",
++};
++
++inline constexpr Entry kStage25{
++    "SAKURA2/MAP/MAP25/MAP25_A.SPR", 1685457, 0x2B07BEB0AB3614FDull,
++    0x91608BD930EA1AE4ull, 0x40000, 696, 480, 696, "stage25-hd-ground",
++};
++
++inline constexpr Entry kStage26{
++    "SAKURA2/MAP/MAP26/MAP26_A.SPR", 1764161, 0x9F35BB3FE48E282Cull,
++    0x44A5831551F52D3Full, 0x40000, 696, 480, 696, "stage26-hd-ground",
++};
++
+ inline const Entry* Find(uint64_t signature) {
++    if (signature == kStage11.mapSignature) return &kStage11;
++    if (signature == kStage17.mapSignature) return &kStage17;
++    if (signature == kStage18.mapSignature) return &kStage18;
++    if (signature == kStage22.mapSignature) return &kStage22;
++    if (signature == kStage24.mapSignature) return &kStage24;
++    if (signature == kStage25.mapSignature) return &kStage25;
++    if (signature == kStage26.mapSignature) return &kStage26;
+     if (signature == kStage09.mapSignature) return &kStage09;
+     if (signature == kStage08.mapSignature) return &kStage08;
+     if (signature == kStage07.mapSignature) return &kStage07;
