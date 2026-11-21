@@ -4,6 +4,17 @@ The inventory in config/hd-tactical-ground-table.json covers 27 Saturn map files
 
 The runtime recognizes the ground using FNV-1a of the first 8,192 VDP2 pattern-name bytes at page 0x40000. For these maps the offline tool derives the page from the BIN. It adds 0x00600000 and slot 1's cell count (size divided by 32) to the names in slot 5, then hashes the top-left 64 columns by 32 rows as big-endian 32-bit words. MAP21 retains its individually observed key.
 
+## Disc 2 route to MAP23
+
+On v0.3.7 the cold Episode 10 route read EVT19 and MAP19, then strict AOT
+stopped after 6,685 fields at the master SH-2 entry `0x00204000`. A
+340-field recording from the field-6500 checkpoint found 57 additional
+instruction spans with exact byte matches in the disc's EVT19 module. The
+registered range list now includes those spans and the 28-byte entry block.
+An interpreter diagnostic reached field 9,000 and still read MAP19. A
+strict replay with the expanded table and a playable MAP23 camera are
+pending. The MAP23 ground remains pending in the HD count.
+
 ## MAP03 at 1440p
 
 MAP03 has 626 square 64-pixel donor tiles on a 2,048-pixel placement plane. Its derived key 3150DAC84F35E1AE matches the natural Episode 3 disc 1 Tsukiji battle reached by saving after the sortie card and continuing from File 1 after restart. Patch 0262 binds that key to the PC ground with the existing source-4 sampler.

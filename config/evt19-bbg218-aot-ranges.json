@@ -10,8 +10,48 @@
   "module_resident_equal_bytes": 76577,
   "addresses_not_in_retained_base": 89,
   "remaining_outside_retained_base": 0,
-  "scope": "45 neutral ordinary frames beginning at the authentic MAP19 display checkpoint. Delta compared against the retained base database, not against a newly linked composite.",
+  "scope": "45 neutral ordinary frames beginning at the authentic MAP19 display checkpoint. Delta compared against the retained base database, not against a newly linked composite. The summary counts above describe that witness alone. Ranges also include the entry witness below.",
   "ranges": [
+    [
+      0,
+      28
+    ],
+    [
+      28,
+      6
+    ],
+    [
+      34,
+      38
+    ],
+    [
+      72,
+      6
+    ],
+    [
+      78,
+      10
+    ],
+    [
+      88,
+      6
+    ],
+    [
+      94,
+      12
+    ],
+    [
+      110,
+      4
+    ],
+    [
+      268,
+      24
+    ],
+    [
+      278,
+      14
+    ],
     [
       1040,
       46
@@ -39,6 +79,14 @@
     [
       5514,
       20
+    ],
+    [
+      16044,
+      12
+    ],
+    [
+      16056,
+      8
     ],
     [
       16136,
@@ -277,6 +325,158 @@
       18
     ],
     [
+      36104,
+      28
+    ],
+    [
+      36132,
+      10
+    ],
+    [
+      36142,
+      96
+    ],
+    [
+      36168,
+      76
+    ],
+    [
+      36238,
+      6
+    ],
+    [
+      36244,
+      12
+    ],
+    [
+      36256,
+      6
+    ],
+    [
+      36262,
+      14
+    ],
+    [
+      36276,
+      32
+    ],
+    [
+      36308,
+      58
+    ],
+    [
+      36628,
+      20
+    ],
+    [
+      36648,
+      8
+    ],
+    [
+      36752,
+      68
+    ],
+    [
+      36820,
+      52
+    ],
+    [
+      36872,
+      38
+    ],
+    [
+      36910,
+      50
+    ],
+    [
+      36960,
+      24
+    ],
+    [
+      36984,
+      6
+    ],
+    [
+      36990,
+      24
+    ],
+    [
+      36992,
+      22
+    ],
+    [
+      37052,
+      26
+    ],
+    [
+      37078,
+      30
+    ],
+    [
+      37116,
+      30
+    ],
+    [
+      37148,
+      16
+    ],
+    [
+      37164,
+      14
+    ],
+    [
+      37178,
+      10
+    ],
+    [
+      37196,
+      42
+    ],
+    [
+      37220,
+      18
+    ],
+    [
+      37238,
+      20
+    ],
+    [
+      37244,
+      14
+    ],
+    [
+      37268,
+      26
+    ],
+    [
+      37294,
+      8
+    ],
+    [
+      37320,
+      8
+    ],
+    [
+      37328,
+      20
+    ],
+    [
+      37334,
+      14
+    ],
+    [
+      37348,
+      42
+    ],
+    [
+      37368,
+      22
+    ],
+    [
+      37432,
+      34
+    ],
+    [
       37472,
       12
     ],
@@ -325,6 +525,30 @@
       38
     ],
     [
+      40384,
+      56
+    ],
+    [
+      40440,
+      8
+    ],
+    [
+      42800,
+      62
+    ],
+    [
+      42824,
+      38
+    ],
+    [
+      42880,
+      12
+    ],
+    [
+      42892,
+      8
+    ],
+    [
       44916,
       32
     ],
@@ -367,6 +591,16 @@
     [
       45444,
       14
+    ],
+    [
+      50000,
+      20
     ]
-  ]
+  ],
+  "entry_witness": {
+    "state_sha256": "8f36984aa1c464787949251e4592f526692506f840e9d133e32d2b03343fe018",
+    "fields": 340,
+    "new_full_span_byte_matches": 57,
+    "scope": "English disc 2 cold route through EVT19 entry, recorded from field 6500 with the interpreter."
+  }
 }
