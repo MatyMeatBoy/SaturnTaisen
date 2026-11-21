@@ -6650,8 +6650,9 @@
             "pairing_evidence": "docs/research/bg3091-bounded-hd.md",
             "pc": "SAKURA1/BG/BG3091.SPR",
             "pc_image_index": 0,
+            "runtime_evidence": "docs/research/bg3091-bounded-hd.md",
             "status": "hd",
-            "verified_in_game": false
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG4093.BIN": {
             "association": "observed",
@@ -20400,8 +20401,9 @@
         "pairing_evidence": "docs/research/bg3097-bounded-hd.md",
         "pc": "SAKURA1/BG/BG3097.SPR",
         "pc_image_index": 0,
+        "runtime_evidence": "docs/research/bg3097-bounded-hd.md",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "2:/SAKURA1/BG3099.BIN": {
         "association": "unknown",
