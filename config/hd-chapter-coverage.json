@@ -9252,7 +9252,10 @@
       },
       "1:/SAKURA1/ITEM09.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM09.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item09-hair-ornament",
+        "status": "hd"
       },
       "1:/SAKURA1/ITEM10.BIN": {
         "association": "unknown",
@@ -9740,7 +9743,10 @@
       },
       "2:/SAKURA1/ITEM09.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pc": "SAKURA1/ITEM/ITEM09.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#item09-hair-ornament",
+        "status": "hd"
       },
       "2:/SAKURA1/ITEM10.BIN": {
         "association": "unknown",

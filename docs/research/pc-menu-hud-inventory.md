@@ -358,3 +358,23 @@ Local receipts are in `local/work/codex-witness-441-review/hud/save-compact-ab/r
 The Spanish Chapter 1 inventory showed the English Option and Return prompts. The four native 16 × 16 text tiles match the decompressed /SAKURA stream at `0x59700` on disc 1 and `0x59838` on disc 2. The fifth tile contains the brackets. The new recipe redraws the prompts as Opc. and Volver with the native indices 1, 6 and 9. The compressed result fits the existing 376-byte span. Disc 2 relocation resolves one range for this isolated change. Both outputs preserve every byte outside the stream and the complete bracket tile.
 
 A controlled Spanish inventory state with the new strip renders both prompts at 2560 × 1440 in the current strict runtime. The four RGB samples change only the prompt area. The Item footer in the 224 × 128 panel is redrawn as Objetos, using the native flat background and ink. Its /SAKURA stream is at `0x5940C` on disc 1 and `0x59544` on disc 2. On both discs the panel encodes to 386 bytes within a 432-byte span. 227 indexed pixels change inside (9,115)–(47,126). The two ranges relocate cleanly to disc 2. Four controlled strict 1440p samples confirm the footer with the existing panel, buttons, icon, and cursor preserved outside the label. A cold Spanish disc 1 New Game ran 7000 strict guest fields and loaded both exact compressed streams into high WRAM and both decoded textures into VDP1. The subsequent 180-field route remained in the opening sequence. The visible inventory labels were verified in controlled captures. The patched label streams are distributed in [v0.2.16.1-alpha](https://github.com/MatyMeatBoy/SaturnTaisen/releases/tag/v0.2.16.1-alpha).
+
+### ITEM09 hair ornament
+
+The Saturn 112 × 112 card and PC ITEM09.SPR image 0 show the same
+flower-shaped hair ornament. The PC flower occupies less of the
+card, which explains why a brightness-only ranking favored an
+unrelated item. The native texture and palette keys are
+8E591306C9D50FCD and 45CE415D5026BA41. The file matches across all
+six prepared English, Spanish and Japanese images.
+
+Patch 0285 adds the pair to the same item-card compositor as
+ITEM12. A controlled fixture replaced the bear picture and its
+palette with the exact local ITEM09 data in the retained inventory
+checkpoint. Four strict 30-field comparisons at 1440p matched
+guest hashes and SRAM. With only ITEM09.SPR present, all 549927
+changed pixels stayed within the card rectangle
+(888,141)–(1672,925). The Original captures matched with and
+without the donor. A scan of 3753 archived states found no direct
+natural draw of ITEM09. The controlled test verifies the renderer
+and fallback, and natural acquisition remains unverified.
