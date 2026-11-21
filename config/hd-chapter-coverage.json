@@ -20699,9 +20699,10 @@
       },
       "2:/SAKURA1/IC09.BIN": {
         "association": "unknown",
+        "fixture_evidence": "docs/research/ic-intermission-table.md#controlled-ic09-on-disc-2",
         "pc": "SAKURA1/ICATCH/IC0900.SPR",
-        "reason": "no saved state or route reaches this intermission, so its palette key, menu layers, darkening and anchor are unwitnessed; see docs/research/ic01-hd-intermission.md",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA1/IC1001.BIN": {
         "association": "unknown",
