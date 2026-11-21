@@ -274,6 +274,10 @@ def package(destination,toolchain,archive=True,runtime=None,owner_root=None,buil
         selected=Path(runtime) if runtime is not None and source=='sakura.exe' else build/source
         shutil.copy2(selected,app/name)
         if name == 'preparar-juego.exe':
+            output = subprocess.check_output([str(app/name), 'self-test'], cwd=app,
+                                             timeout=60, text=True, encoding='utf-8')
+            if output.strip() != 'OK preparar-juego PNG':
+                raise ValueError(f'Unexpected preparar-juego self-test output: {output!r}')
             required_data[name] = digest(selected)
     if controller_mapper is not None:
         shutil.copy2(Path(controller_mapper),app/'Mapear M30.exe')

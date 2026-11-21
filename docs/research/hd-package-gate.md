@@ -60,3 +60,16 @@ tree, the workspace measured 45,835,825,716 bytes with hard links counted
 once. This exceeds the existing 20,000,000,000-byte workspace limit. The
 development ZIP measured 6,315,009,692 bytes. Trial logs, receipts and
 presentation captures were kept locally.
+
+### v0.3.2 setup helper
+
+The 0.3.1 freeze used a Python 3.11 PyInstaller with Pillow from a
+separate Python 3.12 installation. PyInstaller reported incompatible
+compiled modules and the released executable could not load
+`PIL._imaging` during HD preparation.
+
+The setup build now uses Pillow from the freezing interpreter and
+checks that it imports before starting. The final frozen executable
+must decode, resize and compare an RGBA PNG. Both the build and the
+public package gate run this check. A failed check stops packaging
+before the archive can be produced.
