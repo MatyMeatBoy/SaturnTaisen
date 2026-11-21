@@ -165,6 +165,7 @@ EVE_CONTROLLED_REPORT = 'docs/research/disc1-battle-insets.md#controlled-eve-pla
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
+    ('SAKURA1/SYSTEM/OP_WIN.SPR', 0): ('Program panel trim with native localized labels', MENU_REPORT + '#bordes-del-menu-programa'),
     **dict.fromkeys(
         (('SAKURA1/SYSTEM/JYOUKI.SPR', index) for index in range(19)),
         ('patch 0310: steam animation atlas', MENU_REPORT + '#jyouki-steam-frames'),

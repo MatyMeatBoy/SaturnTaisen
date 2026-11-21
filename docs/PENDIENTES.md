@@ -521,3 +521,12 @@ BG1212 adds one PC identity for the disc 2 Chapter 8 opening. The bounded
 registration keeps the date caption and upper sky in their native bands.
 See [offline comparison](research/bg1212-bounded-hd.md). Syntax and
 coverage passed. Linked HD playback and package inclusion remain pending.
+
+## HD Program menu trim (0316)
+
+OP_WIN ordinal 0 adds the decorative Program frame in English and Spanish
+on both discs. Exact texture and composition guards retain localized text.
+The donor decodes asynchronously and the texture is recreated after a
+renderer reset. See [offline evidence](research/pc-menu-hud-inventory.md#bordes-del-menu-programa).
+Syntax, coverage and patch application passed. Linked HD playback and
+packaging remain pending.

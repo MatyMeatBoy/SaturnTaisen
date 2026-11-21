@@ -374,6 +374,31 @@ OPTION #0, #2 y #3 tienen interiores y divisiones distintos de
 los atlas nativos revisados. BURO_W y las barras de color WINDOW
 #4 y #5 siguen pendientes de una orden de dibujo compatible.
 
+## Bordes del menú Programa
+
+OP_WIN.SPR #0 se registra a 2× sobre la placa Programa de
+208 × 152 en (56,40). El archivo PC tiene 42.784 bytes y
+huella 5872A305598B062A. El comando VDP1 usa 1001, modo 00A0,
+banco 0500, tamaño 1A98 y extremos nativos (263,191).
+La paleta EB0E8FBCD10F6A6A y las huellas de textura
+B22B9B9708089A65 (inglés) y 4966E78847FCC6C1 (español)
+coinciden en ambos discos preparados.
+
+Se conserva el interior y se mantienen los rótulos Programa
+y el pie del marco. Los 1.506 texeles que difieren entre las
+dos localizaciones quedan fuera de la máscara. Los comandos
+posteriores, como las opciones seleccionables, protegen sus
+regiones del dibujo compuesto. La placa japonesa usa otras
+huellas y conserva el arte nativo.
+
+La comparación offline reconstruye 4336 texeles de borde
+en una captura nativa inglesa, con peso 31/32 para la placa
+y 1/32 para el fondo. Son 17.330 muestras HD elegibles.
+La lectura y decodificación PC se hacen en un hilo de fondo.
+Original y los recursos ausentes o alterados conservan el
+dibujo Saturn. Falta la comparación del reemplazo en el
+runtime parcheado.
+
 ## HD Options and System panel rails
 
 Patch 0205 uses SISTEM images 11 and 14 on the disc 1 Options and System panels. The PC images register at exactly 2× to the verified 288 × 144 and 112 × 88 VDP1 frames. The two localized Options textures share an identical mask. The exact source, palette, command placement, winning layer and composed native colors guard each draw.

@@ -10465,6 +10465,14 @@
         "status": "hd",
         "verified_in_game": true
       },
+      "pc:SAKURA1/SYSTEM/OP_WIN.SPR#0": {
+        "association": "unknown",
+        "draw": "Program panel trim with native localized labels",
+        "pc": "SAKURA1/SYSTEM/OP_WIN.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/pc-menu-hud-inventory.md#bordes-del-menu-programa",
+        "status": "hd"
+      },
       "pc:SAKURA1/SYSTEM/SISTEM.SPR#1": {
         "association": "unknown",
         "draw": "patch 0206, port/frontend_sdl.cpp: Load-menu title banner rails",

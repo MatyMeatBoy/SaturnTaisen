@@ -18,7 +18,7 @@ CENSUS = ROOT / 'docs' / 'research' / 'pc-menu-hud-inventory.json'
 # connect: 'data' = a table row is enough (witnessed call already guarded); 'witness' = needs a saved state or
 # trace of the Saturn draw; 'mechanism' = needs a new compositor; 'native' = keep native by decision.
 FAMILIES = {
-    'system-frames': ('witness+mechanism', ['SISTEM', 'SIS_BG', 'SIS_BG2', 'SIS_BG3', 'OPTION', 'WINDOW', 'EXIT_W', 'BURO_W', 'TUIKA_W'],
+    'system-frames': ('witness+mechanism', ['SISTEM', 'SIS_BG', 'SIS_BG2', 'SIS_BG3', 'OPTION', 'WINDOW', 'EXIT_W', 'BURO_W', 'TUIKA_W', 'OP_WIN'],
         'Frames and tab panels. The 0197-0213 patches draw rails from VDP1/VDP2 ownership per menu; the rest has no VDP1 texture witness. Needs the menu open in a state to read which layer draws it.'),
     'disc-icons': ('witness', ['SIS_ICON'],
         'Pink and blue CD-1/CD-2 are linked. CD-3/CD-4 have no corresponding two-disc Saturn slot; System RAM and cartridge need a matching donor.'),
@@ -27,7 +27,7 @@ FAMILIES = {
     'extra-menu': ('witness+mechanism', ['KARAOKE', 'OMKMOV_W', 'OMKSND_W', 'MINISAKU', 'MSTAFF'],
         'Sound and Movie already have guarded decorative rails. Full image replacements must preserve the native localized labels and tab layout.'),
     'steam': ('witness', ['JYOUKI'], 'Steam animation matched to the native VDP1 texture atlas.'),
-    'keep-native': ('native', ['R_HARI', 'SHADE_WB', 'OP_WIN', 'SHADE_WA'],
+    'keep-native': ('native', ['R_HARI', 'SHADE_WB', 'SHADE_WA'],
         'Kept native by decision (aspect, clock face, baked Japanese labels) or no native texture (SHADE_WA).'),
 }
 
