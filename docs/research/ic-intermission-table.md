@@ -180,3 +180,13 @@ native decode is approximately 2.3, 2.3 and 5.0 levels.
 The PC card has Japanese lettering baked into the middle.
 Any use must preserve the approved localized scroll and
 transition behaviour. It remains a candidate.
+
+## Core intermission layers
+
+Patch 0306 registers two PC files against the archived disc 1 intermission
+state. The `IC01.SPR` emblem matches the native VDP1 texture, palette and
+placement. Its animated draws and localized label stay native. The
+`SHINRAI.SPR` backdrop matches the STATUS tile and palette data in
+`ICATALL.DAT` at 0xE000 and goes behind the native foreground.
+The matching and syntax checks were performed offline. A linked build,
+beta playback and release packaging remain pending.
