@@ -26,7 +26,7 @@ FAMILIES = {
         'Title/logo/caution screens at 640x480 with baked Japanese or PC-only text; Saturn builds them from LOGO.SH2 16x16 tiles. Needs one witnessed frame per screen and a text decision.'),
     'extra-menu': ('witness+mechanism', ['KARAOKE', 'OMKMOV_W', 'OMKSND_W', 'MINISAKU', 'MSTAFF'],
         'Sound and Movie already have guarded decorative rails. Full image replacements must preserve the native localized labels and tab layout.'),
-    'steam': ('witness', ['JYOUKI'], 'Steam animation; no native sequence identified.'),
+    'steam': ('witness', ['JYOUKI'], 'Steam animation matched to the native VDP1 texture atlas.'),
     'keep-native': ('native', ['R_HARI', 'SHADE_WB', 'OP_WIN', 'SHADE_WA'],
         'Kept native by decision (aspect, clock face, baked Japanese labels) or no native texture (SHADE_WA).'),
 }

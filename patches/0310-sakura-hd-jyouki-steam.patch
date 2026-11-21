@@ -1,0 +1,187 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2253,6 +2253,146 @@
+                 fprintf(stderr,"hd item: %s target %.0f,%.0f,%.0f,%.0f owned=%td\n",card.entry->file,
+                         where.x,where.y,where.w,where.h,std::count(card.pixels.begin(),card.pixels.end(),uint8_t(1)));
+             }
++        }
++    };
++    struct SteamFrame {uint64_t hash; unsigned width, height;};
++    static constexpr SteamFrame steamFrames[]{
++        {0x7FEB304F937EBEEFull, 32, 32},
++        {0x64BB781A489B4C6Dull, 40, 16},
++        {0x15D815D8559815ACull, 16, 32},
++        {0x7F811A1098EF5F33ull, 32, 16},
++        {0xF93F4ACD2E2F927Aull, 32, 24},
++        {0x1BB0AC5E8623C6EEull, 24, 32},
++        {0x3F613B253ACBA831ull, 24, 32},
++        {0xE4568FED2B5C7A7Cull, 32, 24},
++        {0x7A31B09815D95173ull, 32, 32},
++        {0x50C960839D37FA00ull, 32, 8},
++        {0xD059051C2F2CB54Dull, 32, 32},
++        {0xF7D9FBEBC467F935ull, 24, 8},
++        {0xC9C1A99C36767931ull, 32, 32},
++        {0x0B4FD1E918DAED61ull, 24, 32},
++        {0x5D5B3FFA62D654B4ull, 24, 32},
++        {0x15E6CD39131EB127ull, 24, 16},
++        {0x8DEEFBAA72115A98ull, 40, 16},
++        {0x915D89099BA576C7ull, 24, 32},
++        {0x6EC197B169846334ull, 24, 24},
++    };
++    std::vector<PcSprite> steamArt;
++    std::future<std::vector<PcSprite>> steamPending;
++    std::array<uint32_t, 80 * 64> steamPixels{};
++    SDL_Texture* steamTexture = nullptr;
++    bool steamTried = false;
++    auto drawSteam = [&](const satrecomp::video::Renderer::Presentation& planes,
++                         const SDL_FRect& crop, const SDL_FRect& target, int scale) {
++        if (scale < 2 || choosing || port.menu.IsOpen() || port.opt.pcAssetsPath.empty() ||
++            satrecomp::FeatureValue("presentation_mode") != 1 || satrecomp::FeatureValue("pc_hd_backgrounds") != 0 ||
++            planes.width != 320 || planes.height != 224 || planes.topSource.size() != 320 * 224 ||
++            softwareShown.size() != 320 * 224) return;
++        const auto palette = std::span{planes.palette}.subspan(0xAC0, 32);
++        if (PcBackdropHash(palette) != 0x571527B56A00AA8Full) return;
++        const auto coord = [](uint16_t v) { return (int(v & 0x1FFF) ^ 0x1000) - 0x1000; };
++        for (auto it = planes.sprites.begin(); it != planes.sprites.end(); ++it) {
++            const auto& cmd = it->command.words;
++            if ((cmd[0] & 0xFFEF) != 0x1000 || cmd[2] != 0x0080 || cmd[3] != 0xC560 ||
++                it->x < -40 || it->x >= 320 || it->y < -32 || it->y >= 100) continue;
++            const unsigned width = ((cmd[5] >> 8) & 63) * 8, height = cmd[5] & 255;
++            if (it->pixels.size() != size_t(width) * height / 2 ||
++                width == 0 || height == 0 || width > 40 || height > 32) continue;
++            const auto hash = PcBackdropHash(it->pixels);
++            const auto* match = std::ranges::find_if(steamFrames, [&](const auto& frame) {
++                return frame.width == width && frame.height == height && frame.hash == hash;
++            });
++            if (match == std::end(steamFrames)) continue;
++            const unsigned index = unsigned(match - steamFrames);
++            if (!steamTried) {
++                steamTried = true;
++                steamPending = std::async(std::launch::async,
++                    [path = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/JYOUKI.SPR"] {
++                        std::vector<PcSprite> images;
++                        std::vector<uint8_t> bytes;
++                        std::string error;
++                        constexpr size_t fileSize = 27574;
++                        if (!ReadPcBackdropFile(path, bytes, fileSize) || bytes.size() != fileSize ||
++                            PcBackdropHash(bytes) != 0x00BDF79E82007CFCull ||
++                            !DecodePcSprites(bytes, images, error)) return std::vector<PcSprite>{};
++                        std::erase_if(images, [](const auto& image) {
++                            if (image.index >= std::size(steamFrames)) return true;
++                            const auto& shape = steamFrames[image.index];
++                            return image.width != 2 * shape.width || image.height != 2 * shape.height ||
++                                   image.pixels.size() != size_t(image.width) * image.height;
++                        });
++                        return images;
++                    });
++            }
++            if (steamPending.valid() && steamPending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                steamArt = steamPending.get();
++            const auto art = std::ranges::find_if(steamArt, [index](const auto& image) {return image.index == index;});
++            if (art == steamArt.end()) continue;
++
++            // Reject pixels within the bounds of subsequent draws. A
++            // non-axis-aligned or otherwise unknown draw keeps this puff native.
++            std::vector<EveRect> covers;
++            bool safe = true;
++            for (auto later = std::next(it); later != planes.sprites.end(); ++later) {
++                const auto& w = later->command.words;
++                const unsigned type = w[0] & 15;
++                if (type >= 8) continue;
++                int cols = ((w[5] >> 8) & 63) * 8, rows = w[5] & 255;
++                if (type == 2) {
++                    const int x = coord(w[6]), y = coord(w[7]), right = coord(w[8]), bottom = coord(w[11]);
++                    if (right < x || bottom < y || coord(w[9]) != y || coord(w[10]) != right ||
++                        coord(w[12]) != x || coord(w[13]) != bottom) { safe = false; break; }
++                    cols = right - x + 1; rows = bottom - y + 1;
++                } else if (type != 0) { safe = false; break; }
++                if (later->x < it->x + int(width) && later->x + std::max(cols, 1) > it->x &&
++                    later->y < it->y + int(height) && later->y + std::max(rows, 1) > it->y)
++                    covers.push_back({later->x, later->y, std::max(cols, 1), std::max(rows, 1)});
++            }
++            if (!safe) continue;
++            const unsigned stride = 2 * width;
++            std::fill_n(steamPixels.begin(), 4 * width * height, 0);
++            const bool flip = (cmd[0] & 0x10) != 0;
++            bool drew = false;
++            for (unsigned y = 0; y < height; ++y) for (unsigned x = 0; x < width; ++x) {
++                const int sx = it->x + int(x), sy = it->y + int(y);
++                if (sx < 0 || sx >= 320 || sy < 0 || sy >= 224 || sx < crop.x ||
++                    sx >= crop.x + crop.w || sy < crop.y || sy >= crop.y + crop.h ||
++                    std::ranges::any_of(covers, [&](const auto& r) {
++                        return sx >= r.x && sx < r.x + r.width && sy >= r.y && sy < r.y + r.height;
++                    })) continue;
++                const size_t source = y * width + (flip ? width - 1 - x : x);
++                const auto ink = (it->pixels[source / 2] >> (source % 2 ? 0 : 4)) & 15u;
++                if (!ink) continue;
++                const unsigned word = (unsigned(palette[2 * ink]) << 8) | palette[2 * ink + 1];
++                const uint32_t rgb = ((word & 31) << 3) | ((word & 0x3E0) << 6) | ((word & 0x7C00) << 9);
++                const size_t at = size_t(sy) * 320 + sx;
++                if (planes.topSource[at] != 0 || (softwareShown[at] & 0xFFFFFFu) != rgb) continue;
++                for (unsigned dy = 0; dy < 2; ++dy) for (unsigned dx = 0; dx < 2; ++dx) {
++                    const unsigned pcX = flip ? stride - 1 - (2*x + dx) : 2*x + dx;
++                    const auto pixel = art->pixels[(2*y + dy) * stride + pcX];
++                    const auto color = pixel & 0xFFFFFFu;
++                    if ((pixel >> 24) != 255 || color == 0x00FF00u || color == 0xFFFF00u) continue;
++                    steamPixels[(2*y + dy) * stride + 2*x + dx] = pixel;
++                    drew = true;
++                }
++            }
++            if (!drew) continue;
++            if (!steamTexture) {
++                steamTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, 80, 64);
++                if (!steamTexture) return;
++                if (!SDL_SetTextureScaleMode(steamTexture, SDL_SCALEMODE_NEAREST) ||
++                    !SDL_SetTextureBlendMode(steamTexture, SDL_BLENDMODE_BLEND)) {
++                    SDL_DestroyTexture(steamTexture);
++                    steamTexture = nullptr;
++                    return;
++                }
++            }
++            const SDL_Rect update{0, 0, int(stride), int(2*height)};
++            if (!SDL_UpdateTexture(steamTexture, &update, steamPixels.data(), stride * sizeof(uint32_t))) continue;
++            const SDL_FRect source{0, 0, float(stride), float(2*height)};
++            const SDL_FRect dest{target.x + (it->x - crop.x)*scale, target.y + (it->y - crop.y)*scale,
++                float(width*scale), float(height*scale)};
++            SDL_RenderTexture(renderer, steamTexture, &source, &dest);
+         }
+     };
+     std::vector<PcSprite> titleParts;
+@@ -4977,6 +5117,7 @@
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale,true);
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawCompactIcons(planes,imageCrop,imageTarget,zoom.picture.scale);
++                        drawSteam(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawBrackets(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+@@ -5098,6 +5239,7 @@
+                     drawItem(planes,crop,target,fit.scale,true);
+                     drawItem(planes,crop,target,fit.scale);
+                     drawCompactIcons(planes,crop,target,fit.scale);
++                    drawSteam(planes,crop,target,fit.scale);
+                     if (screenBackdrop == "TITLE") drawTitleParts(planes, crop, target, fit.scale);
+                     drawLoadPanels(planes,softwareShown,crop,target,fit.scale);
+                     drawBrackets(planes,crop,target,fit.scale);
+@@ -5133,8 +5275,11 @@
+                 presentationKind = nativeGround->centreLayout;
+             else
+                 SDL_RenderTexture(renderer, texture, nullptr, &where);
+-            if (port.videoRenderer && texW == 320 && texH == 224 && where.w == baseFit.w && where.h == baseFit.h)
+-                drawTitleParts(port.videoRenderer->PresentationFrame(), {0, 0, 320, 224}, where, baseFit.scale);
++            if (port.videoRenderer && texW == 320 && texH == 224 && where.w == baseFit.w && where.h == baseFit.h) {
++                const auto& shown = port.videoRenderer->PresentationFrame();
++                drawTitleParts(shown, {0, 0, 320, 224}, where, baseFit.scale);
++                drawSteam(shown, {0, 0, 320, 224}, where, baseFit.scale);
++            }
+             // MAP02 EVENT follows the native pose and only covers visible actor texels.
+             if (nativeGroundComposite && presentationKind == std::string_view("stage02-hd-ground") &&
+                 texW == 320 && texH == 224) {
+@@ -6958,6 +7103,7 @@
+     }
+     if(itemOverlay)SDL_DestroyTexture(itemOverlay);
+     if(titlePartTexture)SDL_DestroyTexture(titlePartTexture);
++    if(steamTexture)SDL_DestroyTexture(steamTexture);
+     if (horizontalCommandOverlay) SDL_DestroyTexture(horizontalCommandOverlay);
+     for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);
+     resetRegisteredBodies();

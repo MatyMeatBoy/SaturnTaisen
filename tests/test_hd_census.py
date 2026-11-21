@@ -118,9 +118,16 @@ class RepositoryNumbers(unittest.TestCase):
         scene = [r for r in report['rows'] if r['id'].startswith('scene-')]
         self.assertEqual(sum(r['goal'] for r in scene), report['scene_goal'])
         progress = (census.ROOT / 'docs/HD_PROGRESS.md').read_text(encoding='utf-8')
-        goal, hd, verified = report['scene_goal'], sum(r['hd'] for r in scene), sum(r['verified'] for r in scene)
-        self.assertIn(f'{hd}/{goal}', progress)
-        self.assertIn(f'{verified}/{goal}', progress)
+        extras = [r for r in scene if r['id'] in ('scene-event', 'scene-cg')]
+        core = [r for r in scene if r not in extras]
+        goal = sum(r['goal'] for r in core)
+        hd = sum(r['hd'] for r in core)
+        verified = sum(r['verified'] for r in core)
+        scene_line = next(line for line in progress.splitlines() if line.startswith('| Imágenes de escena |'))
+        self.assertIn(f'{hd}/{goal}', scene_line)
+        self.assertIn(f'{verified}/{goal}', scene_line)
+        extra_line = next(line for line in progress.splitlines() if line.startswith('**Extras EVENT y CG**'))
+        self.assertIn(f"{sum(r['hd'] for r in extras)}/{sum(r['goal'] for r in extras)}", extra_line)
 
 
 if __name__ == '__main__':
