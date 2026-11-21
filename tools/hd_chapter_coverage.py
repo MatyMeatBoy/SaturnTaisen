@@ -924,6 +924,7 @@ def build(root, index_dir, portrait_audit):
         elif (disc, path) in {
             (1, '/SAKURA1/BG1331.BIN'), (1, '/SAKURA1/BG2123.BIN'),
             (1, '/SAKURA1/BG2119.BIN'),
+            (1, '/SAKURA1/BG2059.BIN'),
             (1, '/SAKURA1/BG3119.BIN'),
             (1, '/SAKURA1/BG1339.BIN'), (1, '/SAKURA1/BG1340.BIN'),
             (1, '/SAKURA1/BG4053.BIN'), (1, '/SAKURA1/BG4054.BIN'),
@@ -946,9 +947,12 @@ def build(root, index_dir, portrait_audit):
                 'BG3091': 'docs/research/bg3091-bounded-hd.md',
                 'BG3097': 'docs/research/bg3097-bounded-hd.md',
                 'BG4375': 'docs/research/bg4375-bounded-hd.md',
+                'BG2059': 'docs/research/bg2059-fade.md',
             }.get(name)
             if runtime_evidence:
                 row.update(verified_in_game=True, runtime_evidence=runtime_evidence)
+                if name == 'BG2059':
+                    row['pairing_evidence'] = runtime_evidence
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (
