@@ -92,6 +92,15 @@ enlazados. Quedan 78, con una pareja parcial, siete encuadres
 BBG pendientes y 70 sin clasificación definitiva. Las rutas
 EVE se cuentan por su archivo donante BBG. Los 26 suelos
 tácticos únicos se suman al total principal una sola vez.
+El desglose del mismo CSV principal queda así.
+
+| Familia | Enlazados | Pendientes |
+| --- | ---: | ---: |
+| BG | 525 / 580 | 55 |
+| EVE/BBG | 36 / 48 | 12 |
+| ENDING | 7 / 13 | 6 |
+| ICATCH | 16 / 21 | 5 |
+
 Los sprites tácticos forman parte del alcance. Su integración
 se cuantifica por familia cuando esté confirmado el inventario
 de sustituciones, sin volver a contar los recursos de HUD.

@@ -54,10 +54,10 @@ Los suelos y sprites tácticos forman parte del mod principal junto con los fina
 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
-| THD40 | P0 | local | open | **Suelos tácticos de imagen única.** Tomar primero MAP07/08/09/11 o el primer mapa con guardado natural útil. | Reusar el compositor de suelo y verificar cámara fija, movimiento y límites con el donante presente y ausente. Registro de 12/26 suelos únicos integrados. |
-| THD41 | P0 | local | open | **Sprites tácticos de objetos y UI.** Empezar por parejas ITEM confirmadas y sprites de menú que usen una ruta existente. | Vincular por identidad y subimagen, verificar recorte, orden y fallback. Las tarjetas ya contadas en HUD se cuentan una vez. |
-| THD42 | P0 | local | open | **Unidades, efectos y sprites de combate.** Empezar por bancos UNIT y poses con trazas reproducibles, incluyendo proyectiles y efectos compartidos. | Una fila por recurso o variante visual. Medir el inventario integrable antes de sumar su denominador al porcentaje. |
-| THD43 | P1 | local | open | **Suelos tácticos de mosaico.** MAP03, MAP20 y MAP23 con sus tablas de colocación PC ya identificadas. | Verificar armado, cámara, bordes y orden de sprites en una ruta de juego. |
+| THD46 | P0 | local | open | **Suelos tácticos de imagen única.** Empezar con MAP07, que tiene guardado de entrada y cámara jugable. Luego MAP08/09/11 por testigo disponible. | Reusar el compositor de suelo y verificar cámara fija, movimiento y límites con el donante presente y ausente. Registro de 12/26 suelos únicos integrados. |
+| THD47 | P0 | local | open | **Sprites tácticos de objetos y UI.** Buscar el equivalente de ITEM09 y las nueve subimágenes de iconos pendientes. Verificar ITEM03 y ITEM27 en aparición natural. | Vincular por identidad y subimagen, verificar recorte, orden y fallback. Las tarjetas ya contadas en HUD se cuentan una vez. Los tres componentes SLGSYS verificados requieren inventario táctico propio antes de sumarlos al total. |
+| THD48 | P0 | local | open | **Unidades, efectos y sprites de combate.** Empezar por bancos UNIT y poses con trazas reproducibles, incluyendo proyectiles y efectos compartidos. | Una fila por recurso o variante visual. Medir el inventario integrable antes de sumar su denominador al porcentaje. |
+| THD49 | P1 | local | open | **Suelos tácticos de mosaico.** MAP20 y MAP23 con sus tablas de colocación PC ya identificadas. MAP03 ya tiene integración y prueba en juego. | Verificar armado, cámara, bordes y orden de sprites en una ruta de juego. |
 
 ### Imágenes físicas de escena
 
