@@ -17044,7 +17044,11 @@
       },
       "1:/SAKURA1/BG4054.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/bg405x-bounded-hd.md",
+        "pc": "SAKURA1/BG/BG4054.SPR",
+        "pc_image_index": 0,
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/BG4055.BIN": {
         "association": "unknown",

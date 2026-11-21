@@ -924,7 +924,8 @@ def build(root, index_dir, portrait_audit):
         elif (disc, path) in {
             (1, '/SAKURA1/BG1331.BIN'), (1, '/SAKURA1/BG2123.BIN'),
             (1, '/SAKURA1/BG1339.BIN'), (1, '/SAKURA1/BG1340.BIN'),
-            (1, '/SAKURA1/BG4053.BIN'), (1, '/SAKURA1/BG4067.BIN'),
+            (1, '/SAKURA1/BG4053.BIN'), (1, '/SAKURA1/BG4054.BIN'),
+            (1, '/SAKURA1/BG4067.BIN'),
             (1, '/SAKURA1/BG4162.BIN'),
             (2, '/SAKURA1/BG1338.BIN'), (2, '/SAKURA1/BG1212.BIN'),
             (2, '/SAKURA1/BG4055.BIN'), (2, '/SAKURA1/BG4056.BIN'),
@@ -932,7 +933,7 @@ def build(root, index_dir, portrait_audit):
         }:
             row = {'status': 'hd', 'pc': f'SAKURA1/BG/{name}.SPR', 'pc_image_index': 0,
                    'verified_in_game': False,
-                   'pairing_evidence': ('docs/research/bg405x-bounded-hd.md' if name in {'BG4053', 'BG4055', 'BG4056'}
+                   'pairing_evidence': ('docs/research/bg405x-bounded-hd.md' if name in {'BG4053', 'BG4054', 'BG4055', 'BG4056'}
                                         else f'docs/research/{name.lower()}-bounded-hd.md')}
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
