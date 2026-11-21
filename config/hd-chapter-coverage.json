@@ -17067,8 +17067,9 @@
         "pairing_evidence": "docs/research/bg405x-bounded-hd.md",
         "pc": "SAKURA1/BG/BG4057.SPR",
         "pc_image_index": 0,
+        "runtime_evidence": "docs/research/bg405x-bounded-hd.md#bg4057-disc-1",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "1:/SAKURA1/BG4058.BIN": {
         "association": "unknown",

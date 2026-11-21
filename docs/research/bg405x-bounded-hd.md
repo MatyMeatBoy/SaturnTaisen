@@ -47,5 +47,13 @@ native framebuffer at scene origin (16, 8). The saved state contains the
 exact palette and cell data. Five bounded registrations accept 2,488
 interior native cells in the offline compositor comparison, with zero
 samples outside the native silhouette. The table and the unmatched
-figures retain their native art. Linked HD playback and packaging remain
-pending.
+figures retain their native art.
+
+The linked candidate
+`7ee02c21e83b2c659e03e80c9335f11b418841bced5eebd63833b698fb91865f`
+completed four 180-field strict replays at 2560 × 1440 with identical
+guest hashes. At field 165, the donor changed 121,697 window pixels in
+Enhanced mode. The difference image isolates the five figure regions.
+Original mode was pixel-identical with and without the donor. This is
+a controlled script checkpoint. Natural branch reachability and package
+inclusion remain pending.
