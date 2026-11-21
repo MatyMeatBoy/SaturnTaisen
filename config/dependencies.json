@@ -273,7 +273,8 @@
       "patches/0281-sakura-first-film-current-floral-fade.patch",
       "patches/0282-sakura-compose-floral-fades-across-films.patch",
       "patches/0283-sakura-retain-zoom-on-final-floral-fade.patch",
-      "patches/0284-sakura-map02-event-hd.patch"
+      "patches/0284-sakura-map02-event-hd.patch",
+      "patches/0285-sakura-item09-hd-card.patch"
     ]
   }
 }

@@ -130,16 +130,16 @@
   {
    "saturn_file": "SAKURA1/ITEM09.BIN",
    "palette_fnv": "45CE415D5026BA41",
-   "pc_file": "SAKURA1/ITEM/ITEM07.SPR",
+   "pc_file": "SAKURA1/ITEM/ITEM09.SPR",
    "pc_image_index": 0,
-   "pc_sha256": "6eca594f460fdc1b21de1fbc1e536c576427dff6cc89924c01206e8a60a86662",
+   "pc_sha256": "8ab7ec7ac37b142a440bdc878a75ad434358612163e0f53c8b17686814d8cdcb",
    "pc_size": [
     224,
     224
    ],
-   "correlation": 0.617,
-   "runner_up": "SAKURA1/ITEM/ITEM09.SPR",
-   "runner_up_correlation": 0.534,
+   "correlation": 0.534,
+   "runner_up": "SAKURA1/ITEM/ITEM07.SPR",
+   "runner_up_correlation": 0.617,
    "tier": "candidate"
   },
   {

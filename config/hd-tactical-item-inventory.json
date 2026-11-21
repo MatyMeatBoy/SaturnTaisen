@@ -285,7 +285,6 @@
     "SAKURA1/ITEM07.BIN"
    ],
    "saturn_other": [
-    "SAKURA1/ITEM09.BIN:rejected",
     "SAKURA1/ITEM57.BIN:rejected",
     "SAKURA1/ITEM68.BIN:rejected",
     "SAKURA1/ITEM74.BIN:rejected"
@@ -317,14 +316,15 @@
    ],
    "images": 1,
    "pc": "SAKURA1/ITEM/ITEM09.SPR",
-   "reason": "only the best candidate of Saturn items the review did not confirm",
-   "saturn_confirmed": [],
+   "saturn_confirmed": [
+    "SAKURA1/ITEM09.BIN"
+   ],
    "saturn_other": [
     "SAKURA1/ITEM43.BIN:rejected"
    ],
    "sha256": "8ab7ec7ac37b142a440bdc878a75ad434358612163e0f53c8b17686814d8cdcb",
    "size": 27328,
-   "status": "ambiguous"
+   "status": "paired"
   },
   {
    "image_sizes": [
@@ -881,9 +881,9 @@
    "verdict": "confirmed"
   },
   {
-   "pc": "SAKURA1/ITEM/ITEM07.SPR",
+   "pc": "SAKURA1/ITEM/ITEM09.SPR",
    "saturn": "SAKURA1/ITEM09.BIN",
-   "verdict": "rejected"
+   "verdict": "confirmed"
   },
   {
    "pc": "SAKURA1/ITEM/ITEM10.SPR",
@@ -1245,13 +1245,13 @@
  "scope": "PC SAKURA1/ITEM pictures joined with the Saturn item pairs and review; data only.",
  "summary": {
   "pc": {
-   "ambiguous": 3,
+   "ambiguous": 2,
    "no-counterpart": 13,
-   "paired": 41
+   "paired": 42
   },
   "saturn": {
-   "confirmed": 41,
-   "rejected": 39
+   "confirmed": 42,
+   "rejected": 38
   }
  }
 }
