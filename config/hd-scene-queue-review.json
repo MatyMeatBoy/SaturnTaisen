@@ -17,10 +17,6 @@
       "disposition": "incompatible-full",
       "reason": "the Saturn picture has the English text baked in, the PC one has Japanese text"
     },
-    "SAKURA1/BG/BG1339.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "lighting or colour grading clearly differs"
-    },
     "SAKURA1/BG/BG1341.SPR": {
       "disposition": "incompatible-full",
       "reason": "blank placeholder picture"

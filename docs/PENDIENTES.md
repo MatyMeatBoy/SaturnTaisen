@@ -586,3 +586,10 @@ art is unavailable. See [dining room](research/bg4067-bounded-hd.md)
 and [kitchen](research/bg1340-bounded-hd.md). Exact offline comparison,
 syntax, coverage and patch application passed. Linked HD playback
 and packaging remain pending.
+
+## Bounded HD kitchen variant (0323)
+
+BG1339 adds the settled disc 1 kitchen variant using its visible source-2
+identity and the asynchronous compositor. See [the offline comparison](research/bg1339-bounded-hd.md).
+Patch application, C++ syntax and coverage passed. Linked HD playback and
+packaging remain pending.
