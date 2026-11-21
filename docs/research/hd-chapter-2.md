@@ -261,3 +261,26 @@ replay. The verification binary SHA-256 was
 `6c53720bf3a860ea3f3d8cd2780fe90a9ca3f086fc025828a82e898d983a129d`.
 These two subimages are verified components of WKL02. They have
 not been included in a released package.
+
+### Verified WKL attack submenu
+
+Patch 0292 matches the native 40 × 64 Attack shell (texture
+FNV-1a D17D592842A221CD and the existing WKL command-frame
+LUT) to SLGSYS02 ordinal 3. It uses the same vertical mask and
+keeps the horizontal command shell drawn in the same frame.
+
+The natural English MAP02 Attack checkpoint passed six
+75-field strict profiles at 2560 × 1440. The four samples each
+had 24,561 pixels unique to the new vertical change and 39,537
+unique to the existing horizontal change. All 67,500 changed
+pixels matched an independent PC donor projection. No pixels
+changed outside the two frame masks. Guest hashes and backup
+RAM matched across profiles. Original, missing, disabled and
+same-size corrupt controls kept the native pixels.
+
+The MAP14 checkpoint retained both native shells, including
+with the donor present. The MAP02 result verifies the final
+distinct shape of the five command-frame subimages (#0–4).
+The bank also holds 32 Japanese labels and 13 animated
+highlights. Those have separate presentation requirements.
+The change awaits packaging.

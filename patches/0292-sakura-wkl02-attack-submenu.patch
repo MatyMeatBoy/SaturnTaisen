@@ -1,0 +1,11 @@
+diff --git a/port/tactical_command_frames.h b/port/tactical_command_frames.h
+--- a/port/tactical_command_frames.h
++++ b/port/tactical_command_frames.h
+@@ -18,6 +18,7 @@
+     {{0x18FDBFE27D4349D5ull, kCommandFrameLutHash, kCommandFrameFile, 0}, 96, 32},
+     {{0x0D7B8C2AB0FB6C5Eull, kCommandFrameLutHash, kCommandFrameFile, 1}, 120, 32},
+     {{0x549B32456EF87DB3ull, kCommandFrameLutHash, kCommandFrameFile, 2}, 40, 48},
++    {{0xD17D592842A221CDull, kCommandFrameLutHash, kCommandFrameFile, 3}, 40, 64},
+     {{0xD46C77EFDE420A6Full, kCommandFrameLutHash, kCommandFrameFile, 4}, 40, 80},
+ };
+ 
