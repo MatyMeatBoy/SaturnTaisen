@@ -127,8 +127,29 @@ def rectangular(vertices, width, height):
     return vertices == [(left, top), (right, top), (right, bottom), (left, bottom)]
 
 
+def framebuffer_witness(vram, buffers, palette, strips):
+    # Compare the 16-bit, 512-pixel VDP1 layout observed in the MAP02 witness.
+    # This does not identify the active display buffer or check VDP2 priority.
+    samples = []
+    for strip in strips:
+        start, height = strip['vram'], strip['height']
+        for index, texel in enumerate(vram[start:start + 8 * height]):
+            x, y = strip['x'] + index % 8, strip['y'] + index // 8
+            if texel and 0 <= x < 512 and 0 <= y < 256:
+                address = 2 * (y * 512 + x)
+                expected = (palette & 0xffc0) | (texel & 0x3f)  # CMDPMOD 0x90
+                samples.append((address, expected))
+    result = []
+    for index, buffer in enumerate(buffers):
+        matched = sum(struct.unpack_from('>H', buffer, address)[0] == expected
+                      for address, expected in samples)
+        result.append(dict(buffer=index, matching=matched, sampled=len(samples)))
+    return result
+
+
 def observed_groups(state, banks):
-    vram = state_vectors(state)[3]
+    vectors = state_vectors(state)
+    vram = vectors[3]
     local_x = local_y = 0
     linked = defaultdict(list)
     commands = []
@@ -171,7 +192,8 @@ def observed_groups(state, banks):
             if len(xs) >= 3 and xs == list(range(xs[0], xs[0] + 8 * len(xs), 8)):
                 results.append(dict(bank=bank, palette=palette, strips=group,
                                     image_slot=exact_image_slot(banks[bank], group),
-                                    later_4bpp_overlaps=later_4bpp_overlaps(vram, commands, group)))
+                                    later_4bpp_overlaps=later_4bpp_overlaps(vram, commands, group),
+                                    framebuffer_512x256=framebuffer_witness(vram, vectors[4:6], palette, group)))
     return results
 
 

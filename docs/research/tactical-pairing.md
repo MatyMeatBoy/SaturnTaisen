@@ -419,3 +419,20 @@ tiras solo cuando el donante esté listo. El búfer VDP1 del huésped
 debe seguir siendo el original. Esta comprobación de cobertura
 es geométrica y todavía necesita verificar la composición VDP2
 y el resultado a escala HD.
+
+### Confirmación en los búferes VDP1 guardados
+
+El inspector también compara los texels opacos con los dos búferes
+VDP1 de 16 bits, bajo el trazado de 512 píxeles por fila observado
+en MAP02. En ambos guardados el primer búfer conserva 1261 de 1262
+píxeles del actor. La excepción está en (191, 104), donde el valor
+0x21C1 se reemplazó por 0x2374, consistente con el comando posterior
+45. El segundo búfer no contiene esta pose.
+
+Una reproducción de 65 campos con la versión 0.3.3 completó el
+tramo en ejecución nativa estricta. En el campo 15 la captura
+muestra una escena de diálogo delante del terreno táctico.
+Por ello, la coincidencia del búfer VDP1 debe complementarse
+con una captura donde el actor quede expuesto en la salida
+final. El informe no identifica el búfer activo ni prueba la
+prioridad VDP2.
