@@ -91,3 +91,21 @@ for the timed runs.
 
 The measurement covers the HD text scan, including frames with little text.
 The reported other-PC flicker and release packaging remain unverified.
+
+## Suppress partially covered native text during HD presentation
+
+Patch 0278 treats a recognizable dialogue row partly covered by
+another layer as outgoing ink. It consumes the current saved-under
+pixels for the remaining visible glyphs only when their entire
+visible ownership is verified. The HD renderer does not redraw
+the covered row over the scene. Surrounding graphics and the
+other dialogue rows still use their current frame data.
+
+A controlled single-field layer cover used the genuine Spanish
+letter rendering at 1440p. On field 180 the previous path exposed
+native ink. The fix removed 717 owned native pixels, with the RGB
+difference confined to that line. Fields 179 and 181 were RGB
+identical. All 185 strict hashes and SRAM matched. A separate
+unmodified early rapid-advance route matched 4,000 guest hashes
+with zero interpreted blocks. The natural transition originally
+reported remains unidentified.
