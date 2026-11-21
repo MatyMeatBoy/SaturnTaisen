@@ -1,0 +1,37 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2838,7 +2838,7 @@
+         }
+     };
+     SceneHd programTrimSource;
+-    std::vector<uint32_t> programTrimArt, programTrimPixels;
++    std::vector<uint32_t> programTrimArt, programTrimPixels, uploadedProgramTrim;
+     SDL_Texture* programTrimTexture = nullptr;
+     auto drawProgramTrim = [&](const satrecomp::video::Renderer::Presentation& frame,
+                                const SDL_FRect& crop, const SDL_FRect& target, int scale) {
+@@ -2919,6 +2919,7 @@
+         }
+         if (!drew) return;
+         if (!programTrimTexture) {
++            uploadedProgramTrim.clear();
+             programTrimTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,
+                                                   2 * width, 2 * height);
+             if (!programTrimTexture) return;
+@@ -2929,7 +2930,15 @@
+                 return;
+             }
+         }
+-        if (!SDL_UpdateTexture(programTrimTexture, nullptr, programTrimPixels.data(), 2 * width * sizeof(uint32_t))) return;
++        // Native ownership and blend may change while the guest keeps the same menu open.
++        // Compare the completed overlay so only an identical texture can reuse the upload.
++        if (programTrimPixels != uploadedProgramTrim) {
++            if (!SDL_UpdateTexture(programTrimTexture, nullptr, programTrimPixels.data(), 2 * width * sizeof(uint32_t))) {
++                uploadedProgramTrim.clear();
++                return;
++            }
++            programTrimPixels.swap(uploadedProgramTrim);
++        }
+         const SDL_FRect dest{target.x+(left-crop.x)*scale, target.y+(top-crop.y)*scale,
+                              float(width*scale), float(height*scale)};
+         SDL_RenderTexture(renderer, programTrimTexture, nullptr, &dest);
