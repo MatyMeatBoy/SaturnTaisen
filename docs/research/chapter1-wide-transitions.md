@@ -260,3 +260,20 @@ The Spanish disc 1 letter replay at 1440p matched all 795 strict
 guest hashes, final SRAM and 20 RGB captures around the sampled
 transition and the return to the floral backdrop. The capture
 does not reproduce the reported native-text flash entering a video.
+
+## Zoom continuity on Sakura's entrance
+
+The 1440p Park relay reproduced a one-field jump before Sakura
+appears. At field 2620 the outgoing scene reported 4,048 picture
+pixels outside the normal inset. Their captured floral weight was
+31/32. The layout fell back to the grouped frame and the upper
+gold edge moved from y=1048 to y=966 for one field.
+
+Patch 0283 keeps the current pixels for composition and ignores
+only the proven faint overhang when selecting the Zoom geometry.
+It requires an existing Zoom layout and a new successful scene
+classification. The corrected edge remains at y=1048 across fields
+2619 through 2621. In 55 consecutive 1440p captures only field 2620
+changed. All 2,661 strictly replayed guest fields and SRAM matched.
+The fixture uses a Spanish disc and an archived prologue checkpoint
+with the English script already loaded.

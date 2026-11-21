@@ -1,0 +1,39 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2741,7 +2741,34 @@
+                 }
+             }
+             const auto& layoutSource = layoutWithoutHand.empty() ? planes.source : layoutWithoutHand;
+-            const auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(layoutSource,planes.width,planes.height,planes.underSource);
++            auto scene=screenBackdrop=="OPENING"?AnalyzeOpeningPresentation(planes.source,planes.width,planes.height):AnalyzePresentation(layoutSource,planes.width,planes.height,planes.underSource);
++            if (!scene.recognized && heldZoom.valid && screenBackdrop.empty() &&
++                planes.width==320 && planes.height==224 && layoutSource.size()==320*224 &&
++                planes.floralCoverMix.size()==layoutSource.size()) {
++                // At the end of a dissolve the VDP may still report the old
++                // picture outside the inset. It must be proven almost fully
++                // covered by the floral plane before it can be ignored for fit.
++                const auto outsidePicture=[&](size_t at) {
++                    const unsigned x=at%320,y=at/320;
++                    return (layoutSource[at]==2 || layoutSource[at]==4) &&
++                        (x<16 || x>=304 || y<8 || y>=152);
++                };
++                bool faintOverhang=false, safe=true;
++                for (size_t at=0;at<layoutSource.size();++at) {
++                    if (!outsidePicture(at)) continue;
++                    if (planes.floralCoverMix[at].lowerWeight<30) {
++                        safe=false;
++                        break;
++                    }
++                    faintOverhang=true;
++                }
++                if (safe && faintOverhang) {
++                    auto layout=layoutSource;
++                    for (size_t at=0;at<layout.size();++at)
++                        if (outsidePicture(at)) layout[at]=5;
++                    scene=AnalyzePresentation(layout,320,224,planes.underSource);
++                }
++            }
+             if(getenv("SATRECOMP_PRESENTATION_TRACE")) {
+                 static bool traced=false;
+                 if(!traced && planes.source.size()==320*224) {

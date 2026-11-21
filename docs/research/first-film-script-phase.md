@@ -52,3 +52,11 @@ were confined to the film rectangle and its shadow. Captures of
 the fully opaque film and the floral scene after the film matched
 within their respective playback paths. The PC trace opened
 MOVIE001 and its image was retained during the measured fade.
+
+## Shared movie blend
+
+Patch 0282 applies the captured floral recipe to all recognized movie
+rectangles with an active wide backdrop. This removes the script
+test from compositing while keeping the first-film ornament witness
+specific to its original scene. A known story movie keeps the last
+Zoom box for its return to dialogue. Changing out of Zoom clears it.

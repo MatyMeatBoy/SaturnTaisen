@@ -1,0 +1,36 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2080,6 +2080,10 @@
+         const auto baseFit=FitInteger(wide,high,texW,texH);
+         auto textFit=baseFit;int textCropX=0,textCropY=0;
+         auto choiceTextFit=baseFit;int choiceCropX=0,choiceCropY=0;bool choiceViewport=false;
++        if (satrecomp::FeatureValue("presentation_mode")!=1 || satrecomp::FeatureValue("scene_view")!=1) {
++            heldZoom={};
++            pendingZoom={};
++        }
+         bool hdNarrativeErased=false;
+         hdLines.clear();hdChoiceLines.clear();hdNative.clear();hdForeground.clear();hdErased.assign(320*224,0);
+         if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
+@@ -4483,7 +4487,8 @@
+                         zoomForeground=!hdNarrativeErased&&hdChoiceLines.empty()?planes.foreground:hdForeground;
+                         SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+                     }
+-                } else {
++                } else if (!scene.movieOnly || screenBackdrop=="OPENING" ||
++                           satrecomp::FeatureValue("scene_view")!=1) {
+                     heldZoom.valid=false;
+                 }
+                 if(!splitZoom) {choiceTextFit=fit;choiceCropX=int(crop.x);choiceCropY=int(crop.y);}
+@@ -4492,8 +4497,9 @@
+                 const SDL_FRect target{static_cast<float>(fit.x),static_cast<float>(fit.y),static_cast<float>(fit.w),static_cast<float>(fit.h)};
+                 unsigned movieWeight=32, minimumMovieWeight=32;
+                 bool movieFloralFade=false;
+-                if (scene.movieOnly && shownFirstMoviePhase &&
+-                    planes.floralCoverMix.size()==planes.source.size()) {
++                // Every recognized movie with the captured floral blend can
++                // use the selected backdrop, regardless of its script cursor.
++                if (scene.movieOnly && planes.floralCoverMix.size()==planes.source.size()) {
+                     movieWeight=0;
+                     for (size_t at=0;at<planes.source.size();++at) {
+                         if (planes.source[at]!=1) continue;
