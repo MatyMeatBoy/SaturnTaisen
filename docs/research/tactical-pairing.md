@@ -400,3 +400,22 @@ columnas. La unión rectangular cubre x=165..204 e y=55..134.
 Esto permite buscar un punto de sustitución común para la pose
 verificada. El recorte, prioridad y resultado tras el cambio
 aún requieren una prueba del compositor.
+
+### Oclusión de la pose por comandos posteriores
+
+Las cinco tiras de EVS02100 dejan 1262 píxeles opacos en su
+rectángulo de 40 × 80. En los dos guardados, el comando posterior
+45 (0x1160, paleta 0x2370) contiene un píxel 4 bpp no transparente
+que cae sobre la silueta, usando el orden de comandos y los cuatro
+vértices del rectángulo. La lista incluye sprites de interfaz
+posteriores y un comando deformado de modo 0x88 que queda fuera
+de esta comparación de índices 4 bpp.
+
+Un dibujo HD agregado encima del cuadro final no respeta por sí
+solo esa superposición. El renderizador ya captura comandos y
+texels en `Presentation::sprites`. La sustitución debe preservar
+la cobertura de lo dibujado después y activar el borrado de las
+tiras solo cuando el donante esté listo. El búfer VDP1 del huésped
+debe seguir siendo el original. Esta comprobación de cobertura
+es geométrica y todavía necesita verificar la composición VDP2
+y el resultado a escala HD.

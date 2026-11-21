@@ -93,27 +93,62 @@ def contiguous_groups(strips):
         yield group
 
 
+def later_4bpp_overlaps(vram, commands, strips):
+    last = max(strip['order'] for strip in strips)
+    silhouette = set()
+    for strip in strips:
+        start, height = strip['vram'], strip['height']
+        silhouette.update((strip['x'] + i % 8, strip['y'] + i // 8)
+                          for i, value in enumerate(vram[start:start + 8 * height]) if value)
+
+    overlaps = []
+    for order, address, command, vertices in commands:
+        if order <= last or command[0] & 0x3f != 2 or command[2] != 0x80:
+            continue
+        width, height = ((command[5] >> 8) & 63) * 8, command[5] & 255
+        left, top = vertices[0]
+        if not width or not height or not rectangular(vertices, width, height):
+            continue
+        covered = 0
+        for x, y in silhouette:
+            px, py = x - left, y - top
+            if 0 <= px < width and 0 <= py < height:
+                index = py * width + px
+                packed = vram[(command[4] * 8 + index // 2) & 0x7ffff]
+                covered += bool((packed & 15) if index & 1 else (packed >> 4))
+        if covered:
+            overlaps.append(dict(order=order, command_address=address, opaque_overlap=covered))
+    return overlaps
+
+
+def rectangular(vertices, width, height):
+    left, top = vertices[0]
+    right, bottom = left + width - 1, top + height - 1
+    return vertices == [(left, top), (right, top), (right, bottom), (left, bottom)]
+
+
 def observed_groups(state, banks):
     vram = state_vectors(state)[3]
     local_x = local_y = 0
     linked = defaultdict(list)
+    commands = []
     for order, (command_address, command) in enumerate(active_commands(vram, with_address=True)):
         control, _, mode, palette, source, size, x, y = command
         kind = control & 15
         if kind == 10:
             local_x, local_y = coordinate(x), coordinate(y)
             continue
-        # The witnessed EVS actor uses distorted 8-column, 8 bpp strips.
-        if kind != 2 or control & 0x30 or mode != 0x90 or size >> 8 != 1:
+        if kind != 2:
             continue
-        height = size & 255
         corners = struct.unpack_from('>8H', vram, command_address + 12)
         vertices = [(local_x + coordinate(cx), local_y + coordinate(cy))
                     for cx, cy in zip(corners[::2], corners[1::2])]
-        left, top = vertices[0]
-        right, bottom = left + 7, top + height - 1
-        if vertices != [(left, top), (right, top), (right, bottom), (left, bottom)]:
+        commands.append((order, command_address, command, vertices))
+        # The witnessed EVS actor uses distorted 8-column, 8 bpp strips.
+        height = size & 255
+        if control & 0x30 or mode != 0x90 or size >> 8 != 1 or not rectangular(vertices, 8, height):
             continue
+        left, top = vertices[0]
         address = source * 8
         pixels = vram[address:address + height * 8]
         if len(pixels) != height * 8 or not any(pixels):
@@ -135,7 +170,8 @@ def observed_groups(state, banks):
             xs = sorted(strip['x'] for strip in group)
             if len(xs) >= 3 and xs == list(range(xs[0], xs[0] + 8 * len(xs), 8)):
                 results.append(dict(bank=bank, palette=palette, strips=group,
-                                    image_slot=exact_image_slot(banks[bank], group)))
+                                    image_slot=exact_image_slot(banks[bank], group),
+                                    later_4bpp_overlaps=later_4bpp_overlaps(vram, commands, group)))
     return results
 
 
