@@ -459,3 +459,12 @@ Implemented the outer trim and detached petal with preserved native game
 lettering and crest. Decode runs in the background. The ownership model and
 syntax checks passed. See [title atlas evidence](research/pc-menu-hud-inventory.md#placa-y-petalo-del-titulo).
 Linked build, beta playback and packaging remain pending.
+
+## HD Koubu defeat backdrop (0309)
+
+Implemented K_OVER in the Enhanced presentation with one PC file shared
+by both disc copies. See [source matching](research/game-over-hd.md).
+Syntax and patch application passed. Beta playback and packaging remain pending.
+The workspace audit measured 214,970,243,432 logical bytes excluding reparse
+points. The inherited tree exceeds the 20 GB target. This block added no
+runtime build or asset copies inside the workspace.

@@ -1264,6 +1264,13 @@ def build(root, index_dir, portrait_audit):
         'verified_in_game': True, 'runtime_evidence': map02_event_report,
     }, 2, 'observed', map02_event_report)
 
+    game_over_report = 'docs/research/game-over-hd.md'
+    for disc in (1, 2):
+        add('scene-pictures', f'{disc}:/SAKURA2/K_OVER.BIN', {
+            'status': 'hd', 'pc': 'SAKURA2/BG/GO_KOUBU.SPR',
+            'verified_in_game': False,
+        }, association='observed' if disc == 1 else 'inferred', evidence=game_over_report)
+
     intermission_report = 'docs/research/ic-intermission-table.md#core-intermission-layers'
     for offset, filename in (('0', 'IC01'), ('E000', 'SHINRAI')):
         add('scene-pictures', f'1:/SAKURA1/ICATALL.DAT+0x{offset}', {
