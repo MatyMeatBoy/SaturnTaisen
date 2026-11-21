@@ -96,7 +96,7 @@ Los sprites tácticos forman parte del alcance. Su integración
 se cuantifica por familia cuando esté confirmado el inventario
 de sustituciones, sin volver a contar los recursos de HUD.
 
-EVENT y CG suman aparte 4 de 433 donantes integrados.
+EVENT y CG suman aparte 4 de 433 donantes integrados. Para EVENT se conservan los enlaces PC existentes y se aceptan coincidencias confirmadas durante otros shards, sin búsqueda dedicada.
 EVENT incluye animaciones de mapa como EV00S24, la figura
 que se hunde en MAP02. CG incluye ilustraciones como la
 recompensa de cocina BG_RYORI y también piezas de minijuego.
