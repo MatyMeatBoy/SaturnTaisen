@@ -514,3 +514,10 @@ disc 2 and packaging remain pending.
 Four final native poses of WINDOW ordinal 3 reuse the same async donor and
 palette. The short native comparisons reproduce all 31 owned pixels.
 Linked HD playback and packaging remain pending.
+
+## Bounded HD shrine (0315)
+
+BG1212 adds one PC identity for the disc 2 Chapter 8 opening. The bounded
+registration keeps the date caption and upper sky in their native bands.
+See [offline comparison](research/bg1212-bounded-hd.md). Syntax and
+coverage passed. Linked HD playback and package inclusion remain pending.

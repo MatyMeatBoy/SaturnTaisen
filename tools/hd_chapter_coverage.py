@@ -920,7 +920,9 @@ def build(root, index_dir, portrait_audit):
                 witnessed = disc in pair['verified_discs']
                 row.update(status='hd' if witnessed else 'wired-unverified',
                            verified_in_game=witnessed, runtime_evidence=runtime_evidence)
-        elif (disc, path) in {(1, '/SAKURA1/BG1331.BIN'), (2, '/SAKURA1/BG1338.BIN')}:
+        elif (disc, path) in {
+            (1, '/SAKURA1/BG1331.BIN'), (2, '/SAKURA1/BG1338.BIN'), (2, '/SAKURA1/BG1212.BIN'),
+        }:
             row = {'status': 'hd', 'pc': f'SAKURA1/BG/{name}.SPR', 'pc_image_index': 0,
                    'verified_in_game': False,
                    'pairing_evidence': f'docs/research/{name.lower()}-bounded-hd.md'}
