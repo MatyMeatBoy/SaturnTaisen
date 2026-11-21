@@ -1,5 +1,6 @@
 {
   "schema": 1,
+  "scene_extras_inventory": {"EVENT": 235, "CG": 222},
   "categories": [
     {
       "id": "portraits",
@@ -46,8 +47,8 @@
     {
       "id": "scene-images",
       "label": "Imágenes de escena",
-      "unit": "recursos SPR PC únicos (BG, EVENT, CG, ENDING, TITLE, ICATCH)",
-      "scope": "Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.",
+      "unit": "recursos SPR PC únicos (BG, BBG, ENDING, TITLE, ICATCH)",
+      "scope": "Fondos de escena, inserciones EVE/BBG, finales, título y eyecatch de PC. Los archivos EVENT y CG se informan como extras.",
       "sources": [
         {
           "path": "docs/research/pc-asset-census.md"
@@ -136,7 +137,7 @@
     },
     {
       "id": "tactical",
-      "label": "Modo táctico",
+      "label": "Otros recursos tácticos por medir",
       "unit": "archivos SPR PC candidatos (UNIT, MAP, ITEM)",
       "scope": "Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y combate Saturn, pegados al mundo y al scroll.",
       "sources": [

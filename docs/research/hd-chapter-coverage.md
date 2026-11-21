@@ -75,6 +75,8 @@ state, its byte-identical filenames and its known Saturn references.
 
 ```powershell
 python tools/scene_file_queue.py --pc-root <private-pc-extraction> --output <private-output.csv>
+python tools/scene_file_queue.py --pc-root <private-pc-extraction> --scope core --output <private-core.csv>
+python tools/scene_file_queue.py --pc-root <private-pc-extraction> --scope extras --output <private-extras.csv>
 ```
 
 BG1257, BG1280 and BG2247 are native decisions on both discs. The register
@@ -82,6 +84,25 @@ excludes their PC compositions from the file queue because the measured
 camera does not align. This leaves 1,120 eligible files and 519 pending
 at the time of this audit. The seven full-frame BBG candidates retain
 their separate framing review.
+
+### Alcance principal y extras
+
+El inventario de v0.3.4 tiene 584 de 662 donantes principales
+enlazados. Quedan 78, con una pareja parcial, siete encuadres
+BBG pendientes y 70 sin clasificación definitiva. Las rutas
+EVE se cuentan por su archivo donante BBG. Los 26 suelos
+tácticos únicos se suman al total principal una sola vez.
+Los sprites tácticos forman parte del alcance. Su integración
+se cuantifica por familia cuando esté confirmado el inventario
+de sustituciones, sin volver a contar los recursos de HUD.
+
+EVENT y CG suman aparte 4 de 433 donantes integrados.
+EVENT incluye animaciones de mapa como EV00S24, la figura
+que se hunde en MAP02. CG incluye ilustraciones como la
+recompensa de cocina BG_RYORI y también piezas de minijuego.
+Que un archivo figure sin enlace indica que falta atribuirlo
+o verificarlo. Para los que solo aparecen en la edición PC
+se puede registrar una exclusión con evidencia.
 
 ### Equivalent decoded images
 

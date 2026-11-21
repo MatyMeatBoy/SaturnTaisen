@@ -48,19 +48,30 @@ Base de runtime publicada [v0.2.16-alpha](releases/v0.2.16-alpha.md). La actuali
 
 Los estados avanzan en pasos comprobables: asociación, conexión, verificación y paquete. Un test controlado se registra aparte de una ruta natural. Original, donante ausente y la composición aprobada de 16:9 con escala entera se comprueban donde corresponda. Los cambios del runtime incluyen hash de invitado, SRAM y una captura o traza del nuevo dibujo.
 
+### Orden de los shards HD
+
+Los suelos y sprites tácticos forman parte del mod principal junto con los finales, ICATCH, BG e inserciones EVE/BBG. Las tarjetas TITLE y las demás categorías ya incluidas conservan su alcance. Priorizar donantes de arte y encuadre confirmados que ya tienen un compositor y una ruta reproducible. Buscar equivalentes compartidos antes de repetir trabajo por mapa, disco o episodio.
+
+| ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
+| --- | --- | --- | --- | --- | --- |
+| THD40 | P0 | local | open | **Suelos tácticos de imagen única.** Tomar primero MAP07/08/09/11 o el primer mapa con guardado natural útil. | Reusar el compositor de suelo y verificar cámara fija, movimiento y límites con el donante presente y ausente. Registro de 12/26 suelos únicos integrados. |
+| THD41 | P0 | local | open | **Sprites tácticos de objetos y UI.** Empezar por parejas ITEM confirmadas y sprites de menú que usen una ruta existente. | Vincular por identidad y subimagen, verificar recorte, orden y fallback. Las tarjetas ya contadas en HUD se cuentan una vez. |
+| THD42 | P0 | local | open | **Unidades, efectos y sprites de combate.** Empezar por bancos UNIT y poses con trazas reproducibles, incluyendo proyectiles y efectos compartidos. | Una fila por recurso o variante visual. Medir el inventario integrable antes de sumar su denominador al porcentaje. |
+| THD43 | P1 | local | open | **Suelos tácticos de mosaico.** MAP03, MAP20 y MAP23 con sus tablas de colocación PC ya identificadas. | Verificar armado, cámara, bordes y orden de sprites en una ruta de juego. |
+
 ### Imágenes físicas de escena
 
 | ID | Prioridad | Tipo | Estado | Trabajo | Cierre comprobable |
 | --- | --- | --- | --- | --- | --- |
 | THD01 | P0 | local | done | **Fondos del episodio 1.** BG del episodio 1, una fila por SPR físico, incluyendo visitas y variantes de iluminación. | [Inventario de fondos](research/thd01-episode1-backgrounds.md) por donante. Los 43 donantes del inventario están integrados y verificados en juego. Las ramas de episodio y otras familias de recursos se siguen en sus propios lotes. BG1016 se comprobó a 1440p y 1080p en el fundido floral con el parche 0254. El parche se distribuye en [v0.2.23-alpha](releases/v0.2.23-alpha.md). La [prueba headless](research/headless-scene-draw.md) usa un control con el mismo fondo floral. El [enlace de duplicados exactos](research/hd-chapter-coverage.md#shared-pc-background-files) usa un archivo PC común por recurso. El parche 0250 pasó la comparación de BG2126 a 1440p y se distribuye en [v0.2.19-alpha](releases/v0.2.19-alpha.md). El corredor nocturno BG1120 se verifico a 1440p y 1080p con el parche 0252 y se distribuye en [v0.2.21-alpha](releases/v0.2.21-alpha.md). |
-| THD02 | P1 | local | open | **Fondos normales del disco 1.** BG de episodios 2–5, lotes por ruta, excluyendo animaciones, panoramas y recortes. | Captura natural por donante nuevo y decisión explícita para los que no coinciden. |
-| THD03 | P1 | local | open | **Fondos normales del disco 2.** BG de episodios 6–10, mismos límites que THD02. | Mismo encuadre y capas en una prueba A/B por donante. |
+| THD02 | P0 | local | open | **Fondos normales del disco 1.** BG de episodios 2–5, lotes por ruta, excluyendo animaciones, panoramas y recortes. | Captura natural por donante nuevo y decisión explícita para los que no coinciden. |
+| THD03 | P0 | local | open | **Fondos normales del disco 2.** BG de episodios 6–10, mismos límites que THD02. | Mismo encuadre y capas en una prueba A/B por donante. |
 | THD04 | P1 | local | open | **Panoramas y escenas grandes.** Apariciones restantes de BG2290 y variantes animadas de tamaño no estándar. | Medir trayectoria, escala, límites y fundidos por aparición. BG1257, BG1280 y BG2247 conservan el encuadre Saturn tras la [comparación de las composiciones PC](research/scroll-table.md#remaining-dispositions-tp2a12). |
 | THD05 | P1 | local | open | **Primeros planos y recortes.** BG3123 y otros BG3xxx/4xxx con silueta, transparencia o mezcla; BG4370 disco 2 como verificación. | Verificar sólo lo visible y proteger mezcla, máscara, actor y fondo. El [parche 0255 de BG2236](research/t55-sweep-draws.md#bg2236-opaque-and-translucent-phases) conserva la figura translúcida con la mezcla nativa y mantiene el fondo HD en la fase opaca. El parche se distribuye en [v0.2.24-alpha](releases/v0.2.24-alpha.md). Falta comprobar un reemplazo HD dentro de la mezcla. |
-| THD06 | P1 | local | open | **Inserciones de batalla.** EVE y BBG, incluyendo activaciones naturales de EVE102/105/207, EVE0101 disco 2 y disposición BBG238–243/300. | Confirmar activación, ventana y mismo arte; conservar Saturn si el PC cambia pose o composición. |
-| THD07 | P1 | local | open | **Eyecatch e intermedios.** IC por disco y variante de encuadre, fondos compartidos por donante, menús tratados por THD20/21. | Probar entrada, salida, fundido y anclajes en la intermisión natural. |
-| THD08 | P1 | local | open | **CG y finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. Final de Sumire hasta el título comprobado en AOT estricto; falta probar las cuatro fotos con el mismo ejecutable y la pila gráfica completa. |
-| THD09 | P1 | local | open | **Censo de imágenes sin equivalente.** Cruzar los candidatos SPR aún sin asociación con las ocurrencias Saturn; agrupar duplicados y exclusiones por motivo. | Validar el reemplazo del evento MAP02 al mostrarse, bajar y desaparecer en la [ruta reproducida](research/tactical-pairing.md#pose-visible-y-descenso-de-map02), y seguir el inventario de candidatos. |
+| THD06 | P0 | local | open | **Inserciones de batalla.** EVE y BBG, incluyendo activaciones naturales de EVE102/105/207, EVE0101 disco 2 y disposición BBG238–243/300. | Confirmar activación, ventana y mismo arte; conservar Saturn si el PC cambia pose o composición. |
+| THD07 | P0 | local | open | **Eyecatch e intermedios.** IC por disco y variante de encuadre, fondos compartidos por donante, menús tratados por THD20/21. | Probar entrada, salida, fundido y anclajes en la intermisión natural. |
+| THD08 | P0 | local | open | **Finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. Final de Sumire hasta el título comprobado en AOT estricto; falta probar las cuatro fotos con el mismo ejecutable y la pila gráfica completa. |
+| THD09 | P2 | local | deferred | **Extras EVENT y CG.** Conservar las sustituciones existentes y su inventario aparte del porcentaje principal. | Retomar el cotejo por imagen y la validación en juego después de los lotes principales. |
 
 ### Lotes de escenas listos para tomar
 

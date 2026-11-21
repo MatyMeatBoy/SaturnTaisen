@@ -7,10 +7,10 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | Sin dato |
-| Imágenes de escena | recursos SPR PC únicos (BG, EVENT, CG, ENDING, TITLE, ICATCH) | 1095/1095 (100%) | 600/1095 (54,7%) | Sin dato | 587/1095 (53,6%) | 178/1095 (16,2%) |
+| Imágenes de escena | recursos SPR PC únicos (BG, BBG, ENDING, TITLE, ICATCH) | 662/662 (100%) | 592/662 (89,4%) | Sin dato | 584/662 (88,2%) | 175/662 (26,4%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 50/50 (100%) | Sin dato |
-| Modo táctico | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
+| Otros recursos tácticos por medir | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 229/229 (100%) | Sin dato | Sin dato | 59/229 (25,7%) | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 147/147 (100%) | Sin dato | 147/147 (100%) | 48/147 (32,6%) |
@@ -20,16 +20,19 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 304/304 (100%) |
-| Imágenes de escena | 587/1095 (53,6%) |
+| Imágenes de escena | 584/662 (88,2%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 50/50 (100%) |
-| Modo táctico | Sin dato |
+| Otros recursos tácticos por medir | Sin dato |
 | HUD y menús PC/Saturn | 59/229 (25,7%) |
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 147/147 (100%) |
+| Suelos tácticos | 12/26 (46,1%) |
 
-**HD total: 1166/1844 (63,2%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
-- Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
+**HD total: 1175/1437 (81,7%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+- Sin medir todavía (no cuentan): Escenas y transiciones, Otros recursos tácticos por medir.
+
+**Extras EVENT y CG** · 4/433 (0,9%) integrados. Fuera del total principal.
 
 ## Qué cuenta en cada etapa
 
@@ -62,7 +65,7 @@ Identidades de los atlas Saturn auditados en ambos discos. Las tiras de ojos y b
 
 ### Imágenes de escena
 
-Fondos de escena, eventos, CG, finales, título y eyecatch del dump PC que sustituyen a su equivalente Saturn. Un archivo puede contener varias imágenes.
+Fondos de escena, inserciones EVE/BBG, finales, título y eyecatch de PC. Los archivos EVENT y CG se informan como extras.
 
 - El censo incluye 1.267 archivos SPR PC en BG, EVENT, CG, ENDING, TITLE e ICATCH. Los 19 temas KABE se cuentan aparte.
 - El registro cuenta los recursos con correspondencia reconocida y agrupa archivos con las mismas subimágenes RGBA. Cada recurso se cuenta una vez, aunque varias claves Saturn lo utilicen.
@@ -99,7 +102,7 @@ Clips Saturn únicos con sustitución PC completa o con tramos de imagen PC alin
 - [video-equivalence.md](research/video-equivalence.md).
 - [bounded-film-video-spans.md](research/bounded-film-video-spans.md).
 
-### Modo táctico
+### Otros recursos tácticos por medir
 
 Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y combate Saturn, pegados al mundo y al scroll.
 

@@ -20,6 +20,14 @@ PRIORITY = {
 EVENT_REFERENCE = re.compile(r'^\s*MAP:\s*(\d+)\s+NPCID:\s*(\d+)\s+(EVENT\\[^\s]+\.SPR)\b', re.IGNORECASE)
 
 
+def extra_family(path):
+    if path.startswith('SAKURA2/EVENT/'):
+        return 'EVENT'
+    if path.startswith('SAKURA3/CG/'):
+        return 'CG'
+    return None
+
+
 def event_references(text, files):
     names = {path.casefold(): path for path in files if path.startswith('SAKURA2/EVENT/')}
     references = defaultdict(set)
@@ -61,9 +69,11 @@ def work_items(pc_root, register, census):
         candidates = group - excluded
         if not candidates:
             continue
-        canonical = min(candidates, key=lambda path: (path not in linked, path))
+        canonical = min(candidates, key=lambda path: (
+            extra_family(path) is not None, path not in linked, path))
+        has_link = bool(candidates & linked)
         states = set().union(*(statuses[path] for path in candidates))
-        state = 'hd' if canonical in linked else min(
+        state = 'hd' if has_link else min(
             (status for status in states if status in PRIORITY), key=PRIORITY.get, default='unknown')
         keys = set().union(*(references[path] for path in candidates))
         event_keys = set().union(*(events[path] for path in candidates))
@@ -105,7 +115,11 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--event-shards', action='store_true',
                         help='exporta solo EVENT y asigna cada donante a una ruta táctica')
+    parser.add_argument('--scope', choices=('all', 'core', 'extras'), default='all',
+                        help='limita el CSV al mod principal o a los extras EVENT/CG')
     args = parser.parse_args()
+    if args.event_shards and args.scope == 'core':
+        parser.error('--event-shards requiere un alcance que incluya EVENT')
     config = ROOT / 'config'
     register = json.loads((config / 'hd-chapter-coverage.json').read_text(encoding='utf-8'))
     census = json.loads((config / 'hd-scene-file-duplicates.json').read_text(encoding='utf-8'))
@@ -124,6 +138,9 @@ def main():
             print(f'{len(shards)} donantes EVENT únicos en la cola')
             return
         writer.writerow(columns)
+        if args.scope != 'all':
+            items = [item for item in items
+                     if bool(extra_family(item[0])) == (args.scope == 'extras')]
         writer.writerows(items)
     linked = sum(state == 'hd' for _, state, *_ in items)
     print(f'{linked}/{len(items)} enlazados; {len(items) - linked} pendientes')

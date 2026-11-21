@@ -5,6 +5,8 @@ from pathlib import Path, PurePosixPath
 import re
 from urllib.parse import quote
 
+from scene_file_queue import extra_family
+
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORY_IDS = ('portraits', 'scene-images', 'scenes', 'movies', 'tactical', 'hud-menus', 'backgrounds', 'large-characters')
 STAGES = {
@@ -116,9 +118,12 @@ def global_summary(data):
     lines = ['| Sección | Integrado |', '| --- | --- |']
     for row in data['categories']:
         lines.append(f"| {row['label']} | {format_count(row['integrated'], row['total'])} |")
+    grounds = data.get('tactical_grounds')
+    if grounds:
+        lines.append(f"| Suelos tácticos | {format_count(grounds['integrated'], grounds['total'])} |")
     if known:
-        done = sum(row['integrated'] for row in known)
-        total = sum(row['total'] for row in known)
+        done = sum(row['integrated'] for row in known) + (grounds['integrated'] if grounds else 0)
+        total = sum(row['total'] for row in known) + (grounds['total'] if grounds else 0)
         lines += ['', f"**HD total: {done}/{total} ({percent(done, total)}).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.",
                   '- Sin medir todavía (no cuentan): ' + (', '.join(r['label'] for r in data['categories'] if r['integrated'] is None or r['total'] is None) or 'ninguna') + '.']
     return '\n'.join(lines)
@@ -200,6 +205,8 @@ def apply_register(data, register_path):
         resource['pc'] for resource in ground_rows.values()
         if resource.get('status') == 'hd' and resource.get('verified_in_game') is True
     }
+    if ground_files and data.get('scene_extras_inventory'):
+        data['tactical_grounds'] = dict(total=len(ground_files), integrated=len(linked_grounds))
     census = register.get('hud_census')
     for row in data['categories']:
         if row['id'] == 'tactical' and ground_files:
@@ -251,6 +258,27 @@ def apply_register(data, register_path):
                     row['matched'] = len(matched_scenes) - matched_duplicates
                 else:
                     row['matched'] -= alias_count
+            raw_extras = data.get('scene_extras_inventory')
+            if raw_extras:
+                # A shared donor belongs to the main scope if any eligible alias is in scope.
+                eligible_groups = [group - excluded_only for group in duplicate_groups]
+                alias_groups = {path: group for group in eligible_groups for path in group}
+                def extras_in(paths):
+                    return len({min(alias_groups.get(path, {path})) for path in paths
+                                if all(extra_family(alias) for alias in alias_groups.get(path, {path}))})
+                extras_total = sum(raw_extras.values()) - sum(bool(extra_family(path)) for path in excluded_only)
+                extras_total -= sum(sum(bool(extra_family(path)) for path in group)
+                                    - int(bool(group) and all(extra_family(path) for path in group))
+                                    for group in eligible_groups)
+                extras_integrated = extras_in(files[kind])
+                data['scene_extras'] = dict(total=extras_total, integrated=extras_integrated)
+                row['total'] -= extras_total
+                row['inventory'] -= extras_total
+                row['integrated'] -= extras_integrated
+                row['verified'] -= extras_in(verified_scenes)
+                if row['matched'] is not None:
+                    row['matched'] -= extras_in(matched_scenes)
+
 
 
 def render_report(data):
@@ -262,6 +290,9 @@ def render_report(data):
         'Los recuentos de candidatos se detallan por separado.', '',
         table(data, detailed=True), '',
         '## Resumen global de integración', '', global_summary(data), '',
+        *([f"**Extras EVENT y CG** · {format_count(data['scene_extras']['integrated'], data['scene_extras']['total'])} integrados. Fuera del total principal.", '']
+          if 'scene_extras' in data else []),
+
         '## Qué cuenta en cada etapa', '',
         '- **Inventariado**. Elementos nativos identificados dentro del alcance declarado.',
         '- **Emparejado**. Correspondencia aprobada del recurso y sus variantes necesarias.',
