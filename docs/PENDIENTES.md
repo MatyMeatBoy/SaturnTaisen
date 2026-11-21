@@ -615,3 +615,10 @@ trim. They are outside the fixed 1,430-element census. See
 [archive comparison and scope](research/hd-minigame-hud.md).
 Syntax and patch application passed. Linked playback and packaging
 remain pending.
+
+## Bounded HD dining-room variant (0327)
+
+BG4071 adds the disc 2 character after a controlled strict-native
+replay of its original loading block. See [evidence](research/bg4071-bounded-hd.md).
+Offline compositor, syntax, coverage and patch application passed.
+Natural route, linked HD playback and packaging remain pending.

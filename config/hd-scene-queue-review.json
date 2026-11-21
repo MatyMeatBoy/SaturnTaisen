@@ -149,10 +149,6 @@
       "disposition": "incompatible-full",
       "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
     },
-    "SAKURA1/BG/BG4071.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "PC merges hall background with separate native keyed actor."
-    },
     "SAKURA1/BG/BG4204.SPR": {
       "disposition": "incompatible-full",
       "reason": "the Saturn picture decodes only as a partial fragment of the scene"
