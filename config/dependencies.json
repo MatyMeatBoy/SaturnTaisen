@@ -301,7 +301,8 @@
       "patches/0309-sakura-hd-koubu-defeat.patch",
       "patches/0310-sakura-hd-jyouki-steam.patch",
       "patches/0311-sakura-hd-bg1338-bounded.patch",
-      "patches/0312-sakura-hd-lips-pendulum-poses.patch"
+      "patches/0312-sakura-hd-lips-pendulum-poses.patch",
+      "patches/0313-sakura-hd-bg1331-bounded.patch"
     ]
   }
 }
