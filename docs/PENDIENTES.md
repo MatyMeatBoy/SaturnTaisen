@@ -60,7 +60,7 @@ Los estados avanzan en pasos comprobables: asociación, conexión, verificación
 | THD06 | P1 | local | open | **Inserciones de batalla.** EVE y BBG, incluyendo activaciones naturales de EVE102/105/207, EVE0101 disco 2 y disposición BBG238–243/300. | Confirmar activación, ventana y mismo arte; conservar Saturn si el PC cambia pose o composición. |
 | THD07 | P1 | local | open | **Eyecatch e intermedios.** IC por disco y variante de encuadre, fondos compartidos por donante, menús tratados por THD20/21. | Probar entrada, salida, fundido y anclajes en la intermisión natural. |
 | THD08 | P1 | local | open | **CG y finales.** Final general y rutas de las seis heroínas; fotos, recortes pequeños y marca localizada. | Probar rutas naturales, poses aceptadas y composición por registro, sin duplicar fotos compartidas. Final de Sumire hasta el título comprobado en AOT estricto; falta probar las cuatro fotos con el mismo ejecutable y la pila gráfica completa. |
-| THD09 | P1 | local | open | **Censo de imágenes sin equivalente.** Cruzar los candidatos SPR aún sin asociación con las ocurrencias Saturn; agrupar duplicados y exclusiones por motivo. | Un inventario reproducible con candidatos únicos, decisiones revisadas y huecos de evidencia. |
+| THD09 | P1 | local | open | **Censo de imágenes sin equivalente.** Cruzar los candidatos SPR aún sin asociación con las ocurrencias Saturn; agrupar duplicados y exclusiones por motivo. | Validar el reemplazo del evento MAP02 al mostrarse, bajar y desaparecer en la [ruta reproducida](research/tactical-pairing.md#pose-visible-y-descenso-de-map02), y seguir el inventario de candidatos. |
 
 ### Lotes de escenas listos para tomar
 
