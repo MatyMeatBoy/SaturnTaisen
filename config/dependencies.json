@@ -266,7 +266,8 @@
       "patches/0274-sakura-pack-map-mixed-rows.patch",
       "patches/0275-sakura-compose-packed-map-rows.patch",
       "patches/0276-sakura-video-sync-settings.patch",
-      "patches/0277-sakura-hold-dialogue-zoom-shadow.patch"
+      "patches/0277-sakura-hold-dialogue-zoom-shadow.patch",
+      "patches/0278-sakura-suppress-partly-covered-native-text.patch"
     ]
   }
 }

@@ -1,0 +1,100 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2077,13 +2077,14 @@
+         const auto baseFit=FitInteger(wide,high,texW,texH);
+         auto textFit=baseFit;int textCropX=0,textCropY=0;
+         auto choiceTextFit=baseFit;int choiceCropX=0,choiceCropY=0;bool choiceViewport=false;
++        bool hdNarrativeErased=false;
+         hdLines.clear();hdChoiceLines.clear();hdNative.clear();hdForeground.clear();hdErased.assign(320*224,0);
+         if(texture && sakuraUi.HasGameFont() && port.videoRenderer && !englishAtlas.empty() && satrecomp::FeatureValue("presentation_mode")==1 && satrecomp::FeatureValue("text_style")==0) {
+             ProfileScope hdTextScope(frameProfile.hdText);
+             const auto& planes=port.videoRenderer->PresentationFrame();
+             if(planes.width==320 && planes.height==224 && softwareShown.size()==320*224 && planes.underSprites.size()==320*224) {
+                 const auto* catalogRecord=port.dialogueCatalog?port.dialogueCatalog->Get(shownDialogue):nullptr;
+-                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;std::array<uint16_t,16*320> owners{};bool valid=true,needsPlate=false,plateReady=false,catalogExact=true;};
++                struct TextRow {std::map<int,char32_t> chars;std::vector<size_t> ink;std::array<uint16_t,16*320> owners{};bool valid=true,covered=false,needsPlate=false,plateReady=false,catalogExact=true;};
+                 std::map<int,TextRow> rows;
+                 std::map<uint16_t,int> ownerRows;
+                 int localX=0,localY=0;
+@@ -2109,7 +2110,11 @@
+                         const int index=px&1?packed&15:packed>>4;
+                         if(!index) continue;
+                         const size_t at=(y+py)*320+x+px;
+-                        if(planes.source[at]!=0) row.valid=false;
++                        if(planes.source[at]!=0) {
++                            row.covered=true;
++                            row.needsPlate=true;
++                            continue;
++                        }
+                         if(planes.topSource.size()==320*224 && planes.topSource[at]!=0)row.needsPlate=true;
+                         row.ink.push_back(at);
+                         row.owners[at-size_t(y)*320]=uint16_t(&shown-planes.sprites.data()+1);
+@@ -2160,6 +2165,19 @@
+                             static std::array<bool,224> rejected{};
+                             if(!rejected[y]) {rejected[y]=true;fprintf(stderr,"hd edge reject: row=%d shared_plate_unproven\n",y);}
+                         }
++                        continue;
++                    }
++                    if (row.covered) {
++                        // A fade has covered part of this row. Remove only the
++                        // still visible glyphs with a current saved-under plate.
++                        // Drawing the full HD row would put it over the fade.
++                        for (auto at:row.ink) {
++                            const auto& plate=planes.glyphPlate[at];
++                            hdNative[at]=plate.nativeRgb;
++                            hdForeground[at]=plate.foregroundRgba;
++                            hdErased[at]=2;
++                        }
++                        hdNarrativeErased|=!row.ink.empty();
+                         continue;
+                     }
+                     UiTextLine line;line.x=row.chars.begin()->first;line.y=y;
+@@ -2200,9 +2218,10 @@
+                         static std::array<bool,224> traced{};
+                         if(!traced[y]) {traced[y]=true;fprintf(stderr,"hd edge row: y=%d glyphs=%zu saved_under=%d\n",y,row.chars.size(),int(usePlate));}
+                     }
++                    hdNarrativeErased=true;
+                     hdLines.push_back(std::move(line));
+                 }
+-                if(!hdLines.empty()) SDL_UpdateTexture(texture,nullptr,hdNative.data(),320*sizeof(uint32_t));
++                if(hdNarrativeErased) SDL_UpdateTexture(texture,nullptr,hdNative.data(),320*sizeof(uint32_t));
+             }
+         }
+         bool enhanced=false,portraitViewport=false;
+@@ -3092,7 +3111,7 @@
+                         SDL_SetTextureScaleMode(foreground,SDL_SCALEMODE_NEAREST);
+                     }
+                     content=foreground;
+-                    SDL_UpdateTexture(content,nullptr,hdLines.empty()?planes.foreground.data():hdForeground.data(),320*sizeof(uint32_t));
++                    SDL_UpdateTexture(content,nullptr,!hdNarrativeErased?planes.foreground.data():hdForeground.data(),320*sizeof(uint32_t));
+                     if(content && scene.recognized && !port.menu.IsOpen() && !choosing && sakuraUi.HasGameFont() &&
+                        !englishAtlas.empty() && satrecomp::FeatureValue("text_style")==0) {
+                         const auto* choiceRecord=port.dialogueCatalog?port.dialogueCatalog->Get(shownChoice):nullptr;
+@@ -3187,7 +3206,7 @@
+                         splitZoom=true;
+                         zoomShadowRows=shadowRows;
+                         choiceTextFit=zoom.picture;choiceCropX=16;choiceCropY=8;
+-                        zoomForeground=hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground;
++                        zoomForeground=!hdNarrativeErased&&hdChoiceLines.empty()?planes.foreground:hdForeground;
+                         for(int y=153;y<156;y++)for(int x=20;x<308;x++)
+                             if(IsOldPictureShadow(x,y,planes.source[y*320+x]))zoomForeground[y*320+x]=0;
+                         BodyDraw bodyDraw;
+@@ -4458,7 +4477,7 @@
+                         splitZoom=true;
+                         crop=SDL_FRect{float(panel.x),153,float(panel.width),float(panel.lines)};fit=zoom.dialogue;
+                         choiceTextFit=zoom.picture;choiceCropX=16;choiceCropY=8;
+-                        zoomForeground=hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground;
++                        zoomForeground=!hdNarrativeErased&&hdChoiceLines.empty()?planes.foreground:hdForeground;
+                         SDL_UpdateTexture(content,nullptr,zoomForeground.data(),320*sizeof(uint32_t));
+                     }
+                 } else {
+@@ -4477,7 +4496,7 @@
+                     SDL_RenderFillRect(renderer,&shadow);
+                     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
+                 }
+-                const auto& mixedSource=splitZoom?zoomForeground:(hdLines.empty()&&hdChoiceLines.empty()?planes.foreground:hdForeground);
++                const auto& mixedSource=splitZoom?zoomForeground:(!hdNarrativeErased&&hdChoiceLines.empty()?planes.foreground:hdForeground);
+                 if(scene.movieOnly && UpdateClip(planes.source)) {
+                     // T113/S3: the PC clip in the video rectangle; the native frame is drawn over it without the film plane.
+                     clipForeground=mixedSource;
