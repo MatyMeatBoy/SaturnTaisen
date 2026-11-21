@@ -1098,7 +1098,7 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
 # ---- profile -----------------------------------------------------------------------------------------
 
 DEFAULT_SETTINGS = ('[features]\npreset=custom\nscene_view=1\ntext_style=0\n'
-                    'pc_hd_backgrounds=0\npc_hd_portraits=0\nhd_preload=1\npad_profile=0\n')
+                    'pc_hd_backgrounds=0\npc_hd_portraits=0\npc_hd_audio=0\nhd_preload=1\npad_profile=0\n')
 
 
 def set_values(file: Path, values: dict[tuple[str, str], str]) -> None:
@@ -1553,6 +1553,45 @@ def refresh_installed_game(paths: Paths) -> None:
     say(100, 'Contenido preparado actualizado. Ya puedes jugar.')
 
 
+def prepare_audio(paths: Paths, given: list[Path]) -> None:
+    relative = Path('SAKURA2/SE/0042.WAV')
+    expected = '849eeceedbe441dd62ec5c44805c01715b38a5a3c5d7a6832480e7e3c6b170b6'
+    target = paths.home / 'audio-hd' / relative
+
+    def read_verified(path: Path | None) -> bytes | None:
+        if path is None:
+            return None
+        try:
+            if path.stat().st_size != 31020:
+                return None
+            data = path.read_bytes()
+        except OSError:
+            return None
+        return data if hashlib.sha256(data).hexdigest() == expected else None
+
+    if read_verified(target) is not None:
+        return
+    data = read_verified(paths.hd / 'pc' / relative)
+    if data is None:
+        say(10, 'Audio HD: buscando el efecto en tu edición de PC…')
+        paths.home.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='.preparar-audio-', dir=paths.home) as scratch:
+            work = Path(scratch)
+            _, source = gather(given, work)
+            if source is None:
+                raise SetupError('No se encontró tu edición de PC.')
+            found, _ = open_pc(paths, source, work, ['KAO.SPR', '0042.WAV'])
+            donor = found
+            for part in relative.parts:
+                donor = child(donor, part) if donor is not None else None
+            data = read_verified(donor)
+    if data is None:
+        raise SetupError('Tu edición de PC no contiene el efecto compatible con Audio HD.')
+    target.parent.mkdir(parents=True, exist_ok=True)
+    atomic_prepared_file(target, lambda staged: staged.write_bytes(data))
+    say(100, 'Audio HD preparado. Actívalo desde Inicio.')
+
+
 def prepare(paths: Paths, given: list[Path], language: str, force: bool = False) -> dict:
     """Everything the player's files allow; what is already prepared and current is left alone."""
     manifest = load_manifest(paths)
@@ -1669,7 +1708,7 @@ def self_test() -> None:
 def main() -> int:
     global _recomplauncher_progress
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-prepared', 'language', 'info', 'frontend', 'help', 'self-test', 'find-pc'))
+    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-prepared', 'language', 'info', 'frontend', 'help', 'self-test', 'find-pc', 'prepare-audio'))
     parser.add_argument('--folder', type=Path)
     parser.add_argument('--rom', '--disc', '--pc', dest='rom', type=Path, action='append', default=[])
     parser.add_argument('--language', choices=tuple(ALL_LANGUAGES))
@@ -1706,6 +1745,12 @@ def main() -> int:
         elif args.command == 'frontend':
             frontend(paths, args)
             print('OK', flush=True)
+        elif args.command == 'prepare-audio':
+            given = list(args.rom) + ([args.folder] if args.folder else [])
+            if not given and discs_folder(paths.program).is_dir():
+                given = [discs_folder(paths.program)]
+            prepare_audio(paths, given)
+            print('OK Audio HD', flush=True)
         elif args.command == 'refresh-prepared':
             refresh_installed_game(paths)
         else:

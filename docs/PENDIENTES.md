@@ -137,8 +137,8 @@ Mantener el idioma español según el perfil. Registrar la fuente de cada rótul
 | ID | Estado | Lote | Cierre comprobable |
 | --- | --- | --- | --- |
 | AHD01 | open | Catastro de voces, música, canciones, efectos y películas | Contar identidades Saturn por banco y traza. Comparar tomas y calidad contra los donantes locales. |
-| AHD02 | open | Primer lote con donante confirmado | Reemplazo audible sin alterar tiempos invitados, con comparación de ruta, fallback y rendimiento. |
-| AHD03 | open | Launcher y preparación local | Opción independiente, estado de preparación, recibo versionado y reparación local. |
+| AHD02 | open | Primer lote con donante confirmado. PCMSE 42 probado en el ataque de Sakura. | Reemplazo audible sin alterar tiempos invitados, con comparación de ruta, fallback y rendimiento. |
+| AHD03 | open | Launcher y preparación local. Selector independiente y preparación desde carpeta PC implementados. | Opción independiente, estado de preparación, recibo versionado y reparación local. |
 
 Los resultados y el criterio de porcentaje se registran en [Mejora de audio HD](research/hd-audio.md).
 

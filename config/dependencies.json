@@ -278,7 +278,9 @@
       "patches/0286-sakura-map07-pc-ground.patch",
       "patches/0287-sakura-disc2-ic09-intermission.patch",
       "patches/0288-sakura-wkl02-horizontal-command-frames.patch",
-      "patches/0289-sakura-bbg218-tactical-inset.patch"
+      "patches/0289-sakura-bbg218-tactical-inset.patch",
+      "patches/0290-sakura-audio-hd-pcmse42.patch",
+      "patches/0291-sakura-audio-hd-launcher.patch"
     ]
   }
 }
