@@ -295,7 +295,8 @@
       "patches/0303-sakura-hd-blue-disc-icons.patch",
       "patches/0304-sakura-hd-title-floral-bg.patch",
       "patches/0305-sakura-hd-lips-pendulum.patch",
-      "patches/0306-sakura-hd-icatch-core.patch"
+      "patches/0306-sakura-hd-icatch-core.patch",
+      "patches/0307-sakura-hd-save-backdrop.patch"
     ]
   }
 }

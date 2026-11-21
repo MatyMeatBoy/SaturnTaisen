@@ -534,3 +534,25 @@ registers to the 320 × 224 Saturn lattice. The existing exact title
 palette and layer ownership protect the logo, text and other sprites.
 The PC logo and startup plates retain their existing handling.
 Applicability and syntax passed offline. In-game beta is pending.
+
+## PC save menu backdrop
+
+Patch 0307 links `SAKURA1/SYSTEM/SIS_BG.SPR` ordinal 0 to
+the save menu. The retained Episode 2 leave-save and decline-save
+states share VDP2 source 5 palette `0A42F1691B513AFE`, cell key
+`891E20711A32C8EF` and a `−16` RGB offset. The existing save-panel
+command identity limits the replacement to the save menu.
+
+The 640 × 448 crop starts at PC row 20 and samples without
+rescaling on the 2× lattice. Across the two native background
+captures, the mean absolute RGB error is 6.20 for SIS_BG and
+8.85 for SIS_BG2. SIS_BG ordinal 0 decodes to 640 × 480 and its
+162,807 source bytes hash to
+`254648b5e7287d1d44fc42690e171416d084cfe430814877a11c089c24235579`.
+The runtime replaces the pixels owned by source 5. Native menu
+text, sprites and blended pixels retain their composition.
+
+The frontend passed a syntax-only compilation. The one new
+HUD image is integrated for beta. The in-game donor comparison
+remains pending.
+The integration queues the PC decode asynchronously through the pinned sprite loader.

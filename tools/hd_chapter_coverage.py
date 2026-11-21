@@ -166,6 +166,7 @@ EVE_CONTROLLED_REPORT = 'docs/research/disc1-battle-insets.md#controlled-eve-pla
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
     ('SAKURA1/SYSTEM/TL_BG0.SPR', 0): ('patch 0304: PC floral title backdrop', MENU_REPORT + '#pc-floral-title-backdrop'),
+    ('SAKURA1/SYSTEM/SIS_BG.SPR', 0): ('patch 0307: PC save menu backdrop', MENU_REPORT + '#pc-save-menu-backdrop'),
     ('SAKURA1/SYSTEM/SIS_BG3.SPR', 0): ('patch 0299: Extras movie theater backdrop', MENU_REPORT + '#extras-movie-theater-backdrop'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 2): ('patch 0213, port/frontend_sdl.cpp: save and load confirmation banner rails', MENU_REPORT + '#hd-save-and-load-confirmation-controls'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 5): ('patch 0213, port/frontend_sdl.cpp: three-button save management rails', MENU_REPORT + '#hd-save-and-load-confirmation-controls'),

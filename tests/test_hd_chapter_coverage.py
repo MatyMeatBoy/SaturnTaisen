@@ -470,11 +470,13 @@ class ChapterCoverageTest(unittest.TestCase):
         groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
         rows = [row for group in groups for row in group['menus-hud'].values()]
         drawn = {(row['pc'], row['pc_image_index']) for row in rows if row['status'] == 'hd'}
-        self.assertEqual(len(drawn), 72)
-        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 23)
+        self.assertEqual(len(drawn), 73)
+        self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 24)
         self.assertIn(('SAKURA1/SYSTEM/SIS_ICON.SPR', 3), drawn)
         self.assertEqual({index for pc, index in drawn if pc == 'SAKURA1/SYSTEM/SISTEM.SPR'}, {1, 2, 4, 5, 8, 9, 11, 12, 14})
         items = catalog['unassigned']['menus-hud']
+        self.assertIn(('SAKURA1/SYSTEM/SIS_BG.SPR', 0), drawn)
+        self.assertFalse(items['pc:SAKURA1/SYSTEM/SIS_BG.SPR#0'].get('verified_in_game'))
         for index in (0, 1):
             row = items[f'pc:SAKURA1/SYSTEM/WINDOW.SPR#{index}']
             self.assertEqual((row['status'], row['pc_image_index']), ('hd', index))
