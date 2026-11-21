@@ -178,6 +178,7 @@ SYSTEM_HUD_DRAWS = {
     ('SAKURA1/SYSTEM/WINDOW.SPR', 0): ('patch 0202, port/frontend_sdl.cpp: timed LIPS choice rails', MENU_REPORT + '#hd-timed-lips-and-dialogue-window-rails'),
     ('SAKURA1/SYSTEM/WINDOW.SPR', 1): ('patch 0202, port/frontend_sdl.cpp: dialogue box rails', MENU_REPORT + '#hd-timed-lips-and-dialogue-window-rails'),
     ('SAKURA1/SYSTEM/WINDOW.SPR', 2): ('patch 0198, port/frontend_sdl.cpp: Long Day room choice rails', MENU_REPORT + '#hd-long-day-room-choice-frame'),
+    ('SAKURA1/SYSTEM/WINDOW.SPR', 3): ('timed LIPS pendulum', MENU_REPORT + '#pendulo-de-lips'),
     ('SAKURA1/SYSTEM/TUIKA_W.SPR', 0): ('patch 0197, port/frontend_sdl.cpp: save confirmation frame border', MENU_REPORT + '#hd-save-confirmation-frame'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 8): ('patch 0150, port/system_brackets.h: left load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),
     ('SAKURA1/SYSTEM/SISTEM.SPR', 9): ('patch 0150, port/system_brackets.h: right load selector arrow', MENU_REPORT + '#load-menu-selection-arrows'),

@@ -293,7 +293,8 @@
       "patches/0301-sakura-hd-compact-inventory-icons.patch",
       "patches/0302-sakura-map20-pc-ground.patch",
       "patches/0303-sakura-hd-blue-disc-icons.patch",
-      "patches/0304-sakura-hd-title-floral-bg.patch"
+      "patches/0304-sakura-hd-title-floral-bg.patch",
+      "patches/0305-sakura-hd-lips-pendulum.patch"
     ]
   }
 }

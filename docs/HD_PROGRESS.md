@@ -11,7 +11,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 50/50 (100%) | Sin dato |
 | Otros recursos tácticos por medir | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
-| HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 229/229 (100%) | Sin dato | Sin dato | 71/229 (31%) | Sin dato |
+| HUD y menús PC/Saturn | imágenes PC de menú/HUD (SYSTEM sin KAO + tarjetas de objeto) | 229/229 (100%) | Sin dato | Sin dato | 72/229 (31,4%) | Sin dato |
 | Fondos decorativos KABE | temas del inventario KABE | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | cuerpos Saturn (archivos NC) | 147/147 (100%) | 147/147 (100%) | Sin dato | 147/147 (100%) | 48/147 (32,6%) |
 
@@ -24,12 +24,12 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Escenas y transiciones | Sin dato |
 | Vídeos | 50/50 (100%) |
 | Otros recursos tácticos por medir | Sin dato |
-| HUD y menús PC/Saturn | 71/229 (31%) |
+| HUD y menús PC/Saturn | 72/229 (31,4%) |
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 147/147 (100%) |
 | Suelos tácticos | 23/26 (88,4%) |
 
-**HD total: 1198/1430 (83,7%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1199/1430 (83,8%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Otros recursos tácticos por medir.
 
 **Extras EVENT y CG** · 4/433 (0,9%) integrados. Fuera del total principal.

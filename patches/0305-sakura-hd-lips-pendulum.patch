@@ -1,0 +1,79 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1174,7 +1174,8 @@
+         SceneHd image;
+         std::vector<WindowRail> rails;
+     };
+-    std::array<WindowFrame, 15> windowFrames;
++    constexpr unsigned kPendulumFrame = 15;
++    std::array<WindowFrame, kPendulumFrame + 1> windowFrames;
+     SceneHd extrasTheater;
+     std::vector<uint32_t> extrasTheaterCover;
+     SceneHd eve0116;
+@@ -4993,6 +4994,8 @@
+                      0x02E21BFF04BE4CCFull, {}, 0, 0, 0x0077, 0x005F, 168, false, WindowVariant::Gallery::Sound, 10},
+                     {11, 0, {40, 24, 240, 184}, 240, 184, 40, 24, 0x124A604EE6C4CE8Full,
+                      0xFC9A23229AFB36AEull, {}, 0, 0, 0x0077, 0x005F, 168, false, WindowVariant::Gallery::Sound, 11},
++                    {kPendulumFrame, 1, {156, 24, 9, 17}, 8, 16, 160, 32, 0x60012FBF7CD7164Dull,
++                     0x3CA9F51EFEDCF198ull, {}},
+                     {12, 0, {40, 24, 240, 184}, 240, 184, 40, 24, 0x124A604EE6C4CE8Full,
+                      0x32769A58EF881806ull, {}, 0, 0, 0x0077, 0x005F, 168, false, WindowVariant::Gallery::Movie, 0},
+                     {13, 0, {40, 24, 240, 184}, 240, 184, 40, 24, 0x124A604EE6C4CE8Full,
+@@ -5081,6 +5084,7 @@
+                     const auto systemPalette = std::span{frame.palette}.subspan(0x580, 32);
+                     const auto systemPaletteHash = PcBackdropHash(systemPalette);
+                     for (const auto& variant : variants) {
++                        const bool pendulum = variant.index == kPendulumFrame;
+                         const bool system = variant.systemImage != 0;
+                         const bool gallery = variant.gallery != WindowVariant::Gallery::None;
+                         const bool movie = variant.gallery == WindowVariant::Gallery::Movie;
+@@ -5129,6 +5133,15 @@
+                         });
+                         if (sprite == frame.sprites.end()) continue;
+                         const auto box = variant.target;
++                        if (pendulum && std::any_of(std::next(sprite), frame.sprites.end(), [&](const auto& later) {
++                            const auto& cmd = later.command.words;
++                            const auto kind = cmd[0] & 15;
++                            if (kind >= 8) return false;
++                            if (kind != 0) return true;
++                            const auto w = int((cmd[5] >> 8) & 63) * 8, h = int(cmd[5] & 255);
++                            return later.x < box.x + box.width && later.x + std::max(w, 1) > box.x &&
++                                   later.y < box.y + box.height && later.y + std::max(h, 1) > box.y;
++                        })) continue;
+                         auto& window = windowFrames[variant.index];
+                         if (window.rails.empty()) {
+                             const auto columns = rasterAxis(variant.width, box.width);
+@@ -5154,6 +5167,15 @@
+                                         continue;
+                                     }
+                                     const unsigned ink = sprite->pixels[source];
++                                    if (pendulum) {
++                                        if (!ink) continue;
++                                        const unsigned color = (unsigned(frame.palette[0xA00 + 2 * ink]) << 8) |
++                                            frame.palette[0xA01 + 2 * ink];
++                                        const uint32_t rgb = ((color & 31) << 3) |
++                                            ((color & 0x3E0) << 6) | ((color & 0x7C00) << 9);
++                                        window.rails.push_back({x, y, sx, sy, rgb});
++                                        continue;
++                                    }
+                                     if (gallery) {
+                                         // Preserve all tabs, the footer, and the list as drawn by the guest.
+                                         if (sy < 16 || sy >= variant.footer || (sy >= 21 && sx >= 8 && sx < 232) ||
+@@ -5185,7 +5207,7 @@
+                                      (gallery ? (movie ? "SAKURA1/SYSTEM/OMKMOV_W.SPR" : "SAKURA1/SYSTEM/OMKSND_W.SPR") :
+                                       variant.inventory ? "SAKURA1/SYSTEM/OPTION.SPR" :
+                                       system ? "SAKURA1/SYSTEM/SISTEM.SPR" : "SAKURA1/SYSTEM/WINDOW.SPR"),
+-                                 rails = window.rails, variant, system, gallery, movie]() {
++                                 rails = window.rails, variant, system, gallery, movie, pendulum]() {
+                                     SceneHdPixels result;
+                                     std::vector<uint8_t> bytes;
+                                     const unsigned size = gallery ? (movie ? 341209 : 232928) :
+@@ -5198,7 +5220,7 @@
+                                         variant.inventory ? 400 : 2 * variant.width;
+                                     const int height = gallery ? 376 : variant.inventory ? 290 : 2 * variant.height;
+                                     const unsigned ordinal = gallery ? variant.galleryImage :
+-                                        system ? variant.systemImage : variant.index;
++                                        system ? variant.systemImage : pendulum ? 3u : variant.index;
+                                     if (!ReadPcBackdropFile(file, bytes, size) || bytes.size() != size ||
+                                         PcBackdropHash(bytes) != fingerprint) return result;
+                                     std::vector<PcSprite> images;
