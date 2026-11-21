@@ -932,9 +932,11 @@ def build(root, index_dir, portrait_audit):
             (1, '/SAKURA1/BG4162.BIN'),
             (1, '/SAKURA1/BG4375.BIN'),
             (1, '/SAKURA1/BG4372.BIN'),
+            (1, '/SAKURA1/BG3060.BIN'),
             (2, '/SAKURA1/BG1338.BIN'), (2, '/SAKURA1/BG1212.BIN'),
             (2, '/SAKURA1/BG4055.BIN'), (2, '/SAKURA1/BG4056.BIN'),
             (2, '/SAKURA1/BG3091.BIN'), (2, '/SAKURA1/BG3097.BIN'),
+            (2, '/SAKURA1/BG3165.BIN'),
             (2, '/SAKURA1/BG4071.BIN'),
         }:
             row = {'status': 'hd', 'pc': f'SAKURA1/BG/{name}.SPR', 'pc_image_index': 0,
@@ -950,6 +952,8 @@ def build(root, index_dir, portrait_audit):
                 'BG4375': 'docs/research/bg4375-bounded-hd.md',
                 'BG4372': 'docs/research/bg4372-bounded-hd.md',
                 'BG2059': 'docs/research/bg2059-fade.md',
+                'BG3060': 'docs/research/bg3060-bounded-hd.md',
+                'BG3165': 'docs/research/bg3165-bounded-hd.md',
             }.get(name)
             if runtime_evidence:
                 row.update(verified_in_game=True, runtime_evidence=runtime_evidence)
