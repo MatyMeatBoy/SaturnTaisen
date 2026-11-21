@@ -1163,3 +1163,22 @@ invitation reaches the Start and Practice menu. Every guest hash
 and final SRAM match the interpreter and no blocks are interpreted.
 The `MINISWIM_LONG_DAY` registry records the observed ranges.
 The timed swim, BGSWIM reward and public package remain open.
+
+### Timed swimming race and exit
+
+The post-menu route starts the timed swim, reaches the finish
+with 26.18 seconds, selects End Game in the results and reaches
+the loading screen. It runs on prepared English disc 1. The
+menu-only build stopped in this route at master SH-2 address
+`00218D22`.
+
+The isolated build added 418 byte-exact MINISWIM extents beyond
+the 1144 already recorded for the menu. All 2300 guest hashes
+and the final SRAM matched the interpreter run. The strict
+runtime reported zero interpreted blocks. The extent registry
+now holds 1562 entries for the witnessed module. Only offsets
+and lengths are tracked.
+
+The target is under 20 seconds. This race does not reach the
+BGSWIM reward, so the HD image and the winning branch remain
+pending. Neither candidate build is included in a release.
