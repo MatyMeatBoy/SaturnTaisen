@@ -89,3 +89,22 @@ la extensión RIFF antes de entregar WAV estándar. Se verificaron las
 OTOME pasó sin cambios. Las pruebas sintéticas cubren archivos normales,
 el prefijo conocido y extensiones truncadas o inválidas. El valor de
 bucle se conserva como metadato sin aplicarlo a la reproducción.
+
+### Efectos de combate PCMSE
+
+`tools/audit_pcmse_pairs.py` coteja los dos bancos PCMSE.BIN
+del Saturn y la tabla SE.TAB de PC. Los bancos son idénticos.
+Su directorio contiene 12 entradas con datos y dos vacías.
+El despachador Saturn de 0x0601983C asigna los IDs 41–51 y
+54, que coinciden con las entradas STATIC de PC. El informe
+registra tamaños, huellas y formato WAV, sin copiar muestras.
+
+El primer ataque normal de Sakura activa el ID 42 de forma
+natural. Después del campo 378, el despachador recibe 0x2A y
+copia la fila 1 desde 0x060E97CC. En los campos 381 y 386 se
+observa el canal SCSP 6 con PCM8 a aproximadamente 15,99 kHz,
+centrado, sin envío DSP y con los primeros 4096 y 8192 bytes
+exactos de la fila en la RAM de sonido. Su pareja por ID es
+0042.WAV. El efecto 51 queda identificado en ambos formatos,
+con un disparo natural todavía pendiente. El informe de IDs
+no mide la mejora audible ni suma integraciones al mod.
