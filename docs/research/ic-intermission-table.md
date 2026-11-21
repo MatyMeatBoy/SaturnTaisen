@@ -134,3 +134,25 @@ These checks establish controlled runtime integration. The chapter
 coverage register records fixture evidence and keeps the natural
 occurrence field unverified. Private commands, captures and receipts
 are under `local/work/codex-th1/ic-disc1-witness/controlled-batch/`.
+
+### Controlled IC09 on disc 2
+
+The fixture starts from the English disc-2 Iris intermission.
+It redirects the existing loader from its IC06 filename to its
+IC09 filename without changing disc bytes. The guest reads IC09
+at FAD 135148 for 38 sectors and reads ICLOGO at FAD 135470.
+Layer 4 uses IC09's own palette 531118F0C2D02ED5 and its plate
+D598B50EA75137BD. Patch 0287 adds that exact pair and uses the
+existing IC0900.SPR donor. The prior disc-1 ICLOGO key does
+not select this appearance.
+
+Five 430-field A/B runs from the controlled checkpoint at 1440p
+match guest hashes and final SRAM with zero interpreted blocks.
+The two samples of the visible IC09 plate change 2059533 pixels
+within its viewport. Independent decodes match all 2064384
+unprotected viewport pixels in the native and donor samples.
+Later samples, after departure, match exactly. A corrupt donor
+matches the absent donor and Original matches with and without
+the PC file. The evidence covers this controlled appearance.
+The natural disc-2 trigger and release packaging remain pending.
+IC0900.SPR was already counted through disc 1.

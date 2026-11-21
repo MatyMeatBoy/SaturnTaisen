@@ -1,0 +1,12 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -709,6 +709,8 @@
+             rows.push_back({row.disc, row.palette, row.file, row.bytes, row.fileHash, row.nativeRgb, row.darkRgb});
+         rows.push_back({2, 0xFEBAEA7B6E7CAC67ull, "SAKURA1/ICATCH/IC0600.SPR", 179506, 0xD6AEB7F7E04B94DAull,
+                         0x0F85EDA8CE4B247Dull, 0});
++        rows.push_back({2, 0x531118F0C2D02ED5ull, "SAKURA1/ICATCH/IC0900.SPR", 226719, 0x59DD92FA60CCCDDDull,
++                        0xD598B50EA75137BDull, 0});
+         rows.push_back({2, 0xE88FA69862FFF076ull, "SAKURA1/ICATCH/IC0800.SPR", 185067, 0x172242F4CF71EC08ull,
+                         0xCF7BF25FE1E23E25ull, 0xABC1FD0D76B8206Dull});
+         return rows;

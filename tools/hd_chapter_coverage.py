@@ -971,6 +971,9 @@ def build(root, index_dir, portrait_audit):
             elif (disc, path) == (2, '/SAKURA1/IC08.BIN'):
                 row.update(status='hd', verified_in_game=True,
                            runtime_evidence='docs/research/ic-intermission-table.md#ic08-on-english-disc-2')
+            elif (disc, path) == (2, '/SAKURA1/IC09.BIN'):
+                row.update(status='hd', verified_in_game=False,
+                           fixture_evidence='docs/research/ic-intermission-table.md#controlled-ic09-on-disc-2')
             elif disc == 1 and name in IC_TABLE_IDS:
                 row.update(status='wired-unverified', verified_in_game=False,
                            runtime_table='config/hd-ic-table.json')
