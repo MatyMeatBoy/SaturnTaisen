@@ -107,3 +107,21 @@ Verification executable SHA-256:
 `777815553f3c2fd076da60c4cf76b8ae749af14721dd3075efe81c829cf1efe8`.
 This isolated build tests the MAP08 and HLE changes on the WKL02
 baseline. The change awaits packaging.
+
+## MAP09 at 1440p
+
+The English Episode 7 save reached the scripted MAP09 ambush and the
+following save prompt in 19,248 strict fields. Its prefix and sampled
+segments matched the interpreted reference. The candidate adds 860
+disc-pinned EVT09 spans. The PC 2,048 × 1,792 ground maps to the
+1,024 × 896 native source-4 world on page 0x40000 (16F7C2CBA831B3CC).
+
+Two fixed checkpoints and 600 fields of scripted camera motion passed
+the five-profile comparison at 2560 × 1440. All pixel changes stayed
+in the tactical centre. Original and corrupt cases preserved the
+native drawing. Guest hashes and SRAM matched within each case. The
+smoke batch also passed the same three locations in 17.36 seconds.
+
+Verification executable SHA-256:
+`5c8d62bba85b7e44b9bdce33d3bd933cf95ed8346f96e5c45f20cf223c282881`.
+The change is pending packaging.

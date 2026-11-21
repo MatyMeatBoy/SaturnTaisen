@@ -146,6 +146,10 @@ REGISTRY['K014_MAP08'] = dict(
     sha256='18077bebad65ca8555b37bd3efe94a7953ce9f5578f9cc7c482ec50372e7b53d',
     observed_ranges='k014-map08-aot-ranges.json', evidence='English disc 1 MAP08 deployment replay',
 )
+REGISTRY['EVT09_MAP09'] = dict(
+    REGISTRY['EVT09'], observed_ranges='evt09-map09-aot-ranges.json',
+    evidence='English disc 1 MAP09 scripted ambush and exit to the Episode 7 save',
+)
 REGISTRY['EVT19_BBG218'] = dict(
     REGISTRY['EVT19'], observed_ranges='evt19-bbg218-aot-ranges.json',
     evidence='Natural English disc 2 MAP19 replay of the BBG218 tactical inset',
