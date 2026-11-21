@@ -191,6 +191,26 @@ The English disc 2 title replay opened **Data to load** with two Chapter 8 slots
 Patch 0146 uses the previous VDP1 ownership and VDP2 blend checks. Each exact emblem has its own decoded cache entry. The renderer keeps the lower slots on the native path. At 2560×1440, the independent 31/32 PC and 1/32 background reconstruction reproduced the entire result, with 1,122 native-owned texels in the tested draw and preserved pixels outside the emblem. All seven 30-frame runs shared the same strict guest hash log. Original, disabled, missing and corrupt-donor controls passed. The existing disc 1 HD emblem retained identical output and guest hashes. Other slot positions, other variants and package inclusion remain open.
 
 
+### Emblemas azules de los discos de carga
+
+El atlas nativo de carga contiene seis texturas de 40 × 40 con
+la misma paleta de 512 bytes 52C0DBB1EA90290A. Las variantes
+azules CD-1 y CD-2 residen en VRAM VDP1 0x7E900 y 0x7EF40.
+Sus huellas son 00C9C96E75F421B2 y 524889642B14872C.
+Correspondencia PC en SIS_ICON.SPR: subimágenes 4 y 5.
+Las máscaras coinciden en los 6400 píxeles de cada icono PC
+y hay 603 y 628 bloques con detalle interno a 2×, respectivamente.
+
+La tabla usa la comprobación de comando, posición, paleta,
+propiedad del píxel y mezcla VDP2 ya usada por los emblemas rosas.
+La caché se dimensiona con la tabla y el decodificador admite
+ambas subimágenes de 80 × 80 del mismo donante preparado.
+La identidad y el encuadre están comprobados offline. El dibujo
+natural de las variantes azules sigue pendiente de validación.
+Los iconos System RAM y cartucho del donante no añaden detalle
+dentro de bloques 2 × 2. Las cuatro variantes de CD-3 y CD-4 son
+propias de PC.
+
 ## Load menu selection arrows
 
 The English **Data to load** screen on both Saturn discs uses two 8×16 arrows at native (224,62) and (280,62). Both commands use mode `0080`, color bank `02C0` and the exact 32-byte palette fingerprint `809F8438D9925B74`. The packed texture fingerprints are `C22BF33F44463864` and `FF02AF0F7DEB043C`, respectively. The PC equivalents are subimages 8 and 9 of `SAKURA1/SYSTEM/SISTEM.SPR`. Each is 16×32. Their cyan-keyed masks match all 512 pixels of their doubled Saturn silhouettes.

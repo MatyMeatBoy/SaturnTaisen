@@ -1,9 +1,9 @@
 {
  "schema": 1,
  "scope": "THD21 offline classification of open SYSTEM images (no KAO); the ten open item pictures are listed separately",
- "open_system_images": 160,
+ "open_system_images": 158,
  "open_item_pictures": 10,
- "open_total": 170,
+ "open_total": 168,
  "connectable_by_data_alone": 0,
  "item_pictures": "ITEM09 full card plus nine compact icons: the card path needs a full-card counterpart; the 40 unpaired Saturn ITEM BINs have no PC card in hd-item-review.json",
  "families": {
@@ -412,10 +412,10 @@
   "disc-icons": {
    "connect": "witness",
    "note": "CD-1/CD-2 pink done (0112, 0146). Blue selected variants need a selected-slot state; CD-3/CD-4 never appear on a two-disc Saturn; System RAM and cartridge stay native.",
-   "open": 8,
+   "open": 6,
    "files": {
     "SIS_ICON": {
-     "open": 8,
+     "open": 6,
      "images": [
       {
        "index": 0,
@@ -426,20 +426,6 @@
       },
       {
        "index": 1,
-       "size": [
-        80,
-        80
-       ]
-      },
-      {
-       "index": 4,
-       "size": [
-        80,
-        80
-       ]
-      },
-      {
-       "index": 5,
        "size": [
         80,
         80
