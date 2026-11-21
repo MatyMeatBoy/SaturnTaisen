@@ -1,6 +1,6 @@
 # Shards: what is left for the HD mod, split so other bots can send PRs
 
-Workers can pick independent shards across scenes, character art, menus, tactical mode or performance. A shard may cover one complete image or a group of images that share the same runtime path and can be tested together. Rules for every shard: author MatyMeatBoy, PRs only (the coordinator reviews and merges), never commit discs, BIOS, saves, game pixels, `local/` or original PC assets (names, hashes, scores and code are fine), do not move the approved Zoom framing, guest hashes must stay identical (`interpreted 0`, same per-frame hashes as `main`), update `docs/PENDIENTES.md` with what is implemented, tested and packaged. Read `docs/HANDOFF.md` and `docs/research/hd-completion-handoff.md` first. Runtime code lives in the satrecomp dependency as a numbered patch in `patches/` (see `tools/build_runtime.py`); do not run it while someone else has unrecorded dependency changes.
+Workers can pick independent shards across scenes, character art, menus, tactical mode or performance. A shard may cover one complete image or a group of images that share the same runtime path and can be tested together. Rules for every shard: author MatyMeatBoy, PRs only (the coordinator reviews and merges), never commit discs, BIOS, saves, game pixels, `local/` or original PC assets (names, hashes, scores and code are fine), do not move the approved Zoom framing, record guest hashes and interpretation status when a runtime replay is available, update `docs/PENDIENTES.md` with what is implemented, tested and packaged. Read `docs/HANDOFF.md` and `docs/research/hd-completion-handoff.md` first. Runtime code lives in the satrecomp dependency as a numbered patch in `patches/` (see `tools/build_runtime.py`); do not run it while someone else has unrecorded dependency changes.
 
 Pick new HD work from the [resource queue THD01–THD32](PENDIENTES.md#hd-pendiente-por-recurso). The sections below retain the earlier task IDs, render paths and evidence. Use the new queue for assignments and the 30-minute claim check.
 
@@ -205,3 +205,40 @@ A chapter whose register has only a few open rows is closed before anything else
 ### Reservas en PRs abiertos
 
 `python tools/shard_claims.py --list-pr-claims` lee la cola del último commit de cada PR abierto y muestra su reserva, el número de PR y los minutos desde el último commit. Revisa este listado junto con `--list` antes de tomar un shard. Si aparece como obsoleto, el coordinador puede retomar el lote conservando el PR anterior como referencia. `--release-stale` actualiza las reservas que ya figuran en la cola de la rama de trabajo.
+# Cola por lotes de integración HD
+
+Genera la cola desde el inventario revisado y los duplicados exactos. No
+decodifica todo de nuevo ni repite el trabajo por disco, capítulo o visita.
+Cada lote agrupa donantes por familia, estado y ruta de renderizado.
+
+```powershell
+python tools/hd_batch_queue.py --pc-root 'local/work/v02-pc-game/_t_@_C__' --output local/work/hd-batch-queue.json
+```
+
+El orden de entrega es: donantes emparejados y listos para registrar, suelos
+de imagen única con firma conocida, tarjetas e iconos, y familias de HUD
+por archivo y ordinal. El lote conserva las referencias Saturn para poder
+enlazar todos los usos de un mismo recurso. Deja EVENT y CG fuera del total
+principal. Separa los montajes de tamaño distinto, las imágenes con texto
+horneado y los emparejamientos ambiguos antes de asignar un lote.
+
+Para cada lote, el worker coteja el arte y el encuadre con los recursos
+locales, registra juntos los compatibles con el compositor existente y
+actualiza el catálogo. La evidencia offline basta para la integración
+cuando las claves y la geometría están confirmadas. Una ruta natural,
+una prueba controlada y el resultado de beta se registran por separado.
+
+Cuando haya partidas guardadas disponibles, añade uno o más
+`--states <directorio>` a la cola. El índice lee la firma VDP2 de los
+archivos de estado admitidos y prioriza los suelos que ya tienen un
+punto de partida. La residencia en memoria sirve para elegir un
+replay. Un dibujo requiere evidencia de la salida de vídeo.
+
+Para probar varios suelos ya enlazados en un solo comando, pasa a
+`tools/hd_ground_batch.py --manifest <casos.json> --exe <runtime> --pc-root <PC> --output <directorio-nuevo>`
+una lista JSON. Cada caso tiene `map`, `state`, `backup`, `disc`,
+`donor_sha256` y, opcionalmente, `frames` y `movie`. Las rutas del caso
+se resuelven desde el directorio de trabajo. La prueba rápida compara
+donante y ausencia. El beta tester puede añadir `--beta` para comprobar
+también Original y un recurso corrupto. La rutina deja capturas, hashes,
+estado de cada caso y un recibo común. Usa `--jobs 1` si el equipo está ocupado.
