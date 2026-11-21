@@ -1,0 +1,198 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -35,6 +35,7 @@
+ #include "verified_body_faces.h"
+ #include "film_clip_table.h"
+ #include "load_disc_icon.h"
++#include "item_icons.h"
+ #include "tactical_status_frame.h"
+ #include "tactical_command_frames.h"
+ #include "dev_states.h"
+@@ -1963,6 +1964,94 @@
+             const SDL_FRect dest{target.x + panel.x * float(scale), target.y + panel.y * float(scale),
+                 panel.width * float(scale), panel.height * float(scale)};
+             SDL_RenderTexture(renderer, overlay.texture, nullptr, &dest);
++        }
++    };
++    std::array<ItemHdImage,std::size(item_icons::icons)> compactIcons{};
++    std::array<bool,std::size(item_icons::donors)> compactTried{};
++    auto drawCompactIcons=[&](const satrecomp::video::Renderer::Presentation& planes,const SDL_FRect& crop,
++                              const SDL_FRect& target,int scale) {
++        using namespace item_icons;
++        constexpr int width=320,height=224;
++        if(scale<1 || !renderer || port.opt.pcAssetsPath.empty() ||
++           satrecomp::FeatureValue("presentation_mode")!=1 || satrecomp::FeatureValue("pc_hd_backgrounds")!=0 ||
++           planes.width!=width || planes.height!=height ||
++           planes.topSource.size()!=width*height || softwareShown.size()!=width*height)
++            return;
++        const auto panel=std::find_if(planes.sprites.begin(),planes.sprites.end(),[](const auto& sprite) {
++            return sprite.x==48 && sprite.y==16 && IsRectangle(sprite,0x0080,0xA2C0,0x1C80);
++        });
++        if(panel==planes.sprites.end())return;
++        const auto palette=std::span(planes.palette).subspan(0xB00,0x100);
++        if(Fingerprint(palette)!=paletteHash)return;
++        for(auto it=std::next(panel);it!=planes.sprites.end();++it) {
++            const auto& sprite=*it;
++            const int x=sprite.x,y=sprite.y;
++            if(x<64 || y<32 || x+nativeSize>256 || y+nativeSize>108 ||
++               x<crop.x || y<crop.y || x+nativeSize>crop.x+crop.w || y+nativeSize>crop.y+crop.h ||
++               !IsRectangle(sprite,0x0098,0xA580,0x0420) || sprite.pixels.size()!=nativeSize*nativeSize)
++                continue;
++            const auto key=Fingerprint(sprite.pixels);
++            const auto* icon=std::find_if(std::begin(icons),std::end(icons),
++                [key](const Icon& row){return key==row.texture;});
++            if(icon==std::end(icons))continue;
++            // Reject this entire icon when a later command could have drawn
++            // over it, even if the later pixel happens to match its color.
++            if(std::any_of(std::next(it),planes.sprites.end(),[=](const auto& later){return Overlaps(later,x,y);}))
++                continue;
++            bool exact=true;
++            for(int row=0;row<nativeSize && exact;row++)for(int col=0;col<nativeSize;col++) {
++                const auto texel=sprite.pixels[row*nativeSize+col];
++                const auto at=(y+row)*width+x+col;
++                if(texel==0 || texel>=128 || planes.topSource[at]!=0 ||
++                   (softwareShown[at]&0xFFFFFFu)!=NativeRgb(palette,texel)) {
++                    exact=false;break;
++                }
++            }
++            if(!exact)continue;
++            if(!compactTried[icon->donor]) {
++                compactTried[icon->donor]=true;
++                const auto& donor=donors[icon->donor];
++                std::vector<uint8_t> bytes;
++                const auto path=std::filesystem::u8path(port.opt.pcAssetsPath)/donor.file;
++                std::vector<PcSprite> art;
++                std::string error;
++                if(ReadPcBackdropFile(path,bytes,donor.bytes) && bytes.size()==donor.bytes &&
++                   Fingerprint(bytes)==donor.hash && DecodePcSprites(bytes,art,error)) {
++                    for(const auto& spec:icons) {
++                        if(spec.donor!=icon->donor)continue;
++                        const auto image=std::find_if(art.begin(),art.end(),[&](const auto& a){
++                            return a.index==spec.ordinal && a.width==donorSize && a.height==donorSize &&
++                                   a.pixels.size()==donorSize*donorSize;
++                        });
++                        if(image==art.end())continue;
++                        auto& pixels=compactIcons[&spec-icons].rgba;
++                        for(int row=0;row<hdSize;row++) {
++                            const auto first=image->pixels.begin()+(spec.cropY+row)*donorSize+spec.cropX;
++                            pixels.insert(pixels.end(),first,first+hdSize);
++                        }
++                        if(std::any_of(pixels.begin(),pixels.end(),[](auto p){return (p>>24)!=255;}))
++                            pixels.clear();
++                    }
++                }
++            }
++            const auto& pixels=compactIcons[icon-icons].rgba;
++            if(pixels.empty())continue;
++            if(!itemOverlay) {
++                itemOverlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
++                                             hdItemSize,hdItemSize);
++                if(!itemOverlay)return;
++                if(!SDL_SetTextureScaleMode(itemOverlay,SDL_SCALEMODE_NEAREST) ||
++                   !SDL_SetTextureBlendMode(itemOverlay,SDL_BLENDMODE_BLEND)) {
++                    SDL_DestroyTexture(itemOverlay);itemOverlay=nullptr;
++                    return;
++                }
++            }
++            const SDL_Rect update{0,0,hdSize,hdSize};
++            if(!SDL_UpdateTexture(itemOverlay,&update,pixels.data(),hdSize*sizeof(uint32_t)))continue;
++            const SDL_FRect source{0,0,float(hdSize),float(hdSize)};
++            const SDL_FRect dest{target.x+(x-crop.x)*scale,target.y+(y-crop.y)*scale,
++                                 float(nativeSize*scale),float(nativeSize*scale)};
++            SDL_RenderTexture(renderer,itemOverlay,&source,&dest);
+         }
+     };
+     auto drawItem=[&](const satrecomp::video::Renderer::Presentation& planes,const SDL_FRect& crop,
+@@ -4511,6 +4600,7 @@
+                         }
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale,true);
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
++                        drawCompactIcons(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawBrackets(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+@@ -4631,6 +4721,7 @@
+                 if(!scene.movieOnly && !splitZoom) {
+                     drawItem(planes,crop,target,fit.scale,true);
+                     drawItem(planes,crop,target,fit.scale);
++                    drawCompactIcons(planes,crop,target,fit.scale);
+                     drawLoadPanels(planes,softwareShown,crop,target,fit.scale);
+                     drawBrackets(planes,crop,target,fit.scale);
+                 }
+diff --git a/port/item_icons.h b/port/item_icons.h
+new file mode 100644
+--- /dev/null
++++ b/port/item_icons.h
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-3.0-only
++#pragma once
++#include <algorithm>
++#include <array>
++#include <cstdint>
++#include <span>
++
++namespace port::item_icons {
++inline constexpr int nativeSize=32, donorSize=72, hdSize=64;
++inline constexpr uint64_t paletteHash=0x3BBF6ACDF791D975ull;
++
++struct Donor {const char* file;std::size_t bytes;uint64_t hash;};
++inline constexpr Donor donors[]{
++    {"SAKURA1/ITEM/BUROICON.SPR",71079,0xA164748F44CC3535ull},
++    {"SAKURA1/ITEM/ITEMICON.SPR",154369,0x8C08BABCC7B4DD3Eull},
++};
++struct Icon {uint64_t texture;unsigned donor, ordinal;int cropX,cropY;};
++inline constexpr Icon icons[]{
++    {0x33653581F9CF5752ull,0,1,4,4},
++    {0x8E1CF7C5200587B8ull,0,2,5,4},
++    {0xA728E5B8A7F511C5ull,0,9,5,4},
++    {0xDA65A5CEA3A1FF6Bull,0,13,5,4},
++    {0x5191906B7F43728Aull,1,19,4,4},
++    {0xCAAA5A9759CF98D3ull,1,20,4,4},
++    {0xF62D05C1F37521BEull,1,28,5,4},
++};
++
++constexpr uint64_t Fingerprint(std::span<const uint8_t> bytes) {
++    uint64_t hash=0xcbf29ce484222325ull;
++    for(const auto b:bytes)hash=(hash^b)*0x100000001b3ull;
++    return hash;
++}
++constexpr int Signed(uint16_t value) {return int((value&0x1FFF)^0x1000)-0x1000;}
++
++template<class Sprite>
++bool IsRectangle(const Sprite& sprite,uint16_t mode,uint16_t color,uint16_t size) {
++    const auto& w=sprite.command.words;
++    return (w[0]&0x8FFF)==1 && w[2]==mode && w[3]==color && w[5]==size &&
++        Signed(w[10])-Signed(w[6])+1==int((size>>8)&63)*8 &&
++        Signed(w[11])-Signed(w[7])+1==int(size&255);
++}
++
++template<class Sprite>
++bool Overlaps(const Sprite& sprite,int x,int y) {
++    const auto& w=sprite.command.words;
++    const unsigned kind=w[0]&15;
++    if(kind>=8)return false; // clipping and coordinate commands write no pixels
++    int left=sprite.x,right=left,top=sprite.y,bottom=top;
++    if(kind==0) {
++        right+=int((w[5]>>8)&63)*8-1;
++        bottom+=int(w[5]&255)-1;
++    }else{
++        if(kind==1 && (w[0]&0xF00))return true; // scaled with a zoom anchor
++        if(kind==3 || kind==7)return true; // reserved or unsupported
++        const int ox=sprite.x-Signed(w[6]),oy=sprite.y-Signed(w[7]);
++        const std::array<unsigned,3> vertices{8u,10u,12u};
++        for(const auto v:vertices) {
++            if((kind==1 && v!=10) || (kind==6 && v!=8))continue;
++            const int vx=ox+Signed(w[v]),vy=oy+Signed(w[v+1]);
++            left=std::min(left,vx);right=std::max(right,vx);
++            top=std::min(top,vy);bottom=std::max(bottom,vy);
++        }
++    }
++    return right>=x && left<x+nativeSize && bottom>=y && top<y+nativeSize;
++}
++
++constexpr uint32_t NativeRgb(std::span<const uint8_t> palette,uint8_t index) {
++    const uint16_t w=(uint16_t(palette[2*index])<<8)|palette[2*index+1];
++    return ((w&31u)<<3)|((w&0x3E0u)<<6)|((w&0x7C00u)<<9);
++}
++}

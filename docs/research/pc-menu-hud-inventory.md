@@ -379,6 +379,38 @@ without the donor. A scan of 3753 archived states found no direct
 natural draw of ITEM09. The controlled test verifies the renderer
 and fallback, and natural acquisition remains unverified.
 
+### Iconos compactos de inventario
+
+Los nueve enlaces automáticos de BUROICON e ITEMICON apuntaban a tarjetas
+completas con dibujos distintos. El inventario Saturn usa un banco aparte.
+El icono de la carta en un estado retenido se dibuja a 32 × 32, desde
+/SAKURA1/NCOBJ.BIN a partir de 0x1800. Los 28 iconos del banco son idénticos
+en los dos discos. La textura y la paleta del comando reproducen los
+1024 píxeles RGB de la carta en la captura nativa.
+
+| Donante PC | Índice NCOBJ | Recorte PC (x,y) |
+| --- | ---: | --- |
+| BUROICON #1 | 0 | 4,4 |
+| BUROICON #2 | 2 | 5,4 |
+| BUROICON #9 | 25 | 5,4 |
+| BUROICON #13 | 26 | 5,4 |
+| ITEMICON #19 | 18 | 4,4 |
+| ITEMICON #20 | 19 | 4,4 |
+| ITEMICON #28 | 27 | 5,4 |
+
+Cada recorte opaco es de 64 × 64 y excluye el borde de la imagen PC
+de 72 × 72. La comparación con el icono Saturn a 32 × 32 dio
+correlaciones RGB de 0,832 a 0,985. BUROICON #0 es una baldosa rosa
+vacía. ITEMICON #84 representa una botella que tiene tarjeta completa
+ya integrada, sin una pareja compacta identificada en el banco Saturn.
+
+La ruta de presentación comprueba el panel, comando, textura y paleta.
+El icono queda nativo si otro comando puede taparlo o algún píxel no
+coincide con la capa ganadora y el color original. También queda nativo
+en modo Original y ante un donante ausente o alterado. El encuadre y
+la identidad se cotejaron offline. Los siete iconos quedan pendientes
+de verificación en juego.
+
 ## Inventario táctico SYSTEM
 
 El directorio PC `SAKURA2/SYSTEM` contiene 19 archivos SPRED
