@@ -17563,6 +17563,13 @@
         "status": "hd",
         "verified_in_game": false
       },
+      "1:/SAKURA2/K_OVER.BIN": {
+        "association": "observed",
+        "evidence": "docs/research/game-over-hd.md",
+        "pc": "SAKURA2/BG/GO_KOUBU.SPR",
+        "status": "hd",
+        "verified_in_game": false
+      },
       "2:/SAKURA1/AI_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",
@@ -21166,6 +21173,13 @@
         "association": "unknown",
         "pc": "SAKURA2/BG/BBG101.SPR",
         "status": "hd"
+      },
+      "2:/SAKURA2/K_OVER.BIN": {
+        "association": "inferred",
+        "evidence": "docs/research/game-over-hd.md",
+        "pc": "SAKURA2/BG/GO_KOUBU.SPR",
+        "status": "hd",
+        "verified_in_game": false
       },
       "pc:SAKURA1/ENDING/STAFF_AI.SPR": {
         "association": "unknown",
