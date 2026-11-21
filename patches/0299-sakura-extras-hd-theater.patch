@@ -1,0 +1,109 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -449,6 +449,9 @@
+ 
+     SDL_Texture *mapBackdropTexture=nullptr;
+     SDL_Texture* generalEndingTexture = nullptr;
++    SDL_Texture* extrasTheaterTexture = nullptr;
++    SDL_Texture* extrasTheaterForeground = nullptr;
++    bool extrasTheaterTried = false;
+     SDL_Texture* generalEndingSprites = nullptr;
+     SDL_Texture* irisComboTexture = nullptr;
+     SDL_Texture* comboCardTexture = nullptr;
+@@ -758,6 +761,9 @@
+         mapBackdropTexture=nullptr;
+         if (generalEndingTexture) SDL_DestroyTexture(std::exchange(generalEndingTexture, nullptr));
+         if (generalEndingSprites) SDL_DestroyTexture(std::exchange(generalEndingSprites, nullptr));
++        if (extrasTheaterTexture) SDL_DestroyTexture(std::exchange(extrasTheaterTexture, nullptr));
++        if (extrasTheaterForeground) SDL_DestroyTexture(std::exchange(extrasTheaterForeground, nullptr));
++        extrasTheaterTried = false;
+         if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
+         irisComboTexture = nullptr;
+         if (comboCardTexture) SDL_DestroyTexture(comboCardTexture);
+@@ -1144,6 +1150,8 @@
+         std::vector<WindowRail> rails;
+     };
+     std::array<WindowFrame, 15> windowFrames;
++    SceneHd extrasTheater;
++    std::vector<uint32_t> extrasTheaterCover;
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+     SceneHd eve0118;
+@@ -4893,6 +4901,66 @@
+                     }
+                     return samples;
+                 };
++                const auto& video = *port.videoRenderer;
++                if (frame.topSource.size() == 320 * 224 && frame.source.size() == 320 * 224 &&
++                    video.BackgroundIsOpaque(5) && video.BackgroundPaletteFingerprint(5) == 0x98E28A230F215D76ull &&
++                    video.BackgroundCellFingerprint(5, 320 * 224) == 0x3E17A1530811D8BEull) {
++                    // OMAKE12 is the complete theater backdrop. Keep the guest's gallery and dialogue above it.
++                    bool visible = false;
++                    bool exactOwners = true;
++                    for (size_t at = 0; at < frame.topSource.size(); ++at) {
++                        if (frame.topSource[at] == 5 && frame.source[at] == 5) visible = true;
++                        else if (frame.topSource[at] != 0) { exactOwners = false; break; }
++                    }
++                    if (visible && exactOwners) {
++                        if (!extrasTheaterTried) {
++                            extrasTheaterTried = true;
++                            queuePinnedPan(extrasTheater, "SAKURA1/SYSTEM/SIS_BG3.SPR",
++                                365283, 0xA4C4066CF08FB7CAull, 640, 480);
++                        }
++                        if (extrasTheater.pending.valid() &&
++                            extrasTheater.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                            auto art = extrasTheater.pending.get();
++                            if (!art.pixels.empty()) {
++                                // Register the full PC plate to the existing 2x native lattice before integer display scaling.
++                                SceneHdPixels normalized;
++                                normalized.width = 640;
++                                normalized.height = 448;
++                                normalized.pixels.resize(640 * 448);
++                                for (int y = 0; y < 448; ++y) {
++                                    const size_t from = size_t((2 * y + 1) * 480 / (2 * 448)) * 640;
++                                    std::copy_n(art.pixels.begin() + from, 640, normalized.pixels.begin() + size_t(y) * 640);
++                                }
++                                auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                    SDL_TEXTUREACCESS_STATIC, 640, 448);
++                                if (picture && SDL_UpdateTexture(picture, nullptr, normalized.pixels.data(), 640 * 4)) {
++                                    SDL_SetTextureScaleMode(picture, SDL_SCALEMODE_NEAREST);
++                                    SDL_SetTextureBlendMode(picture, SDL_BLENDMODE_NONE);
++                                    extrasTheaterTexture = picture;
++                                } else if (picture) SDL_DestroyTexture(picture);
++                            }
++                        }
++                        if (extrasTheaterTexture) {
++                            if (!extrasTheaterForeground) {
++                                extrasTheaterForeground = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                    SDL_TEXTUREACCESS_STREAMING, 320, 224);
++                                if (extrasTheaterForeground) {
++                                    SDL_SetTextureScaleMode(extrasTheaterForeground, SDL_SCALEMODE_NEAREST);
++                                    SDL_SetTextureBlendMode(extrasTheaterForeground, SDL_BLENDMODE_BLEND);
++                                }
++                            }
++                            if (extrasTheaterForeground) {
++                                extrasTheaterCover.resize(320 * 224);
++                                for (size_t at = 0; at < extrasTheaterCover.size(); ++at)
++                                    extrasTheaterCover[at] = frame.topSource[at] == 0 ? softwareShown[at] | 0xFF000000u : 0;
++                                if (SDL_UpdateTexture(extrasTheaterForeground, nullptr, extrasTheaterCover.data(), 320 * 4)) {
++                                    SDL_RenderTexture(renderer, extrasTheaterTexture, nullptr, &where);
++                                    SDL_RenderTexture(renderer, extrasTheaterForeground, nullptr, &where);
++                                }
++                            }
++                        }
++                    }
++                }
+                 if (frame.topSource.size() == 320 * 224) {
+                     const auto palette = PcBackdropHash(std::span{frame.palette}.subspan(0xA00, 512));
+                     const auto systemPalette = std::span{frame.palette}.subspan(0x580, 32);
+@@ -5950,6 +6018,9 @@
+                 comboCardTexture = nullptr;
+                 if (generalEndingTexture) SDL_DestroyTexture(std::exchange(generalEndingTexture, nullptr));
+         if (generalEndingSprites) SDL_DestroyTexture(std::exchange(generalEndingSprites, nullptr));
++        if (extrasTheaterTexture) SDL_DestroyTexture(std::exchange(extrasTheaterTexture, nullptr));
++        if (extrasTheaterForeground) SDL_DestroyTexture(std::exchange(extrasTheaterForeground, nullptr));
++        extrasTheaterTried = false;
+         if (irisComboTexture) SDL_DestroyTexture(irisComboTexture);
+                 irisComboTexture = nullptr;
+                 if (bg2093Composite) SDL_DestroyTexture(bg2093Composite);
