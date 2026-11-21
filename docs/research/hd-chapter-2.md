@@ -240,12 +240,24 @@ The 120-pixel cases include kohran-end-order, purple-end-menu
 and round-two-kohran-end. The related captures and inputs are in
 the local Chapter 2 follow-up archive.
 
-The current item-card capture keeps one command frame and its
-ownership mask. Registering the horizontal rows alone would
-leave the later vertical frame as the selected replacement.
-The 120-pixel frame also exceeds the current 112-pixel mask
-stride. The next runtime change needs separately bounded masks
-for both frames and must record coverage by later commands.
-Verify a case of each width with its submenu visible,
-preserving labels, highlight and cursor in all comparisons.
-The two horizontal rows are paired candidates and remain native.
+### Verified horizontal WKL02 command frames
+
+Patch 0288 tracks a separate 120 × 32 ownership mask for the
+horizontal shell in each physical VDP1 framebuffer. Later opaque
+and blended writes keep their native order. The SDL frontend uses
+a separate texture for the horizontal shell so the vertical
+submenu can be queued in the same frame.
+
+The Cancel, Advice and Kohran end-order menu replays each ran
+72 strict AOT fields with seven profiles. Four frames per
+profile were compared at 2560 × 1440. The new horizontal pixels
+matched the donor and remained within the native shell while
+preserving the vertical updates. The 120-pixel shell contributed
+2,745 changed output pixels beyond native column 111. Missing,
+same-size corrupt and disabled donors matched the Enhanced
+native result. Original matched with and without the donor.
+Guest hashes and backup RAM matched across profiles for each
+replay. The verification binary SHA-256 was
+`6c53720bf3a860ea3f3d8cd2780fe90a9ca3f086fc025828a82e898d983a129d`.
+These two subimages are verified components of WKL02. They have
+not been included in a released package.

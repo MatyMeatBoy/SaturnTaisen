@@ -1,0 +1,366 @@
+diff --git a/port/tactical_command_frames.h b/port/tactical_command_frames.h
+--- a/port/tactical_command_frames.h
++++ b/port/tactical_command_frames.h
+@@ -15,9 +15,23 @@
+     int width, height;
+ };
+ inline constexpr TacticalCommandFrame kTacticalCommandFrames[]{
++    {{0x18FDBFE27D4349D5ull, kCommandFrameLutHash, kCommandFrameFile, 0}, 96, 32},
++    {{0x0D7B8C2AB0FB6C5Eull, kCommandFrameLutHash, kCommandFrameFile, 1}, 120, 32},
+     {{0x549B32456EF87DB3ull, kCommandFrameLutHash, kCommandFrameFile, 2}, 40, 48},
+     {{0xD46C77EFDE420A6Full, kCommandFrameLutHash, kCommandFrameFile, 4}, 40, 80},
+ };
++
++inline constexpr int kHorizontalCommandMaskStride = 120;
++inline constexpr int kHorizontalCommandHeight = 32;
++
++inline constexpr int HorizontalCommandPixel(int x, int y, int width) {
++    return x >= 0 && x < width && width <= kHorizontalCommandMaskStride &&
++        y >= 0 && y < kHorizontalCommandHeight ? y * kHorizontalCommandMaskStride + x : -1;
++}
++
++inline constexpr uint8_t CommandOwnerAfterWrite(uint8_t prior, bool current, bool composite) {
++    return current ? 1 : prior && composite ? 2 : 0;
++}
+ 
+ inline const TacticalCommandFrame* CommandFrame(const ItemCardEntry* entry) {
+     for (const auto& frame : kTacticalCommandFrames)
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -41,6 +41,8 @@
+     for(auto& sprites:m_presentSprites)sprites.clear();
+     m_presentation.sprites.clear();m_captureValid=false;
+     m_drawnItemCard={};m_presentation.itemCard.reset();
++    m_drawnHorizontalCommandFrame = {}; m_presentation.horizontalCommandFrame.reset();
++    m_horizontalCommandWriting = false;
+     m_itemCaptureActive=false;m_itemWriting=false;
+     m_drawnBrackets={};m_presentation.brackets.reset();
+     m_bracketCaptureActive=false;m_bracketWriting=-1;
+@@ -114,6 +116,8 @@
+         for(auto& sprites:m_presentSprites)sprites.clear();
+         m_captureValid=false;
+         m_drawnItemCard={};m_presentation.itemCard.reset();
++        m_drawnHorizontalCommandFrame = {}; m_presentation.horizontalCommandFrame.reset();
++        m_horizontalCommandWriting = false;
+         m_itemCaptureActive=false;m_itemWriting=false;
+         m_drawnBrackets={};m_presentation.brackets.reset();
+         m_bracketCaptureActive=false;m_bracketWriting=-1;
+@@ -148,6 +152,8 @@
+     if(m_drawing) {
+         m_menuReplayStable=false;m_glyphCaptureActive=false;
+         m_drawnItemCard[m_captureDrawFB].reset();m_itemCaptureActive=false;
++        m_drawnHorizontalCommandFrame[m_captureDrawFB].reset();
++        m_horizontalCommandWriting = false;
+         m_drawnBrackets[m_captureDrawFB]={};m_bracketCaptureActive=false;
+     }
+     alignas(Vdp1Regs) unsigned char before[sizeof(Vdp1Regs)];
+@@ -202,6 +208,8 @@
+     m_drawnBrackets[framebuffer]={};
+     if(framebuffer==m_captureDrawFB)m_bracketCaptureActive=false;
+     m_drawnItemCard[framebuffer].reset();
++    m_drawnHorizontalCommandFrame[framebuffer].reset();
++    if (framebuffer == m_captureDrawFB) m_horizontalCommandWriting = false;
+     if(framebuffer==m_captureDrawFB)m_itemCaptureActive=false;
+     m_glyphPlateReady[framebuffer]=false;
+     if(framebuffer==m_captureDrawFB)m_glyphCaptureActive=false;
+@@ -235,6 +243,8 @@
+         !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable &&
+         !m_regs2.TVMD.IsInterlaced();
+     m_drawnItemCard[m_captureDrawFB].reset();
++    m_drawnHorizontalCommandFrame[m_captureDrawFB].reset();
++    m_horizontalCommandWriting = false;
+     m_itemCaptureActive=m_captureItemCards && m_capturePresentation && m_compose && !m_gpu && !m_check &&
+         m_width==320 && m_height==224 && m_regs1.fbSizeH>=320 && m_regs1.fbSizeV>=224 &&
+         !m_regs1.pixel8Bits && !m_regs1.fbRotEnable && !m_regs1.dblInterlaceEnable && !m_regs1.hdtvEnable &&
+@@ -316,6 +326,7 @@
+         }
+         RasterCommand(cmd);
+         m_itemWriting=false;
++        m_horizontalCommandWriting = false;
+         m_bracketWriting=-1;
+         m_glyphCommand=0;
+         if(m_presentWideReady[m_captureDrawFB] && (cmd.words[0]&15)<8) {
+@@ -416,8 +427,18 @@
+         }
+     }
+     if(!entry)return;
++    const auto* commandFrame = ::port::CommandFrame(entry);
++    if (commandFrame && entry->index < 2) {
++        auto& horizontal = m_drawnHorizontalCommandFrame[m_captureDrawFB];
++        horizontal.emplace();
++        horizontal->entry = entry;
++        horizontal->serial = ++m_itemCardSerial;
++        horizontal->x = sprite.x;
++        horizontal->y = sprite.y;
++        m_horizontalCommandWriting = true;
++        return;
++    }
+     auto& captured=m_drawnItemCard[m_captureDrawFB];
+-    const auto* commandFrame = ::port::CommandFrame(entry);
+     if (captured && commandFrame && !::port::CommandFrame(captured->entry)) return;
+     // The later shell is the submenu. Existing item, disc and status overlays take precedence.
+     if (captured && ::port::CommandFrame(captured->entry)) captured.reset();
+@@ -426,6 +447,7 @@
+     if(captured) {
+         // A single sprite may own pixels for the overlay in a draw pass.
+         captured.reset();m_itemCaptureActive=false;
++        m_drawnHorizontalCommandFrame[m_captureDrawFB].reset();
+         return;
+     }
+     captured.emplace();
+@@ -617,6 +639,8 @@
+     m_reuse.mode = LineReuse::Off;
+     m_presentation.itemCard.reset();
+     m_itemFrameInvalid=false;
++    m_presentation.horizontalCommandFrame.reset();
++    m_horizontalCommandFrameInvalid = false;
+     m_presentation.brackets.reset();
+     if (m_capturePresentation) {
+         m_presentation.width=m_width; m_presentation.height=m_height;
+@@ -874,10 +898,9 @@
+     return true;
+ }
+ 
+-bool Renderer::BeginItemCardLine(uint32 line) {
+-    if(!m_captureItemCards || !m_capturePresentation || m_itemFrameInvalid)return false;
+-    const auto& drawn=m_drawnItemCard[m_displayFB];
+-    auto& presented=m_presentation.itemCard;
++bool Renderer::BeginItemCardLine(uint32 line, const std::optional<ItemCardCapture>& drawn,
++                                 std::optional<ItemCardCapture>& presented, bool& invalid) {
++    if(!m_captureItemCards || !m_capturePresentation || invalid)return false;
+     const auto spriteSize=[](const auto& capture) {
+         if (const auto* frame = ::port::CommandFrame(capture->entry)) return frame->height;
+         if (::port::IsStatusFrame(capture->entry)) return ::port::kStatusFrameHeight;
+@@ -904,11 +927,11 @@
+        m_width!=320 || m_height!=224 || m_regs2.TVMD.IsInterlaced() || m_regs1.pixel8Bits ||
+        m_regs1.fbRotEnable || m_regs1.dblInterlaceEnable || m_regs1.hdtvEnable ||
+        !validPalette) {
+-        m_itemFrameInvalid=true;presented.reset();
++        invalid=true;presented.reset();
+         return false;
+     }
+     if(!presented) {
+-        if(line!=uint32(drawn->y)) {m_itemFrameInvalid=true;return false;}
++        if(line!=uint32(drawn->y)) {invalid=true;return false;}
+         presented.emplace();
+         presented->entry=drawn->entry;
+         presented->serial=drawn->serial;
+@@ -969,6 +992,9 @@
+     // Both bracket layouts build presentation ownership in ComposeLine.
+     if (m_captureBrackets && brackets.serial && y >= bracketStart && y < bracketStart + system_hud::kHeight)
+         return true;
++    const auto& horizontal = m_drawnHorizontalCommandFrame[m_displayFB];
++    if (m_captureItemCards && horizontal && y >= uint32(horizontal->y) &&
++        y < uint32(horizontal->y + ::port::kHorizontalCommandHeight)) return true;
+     const auto &item = m_drawnItemCard[m_displayFB];
+     return m_captureItemCards && item && static_cast<sint32>(y) >= item->y &&
+            static_cast<sint32>(y) < item->y + std::max<sint32>(kItemCardSize, ::port::kLoadDiscIconSize);
+@@ -1533,7 +1559,13 @@
+         return {color,top,presentationSource,backgroundTop,backgroundSecond,whiteWeight,panel,floralCover,floralRgb,mapWeight,episodeWeight,capturesUnshadowedPanel};
+     };
+     const bool glyphLine=supported && PrepareGlyphLine(line);
+-    const bool itemLine=supported && y==line && BeginItemCardLine(y);
++    const auto& primary = m_drawnItemCard[m_displayFB];
++    const auto& horizontal = m_drawnHorizontalCommandFrame[m_displayFB];
++    const bool itemLine = supported && y == line &&
++        BeginItemCardLine(y, primary, m_presentation.itemCard, m_itemFrameInvalid);
++    const bool horizontalLine = supported && y == line && (!primary || ::port::CommandFrame(primary->entry)) &&
++        BeginItemCardLine(y, horizontal, m_presentation.horizontalCommandFrame, m_horizontalCommandFrameInvalid);
++    const auto* horizontalShape = horizontalLine ? ::port::CommandFrame(horizontal->entry) : nullptr;
+     const bool bracketLine=supported && y==line && BeginBracketLine(y);
+     const auto& drawnBrackets=m_drawnBrackets[m_displayFB];
+     const bool loadArrows=bracketLine && drawnBrackets.arrows[0].y==system_hud::kLoadY;
+@@ -1564,6 +1596,15 @@
+                     m_presentation.brackets->owners[slot][at]=1;
+                 }
+                 break;
++            }
++        }
++        if (horizontalShape && x >= uint32(horizontal->x) && x < uint32(horizontal->x + horizontalShape->width)) {
++            const size_t at = size_t(y - horizontal->y) * ::port::kHorizontalCommandMaskStride + x - horizontal->x;
++            if (horizontal->pixels[at] == 1 && top == kSprites &&
++                !m_sprite.colorCalcEnable[x] && !m_sprite.shadowOrWindow[x] &&
++                (color.u32 & 0xFFFFFF) ==
++                    (applyOffset(Color888{.u32 = m_sprite.color[x]}, kSprites).u32 & 0xFFFFFF)) {
++                m_presentation.horizontalCommandFrame->pixels[at] = 1;
+             }
+         }
+         const bool discIcon=drawnItem && ::port::IsLoadDiscIcon(drawnItem->entry);
+diff --git a/video/renderer.h b/video/renderer.h
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -110,6 +110,8 @@
+         std::vector<GlyphPlatePixel> glyphPlate;
+         std::vector<PresentationSprite> sprites;
+         std::optional<ItemCardCapture> itemCard;
++        // Packed rows at kHorizontalCommandMaskStride for the earlier command shell.
++        std::optional<ItemCardCapture> horizontalCommandFrame;
+         std::optional<BracketCapture> brackets;
+         std::array<uint8,0x1000> palette{};
+         uint32 scrollWidth=0;
+@@ -402,6 +404,9 @@
+     uint16 m_glyphCommand=0;
+     std::vector<uint8> m_glyphScratch;
+     std::array<std::optional<ItemCardCapture>,2> m_drawnItemCard;
++    std::array<std::optional<ItemCardCapture>,2> m_drawnHorizontalCommandFrame;
++    bool m_horizontalCommandWriting = false;
++    bool m_horizontalCommandFrameInvalid = false;
+     uint64 m_itemCardSerial=0;
+     bool m_captureItemCards=false,m_itemCaptureActive=false,m_itemWriting=false,m_itemFrameInvalid=false;
+     std::array<BracketCapture,2> m_drawnBrackets{};
+@@ -516,7 +521,8 @@
+     bool PrepareGlyphLine(uint32 y);
+     void InvalidateGlyphPlate(uint32 framebuffer);
+     void TrackItemCommand(const PresentationSprite& sprite);
+-    bool BeginItemCardLine(uint32 line);
++    bool BeginItemCardLine(uint32 line, const std::optional<ItemCardCapture>& drawn,
++                           std::optional<ItemCardCapture>& presented, bool& invalid);
+     void TrackBracketCommand(const PresentationSprite& sprite);
+     bool BeginBracketLine(uint32 line);
+ 
+diff --git a/video/raster.cpp b/video/raster.cpp
+--- a/video/raster.cpp
++++ b/video/raster.cpp
+@@ -8,6 +8,7 @@
+ // The counters that step along edges, lines, textures and shading are in counters.h; what is drawn with
+ // them is done here.
+ #include "renderer.h"
++#include "../port/tactical_command_frames.h"
+ 
+ #include "counters.h"
+ 
+@@ -80,6 +81,19 @@
+             // A normal later write covers the card. A blend through it is left to native composition.
+             if(m_itemWriting)owner=1;
+             else if(owner)owner=(mode&kMsbOn) || (mode&3)!=0 ? 2 : 0;
++        }
++    }
++    if (m_itemCaptureActive && !m_presentRasterTarget && m_drawnHorizontalCommandFrame[m_captureDrawFB]) {
++        auto& frame = *m_drawnHorizontalCommandFrame[m_captureDrawFB];
++        const auto* shape = ::port::CommandFrame(frame.entry);
++        const uint32 pixel = offset / 2;
++        const int column = int(pixel % regs1.fbSizeH) - frame.x;
++        const int row = int(pixel / regs1.fbSizeH) - frame.y;
++        const int at = ::port::HorizontalCommandPixel(column, row, shape->width);
++        if (at >= 0) {
++            auto& owner = frame.pixels[at];
++            owner = ::port::CommandOwnerAfterWrite(owner, m_horizontalCommandWriting,
++                (mode & kMsbOn) || (mode & 3) != 0);
+         }
+     }
+     if(m_bracketCaptureActive && !m_presentRasterTarget) {
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1642,6 +1642,7 @@
+     std::array<ItemHdImage, std::size(kTacticalCommandFrames)> commandFrameImages{};
+     std::array<SceneHd, std::size(kTacticalCommandFrames)> commandFrameSources{};
+     SDL_Texture* itemOverlay=nullptr;
++    SDL_Texture* horizontalCommandOverlay = nullptr;
+     std::array<uint32_t,hdItemSize*hdItemSize> itemOverlayPixels{};
+     auto captureItems=[&]() {
+         if(port.videoRenderer)
+@@ -1955,8 +1956,8 @@
+         }
+     };
+     auto drawItem=[&](const satrecomp::video::Renderer::Presentation& planes,const SDL_FRect& crop,
+-                      const SDL_FRect& target,int scale) {
+-        const auto& capture=planes.itemCard;
++                      const SDL_FRect& target,int scale,bool horizontal = false) {
++        const auto& capture = horizontal ? planes.horizontalCommandFrame : planes.itemCard;
+         if(!capture || scale<2 || choosing || port.menu.IsOpen() ||
+            satrecomp::FeatureValue("pc_hd_backgrounds")!=0 || port.opt.pcAssetsPath.empty())
+             return;
+@@ -1968,6 +1969,8 @@
+                           discIcon ? kLoadDiscIconSize : nativeItemSize;
+         const int height = commandFrame ? commandFrame->height : statusFrame ? kStatusFrameHeight : width;
+         const int hdWidth = 2 * width, hdHeight = 2 * height;
++        const int maskStride = horizontal ? kHorizontalCommandMaskStride : nativeItemSize;
++        auto*& overlay = horizontal ? horizontalCommandOverlay : itemOverlay;
+         if(discIcon && (planes.width!=320 || planes.height!=224 || planes.underSprites.size()!=320*224))
+             return;
+         if(card.rows!=height || card.x<crop.x || card.y<crop.y || card.x+width>crop.x+crop.w ||
+@@ -2019,7 +2022,7 @@
+ 
+         // An unowned native texel always leaves its complete 2x2 destination transparent.
+         for(int y=0;y<height;y++)for(int x=0;x<width;x++) {
+-            const bool visible=card.pixels[y*nativeItemSize+x]!=0;
++            const bool visible=card.pixels[y*maskStride+x]!=0;
+             const size_t at=size_t(2*y)*hdWidth+2*x;
+             uint32_t under=0;
+             if(discIcon && visible)
+@@ -2044,22 +2047,23 @@
+                 itemOverlayPixels[sample]=color;
+             }
+         }
+-        if(!itemOverlay) {
+-            itemOverlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
+-                                         hdItemSize,hdItemSize);
+-            if(!itemOverlay)return;
+-            if(!SDL_SetTextureScaleMode(itemOverlay,SDL_SCALEMODE_NEAREST) ||
+-               !SDL_SetTextureBlendMode(itemOverlay,SDL_BLENDMODE_BLEND)) {
+-                SDL_DestroyTexture(itemOverlay);itemOverlay=nullptr;
++        if(!overlay) {
++            overlay=SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888,SDL_TEXTUREACCESS_STREAMING,
++                                         horizontal ? 2 * kHorizontalCommandMaskStride : hdItemSize,
++                                         horizontal ? 2 * kHorizontalCommandHeight : hdItemSize);
++            if(!overlay)return;
++            if(!SDL_SetTextureScaleMode(overlay,SDL_SCALEMODE_NEAREST) ||
++               !SDL_SetTextureBlendMode(overlay,SDL_BLENDMODE_BLEND)) {
++                SDL_DestroyTexture(overlay);overlay=nullptr;
+                 return;
+             }
+         }
+         const SDL_Rect update{0,0,hdWidth,hdHeight};
+-        if(!SDL_UpdateTexture(itemOverlay,&update,itemOverlayPixels.data(),hdWidth*sizeof(uint32_t)))return;
++        if(!SDL_UpdateTexture(overlay,&update,itemOverlayPixels.data(),hdWidth*sizeof(uint32_t)))return;
+         const SDL_FRect source{0.0f,0.0f,float(hdWidth),float(hdHeight)};
+         const SDL_FRect where{target.x+(card.x-crop.x)*scale,target.y+(card.y-crop.y)*scale,
+                               float(width*scale),float(height*scale)};
+-        if(SDL_RenderTexture(renderer,itemOverlay,&source,&where) && std::getenv("SATRECOMP_ITEM_TRACE")) {
++        if(SDL_RenderTexture(renderer,overlay,&source,&where) && std::getenv("SATRECOMP_ITEM_TRACE")) {
+             static const ItemCardEntry* traced=nullptr;
+             if(traced!=card.entry) {
+                 traced=card.entry;
+@@ -4495,6 +4499,7 @@
+                                 }
+                             }
+                         }
++                        drawItem(planes,imageCrop,imageTarget,zoom.picture.scale,true);
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawBrackets(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+@@ -4614,6 +4619,7 @@
+                 enhanced=true;
+                 presentationKind=screenBackdrop=="OPENING"?"opening":screenBackdrop=="TITLE"?"title":scene.movieOnly?"movie":scene.recognized?"narrative":"backdrop";
+                 if(!scene.movieOnly && !splitZoom) {
++                    drawItem(planes,crop,target,fit.scale,true);
+                     drawItem(planes,crop,target,fit.scale);
+                     drawLoadPanels(planes,softwareShown,crop,target,fit.scale);
+                     drawBrackets(planes,crop,target,fit.scale);
+@@ -4759,6 +4765,7 @@
+                 texW == 320 && texH == 224 && where.x == baseFit.x && where.y == baseFit.y &&
+                 where.w == baseFit.w && where.h == baseFit.h) {
+                 const auto& planes = port.videoRenderer->PresentationFrame();
++                drawItem(planes, {0, 0, 320, 224}, where, baseFit.scale, true);
+                 if (planes.itemCard && (IsStatusFrame(planes.itemCard->entry) || CommandFrame(planes.itemCard->entry)))
+                     drawItem(planes, {0, 0, 320, 224}, where, baseFit.scale);
+             }
+@@ -5862,6 +5869,8 @@
+             switch (ev.type) {
+             case SDL_EVENT_QUIT: running = false; break;
+             case SDL_EVENT_RENDER_DEVICE_RESET:
++                if (horizontalCommandOverlay) SDL_DestroyTexture(std::exchange(horizontalCommandOverlay, nullptr));
++                if (itemOverlay) SDL_DestroyTexture(std::exchange(itemOverlay, nullptr));
+                 if(eventActor)SDL_DestroyTexture(std::exchange(eventActor,nullptr));
+                 if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
+                 narrativeCutoutTexture = nullptr;
+@@ -6289,6 +6298,7 @@
+         SDL_CloseGamepad(gp);
+     }
+     if(itemOverlay)SDL_DestroyTexture(itemOverlay);
++    if (horizontalCommandOverlay) SDL_DestroyTexture(horizontalCommandOverlay);
+     for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);
+     resetRegisteredBodies();
+     if(bracketOverlay)SDL_DestroyTexture(bracketOverlay);

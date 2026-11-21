@@ -2553,6 +2553,18 @@
                 "pc_image_index": 4,
                 "runtime_evidence": "docs/research/hd-chapter-2.md#verified-wkl02-command-submenus",
                 "scope": "vertical command submenu shell"
+              },
+              {
+                "pc": "SAKURA2/SYSTEM/SLGSYS02.SPR",
+                "pc_image_index": 0,
+                "runtime_evidence": "docs/research/hd-chapter-2.md#verified-horizontal-wkl02-command-frames",
+                "scope": "horizontal command shell"
+              },
+              {
+                "pc": "SAKURA2/SYSTEM/SLGSYS02.SPR",
+                "pc_image_index": 1,
+                "runtime_evidence": "docs/research/hd-chapter-2.md#verified-horizontal-wkl02-command-frames",
+                "scope": "horizontal command shell"
               }
             ]
           }

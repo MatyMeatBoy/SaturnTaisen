@@ -68,7 +68,12 @@ class ChapterCoverageTest(unittest.TestCase):
             if entry['id'] == 'IC08':
                 self.assertEqual((rows[disc2]['status'], rows[disc2]['association']), ('hd', 'observed'))
                 self.assertTrue(rows[disc2]['verified_in_game'])
-            if entry['id'] not in ('IC06', 'IC08'):
+            if entry['id'] == 'IC09':
+                self.assertEqual(rows[disc2]['status'], 'hd', disc2)
+                self.assertFalse(rows[disc2]['verified_in_game'], disc2)
+                self.assertEqual(rows[disc2]['fixture_evidence'],
+                                 'docs/research/ic-intermission-table.md#controlled-ic09-on-disc-2')
+            if entry['id'] not in ('IC06', 'IC08', 'IC09'):
                 self.assertEqual(rows[disc2]['status'], 'paired-not-wired', disc2)
 
     def test_published_catalog_keeps_replacement_and_occurrence_separate(self):
@@ -465,7 +470,7 @@ class ChapterCoverageTest(unittest.TestCase):
         groups = [catalog['unassigned']] + [chapter['resources'] for chapter in catalog['chapters']]
         rows = [row for group in groups for row in group['menus-hud'].values()]
         drawn = {(row['pc'], row['pc_image_index']) for row in rows if row['status'] == 'hd'}
-        self.assertEqual(len(drawn), 59)
+        self.assertEqual(len(drawn), 60)
         self.assertEqual(sum(1 for pc, _ in drawn if '/SYSTEM/' in pc), 18)
         self.assertIn(('SAKURA1/SYSTEM/SIS_ICON.SPR', 3), drawn)
         self.assertEqual({index for pc, index in drawn if pc == 'SAKURA1/SYSTEM/SISTEM.SPR'}, {1, 2, 4, 5, 8, 9, 11, 12, 14})
