@@ -17337,6 +17337,20 @@
         "status": "hd",
         "verified_in_game": false
       },
+      "1:/SAKURA1/ICATALL.DAT+0x0": {
+        "association": "observed",
+        "evidence": "docs/research/ic-intermission-table.md#core-intermission-layers",
+        "pc": "SAKURA1/ICATCH/IC01.SPR",
+        "status": "hd",
+        "verified_in_game": false
+      },
+      "1:/SAKURA1/ICATALL.DAT+0xE000": {
+        "association": "observed",
+        "evidence": "docs/research/ic-intermission-table.md#core-intermission-layers",
+        "pc": "SAKURA1/ICATCH/SHINRAI.SPR",
+        "status": "hd",
+        "verified_in_game": false
+      },
       "1:/SAKURA1/KA_CG.BIN": {
         "association": "unknown",
         "decision_evidence": "docs/research/ending-bank-pairs.md",

@@ -1,0 +1,218 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -450,6 +450,9 @@
+ 
+     SDL_Texture *mapBackdropTexture=nullptr;
+     SDL_Texture* generalEndingTexture = nullptr;
++    SDL_Texture* statusPlateTexture = nullptr;
++    SDL_Texture* intermissionCardTexture = nullptr;
++    bool statusPlateTried = false;
+     SDL_Texture* extrasTheaterTexture = nullptr;
+     SDL_Texture* extrasTheaterForeground = nullptr;
+     bool extrasTheaterTried = false;
+@@ -786,6 +789,9 @@
+         mapBackdropTexture=nullptr;
+         if (generalEndingTexture) SDL_DestroyTexture(std::exchange(generalEndingTexture, nullptr));
+         if (generalEndingSprites) SDL_DestroyTexture(std::exchange(generalEndingSprites, nullptr));
++        if (statusPlateTexture) SDL_DestroyTexture(std::exchange(statusPlateTexture, nullptr));
++        if (intermissionCardTexture) SDL_DestroyTexture(std::exchange(intermissionCardTexture, nullptr));
++        statusPlateTried = false;
+         if (extrasTheaterTexture) SDL_DestroyTexture(std::exchange(extrasTheaterTexture, nullptr));
+         if (extrasTheaterForeground) SDL_DestroyTexture(std::exchange(extrasTheaterForeground, nullptr));
+         extrasTheaterTried = false;
+@@ -1177,6 +1183,10 @@
+     constexpr unsigned kPendulumFrame = 15;
+     std::array<WindowFrame, kPendulumFrame + 1> windowFrames;
+     SceneHd extrasTheater;
++    SceneHd statusPlate;
++    std::array<SceneHd, 2> intermissionCards;
++    std::array<SceneHdPixels, 2> intermissionCardArt;
++    std::vector<uint32_t> intermissionCardOverlay;
+     std::vector<uint32_t> extrasTheaterCover;
+     SceneHd eve0116;
+     bool eve0116Traced = false;
+@@ -2638,6 +2648,95 @@
+             }
+             return !plate.donor.empty();
+         }();
++        const auto drawIntermissionCard = [&](const SDL_FRect& target) {
++            if (choosing || port.menu.IsOpen() || !port.videoRenderer || port.opt.pcAssetsPath.empty() ||
++                satrecomp::FeatureValue("presentation_mode") != 1 ||
++                satrecomp::FeatureValue("pc_hd_backgrounds") != 0 ||
++                texW != 320 || texH != 224 || baseFit.scale < 2 || softwareShown.size() != 320 * 224 ||
++                target.x != baseFit.x || target.y != baseFit.y || target.w != baseFit.w || target.h != baseFit.h) return;
++            constexpr port::EveRect cardBox{184, 16, 112, 128};
++            const auto& video = *port.videoRenderer;
++            const auto& frame = video.PresentationFrame();
++            if (frame.topSource.size() != softwareShown.size()) return;
++            const auto palette = std::span{frame.palette}.subspan(0x200, 512);
++            if (PcBackdropHash(palette) != 0xE9107F892185CCC8ull) return;
++            const auto offset = video.BackgroundColorOffset(0);
++            if (offset != std::array<int16_t, 3>{} && offset != std::array<int16_t, 3>{-16, -16, -16}) return;
++            const auto& sprites = frame.sprites;
++            const auto card = std::ranges::find_if(sprites, [&](const auto& s) {
++                const auto& cmd = s.command.words;
++                return cmd[0] == 0x1001 && cmd[2] == 0x00A0 && cmd[3] == 0x0100 && cmd[5] == 0x0E80 &&
++                    cmd[6] == 0x0018 && cmd[7] == 0xFFA0 && cmd[10] == 0x0087 && cmd[11] == 0x001F &&
++                    s.x == cardBox.x && s.y == cardBox.y && s.pixels.size() == 112 * 128;
++            });
++            if (card == sprites.end()) return;
++            const auto hash = PcBackdropHash(card->pixels);
++            int ordinal;
++            if (hash == 0xAA9570B2B3D4F72Eull) ordinal = 0;
++            else if (hash == 0x5D45546BD97354B8ull) ordinal = 1;
++            else return;
++
++            // Later 4-bit sprites carry localized text and selection highlights.
++            std::array<bool, 112 * 128> owned{};
++            for (int y = 0; y < cardBox.height; ++y) {
++                for (int x = 0; x < cardBox.width; ++x) {
++                    const size_t under = size_t(y) * cardBox.width + x;
++                    const size_t at = size_t(cardBox.y + y) * 320 + cardBox.x + x;
++                    const auto ink = card->pixels[under];
++                    if (ink == 0 || frame.topSource[at] != 0) continue;
++                    const unsigned word = (unsigned(palette[ink * 2]) << 8) | palette[ink * 2 + 1];
++                    const uint32_t rgb = ((word & 31) << 3) | ((word & 0x3E0) << 6) | ((word & 0x7C00) << 9);
++                    owned[under] = ((OffsetBackdropPixel(rgb, offset) ^ softwareShown[at]) & 0xFFFFFFu) == 0;
++                }
++            }
++            for (auto part = std::next(card); part != sprites.end(); ++part) {
++                const auto& cmd = part->command.words;
++                const unsigned kind = cmd[0] & 15;
++                if (kind > 6) continue;
++                if (kind > 1) return;
++                const int w = ((cmd[5] >> 8) & 63) * 8, h = cmd[5] & 255;
++                if (part->x >= cardBox.x + cardBox.width || part->x + w <= cardBox.x ||
++                    part->y >= cardBox.y + cardBox.height || part->y + h <= cardBox.y) continue;
++                if (kind != 1 || (cmd[2] != 0x0080 && cmd[2] != 0x0180) || cmd[5] != 0x0210 ||
++                    uint16_t(cmd[10] - cmd[6]) != 15 || uint16_t(cmd[11] - cmd[7]) != 15 ||
++                    part->pixels.size() != 128) return;
++                for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
++                    const int dx = part->x - cardBox.x + x, dy = part->y - cardBox.y + y;
++                    if (dx < 0 || dx >= cardBox.width || dy < 0 || dy >= cardBox.height) continue;
++                    const unsigned dot = (part->pixels[y * 8 + x / 2] >> (x % 2 ? 0 : 4)) & 15;
++                    if (dot) owned[size_t(dy) * cardBox.width + dx] = false;
++                }
++            }
++            if (std::ranges::none_of(owned, [](bool value) { return value; })) return;
++            auto& entry = intermissionCards[ordinal];
++            auto& art = intermissionCardArt[ordinal];
++            if (!entry.tried) {
++                entry.tried = true;
++                queuePinnedPan(entry, "SAKURA1/ICATCH/IC01.SPR", 72921, 0x1A479F4AFC438ACAull, 224, 256, ordinal);
++            }
++            if (entry.pending.valid() && entry.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                art = entry.pending.get();
++            if (art.pixels.empty()) return;
++            if (!intermissionCardTexture) {
++                intermissionCardTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                    SDL_TEXTUREACCESS_STREAMING, 224, 256);
++                if (!intermissionCardTexture) return;
++                SDL_SetTextureScaleMode(intermissionCardTexture, SDL_SCALEMODE_NEAREST);
++                SDL_SetTextureBlendMode(intermissionCardTexture, SDL_BLENDMODE_BLEND);
++            }
++            intermissionCardOverlay.assign(224 * 256, 0);
++            for (int y = 0; y < 254; ++y) {
++                const size_t from = size_t((2 * y + 1) * 248 / 508) * 224;
++                for (int x = 0; x < 224; ++x) {
++                    if (owned[size_t(y / 2) * 112 + x / 2])
++                        intermissionCardOverlay[size_t(y) * 224 + x] = OffsetBackdropPixel(art.pixels[from + x], offset);
++                }
++            }
++            if (!SDL_UpdateTexture(intermissionCardTexture, nullptr, intermissionCardOverlay.data(), 224 * 4)) return;
++            const auto rect = port::EveInsetDestination(cardBox, baseFit.x, baseFit.y, baseFit.scale);
++            const SDL_FRect destination{float(rect.x), float(rect.y), float(rect.width), float(rect.height)};
++            SDL_RenderTexture(renderer, intermissionCardTexture, nullptr, &destination);
++        };
+         const auto drawNativeIntermission = [&](const SDL_FRect& target) {
+             if (!icReady || target.x != baseFit.x || target.y != baseFit.y ||
+                 target.w != baseFit.w || target.h != baseFit.h) return;
+@@ -2686,6 +2785,7 @@
+                 SDL_RenderTexture(renderer,floral,nullptr,&bgTarget);
+                 SDL_RenderTexture(renderer,texture,nullptr,&nativeTarget);
+                 drawNativeIntermission(nativeTarget);
++                drawIntermissionCard(nativeTarget);
+                 if (screenBackdrop == "LOADING" && spanishLoadingInk && native.scale > 0 &&
+                     !choosing && !port.menu.IsOpen() && planes.topSource.size() == 320 * 224 &&
+                     softwareShown.size() == 320 * 224) {
+@@ -2926,6 +3026,61 @@
+                 const auto cover=CoverInteger(canvasWidth,high,static_cast<int>(bgw),static_cast<int>(bgh));
+                 const SDL_FRect bg{static_cast<float>(canvasLeft+cover.x),static_cast<float>(cover.y),static_cast<float>(cover.w),static_cast<float>(cover.h)};
+                 SDL_RenderTexture(renderer,floral,nullptr,&bg);
++                if (screenBackdrop == "STATUS" && !scene.recognized && !choosing && !port.menu.IsOpen() &&
++                    !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("pc_hd_backgrounds") == 0 &&
++                    baseFit.scale >= 2 && softwareShown.size() == 320 * 224 &&
++                    planes.topSource.size() == softwareShown.size()) {
++                    const auto& video = *port.videoRenderer;
++                    const auto& regs = video.Regs2();
++                    const auto& layer = regs.bgParams[4];
++                    constexpr std::array<int16_t, 3> statusOffset{-16, -16, -16};
++                    constexpr std::array<std::pair<size_t, uint32_t>, 6> samples{{
++                        {0, 0xA6729Au}, {319, 0xA66A92u}, {110 * 320, 0xAD89A2u},
++                        {110 * 320 + 319, 0xA65B8Bu}, {223 * 320, 0xADA0B1u}, {224 * 320 - 1, 0xAD99AAu}
++                    }};
++                    if (regs.layerEnabled[5] && layer.pageBaseAddresses[0] == 0x60000 &&
++                        !layer.scrollAmountH && !layer.scrollAmountV && layer.scrollIncH == 256 && layer.scrollIncV == 256 &&
++                        layer.colorCalcEnable && !layer.lineColorScreenEnable && !regs.colorCalcAdd &&
++                        !regs.colorCalcExtended && !regs.colorCalcUseSecondRatio && regs.colorCalcRatio[5] == 0 &&
++                        regs.backScreenParams.baseAddress == 0x20000 && !regs.backScreenParams.perLine &&
++                        video.BackgroundColorOffset(5) == statusOffset &&
++                        video.BackgroundPaletteFingerprint(5) == 0x554CC13BFE8B8594ull &&
++                        video.BackgroundCellFingerprint(5, 62656) == 0xE4EA41414F5C0E75ull &&
++                        std::ranges::all_of(samples, [&](const auto& sample) {
++                            return planes.topSource[sample.first] == 5 &&
++                                (softwareShown[sample.first] & 0xFFFFFFu) == sample.second;
++                        })) {
++                        if (!statusPlateTried) {
++                            statusPlateTried = true;
++                            queuePinnedPan(statusPlate, "SAKURA1/ICATCH/SHINRAI.SPR",
++                                126044, 0xC7B8ABB292BA3241ull, 640, 480);
++                        }
++                        if (statusPlate.pending.valid() &&
++                            statusPlate.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
++                            auto art = statusPlate.pending.get();
++                            if (!art.pixels.empty()) {
++                                std::vector<uint32_t> registered(640 * 448);
++                                constexpr PanelMix mix{0x78C8F8u, 31, statusOffset};
++                                for (int y = 0; y < 448; ++y) {
++                                    const size_t from = size_t((2 * y + 1) * 480 / 896) * 640;
++                                    for (int x = 0; x < 640; ++x)
++                                        registered[size_t(y) * 640 + x] = CompositePanelPixel(mix, art.pixels[from + x], 0xFF000000u);
++                                }
++                                auto* prepared = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                    SDL_TEXTUREACCESS_STATIC, 640, 448);
++                                if (prepared && SDL_UpdateTexture(prepared, nullptr, registered.data(), 640 * 4)) {
++                                    SDL_SetTextureScaleMode(prepared, SDL_SCALEMODE_NEAREST);
++                                    SDL_SetTextureBlendMode(prepared, SDL_BLENDMODE_NONE);
++                                    statusPlateTexture = prepared;
++                                } else if (prepared) SDL_DestroyTexture(prepared);
++                            }
++                        }
++                        if (statusPlateTexture) {
++                            const SDL_FRect native{float(baseFit.x), float(baseFit.y), float(baseFit.w), float(baseFit.h)};
++                            SDL_RenderTexture(renderer, statusPlateTexture, nullptr, &native);
++                        }
++                    }
++                }
+                 if (selectedBackdrop && mapFade && cover.scale > 0 &&
+                     selectedBackdrop->pixels.size() == size_t(int(bgw)) * int(bgh)) {
+                     const auto native = FitInteger(wide, high, 320, 224);
+@@ -5560,6 +5715,7 @@
+                 }
+             }
+             drawNativeIntermission(where);
++            drawIntermissionCard(where);
+             // The ending photo is a separate, opaque 2:1 picture. Keep the native credit text around it.
+             if (!choosing && !port.menu.IsOpen() && shownDisc == 2 && port.videoRenderer &&
+                 !port.opt.pcAssetsPath.empty() && satrecomp::FeatureValue("presentation_mode") == 1 &&
+@@ -6155,6 +6311,9 @@
+                 comboCardTexture = nullptr;
+                 if (generalEndingTexture) SDL_DestroyTexture(std::exchange(generalEndingTexture, nullptr));
+         if (generalEndingSprites) SDL_DestroyTexture(std::exchange(generalEndingSprites, nullptr));
++        if (statusPlateTexture) SDL_DestroyTexture(std::exchange(statusPlateTexture, nullptr));
++        if (intermissionCardTexture) SDL_DestroyTexture(std::exchange(intermissionCardTexture, nullptr));
++        statusPlateTried = false;
+         if (extrasTheaterTexture) SDL_DestroyTexture(std::exchange(extrasTheaterTexture, nullptr));
+         if (extrasTheaterForeground) SDL_DestroyTexture(std::exchange(extrasTheaterForeground, nullptr));
+         extrasTheaterTried = false;

@@ -438,3 +438,10 @@ The user asked to publish the next checkpoint and stop work. Transfer guide and 
 
 ## Presentation asked once, borderless start (patch 0121)
 Implemented: the game asks 4:3 / 16:9 only while settings.ini `[features] presentation_chosen` is absent; `SetFeatureValue("presentation_mode")` (chooser, in-game menu) and the launcher (home cards, TEXTO HD / MODO HD bubbles, `--widescreen`) record it. The launcher home shows no card selected until chosen; setup and the HD-prepared step no longer write `presentation_mode=1`. The window opens borderless over the display by default (`--windowed` opts out; hidden test windows and headless stay windowed; `--fullscreen` and launcher.ini fullscreen unchanged; F11 unchanged). `SATRECOMP_SKIP_CHOOSER` still skips the chooser. Tested: tests/test_presentation_once.py, tests/test_window_policy.cpp, opening-film replay hashes identical (6201 frames). Not tested by eye: launcher home with no card, the chooser appearing once, the borderless window. Not packaged.
+
+## HD intermission core (0306)
+
+Implemented offline: the intermission emblem and STATUS backdrop add two PC
+file identities. See [layer matching](research/ic-intermission-table.md#core-intermission-layers).
+Patch stack application and coverage tests passed. A linked build, beta
+playback and package inclusion remain pending.

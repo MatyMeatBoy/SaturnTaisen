@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | Sin dato |
-| Imágenes de escena | recursos SPR PC únicos (BG, BBG, ENDING, TITLE, ICATCH) | 655/655 (100%) | 592/655 (90,3%) | Sin dato | 584/655 (89,1%) | 177/655 (27%) |
+| Imágenes de escena | recursos SPR PC únicos (BG, BBG, ENDING, TITLE, ICATCH) | 655/655 (100%) | 594/655 (90,6%) | Sin dato | 586/655 (89,4%) | 177/655 (27%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 50/50 (100%) | Sin dato |
 | Otros recursos tácticos por medir | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
@@ -20,7 +20,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 304/304 (100%) |
-| Imágenes de escena | 584/655 (89,1%) |
+| Imágenes de escena | 586/655 (89,4%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 50/50 (100%) |
 | Otros recursos tácticos por medir | Sin dato |
@@ -29,7 +29,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Personajes grandes NC | 147/147 (100%) |
 | Suelos tácticos | 23/26 (88,4%) |
 
-**HD total: 1199/1430 (83,8%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1201/1430 (83,9%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Otros recursos tácticos por medir.
 
 **Extras EVENT y CG** · 4/433 (0,9%) integrados. Fuera del total principal.
