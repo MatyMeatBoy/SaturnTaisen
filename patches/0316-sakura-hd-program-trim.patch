@@ -1,0 +1,143 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2574,6 +2574,103 @@
+                 float(box.width*scale), float(box.height*scale)};
+             SDL_RenderTexture(renderer, titlePartTexture, &source, &dest);
+         }
++    };
++    SceneHd programTrimSource;
++    std::vector<uint32_t> programTrimArt, programTrimPixels;
++    SDL_Texture* programTrimTexture = nullptr;
++    auto drawProgramTrim = [&](const satrecomp::video::Renderer::Presentation& frame,
++                               const SDL_FRect& crop, const SDL_FRect& target, int scale) {
++        constexpr int left = 56, top = 40, width = 208, height = 152;
++        if (scale < 2 || choosing || port.menu.IsOpen() || port.opt.pcAssetsPath.empty() ||
++            satrecomp::FeatureValue("presentation_mode") != 1 || satrecomp::FeatureValue("pc_hd_backgrounds") != 0 ||
++            frame.width != 320 || frame.height != 224 || frame.topSource.size() != 320 * 224 ||
++            frame.underSprites.size() != 320 * 224 || softwareShown.size() != 320 * 224 ||
++            left < crop.x || left + width > crop.x + crop.w ||
++            top < crop.y || top + height > crop.y + crop.h) return;
++        const auto palette = std::span{frame.palette}.subspan(0xA00, 512);
++        if (PcBackdropHash(palette) != 0xEB0E8FBCD10F6A6Aull) return;
++        const auto plate = std::ranges::find_if(frame.sprites, [&](const auto& s) {
++            const auto& c = s.command.words;
++            if (s.x != left || s.y != top || c[0] != 0x1001 || c[2] != 0x00A0 || c[3] != 0x0500 ||
++                c[5] != 0x1A98 || c[6] != 0xFF98 || c[7] != 0xFFB8 || c[10] != 0x0067 || c[11] != 0x004F ||
++                s.pixels.size() != width * height) return false;
++            const auto hash = PcBackdropHash(s.pixels);
++            return hash == 0xB22B9B9708089A65ull || hash == 0x4966E78847FCC6C1ull;
++        });
++        if (plate == frame.sprites.end()) return;
++        if (!programTrimSource.tried) {
++            programTrimSource.tried = true;
++            queuePinnedPan(programTrimSource, "SAKURA1/SYSTEM/OP_WIN.SPR",
++                           42784, 0x5872A305598B062Aull, 416, 304);
++        }
++        if (programTrimSource.pending.valid() &&
++            programTrimSource.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++            programTrimArt = programTrimSource.pending.get().pixels;
++        if (programTrimArt.size() != 4 * width * height) return;
++
++        const auto coord = [](uint16_t v) { return (int(v & 0x1FFF) ^ 0x1000) - 0x1000; };
++        std::vector<EveRect> covers;
++        for (auto later = std::next(plate); later != frame.sprites.end(); ++later) {
++            const auto& c = later->command.words;
++            const unsigned type = c[0] & 15;
++            if (type >= 8) continue;
++            int w = ((c[5] >> 8) & 63) * 8, h = c[5] & 255;
++            if (type == 1 && !(c[0] & 0x0F00)) {
++                w = coord(c[10]) - coord(c[6]) + 1;
++                h = coord(c[11]) - coord(c[7]) + 1;
++                if (w <= 0 || h <= 0) return;
++            } else if (type != 0) return;
++            covers.push_back({later->x, later->y, std::max(w, 1), std::max(h, 1)});
++        }
++        const auto mix = [](uint32_t foreground, uint32_t background) {
++            uint32_t color = 0xFF000000u;
++            for (unsigned shift : {0u, 8u, 16u})
++                color |= ((31 * ((foreground >> shift) & 255u) + ((background >> shift) & 255u)) >> 5) << shift;
++            return color;
++        };
++        programTrimPixels.assign(4 * width * height, 0);
++        bool drew = false;
++        for (int y = 0; y < height; ++y) for (int x = 0; x < width; ++x) {
++            const bool outerTop = y < 7 || (y < 30 && (x < 46 || x >= 164));
++            const bool side = y >= 30 && y < 119 && ((x >= 23 && x < 32) || (x >= 176 && x < 185));
++            const bool bottom = y >= 119 && (x < 22 || x >= 187 || y >= 142);
++            if (!outerTop && !side && !bottom) continue;
++            const auto ink = plate->pixels[y * width + x];
++            const int px = left + x, py = top + y;
++            const auto at = size_t(py) * 320 + px;
++            if (!ink || frame.topSource[at] != 0 ||
++                std::ranges::any_of(covers, [&](const auto& r) {
++                    return px >= r.x && px < r.x + r.width && py >= r.y && py < r.y + r.height;
++                })) continue;
++            const unsigned word = (unsigned(palette[2 * ink]) << 8) | palette[2 * ink + 1];
++            const uint32_t native = ((word & 31) << 3) | ((word & 0x3E0) << 6) | ((word & 0x7C00) << 9);
++            const auto under = frame.underSprites[at];
++            if ((softwareShown[at] & 0xFFFFFFu) != (mix(native, under) & 0xFFFFFFu)) continue;
++            for (int dy = 0; dy < 2; ++dy) for (int dx = 0; dx < 2; ++dx) {
++                const auto where = (2*y + dy) * (2*width) + 2*x + dx;
++                const auto pixel = programTrimArt[where];
++                const auto rgb = pixel & 0xFFFFFFu;
++                if ((pixel >> 24) != 255 || rgb == 0xFFFF00u || rgb == 0x00FF00u) continue;
++                programTrimPixels[where] = mix(pixel, under);
++                drew = true;
++            }
++        }
++        if (!drew) return;
++        if (!programTrimTexture) {
++            programTrimTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,
++                                                  2 * width, 2 * height);
++            if (!programTrimTexture) return;
++            if (!SDL_SetTextureScaleMode(programTrimTexture, SDL_SCALEMODE_NEAREST) ||
++                !SDL_SetTextureBlendMode(programTrimTexture, SDL_BLENDMODE_BLEND)) {
++                SDL_DestroyTexture(programTrimTexture);
++                programTrimTexture = nullptr;
++                return;
++            }
++        }
++        if (!SDL_UpdateTexture(programTrimTexture, nullptr, programTrimPixels.data(), 2 * width * sizeof(uint32_t))) return;
++        const SDL_FRect dest{target.x+(left-crop.x)*scale, target.y+(top-crop.y)*scale,
++                             float(width*scale), float(height*scale)};
++        SDL_RenderTexture(renderer, programTrimTexture, nullptr, &dest);
+     };
+     using PresentationSprite=satrecomp::video::Renderer::PresentationSprite;
+     struct BodyFace {int x=0,y=0,w=0,h=0;unsigned ordinal=0;};
+@@ -5300,7 +5397,10 @@
+                     drawItem(planes,crop,target,fit.scale);
+                     drawCompactIcons(planes,crop,target,fit.scale);
+                     drawSteam(planes,crop,target,fit.scale);
+-                    if (screenBackdrop == "TITLE") drawTitleParts(planes, crop, target, fit.scale);
++                    if (screenBackdrop == "TITLE") {
++                        drawTitleParts(planes, crop, target, fit.scale);
++                        drawProgramTrim(planes, crop, target, fit.scale);
++                    }
+                     drawLoadPanels(planes,softwareShown,crop,target,fit.scale);
+                     drawBrackets(planes,crop,target,fit.scale);
+                 }
+@@ -5338,6 +5438,7 @@
+             if (port.videoRenderer && texW == 320 && texH == 224 && where.w == baseFit.w && where.h == baseFit.h) {
+                 const auto& shown = port.videoRenderer->PresentationFrame();
+                 drawTitleParts(shown, {0, 0, 320, 224}, where, baseFit.scale);
++                drawProgramTrim(shown, {0, 0, 320, 224}, where, baseFit.scale);
+                 drawSteam(shown, {0, 0, 320, 224}, where, baseFit.scale);
+             }
+             // MAP02 EVENT follows the native pose and only covers visible actor texels.
+@@ -6788,6 +6889,7 @@
+             case SDL_EVENT_RENDER_DEVICE_RESET:
+                 if (horizontalCommandOverlay) SDL_DestroyTexture(std::exchange(horizontalCommandOverlay, nullptr));
+                 if (itemOverlay) SDL_DestroyTexture(std::exchange(itemOverlay, nullptr));
++                if (programTrimTexture) SDL_DestroyTexture(std::exchange(programTrimTexture, nullptr));
+                 if (titlePartTexture) SDL_DestroyTexture(std::exchange(titlePartTexture, nullptr));
+                 if(eventActor)SDL_DestroyTexture(std::exchange(eventActor,nullptr));
+                 if (narrativeCutoutTexture) SDL_DestroyTexture(narrativeCutoutTexture);
+@@ -7226,6 +7328,7 @@
+     }
+     if(itemOverlay)SDL_DestroyTexture(itemOverlay);
+     if(titlePartTexture)SDL_DestroyTexture(titlePartTexture);
++    if(programTrimTexture)SDL_DestroyTexture(programTrimTexture);
+     if(steamTexture)SDL_DestroyTexture(steamTexture);
+     if (horizontalCommandOverlay) SDL_DestroyTexture(horizontalCommandOverlay);
+     for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);

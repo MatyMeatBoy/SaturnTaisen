@@ -304,7 +304,8 @@
       "patches/0312-sakura-hd-lips-pendulum-poses.patch",
       "patches/0313-sakura-hd-bg1331-bounded.patch",
       "patches/0314-sakura-hd-lips-pendulum-tail.patch",
-      "patches/0315-sakura-hd-bg1212-bounded.patch"
+      "patches/0315-sakura-hd-bg1212-bounded.patch",
+      "patches/0316-sakura-hd-program-trim.patch"
     ]
   }
 }

@@ -1,9 +1,9 @@
 {
  "schema": 1,
  "scope": "THD21 offline classification of open SYSTEM images (no KAO); ITEM images are counted separately",
- "open_system_images": 133,
+ "open_system_images": 132,
  "open_item_pictures": 2,
- "open_total": 135,
+ "open_total": 134,
  "connectable_by_data_alone": 0,
  "item_pictures": "Distinct ITEM donor subimages without an integrated row in the chapter register.",
  "families": {
@@ -1000,20 +1000,8 @@
   "keep-native": {
    "connect": "native",
    "note": "Kept native by decision (aspect, clock face, baked Japanese labels) or no native texture (SHADE_WA).",
-   "open": 10,
+   "open": 9,
    "files": {
-    "OP_WIN": {
-     "open": 1,
-     "images": [
-      {
-       "index": 0,
-       "size": [
-        416,
-        304
-       ]
-      }
-     ]
-    },
     "R_HARI": {
      "open": 7,
      "images": [
