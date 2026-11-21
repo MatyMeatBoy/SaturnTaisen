@@ -27,9 +27,9 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | HUD y menús PC/Saturn | 60/229 (26,2%) |
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 147/147 (100%) |
-| Suelos tácticos | 13/26 (50%) |
+| Suelos tácticos | 14/26 (53,8%) |
 
-**HD total: 1177/1430 (82,3%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+**HD total: 1178/1430 (82,3%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
 - Sin medir todavía (no cuentan): Escenas y transiciones, Otros recursos tácticos por medir.
 
 **Extras EVENT y CG** · 4/433 (0,9%) integrados. Fuera del total principal.
@@ -108,7 +108,7 @@ Unidades, mapas y objetos del modo táctico PC que sustituyen piezas del mapa y 
 
 - El censo contiene 542 archivos SPR, repartidos en 291 UNIT, 194 MAP y 57 ITEM. Registra también 141 MAP DAT y los datos de mapa.
 - MAP01 usa un archivo de PC común a ambos discos. MAP05 se verificó con cámara fija. MAP10 y MAP19 conservan el suelo Saturn por diferencias de composición. El marco táctico de SLGSYS03 se verificó en MAP02, MAP12 y MAP13 y se cuenta en HUD.
-- Suelos por archivo PC único: 13/26 (50%) integrados y 13/26 (50%) verificados. Los 26 archivos emparejados cubren 27 referencias Saturn.
+- Suelos por archivo PC único: 14/26 (53,8%) integrados y 14/26 (53,8%) verificados. Los 26 archivos emparejados cubren 27 referencias Saturn.
 - **Siguiente paso**. Emparejar unidades, mapas y objetos con sus piezas Saturn y validar anclaje y scroll en capturas.
 
 - [pc-asset-census.md](research/pc-asset-census.md).

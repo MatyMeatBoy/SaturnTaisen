@@ -140,7 +140,7 @@ class CommittedTableTests(unittest.TestCase):
         counts = {}
         for row in self.table['maps']:
             counts[row['status']] = counts.get(row['status'], 0) + 1
-        self.assertEqual(counts, {'hd': 12, 'candidate': 11, 'native': 2, 'needs-assembler': 1})
+        self.assertEqual(counts, {'hd': 14, 'candidate': 9, 'native': 2, 'needs-assembler': 1})
         self.assertEqual(self.table['summary'], counts)
 
     def test_generated_entries_need_live_verification(self):
