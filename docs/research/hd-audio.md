@@ -27,7 +27,7 @@ La edición PC contiene 4589 WAV. La lectura de cabeceras dio los siguientes gru
 | Efectos y sistema | 494 | ADPCM o PCM mono, mayoritariamente 22,05 kHz |
 | Vídeos MPG | 52 | MP2 de 192 kb/s, 44,1 kHz, estéreo |
 
-Los dos discos Saturn contienen la misma pista CDDA de 28,373 segundos
+Cada disco Saturn contiene una pista CDDA distinta de 28,373 segundos
 en PCM estéreo de 16 bits a 44,1 kHz. Los bancos narrativos VCEADV
 ocupan 89.362.432 y 98.607.104 bytes respectivamente. En cada disco se
 identificaron 39 archivos tácticos ADP, seis PCM, 14 SE tácticos más
@@ -46,6 +46,27 @@ se reproduzca a 44,1 kHz. La selección se decide comparando audio
 decodificado de la misma toma, ancho útil, ruido, distorsión, dinámica
 y mezcla. Los conteos de estas tablas aún no representan sustituciones
 de calidad aprobadas.
+
+### Primeras coincidencias y formato de música
+
+MOVIE000 ya usa la pista PC en el reemplazo completo. La comparación
+de la misma película conserva su envolvente en tres ventanas y el
+retorno al audio Saturn funciona al saltarla. El flujo Saturn es mono
+PCM de 16 bits a 32 kHz. El PC contiene estéreo real en MP2 a 44,1 kHz,
+con correlación izquierda/derecha 0,651 y una señal lateral a −6,71 dB
+respecto al centro. La ventaja observada es la separación estéreo.
+Este caso permite fijar el primer control independiente de audio del
+launcher.
+
+En 34 de 35 WAV BGM de PC, un prefijo de ocho bytes con la marca
+`loop` precede al primer bloque ADPCM dentro de la región de datos.
+El largo declarado excluye ese prefijo. Los 35 temas decodifican
+cuando se normaliza el archivo y se conserva el valor de bucle aparte.
+OTOME usa la forma estándar. Falta determinar la unidad del bucle
+antes de usar el valor en reproducción. Desde la galería Saturn,
+ADVBGM02 y ADVBGM03 son candidatos para comparar con SM02 y SM03.
+Todavía requieren comprobar melodía, arreglo y bucle. Esas pistas
+salen del SCSP y necesitan un punto de sustitución propio.
 
 ## Ruta de integración
 
