@@ -16853,7 +16853,11 @@
       },
       "1:/SAKURA1/BG3119.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/bg3119-bounded-hd.md",
+        "pc": "SAKURA1/BG/BG3119.SPR",
+        "pc_image_index": 0,
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/BG3120.BIN": {
         "association": "unknown",
