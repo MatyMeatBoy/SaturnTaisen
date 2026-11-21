@@ -7150,7 +7150,12 @@
           "2:/SAKURA1/BG3165.BIN": {
             "association": "observed",
             "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
-            "status": "unpaired"
+            "pairing_evidence": "docs/research/bg3165-bounded-hd.md",
+            "pc": "SAKURA1/BG/BG3165.SPR",
+            "pc_image_index": 0,
+            "runtime_evidence": "docs/research/bg3165-bounded-hd.md",
+            "status": "hd",
+            "verified_in_game": true
           },
           "2:/SAKURA1/BG4055.BIN": {
             "association": "observed",
@@ -16744,7 +16749,12 @@
       },
       "1:/SAKURA1/BG3060.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/bg3060-bounded-hd.md",
+        "pc": "SAKURA1/BG/BG3060.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/bg3060-bounded-hd.md",
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/BG3067.BIN": {
         "association": "unknown",
