@@ -287,7 +287,8 @@
       "patches/0295-sakura-audio-hd-pcmse45.patch",
       "patches/0296-sakura-audio-hd-second-donor.patch",
       "patches/0297-sakura-extras-hd-panel-rails.patch",
-      "patches/0298-sakura-map09-pc-ground.patch"
+      "patches/0298-sakura-map09-pc-ground.patch",
+      "patches/0299-sakura-extras-hd-theater.patch"
     ]
   }
 }

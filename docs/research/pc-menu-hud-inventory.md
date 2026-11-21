@@ -434,3 +434,16 @@ The candidate used the private WKL and BBG218 baseline. SHA-256:
 These are bounded decorative replacements. OMKMOV_W ordinals 3–6
 keep native handling. The eight panel images do not enter the
 full-image numerator from this verification. Packaging is pending.
+
+## Extras movie theater backdrop
+
+Patch 0299 links the complete SIS_BG3.SPR ordinal 0 to OMAKE12.
+The PC WALL/OMAKE1.SPR is a byte-identical alias of this donor.
+The source-5 draw uses the identified VDP2 cells and palette, with
+the native gallery window and the HD rails above it.
+
+Two 1440p samples changed 1,017,225 pixels each and matched the
+independent projection exactly. Original, missing, corrupt and
+disabled controls preserved native output. The Sound gallery
+did not activate the theater. The 50-field profiles matched
+guest hashes and SRAM. This adds one HUD image. Pending packaging.
