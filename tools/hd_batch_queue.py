@@ -67,6 +67,7 @@ def make_queue(pc_root, state_roots, batch_size):
     scene_review = load(CONFIG / 'hd-scene-bg-review.json')
     rejected = scene_review['rejected']
     shared_keys = scene_review['shared_cell_choice']
+    reviewed_scenes = load(CONFIG / 'hd-scene-queue-review.json')['reviewed']
 
     for path, status, _, aliases, references, _ in work_items(
             pc_root, register, load(CONFIG / 'hd-scene-file-duplicates.json')):
@@ -77,7 +78,11 @@ def make_queue(pc_root, state_roots, batch_size):
             'donor': path, 'aliases': aliases.split('; ') if aliases else [],
             'saturn': references.split('; ') if references else [],
         }
-        if status == 'unknown' and family == 'SAKURA1/BG':
+        if path in reviewed_scenes:
+            item['register_status'] = status
+            item.update(reviewed_scenes[path])
+            status = 'reviewed-hold'
+        elif status == 'unknown' and family == 'SAKURA1/BG':
             name = Path(path).stem
             if name in rejected:
                 status = 'reviewed-hold'

@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "reviewed": {
+    "SAKURA1/BG/BG0000.SPR": {
+      "disposition": "unsupported-art",
+      "reason": "Blank control plate."
+    },
+    "SAKURA1/BG/BG1118.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA1/BG/BG1211.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the Saturn picture has the English text baked in, the PC one has Japanese text"
+    },
+    "SAKURA1/BG/BG1212.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the Saturn picture has the English text baked in, the PC one has Japanese text"
+    },
+    "SAKURA1/BG/BG1213.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the Saturn picture has the English text baked in, the PC one has Japanese text"
+    },
+    "SAKURA1/BG/BG1331.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "lighting or colour grading clearly differs"
+    },
+    "SAKURA1/BG/BG1338.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "lighting or colour grading clearly differs"
+    },
+    "SAKURA1/BG/BG1339.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "lighting or colour grading clearly differs"
+    },
+    "SAKURA1/BG/BG1340.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "lighting or colour grading clearly differs"
+    },
+    "SAKURA1/BG/BG1341.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "blank placeholder picture"
+    },
+    "SAKURA1/BG/BG2005.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA1/BG/BG2013.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA1/BG/BG2016.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA1/BG/BG2017.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA1/BG/BG2022.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA1/BG/BG2035.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+    },
+    "SAKURA1/BG/BG2037.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA1/BG/BG2044.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+    },
+    "SAKURA1/BG/BG2050.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+    },
+    "SAKURA1/BG/BG2059.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+    },
+    "SAKURA1/BG/BG2071.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+    },
+    "SAKURA1/BG/BG2089.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Alternate registration of the sky already served by BG2087.SPR; no distinct native image."
+    },
+    "SAKURA1/BG/BG2090.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Alternate registration of the forest already served by BG2088.SPR; no distinct native image."
+    },
+    "SAKURA1/BG/BG2103.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Native BG2103 is byte-identical to the already covered BG2102; its PC wedge is less complete."
+    },
+    "SAKURA1/BG/BG2109.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+    },
+    "SAKURA1/BG/BG2119.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "composition or colour grading differs"
+    },
+    "SAKURA1/BG/BG2123.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+    },
+    "SAKURA1/BG/BG2240.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "composition or colour grading differs"
+    },
+    "SAKURA1/BG/BG2241.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "composition or colour grading differs"
+    },
+    "SAKURA1/BG/BG2243.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "composition or colour grading differs"
+    },
+    "SAKURA1/BG/BG2252.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC exterior redraw shifts architectural landmarks and does not align to the moving Saturn viewport at an integer scale"
+    },
+    "SAKURA1/BG/BG2263.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "composition or colour grading differs"
+    },
+    "SAKURA1/BG/BG3051.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a library background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG3054.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG3060.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG3069.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG3091.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a grey background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG3097.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG3119.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG3165.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has a background baked in, the Saturn one is a character cut-out on a key colour"
+    },
+    "SAKURA1/BG/BG4053.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
+    },
+    "SAKURA1/BG/BG4054.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
+    },
+    "SAKURA1/BG/BG4055.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
+    },
+    "SAKURA1/BG/BG4056.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
+    },
+    "SAKURA1/BG/BG4057.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
+    },
+    "SAKURA1/BG/BG4058.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
+    },
+    "SAKURA1/BG/BG4067.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "PC merges hall background with separate native keyed actor."
+    },
+    "SAKURA1/BG/BG4071.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "PC merges hall background with separate native keyed actor."
+    },
+    "SAKURA1/BG/BG4162.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "PC merges theater with separate native keyed dancers."
+    },
+    "SAKURA1/BG/BG4204.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the Saturn picture decodes only as a partial fragment of the scene"
+    },
+    "SAKURA1/BG/BG4284.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the Saturn statue stands on a blue pedestal and holds an object, the PC figure has neither (different frame)"
+    },
+    "SAKURA1/BG/BG4372.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the Saturn picture is a character cut-out; the PC picture has the whole hanami scene baked in"
+    },
+    "SAKURA1/BG/BG4375.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "the PC picture has an extra teddy bear baked into the dressing room, the Saturn picture does not"
+    },
+    "SAKURA1/ICATCH/LOAD.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Baked Japanese central scroll would override localized Saturn scroll."
+    },
+    "SAKURA1/ICATCH/SHINRIAD.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Six PC windows bake Japanese ordinals in place of native Roman numeral panel art. Separate decorative mask would be partial."
+    },
+    "SAKURA2/BG/BBG203.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Known matching donor lacks ~41 native columns and five rows."
+    },
+    "SAKURA2/BG/BBG206.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "No approved full native counterpart across 806 distinct decoded native BIN pictures."
+    },
+    "SAKURA2/BG/BBG212.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Comparable character art already covered by BG2214/15. New file has different expression/framing."
+    },
+    "SAKURA2/BG/BBG219.SPR": {
+      "disposition": "native-already-covered",
+      "reason": "Strongest native hit already has another approved donor; no independently registered native use."
+    },
+    "SAKURA2/BG/BBG220.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Comparable character art in BBG211, pose differs."
+    },
+    "SAKURA2/BG/BBG238.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Established pose/framing change against native closeup."
+    },
+    "SAKURA2/BG/BBG239.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Established pose/framing change against native closeup."
+    },
+    "SAKURA2/BG/BBG240.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Established pose/framing change against native closeup."
+    },
+    "SAKURA2/BG/BBG241.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Established pose/framing change against native closeup."
+    },
+    "SAKURA2/BG/BBG242.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Established pose/framing change against native closeup."
+    },
+    "SAKURA2/BG/BBG243.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Established pose/framing change against native closeup."
+    },
+    "SAKURA2/BG/BBG300.SPR": {
+      "disposition": "unsupported-art",
+      "reason": "Same generic gradient, geometry/registration ambiguous."
+    },
+    "SAKURA2/BG/GO_JINBU.SPR": {
+      "disposition": "incompatible-full",
+      "reason": "Related S_OVER art. Best measured framing leaves 6,992 native pixels outside donor, including 2,051 visible nonblack pixels."
+    }
+  }
+}
