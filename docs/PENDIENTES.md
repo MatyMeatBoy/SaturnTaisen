@@ -593,3 +593,10 @@ BG1339 adds the settled disc 1 kitchen variant using its visible source-2
 identity and the asynchronous compositor. See [the offline comparison](research/bg1339-bounded-hd.md).
 Patch application, C++ syntax and coverage passed. Linked HD playback and
 packaging remain pending.
+
+## BG4053 disc 1 picnic cutout (0324)
+
+One new PC identity based on the Chapter 3 Maria route. See
+[offline comparison](research/bg405x-bounded-hd.md#bg4053-disc-1).
+Syntax, coverage and patch application passed. Linked HD playback
+and packaging remain pending.

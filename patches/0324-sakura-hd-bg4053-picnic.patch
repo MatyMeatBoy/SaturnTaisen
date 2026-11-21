@@ -1,0 +1,29 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1026,7 +1026,15 @@
+         {0.99700726, 0.97965017, 0.96037282}, {15.47544837, 16.27323554, 17.56928090},
+         3, 6, 4, 8
+     };
+-    constexpr std::array<NarrativeCutout, 31> narrativeCutouts{{
++    static constexpr std::array<port::RegisteredCutoutRegion, 6> picnic4053{{
++        {23, 69, 57, 113, 1.855000, 1.999000, 33.600000, -11.764500},
++        {59, 64, 78, 103, 1.790000, 1.959000, 41.385000, -13.627500},
++        {92, 29, 115, 78, 1.727000, 1.961000, 53.755500, -19.413500},
++        {189, 65, 210, 86, 1.833000, 1.980000, 52.229500, -21.810000},
++        {211, 76, 246, 106, 1.800000, 1.990000, 57.200000, -21.590000},
++        {253, 80, 288, 117, 1.810000, 2.000000, 45.605000, 3.400000},
++    }};
++    constexpr std::array<NarrativeCutout, 32> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -1089,6 +1097,8 @@
+             "BG4056.BIN", "SAKURA1/BG/BG4056.SPR", 77319, 2, 0, 0, 0, 0, 576, 320, nullptr, 4, picnic4056},
+         {0xE5EAC8390B2F7457ull, 0xD34D02D12816CEB6ull, 0x162FA060C21FA9D4ull, 0xCAF72A105DBE4B59ull,
+             "BG4067.BIN", "SAKURA1/BG/BG4067.SPR", 265392, 1, 0, 0, 0, 0, 576, 320, nullptr, 4, cutout4067},
++        {0xD1738A60C04EDE98ull, 0x937DEFDE46C79BD1ull, 0x8AD9B05EF570FCB4ull, 0x4FAE8633BD485440ull,
++            "BG4053.BIN", "SAKURA1/BG/BG4053.SPR", 82486, 1, 0, 0, 0, 0, 576, 320, nullptr, 4, picnic4053},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
