@@ -276,7 +276,8 @@
       "patches/0284-sakura-map02-event-hd.patch",
       "patches/0285-sakura-item09-hd-card.patch",
       "patches/0286-sakura-map07-pc-ground.patch",
-      "patches/0287-sakura-disc2-ic09-intermission.patch"
+      "patches/0287-sakura-disc2-ic09-intermission.patch",
+      "patches/0288-sakura-wkl02-horizontal-command-frames.patch"
     ]
   }
 }

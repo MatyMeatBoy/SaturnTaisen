@@ -745,6 +745,10 @@ def build(root, index_dir, portrait_audit):
                     {'pc': 'SAKURA2/SYSTEM/SLGSYS02.SPR', 'pc_image_index': index,
                       'scope': 'vertical command submenu shell', 'runtime_evidence': 'docs/research/hd-chapter-2.md#verified-wkl02-command-submenus'}
                     for index in (2, 4)
+                ] + [
+                    {'pc': 'SAKURA2/SYSTEM/SLGSYS02.SPR', 'pc_image_index': index,
+                      'scope': 'horizontal command shell', 'runtime_evidence': 'docs/research/hd-chapter-2.md#verified-horizontal-wkl02-command-frames'}
+                    for index in (0, 1)
                 ],
             }
         elif (disc, path) == TH2_GROUND:
