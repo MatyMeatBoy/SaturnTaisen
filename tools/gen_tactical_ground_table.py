@@ -60,7 +60,7 @@ NATIVE = {
 }
 # Tile grids the placement assembler of patch 0140/0153 draws (square tiles on the 2048 x 2048 plane).
 PLANE = 2048
-LIVE_GENERATED = {'MAP03'}
+LIVE_GENERATED = {'MAP03', 'MAP07'}
 
 
 def fnv1a64(data):

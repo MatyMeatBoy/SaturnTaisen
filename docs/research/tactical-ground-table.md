@@ -55,3 +55,22 @@ each baseline and 12.22 and 12.28 ms with the patch. Median VDP phase
 time was 7.14 and 7.165 ms before and 7.02 and 7.00 ms after. Six HD
 and six Original captures match their respective baseline pixels and
 both pairs match SRAM. The test covers the retained MAP03 checkpoint.
+
+## MAP07 at 1440p
+
+Patch 0286 registers MAP07_A.SPR with the witnessed source-4
+signature EEF9B6CB3B179F60. The donor uses the existing world
+sampler at page 0x40000. The English disc 1 File 1 cold entry
+read EVT07 and MAP07 at FAD 221988 and FAD 232804. All 7200
+fields ran strict, with an exact match for the archived
+6692-field guest hash prefix. The registry records 770 observed
+EVT07 block extents sourced from the local disc.
+
+At 1440p, the 90-field fixed camera, 480-field moving camera
+and 900-field sustained rightward replays kept RGB changes
+inside the tactical centre. Units, cursor and HUD retained
+their order. Guest hashes and final SRAM matched in each
+donor/absent comparison. Original matched with and without
+the donor. Enhanced matched with a truncated donor and with
+the donor absent. Other camera limits, the full battle and
+release inclusion are pending.

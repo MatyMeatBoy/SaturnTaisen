@@ -21014,10 +21014,11 @@
       },
       "1:/SAKURA2/MAP07.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
         "pc": "SAKURA2/MAP/MAP07/MAP07_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "runtime_evidence": "docs/research/tactical-ground-table.md#map07-at-1440p",
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA2/MAP08.BIN": {
         "association": "unknown",
