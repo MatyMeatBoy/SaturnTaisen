@@ -267,7 +267,10 @@
       "patches/0275-sakura-compose-packed-map-rows.patch",
       "patches/0276-sakura-video-sync-settings.patch",
       "patches/0277-sakura-hold-dialogue-zoom-shadow.patch",
-      "patches/0278-sakura-suppress-partly-covered-native-text.patch"
+      "patches/0278-sakura-suppress-partly-covered-native-text.patch",
+      "patches/0279-sakura-windows-branding.patch",
+      "patches/0280-sakura-install-hd-from-home.patch",
+      "patches/0281-sakura-first-film-current-floral-fade.patch"
     ]
   }
 }

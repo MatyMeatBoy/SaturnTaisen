@@ -365,3 +365,13 @@ The portable launcher reviews its prepared-file receipt once on startup. The rec
 Updates and missing or truncated files trigger preparation. The helper can restore a missing CUE or receipt after verifying the cached track checksum and can recover audio from an intact sibling language track. It uses the paired English track to rebuild Spanish or a prepared Japanese track to recover English. When necessary it looks in the remembered source and the installation's roms folder. Spanish Enhanced title centers are regenerated from their exact disc pairs. Previously recorded presentation previews are recreated when missing.
 
 HD derivations can be rebuilt from the complete retained PC inventory. If the donor inventory itself is incomplete, the helper needs the original PC edition and verifies that the replacement includes all previously recorded donor paths before publishing it. The repair retains saves, language, and settings. When source data is unavailable, the launcher reports which source is needed under Options. A damaged or missing file shipped by the release may require extracting a clean package over the installation. A same-size alteration is outside the startup metadata check.
+
+### Title prompt for both Spanish discs
+
+The 152 × 24 prompt keeps the English source P and Start bitmap
+and redraws the lowercase letters using the original indexed palette.
+The old crop split the s and carried pixels from adjacent glyphs. Both
+Spanish deltas retain disc extents, accept the existing English
+inputs and round-trip to the recorded blank-video target. Windows
+1440p cold title captures cover both Spanish discs and include
+Original on disc 1. The release is pending.

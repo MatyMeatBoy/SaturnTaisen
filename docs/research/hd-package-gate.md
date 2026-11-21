@@ -73,3 +73,15 @@ checks that it imports before starting. The final frozen executable
 must decode, resize and compare an RGBA PNG. Both the build and the
 public package gate run this check. A failed check stops packaging
 before the archive can be produced.
+
+### Windows identity and installing HD from Inicio
+
+The launcher has an embedded 16–256 px icon and Windows version
+metadata identifying SaturnTaisen.exe. The in-game window uses the
+same name, including when it preloads assets. The Inicio card runs
+the setup helper's PC edition detection in the background when
+there is no pack. A recognized source offers Instalar mod HD.
+Selecting a source uses the existing file picker and setup worker.
+A successful installation from this card enables Enhanced and the
+HD asset switches together. The frozen helper passed positive
+PC-folder and negative Saturn-only detection controls.
