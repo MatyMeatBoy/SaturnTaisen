@@ -73,10 +73,38 @@ def work_items(pc_root, register, census):
     return sorted(items, key=lambda row: (PRIORITY[row[1]], row[0]))
 
 
+def event_shards(items):
+    """Assign each EVENT identity to one route, retaining every original reference."""
+    by_map = defaultdict(set)
+    without_route = []
+    for row in items:
+        if not row[0].startswith('SAKURA2/EVENT/'):
+            continue
+        routes = {reference.split('/')[0] for reference in row[5].split('; ') if reference}
+        if not routes:
+            without_route.append(row)
+        for route in routes:
+            by_map[route].add(row)
+
+    assigned = set()
+    if 'MAP02' in by_map:
+        first = by_map.pop('MAP02')
+        assigned.update(first)
+        yield from (('MAP02', *row) for row in sorted(first))
+    while by_map:
+        route = min(by_map, key=lambda key: (-len(by_map[key] - assigned), key))
+        fresh = by_map.pop(route) - assigned
+        assigned.update(fresh)
+        yield from ((route, *row) for row in sorted(fresh))
+    yield from (('SIN_REFERENCIA_PC', *row) for row in sorted(without_route))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pc-root', type=Path, required=True, help='directorio con SAKURA1, SAKURA2 y SAKURA3')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--event-shards', action='store_true',
+                        help='exporta solo EVENT y asigna cada donante a una ruta táctica')
     args = parser.parse_args()
     config = ROOT / 'config'
     register = json.loads((config / 'hd-chapter-coverage.json').read_text(encoding='utf-8'))
@@ -87,8 +115,15 @@ def main():
         parser.error(str(error))
     with args.output.open('w', encoding='utf-8-sig', newline='') as stream:
         writer = csv.writer(stream)
-        writer.writerow(('archivo_pc', 'estado', 'referencias_saturn', 'archivos_pc_equivalentes',
-                         'claves_saturn', 'referencias_eventanm_pc'))
+        columns = ('archivo_pc', 'estado', 'referencias_saturn', 'archivos_pc_equivalentes',
+                   'claves_saturn', 'referencias_eventanm_pc')
+        if args.event_shards:
+            shards = list(event_shards(items))
+            writer.writerow(('ruta_principal', *columns))
+            writer.writerows(shards)
+            print(f'{len(shards)} donantes EVENT únicos en la cola')
+            return
+        writer.writerow(columns)
         writer.writerows(items)
     linked = sum(state == 'hd' for _, state, *_ in items)
     print(f'{linked}/{len(items)} enlazados; {len(items) - linked} pendientes')

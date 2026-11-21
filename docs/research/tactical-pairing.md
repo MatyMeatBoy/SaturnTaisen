@@ -313,3 +313,21 @@ A replacement must group the VDP1 commands for one actor, preserve
 priority and anchoring, and use the correct frame. The probe supplies
 the input for that compositor work. No HD draw or package is claimed
 for EVENT on the basis of this investigation.
+
+### Cola de EVENT por ruta táctica
+
+El exportador de archivos acepta `--event-shards` junto con el
+directorio PC y un CSV de salida. Asigna un dueño por donante y
+conserva todas las referencias MAP/NPC de sus rutas y alias. MAP02
+abre la cola con 23 donantes porque ya existe el testigo EVS02100.
+Cada paso siguiente elige el mapa que añade más archivos aún sin
+asignar y desempata por número de mapa.
+
+El inventario actual tiene 214 identidades EVENT. La tabla PC cubre
+201 con 431 referencias MAP/NPC sobre 26 mapas. De los referenciados,
+148 se usan en un único mapa y 53 se comparten. Los 13 sin referencia
+PC quedan en una cola separada. Los primeros lotes son MAP02 (23),
+MAP19 (25 nuevos), MAP01 (19), MAP22 (18) y MAP20 (15), que suman
+100 identidades. Una referencia PC sirve para localizar un candidato
+y todavía requiere cotejar las tiras y paletas de Saturn antes de
+registrarlo como pareja.
