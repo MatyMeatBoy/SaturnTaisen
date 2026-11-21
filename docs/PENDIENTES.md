@@ -538,3 +538,10 @@ The native center and actor layer remain intact during the draw, and the
 native floral blend is used during the transition. See [comparison](research/bg2123-bounded-hd.md).
 Offline comparison, coverage and C++ syntax passed. Linked HD playback
 and package inclusion remain pending.
+
+## Bounded HD picnic cutouts (0318)
+
+BG4055 and BG4056 add two disc 2 PC files with region-specific
+registration and native silhouette protection. See [offline evidence](research/bg405x-bounded-hd.md).
+Coverage, patch application and C++ syntax passed. HD playback and
+packaging remain pending.
