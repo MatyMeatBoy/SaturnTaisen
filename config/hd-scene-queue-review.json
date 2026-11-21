@@ -129,10 +129,6 @@
       "disposition": "incompatible-full",
       "reason": "the Saturn statue stands on a blue pedestal and holds an object, the PC figure has neither (different frame)"
     },
-    "SAKURA1/BG/BG4372.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "the Saturn picture is a character cut-out; the PC picture has the whole hanami scene baked in"
-    },
     "SAKURA1/ICATCH/SHINRIAD.SPR": {
       "disposition": "incompatible-full",
       "reason": "Six PC windows bake Japanese ordinals in place of native Roman numeral panel art. Separate decorative mask would be partial."

@@ -326,7 +326,8 @@
       "patches/0334-sakura-compose-parallel-narrative-cutouts.patch",
       "patches/0335-sakura-hd-chapter9-foregrounds.patch",
       "patches/0336-sakura-hd-bg4375-dressing-room.patch",
-      "patches/0337-sakura-hd-bg2059-floral-fade.patch"
+      "patches/0337-sakura-hd-bg2059-floral-fade.patch",
+      "patches/0338-sakura-hd-bg4372-panoramic-cutout.patch"
     ]
   }
 }

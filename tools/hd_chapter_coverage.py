@@ -931,6 +931,7 @@ def build(root, index_dir, portrait_audit):
             (1, '/SAKURA1/BG4057.BIN'), (1, '/SAKURA1/BG4067.BIN'),
             (1, '/SAKURA1/BG4162.BIN'),
             (1, '/SAKURA1/BG4375.BIN'),
+            (1, '/SAKURA1/BG4372.BIN'),
             (2, '/SAKURA1/BG1338.BIN'), (2, '/SAKURA1/BG1212.BIN'),
             (2, '/SAKURA1/BG4055.BIN'), (2, '/SAKURA1/BG4056.BIN'),
             (2, '/SAKURA1/BG3091.BIN'), (2, '/SAKURA1/BG3097.BIN'),
@@ -947,6 +948,7 @@ def build(root, index_dir, portrait_audit):
                 'BG3091': 'docs/research/bg3091-bounded-hd.md',
                 'BG3097': 'docs/research/bg3097-bounded-hd.md',
                 'BG4375': 'docs/research/bg4375-bounded-hd.md',
+                'BG4372': 'docs/research/bg4372-bounded-hd.md',
                 'BG2059': 'docs/research/bg2059-fade.md',
             }.get(name)
             if runtime_evidence:

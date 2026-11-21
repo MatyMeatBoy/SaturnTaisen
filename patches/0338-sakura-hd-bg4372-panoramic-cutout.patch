@@ -1,0 +1,175 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -985,6 +985,7 @@
+         uint8_t layer = 4;
+         std::span<const port::RegisteredCutoutRegion> regions;
+         bool floralTransition = false;
++        bool panoramicCutout = false;
+     };
+     static constexpr port::BoundedPlateRegistration corridorRegistration{
+         1.7894, 1.8712, 23.0, -13.2,
+@@ -1077,7 +1078,10 @@
+     static constexpr std::array<port::RegisteredCutoutRegion, 1> cave2059{{
+         {148, 4, 191, 122, 2.00000, 2.21000, 0.50000, 0.75000, 23}
+     }};
+-    constexpr std::array<NarrativeCutout, 42> narrativeCutouts{{
++    static constexpr std::array<port::RegisteredCutoutRegion, 1> hanami4372{{
++        {196, 70, 218, 123, 2.00000, 2.19559, 1.25000, 0.50000, 28}
++    }};
++    constexpr std::array<NarrativeCutout, 43> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -1162,6 +1166,8 @@
+             "BG4375.BIN", "SAKURA1/BG/BG4375.SPR", 203601, 1, 0, 0, 0, 0, 576, 320, nullptr, 2, dressingRoom4375},
+         {0x5C4F34289FD6B5AFull, 0xEA7DE43D593086CDull, 0xE5181C47227589DFull, 0x85171B84E8A3194Cull,
+             "BG2059.BIN", "SAKURA1/BG/BG2059.SPR", 131944, 1, 0, 0, 0, 0, 576, 320, nullptr, 4, cave2059, true},
++        {0xEC27F86E7B6DEFC5ull, 0x5957EB69BBE359D6ull, 0x12F20BD5D56653B3ull, 0x3C052F8769132851ull,
++            "BG4372.BIN", "SAKURA1/BG/BG4372.SPR", 432540, 1, 0, 0, 0, 0, 1024, 320, nullptr, 2, hanami4372, false, true},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
+@@ -1172,6 +1178,7 @@
+     std::vector<uint32_t> cutoutPixels;
+     std::array<std::vector<uint8_t>, 2> uploadedCutoutVisibilities;
+     std::array<size_t, 2> uploadedCutouts{narrativeCutouts.size(), narrativeCutouts.size()};
++    std::array<unsigned, 2> uploadedCutoutOrigins{};
+     const auto decodeNarrativeCutout = [](std::span<const uint8_t> bytes, uint64_t fingerprint) {
+         constexpr int w = 288, h = 144, tiles = 0x50, palette = tiles + w * h;
+         std::vector<uint32_t> rgb;
+@@ -5254,16 +5261,28 @@
+                                 const bool floralTransition = row.floralTransition && !regs.colorCalcExtended &&
+                                     !regs.colorCalcAdd && planes.floralCoverMix.size() == planes.source.size() &&
+                                     planes.floralCoverRgb.size() == planes.source.size();
++                                const unsigned nativeWidth = row.panoramicCutout ? 512 : w;
++                                const unsigned residentBytes = row.panoramicCutout ? 1856 : w * h;
++                                const unsigned nativeBytes = row.panoramicCutout ? 8016 : 45120;
+                                 if ((!opaque && !floralTransition) ||
+-                                    video.BackgroundCellFingerprint(row.layer, w * h) != row.cells)
++                                    (row.panoramicCutout && (bg.pageBaseAddresses[0] != 0x40000 ||
++                                        bg.scrollAmountV || bg.scrollIncH != 256 || bg.scrollIncV != 256)) ||
++                                    video.BackgroundCellFingerprint(row.layer, residentBytes) != row.cells)
+                                     continue;
+                                 claimedLayers[layerSlot] = true;
+                                 auto& art = narrativeCutoutArt[slot];
+                                 if (!art.hd.tried) {
+                                     art.hd.tried = true;
+                                     std::vector<uint8_t> native;
+-                                    if (port.discFiles.ReadBounded(row.discFile, native, 45120))
+-                                        art.native = decodeNarrativeCutout(native, row.nativeHash);
++                                    if (port.discFiles.ReadBounded(row.discFile, native, nativeBytes)) {
++                                        if (row.panoramicCutout) {
++                                            art.native = port::DecodePinnedPan(native, nativeWidth, h, nativeBytes, row.nativeHash);
++                                            for (auto& pixel : art.native)
++                                                pixel = pixel == 0x00F8F800u ? 0 : pixel | 0xFF000000u;
++                                        } else {
++                                            art.native = decodeNarrativeCutout(native, row.nativeHash);
++                                        }
++                                    }
+                                     if (!art.native.empty()) {
+                                         PreparePinnedPan prepare;
+                                         if (row.bounded) {
+@@ -5276,11 +5295,11 @@
+                                                 return registered;
+                                             };
+                                         } else if (!row.regions.empty()) {
+-                                            prepare = [native = art.native, regions = row.regions](SceneHdPixels donor) {
++                                            prepare = [native = art.native, regions = row.regions, nativeWidth](SceneHdPixels donor) {
+                                                 SceneHdPixels registered;
+                                                 registered.pixels = port::RegisterCutoutRegions(native, donor.pixels,
+-                                                    w, h, donor.width, donor.height, regions);
+-                                                registered.width = width2;
++                                                    nativeWidth, h, donor.width, donor.height, regions);
++                                                registered.width = nativeWidth * 2;
+                                                 registered.height = 2 * h;
+                                                 return registered;
+                                             };
+@@ -5308,6 +5327,40 @@
+                                     }
+                                 }
+                                 if (art.registered.empty()) continue;
++                                unsigned origin = 0;
++                                if (row.panoramicCutout) {
++                                    const int scroll = int(bg.scrollAmountH >> 8);
++                                    std::optional<unsigned> verified;
++                                    for (int candidate = std::max(0, scroll - 2);
++                                         candidate <= std::min(int(nativeWidth) - w, scroll + 2); ++candidate) {
++                                        unsigned agreeing = 0;
++                                        bool mismatch = false;
++                                        for (const auto& region : row.regions) {
++                                            for (int y = region.top; y < region.bottom && !mismatch; ++y) {
++                                                for (int worldX = std::max(region.left, candidate);
++                                                     worldX < std::min(region.right, candidate + w); ++worldX) {
++                                                    const auto rgb = art.native[size_t(y) * nativeWidth + worldX];
++                                                    if (!rgb) continue;
++                                                    const size_t at = size_t(y + 8) * 320 + worldX - candidate + 16;
++                                                    if (planes.source[at] != row.layer || planes.topSource[at] != row.layer) continue;
++                                                    if ((softwareShown[at] ^ rgb) & 0xFFFFFFu) {
++                                                        mismatch = true;
++                                                        break;
++                                                    }
++                                                    ++agreeing;
++                                                }
++                                            }
++                                        }
++                                        if (mismatch || agreeing < 16) continue;
++                                        if (verified) {
++                                            verified.reset();
++                                            break;
++                                        }
++                                        verified = unsigned(candidate);
++                                    }
++                                    if (!verified) continue;
++                                    origin = *verified;
++                                }
+                                 cutoutVisibility.resize(w * h);
+                                 bool visible = false, mixed = false;
+                                 const auto floralRecipe = [&](size_t at) {
+@@ -5317,13 +5370,14 @@
+                                 for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
+                                     const size_t offset = size_t(y) * w + x;
+                                     const size_t at = size_t(y + 8) * 320 + x + 16;
+-                                    const uint32_t rgb = art.native[offset];
++                                    const size_t world = size_t(y) * nativeWidth + x + origin;
++                                    const uint32_t rgb = art.native[world];
+                                     // Retain the native edge and any overlapping actors or color calculation.
+                                     const bool ownsCell = rgb && planes.source[at] == row.layer &&
+-                                        (x == 0 || art.native[offset - 1]) &&
+-                                        (x + 1 == w || art.native[offset + 1]) &&
+-                                        (y == 0 || art.native[offset - w]) &&
+-                                        (y + 1 == h || art.native[offset + w]);
++                                        (x + origin == 0 || art.native[world - 1]) &&
++                                        (x + origin + 1 == nativeWidth || art.native[world + 1]) &&
++                                        (y == 0 || art.native[world - nativeWidth]) &&
++                                        (y + 1 == h || art.native[world + nativeWidth]);
+                                     uint8_t draw = 0;
+                                     if (ownsCell) {
+                                         const auto stock = softwareShown[at] | 0xFF000000u;
+@@ -5358,8 +5412,16 @@
+                                     uploadedCutout = narrativeCutouts.size();
+                                 }
+                                 if (!narrativeCutoutTexture) continue;
+-                                if (mixed || uploadedCutout != slot || cutoutVisibility != uploadedCutoutVisibility) {
+-                                    cutoutPixels = art.registered;
++                                if (mixed || uploadedCutout != slot || origin != uploadedCutoutOrigins[layerSlot] ||
++                                    cutoutVisibility != uploadedCutoutVisibility) {
++                                    if (row.panoramicCutout) {
++                                        cutoutPixels.resize(width2 * h * 2);
++                                        for (int y = 0; y < h * 2; ++y)
++                                            std::copy_n(art.registered.data() + size_t(y) * nativeWidth * 2 + origin * 2,
++                                                        width2, cutoutPixels.data() + size_t(y) * width2);
++                                    } else {
++                                        cutoutPixels = art.registered;
++                                    }
+                                     for (int y = 0; y < h * 2; ++y) for (int x = 0; x < width2; ++x) {
+                                         auto& pixel = cutoutPixels[size_t(y) * width2 + x];
+                                         const auto draw = cutoutVisibility[size_t(y / 2) * w + x / 2];
+@@ -5375,6 +5437,7 @@
+                                     }
+                                     uploadedCutout = slot;
+                                     uploadedCutoutVisibility = cutoutVisibility;
++                                    uploadedCutoutOrigins[layerSlot] = origin;
+                                 }
+                                 if (SDL_RenderTexture(renderer, narrativeCutoutTexture, nullptr, &imageTarget) &&
+                                     std::getenv("SATRECOMP_NARRATIVE_CUTOUT_TRACE"))
