@@ -24,6 +24,12 @@ python tools/audit_pc_menus.py --pc-root <PC extraction> --disc local/prepared/d
 
 ## Next step
 
+The remaining THD20 queue entries are `ITEM45.BIN` → `ITEMICON.SPR[84]`
+and `ITEM53.BIN` → `BUROICON.SPR[0]`. The visual review rejected both exact
+pairings. The batch queue retains both identities in the pending count and
+puts them on hold so workers can seek different donors instead of repeating
+the same comparisons.
+
 For each candidate with `found=true`: decode both images (PC via the native exporter `sakura.exe --export-pc-spr`, Saturn via the tools already existing in `tools/es/`), compare geometry, and check whether the PC separates text from the background in a way Saturn does not. No name match here demonstrates compatible composition, palette, or geometry — this is a list of candidates to verify, not an integration.
 
 ### Item detail sprite witness (T109)
