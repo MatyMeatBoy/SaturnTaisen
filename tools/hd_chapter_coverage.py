@@ -936,6 +936,9 @@ def build(root, index_dir, portrait_audit):
                    'verified_in_game': False,
                    'pairing_evidence': ('docs/research/bg405x-bounded-hd.md' if name in {'BG4053', 'BG4054', 'BG4055', 'BG4056', 'BG4057'}
                                         else f'docs/research/{name.lower()}-bounded-hd.md')}
+            if name == 'BG4057':
+                row.update(verified_in_game=True,
+                           runtime_evidence='docs/research/bg405x-bounded-hd.md#bg4057-disc-1')
         elif path in bg:
             alias, pair = native_bg_aliases.get(path, (None, bg[path]))
             accepted = name not in bg_review['rejected'] and (
