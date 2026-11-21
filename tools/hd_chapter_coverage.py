@@ -923,7 +923,8 @@ def build(root, index_dir, portrait_audit):
                            verified_in_game=witnessed, runtime_evidence=runtime_evidence)
         elif (disc, path) in {
             (1, '/SAKURA1/BG1331.BIN'), (1, '/SAKURA1/BG2123.BIN'),
-            (1, '/SAKURA1/BG1340.BIN'), (1, '/SAKURA1/BG4067.BIN'),
+            (1, '/SAKURA1/BG1339.BIN'), (1, '/SAKURA1/BG1340.BIN'),
+            (1, '/SAKURA1/BG4067.BIN'),
             (2, '/SAKURA1/BG1338.BIN'), (2, '/SAKURA1/BG1212.BIN'),
             (2, '/SAKURA1/BG4055.BIN'), (2, '/SAKURA1/BG4056.BIN'),
         }:
