@@ -15,7 +15,7 @@ def inspect_native_character(data):
     return dict(part_count=count,parts=parts,palette_offset=0x410,palette_bytes=512,
                 palette_sha256=hashlib.sha256(data[0x410:0x610]).hexdigest(),pixel_offset=0x610,pixel_bytes=len(data)-0x610)
 
-def state_vectors(data):
+def state_vector_ranges(data):
     if len(data)<44 or struct.unpack_from('<II',data)!=(0x53525354,9) or data[8:15]!=b'sakura\0' or struct.unpack_from('<I',data,40)[0]!=0x4D414348:
         raise ValueError('Requires Sakura state version9')
     offset=44;result=[]
@@ -23,8 +23,11 @@ def state_vectors(data):
         if offset+8>len(data):raise ValueError('Truncated state')
         length=struct.unpack_from('<Q',data,offset)[0];offset+=8
         if length!=expected or offset+length>len(data):raise ValueError('Invalid state memory extent')
-        result.append(data[offset:offset+length]);offset+=length
+        result.append((offset, offset+length));offset+=length
     return result
+
+def state_vectors(data):
+    return [data[start:end] for start, end in state_vector_ranges(data)]
 
 def observed_bodies(data):
     vectors=state_vectors(data);vram=vectors[3];address=0;visited=set();stack=[];result=[]

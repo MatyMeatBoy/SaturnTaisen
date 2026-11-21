@@ -545,3 +545,20 @@ BG4055 and BG4056 add two disc 2 PC files with region-specific
 registration and native silhouette protection. See [offline evidence](research/bg405x-bounded-hd.md).
 Coverage, patch application and C++ syntax passed. HD playback and
 packaging remain pending.
+
+## Exact scene residency lookup
+
+For a batch of fixed-cell BG files, use the read-only archive search.
+The list contains one local v9 snapshot path per line, relative to
+the repository or absolute.
+
+```powershell
+python tools/hd_scene_residency.py --disc 'local/prepared/disc2/Track 01.iso' --asset SAKURA1/BG4055.BIN --asset SAKURA1/BG4056.BIN --state-list local/work/snapshots.txt --output local/work/scene-residency.json
+```
+
+The scan checks exact CRAM palettes first, then locates their cell data
+in VDP2 VRAM. It skips the first 64-byte character because the guest
+can overwrite that cell. The report identifies resident candidates
+for a short draw probe. It does not promote them in the HD census.
+The local benchmark indexed 3,753 snapshots in 7.0 seconds and recovered
+both known positive controls. Keep reports and state lists local.
