@@ -147,6 +147,28 @@ class HdProgressTests(unittest.TestCase):
         self.assertIn('2 referencias Saturn', tactical['details'][-1])
         self.assertIsNone(tactical['integrated'])
 
+    def test_scene_extras_do_not_remove_shared_main_donor(self):
+        data = specimen()
+        scene = next(row for row in data['categories'] if row['id'] == 'scene-images')
+        scene.update(total=4, inventory=4, matched=4)
+        data['scene_extras_inventory'] = {'EVENT': 2, 'CG': 1}
+        main = 'SAKURA2/BG/BBG001.SPR'
+        alias = 'SAKURA2/EVENT/ALIAS.SPR'
+        extras = 'SAKURA2/EVENT/EXTRA.SPR'
+        register = {
+            'scene_file_duplicate_groups': [[main, alias]],
+            'unassigned': {'scene-pictures': {
+                'a': {'pc': alias, 'status': 'hd'},
+                'b': {'pc': extras, 'status': 'hd', 'verified_in_game': True},
+            }},
+        }
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / 'coverage.json'
+            path.write_text(json.dumps(register), encoding='utf-8')
+            report.apply_register(data, path)
+        self.assertEqual((scene['total'], scene['integrated'], scene['verified']), (1, 1, 0))
+        self.assertEqual(data['scene_extras'], {'total': 2, 'integrated': 1})
+
     def test_committed_report_and_readme_are_current(self):
         config = json.loads((ROOT / 'config/hd-progress.json').read_text(encoding='utf-8'))
         report.apply_register(config, ROOT / 'config/hd-chapter-coverage.json')

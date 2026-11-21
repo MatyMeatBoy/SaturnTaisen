@@ -78,10 +78,10 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Área | Preparado | Verificado en juego |
 | --- | --- | --- |
 | Retratos y animación | 304/304 (100%) | Sin dato |
-| Imágenes de escena | Sin dato | 178/1095 (16,2%) |
+| Imágenes de escena | Sin dato | 175/662 (26,4%) |
 | Escenas y transiciones | Sin dato | Sin dato |
 | Vídeos | Sin dato | Sin dato |
-| Modo táctico | Sin dato | Sin dato |
+| Otros recursos tácticos por medir | Sin dato | Sin dato |
 | HUD y menús PC/Saturn | Sin dato | Sin dato |
 | Fondos decorativos KABE | 19/19 (100%) | Sin dato |
 | Personajes grandes NC | Sin dato | 48/147 (32,6%) |
@@ -89,16 +89,17 @@ PC body assets will keep a single height-based scale, with the head/torso axis a
 | Sección | Integrado |
 | --- | --- |
 | Retratos y animación | 304/304 (100%) |
-| Imágenes de escena | 587/1095 (53,6%) |
+| Imágenes de escena | 584/662 (88,2%) |
 | Escenas y transiciones | Sin dato |
 | Vídeos | 50/50 (100%) |
-| Modo táctico | Sin dato |
+| Otros recursos tácticos por medir | Sin dato |
 | HUD y menús PC/Saturn | 59/229 (25,7%) |
 | Fondos decorativos KABE | 19/19 (100%) |
 | Personajes grandes NC | 147/147 (100%) |
+| Suelos tácticos | 12/26 (46,1%) |
 
-**HD total: 1166/1844 (63,2%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
-- Sin medir todavía (no cuentan): Escenas y transiciones, Modo táctico.
+**HD total: 1175/1437 (81,7%).** Elementos conectados sobre candidatos de las secciones medidas. La tabla indica por separado la verificación en juego.
+- Sin medir todavía (no cuentan): Escenas y transiciones, Otros recursos tácticos por medir.
 
 [Inventario, alcance de los porcentajes y pendientes](docs/HD_PROGRESS.md).
 
