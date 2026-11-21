@@ -248,9 +248,10 @@
     "1:/SAKURA2/MAP11.BIN"
    ],
    "signature": "51F16F840299873E",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
+   "verified_in_game": false,
    "world": [
     1024,
     1024
@@ -378,9 +379,10 @@
     "2:/SAKURA2/MAP17.BIN"
    ],
    "signature": "EF0D324CBB36FA91",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
+   "verified_in_game": false,
    "world": [
     1024,
     1024
@@ -403,9 +405,10 @@
     "2:/SAKURA2/MAP18.BIN"
    ],
    "signature": "AABF931F9960EDBA",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
+   "verified_in_game": false,
    "world": [
     1024,
     720
@@ -498,9 +501,10 @@
     "1:/SAKURA2/MAP22.BIN"
    ],
    "signature": "CCD72F646DC72847",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
+   "verified_in_game": false,
    "world": [
     864,
     521
@@ -543,9 +547,10 @@
     "2:/SAKURA2/MAP24.BIN"
    ],
    "signature": "8A03B78AA817DF0C",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
+   "verified_in_game": false,
    "world": [
     696,
     480
@@ -568,9 +573,10 @@
     "2:/SAKURA2/MAP25.BIN"
    ],
    "signature": "91608BD930EA1AE4",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
+   "verified_in_game": false,
    "world": [
     696,
     480
@@ -593,9 +599,10 @@
     "2:/SAKURA2/MAP26.BIN"
    ],
    "signature": "44A5831551F52D3F",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
+   "verified_in_game": false,
    "world": [
     696,
     480
@@ -605,8 +612,8 @@
  "schema": 1,
  "scope": "Tactical ground table: Saturn MAPnn.BIN to PC ground SPR and the runtime key. Data only.",
  "summary": {
-  "candidate": 8,
-  "hd": 15,
+  "candidate": 1,
+  "hd": 22,
   "native": 2,
   "needs-assembler": 1
  }

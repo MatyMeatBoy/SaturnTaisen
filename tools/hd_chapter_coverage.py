@@ -628,6 +628,12 @@ def build(root, index_dir, portrait_audit):
     films = {(r['disc'], r['fad']): r for r in config('film-fad-map')['streams']}
     bounded_films = {(edit['disc'], edit['movie']): edit['spans']
                      for edit in config('film-video-spans')['edits']}
+    beta_grounds = {
+        reference: entry['pc_ground']
+        for entry in config('hd-tactical-ground-table')['maps']
+        if entry['status'] == 'hd' and entry.get('verified_in_game') is False
+        for reference in entry['saturn']
+    }
     bg = pairs(config('hd-scene-bg-map'))
     minigame_backgrounds = pairs(config('hd-minigame-bg-pairs'))
     bg_review = config('hd-scene-bg-review')
@@ -839,6 +845,14 @@ def build(root, index_dir, portrait_audit):
                 'runtime_evidence': report,
                 'pc': f'SAKURA2/MAP/{stage}/{stage}_A.SPR',
                 'scope': 'source-4 ground only',
+            }
+        elif kind == 'tactical-maps' and f'{disc}:{path}' in beta_grounds:
+            row = {
+                'status': 'hd',
+                'verified_in_game': False,
+                'pc': beta_grounds[f'{disc}:{path}'],
+                'scope': 'source-4 ground only',
+                'pairing_evidence': 'docs/research/tactical-ground-table.md#single-image-beta-integration',
             }
         elif kind == 'tactical-maps' and tactical_maps.get(f'{disc}:{path}', {}).get('status') == 'paired':
             pair = tactical_maps[f'{disc}:{path}']

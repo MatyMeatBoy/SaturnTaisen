@@ -33,6 +33,22 @@ battle is pending.
 
 Candidate keys and dimensions are offline evidence. Runtime activation and package coverage require a separately verified draw.
 
+### Single-image beta integration
+
+Seven maps use the existing single-image sampler and require the player-prepared PC pack. The disc and PC MAP BIN match byte for byte for each row. The PC TAB selects the registered donor, which decodes to one ordinal-zero image at twice the dimensions of the sampler world. The source-4 key at page `0x40000` was independently regenerated for each disc map.
+
+| Map | Disc | PC image | World | Source-4 key |
+| --- | --- | --- | --- | --- |
+| MAP11 | 1 | 2048 × 2048 | 1024 × 1024 | `51F16F840299873E` |
+| MAP17 | 2 | 2048 × 2048 | 1024 × 1024 | `EF0D324CBB36FA91` |
+| MAP18 | 2 | 2048 × 1440 | 1024 × 720 | `AABF931F9960EDBA` |
+| MAP22 | 1 | 1728 × 1042 | 864 × 521 | `CCD72F646DC72847` |
+| MAP24 | 2 | 1392 × 960 | 696 × 480 | `8A03B78AA817DF0C` |
+| MAP25 | 2 | 1392 × 960 | 696 × 480 | `91608BD930EA1AE4` |
+| MAP26 | 2 | 1392 × 960 | 696 × 480 | `44A5831551F52D3F` |
+
+These seven linked rows count as HD integration with `verified_in_game: false`. Beta review covers visible stationary, moving and boundary cameras, donor absence and corruption, and Original composition. The offline evidence covers exact identity, decoding and sampler geometry.
+
 Run these checks from the repository root.
 
 ```powershell

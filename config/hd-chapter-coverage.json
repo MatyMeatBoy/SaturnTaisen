@@ -21119,17 +21119,19 @@
       },
       "1:/SAKURA2/MAP11.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP11/MAP11_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA2/MAP22.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP22/MAP22_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA2/MAP01.BIN": {
         "association": "unknown",
@@ -21140,17 +21142,19 @@
       },
       "2:/SAKURA2/MAP17.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP17/MAP17_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA2/MAP18.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP18/MAP18_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA2/MAP20.BIN": {
         "association": "unknown",
@@ -21168,24 +21172,27 @@
       },
       "2:/SAKURA2/MAP24.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP24/MAP24_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA2/MAP25.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP25/MAP25_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA2/MAP26.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP26/MAP26_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       }
     },
     "tactical-units": {
