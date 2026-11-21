@@ -290,7 +290,8 @@
       "patches/0298-sakura-map09-pc-ground.patch",
       "patches/0299-sakura-extras-hd-theater.patch",
       "patches/0300-sakura-tactical-single-ground-batch.patch",
-      "patches/0301-sakura-hd-compact-inventory-icons.patch"
+      "patches/0301-sakura-hd-compact-inventory-icons.patch",
+      "patches/0302-sakura-map20-pc-ground.patch"
     ]
   }
 }

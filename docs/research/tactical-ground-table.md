@@ -49,6 +49,16 @@ Seven maps use the existing single-image sampler and require the player-prepared
 
 These seven linked rows count as HD integration with `verified_in_game: false`. Beta review covers visible stationary, moving and boundary cameras, donor absence and corruption, and Original composition. The offline evidence covers exact identity, decoding and sampler geometry.
 
+### MAP20 tiled ground
+
+The disc 2 MAP20 BIN is identical to the PC BIN. The PC TAB selects
+MAP20_A.SPR, with 96 tiles of 128 × 128 and 139 aligned, distinct
+destinations in the 2048 × 2048 placement plane. The existing assembler
+samples a 1024 × 1024 world at source-4 key B0096DE29CC3A325. The offline
+sample matches the retained placement reference after its 102,660 cyan
+pixels are cleared by the existing transparency rule. Camera and
+composition checks remain pending in beta.
+
 Run these checks from the repository root.
 
 ```powershell

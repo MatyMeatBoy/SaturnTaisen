@@ -21221,10 +21221,11 @@
       },
       "2:/SAKURA2/MAP20.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/tactical-pairing.md",
+        "pairing_evidence": "docs/research/tactical-ground-table.md#single-image-beta-integration",
         "pc": "SAKURA2/MAP/MAP20/MAP20_A.SPR",
-        "reason": "PC MAP BIN is byte-identical to the Saturn BIN and its TAB names this ground, but the runtime has no pattern-name fingerprint or ground sampler for this map; the ground holds 96 images (tiles or frames) and needs an assembler",
-        "status": "paired-not-wired"
+        "scope": "source-4 ground only",
+        "status": "hd",
+        "verified_in_game": false
       },
       "2:/SAKURA2/MAP23.BIN": {
         "association": "unknown",

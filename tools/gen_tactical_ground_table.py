@@ -61,7 +61,7 @@ NATIVE = {
 # Tile grids the placement assembler of patch 0140/0153 draws (square tiles on the 2048 x 2048 plane).
 PLANE = 2048
 LIVE_GENERATED = {'MAP03', 'MAP07', 'MAP08', 'MAP09'}
-BETA_SINGLE = {'MAP11', 'MAP17', 'MAP18', 'MAP22', 'MAP24', 'MAP25', 'MAP26'}
+BETA_GENERATED = {'MAP11', 'MAP17', 'MAP18', 'MAP20', 'MAP22', 'MAP24', 'MAP25', 'MAP26'}
 
 
 def fnv1a64(data):
@@ -134,16 +134,18 @@ def classify(pair, derived, plane=None):
         if width % 2 or height % 2:
             row.update(status='needs-assembler', reason='odd image size, no 2x world grid')
             return row
-        row.update(status='hd' if stem in LIVE_GENERATED or stem in BETA_SINGLE else 'candidate',
+        row.update(status='hd' if stem in LIVE_GENERATED or stem in BETA_GENERATED else 'candidate',
                    world=[width // 2, height // 2], tile_px=0, centre_layout=stage_name(stem))
-        if stem in BETA_SINGLE:
+        if stem in BETA_GENERATED:
             row['verified_in_game'] = False
         return row
     count, size = pair['ground_image_count'], pair['ground_image0_size']
     if len(pair['ground_image_sizes']) == 1 and size[0] == size[1] and count > 4 and plane == [PLANE, PLANE]:
-        row.update(status='hd' if stem in LIVE_GENERATED else 'candidate',
+        row.update(status='hd' if stem in LIVE_GENERATED or stem in BETA_GENERATED else 'candidate',
                    world=[PLANE // 2, PLANE // 2], tile_px=size[0],
                    centre_layout=stage_name(stem), plane=plane)
+        if stem in BETA_GENERATED:
+            row['verified_in_game'] = False
         return row
     row.update(status='needs-assembler',
                reason=('%d images of %s are not equal square tiles on the %d px plane: the placement assembler of patch 0140 '
