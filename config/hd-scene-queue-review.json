@@ -21,10 +21,6 @@
       "disposition": "incompatible-full",
       "reason": "lighting or colour grading clearly differs"
     },
-    "SAKURA1/BG/BG1340.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "lighting or colour grading clearly differs"
-    },
     "SAKURA1/BG/BG1341.SPR": {
       "disposition": "incompatible-full",
       "reason": "blank placeholder picture"
@@ -160,10 +156,6 @@
     "SAKURA1/BG/BG4058.SPR": {
       "disposition": "incompatible-full",
       "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
-    },
-    "SAKURA1/BG/BG4067.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "PC merges hall background with separate native keyed actor."
     },
     "SAKURA1/BG/BG4071.SPR": {
       "disposition": "incompatible-full",
