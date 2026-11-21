@@ -163,3 +163,24 @@ verification remain open. At closure, local alone measured
 212,888,133,051 logical bytes excluding junctions, above the
 workspace budget. The RC ZIP was staged outside the repository
 and is 354,107,401 bytes.
+
+## Display synchronization and native field pacing
+
+Patch 0276 introduces VSync as the default under Pantalla, alongside
+VRR and disabled. Changes apply in-session and after display backend
+recreation. The Saturn field-rate limiter remains active. VRR uses
+adaptive presentation where available and otherwise immediate
+presentation, leaving variable refresh to the display and driver.
+
+The compatibility replay used the same Spanish disc 1 launch with
+legacy run-ahead values 0 and 2. All 90 guest hashes matched with
+zero interpreted blocks. Three visible default/VRR/off runs and one
+live-switch run also matched all 90 hashes. A captured settings menu
+showed Configuraciones and no Juego category. Physical VRR activation
+was outside these checks. The package version remains unchanged.
+
+The first Spanish letter was sampled over two rapid advances and two
+narrative-to-backdrop transitions at 1440p. In these captures the HD
+line cleared directly and the empty box maintained its placement.
+The reported momentary native text and box movement entering video
+remain open. Private evidence is staged outside the repository.

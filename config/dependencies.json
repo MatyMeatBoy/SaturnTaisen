@@ -264,7 +264,8 @@
       "patches/0272-sakura-compact-map-fade-strips.patch",
       "patches/0273-sakura-tactical-ground-line-context.patch",
       "patches/0274-sakura-pack-map-mixed-rows.patch",
-      "patches/0275-sakura-compose-packed-map-rows.patch"
+      "patches/0275-sakura-compose-packed-map-rows.patch",
+      "patches/0276-sakura-video-sync-settings.patch"
     ]
   }
 }

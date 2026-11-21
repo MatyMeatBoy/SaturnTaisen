@@ -1098,7 +1098,7 @@ def prepare_hd(paths: Paths, source: Path, discs: list[Path], base: int, span: i
 # ---- profile -----------------------------------------------------------------------------------------
 
 DEFAULT_SETTINGS = ('[features]\npreset=custom\nscene_view=1\ntext_style=0\n'
-                    'pc_hd_backgrounds=0\npc_hd_portraits=0\nhd_preload=1\npad_profile=0\nrun_ahead=0\n')
+                    'pc_hd_backgrounds=0\npc_hd_portraits=0\nhd_preload=1\npad_profile=0\n')
 
 
 def set_values(file: Path, values: dict[tuple[str, str], str]) -> None:
