@@ -1,0 +1,153 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1184,8 +1184,11 @@
+         SceneHd image;
+         std::vector<WindowRail> rails;
+     };
+-    constexpr unsigned kPendulumFrame = 15;
+-    std::array<WindowFrame, kPendulumFrame + 1> windowFrames;
++    constexpr unsigned kPendulumFrame = 15, kPendulumPoseCount = 3;
++    std::array<WindowFrame, kPendulumFrame + kPendulumPoseCount> windowFrames;
++    std::future<PcSprite> pendulumPending;
++    PcSprite pendulumArt;
++    bool pendulumTried = false;
+     SceneHd extrasTheater;
+     SceneHd koubuDefeat;
+     SceneHd statusPlate;
+@@ -1253,10 +1256,7 @@
+          0xFE2E19421522F8A4ull, 0x2FBCC67122384B9Dull, 0x5030F8u, 0x8068F8u, 266889, 0},
+     }};
+     std::array<bool, std::size(endingPhotos)> endingPhotoTraces{};
+-    const auto finishSceneInset = [&](SceneHd& inset, SDL_BlendMode blend) {
+-        if (!inset.pending.valid() || inset.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
+-            return;
+-        auto pixels = inset.pending.get();
++    const auto publishSceneInset = [&](SceneHd& inset, const SceneHdPixels& pixels, SDL_BlendMode blend) {
+         if (pixels.pixels.empty()) return;
+         auto* picture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+             SDL_TEXTUREACCESS_STATIC, pixels.width, pixels.height);
+@@ -1265,6 +1265,10 @@
+             SDL_SetTextureBlendMode(picture, blend);
+             inset.texture = picture;
+         } else if (picture) SDL_DestroyTexture(picture);
++    };
++    const auto finishSceneInset = [&](SceneHd& inset, SDL_BlendMode blend) {
++        if (inset.pending.valid() && inset.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++            publishSceneInset(inset, inset.pending.get(), blend);
+     };
+     auto loadEveInset = [&](SceneHd& inset, const char* file, size_t size, uint64_t hash, port::EveRect crop,
+                            unsigned feather = 0, unsigned index = port::kEve202PcImage,
+@@ -5495,6 +5499,10 @@
+                      0xFC9A23229AFB36AEull, {}, 0, 0, 0x0077, 0x005F, 168, false, WindowVariant::Gallery::Sound, 11},
+                     {kPendulumFrame, 1, {156, 24, 9, 17}, 8, 16, 160, 32, 0x60012FBF7CD7164Dull,
+                      0x3CA9F51EFEDCF198ull, {}},
++                    {kPendulumFrame + 1, 1, {157, 26, 8, 16}, 8, 16, 160, 33, 0x60012FBF7CD7164Dull,
++                     0x574CAC6648603F3Bull, {}},
++                    {kPendulumFrame + 2, 1, {158, 48, 5, 9}, 8, 16, 160, 52, 0x60012FBF7CD7164Dull,
++                     0x376A2B4AB6CB7E7Dull, {}},
+                     {12, 0, {40, 24, 240, 184}, 240, 184, 40, 24, 0x124A604EE6C4CE8Full,
+                      0x32769A58EF881806ull, {}, 0, 0, 0x0077, 0x005F, 168, false, WindowVariant::Gallery::Movie, 0},
+                     {13, 0, {40, 24, 240, 184}, 240, 184, 40, 24, 0x124A604EE6C4CE8Full,
+@@ -5604,8 +5612,39 @@
+                     const auto palette = PcBackdropHash(std::span{frame.palette}.subspan(0xA00, 512));
+                     const auto systemPalette = std::span{frame.palette}.subspan(0x580, 32);
+                     const auto systemPaletteHash = PcBackdropHash(systemPalette);
++                    // Start the single decode during the opening or resting pose,
++                    // before the one-field falling pose needs the same artwork.
++                    if (!pendulumTried &&
++                        (palette == 0x3CA9F51EFEDCF198ull || palette == 0x574CAC6648603F3Bull ||
++                         palette == 0x376A2B4AB6CB7E7Dull) &&
++                        std::ranges::any_of(frame.sprites, [&](const auto& s) {
++                            const auto& c = s.command.words;
++                            return c[0] == 0x1A01 && c[2] == 0x00A0 && c[3] == 0xC500 && c[5] == 0x0110 &&
++                                s.x == 160 && s.pixels.size() == 128 &&
++                                PcBackdropHash(s.pixels) == 0x60012FBF7CD7164Dull;
++                        })) {
++                        pendulumTried = true;
++                        pendulumPending = std::async(std::launch::async,
++                            [path = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/WINDOW.SPR"] {
++                                constexpr size_t size = 93941;
++                                std::vector<uint8_t> bytes;
++                                std::vector<PcSprite> images;
++                                std::string error;
++                                if (ReadPcBackdropFile(path, bytes, size) && bytes.size() == size &&
++                                    PcBackdropHash(bytes) == 0xAF9AB06AB9D017A2ull && DecodePcSprites(bytes, images, error)) {
++                                    for (auto& image : images)
++                                        if (image.index == 3 && image.width == 16 && image.height == 32 &&
++                                            image.pixels.size() == 16 * 32) return std::move(image);
++                                }
++                                return PcSprite{};
++                            });
++                    }
++                    if (pendulumPending.valid() &&
++                        pendulumPending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                        pendulumArt = pendulumPending.get();
+                     for (const auto& variant : variants) {
+-                        const bool pendulum = variant.index == kPendulumFrame;
++                        const bool pendulum = variant.index >= kPendulumFrame &&
++                            variant.index < kPendulumFrame + kPendulumPoseCount;
+                         const bool system = variant.systemImage != 0;
+                         const bool gallery = variant.gallery != WindowVariant::Gallery::None;
+                         const bool movie = variant.gallery == WindowVariant::Gallery::Movie;
+@@ -5629,6 +5668,9 @@
+                             if (footer == frame.sprites.end()) continue;
+                         }
+                         const bool scaled = !system && !gallery && variant.index != 1;
++                        // Center-anchored VDP1 coordinates include both endpoints.
++                        const int extentX = pendulum ? variant.target.width - 1 : variant.width;
++                        const int extentY = pendulum ? variant.target.height - 1 : variant.height;
+                         const auto sprite = std::ranges::find_if(frame.sprites, [&](const auto& candidate) {
+                             const auto& cmd = candidate.command.words;
+                             if (gallery) {
+@@ -5644,7 +5686,7 @@
+                                 cmd[3] != (system ? 0xA2C0 : 0xC500) ||
+                                 cmd[5] != ((variant.width / 8) << 8 | variant.height) ||
+                                 candidate.x != variant.anchorX || candidate.y != variant.anchorY ||
+-                                (scaled && (cmd[8] != variant.width || cmd[9] != variant.height)) ||
++                                (scaled && (cmd[8] != extentX || cmd[9] != extentY)) ||
+                                 (system && (cmd[10] != variant.right || cmd[11] != variant.bottom)) ||
+                                 candidate.pixels.size() != size_t(variant.width * variant.height) / (system ? 2 : 1))
+                                 return false;
+@@ -5721,14 +5763,31 @@
+                             const size_t at = size_t(box.y + rail.y) * 320 + box.x + rail.x;
+                             return frame.topSource[at] == 0 && (softwareShown[at] & 0xFFFFFF) == rail.rgb;
+                         })) continue;
+-                        if (!window.image.tried) {
++                        if (pendulum && !window.image.tried && !pendulumArt.pixels.empty()) {
++                            window.image.tried = true;
++                            SceneHdPixels result;
++                            result.width = 2 * box.width;
++                            result.height = 2 * box.height;
++                            result.pixels.resize(result.width * result.height);
++                            for (const auto& rail : window.rails) {
++                                for (int dy = 0; dy < 2; ++dy) for (int dx = 0; dx < 2; ++dx) {
++                                    const uint32_t pixel =
++                                        pendulumArt.pixels[(2 * rail.sourceY + dy) * 16 + 2 * rail.sourceX + dx];
++                                    const auto rgb = pixel & 0xFFFFFFu;
++                                    if ((pixel >> 24) == 255 && rgb != 0x00FF00u && rgb != 0xFFFF00u)
++                                        result.pixels[(2 * rail.y + dy) * result.width + 2 * rail.x + dx] = pixel;
++                                }
++                            }
++                            publishSceneInset(window.image, result, SDL_BLENDMODE_BLEND);
++                        }
++                        if (!pendulum && !window.image.tried) {
+                             window.image.tried = true;
+                             window.image.pending = std::async(std::launch::async,
+                                 [file = std::filesystem::u8path(port.opt.pcAssetsPath) /
+                                      (gallery ? (movie ? "SAKURA1/SYSTEM/OMKMOV_W.SPR" : "SAKURA1/SYSTEM/OMKSND_W.SPR") :
+                                       variant.inventory ? "SAKURA1/SYSTEM/OPTION.SPR" :
+                                       system ? "SAKURA1/SYSTEM/SISTEM.SPR" : "SAKURA1/SYSTEM/WINDOW.SPR"),
+-                                 rails = window.rails, variant, system, gallery, movie, pendulum]() {
++                                 rails = window.rails, variant, system, gallery, movie]() {
+                                     SceneHdPixels result;
+                                     std::vector<uint8_t> bytes;
+                                     const unsigned size = gallery ? (movie ? 341209 : 232928) :
+@@ -5741,7 +5800,7 @@
+                                         variant.inventory ? 400 : 2 * variant.width;
+                                     const int height = gallery ? 376 : variant.inventory ? 290 : 2 * variant.height;
+                                     const unsigned ordinal = gallery ? variant.galleryImage :
+-                                        system ? variant.systemImage : pendulum ? 3u : variant.index;
++                                        system ? variant.systemImage : variant.index;
+                                     if (!ReadPcBackdropFile(file, bytes, size) || bytes.size() != size ||
+                                         PcBackdropHash(bytes) != fingerprint) return result;
+                                     std::vector<PcSprite> images;

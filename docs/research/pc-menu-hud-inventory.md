@@ -343,6 +343,22 @@ animación usan la composición Saturn. La geometría se comprobó
 offline a partir de estados y capturas retenidos. Falta verificar
 la sustitución en el runtime.
 
+Se añaden dos poses observadas del mismo péndulo. La alterna
+usa el rectángulo nativo (157,26), 8 × 16 y la paleta
+574CAC6648603F3B. La pose de caída usa (158,48), 5 × 9 y la
+paleta 376A2B4AB6CB7E7D. Ambas conservan la huella de textura,
+el recorrido VDP1, el fondo nativo en los texeles transparentes
+y el rechazo ante oclusión. Se prepara una sola copia del
+donante en un hilo de fondo. Cada pose reutiliza esa copia
+para evitar volver a leer el archivo durante la caída.
+
+Una repetición nativa corta alineó el comando con el siguiente
+campo visible. Se reprodujeron los 68 texeles de la pose
+alterna y los 21 de la primera fase de caída. Sus máscaras
+admiten 246 y 84 muestras PC a 2×, respectivamente. La unidad
+del catálogo sigue siendo WINDOW #3. Falta la comparación HD
+del runtime con el parche aplicado.
+
 EXIT_W #0 corresponde al banner nativo de guardado completado
 ya cubierto por TUIKA_W #0 y se contabiliza una sola vez.
 OPTION #0, #2 y #3 tienen interiores y divisiones distintos de

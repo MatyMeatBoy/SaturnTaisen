@@ -494,3 +494,10 @@ task runs asynchronously and consults the existing native owner mask at
 draw time. See [evidence](research/bg1338-bounded-hd.md). The four-field
 offline comparison and C++ syntax passed. Disc 1, beta playback and
 package inclusion remain pending.
+
+## HD LIPS pendulum poses (0312)
+
+The alternating and falling poses reuse the same WINDOW ordinal 3 and
+retain the native VDP1 placement and palette guards. The donor decodes once
+in the background. Short native captures and C++ syntax passed. HD playback
+and packaging remain pending.
