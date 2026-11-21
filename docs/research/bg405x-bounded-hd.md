@@ -16,3 +16,14 @@ Both resources decode and register off the render thread. The
 existing foreground compositor masks sprites and preserves native
 pixels wherever the PC figure does not fit. Syntax and patch
 application passed. Linked HD playback and packaging remain pending.
+
+## BG4053 disc 1
+
+The Chapter 3 Maria route shows all 6,637 opaque native figure cells
+in two archived captures. Its saved state has the exact source-4
+palette and cells and no color offset. Six region registrations in
+patch 0324 accept 3,224 eligible native cells and change 12,869 2x
+samples in the offline composition. The native seated figure and
+silhouette boundaries remain in place. Preparation uses the same
+async decoder and exact owner gate as BG4055 and BG4056. Linked HD
+playback and packaging remain pending.

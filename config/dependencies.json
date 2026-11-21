@@ -312,7 +312,8 @@
       "patches/0320-sakura-hd-bbg203-bounded.patch",
       "patches/0321-sakura-hd-bg4067-character.patch",
       "patches/0322-sakura-hd-bg1340-bounded.patch",
-      "patches/0323-sakura-hd-bg1339-bounded.patch"
+      "patches/0323-sakura-hd-bg1339-bounded.patch",
+      "patches/0324-sakura-hd-bg4053-picnic.patch"
     ]
   }
 }
