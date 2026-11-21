@@ -153,14 +153,6 @@
       "disposition": "incompatible-full",
       "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
     },
-    "SAKURA1/BG/BG4055.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
-    },
-    "SAKURA1/BG/BG4056.SPR": {
-      "disposition": "incompatible-full",
-      "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
-    },
     "SAKURA1/BG/BG4057.SPR": {
       "disposition": "incompatible-full",
       "reason": "Actors have distinct offsets and scales; retained bounded registrations preserve only partial native coverage."
