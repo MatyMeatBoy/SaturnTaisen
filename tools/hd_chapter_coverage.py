@@ -1181,6 +1181,12 @@ def build(root, index_dir, portrait_audit):
                     occurrence.update(verified_in_game=True, runtime_evidence=YONEDA_STORAGE_REPORT)
                 add('portraits', ident, occurrence, episode, 'observed', evidence)
 
+    map02_event_report = 'docs/research/tactical-pairing.md#prueba-aislada-en-el-renderizador'
+    add('scene-pictures', '1:/SAKURA2/EVS02100.BIN#36', {
+        'status': 'hd', 'pc': 'SAKURA2/EVENT/MAP00/EV00S24.SPR', 'pc_index': 0,
+        'verified_in_game': True, 'runtime_evidence': map02_event_report,
+    }, 2, 'observed', map02_event_report)
+
     duplicate_groups = config('hd-scene-file-duplicates')['groups']
     duplicate_identities = {path: min(group) for group in duplicate_groups for path in group}
     for resources in [unassigned, *(chapter['resources'] for chapter in chapters.values())]:
