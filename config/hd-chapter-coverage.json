@@ -17333,7 +17333,12 @@
       },
       "1:/SAKURA1/BG4372.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/bg4372-bounded-hd.md",
+        "pc": "SAKURA1/BG/BG4372.SPR",
+        "pc_image_index": 0,
+        "runtime_evidence": "docs/research/bg4372-bounded-hd.md",
+        "status": "hd",
+        "verified_in_game": true
       },
       "1:/SAKURA1/BG4373.BIN": {
         "association": "unknown",
