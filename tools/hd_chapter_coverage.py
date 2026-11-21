@@ -931,6 +931,7 @@ def build(root, index_dir, portrait_audit):
             (1, '/SAKURA1/BG4162.BIN'),
             (2, '/SAKURA1/BG1338.BIN'), (2, '/SAKURA1/BG1212.BIN'),
             (2, '/SAKURA1/BG4055.BIN'), (2, '/SAKURA1/BG4056.BIN'),
+            (2, '/SAKURA1/BG3091.BIN'), (2, '/SAKURA1/BG3097.BIN'),
             (2, '/SAKURA1/BG4071.BIN'),
         }:
             row = {'status': 'hd', 'pc': f'SAKURA1/BG/{name}.SPR', 'pc_image_index': 0,
