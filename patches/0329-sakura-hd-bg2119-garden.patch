@@ -1,0 +1,26 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1045,7 +1045,12 @@
+         {23, 69, 57, 113, 1.825, 2.02, 34.83, -12.945},
+         {189, 65, 210, 86, 1.833, 1.98, 52.2295, -21.81},
+     }};
+-    constexpr std::array<NarrativeCutout, 35> narrativeCutouts{{
++    static constexpr port::BoundedPlateRegistration gardenRegistration{
++        2.266235, 2.454488, -46.18, -86.33,
++        {0.96181203, 0.95085651, 0.94938180}, {1.69156227, 2.57652807, 2.45833908},
++        3, 6, 4, 8
++    };
++    constexpr std::array<NarrativeCutout, 36> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -1102,6 +1107,8 @@
+             "BG1340.BIN", "SAKURA1/BG/BG1340.SPR", 210648, 1, 0, 0, 0, 0, 576, 320, &kitchenRegistration},
+         {0x4D12BFE409C4E3CEull, 0x349CB93E7C88954Eull, 0xA9A2051A4A633D9Bull, 0x48531652E5EBAD27ull,
+             "BG1339.BIN", "SAKURA1/BG/BG1339.SPR", 225197, 1, 0, 0, 0, 0, 576, 320, &kitchenMorningRegistration, 2},
++        {0xBCF2091C0142AC3Aull, 0x2FAF464E9639D68Eull, 0x248604FF3498E285ull, 0xB32B9D485BF93269ull,
++            "BG2119.BIN", "SAKURA1/BG/BG2119.SPR", 211755, 1, 0, 0, 0, 0, 576, 320, &gardenRegistration, 2},
+         {0xB10435893381ADCCull, 0xA235F76867697520ull, 0x6A8E280E8F6FF698ull, 0x1DF795A841B04CB5ull,
+             "BG4055.BIN", "SAKURA1/BG/BG4055.SPR", 79778, 2, 0, 0, 0, 0, 576, 320, nullptr, 4, picnic4055},
+         {0xB10435893381ADCCull, 0xA3E97F5E1CF9BA7Cull, 0x9F7A7EDF4C1B8DADull, 0x0A8978C45B8D7FF5ull,

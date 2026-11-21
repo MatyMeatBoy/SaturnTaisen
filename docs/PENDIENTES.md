@@ -629,3 +629,11 @@ BG4054 adds the disc 1 variant using two matched figure regions and
 a controlled strict-native witness. See [evidence](research/bg405x-bounded-hd.md#bg4054-disc-1).
 Syntax, coverage and patch application passed. Natural route, linked HD
 playback and packaging remain pending.
+
+## HD garden and Program upload reuse (0329-0330)
+
+BG2119 uses the bounded source-2 garden confirmed by the controlled 0102
+replay. See [layer evidence](research/bg2119-bounded-hd.md).
+The Program frame validates ownership as before and skips uploading an
+identical texture. An upload failure or renderer reset forces recreation.
+Linked runtime and package results are tracked in the release receipt.
