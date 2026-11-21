@@ -16,6 +16,13 @@ From the same checkpoint, the expanded table passed all 340 fields in
 strict mode. Its first 185 guest hashes matched the v0.3.7 run exactly
 before the released executable stopped. The local candidate SHA-256 is
 `5761967c0a4836435a67ac32c8fd1a26173292b83bccf6d0dc744f51a80743df`.
+The extended strict run stopped at `0x00210364` after 346 fields.
+The 2,500-field interpreter recording added 391 disc-byte-matched
+variants, including the missing entry. The AOT generator compiled all
+537 registered EVT19 variants into two tables. The linked candidate
+(`c24f692959b0e89b59b8bbee17d25982a6d1826fea78d60b85893ee7bcdc2d94`)
+completed the same 2,500 fields in strict mode with no discovered blocks.
+The strict and interpreter guest hash logs matched in full.
 The MAP23 ground remains pending until a playable camera is reached.
 
 ## MAP03 at 1440p
