@@ -87,7 +87,7 @@ def build(release,prepared,output,tactical=None,owner_root=None):
         entries.append(('user/art/'+name,owner/'local/build/sakura/art'/name))
     for name,source in (('iris.state','iris-correct-room-3000.state'),('battle.state','chapter1-first-attack.state'),('backup-seed.bin','prebattle-immutable-seed.bin')):
         entries.append(('test-data/'+name,owner/'local/work/sakura'/source))
-    defaults='[features]\npreset=custom\nscene_view=1\ntext_style=0\npc_hd_backgrounds=0\npc_hd_portraits=0\nhd_preload=1\npad_profile=0\nrun_ahead=0\n'
+    defaults='[features]\npreset=custom\nscene_view=1\ntext_style=0\npc_hd_backgrounds=0\npc_hd_portraits=0\nhd_preload=1\npad_profile=0\n'
     defaults+='\n[controller_profiles]\n0300fa675e0400008e02000014017801=m30\n'
     generated={'personal-defaults.ini':defaults}
     for label,state in (('Probar escena HD','iris.state'),('Probar combate','battle.state')):

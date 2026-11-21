@@ -1,0 +1,215 @@
+diff --git a/port/main.cpp b/port/main.cpp
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -120,14 +120,14 @@
+     game.features.push_back({"pad_profile", "Mandos", "Perfil de mando",
+                              "Automático reconoce M30 Bluetooth y 2.4G por nombre o identidad USB. Si XInput oculta el modelo, elige M30 manualmente. Tus asignaciones personalizadas tienen prioridad.",
+                              0, {"Automático", "Estándar SDL", "M30 / Saturn 6 botones"}});
+-    game.features.push_back({"run_ahead", "Juego", "Run-ahead",
+-                             "Anticipa uno o dos fotogramas para reducir la latencia de entrada. Aumenta el trabajo de CPU; desactívalo si aparecen tirones.",
+-                             0, {"Desactivado", "1 fotograma", "2 fotogramas"}});
+     game.features.push_back({"widescreen", "Display", "Widescreen",
+                              "16:9: fights show more at the sides. The launcher's switch changes with it. Needs high resolution.",
+                              satrecomp::kFeatureFirstPage});
+     // (the Display page: how the picture is fitted to the window, video/gpu.h SetFit; the first choice of each
+     // is how the port always drew it)
++    game.features.push_back({"display_sync", "Pantalla", "Sincronización de vídeo",
++                             "VSync alinea la imagen con el monitor. VRR requiere una pantalla y un controlador compatibles. Desactivada mantiene el ritmo original del juego.",
++                             0, {"VSync", "VRR", "Desactivada"}});
+     game.features.push_back({"display_scaling", "Pantalla", "Escala del juego",
+                              "Solo multiplicadores enteros, centrado y sin suavizado. El marco se adapta al espacio restante.",
+                              0, {"Entera · automática"}});
+@@ -977,7 +977,6 @@
+                 static_cast<unsigned long long>(StateHash()));
+     }
+     // (after the pictures and the hash: those are of the frame itself)
+-    RunAhead();
+ }
+ 
+ void Port::MenuAct(Menu::Action action) {
+@@ -1079,48 +1078,6 @@
+         ar.Mark(0x454E4453);
+     }
+ } // namespace
+-
+-void Port::RunAhead() {
+-    const int ahead = satrecomp::FeatureValue("run_ahead");
+-    // (nor while going on a frame at a time or slowed: there the frame shown is the frame)
+-    if (ahead <= 0 || stepping || menu.Speed() != 100 || !videoRenderer ||
+-        (satrecomp::TheGame().noRunAhead && satrecomp::TheGame().noRunAhead())) {
+-        return;
+-    }
+-    // What the frames run ahead change: what a save state holds; the renderer whole (a state leaves out what
+-    // goes from one frame to the next there, the frame being put together and the layers' pictures); the
+-    // GPU's copies of the VDP1's framebuffers; and what the dispatcher keeps about where the CPUs are
+-    static std::vector<uint8_t> kept;
+-    kept.clear();
+-    {
+-        satrecomp::Archive ar(kept, true);
+-        StateOf(*this, ar);
+-    }
+-    satrecomp::video::Renderer renderer = *videoRenderer;
+-    satrecomp::KeepDispatcher();
+-    if (gpu) {
+-        gpu->KeepSprites();
+-    }
+-    satrecomp::SetRunningAhead(true); // (no sound comes out of them: Init, onSample)
+-    for (int n = 0; n < ahead; n++) {
+-        SetWideSplitsOn();
+-        saturn->RunFrame();
+-        if (satrecomp::TheGame().frame) {
+-            satrecomp::TheGame().frame();
+-        }
+-    }
+-    UpdateHud(); // (the readout of the frame shown)
+-    {
+-        satrecomp::Archive ar(kept, false);
+-        StateOf(*this, ar);
+-    }
+-    *videoRenderer = std::move(renderer);
+-    satrecomp::PutDispatcherBack();
+-    if (gpu) {
+-        gpu->PutSpritesBack();
+-    }
+-    satrecomp::SetRunningAhead(false);
+-}
+ 
+ void Port::ApplyWidescreen(bool on) {
+     wideShown = on;
+@@ -1237,7 +1194,6 @@
+     return true;
+ }
+ #else
+-void Port::RunAhead() {}
+ void Port::ApplyWidescreen(bool on) {
+     wideShown = on;
+ }
+diff --git a/port/port.h b/port/port.h
+--- a/port/port.h
++++ b/port/port.h
+@@ -166,11 +166,7 @@
+     bool Init();
+     // Applies movie input for this frame, runs it, then writes screenshots and hashes as configured.
+     void RunFrame();
+-    // Run-ahead (the port's "run_ahead" feature: off, 1 or 2 frames): after the frame, the next ones are run
+-    // on the controls as they are and their picture shown; then the game is put back as it was after the
+-    // frame. So it goes on exactly as without it, and a press is seen a frame or two sooner. Not while the
+-    // frontend goes on a frame at a time (`stepping`), nor slowed, nor when the game says not.
+-    void RunAhead();
++    // Frame-by-frame debugging uses immediate presentation.
+     bool stepping = false;
+     // Widescreen switched while playing (the port's "widescreen" feature, which the menu changes): the
+     // picture's shape and how much more the renderer draws at the sides. GPU only.
+diff --git a/recomp-common/menu.cpp b/recomp-common/menu.cpp
+--- a/recomp-common/menu.cpp
++++ b/recomp-common/menu.cpp
+@@ -382,7 +382,7 @@
+     return item;
+ }
+ Menu::Snapshot Menu::View() const {
+-    Snapshot view; view.title=m_page.empty()?"Compañía Imperial":m_page;
++    Snapshot view; view.title=m_page.empty()?"Configuraciones":m_page;
+     view.note=m_note; view.selected=m_selected;
+     for (const auto& row:m_rows) view.items.push_back(DescribeRow(row));
+     return view;
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -455,6 +455,31 @@
+     bool shaded = false;
+     int shownShader = satrecomp::FeatureValue("display_shader");
+     std::string preset = port.ShaderPreset();
++    int activeDisplaySync = -1;
++    auto applyDisplaySync = [&]() {
++        const int requested = testHidden || port.opt.unthrottled || port.stepping
++            ? 2 : satrecomp::FeatureValue("display_sync");
++        if (requested == activeDisplaySync) return;
++        activeDisplaySync = requested;
++        const int interval = requested == 0 ? 1 : SDL_RENDERER_VSYNC_DISABLED;
++        bool applied = false;
++        if (shaded) {
++            applied = requested == 1 && SDL_GL_SetSwapInterval(-1);
++            if (!applied) applied = SDL_GL_SetSwapInterval(interval);
++        } else if (port.gpu) {
++            const auto mode = interval == 1 ? SDL_GPU_PRESENTMODE_VSYNC : SDL_GPU_PRESENTMODE_IMMEDIATE;
++            applied = SDL_SetGPUSwapchainParameters(port.gpuDevice, window, SDL_GPU_SWAPCHAINCOMPOSITION_SDR, mode);
++            if (!applied && mode == SDL_GPU_PRESENTMODE_IMMEDIATE)
++                applied = SDL_SetGPUSwapchainParameters(port.gpuDevice, window, SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
++                                                        SDL_GPU_PRESENTMODE_MAILBOX);
++        } else {
++            // Use immediate presentation when the backend leaves VRR to the driver.
++            applied = requested == 1 && SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
++            if (!applied) applied = SDL_SetRenderVSync(renderer, interval);
++        }
++        if (!applied)
++            fprintf(stderr, "display sync: mode %d unavailable: %s\n", requested, SDL_GetError());
++    };
+     // (SDL3's plain fullscreen takes the desktop's own mode: a borderless window over the display, the picture
+     // still at an integer scale, F11 back to a window. The default; --windowed and the test windows opt out)
+     // Makes the window (`width` x `height`, with `flags`) for the way the picture is shown: shaded when there is a
+@@ -474,6 +499,7 @@
+         }
+         SDL_SetWindowMinimumSize(window, 704, 512);
+         shaded = false;
++        activeDisplaySync = -1;
+         if (shade) {
+             if (shading.Open(window, error) && shading.Load(preset, error)) {
+                 shaded = true;
+@@ -489,6 +515,7 @@
+             if (port.gpu) {
+                 port.gpu->SetNative(true);
+             }
++            applyDisplaySync();
+             return true;
+         }
+         if (port.gpu) {
+@@ -497,10 +524,7 @@
+                 fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+                 return false;
+             }
+-            // (frames are paced here, to the Saturn's field rate; no waiting for the display on top of that)
+-            if (SDL_WindowSupportsGPUPresentMode(port.gpuDevice, window, SDL_GPU_PRESENTMODE_IMMEDIATE)) {
+-                SDL_SetGPUSwapchainParameters(port.gpuDevice, window, SDL_GPU_SWAPCHAINCOMPOSITION_SDR, SDL_GPU_PRESENTMODE_IMMEDIATE);
+-            }
++            applyDisplaySync();
+             int pixelsWide = 0, pixelsHigh = 0;
+             SDL_GetWindowSizeInPixels(window, &pixelsWide, &pixelsHigh);
+             port.gpu->SizeFor(pixelsWide, pixelsHigh);
+@@ -652,7 +676,7 @@
+             if(std::getenv("SATRECOMP_HD_STATS"))fprintf(stderr,"HD preload: backgrounds=%zu/%zu portrait_variants=%zu\n",loaded,backgroundCount,portraitCount);
+             SDL_SetWindowTitle(window,"SaturnTaisenFirst 0.2.0-test.1");
+         }
+-        SDL_SetRenderVSync(renderer, 0);
++        applyDisplaySync();
+         return true;
+     };
+ #ifdef SATRECOMP_WITH_RA
+@@ -5540,6 +5564,7 @@
+     std::string logged;
+     while (running && !port.quit && (port.opt.frames == 0 || port.frame < port.opt.frames)) {
+         port.PrepareDialogueCatalog(englishAtlas); // also handles first activation through the menu
++        applyDisplaySync();
+         SDL_Event ev;
+         pass++;
+         // The Display page as it is now (the menu may change it): the picture's fit, and the shader, for which the
+@@ -5913,7 +5938,7 @@
+         const bool runs = !paused || stepFrame;
+         stepFrame = false;
+         if (runs) {
+-            port.stepping = paused; // (a frame at a time: no run-ahead)
++            port.stepping = paused;
+             {
+                 ProfileScope runScope(frameProfile.run);
+                 if(port.videoRenderer) port.videoRenderer->CaptureLipsBody(
+diff --git a/port/sakura_ui.cpp b/port/sakura_ui.cpp
+--- a/port/sakura_ui.cpp
++++ b/port/sakura_ui.cpp
+@@ -222,8 +222,6 @@
+     if (!compact) {
+         ImGui::SameLine(0,22);
+         ImGui::BeginChild("detail",{0,height-187},ImGuiChildFlags_None);
+-        ui::text("COMPAÑÍA IMPERIAL",ui::Font::Semibold,12,p.accent);
+-        ui::gap(16);
+         ui::text(description.c_str(),ui::Font::Regular,16,p.text,ImGui::GetContentRegionAvail().x);
+         ui::gap(24);
+         ui::text("Tus cambios se conservan al volver al juego.",ui::Font::Regular,12,p.secondary,ImGui::GetContentRegionAvail().x);
