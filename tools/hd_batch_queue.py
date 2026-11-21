@@ -64,16 +64,28 @@ def make_queue(pc_root, state_roots, batch_size):
     grounds = progress['tactical_grounds']
     expected['tactical-grounds'] = grounds['total'] - grounds['integrated']
     batches = defaultdict(list)
+    scene_review = load(CONFIG / 'hd-scene-bg-review.json')
+    rejected = scene_review['rejected']
+    shared_keys = scene_review['shared_cell_choice']
 
     for path, status, _, aliases, references, _ in work_items(
             pc_root, register, load(CONFIG / 'hd-scene-file-duplicates.json')):
         if status == 'hd' or extra_family(path):
             continue
         family = str(Path(path).parent).replace('\\', '/')
-        batches['scene-images', status, family].append({
+        item = {
             'donor': path, 'aliases': aliases.split('; ') if aliases else [],
             'saturn': references.split('; ') if references else [],
-        })
+        }
+        if status == 'unknown' and family == 'SAKURA1/BG':
+            name = Path(path).stem
+            if name in rejected:
+                status = 'reviewed-hold'
+                item['review'] = rejected[name]
+            elif name in shared_keys and shared_keys[name] != name:
+                status = 'shared-native-key'
+                item['other_donor'] = f'{family}/{shared_keys[name]}.SPR'
+        batches['scene-images', status, family].append(item)
 
     rows = [row for _, _, row in all_rows(register, 'menus-hud')]
     integrated = {(row['pc'], row['pc_image_index']) for row in rows
@@ -125,7 +137,7 @@ def make_queue(pc_root, state_roots, batch_size):
         raise ValueError(f'Pending identities differ from the progress register: {actual} != {expected}')
     order = ('resident', 'wired-unverified', 'paired-not-wired', 'item', 'candidate',
              'witness', 'witness+mechanism', 'system', 'unsupported-size',
-             'needs-assembler', 'unpaired', 'unknown', 'native')
+             'needs-assembler', 'unpaired', 'unknown', 'shared-native-key', 'reviewed-hold', 'native')
     ranked = sorted(batches, key=lambda key: (order.index(key[1]), -len(batches[key]), key))
     queue = []
     for category, status, family in ranked:
