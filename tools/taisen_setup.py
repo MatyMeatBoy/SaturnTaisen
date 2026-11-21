@@ -1651,10 +1651,25 @@ def info(paths: Paths) -> dict:
     return manifest
 
 
+def self_test() -> None:
+    from PIL import Image as PillowImage, ImageChops, ImageStat
+
+    image = PillowImage.new('RGBA', (2, 2), (31, 79, 127, 255))
+    with io.BytesIO() as encoded:
+        image.save(encoded, format='PNG')
+        encoded.seek(0)
+        with PillowImage.open(encoded) as decoded:
+            doubled = decoded.resize((4, 4), PillowImage.Resampling.NEAREST)
+            expected = PillowImage.new('RGBA', (4, 4), (31, 79, 127, 255))
+            if any(ImageStat.Stat(ImageChops.difference(doubled, expected)).sum):
+                raise SetupError('La comprobación de imágenes PNG falló.')
+    print('OK preparar-juego PNG', flush=True)
+
+
 def main() -> int:
     global _recomplauncher_progress
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-prepared', 'language', 'info', 'frontend', 'help'))
+    parser.add_argument('command', choices=('scan', 'prepare', 'refresh-prepared', 'language', 'info', 'frontend', 'help', 'self-test'))
     parser.add_argument('--folder', type=Path)
     parser.add_argument('--rom', '--disc', '--pc', dest='rom', type=Path, action='append', default=[])
     parser.add_argument('--language', choices=tuple(ALL_LANGUAGES))
@@ -1671,8 +1686,11 @@ def main() -> int:
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, 'reconfigure'):
             stream.reconfigure(encoding='utf-8', errors='replace')
-    paths = Paths(args)
     try:
+        if args.command == 'self-test':
+            self_test()
+            return 0
+        paths = Paths(args)
         if args.command == 'info':
             print(json.dumps(info(paths), indent=2, ensure_ascii=False))
         elif args.command == 'help':

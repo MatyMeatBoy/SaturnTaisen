@@ -45,7 +45,7 @@ def main():
     if args.with_importer:
         python=ROOT/'local/venv-release/Scripts/python.exe'
         if not python.is_file():
-            parser.error('Create local/venv-release and install PyInstaller 6.22.3 there first')
+            parser.error('Create local/venv-release and install PyInstaller 6.22.3 and Pillow there first')
         subprocess.run([str(python),'-m','PyInstaller','--noconfirm','--onefile','--console','--name','import-saves',
                         '--distpath',str(destination),'--workpath',str(ROOT/'local/work/pyinstaller-import'),
                         '--specpath',str(ROOT/'local/work/pyinstaller-import'),str(ROOT/'tools/import_saves.py')],
@@ -53,14 +53,10 @@ def main():
     if args.with_setup:
         python=ROOT/'local/venv-release/Scripts/python.exe'
         if not python.is_file():
-            parser.error('Create local/venv-release and install PyInstaller 6.22.3 there first')
-        import PIL  # the HD portrait step needs Pillow; the frozen helper takes it from this interpreter
-        packages=Path(PIL.__file__).resolve().parents[1]
-        hidden=[item for name in ('hd_matching','PIL.Image','PIL.ImageChops','PIL.ImageStat','PIL.PngImagePlugin') for item in ('--hidden-import',name)]
-        subprocess.run([str(python),'-m','PyInstaller','--noconfirm','--onefile','--console','--name','preparar-juego',
-                        '--paths',str(packages),'--paths',str(ROOT/'tools'),*hidden,'--distpath',str(destination),
-                        '--workpath',str(ROOT/'local/work/pyinstaller-preparar'),'--specpath',str(ROOT/'local/work/pyinstaller-preparar'),
-                        str(ROOT/'tools/taisen_setup.py')],cwd=ROOT,env=env,check=True)
+            parser.error('Create local/venv-release and install PyInstaller 6.22.3 and Pillow there first')
+        subprocess.run([str(python), '-I', str(ROOT/'tools/build_setup.py'),
+                        '--output-dir', str(destination), '--work-dir', str(build/'setup-freeze')],
+                       cwd=ROOT, env=env, check=True)
     print(destination/'sakura-launcher.exe')
 
 
