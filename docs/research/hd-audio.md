@@ -82,3 +82,10 @@ Añadir **Mejora de audio HD** como opción independiente de los gráficos, desa
 Antes de activar una sustitución, comprobar el recurso y su disponibilidad de reproducción. Hasta que esté listo, la ruta Saturn sigue activa. Preparar conversiones y remuestreo fuera del hilo de emulación. La reproducción consume una cola de memoria acotada y descarta preparaciones atrasadas tras cambios de pista, escena, disco o estado. Evitar operaciones de disco y asignaciones por muestra.
 
 La primera entrega requiere al menos una pareja exacta verificada con la opción activada y los controles de opción desactivada, donante ausente y reapertura de dispositivo. Comparar sincronía y ganancia, memoria máxima, fallos de cola y tiempos p95/p99 de los mismos recorridos con caché fría y templada. Incluir cambios de pista, avance rápido de diálogo y carga de fondo del sistema. Medir antes de fijar un límite de memoria o prometer una mejora de rendimiento.
+
+La utilidad `tools/normalize_pc_bgm.py` separa el prefijo y valida
+la extensión RIFF antes de entregar WAV estándar. Se verificaron las
+35 pistas de la edición local con FFmpeg sin errores de decodificación.
+OTOME pasó sin cambios. Las pruebas sintéticas cubren archivos normales,
+el prefijo conocido y extensiones truncadas o inválidas. El valor de
+bucle se conserva como metadato sin aplicarlo a la reproducción.
