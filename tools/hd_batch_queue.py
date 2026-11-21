@@ -80,19 +80,23 @@ def make_queue(pc_root, state_roots, batch_size):
                   if row['status'] == 'hd' and row.get('pc') and 'pc_image_index' in row}
     excluded = {row['pc'] for row in rows if row['status'] == 'excluded'
                 and row.get('images')}
-    reviewed = load(CONFIG / 'hd-menu-open-classification.json')['families']
+    families = load(CONFIG / 'hd-menu-open-classification.json')['families']
+    reviewed = {file_id: {'family': family, 'method': row['connect'], 'note': row['note']}
+                for family, row in families.items() for file_id in row['files']}
     menu_inventory = load(ROOT / 'docs/research/pc-menu-hud-inventory.json')['menus']
     for entry in menu_inventory:
         path = entry['pc_path']
         if path in excluded:
             continue
+        review = reviewed.get(entry['id'])
+        method = review['method'] if review else 'system'
         for image in entry['images']:
             ordinal = image['index']
             if (path, ordinal) not in integrated:
-                batches['hud-menus', 'system', path].append({
+                batches['hud-menus', method, path].append({
                     'donor': path, 'ordinal': ordinal,
                     'size': [image['width'], image['height']],
-                    'review': reviewed.get(entry['id']),
+                    'review': review,
                 })
     items = defaultdict(set)
     for item in load(CONFIG / 'hd-item-map.json')['pairs']:
@@ -119,8 +123,9 @@ def make_queue(pc_root, state_roots, batch_size):
               for name in expected}
     if actual != expected:
         raise ValueError(f'Pending identities differ from the progress register: {actual} != {expected}')
-    order = ('resident', 'wired-unverified', 'paired-not-wired', 'item', 'system',
-             'candidate', 'unsupported-size', 'needs-assembler', 'native', 'unpaired', 'unknown')
+    order = ('resident', 'wired-unverified', 'paired-not-wired', 'item', 'candidate',
+             'witness', 'witness+mechanism', 'system', 'unsupported-size',
+             'needs-assembler', 'unpaired', 'unknown', 'native')
     ranked = sorted(batches, key=lambda key: (order.index(key[1]), -len(batches[key]), key))
     queue = []
     for category, status, family in ranked:
