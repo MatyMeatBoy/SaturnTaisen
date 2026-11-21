@@ -331,3 +331,20 @@ MAP19 (25 nuevos), MAP01 (19), MAP22 (18) y MAP20 (15), que suman
 100 identidades. Una referencia PC sirve para localizar un candidato
 y todavía requiere cotejar las tiras y paletas de Saturn antes de
 registrarlo como pareja.
+
+### Reproducción de las tiras EVS de MAP02
+
+`tools/audit_event_strips.py` puede revisar estados locales de MAP02
+con `--iso` y `--bank-prefix EVS021`. El inspector coteja bytes completos
+de tiras VDP1 deformadas de ocho columnas. Exige coincidencia única
+en los bancos del alcance, continuidad del bloque y columnas
+adyacentes en pantalla. Conserva las alturas y posiciones individuales,
+que varían dentro de una misma pose.
+
+La revisión de 25 estados archivados de la ruta encontró el mismo
+grupo de EVS02100 y paleta 21C0 en los dos puntos medios de
+continuous-tactical y from-episode2-continue. Las alturas son
+80, 72, 40, 72 y 48. Los otros 23 estados no aportaron un grupo
+compatible. El resultado reproduce la pose asociada a EV00S24
+y prepara la búsqueda de otros cuadros sin aumentar el conteo
+de recursos HD integrados.
