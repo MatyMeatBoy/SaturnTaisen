@@ -59,7 +59,7 @@
     },
     "SAKURA1/BG/BG2059.SPR": {
       "disposition": "incompatible-full",
-      "reason": "the PC picture has characters baked in that the Saturn draws as sprites"
+      "reason": "The controlled 0502 replay verifies BG2059 on VDP2 source 4. A floral blend accounts for only part of the viewport. Preserve all live blend recipes before enabling HD output."
     },
     "SAKURA1/BG/BG2071.SPR": {
       "disposition": "incompatible-full",
