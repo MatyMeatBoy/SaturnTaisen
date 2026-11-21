@@ -1,0 +1,121 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -979,13 +979,19 @@
+         int disc, scaleX, scaleY, offsetX, offsetY;
+         int donorWidth = 576, donorHeight = 320;
+         const port::BoundedPlateRegistration* bounded = nullptr;
++        uint8_t layer = 4;
+     };
+     static constexpr port::BoundedPlateRegistration corridorRegistration{
+         1.7894, 1.8712, 23.0, -13.2,
+         {0.7923898, 0.8043546, 0.8327943}, {9.471343, 6.408276, 4.975564},
+         8, 16, 4
+     };
+-    constexpr std::array<NarrativeCutout, 23> narrativeCutouts{{
++    static constexpr port::BoundedPlateRegistration hatchRegistration{
++        2.1026, 2.2614, 1.2, 9.0,
++        {1.26295494, 1.26462546, 1.29583104}, {36.53711865, 37.64127942, 38.22432846},
++        1, 4, 4, 10, 115, 12, -16
++    };
++    constexpr std::array<NarrativeCutout, 24> narrativeCutouts{{
+         {0x73F30E16D281DAEFull, 0x69CE7036EEDAEB99ull, 0x6E898A84197D24D3ull, 0x91653D9E567B0FCCull,
+             "BG3132.BIN", "SAKURA1/BG/BG3132.SPR", 90289, 1, 2055, 2220, -10500, -5000},
+         {0x64AF8159AE94CF2Eull, 0xC3C110EAD29B86F3ull, 0x0E8C9F462AEBF2C8ull, 0x549824001974E5E6ull,
+@@ -1032,6 +1038,8 @@
+             "BG4370.BIN", "SAKURA1/BG/BG4370.SPR", 70732, 1, 1940, 2270, -500, -6000},
+         {0x236F0FED8B2059E7ull, 0xD2893F728AEC809Eull, 0xE486914D51F27538ull, 0xFD0E68C4B1A958C2ull,
+             "BG1338.BIN", "SAKURA1/BG/BG1338.SPR", 183109, 2, 0, 0, 0, 0, 576, 320, &corridorRegistration},
++        {0xC9D2219DDED2655Dull, 0x306786D0EE296458ull, 0xCDE6D87E0C07452Dull, 0xD1A802A4A8BA1960ull,
++            "BG1331.BIN", "SAKURA1/BG/BG1331.SPR", 115581, 1, 0, 0, 0, 0, 576, 320, &hatchRegistration, 2},
+     }};
+     struct NarrativeCutoutArt {
+         SceneHd hd;
+@@ -4744,12 +4752,25 @@
+                             imageTarget.w >= 576 && planes.source.size() == 320 * 224 &&
+                             planes.topSource.size() == planes.source.size() && softwareShown.size() == planes.source.size()) {
+                             constexpr int w = 288, h = 144, width2 = w * 2;
+-                            const auto palette = port.videoRenderer->BackgroundPaletteFingerprint(4);
++                            const auto& video = *port.videoRenderer;
++                            const auto layer4Palette = video.BackgroundPaletteFingerprint(4);
++                            const auto layer2Palette = shownDisc == 1 ? video.BackgroundPaletteFingerprint(2) : 0;
+                             for (size_t slot = 0; slot < narrativeCutouts.size(); ++slot) {
+                                 const auto& row = narrativeCutouts[slot];
+-                                if (row.disc != shownDisc || row.palette != palette ||
+-                                    !port.videoRenderer->BackgroundIsOpaque(4) ||
+-                                    port.videoRenderer->BackgroundCellFingerprint(4, w * h) != row.cells)
++                                const auto palette = row.layer == 4 ? layer4Palette : layer2Palette;
++                                if (row.disc != shownDisc || row.palette != palette) continue;
++                                const int16_t shift = row.bounded ? row.bounded->outputOffset : 0;
++                                const std::array<int16_t, 3> colorOffset{shift, shift, shift};
++                                const auto& regs = video.Regs2();
++                                const auto& bg = regs.bgParams[row.layer - 1];
++                                const bool shiftedOpaque = shift != 0 && regs.layerEnabled[row.layer] &&
++                                    bg.pageBaseAddresses[0] == 0x40000 &&
++                                    !regs.colorCalcExtended && !bg.colorCalcEnable && !bg.lineColorScreenEnable &&
++                                    !bg.shadowEnable && !bg.scrollAmountH && !bg.scrollAmountV &&
++                                    bg.scrollIncH == 256 && bg.scrollIncV == 256 &&
++                                    video.BackgroundColorOffset(row.layer) == colorOffset;
++                                if ((shift ? !shiftedOpaque : !video.BackgroundIsOpaque(row.layer)) ||
++                                    video.BackgroundCellFingerprint(row.layer, w * h) != row.cells)
+                                     continue;
+                                 auto& art = narrativeCutoutArt[slot];
+                                 if (!art.hd.tried) {
+@@ -4799,8 +4820,8 @@
+                                     const size_t at = size_t(y + 8) * 320 + x + 16;
+                                     const uint32_t rgb = art.native[offset];
+                                     // Retain the native edge and any overlapping actors or color calculation.
+-                                    const bool owns = rgb && planes.topSource[at] == 4 && planes.source[at] == 4 &&
+-                                        ((softwareShown[at] ^ rgb) & 0xFFFFFF) == 0 &&
++                                    const bool owns = rgb && planes.topSource[at] == row.layer && planes.source[at] == row.layer &&
++                                        ((softwareShown[at] ^ (shift ? OffsetBackdropPixel(rgb, colorOffset) : rgb)) & 0xFFFFFF) == 0 &&
+                                         (x == 0 || art.native[offset - 1]) &&
+                                         (x + 1 == w || art.native[offset + 1]) &&
+                                         (y == 0 || art.native[offset - w]) &&
+diff --git a/port/bounded_plate.h b/port/bounded_plate.h
+--- a/port/bounded_plate.h
++++ b/port/bounded_plate.h
+@@ -13,6 +13,9 @@
+     double scaleX, scaleY, offsetX, offsetY;
+     std::array<double, 3> gain, lift;
+     int preserveTopRows, topFeather, rimFeather;
++    int sourceFeather = 0;
++    int bottomLimit = 0, bottomFeather = 0;
++    int outputOffset = 0;
+ };
+ 
+ inline std::vector<uint32_t> RegisterBoundedPlate(std::span<const uint32_t> native,
+@@ -53,7 +56,12 @@
+         if (px < 0 || py < 0 || px >= donorWidth - 1 || py >= donorHeight - 1) continue;
+         const auto top = smoothstep((ny - geometry.preserveTopRows) / geometry.topFeather);
+         const auto rim = smoothstep(std::min({nx - 1, width - 1 - nx, height - 1 - ny}) / geometry.rimFeather);
+-        weight[at] = top * rim;
++        const auto source = geometry.sourceFeather ? smoothstep(std::min({
++            px / geometry.scaleX, (donorWidth - 1 - px) / geometry.scaleX,
++            py / geometry.scaleY, (donorHeight - 1 - py) / geometry.scaleY}) / geometry.sourceFeather) : 1.0;
++        const auto bottom = geometry.bottomFeather ?
++            smoothstep((geometry.bottomLimit - ny) / geometry.bottomFeather) : 1.0;
++        weight[at] = top * rim * source * bottom;
+     }
+     // Three separable box passes approximate a Gaussian and leave the donor's fine detail intact.
+     constexpr int radius = 13, diameter = 2 * radius + 1;
+@@ -87,12 +95,15 @@
+         if (weight[at] == 0) continue;
+         const uint32_t original = native[size_t(y / 2) * width + x / 2];
+         const auto nativeRgb = unpack(original);
+-        uint32_t pixel = 0xFF000000u;
++        uint32_t pixel = 0xFF000000u, displayedNative = 0xFF000000u;
+         for (int c = 0; c < 3; ++c) {
+-            const auto corrected = std::clamp(registered[at][c] + toneDelta[at][c], 0.0, 255.0);
+-            pixel |= uint32_t(std::lround(nativeRgb[c] * (1 - weight[at]) + corrected * weight[at])) << (8 * c);
++            const auto originalChannel = std::clamp(nativeRgb[c] + geometry.outputOffset, 0.0, 255.0);
++            const auto corrected = std::clamp(std::clamp(registered[at][c] + toneDelta[at][c], 0.0, 255.0)
++                + geometry.outputOffset, 0.0, 255.0);
++            displayedNative |= uint32_t(originalChannel) << (8 * c);
++            pixel |= uint32_t(std::lround(originalChannel * (1 - weight[at]) + corrected * weight[at])) << (8 * c);
+         }
+-        if (pixel != original) result[at] = pixel;
++        if (pixel != displayedNative) result[at] = pixel;
+     }
+     return result;
+ }

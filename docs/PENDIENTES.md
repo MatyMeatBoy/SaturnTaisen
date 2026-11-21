@@ -501,3 +501,10 @@ The alternating and falling poses reuse the same WINDOW ordinal 3 and
 retain the native VDP1 placement and palette guards. The donor decodes once
 in the background. Short native captures and C++ syntax passed. HD playback
 and packaging remain pending.
+
+## Bounded HD hatch room (0313)
+
+BG1331 uses the async bounded plate compositor on disc 1 and retains the
+native floor, perimeter and pointer. The offline model and C++ syntax passed.
+See [hatch evidence](research/bg1331-bounded-hd.md). Linked comparison,
+disc 2 and packaging remain pending.

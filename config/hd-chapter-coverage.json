@@ -15205,7 +15205,11 @@
       },
       "1:/SAKURA1/BG1331.BIN": {
         "association": "unknown",
-        "status": "unpaired"
+        "pairing_evidence": "docs/research/bg1331-bounded-hd.md",
+        "pc": "SAKURA1/BG/BG1331.SPR",
+        "pc_image_index": 0,
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA1/BG1332.BIN": {
         "association": "unknown",
