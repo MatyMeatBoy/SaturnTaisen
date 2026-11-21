@@ -15891,8 +15891,9 @@
         "pairing_evidence": "docs/research/bg2119-bounded-hd.md",
         "pc": "SAKURA1/BG/BG2119.SPR",
         "pc_image_index": 0,
+        "runtime_evidence": "docs/research/bg3119-bounded-hd.md#linked-1440p-comparison",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "1:/SAKURA1/BG2120.BIN": {
         "association": "unknown",
@@ -16856,8 +16857,9 @@
         "pairing_evidence": "docs/research/bg3119-bounded-hd.md",
         "pc": "SAKURA1/BG/BG3119.SPR",
         "pc_image_index": 0,
+        "runtime_evidence": "docs/research/bg3119-bounded-hd.md#linked-1440p-comparison",
         "status": "hd",
-        "verified_in_game": false
+        "verified_in_game": true
       },
       "1:/SAKURA1/BG3120.BIN": {
         "association": "unknown",

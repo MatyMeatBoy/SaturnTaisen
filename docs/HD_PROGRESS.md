@@ -7,7 +7,7 @@ Los porcentajes corresponden al inventario definido para cada fila. Una celda «
 | Área | Unidad | Inventariado | Emparejado | Preparado | Integrado | Verificado en juego |
 | --- | --- | --- | --- | --- | --- | --- |
 | Retratos y animación | identidades Saturn | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | 304/304 (100%) | Sin dato |
-| Imágenes de escena | recursos SPR PC únicos (BG, BBG, ENDING, TITLE, ICATCH) | 655/655 (100%) | 612/655 (93,4%) | Sin dato | 605/655 (92,3%) | 178/655 (27,1%) |
+| Imágenes de escena | recursos SPR PC únicos (BG, BBG, ENDING, TITLE, ICATCH) | 655/655 (100%) | 612/655 (93,4%) | Sin dato | 605/655 (92,3%) | 180/655 (27,4%) |
 | Escenas y transiciones | candidatos de escena (112 tablas de diálogo + 54 flujos de vídeo) | 166/166 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
 | Vídeos | clips únicos | 50/50 (100%) | 50/50 (100%) | Sin dato | 50/50 (100%) | Sin dato |
 | Otros recursos tácticos por medir | archivos SPR PC candidatos (UNIT, MAP, ITEM) | 542/542 (100%) | Sin dato | Sin dato | Sin dato | Sin dato |
