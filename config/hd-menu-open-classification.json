@@ -1,9 +1,9 @@
 {
  "schema": 1,
  "scope": "THD21 offline classification of open SYSTEM images (no KAO); ITEM images are counted separately",
- "open_system_images": 152,
+ "open_system_images": 133,
  "open_item_pictures": 2,
- "open_total": 154,
+ "open_total": 135,
  "connectable_by_data_alone": 0,
  "item_pictures": "Distinct ITEM donor subimages without an integrated row in the chapter register.",
  "families": {
@@ -993,148 +993,9 @@
   },
   "steam": {
    "connect": "witness",
-   "note": "Steam animation; no native sequence identified.",
-   "open": 19,
-   "files": {
-    "JYOUKI": {
-     "open": 19,
-     "images": [
-      {
-       "index": 0,
-       "size": [
-        64,
-        64
-       ]
-      },
-      {
-       "index": 1,
-       "size": [
-        80,
-        32
-       ]
-      },
-      {
-       "index": 2,
-       "size": [
-        32,
-        64
-       ]
-      },
-      {
-       "index": 3,
-       "size": [
-        64,
-        32
-       ]
-      },
-      {
-       "index": 4,
-       "size": [
-        64,
-        48
-       ]
-      },
-      {
-       "index": 5,
-       "size": [
-        48,
-        64
-       ]
-      },
-      {
-       "index": 6,
-       "size": [
-        48,
-        64
-       ]
-      },
-      {
-       "index": 7,
-       "size": [
-        64,
-        48
-       ]
-      },
-      {
-       "index": 8,
-       "size": [
-        64,
-        64
-       ]
-      },
-      {
-       "index": 9,
-       "size": [
-        64,
-        16
-       ]
-      },
-      {
-       "index": 10,
-       "size": [
-        64,
-        64
-       ]
-      },
-      {
-       "index": 11,
-       "size": [
-        48,
-        16
-       ]
-      },
-      {
-       "index": 12,
-       "size": [
-        64,
-        64
-       ]
-      },
-      {
-       "index": 13,
-       "size": [
-        48,
-        64
-       ]
-      },
-      {
-       "index": 14,
-       "size": [
-        48,
-        64
-       ]
-      },
-      {
-       "index": 15,
-       "size": [
-        48,
-        32
-       ]
-      },
-      {
-       "index": 16,
-       "size": [
-        80,
-        32
-       ]
-      },
-      {
-       "index": 17,
-       "size": [
-        48,
-        64
-       ]
-      },
-      {
-       "index": 18,
-       "size": [
-        48,
-        48
-       ]
-      }
-     ]
-    }
-   }
+   "note": "Steam animation matched to the native VDP1 texture atlas.",
+   "open": 0,
+   "files": {}
   },
   "keep-native": {
    "connect": "native",

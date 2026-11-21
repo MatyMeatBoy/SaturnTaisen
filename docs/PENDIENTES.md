@@ -468,3 +468,11 @@ Syntax and patch application passed. Beta playback and packaging remain pending.
 The workspace audit measured 214,970,243,432 logical bytes excluding reparse
 points. The inherited tree exceeds the 20 GB target. This block added no
 runtime build or asset copies inside the workspace.
+
+## HD timed LIPS steam atlas (0310)
+
+Implemented all 19 JYOUKI frames with native animation timing and per-pixel
+ownership. The donor decodes on a background task. Archived command analysis,
+an offline compositor model, syntax and patch application passed. See
+[steam atlas evidence](research/pc-menu-hud-inventory.md#jyouki-steam-frames).
+Linked build, beta playback and packaging remain pending.

@@ -165,6 +165,10 @@ EVE_CONTROLLED_REPORT = 'docs/research/disc1-battle-insets.md#controlled-eve-pla
 # (PC file, image index): evidence. Only pieces whose table or patch was read are listed; everything else stays open.
 MENU_REPORT = 'docs/research/pc-menu-hud-inventory.md'
 SYSTEM_HUD_DRAWS = {
+    **dict.fromkeys(
+        (('SAKURA1/SYSTEM/JYOUKI.SPR', index) for index in range(19)),
+        ('patch 0310: steam animation atlas', MENU_REPORT + '#jyouki-steam-frames'),
+    ),
     ('SAKURA1/SYSTEM/TITLE.SPR', 0): ('trim of title plaque', MENU_REPORT + '#placa-y-petalo-del-titulo'),
     ('SAKURA1/SYSTEM/TITLE.SPR', 11): ('detached title petal', MENU_REPORT + '#placa-y-petalo-del-titulo'),
     ('SAKURA1/SYSTEM/TL_BG0.SPR', 0): ('patch 0304: PC floral title backdrop', MENU_REPORT + '#pc-floral-title-backdrop'),

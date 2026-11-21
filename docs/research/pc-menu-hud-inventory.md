@@ -583,3 +583,19 @@ The frontend passed a syntax-only compilation. The one new
 HUD image is integrated for beta. The in-game donor comparison
 remains pending.
 The integration queues the PC decode asynchronously through the pinned sprite loader.
+
+## JYOUKI steam frames
+
+The PC archive contains 19 cyan-keyed steam images. Archived NC36 and
+BG1090 VDP1 draws identify the timed LIPS clock steam by command format, texture and
+palette. The matched native commands use PMOD 0x0080, COLR 0xC560, and the
+palette fingerprint 571527B56A00AA8F. The HD atlas is pinned to 27,574 bytes
+and fingerprint 00BDF79E82007CFC. The renderer retains the guest's animation
+order and timing.
+
+The contiguous native atlas starts at VDP1 VRAM 0x34480. The 19
+frames all have exactly half the PC width and height and the same
+ordinal order. Every ordinal's native silhouette overlaps its
+PC counterpart at IoU 0.873 or higher. Six ordinals were also present
+as live VDP1 commands in the archived states. That evidence supports the
+atlas mapping. Beta playback is still pending for the HD replacement.
