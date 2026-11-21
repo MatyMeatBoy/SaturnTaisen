@@ -220,3 +220,32 @@ The two new PC subimages are tactical HUD components and outside the
 measured SAKURA1 menu inventory. Package inclusion remains open. The
 private states, A/B captures and exact receipt are in
 `local/work/codex-th1/thd22-wkl02`.
+
+### Horizontal WKL02 frame witnesses
+
+Two more PC donors align at 2× with native horizontal frames
+on the recorded MAP02 command routes.
+
+| Native WKL02 offset | Native size | Texture FNV-1a | PC SLGSYS02 ordinal | Opaque mask IoU |
+| --- | --- | --- | ---: | ---: |
+| 0x39640 | 96 × 32 | 18FDBFE27D4349D5 | 0 | 0.9989 |
+| 0x39C40 | 120 × 32 | 0D7B8C2AB0FB6C5E | 1 | 0.9817 |
+
+The comparison uses the full 2× Saturn mask and removes the
+PC cyan key. The two frames use CMDPMOD 0x0088 and the same FFEC LUT as the
+verified vertical frames. The 96-pixel frame appears in 15 retained
+states and the 120-pixel frame in three. Each active VDP1 list also
+draws either Cancel or Advice, after the horizontal frame.
+The 120-pixel cases include kohran-end-order, purple-end-menu
+and round-two-kohran-end. The related captures and inputs are in
+the local Chapter 2 follow-up archive.
+
+The current item-card capture keeps one command frame and its
+ownership mask. Registering the horizontal rows alone would
+leave the later vertical frame as the selected replacement.
+The 120-pixel frame also exceeds the current 112-pixel mask
+stride. The next runtime change needs separately bounded masks
+for both frames and must record coverage by later commands.
+Verify a case of each width with its submenu visible,
+preserving labels, highlight and cursor in all comparisons.
+The two horizontal rows are paired candidates and remain native.
