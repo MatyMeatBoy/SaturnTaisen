@@ -132,6 +132,10 @@ REGISTRY['EVT07_MAP07'] = dict(
     REGISTRY['EVT07'], observed_ranges='evt07-map07-aot-ranges.json',
     evidence='Natural English disc 1 File 1 cold entry and MAP07 camera witness',
 )
+REGISTRY['EVT19_BBG218'] = dict(
+    REGISTRY['EVT19'], observed_ranges='evt19-bbg218-aot-ranges.json',
+    evidence='Natural English disc 2 MAP19 replay of the BBG218 tactical inset',
+)
 REGISTRY['EVT04_MAP04'] = dict(
     REGISTRY['EVT04'], observed_ranges='evt04-map04-aot-ranges.json',
     evidence='Disc 1 Chapter 3 second battle, the 180-frame MAP04 camera witness')

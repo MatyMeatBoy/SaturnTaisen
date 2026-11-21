@@ -176,3 +176,24 @@ Saturn. Later Enhanced samples and all 11 Original pairs match
 pixel for pixel. All four runs match guest hashes and SRAM with
 zero interpreted blocks on the v0.3.3 executable. This confirms
 the existing draw and leaves the integrated donor count unchanged.
+
+## BBG218 tactical inset
+
+The English disc 2 MAP19 checkpoint after dialogue shows BBG218 on VDP2
+source 5. The native viewport is 288 × 144 at (16, 8). Patch 0289 reuses
+the existing inset compositor with the exact palette and native RGB
+fingerprints. It samples the full PC crop (0, 16, 568, 284) at the native
+2:1 aspect ratio.
+
+The isolated build adds 89 exact EVT19 spans from the disc module at
+00204000. Five 45-field strict replays produced identical guest hashes and
+backup RAM, also matching the interpreted reference. The two 2560 × 1440
+captures at fields 12 and 35 matched all 1,492,992 inset pixels against an
+independent nearest-sampled PC reference. Each capture changed 1,484,984
+pixels, all within the inset. Missing, same-size corrupt and Original
+controls preserved the native result.
+
+Verification executable SHA-256:
+`9443da6a34b84ef4713a79741720a6043eba77252efe73dad8bc3fa9440132c0`.
+The file was already counted through its generic scene pairing. This
+verification adds the tactical draw. The change awaits packaging.

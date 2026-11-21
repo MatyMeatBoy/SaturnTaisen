@@ -841,6 +841,10 @@ def build(root, index_dir, portrait_audit):
             row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/BBG203.SPR',
                    'pairing_evidence': BBG_INSET_REPORT + '#bbg203-partial-pc-coverage',
                    'reason': 'The PC donor omits the right and bottom of the native artwork. A live inset witness is needed to register the shared region.'}
+        elif (disc, path) == (2, '/SAKURA2/BBG218.BIN'):
+            row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG218.SPR',
+                   'verified_in_game': True,
+                   'runtime_evidence': 'docs/research/hd-chapter-10.md#bbg218-tactical-inset'}
         elif (disc, path) == BBG204_INSET:
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG204.SPR',
                    'verified_in_game': True, 'runtime_evidence': BBG204_REPORT}

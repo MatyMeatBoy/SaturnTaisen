@@ -1,0 +1,23 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -1069,8 +1069,8 @@
+     bool eve002Traced = false;
+     SceneHd bbg204;
+     bool bbg204Traced = false;
+-    std::array<SceneHd, 7> bbgInsetImages;
+-    std::array<bool, 7> bbgInsetTraces{};
++    std::array<SceneHd, 8> bbgInsetImages;
++    std::array<bool, 8> bbgInsetTraces{};
+     std::array<SceneHd, 4> bbgItemImages;
+     std::array<bool, 4> bbgItemTraces{};
+     constexpr port::EveRect itemNative{104, 40, 112, 112};
+@@ -1113,6 +1113,8 @@
+          0x81B509F994100235ull, {0, 32, 576, 288}, bbgInsetImages[5], bbgInsetTraces[5]},
+         {"BBG235", 0x2BC159FCB08D0238ull, 0xA5E79E35A266849Dull, "SAKURA2/BG/BBG235.SPR", 210415,
+          0x2BCBC9714A83BC2Eull, {16, 8, 544, 272}, bbgInsetImages[6], bbgInsetTraces[6]},
++        {"BBG218", 0xF5EFD0FC130F9BC5ull, 0x638466E28305DD7Dull, "SAKURA2/BG/BBG218.SPR", 257879,
++         0x089E283BEDD4045Cull, {0, 16, 568, 284}, bbgInsetImages[7], bbgInsetTraces[7]},
+         {"BBG004", 0x319E682E63DC3A4Eull, 0x914BE81AC42AFE65ull, "SAKURA2/BG/BBG004.SPR", 28184,
+          0x72BEA1C2D4460A7Dull, {0, 0, 224, 224}, bbgItemImages[0], bbgItemTraces[0], itemNative},
+         {"BBG005", 0x15ED0C1910A55981ull, 0xAC97820398015961ull, "SAKURA2/BG/BBG005.SPR", 27437,
