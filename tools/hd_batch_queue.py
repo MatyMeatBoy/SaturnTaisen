@@ -8,6 +8,7 @@ from pathlib import Path
 import stat
 
 from build_hd_progress import ROOT, apply_register
+from gen_item_table import review_key
 from gen_tactical_ground_table import fnv1a64
 from hd_census import all_rows
 from scene_file_queue import extra_family, work_items
@@ -115,13 +116,19 @@ def make_queue(pc_root, state_roots, batch_size):
                     'size': [image['width'], image['height']],
                     'review': review,
                 })
-    items = defaultdict(set)
+    item_reviews = {review_key(row): row['verdict']
+                    for row in load(CONFIG / 'hd-item-review.json')['pairs']}
+    items = defaultdict(dict)
     for item in load(CONFIG / 'hd-item-map.json')['pairs']:
-        items[item['pc_file'], item['pc_image_index']].add(item['saturn_file'])
+        items[item['pc_file'], item['pc_image_index']][item['saturn_file']] = (
+            item_reviews.get(review_key(item)))
     for (path, ordinal), references in sorted(items.items()):
         if (path, ordinal) not in integrated:
-            batches['hud-menus', 'item', 'SAKURA1/ITEM'].append({
+            rejected = sorted(name for name, verdict in references.items() if verdict == 'rejected')
+            status = 'reviewed-hold' if len(rejected) == len(references) else 'item'
+            batches['hud-menus', status, 'SAKURA1/ITEM'].append({
                 'donor': path, 'ordinal': ordinal, 'saturn': sorted(references),
+                'rejected_pairs': rejected,
             })
 
     maps = [row for row in load(CONFIG / 'hd-tactical-ground-table.json')['maps']
