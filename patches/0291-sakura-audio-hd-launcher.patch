@@ -1,0 +1,263 @@
+diff --git a/launcher/src/sakura_setup.cpp b/launcher/src/sakura_setup.cpp
+--- a/launcher/src/sakura_setup.cpp
++++ b/launcher/src/sakura_setup.cpp
+@@ -2,27 +2,32 @@
+ #include "sakura_setup.h"
+ #include "game_process.h"
+ #include "layout.h"
++#include "sakura_resources.h"
+ #include "ui.h"
++#include <algorithm>
+ #include <array>
++#include <cstdint>
+ #include <cctype>
+ #include <charconv>
+ #include <fstream>
+ #include <memory>
+ #include <mutex>
+ namespace {
++enum class SetupPurpose { Game, Graphics, Audio, Refresh };
+ struct SetupState {
+     std::mutex mutex;
+     bool dialog=false,closed=false,finished=true,error=false;
+     std::string pending;
+-    std::array<char,2048> source{};
++    std::array<char,2048> source{}, audioSource{};
+     std::unique_ptr<GameProcess> worker, pcProbe;
+     Uint64 nextPcProbe=0;
+-    bool pcFound=false, hdDialog=false, enableHd=false;
++    bool pcFound=false, audioReady=false;
++    SetupPurpose dialogPurpose=SetupPurpose::Game, activePurpose=SetupPurpose::Game;
++    Uint64 nextAudioCheck=0;
+     std::filesystem::path log;
+     std::string message,progress;
+     Uint64 lastRead=0;
+     int language=0; // 0 Español, 1 English, 2 Japonés
+-    bool refreshing=false;
+     bool autoTried=false; // (preparation started on its own once, when the roms folder already has the files)
+ };
+ std::shared_ptr<SetupState> state;
+@@ -206,13 +211,13 @@
+     }
+     return !checked || !applied.eof();
+ }
+-void PickSource(launcher::PageContext& page, SetupState& s, bool hd) {
++void PickSource(launcher::PageContext& page, SetupState& s, SetupPurpose purpose) {
+     static const SDL_DialogFileFilter filters[]={{"Discos e imágenes","cue;iso;bin;img;mdf;zip"}};
+     {
+         std::lock_guard<std::mutex> lock(s.mutex);
+         if (s.dialog) return;
+         s.dialog=true;
+-        s.hdDialog=hd;
++        s.dialogPurpose=purpose;
+     }
+     SDL_ShowOpenFileDialog(Picked,new std::shared_ptr<SetupState>(state),page.window,filters,1,nullptr,false);
+ }
+@@ -233,6 +238,8 @@
+     std::error_code ec;
+     if (s.source[0] && std::filesystem::exists(std::filesystem::u8path(s.source.data()),ec))
+         args.insert(args.end(),{"--rom",s.source.data()});
++    if (s.audioSource[0] && std::filesystem::exists(std::filesystem::u8path(s.audioSource.data()),ec))
++        args.insert(args.end(),{"--rom",s.audioSource.data()});
+     if (!folder.empty()) args.insert(args.end(),{"--folder",Utf8(folder)});
+     s.nextPcProbe=SDL_GetTicks()+15000;
+     if (args.size()==1) {s.pcFound=false;return;}
+@@ -242,20 +249,57 @@
+         s.pcProbe.reset();
+     else ui::request_frames(2);
+ }
+-void StartPrepare(launcher::PageContext& page,SetupState& s,bool refresh=false,bool enableHd=false) {
+-    s.refreshing=refresh;
+-    s.enableHd=enableHd;
+-    std::vector<std::string> args={refresh?"refresh-prepared":"prepare","--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
++bool ValidAudioDonor(const std::filesystem::path& root) {
++    if (root.empty()) return false;
++    const auto path=root/"SAKURA2"/"SE"/"0042.WAV";
++    std::error_code ec;
++    if (std::filesystem::file_size(path,ec)!=31020 || ec) return false;
++    std::ifstream input(path,std::ios::binary);
++    uint64_t hash=0xcbf29ce484222325ULL;
++    std::array<char,4096> bytes{};
++    size_t total=0;
++    while(input && total<31020) {
++        input.read(bytes.data(),std::min(bytes.size(),31020-total));
++        const auto count=input.gcount();
++        total+=count;
++        for(std::streamsize i=0;i<count;++i)
++            hash=(hash^static_cast<unsigned char>(bytes[i]))*0x100000001b3ULL;
++    }
++    return !input.bad() && total==31020 && input.peek()==std::char_traits<char>::eof() && hash==0x41a6fcf48f997315ULL;
++}
++bool AudioReady(launcher::PageContext& page, SetupState& s) {
++    if (SDL_GetTicks()<s.nextAudioCheck) return s.audioReady;
++    s.nextAudioCheck=SDL_GetTicks()+2000;
++    const auto configured=std::filesystem::u8path(page.prefs.get("sakura","pc_assets"));
++    const auto pc=PortableHdRoot(configured,page.program_folder);
++    s.audioReady=ValidAudioDonor(page.folder/"audio-hd") ||
++        ValidAudioDonor(pc) || (!pc.empty() && ValidAudioDonor(pc/"pc"));
++    return s.audioReady;
++}
++void StartPrepare(launcher::PageContext& page,SetupState& s,SetupPurpose purpose=SetupPurpose::Game) {
++    s.activePurpose=purpose;
++    const bool refresh=purpose==SetupPurpose::Refresh, audio=purpose==SetupPurpose::Audio;
++    std::vector<std::string> args={refresh?"refresh-prepared":audio?"prepare-audio":"prepare",
++        "--home",Utf8(page.folder),"--program",Utf8(page.program_folder)};
+     if(!refresh) {
+-        page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
+-        args.insert(args.end(),{"--language",kLanguageCode[s.language]});
+-        if(s.source[0])args.insert(args.end(),{"--rom",s.source.data()});
++        if (audio) {
++            std::error_code ec;
++            if (s.audioSource[0] && std::filesystem::exists(std::filesystem::u8path(s.audioSource.data()),ec)) {
++                page.prefs.set("sakura","audio_source",s.audioSource.data());page.prefs.save();
++                args.insert(args.end(),{"--rom",s.audioSource.data()});
++            } else if (s.source[0] && std::filesystem::exists(std::filesystem::u8path(s.source.data()),ec))
++                args.insert(args.end(),{"--rom",s.source.data()});
++        } else {
++            page.prefs.set("sakura","setup_source",s.source.data());page.prefs.save();
++            args.insert(args.end(),{"--language",kLanguageCode[s.language]});
++            if(s.source[0])args.insert(args.end(),{"--rom",s.source.data()});
++        }
+         const auto discs=DiscsFolder(page.program_folder);
+-        if(!discs.empty() && HasGameFiles(discs))args.insert(args.end(),{"--folder",Utf8(discs)});
++        if(!discs.empty() && (audio || HasGameFiles(discs)))args.insert(args.end(),{"--folder",Utf8(discs)});
+     }
+     s.finished=false;s.error=false;s.message.clear();s.progress="0 % · Iniciando…";
+     std::error_code error;std::filesystem::create_directories(page.folder/"logs",error);
+-    s.log=page.folder/"logs"/"preparar-juego.log";s.worker=std::make_unique<GameProcess>();
++    s.log=page.folder/"logs"/(audio?"preparar-audio.log":"preparar-juego.log");s.worker=std::make_unique<GameProcess>();
+     if(!s.worker->start(page.program_folder/"preparar-juego.exe",args,page.program_folder,s.message,s.log)) {
+         s.worker.reset();s.finished=true;s.error=true;
+         if(s.message.empty())s.message="No se pudo iniciar el ayudante de preparación.";
+@@ -267,13 +311,15 @@
+         state=std::make_shared<SetupState>();
+         state->language=LanguageIndex(page.prefs.get("sakura","language"));
+         SDL_strlcpy(state->source.data(),page.prefs.get("sakura","setup_source").c_str(),state->source.size());
+-    }
+-    auto& s=*state;bool picked=false,pickedForHd=false;
++        SDL_strlcpy(state->audioSource.data(),page.prefs.get("sakura","audio_source").c_str(),state->audioSource.size());
++    }
++    auto& s=*state;bool picked=false;SetupPurpose purpose=SetupPurpose::Game;
+     {
+         std::lock_guard<std::mutex> lock(s.mutex);
+         if(!s.pending.empty()) {
+-            if(s.pending.size()<s.source.size()) {SDL_strlcpy(s.source.data(),s.pending.c_str(),s.source.size());picked=true;}
+-            pickedForHd=s.hdDialog;
++            purpose=s.dialogPurpose;
++            auto& selected=purpose==SetupPurpose::Audio?s.audioSource:s.source;
++            if(s.pending.size()<selected.size()) {SDL_strlcpy(selected.data(),s.pending.c_str(),selected.size());picked=true;}
+             s.pending.clear();
+         }
+     }
+@@ -282,7 +328,12 @@
+     if(s.worker && !running && !s.finished) {
+         s.finished=true;s.error=s.worker->exit_code()!=0;ReadProgress(s);
+         if(s.error)s.message=s.progress.empty()?"No se pudo preparar el juego. Abre la carpeta de registros en Opciones.":s.progress;
+-        else if(s.refreshing) {
++        else if(s.activePurpose==SetupPurpose::Audio) {
++            s.nextAudioCheck=0;
++            s.error=!AudioReady(page,s);
++            s.message=s.error?"No se encontró el audio preparado.":"Audio HD preparado. Actívalo desde Inicio.";
++        }
++        else if(s.activePurpose==SetupPurpose::Refresh) {
+             s.message="Contenido preparado actualizado. Ya puedes jugar.";
+             const auto current=page.prefs.get("game","disc");
+             const auto disc=LanguageDisc(page.program_folder,s.language);
+@@ -296,7 +347,7 @@
+             s.language=LanguageIndex(page.prefs.get("sakura","language"));
+             if(HdPack(page)) // a prepared HD pack is switched on; the MODO HD bubble turns it off
+                 Save(page,{{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},{"hd_preload","1"}});
+-            if (s.enableHd && HdPack(page))
++            if (s.activePurpose==SetupPurpose::Graphics && HdPack(page))
+                 Save(page,{{"presentation_mode","1"},{"presentation_chosen","1"}});
+             s.message=HdPack(page)?"Juego y mod HD preparados. Ya puedes jugar.":"Juego preparado. Ya puedes jugar. Para el mod HD, añade tu edición de PC en Opciones.";
+             const auto disc=LanguageDisc(page.program_folder,s.language);
+@@ -305,7 +356,7 @@
+         s.progress.clear();
+     }
+     // A file just chosen is the request to prepare with it.
+-    if(picked && !running && !page.playing)StartPrepare(page,s,false,pickedForHd);
++    if(picked && !running && !page.playing)StartPrepare(page,s,purpose);
+     return s;
+ }
+ // The bar and the line under it while the helper works, or its last word.
+@@ -342,7 +393,7 @@
+             Exists(page.folder/"prepared-health.txt") || Exists(page.folder/"prepared-release.txt") ||
+             std::filesystem::is_directory(page.program_folder/"game"/"disc1",error) ||
+             std::filesystem::is_directory(page.program_folder/"game"/"disc2",error);
+-        if(installed && PreparedUpdateNeeded(page))StartPrepare(page,s,true);
++        if(installed && PreparedUpdateNeeded(page))StartPrepare(page,s,SetupPurpose::Refresh);
+         else if(!installed && HasGameFiles(DiscsFolder(page.program_folder)))StartPrepare(page,s);
+     }
+     const bool locked=SakuraSetupBusy() || page.playing;
+@@ -350,8 +401,10 @@
+     const bool enhanced=page.settings.get("features","presentation_mode")=="1";
+     const bool sharp=enhanced && page.settings.get("features","text_style")!="1";
+     const bool hd=enhanced && pack && page.settings.get("features","pc_hd_backgrounds")!="1" && page.settings.get("features","pc_hd_portraits")!="1";
+-    const bool stacked=page.width<ui::px(480);
+-    const float gap=ui::px(10),each=stacked?page.width:(page.width-gap*2)/3.0f;
++    const bool audioReady=AudioReady(page,s);
++    const bool audioEnabled=page.settings.get("features","pc_hd_audio")=="1";
++    const bool stacked=page.width<ui::px(640);
++    const float gap=ui::px(10),each=stacked?page.width:(page.width-gap*3)/4.0f;
+     const ImVec2 row=ImGui::GetCursorScreenPos();
+     auto place=[&](int index) {ImGui::SetCursorScreenPos(row+(stacked?ImVec2(0,index*ui::px(72)):ImVec2(index*(each+gap),0)));};
+     place(0);
+@@ -372,16 +425,27 @@
+         else Save(page,{{"text_style","0"},{"presentation_mode","1"},{"presentation_chosen","1"}}); // (HD text belongs to the enhanced presentation)
+     }
+     place(2);
+-    if (!pack && !locked) ProbePcEdition(page,s);
++    if ((!pack || !audioReady) && !locked) ProbePcEdition(page,s);
+     const char* hdLabel=pack?(hd?"Activado":"Desactivado"):
+         locked?"Preparando…":s.pcProbe?"Buscando…":s.pcFound?"Instalar mod HD":"Elegir edición de PC";
+     if(Bubble("hd","MODO HD",hdLabel,hd,each,!locked && !s.pcProbe)) {
+-        if(!pack && s.pcFound) StartPrepare(page,s,false,true);
+-        else if(!pack) PickSource(page,s,true);
++        if(!pack && s.pcFound) StartPrepare(page,s,SetupPurpose::Graphics);
++        else if(!pack) PickSource(page,s,SetupPurpose::Graphics);
+         else if(hd)Save(page,{{"pc_hd_backgrounds","1"},{"pc_hd_portraits","1"}});
+         else Save(page,{{"pc_hd_backgrounds","0"},{"pc_hd_portraits","0"},{"hd_preload","1"},{"presentation_mode","1"},{"presentation_chosen","1"}});
+     }
+-    ImGui::SetCursorScreenPos(row+ImVec2(0,ui::px(stacked?216:72)));
++    place(3);
++    const char* audioLabel=audioReady?(audioEnabled?(enhanced?"Activado":"Solo en Mejorado"):"Desactivado"):
++        locked?"Preparando…":s.pcProbe?"Buscando…":s.pcFound?"Preparar audio HD":"Elegir edición de PC";
++    if(Bubble("audio-hd","AUDIO HD",audioLabel,audioReady && audioEnabled && enhanced,each,!locked && !s.pcProbe)) {
++        if(audioReady) {
++            page.settings.set("features","pc_hd_audio",audioEnabled?"0":"1");
++            page.settings.save();
++        }
++        else if(s.pcFound) StartPrepare(page,s,SetupPurpose::Audio);
++        else PickSource(page,s,SetupPurpose::Audio);
++    }
++    ImGui::SetCursorScreenPos(row+ImVec2(0,ui::px(stacked?288:72)));
+     ImGui::Dummy(ImVec2(page.width,0));
+     ui::gap(4);
+     Status(page,s,false);
+@@ -406,7 +470,7 @@
+         else where+=".";
+         layout::row(page.width,running?"Preparando…":done?"Juego preparado":"Preparar el juego",where.c_str(),210,36,[&] {
+             if(ui::button("Elegir…",ui::Kind::Secondary,100,!locked)) {
+-                PickSource(page,s,false);
++                PickSource(page,s,SetupPurpose::Game);
+             }
+             ImGui::SameLine(0,ui::px(6));
+             if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,!locked))StartPrepare(page,s);
+diff --git a/port/main.cpp b/port/main.cpp
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -733,7 +733,12 @@
+     auto& chip = sat.Sound();
+     auto effect = std::make_shared<Pcm42Projection>();
+     const auto pcFolder = std::filesystem::path(std::u8string(opt.pcAssetsPath.begin(), opt.pcAssetsPath.end()));
+-    const bool prepared = !opt.pcAssetsPath.empty() && effect->Load(pcFolder / "SAKURA2" / "SE" / "0042.WAV");
++    const auto settingsFile = std::filesystem::path(std::u8string(opt.settingsPath.begin(), opt.settingsPath.end()));
++    const auto relativeEffect = std::filesystem::path("SAKURA2") / "SE" / "0042.WAV";
++    const bool prepared = (!opt.settingsPath.empty() &&
++        effect->Load(settingsFile.parent_path() / "audio-hd" / relativeEffect)) ||
++        (!opt.pcAssetsPath.empty() && (effect->Load(pcFolder / relativeEffect) ||
++                                      effect->Load(pcFolder / "pc" / relativeEffect)));
+     if (prepared) {
+         const auto eligible = [](const satrecomp::sound::Slot& slot) {
+             using Slot = satrecomp::sound::Slot;

@@ -108,3 +108,35 @@ exactos de la fila en la RAM de sonido. Su pareja por ID es
 0042.WAV. El efecto 51 queda identificado en ambos formatos,
 con un disparo natural todavía pendiente. El informe de IDs
 no mide la mejora audible ni suma integraciones al mod.
+
+### Primera sustitución PCMSE en juego
+
+Los parches 0290 y 0291 incorporan PCMSE 42 en modo Mejorado.
+El selector de Audio HD es independiente del gráfico y empieza
+desactivado. La preparación local comprueba el WAV del usuario,
+lo guarda en el perfil y permite reparar una copia corrupta
+sin reconstruir los gráficos. La preparación desde una instalación
+de PC extraída pasó con el donante exacto. La prueba desde MDF
+sigue pendiente.
+
+La sustitución usa la fase, ganancia y corte de la voz nativa.
+En el ataque normal de Sakura se compararon ocho perfiles de
+70 campos estrictos. El recurso en el perfil y el recurso en la
+ruta de PC produjeron el mismo PCM presentado. Solo cambiaron
+15.483 muestras estéreo entre los índices 7378 y 22862.
+El PCM nativo, los hashes invitados y la SRAM coincidieron
+entre los perfiles de cada punto de partida. Desactivado,
+Original y donante ausente o corrupto conservaron el audio
+nativo. Restaurar un estado a mitad del efecto conservó la voz
+nativa hasta el próximo disparo elegible.
+
+Ejecutable de verificación SHA-256:
+`4a3b58be0e1b79014e03df30cc963f950bee6dcb3c900e9ff22cc35bea18c3ad`.
+Tres reproducciones a velocidad normal con el dispositivo SDL
+de diagnóstico confirmaron que el PCM presentado llega al
+dispositivo. En cada una se cotejaron 2400 muestras exactas.
+El control de pausa y reanudación antes del ataque conservó
+la secuencia de audio del juego.
+
+Este efecto es el primero de los 12 candidatos de ese banco.
+El denominador global de Audio HD continúa en inventario.
