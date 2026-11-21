@@ -607,3 +607,11 @@ BG4162 on disc 1 uses the exact natural stage appearance and two
 color-guarded character registrations. See [replay and comparison](research/bg4162-bounded-hd.md).
 Syntax, coverage and patch application passed. Linked HD playback
 and packaging remain pending.
+
+## HD minigame overlay (0326)
+
+Fifteen exact PC minigame subimages cover the timer and shooting-gallery
+trim. They are outside the fixed 1,430-element census. See
+[archive comparison and scope](research/hd-minigame-hud.md).
+Syntax and patch application passed. Linked playback and packaging
+remain pending.

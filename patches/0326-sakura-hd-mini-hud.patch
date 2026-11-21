@@ -1,0 +1,216 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -2504,6 +2504,172 @@
+             const SDL_FRect dest{target.x + (it->x - crop.x)*scale, target.y + (it->y - crop.y)*scale,
+                 float(width*scale), float(height*scale)};
+             SDL_RenderTexture(renderer, steamTexture, &source, &dest);
++        }
++    };
++    struct MiniHudAtlas {const char* file; size_t bytes; uint64_t hash, palette;};
++    static constexpr MiniHudAtlas miniHudAtlases[] = {
++        {"SAKURA3/CG/SYSTEM/MM_TIME3.SPR", 9454, 0x56A008C942DEEB73ull, 0xAB8FB8223D38C028ull},
++        {"SAKURA3/CG/SHOT/SHITA_KI.SPR", 37939, 0x2B87EEECBDECE533ull, 0xB67A1B2E4F46F33Bull},
++        {"SAKURA3/CG/SHOT/WAKU.SPR", 66744, 0x712460FA99E0C1C8ull, 0x5DF89BD2B7287F03ull},
++    };
++    struct MiniHudPiece {
++        unsigned atlas, ordinal, address, mode, color, width, height;
++        int x, y;
++        uint64_t hash;
++    };
++    static constexpr MiniHudPiece miniHudPieces[] = {
++        {0, 0, 0xed08, 0x0080, 0x46B0, 16, 16, -1, -1, 0xF9E0CBB698A3ED45ull},
++        {0, 1, 0xed18, 0x0080, 0x46B0, 16, 16, -1, -1, 0xEF48D538E87E9894ull},
++        {0, 2, 0xed28, 0x0080, 0x46B0, 16, 16, -1, -1, 0xE6551AB516BB23C3ull},
++        {0, 3, 0xed38, 0x0080, 0x46B0, 16, 16, -1, -1, 0xD8F8AE057112E978ull},
++        {0, 4, 0xed48, 0x0080, 0x46B0, 16, 16, -1, -1, 0xD73BDD5838FA18C7ull},
++        {0, 5, 0xed58, 0x0080, 0x46B0, 16, 16, -1, -1, 0xB60373E41B099B76ull},
++        {0, 6, 0xed68, 0x0080, 0x46B0, 16, 16, -1, -1, 0x07D991E85360B7B7ull},
++        {0, 7, 0xed78, 0x0080, 0x46B0, 16, 16, -1, -1, 0x5A03C3F392371001ull},
++        {0, 8, 0xed88, 0x0080, 0x46B0, 16, 16, -1, -1, 0x984C0F9170F606B9ull},
++        {0, 9, 0xed98, 0x0080, 0x46B0, 16, 16, -1, -1, 0xE37F92216390EB95ull},
++        {1, 0, 0x5EA4, 0x00A0, 0x3100, 256, 48, 32, 144, 0x7739E9B8BC2FC0BEull},
++        {1, 1, 0x64A4, 0x00A0, 0x3100, 16, 80, 16, 144, 0xC7E7908D2ADB72E1ull},
++        {1, 2, 0x6544, 0x00A0, 0x3100, 256, 16, 32, 192, 0xFAC188F83DE974E4ull},
++        {1, 3, 0x6744, 0x00A0, 0x3100, 16, 80, 288, 144, 0xCB5F966526F8CCAEull},
++        {2, 0, 0x56A4, 0x00A0, 0x0500, 320, 16, 0, 0, 0x3A3234894F2246C3ull},
++    };
++    struct MiniHudArt {
++        bool tried = false;
++        std::future<std::vector<PcSprite>> pending;
++        std::vector<PcSprite> images;
++    };
++    std::array<MiniHudArt, std::size(miniHudAtlases)> miniHudArt;
++    SDL_Texture* miniHudTexture = nullptr;
++    std::vector<uint32_t> miniHudPixels;
++    const auto drawMiniHud = [&](const satrecomp::video::Renderer::Presentation& planes,
++                                 const SDL_FRect& crop, const SDL_FRect& target, int scale) {
++        if (scale < 2 || choosing || port.menu.IsOpen() || port.opt.pcAssetsPath.empty() ||
++            satrecomp::FeatureValue("presentation_mode") != 1 || satrecomp::FeatureValue("pc_hd_backgrounds") != 0 ||
++            planes.width != 320 || planes.height != 224 ||
++            planes.topSource.size() != 320 * 224 || softwareShown.size() != 320 * 224)
++            return;
++        const auto coord = [](uint16_t value) { return (int(value & 0x1FFF) ^ 0x1000) - 0x1000; };
++        for (auto it = planes.sprites.begin(); it != planes.sprites.end(); ++it) {
++            const auto& cmd = it->command.words;
++            if (cmd[0] != 0x1000) continue;
++            const unsigned width = ((cmd[5] >> 8) & 63) * 8, height = cmd[5] & 255;
++            const auto* piece = std::ranges::find_if(miniHudPieces, [&](const auto& entry) {
++                return entry.address == cmd[4] && entry.mode == cmd[2] && entry.color == cmd[3] &&
++                       entry.width == width && entry.height == height &&
++                       (entry.x == -1 || (entry.x == it->x && entry.y == it->y));
++            });
++            if (piece == std::end(miniHudPieces)) continue;
++            const bool indexed4 = piece->mode == 0x0080;
++            const size_t sourcePixels = size_t(width) * height;
++            const size_t paletteStart = 2 * (piece->color & 0x7FF);
++            const size_t paletteBytes = indexed4 ? 32 : 512;
++            if (it->pixels.size() != (indexed4 ? sourcePixels / 2 : sourcePixels) ||
++                paletteStart + paletteBytes > planes.palette.size()) continue;
++            const auto palette = std::span{planes.palette}.subspan(paletteStart, paletteBytes);
++            const auto& atlas = miniHudAtlases[piece->atlas];
++            if (PcBackdropHash(palette) != atlas.palette || PcBackdropHash(it->pixels) != piece->hash) continue;
++            auto& art = miniHudArt[piece->atlas];
++            if (!art.tried) {
++                art.tried = true;
++                art.pending = std::async(std::launch::async,
++                    [path = std::filesystem::u8path(port.opt.pcAssetsPath) / atlas.file, atlas] {
++                        std::vector<PcSprite> images;
++                        std::vector<uint8_t> bytes;
++                        std::string error;
++                        if (!ReadPcBackdropFile(path, bytes, atlas.bytes) || bytes.size() != atlas.bytes ||
++                            PcBackdropHash(bytes) != atlas.hash || !DecodePcSprites(bytes, images, error))
++                            return std::vector<PcSprite>{};
++                        return images;
++                    });
++            }
++            if (art.pending.valid() && art.pending.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
++                art.images = art.pending.get();
++            const unsigned stride = 2 * width;
++            const auto image = std::ranges::find_if(art.images, [&](const auto& sprite) {
++                return sprite.index == piece->ordinal && sprite.width == stride &&
++                       sprite.height == 2 * height && sprite.pixels.size() == 4 * sourcePixels;
++            });
++            if (image == art.images.end()) continue;
++
++            std::vector<EveRect> covers;
++            bool safe = true;
++            for (auto later = std::next(it); later != planes.sprites.end(); ++later) {
++                const auto& next = later->command.words;
++                const unsigned type = next[0] & 15;
++                if (type >= 8) continue;
++                int cols = ((next[5] >> 8) & 63) * 8, rows = next[5] & 255;
++                if (type == 2) {
++                    const int x = coord(next[6]), y = coord(next[7]);
++                    const int right = coord(next[8]), bottom = coord(next[11]);
++                    if (right < x || bottom < y || coord(next[9]) != y || coord(next[10]) != right ||
++                        coord(next[12]) != x || coord(next[13]) != bottom) { safe = false; break; }
++                    cols = right - x + 1;
++                    rows = bottom - y + 1;
++                } else if (type != 0) { safe = false; break; }
++                cols = std::max(cols, 1);
++                rows = std::max(rows, 1);
++                if (later->x < it->x + int(width) && later->x + cols > it->x &&
++                    later->y < it->y + int(height) && later->y + rows > it->y)
++                    covers.push_back({later->x, later->y, cols, rows});
++            }
++            if (!safe) continue;
++            miniHudPixels.assign(4 * sourcePixels, 0);
++            bool changed = false;
++            for (unsigned y = 0; y < height; ++y) for (unsigned x = 0; x < width; ++x) {
++                const int sx = it->x + int(x), sy = it->y + int(y);
++                if (sx < 0 || sx >= 320 || sy < 0 || sy >= 224 ||
++                    sx < crop.x || sx >= crop.x + crop.w || sy < crop.y || sy >= crop.y + crop.h ||
++                    std::ranges::any_of(covers, [&](const auto& r) {
++                        return sx >= r.x && sx < r.x + r.width && sy >= r.y && sy < r.y + r.height;
++                    })) continue;
++                const size_t at = size_t(sy) * 320 + sx;
++                if (planes.topSource[at] != 0) continue;
++                const size_t offset = y * width + x;
++                const unsigned ink = indexed4 ?
++                    ((it->pixels[offset / 2] >> (offset % 2 ? 0 : 4)) & 15u) : it->pixels[offset];
++                if (!ink) continue;
++                const unsigned word = (unsigned(palette[2 * ink]) << 8) | palette[2 * ink + 1];
++                const uint32_t rgb = ((word & 31) << 3) | ((word & 0x3E0) << 6) | ((word & 0x7C00) << 9);
++                if ((softwareShown[at] & 0xFFFFFFu) != rgb) continue;
++                const size_t first = (2 * y) * stride + 2 * x;
++                const std::array<size_t, 4> subpixel{first, first + 1, first + stride, first + stride + 1};
++                if (std::ranges::any_of(subpixel, [&](size_t k) {
++                    const auto pc = image->pixels[k];
++                    return (pc >> 24) != 255 || (pc & 0xFFFFFFu) == 0x00FF00u || (pc & 0xFFFFFFu) == 0xFFFF00u;
++                })) continue;
++                // Retain Saturn color and edges. Transfer only the donor's variation
++                // within this native cell, where all four donor samples are opaque.
++                for (unsigned shift : {0u, 8u, 16u}) {
++                    const auto channel = [shift](uint32_t p) { return int((p >> shift) & 255u); };
++                    int sum = 0;
++                    for (size_t k : subpixel) sum += channel(image->pixels[k]);
++                    const int average = (sum + 2) / 4;
++                    const int inkColor = channel(rgb);
++                    for (size_t k : subpixel) {
++                        const int sample = std::clamp(inkColor + channel(image->pixels[k]) - average, 0, 255);
++                        miniHudPixels[k] |= 0xFF000000u | (uint32_t(sample) << shift);
++                        changed |= sample != inkColor;
++                    }
++                }
++            }
++            if (!changed) continue;
++            if (!miniHudTexture) {
++                miniHudTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
++                                                   SDL_TEXTUREACCESS_STREAMING, 640, 160);
++                if (!miniHudTexture) return;
++                if (!SDL_SetTextureScaleMode(miniHudTexture, SDL_SCALEMODE_NEAREST) ||
++                    !SDL_SetTextureBlendMode(miniHudTexture, SDL_BLENDMODE_BLEND)) {
++                    SDL_DestroyTexture(std::exchange(miniHudTexture, nullptr));
++                    return;
++                }
++            }
++            const SDL_Rect update{0, 0, int(stride), int(2 * height)};
++            if (!SDL_UpdateTexture(miniHudTexture, &update, miniHudPixels.data(), stride * sizeof(uint32_t))) continue;
++            const SDL_FRect source{0, 0, float(stride), float(2 * height)};
++            const SDL_FRect dest{target.x + (it->x - crop.x) * scale, target.y + (it->y - crop.y) * scale,
++                             float(width * scale), float(height * scale)};
++            SDL_RenderTexture(renderer, miniHudTexture, &source, &dest);
+         }
+     };
+     std::vector<PcSprite> titleParts;
+@@ -5425,6 +5591,7 @@
+                         drawItem(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawCompactIcons(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawSteam(planes,imageCrop,imageTarget,zoom.picture.scale);
++                        drawMiniHud(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         drawBrackets(planes,imageCrop,imageTarget,zoom.picture.scale);
+                         crop.x=float(zoomX);crop.w=float(zoomW);crop.y=153;crop.h=float(zoomLines);fit=zoom.dialogue;
+                         if(std::getenv("SATRECOMP_PRESENTATION_TRACE")) {
+@@ -5547,6 +5714,7 @@
+                     drawItem(planes,crop,target,fit.scale);
+                     drawCompactIcons(planes,crop,target,fit.scale);
+                     drawSteam(planes,crop,target,fit.scale);
++                    drawMiniHud(planes,crop,target,fit.scale);
+                     if (screenBackdrop == "TITLE") {
+                         drawTitleParts(planes, crop, target, fit.scale);
+                         drawProgramTrim(planes, crop, target, fit.scale);
+@@ -5590,6 +5758,7 @@
+                 drawTitleParts(shown, {0, 0, 320, 224}, where, baseFit.scale);
+                 drawProgramTrim(shown, {0, 0, 320, 224}, where, baseFit.scale);
+                 drawSteam(shown, {0, 0, 320, 224}, where, baseFit.scale);
++                drawMiniHud(shown, {0, 0, 320, 224}, where, baseFit.scale);
+             }
+             // MAP02 EVENT follows the native pose and only covers visible actor texels.
+             if (nativeGroundComposite && presentationKind == std::string_view("stage02-hd-ground") &&
+@@ -7048,6 +7217,7 @@
+             case SDL_EVENT_RENDER_DEVICE_RESET:
+                 if (horizontalCommandOverlay) SDL_DestroyTexture(std::exchange(horizontalCommandOverlay, nullptr));
+                 if (itemOverlay) SDL_DestroyTexture(std::exchange(itemOverlay, nullptr));
++                if (miniHudTexture) SDL_DestroyTexture(std::exchange(miniHudTexture, nullptr));
+                 if (programTrimTexture) SDL_DestroyTexture(std::exchange(programTrimTexture, nullptr));
+                 if (titlePartTexture) SDL_DestroyTexture(std::exchange(titlePartTexture, nullptr));
+                 if(eventActor)SDL_DestroyTexture(std::exchange(eventActor,nullptr));
+@@ -7490,6 +7660,7 @@
+     if(titlePartTexture)SDL_DestroyTexture(titlePartTexture);
+     if(programTrimTexture)SDL_DestroyTexture(programTrimTexture);
+     if(steamTexture)SDL_DestroyTexture(steamTexture);
++    if (miniHudTexture) SDL_DestroyTexture(miniHudTexture);
+     if (horizontalCommandOverlay) SDL_DestroyTexture(horizontalCommandOverlay);
+     for (auto* portrait : tacticalPortraitTextures) if (portrait) SDL_DestroyTexture(portrait);
+     resetRegisteredBodies();
