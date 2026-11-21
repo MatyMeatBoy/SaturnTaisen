@@ -455,3 +455,41 @@ These pictures are the shared END_SA photographs already `hd` and verified (see 
 - Integration desk: link one executable with the full patch stack (through 0245) and the 1,411,614-block ENDING-complete registry (PR #600). That would show the Enhanced draw of all four photographs and the zero-interpreted hash parity in a single strict run. It needs a clean build of the generated blocks, which is hours, so it was not done here.
 - Owner (discs, natural play): Kanna, Maria, Iris and Kohran continuation replays, and the six-route general ending, as listed above. The Sumire route does not load their banks.
 - Fixtures, states, movies and captures stay under `local/work/ending`.
+
+### STAFF banks and native credits
+
+The PC STAFF_AI, STAFF_KA, STAFF_KO, STAFF_MA, STAFF_SA and STAFF_SU
+banks each contain 36 full 640 × 480 credit pages. The files are
+distinct and carry heroine-specific color treatments. The natural
+English disc-2 Sakura credits instead use VDP1 text glyphs, with
+no text pixels on the VDP2 background layers at the sampled page.
+All 91 active nonblank 16 × 16 glyph textures, covering 66 unique
+textures, match bytes in ENDING.BIN. None matches SA_SPR.BIN,
+SU_SPR.BIN or SA_CG.BIN. Sumire's credits also overlay text on the
+group photograph.
+
+PC STAFF_SA page 16 shares sound credits with the native page.
+Page 31 omits lines from the Saturn Special Thanks and page 35
+adds the 1999 PC copyright to the native 1996 credits. A full
+page draw would change the original credits and their timing.
+The six PC-specific sheets remain outside the replaceable
+asset count. The seven END_* donor files retain their existing
+integration and route coverage.
+
+### Four Sumire photographs on the v0.3.4 runtime
+
+The shipped v0.3.4 executable replayed 2300 fields from the
+retained disc-2 Sumire ending photograph window; the development
+copy used here has the same binary SHA-256 as the release.
+Only END_SA.SPR and END_SU.SPR were available in the donor
+profile. One run drew ordinals 6, 7, 10 and 8, covering the
+two group photographs and both Sumire close-ups.
+
+The four profiles (Enhanced and Original with and without
+donors) matched all guest hashes and final SRAM. Every run
+reported zero interpreted blocks. At 1440p, 12 of 23 Enhanced
+sample pairs differ inside (320,144)–(2240,1104), and the
+remaining pairs match exactly. All 23 Original pairs match
+pixel for pixel. This certifies the four-picture window on the
+released runtime. The natural witnesses for the other ending
+routes remain separate.

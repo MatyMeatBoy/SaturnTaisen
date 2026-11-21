@@ -21005,6 +21005,48 @@
         "pc": "SAKURA2/BG/BBG101.SPR",
         "status": "hd"
       },
+      "pc:SAKURA1/ENDING/STAFF_AI.SPR": {
+        "association": "unknown",
+        "evidence": "docs/research/ending-bank-pairs.md#staff-banks-and-native-credits",
+        "pc": "SAKURA1/ENDING/STAFF_AI.SPR",
+        "reason": "PC-specific precomposed credits omit native credits and change the copyright line.",
+        "status": "excluded"
+      },
+      "pc:SAKURA1/ENDING/STAFF_KA.SPR": {
+        "association": "unknown",
+        "evidence": "docs/research/ending-bank-pairs.md#staff-banks-and-native-credits",
+        "pc": "SAKURA1/ENDING/STAFF_KA.SPR",
+        "reason": "PC-specific precomposed credits omit native credits and change the copyright line.",
+        "status": "excluded"
+      },
+      "pc:SAKURA1/ENDING/STAFF_KO.SPR": {
+        "association": "unknown",
+        "evidence": "docs/research/ending-bank-pairs.md#staff-banks-and-native-credits",
+        "pc": "SAKURA1/ENDING/STAFF_KO.SPR",
+        "reason": "PC-specific precomposed credits omit native credits and change the copyright line.",
+        "status": "excluded"
+      },
+      "pc:SAKURA1/ENDING/STAFF_MA.SPR": {
+        "association": "unknown",
+        "evidence": "docs/research/ending-bank-pairs.md#staff-banks-and-native-credits",
+        "pc": "SAKURA1/ENDING/STAFF_MA.SPR",
+        "reason": "PC-specific precomposed credits omit native credits and change the copyright line.",
+        "status": "excluded"
+      },
+      "pc:SAKURA1/ENDING/STAFF_SA.SPR": {
+        "association": "unknown",
+        "evidence": "docs/research/ending-bank-pairs.md#staff-banks-and-native-credits",
+        "pc": "SAKURA1/ENDING/STAFF_SA.SPR",
+        "reason": "PC-specific precomposed credits omit native credits and change the copyright line.",
+        "status": "excluded"
+      },
+      "pc:SAKURA1/ENDING/STAFF_SU.SPR": {
+        "association": "unknown",
+        "evidence": "docs/research/ending-bank-pairs.md#staff-banks-and-native-credits",
+        "pc": "SAKURA1/ENDING/STAFF_SU.SPR",
+        "reason": "PC-specific precomposed credits omit native credits and change the copyright line.",
+        "status": "excluded"
+      },
       "pc:SAKURA1/ICATCH/KAO_P.SPR": {
         "association": "unknown",
         "evidence": "docs/research/ic-intermission-table.md#remaining-icatch-file-roles",
