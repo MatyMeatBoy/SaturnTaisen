@@ -1,0 +1,11 @@
+--- a/port/load_disc_icon.h
++++ b/port/load_disc_icon.h
+@@ -8,6 +8,8 @@
+ inline constexpr ItemCardEntry kLoadDiscIcons[]{
+     {0xE2E4156ADAB1517Full,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",2},
+     {0x9AF2CC56D5CAEB11ull,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",3},
++    {0x00C9C96E75F421B2ull,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",4},
++    {0x524889642B14872Cull,0x52C0DBB1EA90290Aull,"SAKURA1/SYSTEM/SIS_ICON.SPR",5},
+ };
+ 
+ inline bool IsLoadDiscIcon(const ItemCardEntry* entry) {

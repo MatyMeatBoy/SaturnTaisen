@@ -184,6 +184,8 @@ SYSTEM_HUD_DRAWS = {
     ('SAKURA1/SYSTEM/FONT_CSL.SPR', 1): ('patch 0093, port/system_brackets.h: right inventory bracket', MENU_REPORT + '#t110a-inventory-brackets-in-game'),
     ('SAKURA1/SYSTEM/SIS_ICON.SPR', 2): ('patch 0112, port/load_disc_icon.h: CD-1 load emblem', MENU_REPORT + '#t110b-cd-1-emblem-in-the-load-menu'),
     ('SAKURA1/SYSTEM/SIS_ICON.SPR', 3): ('patch 0146, port/load_disc_icon.h: CD-2 load emblem in the top slot', MENU_REPORT + '#t110c-cd-2-emblem-in-the-load-menu'),
+    ('SAKURA1/SYSTEM/SIS_ICON.SPR', 4): ('blue CD-1 load emblem, resident texture pair', MENU_REPORT + '#emblemas-azules-de-los-discos-de-carga'),
+    ('SAKURA1/SYSTEM/SIS_ICON.SPR', 5): ('blue CD-2 load emblem, resident texture pair', MENU_REPORT + '#emblemas-azules-de-los-discos-de-carga'),
 }
 # SYSTEM files that belong to another category and must not be counted twice in hud-menus.
 SYSTEM_HUD_EXCLUDED = {
