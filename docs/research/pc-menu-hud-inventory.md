@@ -499,3 +499,13 @@ independent projection exactly. Original, missing, corrupt and
 disabled controls preserved native output. The Sound gallery
 did not activate the theater. The 50-field profiles matched
 guest hashes and SRAM. This adds one HUD image. Pending packaging.
+
+## PC floral title backdrop
+
+Patch 0304 links the full floral TL_BG0 image behind the native title
+layers. The native NBG3 and the PC plate share the same composition
+with 0.941 full-area luminance correlation. The 640 × 448 centre crop
+registers to the 320 × 224 Saturn lattice. The existing exact title
+palette and layer ownership protect the logo, text and other sprites.
+The PC logo and startup plates retain their existing handling.
+Applicability and syntax passed offline. In-game beta is pending.

@@ -1,0 +1,34 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -649,6 +649,30 @@
+                         spanishLoadingInk = nullptr;
+                     }
+                     if (spanishLoadingInk) SDL_SetTextureScaleMode(spanishLoadingInk, SDL_SCALEMODE_NEAREST);
++                }
++            }
++            if (item.id == "TITLE" && !item.anchored && !port.opt.pcAssetsPath.empty()) {
++                constexpr size_t titleBytes = 148739;
++                const auto donor = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/TL_BG0.SPR";
++                std::vector<uint8_t> bytes;
++                std::vector<PcSprite> images;
++                std::string error;
++                if (ReadPcBackdropFile(donor, bytes, titleBytes) && bytes.size() == titleBytes &&
++                    PcBackdropHash(bytes) == 0x8B0D11CBBD5CEF5Bull &&
++                    DecodePcSprites(bytes, images, error) && images.size() == 1 &&
++                    images.front().index == 0 && images.front().width == 640 && images.front().height == 480) {
++                    // Match the 320 x 224 Saturn plate at 2x without resampling the donor.
++                    auto* surface = SDL_CreateSurfaceFrom(640, 448, SDL_PIXELFORMAT_ABGR8888,
++                        images.front().pixels.data() + 16 * 640, 640 * sizeof(uint32_t));
++                    Backdrop pc;
++                    pc.texture = BackdropTexture(renderer, surface, &pc.pixels);
++                    if (pc.texture) {
++                        pc.id = item.id;
++                        pc.palette = item.palette;
++                        pc.layer = item.layer;
++                        pc.screen = pc.pc = pc.attempted = true;
++                        backdrops.push_back(std::move(pc));
++                    }
+                 }
+             }
+             if(item.texture)backdrops.push_back(std::move(item));
