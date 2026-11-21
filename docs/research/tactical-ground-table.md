@@ -74,3 +74,36 @@ donor/absent comparison. Original matched with and without
 the donor. Enhanced matched with a truncated donor and with
 the donor absent. Other camera limits, the full battle and
 release inclusion are pending.
+
+## MAP08 at 1440p
+
+The English episode 6 battle save worked on Beetle Saturn. SaturnTaisen
+loaded the same map and music but remained in the native fade. The
+EVT08 null actor-animation descriptor reads BIOS-mapped data, and the
+HLE values left the subsequent command parser spinning. Patch 0293
+returns the five observed data reads in the exact actor and caller
+context for both interpreted and AOT execution. The rest of the
+BIOS mapping and the native fade remain under the existing runtime.
+
+The strict replay from the native battle save read EVT08, MAP08,
+K014 and K003 and reached a selectable Sakura in 11,800 fields. The
+6,663-field prefix matched the earlier build before the changed
+execution path. The separate 4,800-field strict replay from the
+last checkpoint before the missing block matched the corrected
+interpreter in guest hashes, backup RAM and all 12 RGB captures.
+The response adds 660, 78 and 56 verified AOT spans from EVT08,
+K003 and K014 respectively.
+
+Patch 0294 maps the 2,048 × 2,048 PC ground to the 1,024 × 1,024
+native source-4 plane at page 0x40000, key 7EE5F9416E6CFE55.
+At 2560 × 1440 the fixed-camera pair changed 844,272–851,868
+pixels, the motion pair 858,636–865,260, and the 1,190-field boundary
+replay 1,721,412–1,723,968. All changes stayed inside the native
+tactical centre. Missing, same-size corrupt and Original controls
+preserved the native result. Guest hashes and backup RAM matched
+and there were zero interpreted blocks.
+
+Verification executable SHA-256:
+`777815553f3c2fd076da60c4cf76b8ae749af14721dd3075efe81c829cf1efe8`.
+This isolated build tests the MAP08 and HLE changes on the WKL02
+baseline. The change awaits packaging.

@@ -178,7 +178,7 @@
     "1:/SAKURA2/MAP08.BIN"
    ],
    "signature": "7EE5F9416E6CFE55",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 0,
    "world": [
@@ -605,8 +605,8 @@
  "schema": 1,
  "scope": "Tactical ground table: Saturn MAPnn.BIN to PC ground SPR and the runtime key. Data only.",
  "summary": {
-  "candidate": 10,
-  "hd": 13,
+  "candidate": 9,
+  "hd": 14,
   "native": 2,
   "needs-assembler": 1
  }

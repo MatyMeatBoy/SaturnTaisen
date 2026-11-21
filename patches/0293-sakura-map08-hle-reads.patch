@@ -1,0 +1,166 @@
+diff --git a/runtime/hle_bios.h b/runtime/hle_bios.h
+--- a/runtime/hle_bios.h
++++ b/runtime/hle_bios.h
+@@ -34,6 +34,14 @@
+ 
+ bool Active();
+ 
++// The original executor accidentally treats BIOS data as the empty animation
++// for a MAP08 actor. Keep the HLE compatibility reads scoped to that caller.
++constexpr bool IsMap08BiosDataRead(uint32_t pc) {
++    return pc == 0x060159D4 || pc == 0x060159E4 || pc == 0x060159F0 ||
++           pc == 0x06015A00 || pc == 0x06015534;
++}
++bool ReadMap08BiosData(SH2 &cpu, uint32_t pc, uint32_t address, uint32_t &value);
++
+ // Save states (state.h): what the native BIOS is in the middle of
+ void Serialize(Archive &ar);
+ 
+diff --git a/runtime/hle_bios.cpp b/runtime/hle_bios.cpp
+--- a/runtime/hle_bios.cpp
++++ b/runtime/hle_bios.cpp
+@@ -755,6 +755,53 @@
+     return g.saturn != nullptr;
+ }
+ 
++bool ReadMap08BiosData(SH2 &cpu, uint32_t pc, uint32_t address, uint32_t &value) {
++    if (!Active()) {
++        return false;
++    }
++#ifdef SATRECOMP_OWN_MACHINE
++    if (!cpu.IsMaster()) {
++        return false;
++    }
++#endif
++    const uint8_t *code = Ram(0x0020D05C);
++    const uint8_t *actor = Ram(0x00215A54);
++    if (!code || !actor || code[0] != 0x58 || code[1] != 0xB4 ||
++        code[2] != 0xD0 || code[3] != 0x20 ||
++        actor[0] != 0x03 || actor[1] != 0x30 || actor[2] != 0x0F || actor[3] != 0x00) {
++        return false;
++    }
++
++    const auto &registers = Access::R(cpu);
++    const uint32_t descriptor = 0x06051020;
++    if (pc == 0x06015534) {
++        if (address != 0x20020234 || registers[9] != descriptor) {
++            return false;
++        }
++        // The first command word is nonnegative, so the parser advances.
++        value = 0x0914;
++        return true;
++    }
++    if (registers[8] != descriptor || registers[12] != 0x00215A50) {
++        return false;
++    }
++
++    // Return the observed data values only. The BIOS vectors and executable
++    // contents remain those installed by the HLE implementation.
++    if (pc == 0x060159D4 && address == 0) {
++        value = 0x2000;
++    } else if (pc == 0x060159E4 && address == 0x10) {
++        value = 0x20000222;
++    } else if (pc == 0x060159F0 && address == 0x15) {
++        value = 0;
++    } else if (pc == 0x06015A00 && address == 0x20020234) {
++        value = 0x0914;
++    } else {
++        return false;
++    }
++    return true;
++}
++
+ void Serialize(Archive &ar) {
+     ar.Mark(0x42494F53);
+     ar.Pod(g.clockChanging);
+diff --git a/machine/sh2.cpp b/machine/sh2.cpp
+--- a/machine/sh2.cpp
++++ b/machine/sh2.cpp
+@@ -4,6 +4,7 @@
+ 
+ #include "machine.h"
+ #include "../runtime/cache_control.h"
++#include "../runtime/hle_bios.h"
+ 
+ #include <cstdio>
+ #include <cstdlib>
+@@ -130,6 +131,12 @@
+     if ((a & 0xC6000000u) == 0x06000000u) [[likely]] {
+         return m_machine.ramHigh[a & 0xFFFFFu];
+     }
++    if (hle::IsMap08BiosDataRead(PC)) {
++        uint32 value;
++        if (hle::ReadMap08BiosData(*this, PC, a, value)) {
++            return static_cast<uint8>(value);
++        }
++    }
+     ++g_activity;
+     g_hardware += (a & 0xC7F00000u) != 0x00200000u;
+     switch (a >> 29) {
+@@ -144,6 +151,12 @@
+     if ((a & 0xC6000000u) == 0x06000000u) [[likely]] {
+         return Get16(&m_machine.ramHigh[a & 0xFFFFFu]);
+     }
++    if (hle::IsMap08BiosDataRead(PC)) {
++        uint32 value;
++        if (hle::ReadMap08BiosData(*this, PC, a, value)) {
++            return static_cast<uint16>(value);
++        }
++    }
+     ++g_activity;
+     g_hardware += (a & 0xC7F00000u) != 0x00200000u;
+     switch (a >> 29) {
+@@ -157,6 +170,12 @@
+     a &= ~3u;
+     if ((a & 0xC6000000u) == 0x06000000u) [[likely]] {
+         return Get32(&m_machine.ramHigh[a & 0xFFFFFu]);
++    }
++    if (hle::IsMap08BiosDataRead(PC)) {
++        uint32 value;
++        if (hle::ReadMap08BiosData(*this, PC, a, value)) {
++            return static_cast<uint32>(value);
++        }
+     }
+     ++g_activity;
+     g_hardware += (a & 0xC7F00000u) != 0x00200000u;
+diff --git a/runtime/block_native.h b/runtime/block_native.h
+--- a/runtime/block_native.h
++++ b/runtime/block_native.h
+@@ -14,6 +14,7 @@
+ #pragma once
+ 
+ #include "blocks.h"
++#include "hle_bios.h"
+ 
+ #include <cstring>
+ 
+@@ -188,7 +189,8 @@
+     uint32 V;                                                   \
+     {                                                           \
+         const uint32 a_ = (ADDR);                               \
+-        if (const uint8_t *p_ = Native::ReadPtr(a_)) [[likely]] { \
++        if (hle::IsMap08BiosDataRead(here) && hle::ReadMap08BiosData(c, here, a_, V)) { \
++        } else if (const uint8_t *p_ = Native::ReadPtr(a_)) [[likely]] { \
+             V = *p_;                                            \
+         } else {                                                \
+             SN_HW_BEGIN()                                       \
+@@ -200,7 +202,8 @@
+     uint32 V;                                                                        \
+     {                                                                                \
+         const uint32 a_ = (ADDR);                                                    \
+-        if (const uint8_t *p_ = Native::ReadPtr(a_ & ~1u)) [[likely]] {              \
++        if (hle::IsMap08BiosDataRead(here) && hle::ReadMap08BiosData(c, here, a_, V)) { \
++        } else if (const uint8_t *p_ = Native::ReadPtr(a_ & ~1u)) [[likely]] {       \
+             V = Native::Get16(p_);                                                   \
+         } else {                                                                     \
+             SN_HW_BEGIN()                                                            \
+@@ -213,7 +216,8 @@
+     uint32 V;                                                                        \
+     {                                                                                \
+         const uint32 a_ = (ADDR);                                                    \
+-        if (const uint8_t *p_ = Native::ReadPtr(a_ & ~3u)) [[likely]] {              \
++        if (hle::IsMap08BiosDataRead(here) && hle::ReadMap08BiosData(c, here, a_, V)) { \
++        } else if (const uint8_t *p_ = Native::ReadPtr(a_ & ~3u)) [[likely]] {       \
+             V = Native::Get32(p_);                                                   \
+         } else {                                                                     \
+             SN_HW_BEGIN()                                                            \

@@ -132,6 +132,20 @@ REGISTRY['EVT07_MAP07'] = dict(
     REGISTRY['EVT07'], observed_ranges='evt07-map07-aot-ranges.json',
     evidence='Natural English disc 1 File 1 cold entry and MAP07 camera witness',
 )
+REGISTRY['EVT08_MAP08'] = dict(
+    REGISTRY['EVT08'], observed_ranges='evt08-map08-aot-ranges.json',
+    evidence='English disc 1 MAP08 deployment and camera replays',
+)
+REGISTRY['K003_MAP08'] = dict(
+    file='/SAKURA2/K003.BIN', base=0x06078000, bytes=11644,
+    sha256='90ee083b7507f6c35df84fa53f4d4be50c87e8e2f459f8edee56bc3ff7403515',
+    observed_ranges='k003-map08-aot-ranges.json', evidence='English disc 1 MAP08 deployment replay',
+)
+REGISTRY['K014_MAP08'] = dict(
+    file='/SAKURA2/K014.BIN', base=0x06078000, bytes=1520,
+    sha256='18077bebad65ca8555b37bd3efe94a7953ce9f5578f9cc7c482ec50372e7b53d',
+    observed_ranges='k014-map08-aot-ranges.json', evidence='English disc 1 MAP08 deployment replay',
+)
 REGISTRY['EVT19_BBG218'] = dict(
     REGISTRY['EVT19'], observed_ranges='evt19-bbg218-aot-ranges.json',
     evidence='Natural English disc 2 MAP19 replay of the BBG218 tactical inset',
