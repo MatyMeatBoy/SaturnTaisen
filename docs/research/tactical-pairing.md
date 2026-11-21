@@ -384,3 +384,19 @@ quedó por debajo de 0.64. MAP19/EV19S03.SPR usa un formato SPRED
 8 que el decodificador actual no admite. La pareja corresponde
 a la pose observada. El reemplazo y la selección de otros
 cuadros de animación siguen pendientes.
+
+### Geometría y orden de dibujo de la pose MAP02
+
+El inspector conserva la dirección del comando, su orden en la
+lista activa y sus cuatro vértices en coordenadas de pantalla.
+Solo compone tiras que describen su rectángulo 1:1, incluso cuando
+Saturn las envía como sprites deformados. Un vértice modificado
+excluye la pose del emparejamiento.
+
+En los dos guardados positivos, las cinco tiras ocupan comandos
+consecutivos 38 a 42, desde 0x1080 hasta 0x1100, sin un dibujo
+intercalado. El orden de dibujo no coincide con el orden de sus
+columnas. La unión rectangular cubre x=165..204 e y=55..134.
+Esto permite buscar un punto de sustitución común para la pose
+verificada. El recorte, prioridad y resultado tras el cambio
+aún requieren una prueba del compositor.

@@ -114,7 +114,7 @@ def patch_matches(atlas, frame):
     return tuple(doubles)
 
 
-def active_commands(vram):
+def active_commands(vram, *, with_address=False):
     """Walk the VDP1 list starting at zero with its single return register."""
     if len(vram) != 0x80000:
         raise ValueError("VDP1 VRAM size mismatch")
@@ -125,7 +125,7 @@ def active_commands(vram):
         if control & 0x8000:
             return
         if not (control & 0x4000) and (control & 15) <= 11:
-            yield command
+            yield (at, command) if with_address else command
         target = at + 32
         jump = (control >> 12) & 3
         if jump in (1, 2):

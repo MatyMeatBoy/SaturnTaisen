@@ -97,7 +97,8 @@ def observed_groups(state, banks):
     vram = state_vectors(state)[3]
     local_x = local_y = 0
     linked = defaultdict(list)
-    for control, _, mode, palette, source, size, x, y in active_commands(vram):
+    for order, (command_address, command) in enumerate(active_commands(vram, with_address=True)):
+        control, _, mode, palette, source, size, x, y = command
         kind = control & 15
         if kind == 10:
             local_x, local_y = coordinate(x), coordinate(y)
@@ -106,6 +107,13 @@ def observed_groups(state, banks):
         if kind != 2 or control & 0x30 or mode != 0x90 or size >> 8 != 1:
             continue
         height = size & 255
+        corners = struct.unpack_from('>8H', vram, command_address + 12)
+        vertices = [(local_x + coordinate(cx), local_y + coordinate(cy))
+                    for cx, cy in zip(corners[::2], corners[1::2])]
+        left, top = vertices[0]
+        right, bottom = left + 7, top + height - 1
+        if vertices != [(left, top), (right, top), (right, bottom), (left, bottom)]:
+            continue
         address = source * 8
         pixels = vram[address:address + height * 8]
         if len(pixels) != height * 8 or not any(pixels):
@@ -118,7 +126,8 @@ def observed_groups(state, banks):
         if banks[bank].find(pixels, offset + 1) >= 0:
             continue
         linked[bank, palette].append(dict(vram=address, offset=offset, height=height,
-                                          x=local_x + coordinate(x), y=local_y + coordinate(y)))
+                                          x=left, y=top, vertices=vertices,
+                                          order=order, command_address=command_address))
 
     results = []
     for (bank, palette), strips in sorted(linked.items()):
