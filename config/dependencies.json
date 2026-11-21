@@ -283,7 +283,9 @@
       "patches/0291-sakura-audio-hd-launcher.patch",
       "patches/0292-sakura-wkl02-attack-submenu.patch",
       "patches/0293-sakura-map08-hle-reads.patch",
-      "patches/0294-sakura-map08-pc-ground.patch"
+      "patches/0294-sakura-map08-pc-ground.patch",
+      "patches/0295-sakura-audio-hd-pcmse45.patch",
+      "patches/0296-sakura-audio-hd-second-donor.patch"
     ]
   }
 }

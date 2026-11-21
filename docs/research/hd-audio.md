@@ -140,3 +140,35 @@ la secuencia de audio del juego.
 
 Este efecto es el primero de los 12 candidatos de ese banco.
 El denominador global de Audio HD continúa en inventario.
+
+### PCMSE 45
+
+Patch 0295 adds the second independently qualified donor. PCMSE 45
+was witnessed in the English MAP02 battle. The PCM8 slot uses the
+same clock and ring as PCMSE 42. The compositor uses each effect's
+whole native payload fingerprint and checks the live ring before
+substituting. The standalone check covers simultaneous independent
+slots, retriggering and key-off. The shared guest ring falls back
+when its current bytes belong to another sound.
+
+Twenty strict 70-field controls covered the two natural combat
+events, resource location in the profile or PC directory,
+individual and combined donors, corruption and missing donors,
+Original, disable and mid-effect restore. PCMSE 42 matched the
+previous candidate bit for bit. PCMSE 45 changed 16,259 stereo
+samples from 5886 to 22856; the native event isolated by mute spans
+5889 to 22856. Native audio, guest hashes and backup RAM matched.
+The isolate comparison measured +0.30 dB for the PC effect.
+
+Three SDL diagnostic device captures matched 2400 exact samples
+each with Audio HD enabled, disabled and paused before the event.
+The control verified the guest audio prefix through pause and
+resume. The test binary SHA-256 was
+`80ea6588b2b074be6fe6375a4cb2d5fb5b69697f33127666f516eb3c51f2aac1`.
+
+Patch 0296 lets an existing PCMSE 42 profile keep working and
+prepare the additional donor from the launcher. The preparer was
+verified with an extracted PC installation, including repair of
+a same-size corrupt WAV. The two effects cover 2 of the 12
+identified PCMSE candidates. Comparative listening, direct MDF
+preparation and packaging are pending.

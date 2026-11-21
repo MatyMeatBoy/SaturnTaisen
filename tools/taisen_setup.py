@@ -1553,43 +1553,69 @@ def refresh_installed_game(paths: Paths) -> None:
     say(100, 'Contenido preparado actualizado. Ya puedes jugar.')
 
 
-def prepare_audio(paths: Paths, given: list[Path]) -> None:
-    relative = Path('SAKURA2/SE/0042.WAV')
-    expected = '849eeceedbe441dd62ec5c44805c01715b38a5a3c5d7a6832480e7e3c6b170b6'
-    target = paths.home / 'audio-hd' / relative
+AUDIO_PCMSE_DONORS = (
+    (Path('SAKURA2/SE/0042.WAV'), 31020,
+     '849eeceedbe441dd62ec5c44805c01715b38a5a3c5d7a6832480e7e3c6b170b6'),
+    (Path('SAKURA2/SE/0045.WAV'), 23340,
+     '8ee8771536632513a3aa9363edd7aa3708e7331a0d405afe6cf84211e05ba2f1'),
+)
 
-    def read_verified(path: Path | None) -> bytes | None:
+
+def prepare_audio(paths: Paths, given: list[Path]) -> None:
+    def read_verified(path: Path | None, size: int, sha: str) -> bytes | None:
         if path is None:
             return None
         try:
-            if path.stat().st_size != 31020:
+            if path.stat().st_size != size:
                 return None
             data = path.read_bytes()
         except OSError:
             return None
-        return data if hashlib.sha256(data).hexdigest() == expected else None
+        return data if hashlib.sha256(data).hexdigest() == sha else None
 
-    if read_verified(target) is not None:
+    def publish(target: Path, data: bytes) -> None:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        atomic_prepared_file(target, lambda staged: staged.write_bytes(data))
+
+    pending = []
+    for relative, size, sha in AUDIO_PCMSE_DONORS:
+        target = paths.home / 'audio-hd' / relative
+        if read_verified(target, size, sha) is not None:
+            continue
+        data = read_verified(paths.hd / 'pc' / relative, size, sha)
+        if data is not None:
+            publish(target, data)
+        else:
+            pending.append((relative, size, sha))
+    if not pending:
         return
-    data = read_verified(paths.hd / 'pc' / relative)
-    if data is None:
-        say(10, 'Audio HD: buscando el efecto en tu edición de PC…')
+
+    if given:
+        say(10, 'Audio HD: buscando los efectos en tu edición de PC…')
         paths.home.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix='.preparar-audio-', dir=paths.home) as scratch:
             work = Path(scratch)
             _, source = gather(given, work)
-            if source is None:
+            if source is None and len(pending) == len(AUDIO_PCMSE_DONORS):
                 raise SetupError('No se encontró tu edición de PC.')
-            found, _ = open_pc(paths, source, work, ['KAO.SPR', '0042.WAV'])
-            donor = found
-            for part in relative.parts:
-                donor = child(donor, part) if donor is not None else None
-            data = read_verified(donor)
-    if data is None:
-        raise SetupError('Tu edición de PC no contiene el efecto compatible con Audio HD.')
-    target.parent.mkdir(parents=True, exist_ok=True)
-    atomic_prepared_file(target, lambda staged: staged.write_bytes(data))
-    say(100, 'Audio HD preparado. Actívalo desde Inicio.')
+            names = ['KAO.SPR', *(relative.name for relative, _, _ in pending)]
+            found = open_pc(paths, source, work, names)[0] if source is not None else None
+            missing = []
+            for relative, size, sha in pending:
+                donor = found
+                for part in relative.parts:
+                    donor = child(donor, part) if donor is not None else None
+                data = read_verified(donor, size, sha)
+                if data is None:
+                    missing.append((relative, size, sha))
+                else:
+                    publish(paths.home / 'audio-hd' / relative, data)
+            pending = missing
+
+    ready = len(AUDIO_PCMSE_DONORS) - len(pending)
+    if not ready:
+        raise SetupError('Tu edición de PC no contiene efectos compatibles con Audio HD.')
+    say(100, f'Audio HD: {ready} de {len(AUDIO_PCMSE_DONORS)} efectos preparados. Actívalo desde Inicio.')
 
 
 def prepare(paths: Paths, given: list[Path], language: str, force: bool = False) -> dict:
