@@ -245,3 +245,18 @@ A separate alternating memory run recorded peak process commit of
 run, counts over 16.67 ms were 2 and 6 before and 3 and 4 after.
 The two timing runs show that host timing still varies. Process
 commit is a host metric and does not measure video memory.
+
+## Stable Zoom placement across shadow changes
+
+Patch 0277 retains all fields of the previous Zoom layout while a
+transient candidate is present. Six distinct guest fields with the
+same candidate are required to adopt it. A redrawn field contributes
+once. The previous debounce omitted shadow-only rows even though
+changing them can move the 1440p dialogue origin from 1048 to 1038.
+A focused check covered alternating candidates, duplicate draws and
+acceptance on the sixth field, and evaluated 720p to 2160p layouts.
+
+The Spanish disc 1 letter replay at 1440p matched all 795 strict
+guest hashes, final SRAM and 20 RGB captures around the sampled
+transition and the return to the floral backdrop. The capture
+does not reproduce the reported native-text flash entering a video.

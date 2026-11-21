@@ -1,0 +1,63 @@
+diff --git a/port/frontend_sdl.cpp b/port/frontend_sdl.cpp
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -891,7 +891,13 @@
+     };
+     // The software picture through the SDL renderer, fitted as the Display page says
+     ParallelRows parallelRows;
+-    struct HeldZoom {bool valid=false;int x=0,width=0,lines=0,group=0,shadowRows=0;} heldZoom;
++    struct HeldZoom {
++        bool valid=false;
++        int x=0,width=0,lines=0,group=0,shadowRows=0;
++        bool operator==(const HeldZoom&) const = default;
++    } heldZoom, pendingZoom;
++    unsigned pendingZoomFrames=0;
++    uint64_t pendingZoomSerial=0;
+     struct SaluteHandoff {
+         uint64_t last=0,start=0;
+         bool mixed=false;
+@@ -3154,15 +3160,27 @@
+                         if(!shadowOnly)break;
+                         shadowRows++;
+                     }
+-                    // Hysteresis: the box geometry comes from a per-frame bounding box, so one odd frame
+-                    // (a fade, a sprite edge, a load) would move the whole box. A different geometry must
+-                    // persist for several frames before it replaces the one already on screen.
+-                    {
+-                        static int pendingFrames=0;
+-                        const bool differs=heldZoom.valid && (heldZoom.x!=zoomX || heldZoom.width!=zoomW || heldZoom.lines!=zoomLines || heldZoom.group!=zoomGroup);
+-                        if(differs && ++pendingFrames<6) {
+-                            zoomX=heldZoom.x;zoomW=heldZoom.width;zoomLines=heldZoom.lines;zoomGroup=heldZoom.group;
+-                        } else pendingFrames=0;
++                    // Retain the whole placement until the same replacement geometry
++                    // has survived six guest frames, including the shadow-only rows.
++                    const HeldZoom nextZoom{true,zoomX,zoomW,zoomLines,zoomGroup,shadowRows};
++                    if (heldZoom.valid && nextZoom!=heldZoom) {
++                        if (pendingZoom!=nextZoom) {
++                            pendingZoom=nextZoom;
++                            pendingZoomFrames=1;
++                            pendingZoomSerial=port.frame;
++                        } else if (pendingZoomSerial!=port.frame) {
++                            ++pendingZoomFrames;
++                            pendingZoomSerial=port.frame;
++                        }
++                        if (pendingZoomFrames<6) {
++                            zoomX=heldZoom.x;
++                            zoomW=heldZoom.width;
++                            zoomLines=heldZoom.lines;
++                            zoomGroup=heldZoom.group;
++                            shadowRows=heldZoom.shadowRows;
++                        }
++                    } else {
++                        pendingZoom={};
+                     }
+                     const auto zoom=FitSceneZoom(wide,high,zoomW,zoomLines,zoomGroup,shadowRows);
+                     if(zoom.valid) {
+@@ -4424,6 +4442,7 @@
+                         }
+                     }
+                 }
++                if (!splitZoom) pendingZoom={};
+                 // Zoom held between scenes: when the picture has gone and only the box is left on the floral
+                 // plane (a load between two scenes), the box keeps the Zoom place instead of jumping back to
+                 // the original one. Any other screen ends the hold.
