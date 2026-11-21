@@ -308,7 +308,8 @@
       "patches/0316-sakura-hd-program-trim.patch",
       "patches/0317-sakura-hd-bg2123-bounded.patch",
       "patches/0318-sakura-hd-picnic-cutouts.patch",
-      "patches/0319-sakura-hd-loading-side-art.patch"
+      "patches/0319-sakura-hd-loading-side-art.patch",
+      "patches/0320-sakura-hd-bbg203-bounded.patch"
     ]
   }
 }

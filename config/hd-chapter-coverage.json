@@ -17694,10 +17694,10 @@
       },
       "1:/SAKURA2/BBG203.BIN": {
         "association": "unknown",
-        "pairing_evidence": "docs/research/disc1-battle-insets.md#bbg203-partial-pc-coverage",
+        "pairing_evidence": "docs/research/disc1-battle-insets.md#bbg203-bounded-registration",
         "pc": "SAKURA2/BG/BBG203.SPR",
-        "reason": "The PC donor omits the right and bottom of the native artwork. A live inset witness is needed to register the shared region.",
-        "status": "paired-not-wired"
+        "status": "hd",
+        "verified_in_game": false
       },
       "1:/SAKURA2/BBG205.BIN": {
         "association": "unknown",

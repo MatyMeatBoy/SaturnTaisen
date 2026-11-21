@@ -884,9 +884,9 @@ def build(root, index_dir, portrait_audit):
                 row['reason'] = ('The PC ground places lamps and rails differently at the witnessed camera. '
                                  'Keep the native ground.')
         elif (disc, path) == (1, '/SAKURA2/BBG203.BIN'):
-            row = {'status': 'paired-not-wired', 'pc': 'SAKURA2/BG/BBG203.SPR',
-                   'pairing_evidence': BBG_INSET_REPORT + '#bbg203-partial-pc-coverage',
-                   'reason': 'The PC donor omits the right and bottom of the native artwork. A live inset witness is needed to register the shared region.'}
+            row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG203.SPR',
+                   'pairing_evidence': BBG_INSET_REPORT + '#bbg203-bounded-registration',
+                   'verified_in_game': False}
         elif (disc, path) == (2, '/SAKURA2/BBG218.BIN'):
             row = {'status': 'hd', 'pc': 'SAKURA2/BG/BBG218.SPR',
                    'verified_in_game': True,
