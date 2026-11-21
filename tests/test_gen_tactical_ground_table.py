@@ -140,15 +140,15 @@ class CommittedTableTests(unittest.TestCase):
         counts = {}
         for row in self.table['maps']:
             counts[row['status']] = counts.get(row['status'], 0) + 1
-        self.assertEqual(counts, {'hd': 22, 'candidate': 1, 'native': 2, 'needs-assembler': 1})
+        self.assertEqual(counts, {'hd': 23, 'native': 2, 'needs-assembler': 1})
         self.assertEqual(self.table['summary'], counts)
 
     def test_integrated_entries_distinguish_live_and_offline_evidence(self):
         for row in self.table['maps']:
             if row['table'] == 'generated':
                 stem = row['map']
-                self.assertEqual(row['status'] == 'hd', stem in gt.LIVE_GENERATED | gt.BETA_SINGLE)
-                self.assertEqual(row.get('verified_in_game') is False, stem in gt.BETA_SINGLE)
+                self.assertEqual(row['status'] == 'hd', stem in gt.LIVE_GENERATED | gt.BETA_GENERATED)
+                self.assertEqual(row.get('verified_in_game') is False, stem in gt.BETA_GENERATED)
             else:
                 self.assertEqual(row['status'], 'hd')
 
@@ -164,7 +164,7 @@ class CommittedTableTests(unittest.TestCase):
 
     def test_geometry_of_candidate_entries(self):
         for row in self.table['maps']:
-            if row['status'] != 'candidate' and row['map'] not in gt.BETA_SINGLE:
+            if row['status'] != 'candidate' and row['map'] not in gt.BETA_GENERATED:
                 continue
             self.assertLessEqual(max(row['world']), 1024)
             if row['tile_px']:

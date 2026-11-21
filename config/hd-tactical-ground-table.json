@@ -455,9 +455,10 @@
     "2:/SAKURA2/MAP20.BIN"
    ],
    "signature": "B0096DE29CC3A325",
-   "status": "candidate",
+   "status": "hd",
    "table": "generated",
    "tile_px": 128,
+   "verified_in_game": false,
    "world": [
     1024,
     1024
@@ -612,8 +613,7 @@
  "schema": 1,
  "scope": "Tactical ground table: Saturn MAPnn.BIN to PC ground SPR and the runtime key. Data only.",
  "summary": {
-  "candidate": 1,
-  "hd": 22,
+  "hd": 23,
   "native": 2,
   "needs-assembler": 1
  }
