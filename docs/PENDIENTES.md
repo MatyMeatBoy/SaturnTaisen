@@ -577,3 +577,12 @@ BBG203 adds one PC identity through the existing exact inset route,
 with native boundaries. See [archived comparison](research/disc1-battle-insets.md#bbg203-bounded-registration).
 Syntax, coverage and patch application passed. Linked HD playback
 and packaging remain pending.
+
+## HD dining-room cutout and bounded kitchen (0321-0322)
+
+BG4067 uses matched character interiors on disc 1 and preserves the
+Saturn room. BG1340 preserves the native kitchen where aligned PC
+art is unavailable. See [dining room](research/bg4067-bounded-hd.md)
+and [kitchen](research/bg1340-bounded-hd.md). Exact offline comparison,
+syntax, coverage and patch application passed. Linked HD playback
+and packaging remain pending.
