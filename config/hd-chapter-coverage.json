@@ -7171,7 +7171,9 @@
             "association": "observed",
             "evidence": "docs/research/hd-chapter-10.md#re-attribution-with-the-evt-overlay-build",
             "pc": "SAKURA2/BG/BBG218.SPR",
-            "status": "hd"
+            "runtime_evidence": "docs/research/hd-chapter-10.md#bbg218-tactical-inset",
+            "status": "hd",
+            "verified_in_game": true
           }
         },
         "tactical-maps": {
