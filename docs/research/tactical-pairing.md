@@ -348,3 +348,22 @@ continuous-tactical y from-episode2-continue. Las alturas son
 compatible. El resultado reproduce la pose asociada a EV00S24
 y prepara la búsqueda de otros cuadros sin aumentar el conteo
 de recursos HD integrados.
+
+### Inventario de imágenes dentro de bancos EVS
+
+`audit_event_strips.py --inventory` lee la tabla de secciones al
+principio de cada banco EVS. La primera dirección da el tamaño de
+tabla; las parejas de dirección y longitud deben cubrir el resto
+del archivo de forma contigua. Los conjuntos que pasan el decodificador
+táctico conservan su número de sección.
+
+| Disco | Bancos | Secciones | Conjuntos reconocidos | Imágenes VDP1 |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | 33 | 570 | 118 | 1438 |
+| 2 | 28 | 456 | 103 | 2024 |
+
+El testigo de MAP02 coincide por posición y altura con todos los
+registros del conjunto 36 de EVS02100. El barrido adicional de 153
+estados del disco 1 y seis del disco 2 no dio más grupos con la misma
+firma de comandos. El inventario identifica tiras e imágenes
+SATURN, con emparejamiento PC pendiente por actor y pose.
