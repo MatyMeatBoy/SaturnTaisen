@@ -1,0 +1,87 @@
+--- a/launcher/src/sakura_setup.cpp
++++ b/launcher/src/sakura_setup.cpp
+@@ -21,7 +21,8 @@
+     std::array<char,2048> source{}, audioSource{};
+     std::unique_ptr<GameProcess> worker, pcProbe;
+     Uint64 nextPcProbe=0;
+-    bool pcFound=false, audioReady=false;
++    bool pcFound=false;
++    unsigned audioDonors=0;
+     SetupPurpose dialogPurpose=SetupPurpose::Game, activePurpose=SetupPurpose::Game;
+     Uint64 nextAudioCheck=0;
+     std::filesystem::path log;
+@@ -249,32 +250,43 @@
+         s.pcProbe.reset();
+     else ui::request_frames(2);
+ }
+-bool ValidAudioDonor(const std::filesystem::path& root) {
++struct AudioDonor {
++    const char* name;
++    size_t size;
++    uint64_t fingerprint;
++};
++constexpr AudioDonor kAudioDonors[] {
++    {"0042.WAV",31020,0x41a6fcf48f997315ULL},
++    {"0045.WAV",23340,0x94509a490258ffd5ULL},
++};
++bool ValidAudioDonor(const std::filesystem::path& root, const AudioDonor& donor) {
+     if (root.empty()) return false;
+-    const auto path=root/"SAKURA2"/"SE"/"0042.WAV";
++    const auto path=root/"SAKURA2"/"SE"/donor.name;
+     std::error_code ec;
+-    if (std::filesystem::file_size(path,ec)!=31020 || ec) return false;
++    if (std::filesystem::file_size(path,ec)!=donor.size || ec) return false;
+     std::ifstream input(path,std::ios::binary);
+     uint64_t hash=0xcbf29ce484222325ULL;
+     std::array<char,4096> bytes{};
+     size_t total=0;
+-    while(input && total<31020) {
+-        input.read(bytes.data(),std::min(bytes.size(),31020-total));
++    while(input && total<donor.size) {
++        input.read(bytes.data(),std::min(bytes.size(),donor.size-total));
+         const auto count=input.gcount();
+         total+=count;
+         for(std::streamsize i=0;i<count;++i)
+             hash=(hash^static_cast<unsigned char>(bytes[i]))*0x100000001b3ULL;
+     }
+-    return !input.bad() && total==31020 && input.peek()==std::char_traits<char>::eof() && hash==0x41a6fcf48f997315ULL;
+-}
+-bool AudioReady(launcher::PageContext& page, SetupState& s) {
+-    if (SDL_GetTicks()<s.nextAudioCheck) return s.audioReady;
++    return !input.bad() && total==donor.size && input.peek()==std::char_traits<char>::eof() && hash==donor.fingerprint;
++}
++unsigned AudioReady(launcher::PageContext& page, SetupState& s) {
++    if (SDL_GetTicks()<s.nextAudioCheck) return s.audioDonors;
+     s.nextAudioCheck=SDL_GetTicks()+2000;
+     const auto configured=std::filesystem::u8path(page.prefs.get("sakura","pc_assets"));
+     const auto pc=PortableHdRoot(configured,page.program_folder);
+-    s.audioReady=ValidAudioDonor(page.folder/"audio-hd") ||
+-        ValidAudioDonor(pc) || (!pc.empty() && ValidAudioDonor(pc/"pc"));
+-    return s.audioReady;
++    s.audioDonors=0;
++    for(const auto& donor:kAudioDonors)
++        s.audioDonors+=ValidAudioDonor(page.folder/"audio-hd",donor) ||
++            ValidAudioDonor(pc,donor) || (!pc.empty() && ValidAudioDonor(pc/"pc",donor));
++    return s.audioDonors;
+ }
+ void StartPrepare(launcher::PageContext& page,SetupState& s,SetupPurpose purpose=SetupPurpose::Game) {
+     s.activePurpose=purpose;
+@@ -476,6 +488,18 @@
+             if(ui::button(done?"Revisar":"Preparar",ui::Kind::Primary,104,!locked))StartPrepare(page,s);
+         });
+         layout::inset_separator(page.width);
++        const unsigned audioDonors=AudioReady(page,s);
++        const bool audioComplete=audioDonors==std::size(kAudioDonors);
++        if(!audioComplete && !locked) ProbePcEdition(page,s);
++        const auto audioStatus=std::to_string(audioDonors)+" de "+
++            std::to_string(std::size(kAudioDonors))+" efectos preparados.";
++        layout::row(page.width,"Audio HD",audioStatus.c_str(),100,36,[&] {
++            if(ui::button("Preparar##audio",ui::Kind::Secondary,100,!locked && !audioComplete && !s.pcProbe)) {
++                if(s.pcFound) StartPrepare(page,s,SetupPurpose::Audio);
++                else PickSource(page,s,SetupPurpose::Audio);
++            }
++        });
++        layout::inset_separator(page.width);
+         layout::row(page.width,"Partidas y registros","Tus partidas, ajustes y los registros por si algo falla.",100,36,[&] {
+             if(ui::button("Abrir",ui::Kind::Secondary,100,true)) {
+                 const std::string url="file:///"+Utf8(page.folder);

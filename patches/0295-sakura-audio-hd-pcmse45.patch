@@ -1,0 +1,292 @@
+--- a/port/pc_pcmse_audio.h
++++ b/port/pc_pcmse_audio.h
+@@ -12,14 +12,23 @@
+ #include <vector>
+ 
+ namespace port {
+-class Pcm42Projection {
++class PcmseProjection {
+ public:
+-    static constexpr std::size_t nativeLength = 11096;
+-    static constexpr std::uint64_t nativeFingerprint = 0xb5d0ddee6fec411dULL;
+-    static constexpr std::uint64_t pcFingerprint = 0x41a6fcf48f997315ULL;
+-    static constexpr std::size_t pcFileBytes = 31020;
++    struct Descriptor {
++        const char* filename;
++        std::size_t pcFileBytes;
++        std::uint64_t pcFingerprint;
++        std::size_t nativeOffset;
++        std::size_t nativeLength;
++        std::uint64_t nativeFingerprint;
++        std::uint16_t pcLead;
++    };
++    // The lead is the estimated source alignment in PC frames.
++    static constexpr std::array<Descriptor, 2> descriptors{{
++        {"0042.WAV", 31020, 0x41a6fcf48f997315ULL, 0xe97cc, 11096, 0xb5d0ddee6fec411dULL, 392},
++        {"0045.WAV", 23340, 0x94509a490258ffd5ULL, 0xeea78,  9312, 0x533b4f3d9aa633e9ULL, 293},
++    }};
+     static constexpr std::uint32_t ringStep = 8191;
+-    static constexpr std::uint16_t pcLead = 392; // Provisional alignment, driven by measured source lag.
+ 
+     // All values are observations of the existing guest state, never written back.
+     struct NativePoint {
+@@ -43,19 +52,20 @@
+     }
+ 
+     // Decode and pin the owner WAV outside the audio loop.
+-    bool Load(const std::filesystem::path& path) {
+-        Clear();
+-        donor.clear();
++    bool Load(std::size_t effect, const std::filesystem::path& path) {
++        const auto& spec = descriptors[effect];
++        auto& donor = sources[effect].donor;
+         std::ifstream input(path, std::ios::binary | std::ios::ate);
+-        if (!input || input.tellg() != static_cast<std::streamoff>(pcFileBytes))
++        if (!input || input.tellg() != static_cast<std::streamoff>(spec.pcFileBytes))
+             return false;
+-        std::array<std::uint8_t, pcFileBytes> bytes{};
++        std::vector<std::uint8_t> bytes(spec.pcFileBytes);
+         input.seekg(0);
+         if (!input.read(reinterpret_cast<char*>(bytes.data()), bytes.size()) ||
+-            Fingerprint(bytes) != pcFingerprint)
++            Fingerprint(bytes) != spec.pcFingerprint)
+             return false;
+         // This exact RIFF has one PCM mono 16-bit 22,050 Hz data chunk.
+         constexpr std::size_t pcmOffset = 44;
++        donor.clear();
+         donor.reserve((bytes.size() - pcmOffset) / 2);
+         for (std::size_t i = pcmOffset; i + 1 < bytes.size(); i += 2) {
+             const unsigned value = bytes[i] | (unsigned(bytes[i + 1]) << 8);
+@@ -64,47 +74,68 @@
+         return true;
+     }
+ 
+-    void Clear() { armed.reset(); }
+-
+-    void Stop(unsigned slot) {
+-        if (armed && armed->slot == slot)
+-            Clear();
+-    }
+-
+     // Caller additionally verifies PCM8, forward loop 0..8191, 1485 FNS,
+     // OCT=-2, no FM/LFO/XOR, and DSP send zero in the live SCSP Slot.
+     bool Start(unsigned slot, std::uint32_t address,
+-               std::span<const std::uint8_t> staging,
++               std::span<const std::uint8_t> workRam,
+                std::span<const std::uint8_t> firstRingPage) {
+-        Stop(slot);
+-        if (donor.empty() || address != 0x7dff0 || staging.size() != nativeLength ||
+-            firstRingPage.size() != 1024 || Fingerprint(staging) != nativeFingerprint ||
+-            !std::equal(firstRingPage.begin(), firstRingPage.end(), staging.begin()))
++        auto& cursor = voices[slot];
++        cursor.reset();
++        if (address != 0x7dff0 || firstRingPage.size() != 1024)
+             return false;
+-        std::copy(staging.begin(), staging.end(), native.begin());
+-        armed = Cursor{slot, address};
++
++        std::optional<std::size_t> match;
++        for (std::size_t effect = 0; effect < descriptors.size(); ++effect) {
++            const auto& spec = descriptors[effect];
++            auto& source = sources[effect];
++            if (source.donor.empty() || spec.nativeOffset + spec.nativeLength > workRam.size())
++                continue;
++            const auto staging = workRam.subspan(spec.nativeOffset, spec.nativeLength);
++            if (!std::equal(firstRingPage.begin(), firstRingPage.end(), staging.begin()) ||
++                Fingerprint(staging) != spec.nativeFingerprint)
++                continue;
++            if (match)
++                return false;
++            match = effect;
++        }
++        if (!match)
++            return false;
++
++        // A new instance takes the effect's previous witness, as with the
++        // original ID42-only presenter. Other payloads keep their own phase.
++        for (auto& previous : voices) {
++            if (previous && previous->effect == *match)
++                previous.reset();
++        }
++        const auto& spec = descriptors[*match];
++        const auto staging = workRam.subspan(spec.nativeOffset, spec.nativeLength);
++        std::copy(staging.begin(), staging.end(), sources[*match].native.begin());
++        cursor = Cursor{*match, address};
+         return true;
+     }
+ 
+     std::optional<std::int16_t> Project(const NativePoint& p) {
+-        if (!armed || armed->slot != p.slot)
++        auto& armed = voices[p.slot];
++        if (!armed)
+             return std::nullopt;
+         if (p.address != armed->address || p.cursor > ringStep || p.fraction > 63 || p.finalLevel > 1023) {
+-            Clear();
++            armed.reset();
+             return std::nullopt;
+         }
+ 
+         if (p.cursor < armed->position) {
+             if (armed->position < ringStep - 1 || p.cursor > 1) {
+-                Clear();
++                armed.reset();
+                 return std::nullopt;
+             }
+             armed->base += ringStep;
+         }
+         armed->position = p.cursor;
++        const auto& spec = descriptors[armed->effect];
++        const auto& [native, donor] = sources[armed->effect];
+         const std::uint32_t global = armed->base + p.cursor;
+-        if (global >= nativeLength - 1) {
+-            Clear();
++        if (global >= spec.nativeLength - 1) {
++            armed.reset();
+             return std::nullopt;
+         }
+ 
+@@ -112,7 +143,7 @@
+         // Require the sample actually fetched by the chip to agree with the
+         // expected source at this phase before substituting the direct mix.
+         constexpr std::size_t witnessLength = 16;
+-        if (p.ringWindow.size() != witnessLength || global + witnessLength > nativeLength ||
++        if (p.ringWindow.size() != witnessLength || global + witnessLength > spec.nativeLength ||
+             !std::equal(p.ringWindow.begin(), p.ringWindow.end(), native.begin() + global) ||
+             p.wave1 != SignedPcm8(native[global]) ||
+             (p.interpolate && p.wave2 != SignedPcm8(native[global + 1])))
+@@ -121,7 +152,7 @@
+         // 22050 / (44100 * 1485 / 4096) = 2048 / 1485.
+         constexpr std::uint32_t denominator = 64 * 1485;
+         const std::uint32_t offset = (global * 64 + p.fraction) * 2048;
+-        const auto index = pcLead + offset / denominator;
++        const auto index = spec.pcLead + offset / denominator;
+         if (index + 1 >= donor.size())
+             return std::nullopt;
+         const auto fraction = static_cast<std::int32_t>(offset % denominator);
+@@ -140,14 +171,18 @@
+     }
+ 
+     struct Cursor {
+-        unsigned slot;
++        std::size_t effect;
+         std::uint32_t address;
+         std::uint32_t position = 0;
+         std::uint32_t base = 0;
+     };
+-    std::optional<Cursor> armed;
+-    std::array<std::uint8_t, nativeLength> native{};
+-    std::vector<std::int16_t> donor;
++    struct Source {
++        std::array<std::uint8_t, descriptors.front().nativeLength> native{};
++        std::vector<std::int16_t> donor;
++    };
++    static_assert(descriptors[1].nativeLength <= descriptors.front().nativeLength);
++    std::array<Source, descriptors.size()> sources;
++    std::array<std::optional<Cursor>, 32> voices;
+ };
+ } // namespace port
+ 
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -731,20 +731,25 @@
+     // Sound: the chip's samples, with CD music the port plays itself (runtime/music.h) at its CD audio input
+     sat.Sound().cdAudioSource = &satrecomp::music::Next;
+     auto& chip = sat.Sound();
+-    auto effect = std::make_shared<Pcm42Projection>();
++    auto effect = std::make_shared<PcmseProjection>();
+     const auto pcFolder = std::filesystem::path(std::u8string(opt.pcAssetsPath.begin(), opt.pcAssetsPath.end()));
+     const auto settingsFile = std::filesystem::path(std::u8string(opt.settingsPath.begin(), opt.settingsPath.end()));
+-    const auto relativeEffect = std::filesystem::path("SAKURA2") / "SE" / "0042.WAV";
+-    const bool prepared = (!opt.settingsPath.empty() &&
+-        effect->Load(settingsFile.parent_path() / "audio-hd" / relativeEffect)) ||
+-        (!opt.pcAssetsPath.empty() && (effect->Load(pcFolder / relativeEffect) ||
+-                                      effect->Load(pcFolder / "pc" / relativeEffect)));
++    bool prepared = false;
++    for (std::size_t i = 0; i < PcmseProjection::descriptors.size(); ++i) {
++        const auto relativeEffect = std::filesystem::path("SAKURA2") / "SE" /
++            PcmseProjection::descriptors[i].filename;
++        if ((!opt.settingsPath.empty() &&
++             effect->Load(i, settingsFile.parent_path() / "audio-hd" / relativeEffect)) ||
++            (!opt.pcAssetsPath.empty() && (effect->Load(i, pcFolder / relativeEffect) ||
++                                           effect->Load(i, pcFolder / "pc" / relativeEffect))))
++            prepared = true;
++    }
+     if (prepared) {
+         const auto eligible = [](const satrecomp::sound::Slot& slot) {
+             using Slot = satrecomp::sound::Slot;
+             return slot.pcm8Bit && slot.soundSource == Slot::SoundSource::SoundRAM &&
+                 slot.startAddress == 0x7dff0 && slot.loopControl == Slot::LoopControl::Normal &&
+-                slot.loopStartAddress == 0 && slot.loopEndAddress == Pcm42Projection::ringStep &&
++                slot.loopStartAddress == 0 && slot.loopEndAddress == PcmseProjection::ringStep &&
+                 slot.octave == 14 && slot.freqNumSwitch == 1485 && slot.sampleXOR == 0 &&
+                 slot.modLevel == 0 && slot.ampLFOSens == 0 && slot.pitchLFOSens == 0 &&
+                 slot.inputMixingLevel == 0 && !slot.reverse;
+@@ -754,14 +759,14 @@
+             if (!eligible(slot))
+                 return false;
+             return effect->Start(slot.index, slot.startAddress,
+-                {sat.ramHigh + 0xe97cc, Pcm42Projection::nativeLength}, {sat.SoundRam() + slot.startAddress, 1024});
++                {sat.ramHigh, satrecomp::Machine::kRamSize}, {sat.SoundRam() + slot.startAddress, 1024});
+         };
+         chip.projectDirectVoice = [effect, eligible, &sat](const auto& slot) -> std::optional<int16_t> {
+             if (!eligible(slot))
+                 return std::nullopt;
+             const auto cursor = slot.currSample;
+             const auto address = slot.startAddress + cursor;
+-            if (cursor > Pcm42Projection::ringStep || address > 0x80000 - 16)
++            if (cursor > PcmseProjection::ringStep || address > 0x80000 - 16)
+                 return std::nullopt;
+             return effect->Project({slot.index, slot.startAddress, cursor, (slot.currPhase >> 8) & 63u,
+                 slot.sample1, slot.sample2, unsigned(slot.finalLevel), slot.soundDirect, sat.Sound().linearInterpolation,
+--- a/sound/chip.h
++++ b/sound/chip.h
+@@ -252,7 +252,7 @@
+     bool CanProject() const;
+     void ProjectVoice(const Slot& slot);
+     std::array<sint32, 2> m_presentationDelta{};
+-    unsigned m_presentationSlot = 32;
++    uint32 m_presentationSlots = 0;
+     bool m_presentationEnabled = false;
+     void Finish();
+     void SampleEnd();
+--- a/sound/chip.cpp
++++ b/sound/chip.cpp
+@@ -120,8 +120,9 @@
+     if (releasing != slot.keyOnBit) {
+         return false;
+     }
+-    if (m_presentationSlot == slot.index && CanProject())
+-        m_presentationSlot = 32;
++    const uint32 presentationBit = uint32(1) << slot.index;
++    if ((m_presentationSlots & presentationBit) && CanProject())
++        m_presentationSlots &= ~presentationBit;
+     if (!slot.keyOnBit) {
+         slot.egState = Slot::EGState::Release;
+         slot.currEGRate = slot.releaseRate;
+@@ -146,7 +147,7 @@
+     slot.sample2 = 0;
+     slot.output = 0;
+     if (CanProject() && onPresentationKeyOn && onPresentationKeyOn(slot))
+-        m_presentationSlot = slot.index;
++        m_presentationSlots |= presentationBit;
+     return true;
+ }
+ 
+@@ -467,7 +468,7 @@
+ }
+ 
+ void Chip::ClearPresentationAudio() {
+-    m_presentationSlot = 32;
++    m_presentationSlots = 0;
+     m_presentationDelta = {};
+ }
+ 
+@@ -610,7 +611,7 @@
+     // The finished voice into the output: directly, and what the DSP made of the inputs
+     const uint32 finished = (i - 6) & 31;
+     Mix(s7.output, s7.directSendLevel, s7.directPan);
+-    if (s7.index == m_presentationSlot)
++    if (m_presentationSlots & (uint32(1) << s7.index))
+         ProjectVoice(s7);
+     if (finished < 16) {
+         Mix(dsp.effectOut[finished], s7.effectSendLevel, s7.effectPan);
