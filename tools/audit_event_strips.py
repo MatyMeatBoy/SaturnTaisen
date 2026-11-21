@@ -6,10 +6,12 @@ import json
 import mmap
 from pathlib import Path
 import re
+import struct
 
 from audit_native_characters import state_vectors
 from audit_portrait_coverage import active_commands
 from audit_sdk import files
+from decode_saturn_units import UnitError, image_set
 
 
 def coordinate(word):
@@ -24,6 +26,55 @@ def event_banks(path, prefix):
             if re.fullmatch(r'/SAKURA2/EVS\d+\.BIN', name, re.IGNORECASE)
             and Path(name).stem.upper().startswith(prefix)
         }
+
+
+def bank_sections(data):
+    if len(data) < 8:
+        raise ValueError('Truncated EVS table')
+    table_size = struct.unpack_from('>I', data)[0]
+    if not 8 <= table_size <= len(data) or table_size % 8:
+        raise ValueError('Invalid EVS table size')
+    sections = list(struct.iter_unpack('>II', data[:table_size]))
+    cursor = table_size
+    for offset, length in sections:
+        if offset != cursor or offset + length > len(data):
+            raise ValueError('Noncontiguous or truncated EVS section')
+        cursor += length
+    if cursor != len(data):
+        raise ValueError('EVS table does not cover the whole file')
+    return sections
+
+
+def bank_image_sets(data):
+    for slot, (offset, length) in enumerate(bank_sections(data)):
+        try:
+            records, base = image_set(data[offset:offset + length])
+        except UnitError:
+            continue
+        yield slot, records, offset + base
+
+
+def bank_inventory(banks):
+    return {
+        name: {
+            'sections': len(bank_sections(data)),
+            'image_sets': [
+                {'slot': slot, 'data_offset': offset, 'images': len(records)}
+                for slot, records, offset in bank_image_sets(data)
+            ],
+        }
+        for name, data in sorted(banks.items())
+    }
+
+
+def exact_image_slot(data, group):
+    observed = [(strip['offset'], strip['height']) for strip in group]
+    for slot, records, start in bank_image_sets(data):
+        if any(w != 8 or fmt != 4 for w, _, fmt, _, _, _ in records):
+            continue
+        if [(start + offset, h) for _, h, _, _, offset, _ in records] == observed:
+            return slot
+    return None
 
 
 def contiguous_groups(strips):
@@ -74,7 +125,8 @@ def observed_groups(state, banks):
         for group in contiguous_groups(strips):
             xs = sorted(strip['x'] for strip in group)
             if len(xs) >= 3 and xs == list(range(xs[0], xs[0] + 8 * len(xs), 8)):
-                results.append(dict(bank=bank, palette=palette, strips=group))
+                results.append(dict(bank=bank, palette=palette, strips=group,
+                                    image_slot=exact_image_slot(banks[bank], group)))
     return results
 
 
@@ -82,12 +134,20 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--iso', type=Path, required=True)
     parser.add_argument('--bank-prefix', default='EVS')
-    parser.add_argument('states', type=Path, nargs='+')
+    parser.add_argument('--inventory', action='store_true', help='list native image sets without loading states')
+    parser.add_argument('states', type=Path, nargs='*')
     args = parser.parse_args()
     banks = event_banks(args.iso, args.bank_prefix.upper())
     if not banks:
         parser.error('No matching Saturn event banks')
-    result = {str(path): observed_groups(path.read_bytes(), banks) for path in args.states}
+    if args.inventory:
+        if args.states:
+            parser.error('--inventory does not accept states')
+        result = bank_inventory(banks)
+    else:
+        if not args.states:
+            parser.error('Pass at least one tactical state or use --inventory')
+        result = {str(path): observed_groups(path.read_bytes(), banks) for path in args.states}
     print(json.dumps(result, indent=2))
 
 
