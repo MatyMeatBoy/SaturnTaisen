@@ -38,6 +38,17 @@
 !/patches/
 /patches/**
 !/patches/*.patch
+!/patches/platform/
+!/patches/platform/r36s-original-only.patch
+!/patches/platform/r36s-aot-pages.patch
+!/patches/platform/SaturnTaisen.sh
+!/patches/platform/ga36-hd-2x-pilot.patch
+!/patches/platform/ga36-sdl3-fbdev.patch
+!/patches/platform/ga36-armhf-state.patch
+!/patches/platform/ga36-diagnostic-wide.patch
+!/patches/platform/ga36-launch.sh
+!/patches/platform/saturntaisen-ga36.puppy
+!/patches/platform/saturntaisen-ga36-en.puppy
 !/games/
 /games/**
 !/games/sakura/
