@@ -67,3 +67,9 @@ El disco preparado en español llegó al título en un arranque de 1.300 cuadros
 La aprobación para uso estable requiere medir velocidad sostenida y estabilidad de cuadros en la GA36 y comprobar el panel, audio, mandos, salida al frontend y suspensión. La revisión de R36S queda separada.
 
 Se retiraron las imágenes de disco y de arranque regenerables de los ensayos cerrados. La referencia AOT se comprimió y se verificó su SHA-256 al leer el ejecutable restaurado. Quedaron el ejecutable vigente, la receta, las herramientas de compilación reutilizadas y la evidencia de pruebas. El laboratorio mide alrededor de 3,15 GB y el árbol completo 63,45 GB lógicos, excluyendo puntos de reanálisis. El árbol ya excedía el límite de 20 GB antes de este bloque.
+
+## Diagnóstico físico y RC2 de laboratorio
+
+La primera captura física terminó con código 0, cinco hilos en el proceso y frecuencias leídas de hasta 1.200 MHz; 0–3540 cuadros tardaron 416,021 s (8,51 FPS), con instrumentación activa. El control de 0–1140 sin perfil tomó 125,840 s (9,06 FPS). El usuario reportó que apenas alcanzó el final del vídeo inicial. El ajuste de hilos VDP comparado después no afecta al backend propio y no constituye un A/B válido.
+
+En QEMU ARMv7, un muestreo aproximado del arranque apuntó al despacho y validación SH-2 como un grupo importante. La RC2 prueba dos simplificaciones allí. El arranque español (600 cuadros) y el primer ataque (120) conservaron las huellas de estado y audio bajo AOT estricto. Los resultados de rendimiento entre pasadas se solaparon o variaron demasiado para atribuir una ganancia, y el sondeo por tiempo de CPU tuvo una resolución insuficiente. La ejecución física de RC2, las cifras de audio y la equivalencia más allá de esas rutas siguen pendientes. [Instalación y reconstrucción](ga36-handoff.md#rc2-de-laboratorio-despacho-y-comparación-en-placa).

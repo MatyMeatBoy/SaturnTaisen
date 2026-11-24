@@ -1,0 +1,22 @@
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1110,7 +1110,9 @@
+             }
+             // (Free running, blocks are only entered at their first instruction: a branch into the middle of
+             // one starts a block of its own.)
+-            LoadPendingPage(rt, *r, offset);
++            if (!r->pending.empty() && !r->pending[offset >> kPendingPageShift].empty()) [[unlikely]] {
++                LoadPendingPage(rt, *r, offset);
++            }
+             for (e = resumed ? nullptr : (freeRunning ? r->fast : r->table)[offset >> 1]; e; e = freeRunning ? e->nextFree : e->next) {
+                 if (e->lift) [[unlikely]] {
+                     // A lifted routine: the code here must be the routine it was written from. Its bytes
+@@ -1160,7 +1162,7 @@
+                     }
+                     continue;
+                 }
+-                if (!(freeRunning ? e->start == 0 : !e->function)) {
++                if (!freeRunning && e->function) {
+                     continue;
+                 }
+                 if (e->head) {
