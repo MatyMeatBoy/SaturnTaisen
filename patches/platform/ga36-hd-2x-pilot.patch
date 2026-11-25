@@ -1,0 +1,96 @@
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -376,8 +376,14 @@
+     const auto mappings=std::filesystem::path(port.opt.settingsPath).parent_path()/"gamecontrollerdb.txt";
+     std::error_code mappingError;if(std::filesystem::is_regular_file(mappings,mappingError))SDL_AddGamepadMappingsFromFile(mappings.string().c_str());
+     // (the Display page's Window size, in times 240 lines, unless --scale says)
++#ifdef SATRECOMP_GA36_HD_PILOT
++    constexpr bool handheldPanel = true;
++    constexpr int scale = 2;
++#else
++    constexpr bool handheldPanel = false;
+     static const int kWindowTimes[] = {3, 2, 4, 5, 6};
+     const int scale = port.opt.scale > 0 ? port.opt.scale : kWindowTimes[std::clamp(satrecomp::FeatureValue("window_size"), 0, 4)];
++#endif
+     // The picture is drawn by the GPU (video/gpu.h) into the window's swapchain, or in software and shown
+     // through an SDL renderer; or, through a shader (the Display page's Shader: shading.h), in an OpenGL window
+     // that the picture goes to at the Saturn's own size, drawn by the GPU without a window or in software
+@@ -507,14 +513,14 @@
+         if (!preset.empty() && !shade) {
+             fprintf(stderr, "shader: %s\n", error.c_str());
+         }
+-        flags |= SDL_WINDOW_RESIZABLE | (port.gpu || shade ? SDL_WINDOW_HIGH_PIXEL_DENSITY : 0) | (shade ? SDL_WINDOW_OPENGL : 0) |
++        flags |= (handheldPanel ? 0 : SDL_WINDOW_RESIZABLE) | (port.gpu || shade ? SDL_WINDOW_HIGH_PIXEL_DENSITY : 0) | (shade ? SDL_WINDOW_OPENGL : 0) |
+                  (testHidden ? SDL_WINDOW_HIDDEN : 0);
+         window = SDL_CreateWindow("SaturnTaisen", width, height, flags);
+         if (!window) {
+             fprintf(stderr, "SDL window: %s\n", SDL_GetError());
+             return false;
+         }
+-        SDL_SetWindowMinimumSize(window, 704, 512);
++        if (!handheldPanel) SDL_SetWindowMinimumSize(window, 704, 512);
+         shaded = false;
+         activeDisplaySync = -1;
+         if (shade) {
+@@ -2752,11 +2758,23 @@
+     SDL_Texture* titlePartTexture = nullptr;
+     bool titlePartsTried = false;
+     std::future<std::vector<PcSprite>> pendingTitleParts;
++    const char* handheldTitleAssets = nullptr;
++#ifdef SATRECOMP_GA36_HD_PILOT
++    // Import the verified PC title layers without enabling the widescreen compositor.
++    handheldTitleAssets = std::getenv("SATRECOMP_GA36_PC_ASSETS");
++#endif
++    const std::string titleAssets = handheldTitleAssets ? handheldTitleAssets : port.opt.pcAssetsPath;
++    const bool handheldTitleArt = handheldTitleAssets && *handheldTitleAssets;
+     auto drawTitleParts = [&](const satrecomp::video::Renderer::Presentation& planes,
+                               const SDL_FRect& crop, const SDL_FRect& target, int scale) {
+         constexpr int frameWidth = 320, frameHeight = 224;
+-        if (scale < 2 || choosing || port.menu.IsOpen() || port.opt.pcAssetsPath.empty() ||
+-            satrecomp::FeatureValue("presentation_mode") != 1 || satrecomp::FeatureValue("pc_hd_backgrounds") != 0 ||
++        const bool titleArtEnabled = handheldTitleArt
++            ? scale == 2 && crop.x == 0 && crop.y == 0 && crop.w == 320 && crop.h == 224 &&
++                target.w == 640 && target.h == 448
++            : satrecomp::FeatureValue("presentation_mode") == 1 &&
++                satrecomp::FeatureValue("pc_hd_backgrounds") == 0;
++        if (scale < 2 || choosing || port.menu.IsOpen() || titleAssets.empty() ||
++            !titleArtEnabled ||
+             planes.width != frameWidth || planes.height != frameHeight ||
+             planes.topSource.size() != frameWidth * frameHeight || planes.underSprites.size() != frameWidth * frameHeight ||
+             softwareShown.size() != frameWidth * frameHeight) return;
+@@ -2796,7 +2814,7 @@
+         if (!titlePartsTried) {
+             titlePartsTried = true;
+             constexpr size_t bytesExpected = 247979;
+-            const auto path = std::filesystem::u8path(port.opt.pcAssetsPath) / "SAKURA1/SYSTEM/TITLE.SPR";
++            const auto path = std::filesystem::u8path(titleAssets) / "SAKURA1/SYSTEM/TITLE.SPR";
+             pendingTitleParts = std::async(std::launch::async, [path] {
+                 std::vector<uint8_t> bytes;
+                 std::vector<PcSprite> images;
+@@ -7455,7 +7473,7 @@
+                 } else if (ev.key.scancode == SDL_SCANCODE_F11 ||
+                            (ev.key.scancode == SDL_SCANCODE_RETURN && (ev.key.mod & SDL_KMOD_ALT))) {
+                     const bool fs = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
+-                    SDL_SetWindowFullscreen(window, !fs);
++                    if (!handheldPanel) SDL_SetWindowFullscreen(window, !fs);
+                 }
+                 break;
+             case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -649,7 +649,14 @@
+ 
+     // The picture: drawn by the GPU, or in software at the original resolution
+     videoRenderer = &sat.Video();
+-    videoRenderer->CapturePresentation(!opt.headless);
++    bool capturePresentation = !opt.headless;
++#ifdef SATRECOMP_GA36_HD_PILOT
++    // Original at 2x uses the native frame directly. Capture the extra planes only for the art pilot.
++    const char* handheldTitleAssets = std::getenv("SATRECOMP_GA36_PC_ASSETS");
++    capturePresentation = capturePresentation &&
++        ((handheldTitleAssets && *handheldTitleAssets) || std::getenv("SATRECOMP_GA36_CAPTURE_FULL"));
++#endif
++    videoRenderer->CapturePresentation(capturePresentation);
+     using Mode = satrecomp::video::Renderer::Mode;
+     std::vector<uint8_t> firstMovieScript;
+     if(!opt.headless && (!discFiles.Read("0100.BIN",firstMovieScript) || !KnownFirstMovieScript(firstMovieScript)))
