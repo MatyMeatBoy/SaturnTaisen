@@ -2,6 +2,8 @@
 
 Updated: 2026-11-18. For another bot or collaborator joining SaturnTaisenFirst. Operational status in [PENDIENTES](PENDIENTES.md); the research documents keep the detailed evidence.
 
+Para trasladar o reconstruir el port GA36 en otro PC, usa el [handoff de GA36-MB v1.2](research/ga36-handoff.md).
+
 ## Goal and user agreements
 
 AOT static recompilation of Sakura Taisen Saturn, Windows x64, both SH-2. Saturn first; playable PC/PC translation afterward. PC assets are already used for the Saturn HD mod. English translation reused/adapted from the Saturn team; the corpus is not published in Git.

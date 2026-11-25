@@ -1,0 +1,6 @@
+[ENTRY]
+CATEGORY=Ports
+NAME=SaturnTaisen (English)
+DESCRIPTION=Sakura Taisen for GA36
+COMMAND=/bin/sh /home/player/ports/saturntaisen/launch.sh en
+TERMINAL=0

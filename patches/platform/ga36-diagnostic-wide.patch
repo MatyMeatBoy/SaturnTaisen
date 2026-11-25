@@ -1,0 +1,88 @@
+--- a/runtime/game.cpp
++++ b/runtime/game.cpp
+@@ -94,6 +94,10 @@
+ #ifdef SATRECOMP_R36S
+     g_on["widescreen"] = 0;
+     g_on["presentation_mode"] = 0;
++#ifdef SATRECOMP_GA36_WIDE_DIAGNOSTIC
++    if (const char* wide = std::getenv("SATRECOMP_GA36_WIDE"); wide && !std::strcmp(wide, "1"))
++        g_on["presentation_mode"] = 1;
++#endif
+     g_on["scene_view"] = 0;
+     g_on["run_ahead"] = 0;
+     g_on["hd_preload"] = 0;
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -654,7 +654,8 @@
+     // Original at 2x uses the native frame directly. Capture the extra planes only for the art pilot.
+     const char* handheldTitleAssets = std::getenv("SATRECOMP_GA36_PC_ASSETS");
+     capturePresentation = capturePresentation &&
+-        ((handheldTitleAssets && *handheldTitleAssets) || std::getenv("SATRECOMP_GA36_CAPTURE_FULL"));
++        ((handheldTitleAssets && *handheldTitleAssets) || std::getenv("SATRECOMP_GA36_CAPTURE_FULL") ||
++         satrecomp::FeatureValue("presentation_mode") == 1);
+ #endif
+     videoRenderer->CapturePresentation(capturePresentation);
+     using Mode = satrecomp::video::Renderer::Mode;
+--- a/port/frontend_sdl.cpp
++++ b/port/frontend_sdl.cpp
+@@ -378,6 +378,20 @@
+     // (the Display page's Window size, in times 240 lines, unless --scale says)
+ #ifdef SATRECOMP_GA36_HD_PILOT
+     constexpr bool handheldPanel = true;
++#ifdef SATRECOMP_GA36_WIDE_DIAGNOSTIC
++    const char* diagnosticPath = std::getenv("SATRECOMP_GA36_DIAG_CSV");
++    std::unique_ptr<FILE, decltype(&std::fclose)> diagnostic(
++        diagnosticPath ? std::fopen(diagnosticPath, "w") : nullptr, &std::fclose);
++    if (diagnosticPath && !diagnostic) {
++        std::perror("GA36 frame CSV");
++        return 1;
++    }
++    uint64_t lastPresented = 0;
++    if (diagnostic) {
++        std::setvbuf(diagnostic.get(), nullptr, _IOFBF, 64 * 1024);
++        std::fputs("guest_frame,present_interval_ms,render_present_ms,layout\n", diagnostic.get());
++    }
++#endif
+     constexpr int scale = 2;
+ #else
+     constexpr bool handheldPanel = false;
+@@ -562,6 +576,18 @@
+             const char* name=SDL_GetRendererName(renderer);
+             fprintf(stderr,"background renderer: %s\n",name?name:"unknown");
+         }
++#ifdef SATRECOMP_GA36_WIDE_DIAGNOSTIC
++        if (handheldPanel) {
++            int outputWidth = 0, outputHeight = 0;
++            if (!SDL_GetRenderOutputSize(renderer, &outputWidth, &outputHeight) ||
++                outputWidth != 640 || outputHeight != 480) {
++                std::fprintf(stderr, "GA36 output %dx%d, expected 640x480\n", outputWidth, outputHeight);
++                return false;
++            }
++            std::fprintf(stderr, "GA36 output=%dx%d renderer=%s wide=%d\n", outputWidth, outputHeight,
++                         SDL_GetRendererName(renderer), satrecomp::FeatureValue("presentation_mode"));
++        }
++#endif
+         if (!sakuraUi.Open(window,renderer,port.opt.settingsPath)) return false;
+         tacticalPatch.clear();
+         for(const auto& folder:{std::filesystem::path(port.opt.settingsPath).parent_path(),std::filesystem::path(SDL_GetBasePath())}) {
+@@ -7220,7 +7246,20 @@
+         frameProfile.Mark(frameProfile.ui);
+         frameProfile.kind=presentationKind;
+         bool presented=false;
++#if defined(SATRECOMP_GA36_HD_PILOT) && defined(SATRECOMP_GA36_WIDE_DIAGNOSTIC)
++        const uint64_t beforePresent = diagnostic ? SDL_GetTicksNS() : 0;
++#endif
+         {ProfileScope flipScope(frameProfile.flip);presented=SDL_RenderPresent(renderer);}
++#if defined(SATRECOMP_GA36_HD_PILOT) && defined(SATRECOMP_GA36_WIDE_DIAGNOSTIC)
++        if (presented && diagnostic) {
++            const uint64_t now = SDL_GetTicksNS();
++            std::fprintf(diagnostic.get(), "%llu,%.3f,%.3f,%s\n",
++                         static_cast<unsigned long long>(port.frame),
++                         lastPresented ? (now - lastPresented) / 1e6 : 0.0,
++                         (now - beforePresent) / 1e6, presentationKind);
++            lastPresented = now;
++        }
++#endif
+         if (presented) presentedClip = drewPcClip ? clipMovie : -1;
+         if (presented && !announcedReady) {
+             announcedReady = recomp::PublishLaunchReady(port.opt.readyFile);

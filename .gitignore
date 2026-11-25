@@ -38,6 +38,10 @@
 !/patches/
 /patches/**
 !/patches/*.patch
+!/patches/platform/
+!/patches/platform/*.patch
+!/patches/platform/*.sh
+!/patches/platform/*.puppy
 !/games/
 /games/**
 !/games/sakura/
