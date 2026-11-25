@@ -2,6 +2,7 @@
 and the whole stack applies cleanly on the pinned commit (temporary index, nothing in the dependency tree is touched).
 
     python tools/check_patch_stack.py
+    python tools/check_patch_stack.py --platform   # also apply the GA36/R36S platform patches on top, in PLATFORM_ORDER
 
 Needs local/deps/satrecomp (the pinned SDK checkout). Exit 1 with the reason on any problem. If two PRs took the same number, rebase on
 origin/main, `git mv` your patch to the next free number and list it last in config/dependencies.json.
@@ -9,7 +10,10 @@ origin/main, `git mv` your patch to the next free number and list it last in con
 import json, os, pathlib, re, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DEP = ROOT / 'local/deps/satrecomp'
+DEP = pathlib.Path(os.environ.get('SATRECOMP_DEP_DIR', ROOT / 'local/deps/satrecomp'))
+# Documented order of the SDK-side handheld patches (docs/research/ga36-handoff.md); ga36-sdl3-fbdev.patch is for the SDL3 tree.
+PLATFORM_ORDER = ['r36s-original-only', 'r36s-aot-pages', 'ga36-armhf-state', 'ga36-hd-2x-pilot', 'ga36-aot-fast-dispatch',
+                  'ga36-diagnostic-wide']
 
 
 def main():
@@ -38,6 +42,14 @@ def main():
                 if result.returncode:
                     problems.append('%s does not apply on the stack before it: %s' % (patch, result.stderr.strip()[:200]))
                     break
+            if not problems and '--platform' in sys.argv[1:]:
+                for name in PLATFORM_ORDER:
+                    result = git('apply', '--cached', '--whitespace=nowarn', ROOT / 'patches/platform' / (name + '.patch'))
+                    if result.returncode:
+                        problems.append('platform %s does not apply on the current stack: %s' % (name, result.stderr.strip()[:200]))
+                        break
+                if not problems:
+                    print('platform patches ok: %d applied on top' % len(PLATFORM_ORDER))
     elif not DEP.is_dir():
         print('note: local/deps/satrecomp is absent, only the numbering was checked')
     for problem in problems:

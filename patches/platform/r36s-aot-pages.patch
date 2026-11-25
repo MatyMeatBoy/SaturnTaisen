@@ -1,0 +1,122 @@
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -110,12 +110,15 @@
+         bool sync;           // starts at a sync point
+     };
+ 
++    // Register resumable instruction entries by 4 KiB guest code page.
++    constexpr unsigned kPendingPageShift = 12;
+     struct Region {
+         uint32_t base;
+         uint32_t size;
+         const uint8_t *mem;
+         std::vector<Entry *> table; // by (offset / 2)
+         std::vector<Entry *> fast;  // by (offset / 2): the entries of `table` that are lifted routines or start at instruction 0, same order
++        std::vector<std::vector<const BlockDesc *>> pending;
+     };
+ 
+     struct Runtime {
+@@ -463,10 +466,12 @@
+ 
+     // Adds a block and an entry for each instruction execution can resume at. Returns the entry of the first.
+     Entry *AddBlock(Runtime &rt, Region &r, uint32_t offset, const uint8_t *code, unsigned numInstrs, uint64_t slots,
+-                    BlockFn fn, NativeFn native, bool single, bool fresh) {
++                    BlockFn fn, NativeFn native, bool single, bool fresh,
++                    uint32_t minimum = 0, uint32_t limit = UINT32_MAX) {
+         Entry *first = nullptr;
+         for (unsigned i = 0; i < numInstrs; i++) {
+-            if ((slots >> i) & 1) {
++            const uint32_t address = offset + i * 2;
++            if (address < minimum || address >= limit || ((slots >> i) & 1)) {
+                 continue;
+             }
+             Entry &e = rt.entries.emplace_back();
+@@ -507,6 +512,30 @@
+             }
+         }
+         return first;
++    }
++
++    void LoadPendingPage(Runtime &rt, Region &r, uint32_t offset) {
++        if (r.pending.empty()) return;
++        const unsigned page = offset >> kPendingPageShift;
++        auto &queued = r.pending[page];
++        if (queued.empty()) return;
++        const uint32_t begin = page << kPendingPageShift;
++        static const bool tracePages = getenv("SATRECOMP_LIST_LAZY_PAGES") != nullptr;
++        if (tracePages) fprintf(stderr, "opti36s-page %08X\n", r.base + begin);
++        const uint32_t end = begin + (1u << kPendingPageShift);
++        for (const BlockDesc *d : queued) {
++            uint32_t start;
++            RegionFor(rt, d->pc, start);
++            uint64_t slots;
++            if (ScanBlock(d->code, d->numInstrs * 2u, slots, d->pc, &rt.opt.syncPoints) == d->numInstrs) {
++                AddBlock(rt, r, start, d->code, d->numInstrs, slots, d->fn, d->native,
++                         false, false, begin, end);
++                if (start >= begin) rt.builtBlocks++;
++            } else if (start >= begin) {
++                fprintf(stderr, "satrecomp: generated block %08X doesn't match this runtime's block rules\n", d->pc);
++            }
++        }
++        std::vector<const BlockDesc *>().swap(queued);
+     }
+ 
+     // A block the build doesn't know: take it from memory as it is now
+@@ -1081,6 +1110,7 @@
+             }
+             // (Free running, blocks are only entered at their first instruction: a branch into the middle of
+             // one starts a block of its own.)
++            LoadPendingPage(rt, *r, offset);
+             for (e = resumed ? nullptr : (freeRunning ? r->fast : r->table)[offset >> 1]; e; e = freeRunning ? e->nextFree : e->next) {
+                 if (e->lift) [[unlikely]] {
+                     // A lifted routine: the code here must be the routine it was written from. Its bytes
+@@ -1437,11 +1467,28 @@
+     // (SATRECOMP_NO_BLOCKS=1: the build's translations are left out, so that everything runs in the
+     // interpreter: a test of the interpreter against the translated code)
+     const bool noBlocks = getenv("SATRECOMP_NO_BLOCKS") != nullptr;
++    const bool lazyBlocks = !noBlocks && getenv("SATRECOMP_LAZY_BLOCKS") &&
++        !getenv("SATRECOMP_EXPERIMENTAL_FUNCTIONS") && rt.opt.recordPath.empty();
++    if (lazyBlocks) {
++        for (auto &region : rt.regions) {
++            region.pending.resize((region.size + (1u << kPendingPageShift) - 1) >> kPendingPageShift);
++        }
++    }
+     for (size_t t = 0; t < g_blockTableCount && !noBlocks; t++) {
+         for (size_t i = 0; i < g_blockTables[t].count; i++) {
+             const BlockDesc &d = g_blockTables[t].blocks[i];
+             uint32_t offset;
+             Region *r = RegionFor(rt, d.pc, offset);
++            if (lazyBlocks && r && d.numInstrs && offset + d.numInstrs * 2u <= r->size) {
++                const unsigned first = offset >> kPendingPageShift;
++                const unsigned last = (offset + d.numInstrs * 2u - 1) >> kPendingPageShift;
++                // Preserve the generated table order even for blocks crossing page boundaries.
++                for (unsigned page = first; page <= last; page++) {
++                    r->pending[page].push_back(&d);
++                }
++                MarkCode(rt, *r, offset, d.numInstrs * 2u);
++                continue;
++            }
+             uint64_t slots;
+             if (!r || ScanBlock(d.code, d.numInstrs * 2u, slots, d.pc, &rt.opt.syncPoints) != d.numInstrs) {
+                 fprintf(stderr, "satrecomp: generated block %08X doesn't match this runtime's block rules\n", d.pc);
+@@ -1493,6 +1540,20 @@
+     ymir::sh2::g_satrecompFreeRunning =
+         (rt.opt.mode == Mode::Native || rt.opt.mode == Mode::Free) && !getenv("SATRECOMP_SHORT_SLICES");
+ #endif
++
++    if (lazyBlocks) {
++        const char *warm = getenv("SATRECOMP_WARM_BLOCK_PAGES");
++        while (warm && *warm) {
++            char *end;
++            const auto pc = strtoul(warm, &end, 16);
++            if (end == warm || pc > UINT32_MAX) break;
++            uint32_t offset;
++            if (Region *r = RegionFor(rt, static_cast<uint32_t>(pc), offset)) {
++                LoadPendingPage(rt, *r, offset);
++            }
++            warm = *end == ',' ? end + 1 : nullptr;
++        }
++    }
+ 
+     // Calls as calls: when free running and nothing wants to see every block as it is entered
+     // (SATRECOMP_NO_CALLS=1: every call through the dispatcher, as before)

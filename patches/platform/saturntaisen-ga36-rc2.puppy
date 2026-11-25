@@ -1,0 +1,6 @@
+[ENTRY]
+CATEGORY=Ports
+NAME=SaturnTaisen RC2 laboratorio
+DESCRIPTION=GA36 prueba experimental
+COMMAND=/bin/sh /home/player/ports/saturntaisen/ga36-rc2-launch.sh es
+TERMINAL=0

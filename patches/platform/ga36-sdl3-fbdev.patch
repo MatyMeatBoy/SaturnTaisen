@@ -1,0 +1,143 @@
+--- /dev/null
++++ b/src/video/dummy/SDL_ga36fbdev.h
+@@ -0,0 +1,91 @@
++/* GA36 presentation for SDL's software framebuffer, with no GPU dependency. */
++#include <errno.h>
++#include <fcntl.h>
++#include <linux/fb.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++#include <unistd.h>
++
++#define GA36_FBDEV_PROPERTY "SDL.internal.ga36.fbdev"
++
++typedef struct GA36_FBDev
++{
++    void *mapping;
++    size_t size;
++    size_t start;
++    size_t stride;
++} GA36_FBDev;
++
++static void SDLCALL GA36_CloseFramebuffer(void *userdata, void *pointer)
++{
++    GA36_FBDev *fb = pointer;
++    (void)userdata;
++    munmap(fb->mapping, fb->size);
++    SDL_free(fb);
++}
++
++static bool GA36_OpenFramebuffer(SDL_Window *window, const char *path, int width, int height)
++{
++    struct fb_fix_screeninfo fix;
++    struct fb_var_screeninfo var;
++    GA36_FBDev *fb;
++    int fd = open(path, O_RDWR | O_CLOEXEC);
++    if (fd < 0) {
++        return SDL_SetError("GA36 framebuffer open failed: %s", strerror(errno));
++    }
++    if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0 || ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0) {
++        const int error = errno;
++        close(fd);
++        return SDL_SetError("GA36 framebuffer query failed: %s", strerror(error));
++    }
++    if (fix.type != FB_TYPE_PACKED_PIXELS || fix.visual != FB_VISUAL_TRUECOLOR ||
++        var.xres != 640 || var.yres != 480 || width != 640 || height != 480 ||
++        var.bits_per_pixel != 32 || var.grayscale || var.nonstd ||
++        var.red.offset != 16 || var.green.offset != 8 || var.blue.offset != 0 ||
++        var.red.length != 8 || var.green.length != 8 || var.blue.length != 8 ||
++        var.red.msb_right || var.green.msb_right || var.blue.msb_right ||
++        ((Uint64)var.xoffset + var.xres) * 4 > fix.line_length ||
++        ((Uint64)var.yoffset + var.yres - 1) * fix.line_length + ((Uint64)var.xoffset + var.xres) * 4 > fix.smem_len) {
++        close(fd);
++        return SDL_SetError("GA36 requires a 640x480 packed XRGB8888 framebuffer");
++    }
++    fb = (GA36_FBDev *)SDL_calloc(1, sizeof(*fb));
++    if (!fb) {
++        close(fd);
++        return false;
++    }
++    fb->size = fix.smem_len;
++    fb->start = (size_t)var.yoffset * fix.line_length + (size_t)var.xoffset * 4;
++    fb->stride = fix.line_length;
++    fb->mapping = mmap(NULL, fb->size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++    const int error = errno;
++    close(fd);
++    if (fb->mapping == MAP_FAILED) {
++        SDL_free(fb);
++        return SDL_SetError("GA36 framebuffer mapping failed: %s", strerror(error));
++    }
++    if (!SDL_SetPointerPropertyWithCleanup(SDL_GetWindowProperties(window), GA36_FBDEV_PROPERTY,
++                                           fb, GA36_CloseFramebuffer, NULL)) {
++        return false;
++    }
++    SDL_Log("GA36 fbdev XRGB8888 at 640x480, stride %u", fix.line_length);
++    return true;
++}
++
++static void GA36_PresentFramebuffer(SDL_Window *window, SDL_Surface *surface)
++{
++    GA36_FBDev *fb = SDL_GetPointerProperty(SDL_GetWindowProperties(window), GA36_FBDEV_PROPERTY, NULL);
++    if (fb) {
++        const size_t rowBytes = 640 * 4;
++        Uint8 *out = (Uint8 *)fb->mapping + fb->start;
++        const Uint8 *in = surface->pixels;
++        if (fb->stride == rowBytes && (size_t)surface->pitch == rowBytes) {
++            SDL_memcpy(out, in, rowBytes * 480);
++        } else {
++            for (unsigned row = 0; row < 480; ++row) {
++                SDL_memcpy(out + row * fb->stride, in + row * surface->pitch, rowBytes);
++            }
++        }
++    }
++}
+--- a/src/video/dummy/SDL_nullframebuffer.c
++++ b/src/video/dummy/SDL_nullframebuffer.c
+@@ -26,6 +26,10 @@
+ #include "../../SDL_properties_c.h"
+ #include "SDL_nullframebuffer_c.h"
+ 
++#if defined(SDL_PLATFORM_LINUX)
++#include "SDL_ga36fbdev.h"
++#endif
++
+ #define DUMMY_SURFACE "SDL.internal.window.surface"
+ 
+ 
+@@ -41,6 +45,14 @@
+     if (!surface) {
+         return false;
+     }
++
++#if defined(SDL_PLATFORM_LINUX)
++    const char *framebuffer = SDL_getenv("SATURNTAISEN_FBDEV");
++    if (framebuffer && *framebuffer && !GA36_OpenFramebuffer(window, framebuffer, w, h)) {
++        SDL_DestroySurface(surface);
++        return false;
++    }
++#endif
+ 
+     // Save the info and return!
+     SDL_SetSurfaceProperty(SDL_GetWindowProperties(window), DUMMY_SURFACE, surface);
+@@ -60,6 +72,10 @@
+         return SDL_SetError("Couldn't find dummy surface for window");
+     }
+ 
++#if defined(SDL_PLATFORM_LINUX)
++    GA36_PresentFramebuffer(window, surface);
++#endif
++
+     // Send the data to the display
+     if (SDL_GetHintBoolean(SDL_HINT_VIDEO_DUMMY_SAVE_FRAMES, false)) {
+         char file[128];
+@@ -73,6 +89,9 @@
+ void SDL_DUMMY_DestroyWindowFramebuffer(SDL_VideoDevice *_this, SDL_Window *window)
+ {
+     SDL_ClearProperty(SDL_GetWindowProperties(window), DUMMY_SURFACE);
++#if defined(SDL_PLATFORM_LINUX)
++    SDL_ClearProperty(SDL_GetWindowProperties(window), GA36_FBDEV_PROPERTY);
++#endif
+ }
+ 
+ #endif // SDL_VIDEO_DRIVER_DUMMY

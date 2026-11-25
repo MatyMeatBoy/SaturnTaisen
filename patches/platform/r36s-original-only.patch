@@ -1,0 +1,73 @@
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -121,6 +121,7 @@
+     game.features.push_back({"pad_profile", "Mandos", "Perfil de mando",
+                              "Automático reconoce M30 Bluetooth y 2.4G por nombre o identidad USB. Si XInput oculta el modelo, elige M30 manualmente. Tus asignaciones personalizadas tienen prioridad.",
+                              0, {"Automático", "Estándar SDL", "M30 / Saturn 6 botones"}});
++#ifndef SATRECOMP_R36S
+     game.features.push_back({"widescreen", "Display", "Widescreen",
+                              "16:9: fights show more at the sides. The launcher's switch changes with it. Needs high resolution.",
+                              satrecomp::kFeatureFirstPage});
+@@ -167,6 +168,7 @@
+     game.features.push_back({"window_size", "Pantalla", "Tamaño de ventana",
+                              "Tamaño inicial de la ventana. Puedes redimensionarla o usar F11 para pantalla completa; el juego conserva la escala entera.",
+                              0, {"3x", "2x", "4x", "5x", "6x"}});
++#endif
+ }
+ 
+ // The Display page's Shader's presets, in the order of its choices after Off (the folders and files of RetroArch's
+@@ -983,6 +985,10 @@
+     }
+ #ifdef SATRECOMP_OWN_MACHINE
+     if (frame == 0 && powerOn.empty()) {
++#ifdef SATRECOMP_R36S
++        // The cold Sakura reset snapshot is just over 4 MiB.
++        powerOn.reserve(4352 * 1024);
++#endif
+         SaveStateData(powerOn);
+     }
+ #endif
+@@ -1728,6 +1734,11 @@
+         fprintf(stderr,"Exported %d original KABE backgrounds locally\n",count);
+         return count==20?0:1;
+     }
++#ifdef SATRECOMP_R36S
++    o.aspect = 4.0f / 3.0f;
++    o.video = "software";
++    o.pcAssetsPath.clear();
++#endif
+     if (o.video.empty()) p.opt.video = "software"; // validated native-resolution Sakura renderer
+     try {
+         if (!p.Init()) return 1;
+--- a/runtime/game.cpp
++++ b/runtime/game.cpp
+@@ -91,6 +91,19 @@
+             }
+         }
+     }
++#ifdef SATRECOMP_R36S
++    g_on["widescreen"] = 0;
++    g_on["presentation_mode"] = 0;
++    g_on["scene_view"] = 0;
++    g_on["run_ahead"] = 0;
++    g_on["hd_preload"] = 0;
++    g_on["text_style"] = 1;
++    g_on["pc_hd_backgrounds"] = 1;
++    g_on["pc_hd_portraits"] = 1;
++    g_on["display_shader"] = 0;
++    g_on["custom_soundtrack"] = 0;
++    g_on["pc_hd_audio"] = 0;
++#endif
+ }
+ 
+ bool FeatureOn(const char *name) {
+@@ -137,6 +150,9 @@
+ }
+ 
+ bool PresentationChosen() {
++#ifdef SATRECOMP_R36S
++    return true;
++#endif
+     if (g_settingsPath.empty()) {
+         return false;
+     }
