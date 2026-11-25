@@ -211,3 +211,4 @@ One line per document. The JSON files are the machine-readable evidence for thei
 
 - [Bounded film video spans](bounded-film-video-spans.md)
 - [VDP presentation planes: lazy clearing result](vdp-presentation-planes.md)
+- [PC AOT registry by guest page](pc-aot-registry.md) — patch 0340, lazy block registration from the GA36 port; not yet built or measured.

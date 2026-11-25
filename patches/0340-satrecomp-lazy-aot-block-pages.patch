@@ -1,0 +1,166 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index f669974..7ad00c1 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -116,7 +116,13 @@ namespace {
+         const uint8_t *mem;
+         std::vector<Entry *> table; // by (offset / 2)
+         std::vector<Entry *> fast;  // by (offset / 2): the entries of `table` that are lifted routines or start at instruction 0, same order
++        // Generated blocks not entered in `table`/`fast` yet, by 4 KiB page of the region (kPendingPageShift), in
++        // the build's order. A page's blocks are entered the first time the dispatcher looks there (LoadPendingPage).
++        std::vector<std::vector<const BlockDesc *>> pending;
+     };
++    // Generated blocks are entered in the tables a guest page at a time, when first needed, instead of all at
++    // start (SATRECOMP_EAGER_BLOCKS=1: all at start, as before)
++    constexpr unsigned kPendingPageShift = 12;
+ 
+     struct Runtime {
+         Options opt;
+@@ -133,6 +139,7 @@ namespace {
+         uint64_t freshBlocks = 0;
+         uint64_t cachedLoopRuns = 0; // times a waiting CPU ran its loop from its 'cache' (CachedLoop)
+         uint64_t builtBlocks = 0;
++        uint64_t pendingPages = 0, loadedPages = 0; // pages with generated blocks waiting at start / entered since
+         uint64_t builtFunctions = 0;
+         bool hle = false; // the native BIOS is in use
+         std::set<std::string> explored; // static discovery: address (text) + code bytes of the blocks found
+@@ -462,11 +469,13 @@ namespace {
+     void MarkCode(Runtime &rt, const Region &r, int64_t offset, unsigned size);
+ 
+     // Adds a block and an entry for each instruction execution can resume at. Returns the entry of the first.
++    // (Only the entries at offsets in [minimum, limit): a block entered a page at a time, see LoadPendingPage)
+     Entry *AddBlock(Runtime &rt, Region &r, uint32_t offset, const uint8_t *code, unsigned numInstrs, uint64_t slots,
+-                    BlockFn fn, NativeFn native, bool single, bool fresh) {
++                    BlockFn fn, NativeFn native, bool single, bool fresh, uint32_t minimum = 0, uint32_t limit = UINT32_MAX) {
+         Entry *first = nullptr;
+         for (unsigned i = 0; i < numInstrs; i++) {
+-            if ((slots >> i) & 1) {
++            const uint32_t at = offset + i * 2;
++            if (at < minimum || at >= limit || ((slots >> i) & 1)) {
+                 continue;
+             }
+             Entry &e = rt.entries.emplace_back();
+@@ -509,6 +518,38 @@ namespace {
+         return first;
+     }
+ 
++    // Enters the generated blocks of the page of `offset` that are still waiting (the entries of a block that
++    // crosses into the next page are entered with that page). The build's order is kept at every address, and
++    // the build's blocks go after the lifted routines, as when every block was entered at start.
++    void LoadPage(Runtime &rt, Region &r, uint32_t offset) {
++        const unsigned page = offset >> kPendingPageShift;
++        auto &queued = r.pending[page];
++        const uint32_t begin = page << kPendingPageShift;
++        const uint32_t end = begin + (1u << kPendingPageShift);
++        static const bool trace = getenv("SATRECOMP_LIST_BLOCK_PAGES") != nullptr;
++        if (trace) {
++            fprintf(stderr, "satrecomp: block page %08X (%zu blocks)\n", r.base + begin, queued.size());
++        }
++        for (const BlockDesc *d : queued) {
++            uint32_t start;
++            RegionFor(rt, d->pc, start);
++            uint64_t slots;
++            if (ScanBlock(d->code, d->numInstrs * 2u, slots, d->pc, &rt.opt.syncPoints) == d->numInstrs) {
++                AddBlock(rt, r, start, d->code, d->numInstrs, slots, d->fn, d->native, false, false, begin, end);
++            } else if (start >= begin) {
++                fprintf(stderr, "satrecomp: generated block %08X doesn't match this runtime's block rules\n", d->pc);
++                rt.builtBlocks--;
++            }
++        }
++        std::vector<const BlockDesc *>().swap(queued);
++        rt.loadedPages++;
++    }
++    inline void LoadPendingPage(Runtime &rt, Region &r, uint32_t offset) {
++        if (!r.pending.empty() && !r.pending[offset >> kPendingPageShift].empty()) [[unlikely]] {
++            LoadPage(rt, r, offset);
++        }
++    }
++
+     // A block the build doesn't know: take it from memory as it is now
+     Entry *Discover(Runtime &rt, Region &r, uint32_t offset) {
+         uint64_t slots;
+@@ -520,6 +561,10 @@ namespace {
+                 return nullptr;
+             }
+         }
++        // (the build's blocks go before it at every address it covers, as when they were all entered at start)
++        for (uint32_t at = offset; at < offset + n * 2; at = ((at >> kPendingPageShift) + 1) << kPendingPageShift) {
++            LoadPendingPage(rt, r, at);
++        }
+         auto &copy = rt.codeStore.emplace_back(r.mem + offset, r.mem + offset + n * 2);
+         rt.freshBlocks++;
+         return AddBlock(rt, r, offset, copy.data(), n, slots, nullptr, nullptr, single, true);
+@@ -1081,6 +1126,7 @@ namespace {
+             }
+             // (Free running, blocks are only entered at their first instruction: a branch into the middle of
+             // one starts a block of its own.)
++            LoadPendingPage(rt, *r, offset);
+             for (e = resumed ? nullptr : (freeRunning ? r->fast : r->table)[offset >> 1]; e; e = freeRunning ? e->nextFree : e->next) {
+                 if (e->lift) [[unlikely]] {
+                     // A lifted routine: the code here must be the routine it was written from. Its bytes
+@@ -1130,7 +1176,8 @@ namespace {
+                     }
+                     continue;
+                 }
+-                if (!(freeRunning ? e->start == 0 : !e->function)) {
++                // (free running, `fast` holds lifted routines and entries at instruction 0 only)
++                if (!freeRunning && e->function) {
+                     continue;
+                 }
+                 if (e->head) {
+@@ -1437,11 +1484,36 @@ void Attach(Machine &saturn, const Options &options) {
+     // (SATRECOMP_NO_BLOCKS=1: the build's translations are left out, so that everything runs in the
+     // interpreter: a test of the interpreter against the translated code)
+     const bool noBlocks = getenv("SATRECOMP_NO_BLOCKS") != nullptr;
++    // Entered a page at a time (LoadPendingPage) unless something reads the whole tables or must find the
++    // blocks before what is entered after them: recording, the research functions of several blocks,
++    // or SATRECOMP_EAGER_BLOCKS=1
++#ifdef SATRECOMP_OWN_MACHINE
++    const bool functionsBeforeBlocks = getenv("SATRECOMP_EXPERIMENTAL_FUNCTIONS") != nullptr;
++#else
++    const bool functionsBeforeBlocks = true;
++#endif
++    const bool lazyBlocks = !noBlocks && !functionsBeforeBlocks && rt.opt.recordPath.empty() &&
++                            !getenv("SATRECOMP_EAGER_BLOCKS");
++    if (lazyBlocks) {
++        for (auto &region : rt.regions) {
++            region.pending.resize((region.size + (1u << kPendingPageShift) - 1) >> kPendingPageShift);
++        }
++    }
+     for (size_t t = 0; t < g_blockTableCount && !noBlocks; t++) {
+         for (size_t i = 0; i < g_blockTables[t].count; i++) {
+             const BlockDesc &d = g_blockTables[t].blocks[i];
+             uint32_t offset;
+             Region *r = RegionFor(rt, d.pc, offset);
++            if (lazyBlocks && r && d.numInstrs && offset + d.numInstrs * 2u <= r->size) {
++                // (a block that crosses a page waits in both, so that each address keeps the build's order)
++                for (unsigned page = offset >> kPendingPageShift; page <= (offset + d.numInstrs * 2u - 1) >> kPendingPageShift; page++) {
++                    rt.pendingPages += r->pending[page].empty();
++                    r->pending[page].push_back(&d);
++                }
++                MarkCode(rt, *r, offset, d.numInstrs * 2u);
++                rt.builtBlocks++;
++                continue;
++            }
+             uint64_t slots;
+             if (!r || ScanBlock(d.code, d.numInstrs * 2u, slots, d.pc, &rt.opt.syncPoints) != d.numInstrs) {
+                 fprintf(stderr, "satrecomp: generated block %08X doesn't match this runtime's block rules\n", d.pc);
+@@ -1635,6 +1707,7 @@ bool Call(SH2 &cpu, uint64_t target, int retBlock, uint32_t ret) {
+     // where a hand-written routine or a sync point is: those are the dispatcher's business.
+     Entry *e;
+     unsigned block = 0;
++    LoadPendingPage(rt, *r, offset);
+     for (e = r->fast[offset >> 1]; e; e = e->nextFree) { // (the entries that start in the middle of a block are skipped below, so they are left out)
+         if (e->lift) {
+             return false;
+@@ -2077,6 +2150,10 @@ void Finish() {
+                 static_cast<unsigned long long>(recompiled), total ? 100.0 * recompiled / total : 0.0,
+                 static_cast<unsigned long long>(interpreted), total ? 100.0 * interpreted / total : 0.0,
+                 static_cast<unsigned long long>(single), static_cast<unsigned long long>(lifted));
++        if (rt.pendingPages) {
++            fprintf(stderr, "satrecomp: pages of generated blocks entered %llu of %llu\n",
++                    static_cast<unsigned long long>(rt.loadedPages), static_cast<unsigned long long>(rt.pendingPages));
++        }
+         if (rt.cachedLoopRuns) {
+             fprintf(stderr, "satrecomp: a waiting CPU ran its loop from its cache, the memory under it overwritten, %llu times\n",
+                     static_cast<unsigned long long>(rt.cachedLoopRuns));
