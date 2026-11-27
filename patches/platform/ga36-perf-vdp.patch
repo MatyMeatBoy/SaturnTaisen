@@ -1,0 +1,50 @@
+--- /dev/null
++++ b/port/ga36_blit2x.h
+@@ -0,0 +1,47 @@
++// GA36 (Cortex-A7, NEON) fast present: Saturn ABGR8888 frame -> 2x XRGB8888 rows.
++// Bit-identical to SDL's nearest 2x stretch + ABGR->XRGB conversion (alpha forced to 0xFF
++// is irrelevant on the XRGB fbdev, X byte is written as 0xFF like SDL does).
++#pragma once
++#include <cstddef>
++#include <cstdint>
++#include <cstring>
++#if defined(__ARM_NEON) || defined(__ARM_NEON__)
++#include <arm_neon.h>
++#endif
++
++namespace ga36 {
++
++// Converts one source row of `width` ABGR8888 pixels to 2*width XRGB8888 pixels in `out`,
++// then duplicates that output row into `out2` (may be null). No per-pixel branches.
++inline void Blit2xRow(const uint32_t* in, uint32_t* out, uint32_t* out2, int width) {
++    int x = 0;
++#if defined(__ARM_NEON) || defined(__ARM_NEON__)
++    const uint32x4_t g = vdupq_n_u32(0xFF00u), b8 = vdupq_n_u32(0xFFu), xa = vdupq_n_u32(0xFF000000u);
++    for (; x + 4 <= width; x += 4) {
++        const uint32x4_t v = vld1q_u32(in + x);
++        uint32x4_t px = vorrq_u32(vorrq_u32(xa, vandq_u32(v, g)),
++                                  vorrq_u32(vshlq_n_u32(vandq_u32(v, b8), 16), vandq_u32(vshrq_n_u32(v, 16), b8)));
++        const uint32x4x2_t d = vzipq_u32(px, px);
++        vst1q_u32(out + 2 * x, d.val[0]);
++        vst1q_u32(out + 2 * x + 4, d.val[1]);
++    }
++#endif
++    for (; x < width; ++x) {
++        const uint32_t v = in[x]; // memory R,G,B,A (ABGR8888 little-endian)
++        const uint32_t px = 0xFF000000u | ((v & 0xFFu) << 16) | (v & 0xFF00u) | ((v >> 16) & 0xFFu);
++        out[2 * x] = px; out[2 * x + 1] = px;
++    }
++    if (out2) std::memcpy(out2, out, size_t(width) * 2 * sizeof(uint32_t));
++}
++
++// Full frame: 320x224 (or any w<=320,h<=240) centred on a 640x480 fbdev with `strideWords` pitch.
++inline void Blit2xFrame(const uint32_t* src, int width, int height, int srcStrideWords,
++                        uint32_t* fb, int fbStrideWords, int fbWidth, int fbHeight) {
++    const int ox = (fbWidth - 2 * width) / 2, oy = (fbHeight - 2 * height) / 2;
++    for (int y = 0; y < height; ++y) {
++        uint32_t* row = fb + size_t(oy + 2 * y) * fbStrideWords + ox;
++        Blit2xRow(src + size_t(y) * srcStrideWords, row, row + fbStrideWords, width);
++    }
++}
++
++} // namespace ga36

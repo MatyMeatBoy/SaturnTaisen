@@ -1,0 +1,19 @@
+--- a/sound/chip.cpp	2026-11-22 11:42:01.194339800 -0300
++++ b/sound/chip.cpp	2026-11-25 00:45:04.664337600 -0300
+@@ -280,6 +280,16 @@
+         slot.alfoOutput = static_cast<uint8>(AmplitudeWave(slot.ampLFOWaveform, slot.lfoStep, chip.m_lfsr) >> (7u - slot.ampLFOSens));
+     }
+ 
++    // GA36 fast path: a parked voice (released, silent at 0x3FF, not bypassed) ends every step exactly as it
++    // began: the general path would add a rate amount, clamp back to 0x3FF and show 0x3FF again. Skip the
++    // rate scaling and table lookup but keep every store the general path makes (bit-identical state).
++    if (slot.egState == Slot::EGState::Release && slot.egLevel == 0x3FF && slot.currEGLevel == 0x3FF && !slot.egBypass) {
++        slot.active = false;
++        slot.reverse = false;
++        slot.crossedLoopStart = false;
++        return;
++    }
++
+     // The envelope generator: attack (level falls to 0, that is full volume, ever slower), decay 1 down to
+     // the decay level, decay 2, and release after key off; levels are attenuations, 0x3FF silent
+     const uint32 counter = static_cast<uint32>(chip.m_sampleCounter + 1);

@@ -59,6 +59,12 @@ export SDL_AUDIO_DRIVER="${SDL_AUDIO_DRIVER:-${SDL_AUDIODRIVER:-alsa}}"
 export SDL_KMSDRM_DEVICE_INDEX="${SDL_KMSDRM_DEVICE_INDEX:-1}"
 export LD_LIBRARY_PATH="$here/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export SATRECOMP_LAZY_BLOCKS=1
+# The four cores of the A33 (RC11, ga36-*-thread patches): the renderer, the sound side and the final picture
+# composition on cores of their own; each can be turned off by setting it to 0. Composing 1 frame of N
+# (SATRECOMP_FRAME_SKIP=N) stays off unless asked for: the game itself always runs every frame.
+export SATRECOMP_VIDEO_THREAD="${SATRECOMP_VIDEO_THREAD:-1}"
+export SATRECOMP_SOUND_THREAD="${SATRECOMP_SOUND_THREAD:-1}"
+export SATRECOMP_COMPOSE_THREAD="${SATRECOMP_COMPOSE_THREAD:-1}"
 if [ -z "${SATRECOMP_WARM_BLOCK_PAGES:-}" ] && [ -r warm-pages.txt ]; then
     read -r SATRECOMP_WARM_BLOCK_PAGES <warm-pages.txt
     export SATRECOMP_WARM_BLOCK_PAGES

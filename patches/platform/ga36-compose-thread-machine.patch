@@ -1,0 +1,50 @@
+diff --git a/machine/machine.cpp b/machine/machine.cpp
+index 605d569..f93d8e5 100644
+--- a/machine/machine.cpp
++++ b/machine/machine.cpp
+@@ -4,6 +4,9 @@
+ #include "video_thread.h"
+ #include "sound_thread.h"
+ 
++namespace satrecomp::video {
++void StopComposeThread();
++}
+ namespace satrecomp::music {
+ // GA36 (runtime/music.cpp, ga36-sound-thread.patch): called before the CD music's state is read or changed
+ void SetAccessHook(void (*hook)());
+@@ -108,6 +111,8 @@ std::function<void(bool)> g_soundMainIrqHandler;
+ }
+ // GA36 research (SATRECOMP_SOUND_STATS=1): how the main CPUs and the sound side meet
+ uint64 g_soundBusReads = 0, g_soundBusWrites = 0, g_soundMainIrq = 0, g_soundMainIrqRaised = 0, g_soundSamples = 0;
++// GA36 research: how Run() slices the two CPUs (whole stretches, 32-cycle turns and who waits in them)
++uint64 g_sliceWhole = 0, g_sliceFine = 0, g_sliceMasterWaits = 0, g_sliceSlaveWaits = 0, g_sliceFineCycles = 0, g_sliceWholeCycles = 0;
+ 
+ Machine::~Machine() {
+     if (st::g_thread) {
+@@ -122,6 +127,9 @@ Machine::~Machine() {
+         delete thread;
+     }
+     if (std::getenv("SATRECOMP_SOUND_STATS")) {
++        fprintf(stderr, "cpu slices: %llu whole (%llu cycles), %llu in 32-cycle turns (%llu cycles; master waiting in %llu, slave in %llu)\n",
++                (unsigned long long)g_sliceWhole, (unsigned long long)g_sliceWholeCycles, (unsigned long long)g_sliceFine,
++                (unsigned long long)g_sliceFineCycles, (unsigned long long)g_sliceMasterWaits, (unsigned long long)g_sliceSlaveWaits);
+         fprintf(stderr, "sound bus: %llu reads, %llu writes by the main side; main interrupt calls %llu (%llu raised); %llu samples\n",
+                 (unsigned long long)g_soundBusReads, (unsigned long long)g_soundBusWrites, (unsigned long long)g_soundMainIrq,
+                 (unsigned long long)g_soundMainIrqRaised, (unsigned long long)g_soundSamples);
+@@ -136,6 +144,7 @@ Machine::~Machine() {
+         vt::g_thread = nullptr;
+         delete thread; // (stops it, before the renderer goes)
+     }
++    ::satrecomp::video::StopComposeThread(); // (its queued lines point into the renderer)
+ }
+ 
+ void Machine::LoadRom(const uint8 *data, size_t size) {
+@@ -271,6 +280,8 @@ void Machine::Run() {
+                                                    ((slaveSH2.PC & 0x07FFFFFF) - m_fineLo) < m_fineHi - m_fineLo);
+                 const uint64 step = masterWaits == slaveWaits && !m_fineCycles && !fineCode ? cycles : 32;
+                 const uint64 target = std::min(executed + step, cycles);
++                if (step == cycles) { g_sliceWhole++; g_sliceWholeCycles += target - executed; }
++                else { g_sliceFine++; g_sliceFineCycles += target - executed; g_sliceMasterWaits += masterWaits; g_sliceSlaveWaits += slaveWaits; }
+                 const uint64 before = executed;
+                 executed = masterSH2.Advance(target, executed);
+                 slaveCycles = slaveSH2.Advance(executed, slaveCycles);

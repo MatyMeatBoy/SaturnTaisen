@@ -1,0 +1,513 @@
+diff --git a/machine/machine.cpp b/machine/machine.cpp
+index 41d9b5b..605d569 100644
+--- a/machine/machine.cpp
++++ b/machine/machine.cpp
+@@ -2,6 +2,16 @@
+ // Copyright (C) 2026 Tommy McLeroy. Part of satrecomp: https://github.com/tmcleroy/satrecomp
+ #include "machine.h"
+ #include "video_thread.h"
++#include "sound_thread.h"
++
++namespace satrecomp::music {
++// GA36 (runtime/music.cpp, ga36-sound-thread.patch): called before the CD music's state is read or changed
++void SetAccessHook(void (*hook)());
++}
++
++namespace satrecomp::machine {
++extern uint64 g_soundBusReads, g_soundBusWrites, g_soundMainIrq, g_soundMainIrqRaised, g_soundSamples;
++}
+ 
+ #include <algorithm>
+ #include <bit>
+@@ -68,6 +78,8 @@ Machine::Machine()
+     m_sound = std::make_unique<sound::Chip>(m_soundRam.data());
+     m_sound->onSoundCpuInterrupt = [this](uint8 level) { m_soundCpu.SetInterruptLevel(level); };
+     m_sound->onMainInterrupt = [this](bool level) {
++        g_soundMainIrq++;
++        g_soundMainIrqRaised += level;
+         // (the sound request line follows the chip's level)
+         const bool raised = m_scu.status & (1u << 6);
+         if (raised != level) {
+@@ -83,8 +95,37 @@ Machine::Machine()
+ namespace vt {
+ VideoThread *g_thread = nullptr;
+ }
++namespace st {
++SoundThread *g_thread = nullptr;
++}
++namespace {
++// GA36 sound thread: started with the first frame (the port sets the chip's callbacks after the machine is
++// made), and not with the HD sound effects (their callbacks read work RAM)
++bool g_soundThreadChecked = false;
++std::atomic<int> g_soundMainIrqLate{-1}; // a level the sound side gave its SCU line from its thread
++uint64 g_soundMainIrqLateCount = 0;
++std::function<void(bool)> g_soundMainIrqHandler;
++}
++// GA36 research (SATRECOMP_SOUND_STATS=1): how the main CPUs and the sound side meet
++uint64 g_soundBusReads = 0, g_soundBusWrites = 0, g_soundMainIrq = 0, g_soundMainIrqRaised = 0, g_soundSamples = 0;
+ 
+ Machine::~Machine() {
++    if (st::g_thread) {
++        st::SoundThread *thread = st::g_thread;
++        if (std::getenv("SATRECOMP_SOUND_STATS")) {
++            fprintf(stderr, "sound thread: %llu commands, %llu waits for it (%.1f ms), %.1f ms working, %llu times full, %llu late SCU interrupts\n",
++                    (unsigned long long)thread->commands, (unsigned long long)thread->syncs, thread->waitNs / 1e6, thread->busyNs / 1e6,
++                    (unsigned long long)thread->fullWaits, (unsigned long long)g_soundMainIrqLateCount);
++        }
++        music::SetAccessHook(nullptr);
++        st::g_thread = nullptr;
++        delete thread;
++    }
++    if (std::getenv("SATRECOMP_SOUND_STATS")) {
++        fprintf(stderr, "sound bus: %llu reads, %llu writes by the main side; main interrupt calls %llu (%llu raised); %llu samples\n",
++                (unsigned long long)g_soundBusReads, (unsigned long long)g_soundBusWrites, (unsigned long long)g_soundMainIrq,
++                (unsigned long long)g_soundMainIrqRaised, (unsigned long long)g_soundSamples);
++    }
+     if (vt::g_thread) {
+         vt::VideoThread *thread = vt::g_thread;
+         if (std::getenv("SATRECOMP_VIDEO_THREAD_STATS")) {
+@@ -103,6 +144,7 @@ void Machine::LoadRom(const uint8 *data, size_t size) {
+ 
+ void Machine::Reset(bool hard) {
+     SATRECOMP_VIDEO_SYNC();
++    st::SyncNow();
+     if (hard) {
+         std::fill(m_ramHigh.begin(), m_ramHigh.end(), 0);
+         std::fill(m_ramLow.begin(), m_ramLow.end(), 0);
+@@ -152,17 +194,64 @@ struct PartTimer {
+ }
+ 
+ void Machine::RunFrame() {
++    if (!g_soundThreadChecked) {
++        g_soundThreadChecked = true;
++        const char *on = std::getenv("SATRECOMP_SOUND_THREAD");
++        if (on && *on && *on != '0' && !st::g_thread && !m_sound->onPresentationKeyOn && !m_sound->projectDirectVoice) {
++            auto *thread = new st::SoundThread;
++            thread->execute = [this](const st::Command &cmd) {
++                switch (cmd.op) {
++                case st::kSamples:
++                    for (uint32 n = 0; n < cmd.a; n++) {
++                        g_soundSamples++;
++                        if (m_soundCpuEnabled) {
++                            uint64 cycles = m_soundCpuSpillover;
++                            while (cycles < kSoundCpuCyclesPerSample) {
++                                cycles += m_soundCpu.Step();
++                            }
++                            m_soundCpuSpillover = cycles - kSoundCpuCyclesPerSample;
++                        }
++                        for (uint32 i = 0; i < 32; i++) {
++                            m_sound->Step(i);
++                        }
++                    }
++                    break;
++                case st::kRamWrite8: m_soundRam[cmd.a] = static_cast<uint8>(cmd.value); break;
++                case st::kRamWrite16: Put16(&m_soundRam[cmd.a], cmd.value); break;
++                case st::kRegWrite8: m_sound->Write(cmd.a, static_cast<uint8>(cmd.value), false); break;
++                case st::kRegWrite16: m_sound->Write(cmd.a, cmd.value, true); break;
++                default: break;
++                }
++            };
++            g_soundMainIrqHandler = m_sound->onMainInterrupt;
++            m_sound->onMainInterrupt = [](bool level) {
++                if (st::g_thread && st::g_thread->OnWorker()) {
++                    g_soundMainIrqLate.store(level);
++                } else {
++                    g_soundMainIrqHandler(level);
++                }
++            };
++            music::SetAccessHook([] { st::SyncNow(); });
++            thread->Start();
++            st::g_thread = thread;
++        }
++    }
+     m_frameDone = false;
+     while (!m_frameDone) {
+         Run();
+     }
+     SATRECOMP_VIDEO_SYNC(); // (the port looks at the renderer between frames)
++    st::SyncNow();          // (... and takes the frame's sound)
+ }
+ 
+ // The CPUs up to the next thing due, then that. The two CPUs take turns: each runs the whole stretch unless
+ // exactly one of them is only waiting (for the other): then they alternate in short slices, so that the one
+ // waiting sees what it waits for soon.
+ void Machine::Run() {
++    if (const int level = g_soundMainIrqLate.exchange(-1); level >= 0) [[unlikely]] {
++        g_soundMainIrqLateCount++;
++        g_soundMainIrqHandler(level != 0);
++    }
+     uint64 due = std::min(m_vdp.phaseDue, m_sampleDue);
+     for (const uint64 other : {m_smpc.commandDue, m_scu.timer1Due, m_vdp.drawEndDue, m_cd.periodicDue}) {
+         if (other) {
+@@ -203,9 +292,20 @@ void Machine::Run() {
+         PartTimer vdpTimer(g_partTimes.vdp);
+         VdpPhase();
+     }
+-    while (m_sampleDue <= m_now) {
+-        PartTimer soundTimer(g_partTimes.sound);
+-        SoundSample();
++    if (st::g_thread) {
++        uint32 samples = 0;
++        while (m_sampleDue <= m_now) {
++            const uint64 total = m_clock + m_sampleFraction;
++            m_sampleDue += total / kSampleRate;
++            m_sampleFraction = total % kSampleRate;
++            samples++;
++        }
++        if (samples) st::g_thread->Push(st::kSamples, samples);
++    } else {
++        while (m_sampleDue <= m_now) {
++            PartTimer soundTimer(g_partTimes.sound);
++            SoundSample();
++        }
+     }
+     if (m_smpc.commandDue && m_smpc.commandDue <= m_now) {
+         m_smpc.commandDue = 0;
+@@ -243,8 +343,8 @@ uint8 Machine::BusRead8(uint32 a) {
+     case 0x00: return m_rom[a & 0x7FFFF];
+     case 0x01: return a < 0x00180000 ? SmpcRead(a & 0x7F) : 0xFF;
+     case 0x02: return m_ramLow[a & 0xFFFFF];
+-    case 0x5A: return m_soundRam[a & 0x7FFFF];
+-    case 0x5B: return static_cast<uint8>(m_sound->Read(a & 0xFFF, false));
++    case 0x5A: g_soundBusReads++; st::SyncNow(); return m_soundRam[a & 0x7FFFF];
++    case 0x5B: g_soundBusReads++; st::SyncNow(); return static_cast<uint8>(m_sound->Read(a & 0xFFF, false));
+     case 0x5C: return a < 0x05C80000 ? m_vram1[a & 0x7FFFF] : DrawFramebuffer()[a & 0x3FFFF];
+     case 0x5E: return m_vram2[a & 0x7FFFF];
+     case 0x5F:
+@@ -269,8 +369,8 @@ uint16 Machine::BusRead16(uint32 a) {
+     case 0x01: return a < 0x00180000 ? static_cast<uint16>(0xFF00 | SmpcRead((a & 0x7F) | 1)) : 0xFFFF;
+     case 0x02: return Get16(&m_ramLow[a & 0xFFFFE]);
+     case 0x58: return CdRead(a & 0xFFFFF);
+-    case 0x5A: return Get16(&m_soundRam[a & 0x7FFFE]);
+-    case 0x5B: return m_sound->Read(a & 0xFFE, true);
++    case 0x5A: g_soundBusReads++; st::SyncNow(); return Get16(&m_soundRam[a & 0x7FFFE]);
++    case 0x5B: g_soundBusReads++; st::SyncNow(); return m_sound->Read(a & 0xFFE, true);
+     case 0x5C: return a < 0x05C80000 ? Get16(&m_vram1[a & 0x7FFFE]) : Get16(&DrawFramebuffer()[a & 0x3FFFE]);
+     case 0x5D: return Vdp1ReadRegister(a & 0x1E);
+     case 0x5E: return Get16(&m_vram2[a & 0x7FFFE]);
+@@ -309,8 +409,16 @@ void Machine::BusWrite8(uint32 a, uint8 v) {
+         m_ramLow[a & 0xFFFFF] = v;
+         NoteWrite(&m_ramLow[a & 0xFFFFF]);
+         return;
+-    case 0x5A: m_soundRam[a & 0x7FFFF] = v; return;
+-    case 0x5B: m_sound->Write(a & 0xFFF, v, false); return;
++    case 0x5A:
++        g_soundBusWrites++;
++        if (st::g_thread) st::g_thread->Push(st::kRamWrite8, a & 0x7FFFF, v);
++        else m_soundRam[a & 0x7FFFF] = v;
++        return;
++    case 0x5B:
++        g_soundBusWrites++;
++        if (st::g_thread) st::g_thread->Push(st::kRegWrite8, a & 0xFFF, v);
++        else m_sound->Write(a & 0xFFF, v, false);
++        return;
+     case 0x5C:
+         if (a < 0x05C80000) {
+             m_vram1[a & 0x7FFFF] = v;
+@@ -368,8 +476,16 @@ void Machine::BusWrite16(uint32 a, uint16 v) {
+         NoteWrite(&m_ramLow[a & 0xFFFFE]);
+         return;
+     case 0x58: CdWrite(a & 0xFFFFF, v); return;
+-    case 0x5A: Put16(&m_soundRam[a & 0x7FFFE], v); return;
+-    case 0x5B: m_sound->Write(a & 0xFFE, v, true); return;
++    case 0x5A:
++        g_soundBusWrites++;
++        if (st::g_thread) st::g_thread->Push(st::kRamWrite16, a & 0x7FFFE, v);
++        else Put16(&m_soundRam[a & 0x7FFFE], v);
++        return;
++    case 0x5B:
++        g_soundBusWrites++;
++        if (st::g_thread) st::g_thread->Push(st::kRegWrite16, a & 0xFFE, v);
++        else m_sound->Write(a & 0xFFE, v, true);
++        return;
+     case 0x5C:
+         if (a < 0x05C80000) {
+             Put16(&m_vram1[a & 0x7FFFE], v);
+@@ -691,6 +807,9 @@ void Machine::SmpcWrite(uint32 address, uint8 value) {
+ 
+ void Machine::SmpcCommand() {
+     auto &s = m_smpc;
++    if (s.command == 0x06 || s.command == 0x07 || s.command == 0x0D || s.command == 0x0E || s.command == 0x0F) {
++        st::SyncNow(); // (the sound side is started, stopped or reset from here)
++    }
+     s.OREG[31] = s.command;
+     switch (s.command) {
+     case 0x02: // SSHON (a slave CPU that is already running goes on)
+@@ -811,6 +930,7 @@ void Machine::SmpcPeripheralReport() {
+ // Sound: a sample of the chip's, 44,100 times a second, and the sound CPU's share of time before it
+ 
+ void Machine::SoundSample() {
++    g_soundSamples++;
+     if (m_soundCpuEnabled) {
+         uint64 cycles = m_soundCpuSpillover;
+         while (cycles < kSoundCpuCyclesPerSample) {
+@@ -827,6 +947,17 @@ void Machine::SoundSample() {
+ }
+ 
+ void Machine::SoundCatchUp(uint64 sliceCycles) {
++    if (st::g_thread) {
++        uint32 samples = 0;
++        while (m_sampleDue <= m_now + sliceCycles) {
++            const uint64 total = m_clock + m_sampleFraction;
++            m_sampleDue += total / kSampleRate;
++            m_sampleFraction = total % kSampleRate;
++            samples++;
++        }
++        if (samples) st::g_thread->Push(st::kSamples, samples);
++        return;
++    }
+     while (m_sampleDue <= m_now + sliceCycles) {
+         SoundSample();
+     }
+diff --git b/machine/sound_thread.h b/machine/sound_thread.h
+new file mode 100644
+index 0000000..b89bebd
+--- /dev/null
++++ b/machine/sound_thread.h
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// SaturnTaisen GA36: the sound side (68000 and SCSP) on a core of its own (SATRECOMP_SOUND_THREAD=1).
++//
++// The sound side's samples are due at fixed times; the main side only meets it through its memory and
++// registers (0x05A00000-0x05BFFFFF), the SMPC's sound commands, the CD music it mixes in, and its interrupt
++// line to the SCU. So the machine queues "make the next n samples" and its own writes to the sound side, in
++// the order they happen, and a second thread works through them a little behind. Before the main side reads
++// anything there (or changes what the music source plays, or saves a state, or hands a frame to the port) it
++// waits for the queue to empty, which leaves the sound side exactly where it would be running in line. The
++// one thing that cannot wait is the interrupt line to the SCU: Sakura Taisen never raises it; if a game does,
++// the machine notices on its next turn (and reports it), a little later than the hardware would.
++#pragma once
++
++#include <atomic>
++#include <chrono>
++#include <condition_variable>
++#include <cstdint>
++#include <functional>
++#include <mutex>
++#include <thread>
++#include <vector>
++
++namespace satrecomp::machine::st {
++
++enum Op : uint8_t { kSamples, kRamWrite8, kRamWrite16, kRegWrite8, kRegWrite16 };
++
++struct Command {
++    uint8_t op;
++    uint8_t pad;
++    uint16_t value;
++    uint32_t a;
++};
++static_assert(sizeof(Command) == 8);
++
++class SoundThread {
++public:
++    static constexpr uint32_t kSize = 1u << 16;
++    uint64_t commands = 0, syncs = 0, waitNs = 0, busyNs = 0, fullWaits = 0;
++    std::function<void(const Command &)> execute;
++
++    SoundThread() : m_ring(kSize) {}
++    ~SoundThread() { Stop(); }
++
++    void Start() { m_thread = std::thread([this] { Work(); }); }
++    void Stop() {
++        if (!m_thread.joinable()) return;
++        Sync();
++        {
++            std::lock_guard<std::mutex> lock(m_mutex);
++            m_stop.store(true);
++        }
++        m_wake.notify_one();
++        m_thread.join();
++    }
++    bool OnWorker() const { return std::this_thread::get_id() == m_thread.get_id(); }
++
++    void Push(uint8_t op, uint32_t a = 0, uint16_t value = 0) {
++        const uint32_t head = m_head.load(std::memory_order_relaxed);
++        if (head - m_tail.load(std::memory_order_acquire) >= kSize) [[unlikely]] {
++            fullWaits++;
++            while (head - m_tail.load(std::memory_order_acquire) >= kSize) Relax();
++        }
++        Command &cmd = m_ring[head & (kSize - 1)];
++        cmd.op = op;
++        cmd.value = value;
++        cmd.a = a;
++        m_head.store(head + 1, std::memory_order_seq_cst);
++        commands++;
++        if (m_sleeping.load(std::memory_order_seq_cst)) [[unlikely]] {
++            std::lock_guard<std::mutex> lock(m_mutex);
++            m_wake.notify_one();
++        }
++    }
++
++    void Sync() {
++        const uint32_t head = m_head.load(std::memory_order_relaxed);
++        if (m_done.load(std::memory_order_acquire) == head) return;
++        syncs++;
++        const auto start = std::chrono::steady_clock::now();
++        for (unsigned spins = 0; m_done.load(std::memory_order_acquire) != head; spins++) {
++            if (spins < 20000) Relax();
++            else std::this_thread::yield();
++        }
++        waitNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
++            std::chrono::steady_clock::now() - start).count());
++    }
++
++private:
++    std::vector<Command> m_ring;
++    alignas(64) std::atomic<uint32_t> m_head{0};
++    alignas(64) std::atomic<uint32_t> m_tail{0};
++    alignas(64) std::atomic<uint32_t> m_done{0};
++    std::atomic<bool> m_sleeping{false}, m_stop{false};
++    std::mutex m_mutex;
++    std::condition_variable m_wake;
++    std::thread m_thread;
++
++    static void Relax() {
++#if defined(__arm__) || defined(__aarch64__)
++        __asm__ __volatile__("yield");
++#elif defined(__x86_64__) || defined(__i386__)
++        __builtin_ia32_pause();
++#endif
++    }
++
++    void Work() {
++        uint32_t tail = 0;
++        for (;;) {
++            uint32_t head = m_head.load(std::memory_order_acquire);
++            if (head == tail) {
++                for (unsigned spins = 0; spins < 4000 && head == tail; spins++) {
++                    Relax();
++                    head = m_head.load(std::memory_order_acquire);
++                }
++                if (head == tail) {
++                    std::unique_lock<std::mutex> lock(m_mutex);
++                    m_sleeping.store(true, std::memory_order_seq_cst);
++                    m_wake.wait(lock, [&] { return m_head.load(std::memory_order_seq_cst) != tail || m_stop.load(); });
++                    m_sleeping.store(false, std::memory_order_seq_cst);
++                    if (m_stop.load() && m_head.load() == tail) return;
++                    continue;
++                }
++            }
++            const auto start = std::chrono::steady_clock::now();
++            while (tail != head) {
++                execute(m_ring[tail & (kSize - 1)]);
++                tail++;
++                m_tail.store(tail, std::memory_order_release);
++                if ((tail & 15) == 0) m_done.store(tail, std::memory_order_release);
++            }
++            m_done.store(tail, std::memory_order_release);
++            busyNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
++                std::chrono::steady_clock::now() - start).count());
++        }
++    }
++};
++
++// The machine's sound thread, if it has one (one machine a process)
++extern SoundThread *g_thread;
++inline void SyncNow() {
++    if (g_thread) g_thread->Sync();
++}
++
++} // namespace satrecomp::machine::st
+diff --git a/machine/state.cpp b/machine/state.cpp
+index bc8d8dd..67418d9 100644
+--- a/machine/state.cpp
++++ b/machine/state.cpp
+@@ -3,6 +3,7 @@
+ // Save states: the machine's part (runtime/state.h).
+ #include "machine.h"
+ #include "video_thread.h"
++#include "sound_thread.h"
+ 
+ #include "../runtime/state.h"
+ 
+@@ -37,6 +38,7 @@ void SH2::Serialize(Archive &ar) {
+ 
+ void Machine::Serialize(Archive &ar) {
+     SATRECOMP_VIDEO_SYNC(); // (the renderer's thread, if any, has drawn everything asked of it)
++    st::SyncNow();          // (and the sound side's has made every sample due)
+     ar.Mark(0x4D414348);
+     ar.Vec(m_ramHigh);
+     ar.Vec(m_ramLow);
+diff --git a/runtime/music.cpp b/runtime/music.cpp
+index 5fec3e2..a5083ec 100644
+--- a/runtime/music.cpp
++++ b/runtime/music.cpp
+@@ -53,6 +53,18 @@ namespace {
+     }
+ } // namespace
+ 
++// GA36 (sound thread): the CD music is mixed in by the sound side; whoever reads or changes its state first
++// lets the sound side catch up (machine/sound_thread.h)
++namespace {
++void (*g_accessHook)() = nullptr;
++inline void Access() {
++    if (g_accessHook) g_accessHook();
++}
++} // namespace
++void SetAccessHook(void (*hook)()) {
++    g_accessHook = hook;
++}
++
+ void SetDisc(Disc disc) {
+     g.disc = std::move(disc);
+ }
+@@ -66,6 +78,7 @@ bool IsAudioTrack(int track) {
+ }
+ 
+ void Play(int first, int last, int repeats) {
++    Access();
+     if (!IsAudioTrack(first)) {
+         Stop();
+         return;
+@@ -84,12 +97,14 @@ void Play(int first, int last, int repeats) {
+ }
+ 
+ void Pause() {
++    Access();
+     if (g.state == State::Playing) {
+         g.state = State::Paused;
+     }
+ }
+ 
+ void Resume() {
++    Access();
+     if (g.state == State::Paused && g.track != 0) {
+         g.state = State::Playing;
+         g.ended = false;
+@@ -97,6 +112,7 @@ void Resume() {
+ }
+ 
+ void Stop() {
++    Access();
+     g.state = State::Stopped;
+     g.track = 0;
+     g.sample = 588;
+@@ -104,15 +120,19 @@ void Stop() {
+ }
+ 
+ State GetState() {
++    Access();
+     return g.state;
+ }
+ bool IsPlaying(int first, int last) {
++    Access();
+     return g.state == State::Playing && g.first == first && g.last == (last < first ? first : last);
+ }
+ int CurrentTrack() {
++    Access();
+     return g.track;
+ }
+ uint32_t CurrentSector() {
++    Access();
+     return g.sector;
+ }
+ 
+@@ -140,6 +160,7 @@ bool Next(int16_t &left, int16_t &right) {
+ }
+ 
+ void Serialize(Archive &ar) {
++    Access();
+     ar.Mark(0x4D555349);
+     ar.Pod(g.state);
+     ar.Pod(g.first);

@@ -1,0 +1,587 @@
+diff --git a/machine/machine.cpp b/machine/machine.cpp
+index 6419727..41d9b5b 100644
+--- a/machine/machine.cpp
++++ b/machine/machine.cpp
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-3.0-only
+ // Copyright (C) 2026 Tommy McLeroy. Part of satrecomp: https://github.com/tmcleroy/satrecomp
+ #include "machine.h"
++#include "video_thread.h"
+ 
+ #include <algorithm>
+ #include <bit>
+@@ -50,7 +51,20 @@ Machine::Machine()
+     memory.fb[1] = m_fb[1].data();
+     memory.vram2 = m_vram2.data();
+     memory.cram = m_cram.data();
++    // (GA36: SATRECOMP_VIDEO_THREAD=1 draws on another core, from copies of the video memory: video_thread.h)
++    std::unique_ptr<vt::VideoThread> videoThread;
++    if (const char *on = std::getenv("SATRECOMP_VIDEO_THREAD"); on && *on && *on != '0' && !vt::g_thread) {
++        videoThread = std::make_unique<vt::VideoThread>();
++        memory.vram1 = videoThread->vram1.data();
++        memory.vram2 = videoThread->vram2.data();
++        memory.cram = videoThread->cram.data();
++    }
+     m_video = std::make_unique<video::Renderer>(memory);
++    if (videoThread) {
++        videoThread->CopyFrom(m_vram1.data(), m_vram2.data(), m_cram.data());
++        videoThread->Start(*m_video);
++        vt::g_thread = videoThread.release();
++    }
+     m_sound = std::make_unique<sound::Chip>(m_soundRam.data());
+     m_sound->onSoundCpuInterrupt = [this](uint8 level) { m_soundCpu.SetInterruptLevel(level); };
+     m_sound->onMainInterrupt = [this](bool level) {
+@@ -66,13 +80,29 @@ Machine::Machine()
+     };
+ }
+ 
+-Machine::~Machine() = default;
++namespace vt {
++VideoThread *g_thread = nullptr;
++}
++
++Machine::~Machine() {
++    if (vt::g_thread) {
++        vt::VideoThread *thread = vt::g_thread;
++        if (std::getenv("SATRECOMP_VIDEO_THREAD_STATS")) {
++            fprintf(stderr, "video thread: %llu commands, %llu waits for it (%.1f ms), %.1f ms drawing, %llu times the queue was full\n",
++                    static_cast<unsigned long long>(thread->commands), static_cast<unsigned long long>(thread->syncs),
++                    thread->waitNs / 1e6, thread->busyNs / 1e6, static_cast<unsigned long long>(thread->fullWaits));
++        }
++        vt::g_thread = nullptr;
++        delete thread; // (stops it, before the renderer goes)
++    }
++}
+ 
+ void Machine::LoadRom(const uint8 *data, size_t size) {
+     std::copy_n(data, std::min(size, m_rom.size()), m_rom.begin());
+ }
+ 
+ void Machine::Reset(bool hard) {
++    SATRECOMP_VIDEO_SYNC();
+     if (hard) {
+         std::fill(m_ramHigh.begin(), m_ramHigh.end(), 0);
+         std::fill(m_ramLow.begin(), m_ramLow.end(), 0);
+@@ -85,6 +115,9 @@ void Machine::Reset(bool hard) {
+         for (size_t i = 0; i < m_vram1.size(); i++) {
+             m_vram1[i] = (i & 0x1F) == 0 ? 0x80 : (i & 0x1F) == 1 ? 0x00 : (i & 2) ? 0x55 : 0xAA;
+         }
++        if (vt::g_thread) {
++            vt::g_thread->CopyFrom(m_vram1.data(), m_vram2.data(), m_cram.data());
++        }
+     }
+     SetClock(false);
+     ScuReset();
+@@ -101,6 +134,7 @@ void Machine::Reset(bool hard) {
+     m_masterSpillover = m_slaveSpillover = 0;
+     m_sampleFraction = 0;
+     m_sampleDue = m_now + m_clock / kSampleRate;
++    SATRECOMP_VIDEO_SYNC();
+ }
+ 
+ void Machine::SetClock(bool dots352) {
+@@ -122,6 +156,7 @@ void Machine::RunFrame() {
+     while (!m_frameDone) {
+         Run();
+     }
++    SATRECOMP_VIDEO_SYNC(); // (the port looks at the renderer between frames)
+ }
+ 
+ // The CPUs up to the next thing due, then that. The two CPUs take turns: each runs the whole stretch unless
+@@ -197,6 +232,12 @@ void Machine::Run() {
+ // ---------------------------------------------------------------------------------------------------------
+ // The bus
+ 
++// Colour RAM mode 2 or 3 (24-bit colours): from the machine's own copy of RAMCTL when the renderer has a thread
++// of its own (its registers may be some lines behind), from the renderer otherwise
++#define CramMode24() (vt::g_thread ? ((m_vdp.regs2[0x0E >> 1] >> 12) & 3) >= 2 : m_video->Regs2().vramControl.colorRAMMode >= 2)
++// The framebuffer the VDP1 draws into (only the renderer's thread touches it while a frame runs)
++#define DrawFramebuffer() (vt::SyncNow(), m_fb[m_video->DisplayFramebuffer() ^ 1])
++
+ uint8 Machine::BusRead8(uint32 a) {
+     switch (a >> 20) {
+     case 0x00: return m_rom[a & 0x7FFFF];
+@@ -204,11 +245,11 @@ uint8 Machine::BusRead8(uint32 a) {
+     case 0x02: return m_ramLow[a & 0xFFFFF];
+     case 0x5A: return m_soundRam[a & 0x7FFFF];
+     case 0x5B: return static_cast<uint8>(m_sound->Read(a & 0xFFF, false));
+-    case 0x5C: return a < 0x05C80000 ? m_vram1[a & 0x7FFFF] : m_fb[m_video->DisplayFramebuffer() ^ 1][a & 0x3FFFF];
++    case 0x5C: return a < 0x05C80000 ? m_vram1[a & 0x7FFFF] : DrawFramebuffer()[a & 0x3FFFF];
+     case 0x5E: return m_vram2[a & 0x7FFFF];
+     case 0x5F:
+         if (a < 0x05F80000) {
+-            return m_cram[CramAddress(a, m_video->Regs2().vramControl.colorRAMMode >= 2)];
++            return m_cram[CramAddress(a, CramMode24())];
+         }
+         break;
+     default:
+@@ -230,12 +271,12 @@ uint16 Machine::BusRead16(uint32 a) {
+     case 0x58: return CdRead(a & 0xFFFFF);
+     case 0x5A: return Get16(&m_soundRam[a & 0x7FFFE]);
+     case 0x5B: return m_sound->Read(a & 0xFFE, true);
+-    case 0x5C: return a < 0x05C80000 ? Get16(&m_vram1[a & 0x7FFFE]) : Get16(&m_fb[m_video->DisplayFramebuffer() ^ 1][a & 0x3FFFE]);
++    case 0x5C: return a < 0x05C80000 ? Get16(&m_vram1[a & 0x7FFFE]) : Get16(&DrawFramebuffer()[a & 0x3FFFE]);
+     case 0x5D: return Vdp1ReadRegister(a & 0x1E);
+     case 0x5E: return Get16(&m_vram2[a & 0x7FFFE]);
+     case 0x5F:
+         if (a < 0x05F80000) {
+-            return Get16(&m_cram[CramAddress(a & ~1u, m_video->Regs2().vramControl.colorRAMMode >= 2)]);
++            return Get16(&m_cram[CramAddress(a & ~1u, CramMode24())]);
+         }
+         if (a < 0x05FE0000) {
+             return Vdp2ReadRegister(a & 0x1FE);
+@@ -273,23 +314,25 @@ void Machine::BusWrite8(uint32 a, uint8 v) {
+     case 0x5C:
+         if (a < 0x05C80000) {
+             m_vram1[a & 0x7FFFF] = v;
++            if (vt::g_thread) vt::g_thread->Push(vt::kVram1Write8, a & 0x7FFFF, 0, v);
+         } else {
+-            m_fb[m_video->DisplayFramebuffer() ^ 1][a & 0x3FFFF] = v;
++            DrawFramebuffer()[a & 0x3FFFF] = v;
+             m_video->Vdp1FramebufferWritten();
+         }
+         return;
+     case 0x5E:
+         if (m_vram2[a & 0x7FFFF] != v) {
+             m_vram2[a & 0x7FFFF] = v;
+-            m_video->NoteVideoMemoryWrite();
++            SATRECOMP_VIDEO((vt::kVram2Write8, a & 0x7FFFF, 0, v), NoteVideoMemoryWrite());
+         }
+         return;
+     case 0x5F:
+         if (a < 0x05F80000) {
+-            uint8 &cell = m_cram[CramAddress(a, m_video->Regs2().vramControl.colorRAMMode >= 2)];
++            const uint32 at = CramAddress(a, CramMode24());
++            uint8 &cell = m_cram[at];
+             if (cell != v) {
+                 cell = v;
+-                m_video->NoteVideoMemoryWrite();
++                SATRECOMP_VIDEO((vt::kCramWrite8, at, 0, v), NoteVideoMemoryWrite());
+             }
+             return;
+         }
+@@ -330,8 +373,9 @@ void Machine::BusWrite16(uint32 a, uint16 v) {
+     case 0x5C:
+         if (a < 0x05C80000) {
+             Put16(&m_vram1[a & 0x7FFFE], v);
++            if (vt::g_thread) vt::g_thread->Push(vt::kVram1Write16, a & 0x7FFFE, 0, v);
+         } else {
+-            Put16(&m_fb[m_video->DisplayFramebuffer() ^ 1][a & 0x3FFFE], v);
++            Put16(&DrawFramebuffer()[a & 0x3FFFE], v);
+             m_video->Vdp1FramebufferWritten();
+         }
+         return;
+@@ -339,15 +383,16 @@ void Machine::BusWrite16(uint32 a, uint16 v) {
+     case 0x5E:
+         if (Get16(&m_vram2[a & 0x7FFFE]) != v) {
+             Put16(&m_vram2[a & 0x7FFFE], v);
+-            m_video->NoteVideoMemoryWrite();
++            SATRECOMP_VIDEO((vt::kVram2Write16, a & 0x7FFFE, 0, v), NoteVideoMemoryWrite());
+         }
+         return;
+     case 0x5F:
+         if (a < 0x05F80000) {
+-            uint8 *cell = &m_cram[CramAddress(a & ~1u, m_video->Regs2().vramControl.colorRAMMode >= 2)];
++            const uint32 at = CramAddress(a & ~1u, CramMode24());
++            uint8 *cell = &m_cram[at];
+             if (Get16(cell) != v) {
+                 Put16(cell, v);
+-                m_video->NoteVideoMemoryWrite();
++                SATRECOMP_VIDEO((vt::kCramWrite16, at, 0, v), NoteVideoMemoryWrite());
+             }
+         } else if (a < 0x05FE0000) {
+             Vdp2WriteRegister(a & 0x1FE, v);
+diff --git a/machine/state.cpp b/machine/state.cpp
+index 77ff8ce..bc8d8dd 100644
+--- a/machine/state.cpp
++++ b/machine/state.cpp
+@@ -2,6 +2,7 @@
+ // Copyright (C) 2026 Tommy McLeroy. Part of satrecomp: https://github.com/tmcleroy/satrecomp
+ // Save states: the machine's part (runtime/state.h).
+ #include "machine.h"
++#include "video_thread.h"
+ 
+ #include "../runtime/state.h"
+ 
+@@ -35,6 +36,7 @@ void SH2::Serialize(Archive &ar) {
+ }
+ 
+ void Machine::Serialize(Archive &ar) {
++    SATRECOMP_VIDEO_SYNC(); // (the renderer's thread, if any, has drawn everything asked of it)
+     ar.Mark(0x4D414348);
+     ar.Vec(m_ramHigh);
+     ar.Vec(m_ramLow);
+@@ -63,6 +65,9 @@ void Machine::Serialize(Archive &ar) {
+     slaveSH2.Serialize(ar);
+     m_soundCpu.Serialize(ar);
+     m_sound->Serialize(ar);
++    if (!ar.Saving() && vt::g_thread) {
++        vt::g_thread->CopyFrom(m_vram1.data(), m_vram2.data(), m_cram.data()); // (its copies of the video memory)
++    }
+     m_video->Serialize(ar);
+     ar.Mark(0x454E444D);
+     if (!ar.Saving()) {
+diff --git a/machine/vdp.cpp b/machine/vdp.cpp
+index 8bd343f..84bdfee 100644
+--- a/machine/vdp.cpp
++++ b/machine/vdp.cpp
+@@ -4,6 +4,7 @@
+ // is when: the parts of a line and of a frame, the interrupts at the blanking periods, the VDP1 going through
+ // its command table and swapping its framebuffers.
+ #include "machine.h"
++#include "video_thread.h"
+ 
+ namespace satrecomp::machine {
+ 
+@@ -20,11 +21,12 @@ namespace {
+ 
+ void Machine::VdpReset() {
+     m_vdp = {};
++    SATRECOMP_VIDEO_SYNC();
+     m_video->Reset(true);
+     for (uint32 address = 0; address < 0x200; address += 2) {
+         m_video->WriteVdp2Reg(address, 0);
+     }
+-    m_video->SetField(m_vdp.odd);
++    SATRECOMP_VIDEO((vt::kField, 0, 0, 0, m_vdp.odd), SetField(m_vdp.odd));
+     VdpUpdateResolution();
+     m_vdp.phaseDue = m_now + m_vdp.hTimings[kHActive];
+ }
+@@ -60,7 +62,7 @@ void Machine::VdpUpdateResolution() {
+         }
+     }
+     m_vdp.field = interlaced && m_vdp.odd ? 1 : 0;
+-    m_video->SetResolution(m_vdp.width, m_vdp.height, exclusive);
++    SATRECOMP_VIDEO((vt::kResolution, m_vdp.width, m_vdp.height, 0, exclusive), SetResolution(m_vdp.width, m_vdp.height, exclusive));
+ }
+ 
+ // The next part of the line begins
+@@ -79,7 +81,7 @@ void Machine::VdpPhase() {
+                     }
+                 }
+             }
+-            m_video->RenderLine(v.VCNT);
++            SATRECOMP_VIDEO((vt::kLine, v.VCNT), RenderLine(v.VCNT));
+         }
+         break;
+     case kHRightBorder:
+@@ -106,11 +108,11 @@ void Machine::VdpPhase() {
+             if (interlace != 0) {
+                 v.odd = !v.odd;
+                 v.field = v.odd;
+-                m_video->SetField(v.odd);
++                SATRECOMP_VIDEO((vt::kField, 0, 0, 0, v.odd), SetField(v.odd));
+             } else if (!v.odd) {
+                 v.odd = true;
+                 v.field = 0;
+-                m_video->SetField(v.odd);
++                SATRECOMP_VIDEO((vt::kField, 0, 0, 0, v.odd), SetField(v.odd));
+             }
+         }
+         break;
+@@ -131,7 +133,8 @@ void Machine::VdpPhase() {
+             v.paramsChanged = false;
+             if (v.doVBlankErase) {
+                 const uint64 lineCycles = v.hTimings[0] + v.hTimings[1] + v.hTimings[2] + v.hTimings[3];
+-                m_video->EraseFramebuffer((lineCycles - 113) * (v.vTimings[v.field][kVLastLine] - v.vTimings[v.field][kVActive]));
++                const uint64 cycles = (lineCycles - 113) * (v.vTimings[v.field][kVLastLine] - v.vTimings[v.field][kVActive]);
++                SATRECOMP_VIDEO((vt::kErase, 0, cycles), EraseFramebuffer(cycles));
+             }
+             if (erase) {
+                 v.doDisplayErase = true;
+@@ -170,19 +173,21 @@ void Machine::VdpLineEnd() {
+             m_smpc.intbackInProgress = false; // (a pad read not finished by now is given up)
+             break;
+         case kVBlanking:
++            // (the picture goes to the port from this thread, as before)
++            SATRECOMP_VIDEO_SYNC();
+             m_video->EndFrame();
+             m_frameDone = true;
+             if (v.doDisplayErase) {
+                 v.doDisplayErase = false;
+-                m_video->EraseFramebuffer(0);
++                SATRECOMP_VIDEO((vt::kErase, 0, 0), EraseFramebuffer(0));
+             }
+             break;
+         case kVTopBorder:
+             VdpUpdateResolution();
+-            m_video->LatchDisplayMode();
++            SATRECOMP_VIDEO((vt::kLatch), LatchDisplayMode());
+             break;
+         case kVLastLine: // VBlank out
+-            m_video->BeginFrame();
++            SATRECOMP_VIDEO((vt::kBeginFrame), BeginFrame());
+             v.vblank = false;
+             ScuRaise(1);
+             m_scu.timer0Counter = 0;
+@@ -222,7 +227,7 @@ void Machine::Vdp2WriteRegister(uint32 address, uint16 value) {
+         m_vdp.resolutionDirty = true; // (the display mode changes with the next frame)
+     }
+     m_vdp.regs2[address >> 1] = value;
+-    m_video->WriteVdp2Reg(address, value);
++    SATRECOMP_VIDEO((vt::kVdp2Reg, address, 0, value), WriteVdp2Reg(address, value));
+ }
+ 
+ // ---------------------------------------------------------------------------------------------------------
+@@ -262,7 +267,7 @@ void Machine::Vdp1WriteRegister(uint32 address, uint16 value) {
+     case 0x0A: v.EWRR = value; break;
+     default: break;
+     }
+-    m_video->WriteVdp1Reg(address, value);
++    SATRECOMP_VIDEO((vt::kVdp1Reg, address, 0, value), WriteVdp1Reg(address, value));
+ }
+ 
+ void Machine::Vdp1Swap() {
+@@ -270,7 +275,7 @@ void Machine::Vdp1Swap() {
+     v.previousCommandAddress = v.commandAddress;
+     v.previousFrameEnded = v.frameEnded;
+     v.frameEnded = false;
+-    m_video->SwapFramebuffer();
++    SATRECOMP_VIDEO((vt::kSwap), SwapFramebuffer());
+     if (v.PTMR & 2) {
+         Vdp1Draw(); // (drawing starts with every swap)
+     }
+@@ -282,7 +287,7 @@ void Machine::Vdp1Swap() {
+ void Machine::Vdp1Draw() {
+     auto &v = m_vdp;
+     v.frameEnded = false;
+-    m_video->BeginDrawing();
++    SATRECOMP_VIDEO((vt::kBeginDrawing), BeginDrawing());
+     constexpr uint32 kNoReturn = 0xFFFFFFFF;
+     uint32 address = 0, returnAddress = kNoReturn;
+     uint32 commands = 0;
+@@ -295,7 +300,7 @@ void Machine::Vdp1Draw() {
+             break;
+         }
+         if (!(control & 0x4000) && (control & 0x000F) <= 0x000B) {
+-            m_video->DrawCommand(address);
++            SATRECOMP_VIDEO((vt::kDraw, address), DrawCommand(address));
+         }
+         const uint32 link = (static_cast<uint32>(Get16(&m_vram1[address + 2])) << 3) & ~0x1Fu;
+         uint32 target = address;
+@@ -322,7 +327,7 @@ void Machine::Vdp1Draw() {
+         }
+         address = target & 0x7FFE0;
+     }
+-    m_video->EndDrawing();
++    SATRECOMP_VIDEO((vt::kEndDrawing), EndDrawing());
+     if (ended) {
+         v.drawEndDue = m_now + 2000 + commands * 64;
+     }
+diff --git b/machine/video_thread.h b/machine/video_thread.h
+new file mode 100644
+index 0000000..44d5950
+--- /dev/null
++++ b/machine/video_thread.h
+@@ -0,0 +1,211 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// SaturnTaisen GA36: the renderer on a core of its own (SATRECOMP_VIDEO_THREAD=1).
++//
++// The machine tells the renderer what happens (registers written, lines reached, commands to draw) and never
++// asks it anything back while a frame runs, so those calls can wait in a queue that a second thread works
++// through in order, a few lines behind the CPUs. The renderer then reads its own copies of VDP1 VRAM, VDP2
++// VRAM and colour RAM, which the same queue keeps up to date: whatever a line is drawn with is exactly what
++// the machine had written by then. The VDP1 framebuffers stay shared: only the renderer touches them during a
++// frame, and a CPU access to them first waits for the queue to empty.
++//
++// Outside the machine's own calls (RunFrame, Reset, Serialize) the queue is always empty, and the frame's
++// picture is handed over (EndFrame) on the machine's thread, so the port sees the renderer as before.
++#pragma once
++
++#include "../video/renderer.h"
++
++#include <atomic>
++#include <chrono>
++#include <condition_variable>
++#include <cstdlib>
++#include <cstring>
++#include <mutex>
++#include <thread>
++#include <vector>
++
++namespace satrecomp::machine::vt {
++
++enum Op : uint8_t {
++    kVdp1Reg, kVdp2Reg, kErase, kSwap, kBeginDrawing, kDraw, kEndDrawing, kResolution, kField, kLatch,
++    kBeginFrame, kLine, kVram1Write8, kVram1Write16, kVram2Write8, kVram2Write16, kCramWrite8, kCramWrite16,
++};
++
++struct Command {
++    uint8_t op;
++    uint8_t flag;
++    uint16_t value;
++    uint32_t a;
++    uint64_t c;
++};
++static_assert(sizeof(Command) == 16);
++
++inline void Put16(uint8_t *p, uint16_t v) {
++    p[0] = static_cast<uint8_t>(v >> 8);
++    p[1] = static_cast<uint8_t>(v);
++}
++
++class VideoThread {
++public:
++    static constexpr uint32_t kSize = 1u << 16; // commands (1 MiB)
++
++    std::vector<uint8_t> vram1, vram2, cram; // the renderer's copies
++    video::Renderer *renderer = nullptr;
++    uint64_t commands = 0, syncs = 0, waitNs = 0, busyNs = 0, fullWaits = 0;
++
++    VideoThread() : vram1(0x80000), vram2(0x80000), cram(0x1000), m_ring(kSize) {}
++    ~VideoThread() { Stop(); }
++
++    void Start(video::Renderer &r) {
++        renderer = &r;
++        m_thread = std::thread([this] { Work(); });
++    }
++    void Stop() {
++        if (!m_thread.joinable()) return;
++        Sync();
++        {
++            std::lock_guard<std::mutex> lock(m_mutex);
++            m_stop.store(true);
++        }
++        m_wake.notify_one();
++        m_thread.join();
++    }
++
++    void Push(uint8_t op, uint32_t a = 0, uint64_t c = 0, uint16_t value = 0, uint8_t flag = 0) {
++        const uint32_t head = m_head.load(std::memory_order_relaxed);
++        if (head - m_tail.load(std::memory_order_acquire) >= kSize) [[unlikely]] {
++            fullWaits++;
++            while (head - m_tail.load(std::memory_order_acquire) >= kSize) Relax();
++        }
++        Command &cmd = m_ring[head & (kSize - 1)];
++        cmd.op = op;
++        cmd.flag = flag;
++        cmd.value = value;
++        cmd.a = a;
++        cmd.c = c;
++        m_head.store(head + 1, std::memory_order_seq_cst);
++        commands++;
++        if (m_sleeping.load(std::memory_order_seq_cst)) [[unlikely]] {
++            std::lock_guard<std::mutex> lock(m_mutex);
++            m_wake.notify_one();
++        }
++    }
++
++    // Until the renderer has done everything asked of it
++    void Sync() {
++        const uint32_t head = m_head.load(std::memory_order_relaxed);
++        if (m_done.load(std::memory_order_acquire) == head) return;
++        syncs++;
++        const auto start = std::chrono::steady_clock::now();
++        for (unsigned spins = 0; m_done.load(std::memory_order_acquire) != head; spins++) {
++            if (spins < 20000) Relax();
++            else std::this_thread::yield();
++        }
++        waitNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
++            std::chrono::steady_clock::now() - start).count());
++    }
++
++    // The machine's video memory as it is now becomes the renderer's (after a reset or a loaded state)
++    void CopyFrom(const uint8_t *v1, const uint8_t *v2, const uint8_t *c) {
++        Sync();
++        std::memcpy(vram1.data(), v1, vram1.size());
++        std::memcpy(vram2.data(), v2, vram2.size());
++        std::memcpy(cram.data(), c, cram.size());
++    }
++
++private:
++    std::vector<Command> m_ring;
++    alignas(64) std::atomic<uint32_t> m_head{0};
++    alignas(64) std::atomic<uint32_t> m_tail{0};
++    alignas(64) std::atomic<uint32_t> m_done{0};
++    std::atomic<bool> m_sleeping{false}, m_stop{false};
++    std::mutex m_mutex;
++    std::condition_variable m_wake;
++    std::thread m_thread;
++
++    static void Relax() {
++#if defined(__arm__) || defined(__aarch64__)
++        __asm__ __volatile__("yield");
++#elif defined(__x86_64__) || defined(__i386__)
++        __builtin_ia32_pause();
++#endif
++    }
++
++    void Execute(const Command &cmd) {
++        video::Renderer &r = *renderer;
++        switch (cmd.op) {
++        case kVdp1Reg: r.WriteVdp1Reg(cmd.a, cmd.value); break;
++        case kVdp2Reg: r.WriteVdp2Reg(cmd.a, cmd.value); break;
++        case kErase: r.EraseFramebuffer(cmd.c); break;
++        case kSwap: r.SwapFramebuffer(); break;
++        case kBeginDrawing: r.BeginDrawing(); break;
++        case kDraw: r.DrawCommand(cmd.a); break;
++        case kEndDrawing: r.EndDrawing(); break;
++        case kResolution: r.SetResolution(cmd.a, static_cast<uint32_t>(cmd.c), cmd.flag != 0); break;
++        case kField: r.SetField(cmd.flag != 0); break;
++        case kLatch: r.LatchDisplayMode(); break;
++        case kBeginFrame: r.BeginFrame(); break;
++        case kLine: r.RenderLine(cmd.a); break;
++        case kVram1Write8: vram1[cmd.a] = static_cast<uint8_t>(cmd.value); break;
++        case kVram1Write16: Put16(&vram1[cmd.a], cmd.value); break;
++        case kVram2Write8: vram2[cmd.a] = static_cast<uint8_t>(cmd.value); r.NoteVideoMemoryWrite(); break;
++        case kVram2Write16: Put16(&vram2[cmd.a], cmd.value); r.NoteVideoMemoryWrite(); break;
++        case kCramWrite8: cram[cmd.a] = static_cast<uint8_t>(cmd.value); r.NoteVideoMemoryWrite(); break;
++        case kCramWrite16: Put16(&cram[cmd.a], cmd.value); r.NoteVideoMemoryWrite(); break;
++        default: break;
++        }
++    }
++
++    void Work() {
++        uint32_t tail = 0;
++        for (;;) {
++            uint32_t head = m_head.load(std::memory_order_acquire);
++            if (head == tail) {
++                // (a short wait in place first: the next line is usually a few microseconds away)
++                for (unsigned spins = 0; spins < 4000 && head == tail; spins++) {
++                    Relax();
++                    head = m_head.load(std::memory_order_acquire);
++                }
++                if (head == tail) {
++                    std::unique_lock<std::mutex> lock(m_mutex);
++                    m_sleeping.store(true, std::memory_order_seq_cst);
++                    m_wake.wait(lock, [&] {
++                        return m_head.load(std::memory_order_seq_cst) != tail || m_stop.load();
++                    });
++                    m_sleeping.store(false, std::memory_order_seq_cst);
++                    if (m_stop.load() && m_head.load() == tail) return;
++                    continue;
++                }
++            }
++            const auto start = std::chrono::steady_clock::now();
++            while (tail != head) {
++                Execute(m_ring[tail & (kSize - 1)]);
++                tail++;
++                m_tail.store(tail, std::memory_order_release);
++                if ((tail & 63) == 0) m_done.store(tail, std::memory_order_release);
++            }
++            m_done.store(tail, std::memory_order_release);
++            busyNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
++                std::chrono::steady_clock::now() - start).count());
++        }
++    }
++};
++
++// The machine's renderer thread, if it has one (one machine a process)
++extern VideoThread *g_thread;
++inline void SyncNow() {
++    if (g_thread) g_thread->Sync();
++}
++
++} // namespace satrecomp::machine::vt
++
++// A call to the renderer: queued when it has a thread of its own, made here and now otherwise
++#define SATRECOMP_VIDEO(PUSH, DIRECT)                                         \
++    do {                                                                      \
++        if (auto *vt_ = ::satrecomp::machine::vt::g_thread) {                 \
++            vt_->Push PUSH;                                                   \
++        } else {                                                              \
++            m_video->DIRECT;                                                  \
++        }                                                                     \
++    } while (0)
++// The renderer as it is after everything asked of it so far (before anything reads from it)
++#define SATRECOMP_VIDEO_SYNC() ::satrecomp::machine::vt::SyncNow()
