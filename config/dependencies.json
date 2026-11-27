@@ -340,7 +340,8 @@
       "patches/0348-satrecomp-sprite-line-constants.patch",
       "patches/0349-satrecomp-optional-compose-skip.patch",
       "patches/0350-satrecomp-compose-thread.patch",
-      "patches/0351-sakura-tighter-wait-skips.patch"
+      "patches/0351-sakura-tighter-wait-skips.patch",
+      "patches/0352-sakura-counted-wait-landing.patch"
     ]
   }
 }

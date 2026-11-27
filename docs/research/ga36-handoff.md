@@ -309,3 +309,12 @@ PC (Windows x64, `build_runtime.py build` sobre la pila 0001–0351, en su propi
 
 En PC los hilos siguen apagados por defecto. En ventana el PC dibuja por GPU, la composición ligera no se usa porque hay captura de presentación, y el sonido en hilo se desactiva solo con las voces HD. Los hilos en ventana no se han probado.
 
+**0352 (`sakura-counted-wait-landing`).** El bucle de espera contada son cuatro bloques fijos: `060041BA`, `060338B8`, `060338B4` y `060041C2`. El dispatcher apunta cuándo entra en cada uno y con qué registros. Cuando dos pasadas enteras seguidas coinciden en el coste de cada bloque y en los registros, la vuelta que cruza el final del tramo ya no corre como código: la CPU queda tras el bloque en que el tiempo llega al final, como la dejaría ese bloque, y el dispatcher devuelve el control.
+- En esa vuelta solo cambian el contador en memoria y `r1`, que vale el contador anterior con extensión de signo más 1.
+- `SATRECOMP_NO_COUNTED_WAIT_LANDING=1` vuelve al comportamiento del 0351.
+
+Resultados:
+- **QEMU, combate:** con 600 cuadros, el hash `d6d78df6…` es igual con y sin aterrizaje, y es el mismo que da la placa. Con 300 cuadros, los despachos bajan de 6,55 a 5,58 millones.
+- **QEMU, mapa:** sin cambios (`82416007…`).
+- **PC, mismos 1.200 cuadros:** por defecto 6,1 s y con hilos 4,0 s, con el mismo hash `E46E5D14…`.
+

@@ -1,0 +1,191 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index 827b711..760bc74 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1098,13 +1098,21 @@ namespace {
+         uint16_t counter = 0;
+         unsigned seen = 0;
+         Access::Registers regs{};
++        // The pass block by block (after 060041BA, 060338B8, 060338B4): when each was entered and the registers
++        // then, from a pass seen whole; the four block costs once two whole passes in a row agree on them
++        uint64_t blockAt[3] = {};
++        bool blockSeen[3] = {};
++        Access::Registers blockRegs[3]{}, keptRegs[3]{};
++        uint64_t blockCost[4] = {};
++        bool blocksKnown = false, blocksCandidate = false;
+     } g_countedWait[2];
+-    uint64_t g_countedWaitPasses = 0, g_countedWaitSkips = 0;
++    uint64_t g_countedWaitPasses = 0, g_countedWaitSkips = 0, g_countedWaitLandings = 0;
+     struct CountedWaitReport {
+         ~CountedWaitReport() {
+             if (getenv("SATRECOMP_COUNTED_WAIT_STATS")) {
+-                fprintf(stderr, "counted wait: %llu passes counted at once, in %llu skips\n",
+-                        static_cast<unsigned long long>(g_countedWaitPasses), static_cast<unsigned long long>(g_countedWaitSkips));
++                fprintf(stderr, "counted wait: %llu passes counted at once, in %llu skips (%llu ending the slice at its block)\n",
++                        static_cast<unsigned long long>(g_countedWaitPasses), static_cast<unsigned long long>(g_countedWaitSkips),
++                        static_cast<unsigned long long>(g_countedWaitLandings));
+             }
+         }
+     } g_countedWaitReport;
+@@ -1116,18 +1124,36 @@ namespace {
+         return Native::Get32(g_ramHigh + (a & 0xFFFFCu));
+     }
+ 
+-    void SkipCountedWait(SH2 &cpu, uint64_t target) {
++    // A block of the pass entered (0: 060338B8, after 060041BA; 1: 060338B4; 2: 060041C2): when, with what registers
++    void TrackCountedWaitBlock(SH2 &cpu, unsigned block) {
++        CountedWait &w = g_countedWait[cpu.IsMaster() ? 0 : 1];
++        if (!w.seen) {
++            return;
++        }
++        w.blockAt[block] = Access::Cycles(cpu);
++        w.blockRegs[block] = Access::GetRegisters(cpu);
++        w.blockSeen[block] = true;
++    }
++
++    // true: the CPU was left where the slice ends (the dispatcher returns); false: it goes on from here as before
++    bool SkipCountedWait(SH2 &cpu, uint64_t target) {
+         static const bool off = getenv("SATRECOMP_NO_COUNTED_WAIT") != nullptr;
++        static const bool noLanding = getenv("SATRECOMP_NO_COUNTED_WAIT_LANDING") != nullptr;
+         CountedWait &w = g_countedWait[cpu.IsMaster() ? 0 : 1];
+         static constexpr uint8_t kLoop[] = {0x61, 0x81, 0x71, 0x01, 0x49, 0x0B, 0x28, 0x11,
+                                             0xD1, 0x05, 0x61, 0x12, 0x21, 0x18, 0x89, 0xF7};
+         static constexpr uint8_t kCallee[] = {0x00, 0x0B, 0x00, 0x09, 0xD3, 0x10, 0x84, 0x30, 0x20, 0x08, 0x89, 0xF9};
++        auto forget = [&w] {
++            w.seen = 0;
++            w.blocksKnown = w.blocksCandidate = false;
++            w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
++            return false;
++        };
+         const auto &R = Access::R(cpu);
+         const uint32_t counterAt = R[8];
+         if (off || !g_ramHigh || Access::InterruptRaised(cpu) || R[9] != 0x060338B8u || !HighRam(counterAt) || (counterAt & 1) ||
+             memcmp(g_ramHigh + 0x041BA, kLoop, sizeof kLoop) != 0 || memcmp(g_ramHigh + 0x338B4, kCallee, sizeof kCallee) != 0) {
+-            w.seen = 0;
+-            return;
++            return forget();
+         }
+         const uint32_t byteFlagAt = RamLong(0x060338FC), longFlagAt = RamLong(0x060041D8);
+         // (the count must not be one of the things the loop reads)
+@@ -1139,19 +1165,89 @@ namespace {
+         if (!HighRam(byteFlagAt) || !HighRam(longFlagAt) || (longFlagAt & 3) || overlaps(byteFlagAt, 1) || overlaps(longFlagAt, 4) ||
+             overlaps(0x060041BA, 0x24) || overlaps(0x060338B4, 0x0C) || overlaps(0x060338FC, 4) ||
+             g_ramHigh[byteFlagAt & 0xFFFFF] != 0 || RamLong(longFlagAt) != 0) {
+-            w.seen = 0;
+-            return;
++            return forget();
+         }
+         uint8_t *count = g_ramHigh + c;
+         uint16_t counter = static_cast<uint16_t>((count[0] << 8) | count[1]);
+         uint64_t now = Access::Cycles(cpu);
+         const Access::Registers regs = Access::GetRegisters(cpu);
++        // What the first block leaves in r1: the count before it, sign-extended, plus one (mov.w @r8,r1; add #1,r1)
++        auto r1After = [](uint16_t before) { return static_cast<uint32_t>(static_cast<int32_t>(static_cast<int16_t>(before)) + 1); };
+         if (w.seen && regs == w.regs && counter == static_cast<uint16_t>(w.counter + 1) && now > w.at) {
+             const uint64_t cost = now - w.at;
++            // The pass just finished, block by block, if it was seen whole: its block costs and registers (r1 aside,
++            // which follows the count) must be those of the pass before, twice running, before landings are made
++            if (w.blockSeen[0] && w.blockSeen[1] && w.blockSeen[2] && w.blockAt[0] > w.at && w.blockAt[1] > w.blockAt[0] &&
++                w.blockAt[2] > w.blockAt[1] && now > w.blockAt[2]) {
++                const uint64_t costs[4] = {w.blockAt[0] - w.at, w.blockAt[1] - w.blockAt[0], w.blockAt[2] - w.blockAt[1], now - w.blockAt[2]};
++                bool modelled = true;
++                for (unsigned b = 0; b < 3; b++) {
++                    modelled = modelled && w.blockRegs[b].R[1] == r1After(w.counter);
++                }
++                bool same = modelled && w.blocksCandidate;
++                for (unsigned b = 0; b < 4 && same; b++) {
++                    same = costs[b] == w.blockCost[b];
++                }
++                for (unsigned b = 0; b < 3 && same; b++) {
++                    Access::Registers mine = w.blockRegs[b], kept = w.keptRegs[b];
++                    mine.R[1] = kept.R[1] = 0;
++                    same = mine == kept;
++                }
++                if (modelled) {
++                    for (unsigned b = 0; b < 4; b++) w.blockCost[b] = costs[b];
++                    for (unsigned b = 0; b < 3; b++) w.keptRegs[b] = w.blockRegs[b];
++                }
++                w.blocksKnown = same || (w.blocksKnown && modelled && same);
++                if (!same) w.blocksKnown = false;
++                w.blocksCandidate = modelled;
++            }
+             if (w.seen >= 2 && cost == w.cost && target > now) {
++                const bool land = !noLanding && w.blocksKnown &&
++                                  w.blockCost[0] + w.blockCost[1] + w.blockCost[2] + w.blockCost[3] == cost;
+                 // (whole passes that end before the slice does: the pass that crosses its end runs as code, so
+                 // the slice ends at the same block; never exactly at the end, where the next block would run)
+                 uint64_t passes = (target - now - 1) / cost;
++                if (land) {
++                    // ... or does not run at all: the slice ends after the block of that pass during which the
++                    // time reaches its end, and the CPU is left there as those blocks would leave it
++                    const uint64_t rest = target - now - passes * cost; // (1..cost)
++                    unsigned block = 0;
++                    uint64_t into = w.blockCost[0];
++                    while (into < rest) {
++                        into += w.blockCost[++block];
++                    }
++                    const uint16_t before = static_cast<uint16_t>(counter + passes);
++                    const uint16_t after = static_cast<uint16_t>(before + 1);
++                    count[0] = static_cast<uint8_t>(after >> 8);
++                    count[1] = static_cast<uint8_t>(after);
++                    SATRECOMP_NOTE_WRITE(count);
++                    SATRECOMP_ACTIVITY += passes + 1; // (one write each)
++                    Access::AddCycles(cpu, passes * cost + into);
++                    if (block < 3) {
++                        Access::Registers to = w.keptRegs[block];
++                        to.R[1] = r1After(before);
++                        Access::R(cpu) = to.R;
++                        Access::SetPC(cpu, to.PC);
++                        Access::SetPR(cpu, to.PR);
++                        Access::SetSR(cpu, to.SR);
++                        // (GBR, VBR and MAC are the pass's own: the blocks do not touch them)
++                        // the next time round the top, a pass after this one's start
++                        w.at = now + passes * cost;
++                        w.counter = before;
++                    } else {
++                        // back at the top: as if it had been seen there one pass earlier
++                        w.at = now + passes * cost;
++                        w.counter = before;
++                    }
++                    w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
++                    w.cost = cost;
++                    w.seen++;
++                    w.regs = regs;
++                    g_countedWaitPasses += passes + 1;
++                    g_countedWaitSkips++;
++                    g_countedWaitLandings++;
++                    return true;
++                }
+                 if (passes >= 1) {
+                     counter = static_cast<uint16_t>(counter + passes);
+                     count[0] = static_cast<uint8_t>(counter >> 8);
+@@ -1168,10 +1264,13 @@ namespace {
+             w.seen++;
+         } else {
+             w.seen = 1;
++            w.blocksKnown = false;
+         }
++        w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
+         w.at = now;
+         w.counter = counter;
+         w.regs = regs;
++        return false;
+     }
+ #endif
+ 
+@@ -1240,8 +1339,13 @@ namespace {
+ #ifdef SATRECOMP_OWN_MACHINE
+             if (native && (pc == 0x06014B60 || pc == 0x06014F5E) && EnhancedDialogueVoice(cpu, pc))
+                 continue;
+-            if (native && pc == 0x060041BAu) [[unlikely]]
+-                SkipCountedWait(cpu, target);
++            if (native && pc == 0x060041BAu) [[unlikely]] {
++                if (SkipCountedWait(cpu, target)) {
++                    return true; // (the slice ends where the passes would have ended it)
++                }
++            } else if (native && (pc == 0x060338B8u || pc == 0x060338B4u || pc == 0x060041C2u)) [[unlikely]] {
++                TrackCountedWaitBlock(cpu, pc == 0x060338B8u ? 0 : pc == 0x060338B4u ? 1 : 2);
++            }
+ #endif
+             // An address in the ROM area that stands for a native BIOS routine (hle_bios.h)
+             if (r == &rt.regions[2] && rt.hle && hle::Run(cpu, offset)) {
