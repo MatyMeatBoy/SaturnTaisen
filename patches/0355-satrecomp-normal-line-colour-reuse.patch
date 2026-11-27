@@ -1,0 +1,29 @@
+diff --git a/video/layers.cpp b/video/layers.cpp
+index c5e7b44..4aff830 100644
+--- a/video/layers.cpp
++++ b/video/layers.cpp
+@@ -657,6 +657,7 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+         const uint32 cramMask = cramMode == 0 ? 0x7FE : 0xFFE;
+         const uint32 cramOffset = bg.cramOffset;
+         const bool transparency = bg.enableTransparency;
++        uint32 lastIndex = 0xFFFFFFFF, lastColor = 0;
+         for (uint32 x = 0; x < width; x++, fracX += scroll.incH) {
+             const uint32 sx = fracX >> 8;
+             if ((sx >> 3) != current) {
+@@ -711,11 +712,12 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+                 continue;
+             }
+             const uint32 index = cramOffset + (wide ? ((palette & 0x700) | dot) : (palette | dot));
+-            if (cramMode >= 2) {
+-                colorOut[x] = CramLong((index * 4) & 0xFFC);
+-            } else {
+-                colorOut[x] = To888(Be16(&cram[(index * 2) & cramMask]));
++            // (the colour RAM does not change during a line: a colour read once is kept for the dots that repeat it)
++            if (index != lastIndex) {
++                lastIndex = index;
++                lastColor = cramMode >= 2 ? CramLong((index * 4) & 0xFFC) : To888(Be16(&cram[(index * 2) & cramMask]));
+             }
++            colorOut[x] = lastColor;
+             priorityOut[x] = perDot ? static_cast<uint8>(priority | static_cast<uint8>(matches[(dot >> 1) & 7])) : priority;
+         }
+         // (what the dot by dot way leaves behind, should the next line be drawn that way)
