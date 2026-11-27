@@ -1,0 +1,207 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index b2fb0d9..935e212 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1095,6 +1095,9 @@ namespace {
+     // registers come back the same and the measured cost of a pass is the same twice running.
+     struct CountedWait {
+         uint64_t at = 0, cost = 0;
++        // (a CPU's time counts from the start of its slice: the end of the slice each time above was taken in, so that
++        // times are only ever set against times of the same slice)
++        uint64_t atSlice = 0, blockSlice[3] = {};
+         uint16_t counter = 0;
+         unsigned seen = 0;
+         Access::Registers regs{};
+@@ -1136,6 +1139,7 @@ namespace {
+             return true;
+         }
+         w.blockAt[block] = Access::Cycles(cpu);
++        w.blockSlice[block] = target;
+         if (!w.blocksKnown) { // (once the pass is known block by block, only its timing is checked)
+             w.blockRegs[block] = Access::GetRegisters(cpu);
+         }
+@@ -1168,12 +1172,23 @@ namespace {
+             w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
+             return false;
+         };
++        // (an interrupt about to be taken, or the loop about to end: the pass being timed is given up and landings
++        // wait for a whole pass that matches the blocks kept, costs and registers, which stay as the candidate)
++        auto pause = [&w] {
++            w.seen = 0;
++            w.blocksKnown = false;
++            w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
++            return false;
++        };
+         const auto &R = Access::R(cpu);
+         const uint32_t counterAt = R[8];
+-        if (off || !g_ramHigh || Access::InterruptRaised(cpu) || R[9] != 0x060338B8u || !HighRam(counterAt) || (counterAt & 1) ||
++        if (off || !g_ramHigh || R[9] != 0x060338B8u || !HighRam(counterAt) || (counterAt & 1) ||
+             !SameBytes(g_ramHigh + 0x041BA, kLoop, sizeof kLoop) || !SameBytes(g_ramHigh + 0x338B4, kCallee, sizeof kCallee)) {
+             return forget();
+         }
++        if (Access::InterruptRaised(cpu)) {
++            return pause();
++        }
+         const uint32_t byteFlagAt = RamLong(0x060338FC), longFlagAt = RamLong(0x060041D8);
+         // (the count must not be one of the things the loop reads)
+         const uint32_t c = counterAt & 0xFFFFF;
+@@ -1184,7 +1199,7 @@ namespace {
+         if (!HighRam(byteFlagAt) || !HighRam(longFlagAt) || (longFlagAt & 3) || overlaps(byteFlagAt, 1) || overlaps(longFlagAt, 4) ||
+             overlaps(0x060041BA, 0x24) || overlaps(0x060338B4, 0x0C) || overlaps(0x060338FC, 4) ||
+             g_ramHigh[byteFlagAt & 0xFFFFF] != 0 || RamLong(longFlagAt) != 0) {
+-            return forget();
++            return pause();
+         }
+         uint8_t *count = g_ramHigh + c;
+         uint16_t counter = static_cast<uint16_t>((count[0] << 8) | count[1]);
+@@ -1193,11 +1208,72 @@ namespace {
+         const bool sameRegs = w.seen && Access::SameRegisters(cpu, w.regs);
+         // What the first block leaves in r1: the count before it, sign-extended, plus one (mov.w @r8,r1; add #1,r1)
+         auto r1After = [](uint16_t before) { return static_cast<uint32_t>(static_cast<int32_t>(static_cast<int16_t>(before)) + 1); };
+-        if (sameRegs && counter == static_cast<uint16_t>(w.counter + 1) && now > w.at) {
++        auto canLand = [&](uint64_t cost) {
++            return !noLanding && w.blocksKnown && w.blockCost[0] + w.blockCost[1] + w.blockCost[2] + w.blockCost[3] == cost;
++        };
++        // (the slice's end is reached inside this wait: the CPU is left after the block of the pass during which the
++        // time reaches it, as those blocks would leave it, with the passes before it counted)
++        auto doLand = [&](uint64_t cost, uint64_t passes) {
++            // ... or does not run at all: the slice ends after the block of that pass during which the
++            // time reaches its end, and the CPU is left there as those blocks would leave it
++            const uint64_t rest = target - now - passes * cost; // (1..cost)
++            unsigned block = 0;
++            uint64_t into = w.blockCost[0];
++            while (into < rest) {
++                into += w.blockCost[++block];
++            }
++            const uint16_t before = static_cast<uint16_t>(counter + passes);
++            const uint16_t after = static_cast<uint16_t>(before + 1);
++            count[0] = static_cast<uint8_t>(after >> 8);
++            count[1] = static_cast<uint8_t>(after);
++            SATRECOMP_NOTE_WRITE(count);
++            SATRECOMP_ACTIVITY += passes + 1; // (one write each)
++            Access::AddCycles(cpu, passes * cost + into);
++            if (block < 3) {
++                Access::Registers to = w.keptRegs[block];
++                to.R[1] = r1After(before);
++                Access::R(cpu) = to.R;
++                Access::SetPC(cpu, to.PC);
++                Access::SetPR(cpu, to.PR);
++                Access::SetSR(cpu, to.SR);
++                // (GBR, VBR and MAC are the pass's own: the blocks do not touch them)
++                // the next time round the top, a pass after this one's start
++                w.at = now + passes * cost;
++                w.atSlice = target;
++                w.counter = before;
++            } else {
++                // back at the top: as if it had been seen there one pass earlier
++                w.at = now + passes * cost;
++                w.atSlice = target;
++                w.counter = before;
++            }
++            w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
++            w.cost = cost;
++            w.seen++;
++            g_countedWaitPasses += passes + 1;
++            g_countedWaitSkips++;
++            g_countedWaitLandings++;
++            return true;
++        };
++        const bool following = sameRegs && counter == static_cast<uint16_t>(w.counter + 1);
++        if (following && w.atSlice != target) {
++            // The pass after the one begun last time round the top, which began in an earlier slice: its time is
++            // not to be set against this slice's. The passes from here are the known ones, if the blocks are known.
++            if (w.blocksKnown && w.seen >= 2 && w.cost && target > now && canLand(w.cost)) {
++                return doLand(w.cost, (target - now - 1) / w.cost);
++            }
++            w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
++            w.at = now;
++            w.atSlice = target;
++            w.counter = counter;
++            return false;
++        }
++        if (following && now > w.at) {
+             const uint64_t cost = now - w.at;
+             // The pass just finished, block by block, if it was seen whole: its block costs and registers (r1 aside,
+             // which follows the count) must be those of the pass before, twice running, before landings are made
+-            if (w.blockSeen[0] && w.blockSeen[1] && w.blockSeen[2] && w.blockAt[0] > w.at && w.blockAt[1] > w.blockAt[0] &&
++            if (w.blockSeen[0] && w.blockSeen[1] && w.blockSeen[2] && w.blockSlice[0] == target && w.blockSlice[1] == target &&
++                w.blockSlice[2] == target && w.blockAt[0] > w.at && w.blockAt[1] > w.blockAt[0] &&
+                 w.blockAt[2] > w.blockAt[1] && now > w.blockAt[2]) {
+                 const uint64_t costs[4] = {w.blockAt[0] - w.at, w.blockAt[1] - w.blockAt[0], w.blockAt[2] - w.blockAt[1], now - w.blockAt[2]};
+                 const bool timingOnly = w.blocksKnown; // (registers kept from when it became known)
+@@ -1223,50 +1299,12 @@ namespace {
+                 w.blocksCandidate = modelled;
+             }
+             if (w.seen >= 2 && cost == w.cost && target > now) {
+-                const bool land = !noLanding && w.blocksKnown &&
+-                                  w.blockCost[0] + w.blockCost[1] + w.blockCost[2] + w.blockCost[3] == cost;
++                const bool land = canLand(cost);
+                 // (whole passes that end before the slice does: the pass that crosses its end runs as code, so
+                 // the slice ends at the same block; never exactly at the end, where the next block would run)
+                 uint64_t passes = (target - now - 1) / cost;
+                 if (land) {
+-                    // ... or does not run at all: the slice ends after the block of that pass during which the
+-                    // time reaches its end, and the CPU is left there as those blocks would leave it
+-                    const uint64_t rest = target - now - passes * cost; // (1..cost)
+-                    unsigned block = 0;
+-                    uint64_t into = w.blockCost[0];
+-                    while (into < rest) {
+-                        into += w.blockCost[++block];
+-                    }
+-                    const uint16_t before = static_cast<uint16_t>(counter + passes);
+-                    const uint16_t after = static_cast<uint16_t>(before + 1);
+-                    count[0] = static_cast<uint8_t>(after >> 8);
+-                    count[1] = static_cast<uint8_t>(after);
+-                    SATRECOMP_NOTE_WRITE(count);
+-                    SATRECOMP_ACTIVITY += passes + 1; // (one write each)
+-                    Access::AddCycles(cpu, passes * cost + into);
+-                    if (block < 3) {
+-                        Access::Registers to = w.keptRegs[block];
+-                        to.R[1] = r1After(before);
+-                        Access::R(cpu) = to.R;
+-                        Access::SetPC(cpu, to.PC);
+-                        Access::SetPR(cpu, to.PR);
+-                        Access::SetSR(cpu, to.SR);
+-                        // (GBR, VBR and MAC are the pass's own: the blocks do not touch them)
+-                        // the next time round the top, a pass after this one's start
+-                        w.at = now + passes * cost;
+-                        w.counter = before;
+-                    } else {
+-                        // back at the top: as if it had been seen there one pass earlier
+-                        w.at = now + passes * cost;
+-                        w.counter = before;
+-                    }
+-                    w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
+-                    w.cost = cost;
+-                    w.seen++;
+-                    g_countedWaitPasses += passes + 1;
+-                    g_countedWaitSkips++;
+-                    g_countedWaitLandings++;
+-                    return true;
++                    return doLand(cost, passes);
+                 }
+                 if (passes >= 1) {
+                     counter = static_cast<uint16_t>(counter + passes);
+@@ -1288,6 +1326,7 @@ namespace {
+         }
+         w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
+         w.at = now;
++        w.atSlice = target;
+         w.counter = counter;
+         if (!sameRegs) {
+             w.regs = Access::GetRegisters(cpu);
+@@ -1312,9 +1351,13 @@ namespace {
+         const uint64_t now = Access::Cycles(cpu);
+         uint64_t done = 0; // (into the pass, after its blocks up to `block`)
+         for (unsigned b = 0; b <= block; b++) done += w.blockCost[b];
+-        if (now != w.at + done || target <= now) {
++        // (the CPU's time counts from the slice's start: where this pass began, in the same count, is `done` before
++        // now; what is left of it and the passes after are the known blocks, whenever it began)
++        if (target <= now || now < done) {
+             return false;
+         }
++        w.at = now - done;
++        w.atSlice = target;
+         const auto &R = Access::R(cpu);
+         const uint32_t counterAt = R[8];
+         if (R[9] != 0x060338B8u || !HighRam(counterAt) || (counterAt & 1) ||

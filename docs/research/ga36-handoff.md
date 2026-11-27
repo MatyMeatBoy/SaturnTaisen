@@ -373,3 +373,16 @@ Resultados con los mismos hashes:
 - QEMU, mapa: `82416007…`.
 - PC: `E46E5D14…`.
 
+**0360 (`sakura-counted-wait-slice-times`).** `Access::Cycles` cuenta desde el comienzo del tramo, no desde el arranque. La espera contada comparaba tiempos tomados en tramos distintos, y al no cuadrar daba por perdido el modelo y necesitaba dos vueltas enteras para recuperarlo. Ahora:
+- **Cada tiempo apuntado lleva el tramo en que se tomó** (el final del tramo); solo se comparan tiempos del mismo tramo.
+- **En la cabeza:** si llega la vuelta siguiente a la anterior (contador uno más y los mismos registros) pero empezó en otro tramo, aterriza con los bloques conocidos.
+- **A mitad de vuelta:** el inicio de la vuelta se toma como ahora menos lo hecho, en la cuenta del tramo actual.
+- **Tras una interrupción o una salida del bucle:** el modelo queda como candidato y se vuelve a dar por conocido con una vuelta entera que coincida en costes y registros. Antes había que aprenderlo de cero.
+
+Resultados con los mismos hashes:
+- QEMU, combate de 600 cuadros (`d6d78df6…`): los despachos bajan de 8,3 a 3,65 millones.
+- QEMU, mapa: `82416007…`.
+- PC: `E46E5D14…`; los 1.200 cuadros por defecto pasan de 5,3 a 4,9 s.
+
+Diagnóstico: con contadores de motivos se vio que la mayoría de vueltas que no aterrizaban eran por «modelo no conocido» y «sin relación en la cabeza». Los desfases de tiempo eran de −23 a −64 ciclos, con vueltas de 18 ciclos.
+
