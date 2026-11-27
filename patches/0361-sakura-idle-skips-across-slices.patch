@@ -1,0 +1,52 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index 935e212..8b2d42c 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -156,6 +156,10 @@ namespace {
+             // GA36: the CPU found back at `at` with nothing changed (see IdleFastForward)
+             uint64_t lastMatch = 0, cost = 0;
+             unsigned matches = 0;
++            // (the slice `lastMatch` was taken in, by its end: times count from a slice's start; and whether `cost`
++            // has been measured the same twice running since the matches began)
++            uint64_t lastSlice = 0;
++            bool costKnown = false;
+             bool tainted = false; // a block since the last match that ends a slice early or steps
+         } waiting[2];
+         // The loop a CPU is going round (it came back to where it came in last time), as its cache holds it.
+@@ -1446,10 +1450,28 @@ namespace {
+     void IdleFastForward(SH2 &cpu, Waiting &w, uint64_t target) {
+         static const bool off = getenv("SATRECOMP_NO_IDLE_SKIP") != nullptr;
+         uint64_t now = Access::Cycles(cpu);
++        if (w.matches == 0) {
++            w.costKnown = false;
++        }
+         if (off || w.tainted || Access::InterruptRaised(cpu)) {
+             w.matches = 0;
++            w.costKnown = false;
++        } else if (w.matches && w.lastSlice != target) {
++            // Back at the same point with the same registers and nothing done in between, the last time having
++            // been in an earlier slice: that pass's time is not to be set against this slice's, but a pass of this
++            // loop has been measured, twice the same: the passes that end before this slice does are those
++            if (w.costKnown && target > now) {
++                const uint64_t passes = (target - now - 1) / w.cost;
++                if (passes >= 1) {
++                    Access::AddCycles(cpu, passes * w.cost);
++                    now += passes * w.cost;
++                    g_idlePasses += passes;
++                    g_idleSkips++;
++                }
++            }
+         } else if (w.matches && now > w.lastMatch) {
+             const uint64_t cost = now - w.lastMatch;
++            w.costKnown = w.matches >= 2 && cost == w.cost;
+             if (w.matches >= 2 && cost == w.cost && target > now) {
+                 // (whole passes that end before the slice does: the pass that crosses its end runs as code, so
+                 // the slice ends at the same block; never exactly at the end, where the next block would run)
+@@ -1465,6 +1487,7 @@ namespace {
+         }
+         w.matches++;
+         w.lastMatch = now;
++        w.lastSlice = target;
+         w.tainted = false;
+     }
+ #endif

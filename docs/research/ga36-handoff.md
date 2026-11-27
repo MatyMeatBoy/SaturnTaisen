@@ -386,3 +386,9 @@ Resultados con los mismos hashes:
 
 Diagnóstico: con contadores de motivos se vio que la mayoría de vueltas que no aterrizaban eran por «modelo no conocido» y «sin relación en la cabeza». Los desfases de tiempo eran de −23 a −64 ciclos, con vueltas de 18 ciclos.
 
+**0361 (`sakura-idle-skips-across-slices`).** Arreglo para `IdleFastForward`, el salto de los bucles de solo lectura: tenía el mismo defecto que se corrigió en el 0360. Ahora:
+- **Cada coincidencia lleva su tramo.**
+- **Si la vuelta siguiente llega en otro tramo**, con los mismos registros y sin actividad, se cobran de golpe las vueltas que caben antes del final del tramo, con el coste ya medido igual dos veces seguidas.
+
+En el mapa de Ogami, el bucle de sondeo (`060041BA` → `0600A200` → `0600A1FC` → `060041BE`) era 4,49 de los 4,68 millones de despachos en 300 cuadros. Con el 0361 el total baja a 2,56 millones. Mismos hashes en QEMU (mapa `82416007…`, combate `d6d78df6…`) y en PC (`E46E5D14…`).
+
