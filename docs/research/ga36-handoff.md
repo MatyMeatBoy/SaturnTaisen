@@ -392,3 +392,7 @@ Diagnóstico: con contadores de motivos se vio que la mayoría de vueltas que no
 
 En el mapa de Ogami, el bucle de sondeo (`060041BA` → `0600A200` → `0600A1FC` → `060041BE`) era 4,49 de los 4,68 millones de despachos en 300 cuadros. Con el 0361 el total baja a 2,56 millones. Mismos hashes en QEMU (mapa `82416007…`, combate `d6d78df6…`) y en PC (`E46E5D14…`).
 
+**0362 (`sakura-midpass-landing-earlier-pass`).** Unos contadores de motivos mostraron que el aterrizaje a mitad de vuelta fallaba casi siempre por la guarda `now < done`. Al principio de un tramo el tiempo está cerca de cero, y la vuelta empezó en el tramo anterior. Sin la guarda, la cuenta sin signo da la vuelta por debajo de cero y las sumas salen bien, porque solo intervienen tiempos de esta vuelta y posteriores. Resultados:
+- QEMU, combate de 600 cuadros: 718.050 aterrizajes desde mitad de vuelta, y los despachos bajan de 3,65 a 2,07 millones.
+- Mismos hashes: QEMU `d6d78df6…` y `82416007…`, PC `E46E5D14…`; en PC, por defecto, 4,7 s.
+

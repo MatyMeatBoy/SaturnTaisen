@@ -1,0 +1,17 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index 8b2d42c..035ed95 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1356,8 +1356,10 @@ namespace {
+         uint64_t done = 0; // (into the pass, after its blocks up to `block`)
+         for (unsigned b = 0; b <= block; b++) done += w.blockCost[b];
+         // (the CPU's time counts from the slice's start: where this pass began, in the same count, is `done` before
+-        // now; what is left of it and the passes after are the known blocks, whenever it began)
+-        if (target <= now || now < done) {
++        // now, which is before the slice's start when the pass began in an earlier one: the count wraps round below
++        // zero and the sums below, all of times of this pass and after, come out right; what is left of it and the
++        // passes after are the known blocks, whenever it began)
++        if (target <= now) {
+             return false;
+         }
+         w.at = now - done;

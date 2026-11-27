@@ -350,7 +350,8 @@
       "patches/0358-satrecomp-keep-unchanged-sprite-lines.patch",
       "patches/0359-sakura-counted-wait-midpass-landing.patch",
       "patches/0360-sakura-counted-wait-slice-times.patch",
-      "patches/0361-sakura-idle-skips-across-slices.patch"
+      "patches/0361-sakura-idle-skips-across-slices.patch",
+      "patches/0362-sakura-midpass-landing-earlier-pass.patch"
     ]
   }
 }
