@@ -341,7 +341,8 @@
       "patches/0349-satrecomp-optional-compose-skip.patch",
       "patches/0350-satrecomp-compose-thread.patch",
       "patches/0351-sakura-tighter-wait-skips.patch",
-      "patches/0352-sakura-counted-wait-landing.patch"
+      "patches/0352-sakura-counted-wait-landing.patch",
+      "patches/0353-sakura-cheaper-counted-wait-checks.patch"
     ]
   }
 }
