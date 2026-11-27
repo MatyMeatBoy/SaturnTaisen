@@ -7,7 +7,9 @@ tag=$1; exe=$2; scen=$3; n=$4; mode=${5:-headless}; shift 5 2>/dev/null; extra="
 o=$u/med/$tag-$scen-$mode; rm -rf "$o"; mkdir -p "$o" "$u/bin/$tag"
 b=$u/bin/$tag/sakura
 [ "$b" -ef "$exe" ] || { rm -f "$b"; ln "$exe" "$b" 2>/dev/null || { echo "sin enlace duro: $exe se corre en su sitio"; rmdir "$u/bin/$tag" 2>/dev/null; b=$exe; }; }
-export LD_LIBRARY_PATH=$g/lib SATRECOMP_LAZY_BLOCKS=1 SATRECOMP_FRAME_PROFILE=1
+export LD_LIBRARY_PATH=$g/lib SATRECOMP_LAZY_BLOCKS=1
+# (NOPROF=1: without the per-part frame profile, which reads the clock thousands of times a frame)
+[ -n "$NOPROF" ] || export SATRECOMP_FRAME_PROFILE=1
 # (the binary finds its SDL through $ORIGIN/lib before the system one: a test binary gets a copy of the port's)
 d=$(dirname "$b"); [ "$d" = "$g" ] || [ -r "$d/lib/libSDL3.so.0" ] || { mkdir -p "$d/lib"; cp $g/lib/libSDL3.so.0 "$d/lib/"; }
 read -r SATRECOMP_WARM_BLOCK_PAGES <warm-pages.txt; export SATRECOMP_WARM_BLOCK_PAGES

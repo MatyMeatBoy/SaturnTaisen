@@ -398,3 +398,24 @@ En el mapa de Ogami, el bucle de sondeo (`060041BA` → `0600A200` → `0600A1FC
 
 **0363 (`satrecomp-pass-division-32-bit`).** Las divisiones por el coste de una vuelta en los tres saltos exactos se hacen en 32 bits cuando los dos valores caben, que dentro de un tramo es siempre. En ARMv7 eso es una instrucción `udiv` en lugar de la llamada a `__aeabi_uldivmod`; el perfil de la RC23 en la placa mostraba esa función llamada desde la espera contada. Mismos hashes en QEMU (`d6d78df6…`, `82416007…`) y en PC (`E46E5D14…`).
 
+## RC31 instalada en la consola como juego (2026-11-27)
+
+La RC31 es la base de laboratorio 0.3.8 con los parches 0354–0363, cada uno verificado por hash en QEMU y en PC. Binario `rc31/sakura`, SHA‑256 `6a12e53a…`, y xz `f910f6f5…`. Se instaló con `tools/ga36/usbdiag/` (trabajo `instalar31.sh` de USBdiag):
+- **Lo anterior, guardado para volver atrás:** `ports/saturntaisen/sakura` pasa a `sakura.rc3-antes`, `lib/libSDL3.so.0` a `libSDL3.so.0.neon1-antes` y `launch.sh` a `launch.sh.antes-rc31`.
+- **SDL nuevo:** el de `ga36-sdl3-neon-present.patch`.
+- **`launch.sh`:** activa `SATRECOMP_VIDEO_THREAD`, `SATRECOMP_SOUND_THREAD` y `SATRECOMP_COMPOSE_THREAD`; cada uno se apaga con `0`.
+- **Volver atrás:** renombrar los tres archivos `-antes` a su nombre.
+
+En la placa, con otros proyectos usándola a la vez y la placa caliente:
+
+| | Combate | Mapa |
+| --- | ---: | ---: |
+| RC28 | 29,3 fps | 33,8 fps |
+| RC30 | 29,3 fps | 33,7 fps |
+
+En el arranque de prueba de la RC31 instalada (300 cuadros, recién cargada) la pantalla real dio 29,5 ms de emulación más 8 ms de presentación por cuadro.
+
+El perfil de la RC32 en la placa muestra que el hilo principal ya pasa buena parte del cuadro dormido. En el combate tiene 965 muestras, frente a 908 del hilo de vídeo, 751 del de sonido y 438 del de composición. Al final de cada cuadro espera a que el hilo de vídeo acabe sus últimas líneas antes de pasar al cuadro siguiente. El siguiente paso es entregar el cuadro desde el hilo de vídeo, para que los dos trabajen en paralelo también en ese tramo.
+
+Los despertares entre hilos se contaron en la placa: unos 140 por cuadro. No explican el tiempo en libc.
+
