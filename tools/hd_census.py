@@ -28,6 +28,7 @@ DOC = 'docs/research/hd-census.md'
 BEGIN = '<!-- BEGIN HD CENSUS -->'
 END = '<!-- END HD CENSUS -->'
 PRECEDENCE = ('hd', 'wired-unverified', 'paired-not-wired', 'unsupported-size', 'excluded')
+PENDING = {'wired-unverified', 'paired-not-wired', 'unsupported-size'}
 SCENE_FOLDERS = (
     ('scene-bg', 'Fondos de escena (BG)', 'SAKURA1/BG'),
     ('scene-bbg', 'Fondos EVE/BBG (batalla y evento)', 'SAKURA2/BG'),
@@ -127,7 +128,7 @@ def new_row(rid, label, unit, source, manual=False):
     return {'id': rid, 'label': label, 'unit': unit, 'source': source, 'manual': manual,
             'candidates': 0, 'excluded': 0, 'excluded_reasons': {}, 'goal': 0, 'hd': 0,
             'wired_unverified': 0, 'blocked': 0, 'blocked_reasons': {}, 'unmatched': 0,
-            'verified': 0, 'partial': 0, 'note': ''}
+            'verified': 0, 'partial': 0, 'strict': 0, 'strict_disc': 0, 'note': ''}
 
 
 def finish(row):
@@ -174,8 +175,13 @@ def scene_rows(register, census):
             if status == 'hd':
                 row['hd'] += 1
                 row['verified'] += donor['verified']
-                if donor['status'] & {'wired-unverified', 'paired-not-wired', 'unsupported-size'}:
+                if donor['status'] & PENDING:
                     row['partial'] += 1
+                else:
+                    # THD42: every non-excluded key of the donor is `hd`.
+                    row['strict'] += 1
+                    # Cut-out exclusions are disc-specific runtime rows, not design exclusions.
+                    row['strict_disc'] += donor['status'] == {'hd'}
             elif status == 'wired-unverified':
                 row['wired_unverified'] += 1
             elif status in ('paired-not-wired', 'unsupported-size'):
@@ -391,7 +397,7 @@ def build():
         'unpaired_scene_keys': len(unpaired),
         'mixed_donors': {'total': len(mixed),
                          'hd_and_excluded': sum(1 for s in mixed.values() if s == {'hd', 'excluded'}),
-                         'hd_and_pending': sum(1 for s in mixed.values() if 'hd' in s and s & {'paired-not-wired', 'unsupported-size', 'wired-unverified'})},
+                         'hd_and_pending': sum(1 for s in mixed.values() if 'hd' in s and s & PENDING)},
         'duplicate_donors_listed_twice': double,
         'evidence_gaps': evidence_gaps(register),
     }
@@ -423,11 +429,18 @@ def render_table(report):
 
 def render_block(report):
     scene = [r for r in report['rows'] if r['id'].startswith('scene-')]
-    totals = {k: sum(r[k] for r in scene) for k in ('candidates', 'excluded', 'goal', 'hd', 'verified', 'blocked', 'wired_unverified', 'unmatched', 'partial')}
+    totals = {k: sum(r[k] for r in scene) for k in ('candidates', 'excluded', 'goal', 'hd', 'verified', 'blocked', 'wired_unverified', 'unmatched', 'partial', 'strict', 'strict_disc')}
+    core = [r for r in scene if r['id'] not in ('scene-event', 'scene-cg')]
+    core_goal, core_hd, core_strict, core_disc = (sum(r[k] for r in core) for k in ('goal', 'hd', 'strict', 'strict_disc'))
     extra = [
         '', f"Escena (7 carpetas SPR): candidatos {totals['candidates']}, excluidos {totals['excluded']}, meta {totals['goal']}, "
             f"hd {totals['hd']} ({pct(totals['hd'], totals['goal'])}), verificados {totals['verified']} ({pct(totals['verified'], totals['goal'])}), "
             f"bloqueados {totals['blocked']}, sin pareja o sin fila {totals['unmatched']}; de los hd, {totals['partial']} aún tienen otra clave pendiente (parcial).",
+        '', f"Integrado estricto (THD42, todas las claves no excluidas del donante en `hd`): escena {totals['strict']}/{totals['goal']} "
+            f"({pct(totals['strict'], totals['goal'])}) junto al actual {totals['hd']}/{totals['goal']}; principal sin EVENT/CG "
+            f"{core_strict}/{core_goal} ({pct(core_strict, core_goal)}) junto a {core_hd}/{core_goal}. Si además los recortes `excluded` "
+            f"en el otro disco cuentan como pendientes (la tabla del runtime filtra por disco): escena {totals['strict_disc']}/{totals['goal']} "
+            f"({pct(totals['strict_disc'], totals['goal'])}), principal {core_disc}/{core_goal} ({pct(core_disc, core_goal)}).",
         '', 'Donantes de escena que cuentan en dos estados: ' +
             f"{report['mixed_donors']['hd_and_excluded']} hd y excluido a la vez, {report['mixed_donors']['hd_and_pending']} hd con otra clave pendiente. "
             f"Rutas físicas extra de familias exactas presentes en el registro: {report['duplicate_donors_listed_twice']}. "
