@@ -335,3 +335,5 @@ Descartado: conservar los costes por bloque entre interrupciones o al salir del 
 
 **0355 (`satrecomp-normal-line-colour-reuse`).** En el camino plano de `NormalLine` se guarda el último índice de colour RAM convertido. Como la CRAM no cambia durante una línea, los puntos que repiten índice reutilizan el color en vez de leerlo y convertirlo otra vez. En el perfil de la RC13 en la placa, `NormalLine` era el 50 % del hilo de vídeo. Mismos hashes en QEMU (`d6d78df6…` y `82416007…`) y en PC (`E46E5D14…`).
 
+**0356 (`satrecomp-dsp-idle-steps-inline`).** `Chip::Step` llama 4 veces por voz a `Effects()`, es decir, 128 pasos del DSP por muestra. Si el PC está pasado el final del programa, sin escritura pendiente y sin estar en el último paso, el paso solo avanza el PC; ahora lo hace en línea, sin la llamada. En QEMU el hilo de sonido trabaja 7,16 s en vez de 7,54 s en el combate de 600 cuadros, y el principal lo espera 286 ms en vez de 837. Mismos hashes, sonido incluido: QEMU `d6d78df6…` y `82416007…`, PC `E46E5D14…`.
+
