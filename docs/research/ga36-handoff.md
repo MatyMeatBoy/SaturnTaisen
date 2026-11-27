@@ -396,3 +396,5 @@ En el mapa de Ogami, el bucle de sondeo (`060041BA` → `0600A200` → `0600A1FC
 - QEMU, combate de 600 cuadros: 718.050 aterrizajes desde mitad de vuelta, y los despachos bajan de 3,65 a 2,07 millones.
 - Mismos hashes: QEMU `d6d78df6…` y `82416007…`, PC `E46E5D14…`; en PC, por defecto, 4,7 s.
 
+**0363 (`satrecomp-pass-division-32-bit`).** Las divisiones por el coste de una vuelta en los tres saltos exactos se hacen en 32 bits cuando los dos valores caben, que dentro de un tramo es siempre. En ARMv7 eso es una instrucción `udiv` en lugar de la llamada a `__aeabi_uldivmod`; el perfil de la RC23 en la placa mostraba esa función llamada desde la espera contada. Mismos hashes en QEMU (`d6d78df6…`, `82416007…`) y en PC (`E46E5D14…`).
+

@@ -1,0 +1,65 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index 035ed95..8f27c4d 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1124,6 +1124,15 @@ namespace {
+         }
+     } g_countedWaitReport;
+ 
++    // (a / b for the passes of a slice: in 32 bits when both fit, as they always do within one, which on ARMv7 is one
++    // divide instruction instead of a call to the 64-bit library division)
++    inline uint64_t PassDivide(uint64_t a, uint64_t b) {
++        if (((a | b) >> 32) == 0) [[likely]] {
++            return static_cast<uint32_t>(a) / static_cast<uint32_t>(b);
++        }
++        return a / b;
++    }
++
+     inline bool HighRam(uint32_t a) {
+         return (a & 0xC6000000u) == 0x06000000u;
+     }
+@@ -1264,7 +1273,7 @@ namespace {
+             // The pass after the one begun last time round the top, which began in an earlier slice: its time is
+             // not to be set against this slice's. The passes from here are the known ones, if the blocks are known.
+             if (w.blocksKnown && w.seen >= 2 && w.cost && target > now && canLand(w.cost)) {
+-                return doLand(w.cost, (target - now - 1) / w.cost);
++                return doLand(w.cost, PassDivide(target - now - 1, w.cost));
+             }
+             w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
+             w.at = now;
+@@ -1306,7 +1315,7 @@ namespace {
+                 const bool land = canLand(cost);
+                 // (whole passes that end before the slice does: the pass that crosses its end runs as code, so
+                 // the slice ends at the same block; never exactly at the end, where the next block would run)
+-                uint64_t passes = (target - now - 1) / cost;
++                uint64_t passes = PassDivide(target - now - 1, cost);
+                 if (land) {
+                     return doLand(cost, passes);
+                 }
+@@ -1395,7 +1404,7 @@ namespace {
+         }
+         // From the pass's start: the passes whole before the slice's end, and the block of the last one it ends in
+         const uint64_t start = w.at;
+-        const uint64_t passes = (target - start - 1) / cost;
++        const uint64_t passes = PassDivide(target - start - 1, cost);
+         const uint64_t rest = target - start - passes * cost; // (1..cost; beyond `done` when passes is 0)
+         unsigned last = 0;
+         uint64_t into = w.blockCost[0];
+@@ -1463,7 +1472,7 @@ namespace {
+             // been in an earlier slice: that pass's time is not to be set against this slice's, but a pass of this
+             // loop has been measured, twice the same: the passes that end before this slice does are those
+             if (w.costKnown && target > now) {
+-                const uint64_t passes = (target - now - 1) / w.cost;
++                const uint64_t passes = PassDivide(target - now - 1, w.cost);
+                 if (passes >= 1) {
+                     Access::AddCycles(cpu, passes * w.cost);
+                     now += passes * w.cost;
+@@ -1477,7 +1486,7 @@ namespace {
+             if (w.matches >= 2 && cost == w.cost && target > now) {
+                 // (whole passes that end before the slice does: the pass that crosses its end runs as code, so
+                 // the slice ends at the same block; never exactly at the end, where the next block would run)
+-                uint64_t passes = (target - now - 1) / cost;
++                uint64_t passes = PassDivide(target - now - 1, cost);
+                 if (passes >= 1) {
+                     Access::AddCycles(cpu, passes * cost);
+                     now += passes * cost;
