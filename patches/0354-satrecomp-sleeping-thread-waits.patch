@@ -1,0 +1,182 @@
+diff --git a/machine/sound_thread.h b/machine/sound_thread.h
+index ba33934..84ebc71 100644
+--- a/machine/sound_thread.h
++++ b/machine/sound_thread.h
+@@ -77,9 +77,18 @@ public:
+         if (m_done.load(std::memory_order_acquire) == head) return;
+         syncs++;
+         const auto start = std::chrono::steady_clock::now();
++        // (a short wait in place, then asleep until the worker says it has caught up: a core turning round here
++        // is one the worker, or the other threads, could be using)
+         for (unsigned spins = 0; m_done.load(std::memory_order_acquire) != head; spins++) {
+-            if (spins < 20000) Relax();
+-            else std::this_thread::yield();
++            if (spins < kSpinsBeforeSleep) {
++                Relax();
++                continue;
++            }
++            std::unique_lock<std::mutex> lock(m_doneMutex);
++            m_syncWaiting.store(true, std::memory_order_seq_cst);
++            m_doneWake.wait_for(lock, std::chrono::milliseconds(1),
++                                [&] { return m_done.load(std::memory_order_seq_cst) == head; });
++            m_syncWaiting.store(false, std::memory_order_seq_cst);
+         }
+         waitNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+             std::chrono::steady_clock::now() - start).count());
+@@ -93,8 +102,23 @@ private:
+     std::atomic<bool> m_sleeping{false}, m_stop{false};
+     std::mutex m_mutex;
+     std::condition_variable m_wake;
++    std::atomic<bool> m_syncWaiting{false};
++    std::mutex m_doneMutex;
++    std::condition_variable m_doneWake;
++    void TellDone() {
++        if (m_syncWaiting.load(std::memory_order_seq_cst)) [[unlikely]] {
++            std::lock_guard<std::mutex> lock(m_doneMutex);
++            m_doneWake.notify_one();
++        }
++    }
+     std::thread m_thread;
+ 
++    // (an ARMv7 handheld's four cores are all busy: little turning before sleeping; a PC's are not)
++#if defined(__arm__) || defined(__aarch64__)
++    static constexpr unsigned kSpinsBeforeSleep = 2000;
++#else
++    static constexpr unsigned kSpinsBeforeSleep = 20000;
++#endif
+     static void Relax() {
+ #if defined(__arm__) || defined(__aarch64__)
+         __asm__ __volatile__("yield");
+@@ -126,9 +150,13 @@ private:
+                 execute(m_ring[tail & (kSize - 1)]);
+                 tail++;
+                 m_tail.store(tail, std::memory_order_release);
+-                if ((tail & 15) == 0) m_done.store(tail, std::memory_order_release);
++                if ((tail & 15) == 0) {
++                    m_done.store(tail, std::memory_order_release);
++                    TellDone();
++                }
+             }
+             m_done.store(tail, std::memory_order_release);
++            TellDone();
+             busyNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+                 std::chrono::steady_clock::now() - start).count());
+         }
+diff --git a/machine/video_thread.h b/machine/video_thread.h
+index 0165038..49d009a 100644
+--- a/machine/video_thread.h
++++ b/machine/video_thread.h
+@@ -96,9 +96,18 @@ public:
+         if (m_done.load(std::memory_order_acquire) == head) return;
+         syncs++;
+         const auto start = std::chrono::steady_clock::now();
++        // (a short wait in place, then asleep until the worker says it has caught up: a core turning round here
++        // is one the worker, or the other threads, could be using)
+         for (unsigned spins = 0; m_done.load(std::memory_order_acquire) != head; spins++) {
+-            if (spins < 20000) Relax();
+-            else std::this_thread::yield();
++            if (spins < kSpinsBeforeSleep) {
++                Relax();
++                continue;
++            }
++            std::unique_lock<std::mutex> lock(m_doneMutex);
++            m_syncWaiting.store(true, std::memory_order_seq_cst);
++            m_doneWake.wait_for(lock, std::chrono::milliseconds(1),
++                                [&] { return m_done.load(std::memory_order_seq_cst) == head; });
++            m_syncWaiting.store(false, std::memory_order_seq_cst);
+         }
+         waitNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+             std::chrono::steady_clock::now() - start).count());
+@@ -120,8 +129,23 @@ private:
+     std::atomic<bool> m_sleeping{false}, m_stop{false};
+     std::mutex m_mutex;
+     std::condition_variable m_wake;
++    std::atomic<bool> m_syncWaiting{false};
++    std::mutex m_doneMutex;
++    std::condition_variable m_doneWake;
++    void TellDone() {
++        if (m_syncWaiting.load(std::memory_order_seq_cst)) [[unlikely]] {
++            std::lock_guard<std::mutex> lock(m_doneMutex);
++            m_doneWake.notify_one();
++        }
++    }
+     std::thread m_thread;
+ 
++    // (an ARMv7 handheld's four cores are all busy: little turning before sleeping; a PC's are not)
++#if defined(__arm__) || defined(__aarch64__)
++    static constexpr unsigned kSpinsBeforeSleep = 2000;
++#else
++    static constexpr unsigned kSpinsBeforeSleep = 20000;
++#endif
+     static void Relax() {
+ #if defined(__arm__) || defined(__aarch64__)
+         __asm__ __volatile__("yield");
+@@ -181,9 +205,13 @@ private:
+                 Execute(m_ring[tail & (kSize - 1)]);
+                 tail++;
+                 m_tail.store(tail, std::memory_order_release);
+-                if ((tail & 63) == 0) m_done.store(tail, std::memory_order_release);
++                if ((tail & 63) == 0) {
++                    m_done.store(tail, std::memory_order_release);
++                    TellDone();
++                }
+             }
+             m_done.store(tail, std::memory_order_release);
++            TellDone();
+             busyNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+                 std::chrono::steady_clock::now() - start).count());
+         }
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 41bb963..398ec88 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -142,8 +142,15 @@ public:
+         drains++;
+         const auto start = std::chrono::steady_clock::now();
+         for (unsigned spins = 0; m_tail.load(std::memory_order_acquire) != head; spins++) {
+-            if (spins < 20000) Relax();
+-            else std::this_thread::yield();
++            if (spins < kSpinsBeforeSleep) {
++                Relax();
++                continue;
++            }
++            std::unique_lock<std::mutex> lock(m_doneMutex);
++            m_drainWaiting.store(true, std::memory_order_seq_cst);
++            m_doneWake.wait_for(lock, std::chrono::milliseconds(1),
++                                [&] { return m_tail.load(std::memory_order_seq_cst) == head; });
++            m_drainWaiting.store(false, std::memory_order_seq_cst);
+         }
+         drainNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+             std::chrono::steady_clock::now() - start).count());
+@@ -153,11 +160,17 @@ private:
+     std::vector<LeanLine> m_jobs;
+     alignas(64) std::atomic<uint32> m_head{0};
+     alignas(64) std::atomic<uint32> m_tail{0};
+-    std::atomic<bool> m_sleeping{false}, m_stop{false};
+-    std::mutex m_mutex;
+-    std::condition_variable m_wake;
++    std::atomic<bool> m_sleeping{false}, m_stop{false}, m_drainWaiting{false};
++    std::mutex m_mutex, m_doneMutex;
++    std::condition_variable m_wake, m_doneWake;
+     std::thread m_thread;
+ 
++    // (an ARMv7 handheld's four cores are all busy: little turning before sleeping; a PC's are not)
++#if defined(__arm__) || defined(__aarch64__)
++    static constexpr unsigned kSpinsBeforeSleep = 2000;
++#else
++    static constexpr unsigned kSpinsBeforeSleep = 20000;
++#endif
+     static void Relax() {
+ #if defined(__arm__) || defined(__aarch64__)
+         __asm__ __volatile__("yield");
+@@ -187,6 +200,10 @@ private:
+                 LeanCompose(m_jobs[tail & (kJobs - 1)]);
+                 tail++;
+                 m_tail.store(tail, std::memory_order_release);
++                if (m_drainWaiting.load(std::memory_order_seq_cst)) [[unlikely]] {
++                    std::lock_guard<std::mutex> lock(m_doneMutex);
++                    m_doneWake.notify_one();
++                }
+             }
+         }
+     }

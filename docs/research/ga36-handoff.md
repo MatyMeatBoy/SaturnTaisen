@@ -327,3 +327,9 @@ Mismos hashes: QEMU, combate de 600 cuadros (`d6d78df6…`) y mapa (`82416007…
 
 Descartado: conservar los costes por bloque entre interrupciones o al salir del bucle, y aterrizar en cuanto la CPU vuelve a la cabeza tras una pausa. Habría bajado los despachos de 11,2 a 3,7 millones en 600 cuadros, pero el hash del combate cambia desde el cuadro 352. Al volver a entrar en el bucle, los costes de cada bloque no siempre son los mismos.
 
+**0354 (`satrecomp-sleeping-thread-waits`).** Quien espera a los hilos de vídeo y sonido o a la composición gira un poco y luego duerme en una variable de condición, y el trabajador avisa al ponerse al día. Antes daba 20.000 vueltas y después llamaba a `sched_yield` sin parar.
+- El giro es de 2.000 vueltas en ARM, donde los cuatro núcleos van llenos, y de 20.000 en x86.
+- En el perfil de la RC13 en la placa, el 36 % del hilo principal estaba fuera del binario, buena parte en esas esperas.
+- QEMU: mismos hashes en combate de 600 cuadros (`d6d78df6…`) y en mapa (`82416007…`). La CPU total del combate baja de 37,5 a 27,9 s.
+- PC: mismo hash `E46E5D14…`.
+
