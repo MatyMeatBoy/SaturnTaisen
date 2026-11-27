@@ -352,3 +352,12 @@ Resultados en QEMU, con los mismos hashes con y sin hilos:
 
 PC: mismo hash `E46E5D14…` en las tres variantes.
 
+**0358 (`satrecomp-keep-unchanged-sprite-lines`).** Lo mismo que el 0357 para `SpriteLine`. El 88 % de las líneas de sprites del combate y el 97 % de las del mapa tienen los mismos bytes de framebuffer que en el cuadro anterior. La línea de 16 bits se guarda con:
+- sus palabras de framebuffer y su línea de ventana de sprites;
+- los registros del VDP1 que la sitúan (`fbSizeH` y `hdtvEnable`) y su desplazamiento de salida;
+- el número del contador de `Vdp2Stamps` al hacerla.
+
+Se reutiliza si nada de eso cambió, ni cambió algo de colour RAM ni de los registros del VDP2. No se guardan las líneas de 8 bits, las de otro framebuffer ni las del modo de comprobación.
+
+Mismos hashes: QEMU, con y sin hilos, combate de 600 cuadros (`d6d78df6…`) y mapa (`82416007…`); PC, `E46E5D14…`. En PC, los 1.200 cuadros pasan de 6,1 a 5,2 s por defecto y de 4,1 a 3,3 s con hilos.
+

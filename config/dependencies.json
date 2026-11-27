@@ -346,7 +346,8 @@
       "patches/0354-satrecomp-sleeping-thread-waits.patch",
       "patches/0355-satrecomp-normal-line-colour-reuse.patch",
       "patches/0356-satrecomp-dsp-idle-steps-inline.patch",
-      "patches/0357-satrecomp-keep-unchanged-normal-lines.patch"
+      "patches/0357-satrecomp-keep-unchanged-normal-lines.patch",
+      "patches/0358-satrecomp-keep-unchanged-sprite-lines.patch"
     ]
   }
 }

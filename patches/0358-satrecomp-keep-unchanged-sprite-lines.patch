@@ -1,0 +1,68 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 2fd9fdf..028b239 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -1040,6 +1040,40 @@ bool Renderer::SpriteLine(uint32 y,const uint8* alternateFb) {
+     const uint8 zeroCalcRatio = params.colorCalcRatios[0];
+     const uint8 zeroSow = zeroWindowed ? 1 : 0;
+     const uint8 blankCalcEnable = calcEnable && condition(0, false);
++    // The same line as last frame, made from the same things: what it made then. What a 16-bit sprite line reads
++    // is its framebuffer words, its sprite window line, the VDP1 registers that place it, colour RAM and the VDP2
++    // registers (those two move g_vdp2Stamps); the frame's number (the counter) when it was made is kept with it.
++    struct KeptSpriteLine {
++        uint64 made = 0;
++        uint32 y = 0, width = 0, fbSizeH = 0, outputShift = 0;
++        bool hdtv = false;
++        std::vector<uint8> words, window, priority, special, sow, calcEnable, calcRatio;
++        std::vector<uint32> color;
++    };
++    static KeptSpriteLine keptSprites[512];
++    static const bool keepSprites = getenv("SATRECOMP_NO_LINE_KEEP") == nullptr;
++    const uint32 wordBytes = (width >> outputShift) * 2, wordsAt = lineStart * 2;
++    const bool keepable = keepSprites && !alternateFb && !pixel8 && !m_check && wordsAt + wordBytes <= 0x40000;
++    KeptSpriteLine &kept = keptSprites[y & 511];
++    auto cramUnchangedSince = [](uint64 made) {
++        if (g_vdp2Stamps.everything > made) return false;
++        for (const uint64 part : g_vdp2Stamps.cramPart) {
++            if (part > made) return false;
++        }
++        return true;
++    };
++    if (keepable && kept.made && kept.y == y && kept.width == width && kept.fbSizeH == regs1.fbSizeH &&
++        kept.outputShift == outputShift && kept.hdtv == regs1.hdtvEnable && cramUnchangedSince(kept.made) &&
++        std::memcmp(kept.words.data(), fb + wordsAt, wordBytes) == 0 && std::memcmp(kept.window.data(), windowIn, width) == 0) {
++        std::memcpy(colorOut, kept.color.data(), size_t(width) * 4);
++        std::memcpy(priorityOut, kept.priority.data(), width);
++        std::memcpy(specialOut, kept.special.data(), width);
++        std::memcpy(sowOut, kept.sow.data(), width);
++        std::memcpy(calcEnableOut, kept.calcEnable.data(), width);
++        std::memcpy(calcRatioOut, kept.calcRatio.data(), width);
++        return true;
++    }
++    const uint64 madeAt = g_vdp2Stamps.counter;
+     for (uint32 x = 0; x < (width >> outputShift); x++) {
+         const uint32 xx = x << outputShift;
+         const uint32 offset = (x << readShift) + lineStart;
+@@ -1114,6 +1148,22 @@ bool Renderer::SpriteLine(uint32 y,const uint8* alternateFb) {
+         }
+     }
+ 
++    if (keepable) {
++        kept.made = madeAt;
++        kept.y = y;
++        kept.width = width;
++        kept.fbSizeH = regs1.fbSizeH;
++        kept.outputShift = outputShift;
++        kept.hdtv = regs1.hdtvEnable;
++        kept.words.assign(fb + wordsAt, fb + wordsAt + wordBytes);
++        kept.window.assign(windowIn, windowIn + width);
++        kept.color.assign(colorOut, colorOut + width);
++        kept.priority.assign(priorityOut, priorityOut + width);
++        kept.special.assign(specialOut, specialOut + width);
++        kept.sow.assign(sowOut, sowOut + width);
++        kept.calcEnable.assign(calcEnableOut, calcEnableOut + width);
++        kept.calcRatio.assign(calcRatioOut, calcRatioOut + width);
++    }
+     if (m_check) {
+         m_ref->LayerLine(kSprites, width, m_refColor.data(), m_refPriority.data());
+         m_ref->SpriteLine(width, m_refSpecial.data(), m_refShadowOrWindow.data());
