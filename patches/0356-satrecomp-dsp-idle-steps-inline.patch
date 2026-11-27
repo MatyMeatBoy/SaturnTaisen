@@ -1,0 +1,53 @@
+diff --git a/sound/chip.cpp b/sound/chip.cpp
+index 15a0807..e431aed 100644
+--- a/sound/chip.cpp
++++ b/sound/chip.cpp
+@@ -559,6 +559,15 @@ void Chip::Finish() {
+ void Chip::Step(uint32 i) {
+     Chip &chip = *this;
+     Dsp &dsp = chip.m_dsp;
++    // (past the end of the DSP's program, with no write waiting and not at its last step, an instruction step only
++    // moves PC on: done here, without the call, as Effects() would do it)
++    auto effects = [&chip, &dsp] {
++        if (dsp.PC < dsp.m_programLength || dsp.m_writePending || dsp.PC == 0x7F) {
++            chip.Effects();
++        } else {
++            ++dsp.PC;
++        }
++    };
+     auto &slots = chip.m_slots;
+     Slot &s1 = slots[i], &s2 = slots[(i - 1) & 31], &s3 = slots[(i - 2) & 31], &s4 = slots[(i - 3) & 31], &s5 = slots[(i - 4) & 31],
+          &s6 = slots[(i - 5) & 31], &s7 = slots[(i - 6) & 31];
+@@ -567,7 +576,7 @@ void Chip::Step(uint32 i) {
+     if (!s7.stackWriteInhibit) {
+         chip.m_soundStack[(chip.m_soundStackIndex - 6u) & 63] = static_cast<uint16>(s7.output);
+     }
+-    Effects();
++    effects();
+ 
+     // ... and into one of the DSP's 16 inputs
+     const uint32 input = s7.inputSelect;
+@@ -603,12 +612,12 @@ void Chip::Step(uint32 i) {
+             s3.sample1 = static_cast<sint16>(Be16(&chip.m_WRAM[((s3.startAddress & ~1u) + offset * 2) & 0x7FFFF]));
+         }
+     }
+-    Effects();
++    effects();
+ 
+     if (s2.modLevel >= 5) {
+         s2.modYSample = static_cast<sint16>(chip.m_soundStack[(chip.m_soundStackIndex - 1 + s2.modYSelect) & 63]);
+     }
+-    Effects();
++    effects();
+ 
+     Pitch(s1);
+     Advance(s2);
+@@ -616,7 +625,7 @@ void Chip::Step(uint32 i) {
+     Envelope(s4);
+     Level(s5);
+     Attenuate(s6);
+-    Effects();
++    effects();
+ 
+     // The finished voice into the output: directly, and what the DSP made of the inputs
+     const uint32 finished = (i - 6) & 31;
