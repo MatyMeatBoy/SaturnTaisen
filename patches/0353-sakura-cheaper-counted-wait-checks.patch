@@ -1,0 +1,95 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index be6aca0..4ce8331 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1131,10 +1131,23 @@ namespace {
+             return;
+         }
+         w.blockAt[block] = Access::Cycles(cpu);
+-        w.blockRegs[block] = Access::GetRegisters(cpu);
++        if (!w.blocksKnown) { // (once the pass is known block by block, only its timing is checked)
++            w.blockRegs[block] = Access::GetRegisters(cpu);
++        }
+         w.blockSeen[block] = true;
+     }
+ 
++    // (a few bytes of code against what they must be: 32 bits at a time, in place)
++    inline bool SameBytes(const uint8_t *at, const uint8_t *want, unsigned size) {
++        for (unsigned i = 0; i < size; i += 4) {
++            uint32_t a, b;
++            std::memcpy(&a, at + i, 4);
++            std::memcpy(&b, want + i, 4);
++            if (a != b) return false;
++        }
++        return true;
++    }
++
+     // true: the CPU was left where the slice ends (the dispatcher returns); false: it goes on from here as before
+     bool SkipCountedWait(SH2 &cpu, uint64_t target) {
+         static const bool off = getenv("SATRECOMP_NO_COUNTED_WAIT") != nullptr;
+@@ -1152,7 +1165,7 @@ namespace {
+         const auto &R = Access::R(cpu);
+         const uint32_t counterAt = R[8];
+         if (off || !g_ramHigh || Access::InterruptRaised(cpu) || R[9] != 0x060338B8u || !HighRam(counterAt) || (counterAt & 1) ||
+-            memcmp(g_ramHigh + 0x041BA, kLoop, sizeof kLoop) != 0 || memcmp(g_ramHigh + 0x338B4, kCallee, sizeof kCallee) != 0) {
++            !SameBytes(g_ramHigh + 0x041BA, kLoop, sizeof kLoop) || !SameBytes(g_ramHigh + 0x338B4, kCallee, sizeof kCallee)) {
+             return forget();
+         }
+         const uint32_t byteFlagAt = RamLong(0x060338FC), longFlagAt = RamLong(0x060041D8);
+@@ -1170,30 +1183,32 @@ namespace {
+         uint8_t *count = g_ramHigh + c;
+         uint16_t counter = static_cast<uint16_t>((count[0] << 8) | count[1]);
+         uint64_t now = Access::Cycles(cpu);
+-        const Access::Registers regs = Access::GetRegisters(cpu);
++        // (the registers against those last time round, in place: copied only when they differ)
++        const bool sameRegs = w.seen && Access::SameRegisters(cpu, w.regs);
+         // What the first block leaves in r1: the count before it, sign-extended, plus one (mov.w @r8,r1; add #1,r1)
+         auto r1After = [](uint16_t before) { return static_cast<uint32_t>(static_cast<int32_t>(static_cast<int16_t>(before)) + 1); };
+-        if (w.seen && regs == w.regs && counter == static_cast<uint16_t>(w.counter + 1) && now > w.at) {
++        if (sameRegs && counter == static_cast<uint16_t>(w.counter + 1) && now > w.at) {
+             const uint64_t cost = now - w.at;
+             // The pass just finished, block by block, if it was seen whole: its block costs and registers (r1 aside,
+             // which follows the count) must be those of the pass before, twice running, before landings are made
+             if (w.blockSeen[0] && w.blockSeen[1] && w.blockSeen[2] && w.blockAt[0] > w.at && w.blockAt[1] > w.blockAt[0] &&
+                 w.blockAt[2] > w.blockAt[1] && now > w.blockAt[2]) {
+                 const uint64_t costs[4] = {w.blockAt[0] - w.at, w.blockAt[1] - w.blockAt[0], w.blockAt[2] - w.blockAt[1], now - w.blockAt[2]};
++                const bool timingOnly = w.blocksKnown; // (registers kept from when it became known)
+                 bool modelled = true;
+-                for (unsigned b = 0; b < 3; b++) {
++                for (unsigned b = 0; b < 3 && !timingOnly; b++) {
+                     modelled = modelled && w.blockRegs[b].R[1] == r1After(w.counter);
+                 }
+                 bool same = modelled && w.blocksCandidate;
+                 for (unsigned b = 0; b < 4 && same; b++) {
+                     same = costs[b] == w.blockCost[b];
+                 }
+-                for (unsigned b = 0; b < 3 && same; b++) {
++                for (unsigned b = 0; b < 3 && same && !timingOnly; b++) {
+                     Access::Registers mine = w.blockRegs[b], kept = w.keptRegs[b];
+                     mine.R[1] = kept.R[1] = 0;
+                     same = mine == kept;
+                 }
+-                if (modelled) {
++                if (modelled && !timingOnly) {
+                     for (unsigned b = 0; b < 4; b++) w.blockCost[b] = costs[b];
+                     for (unsigned b = 0; b < 3; b++) w.keptRegs[b] = w.blockRegs[b];
+                 }
+@@ -1242,7 +1257,6 @@ namespace {
+                     w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
+                     w.cost = cost;
+                     w.seen++;
+-                    w.regs = regs;
+                     g_countedWaitPasses += passes + 1;
+                     g_countedWaitSkips++;
+                     g_countedWaitLandings++;
+@@ -1269,7 +1283,9 @@ namespace {
+         w.blockSeen[0] = w.blockSeen[1] = w.blockSeen[2] = false;
+         w.at = now;
+         w.counter = counter;
+-        w.regs = regs;
++        if (!sameRegs) {
++            w.regs = Access::GetRegisters(cpu);
++        }
+         return false;
+     }
+ #endif

@@ -318,3 +318,12 @@ Resultados:
 - **QEMU, mapa:** sin cambios (`82416007…`).
 - **PC, mismos 1.200 cuadros:** por defecto 6,1 s y con hilos 4,0 s, con el mismo hash `E46E5D14…`.
 
+**0353 (`sakura-cheaper-counted-wait-checks`).** Según el perfil en la placa de la RC12, las comprobaciones de la espera contada se llevaban cerca del 17 % del hilo principal. Cambios:
+- `memcmp` de libc pasa a ser una comparación del código en palabras de 32 bits.
+- Los registros se comparan en su sitio (`SameRegisters`) y solo se copian cuando cambian.
+- Cuando el modelo por bloques ya está verificado, solo se mira la temporización de cada bloque.
+
+Mismos hashes: QEMU, combate de 600 cuadros (`d6d78df6…`) y mapa (`82416007…`); PC, `E46E5D14…`.
+
+Descartado: conservar los costes por bloque entre interrupciones o al salir del bucle, y aterrizar en cuanto la CPU vuelve a la cabeza tras una pausa. Habría bajado los despachos de 11,2 a 3,7 millones en 600 cuadros, pero el hash del combate cambia desde el cuadro 352. Al volver a entrar en el bucle, los costes de cada bloque no siempre son los mismos.
+
