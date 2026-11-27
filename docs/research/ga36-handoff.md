@@ -333,3 +333,5 @@ Descartado: conservar los costes por bloque entre interrupciones o al salir del 
 - QEMU: mismos hashes en combate de 600 cuadros (`d6d78df6…`) y en mapa (`82416007…`). La CPU total del combate baja de 37,5 a 27,9 s.
 - PC: mismo hash `E46E5D14…`.
 
+**0355 (`satrecomp-normal-line-colour-reuse`).** En el camino plano de `NormalLine` se guarda el último índice de colour RAM convertido. Como la CRAM no cambia durante una línea, los puntos que repiten índice reutilizan el color en vez de leerlo y convertirlo otra vez. En el perfil de la RC13 en la placa, `NormalLine` era el 50 % del hilo de vídeo. Mismos hashes en QEMU (`d6d78df6…` y `82416007…`) y en PC (`E46E5D14…`).
+
