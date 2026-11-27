@@ -419,3 +419,16 @@ El perfil de la RC32 en la placa muestra que el hilo principal ya pasa buena par
 
 Los despertares entre hilos se contaron en la placa: unos 140 por cuadro. No explican el tiempo en libc.
 
+## 0364: el cierre del cuadro, en el hilo de vídeo (RC33)
+
+Antes, al entrar en el borrado vertical, el hilo principal esperaba a que el de vídeo terminara las últimas líneas del cuadro y llamaba él a `EndFrame`. Ahora `EndFrame` va a la cola como una orden más (`kEndFrame`, al final del enum), y el hilo principal sigue con la CPU mientras el de vídeo acaba. `RunFrame` sigue esperando a la cola antes de volver, así que el puerto ve el renderer igual que antes.
+
+Lo que el puerto tomaba de la máquina en el callback del cuadro (diálogo, elección, estado del CD, fase de la primera película) se toma ahora en el hilo principal en el mismo instante, mediante `machine::g_frameEndHook`. Es un global y no un miembro, para no cambiar la estructura de `Machine`. En modo GPU queda vacío, porque allí el callback nunca se llamaba.
+
+- **Exactitud:**
+  - PC, 1200 cuadros con y sin hilos: hash `E46E5D14…`.
+  - RC33 en QEMU, 300 cuadros con los tres hilos: `7586b394…`.
+- **Revisión independiente:** limpia, sin carreras. Queda probar una vez la ruta GPU con el hilo de vídeo.
+- **RC33:** la RC31 con `machine.o`, `vdp.o`, `state.o` y `main-ga36.o` rehechos con 0364. SHA-256 `78e045e1…`, xz `e35c5e7e…`.
+- **Base en la placa:** la RC31 instalada daba 29,1 fps en combate y 35,9 fps en mapa, como se juega y sin hash.
+

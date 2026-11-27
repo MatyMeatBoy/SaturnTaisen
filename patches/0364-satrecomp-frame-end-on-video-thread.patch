@@ -1,0 +1,90 @@
+diff --git a/machine/machine.h b/machine/machine.h
+index 9687779..cc0a670 100644
+--- a/machine/machine.h
++++ b/machine/machine.h
+@@ -40,6 +40,11 @@ struct Disc {
+     uint32 leadOutFAD = 0;
+ };
+ 
++// Called on the machine's thread when a frame's picture is complete (with its size), before the renderer hands
++// it over, which with SATRECOMP_VIDEO_THREAD happens a little later on the renderer's thread: for what the port
++// takes from the machine itself at that moment
++inline std::function<void(uint32_t width, uint32_t height)> g_frameEndHook;
++
+ class Machine final : private sound::M68KBus {
+ public:
+     // Host-only witness for the HD clip hook (T113): the start FAD of the last accepted CD play command and how many there were.
+diff --git a/machine/vdp.cpp b/machine/vdp.cpp
+index 84bdfee..a5bbba9 100644
+--- a/machine/vdp.cpp
++++ b/machine/vdp.cpp
+@@ -173,9 +173,13 @@ void Machine::VdpLineEnd() {
+             m_smpc.intbackInProgress = false; // (a pad read not finished by now is given up)
+             break;
+         case kVBlanking:
+-            // (the picture goes to the port from this thread, as before)
+-            SATRECOMP_VIDEO_SYNC();
+-            m_video->EndFrame();
++            // (what the port reads from the machine, now; the picture itself is handed over by the renderer once
++            // it has drawn the frame's last lines, on its own thread when it has one, while the CPUs go on into
++            // the vertical blank: RunFrame waits for it before returning)
++            if (g_frameEndHook) {
++                g_frameEndHook(m_vdp.width, m_vdp.height);
++            }
++            SATRECOMP_VIDEO((vt::kEndFrame), EndFrame());
+             m_frameDone = true;
+             if (v.doDisplayErase) {
+                 v.doDisplayErase = false;
+diff --git a/machine/video_thread.h b/machine/video_thread.h
+index 7d928c5..272b397 100644
+--- a/machine/video_thread.h
++++ b/machine/video_thread.h
+@@ -28,6 +28,7 @@ namespace satrecomp::machine::vt {
+ enum Op : uint8_t {
+     kVdp1Reg, kVdp2Reg, kErase, kSwap, kBeginDrawing, kDraw, kEndDrawing, kResolution, kField, kLatch,
+     kBeginFrame, kLine, kVram1Write8, kVram1Write16, kVram2Write8, kVram2Write16, kCramWrite8, kCramWrite16,
++    kEndFrame,
+ };
+ 
+ struct Command {
+@@ -170,6 +171,7 @@ private:
+         case kLatch: r.LatchDisplayMode(); break;
+         case kBeginFrame: r.BeginFrame(); break;
+         case kLine: r.RenderLine(cmd.a); break;
++        case kEndFrame: r.EndFrame(); break;
+         case kVram1Write8: vram1[cmd.a] = static_cast<uint8_t>(cmd.value); break;
+         case kVram1Write16: Put16(&vram1[cmd.a], cmd.value); break;
+         case kVram2Write8: vram2[cmd.a] = static_cast<uint8_t>(cmd.value); r.NoteVram2Write(cmd.a); break;
+diff --git a/port/main.cpp b/port/main.cpp
+index 91ce354..99bf1b6 100644
+--- a/port/main.cpp
++++ b/port/main.cpp
+@@ -652,7 +652,9 @@ bool Port::Init() {
+     std::vector<uint8_t> firstMovieScript;
+     if(!opt.headless && (!discFiles.Read("0100.BIN",firstMovieScript) || !KnownFirstMovieScript(firstMovieScript)))
+         firstMovieScript.clear();
+-    const auto onFrame = [this,firstMovieScript=std::move(firstMovieScript)](uint32_t *pixels, uint32_t width, uint32_t height) {
++    // (what goes with the picture from the machine: taken on its thread when the frame ends, as the renderer may
++    // hand the picture over from its own a little later)
++    satrecomp::machine::g_frameEndHook = [this,firstMovieScript=std::move(firstMovieScript)](uint32_t width, uint32_t height) {
+         std::lock_guard lock(fbMutex);
+         fbDialogue = dialogueCatalog && satrecomp::FeatureValue("presentation_mode") == 1 &&
+             satrecomp::FeatureValue("text_style") == 0 ? dialogueCatalog->Locate(
+@@ -671,6 +673,9 @@ bool Port::Init() {
+             const auto cursor=FirstMovieCursor(std::span<const uint8_t>(saturn->ramHigh,0x100000));
+             if(cursor!=previous) {previous=cursor;fprintf(stderr,"movie phase cursor: frame=%llu cursor=%08X witness=%d\n",static_cast<unsigned long long>(frame),cursor,int(fbFirstMoviePhase));}
+         }
++    };
++    const auto onFrame = [this](uint32_t *pixels, uint32_t width, uint32_t height) {
++        std::lock_guard lock(fbMutex);
+         fb.assign(pixels, pixels + static_cast<size_t>(width) * height);
+         fbWidth = width;
+         fbHeight = height;
+@@ -700,6 +705,7 @@ bool Port::Init() {
+             }
+             videoRenderer->SetWideSplits(std::move(splits));
+         }
++        satrecomp::machine::g_frameEndHook = nullptr; // (the GPU's pictures come another way, with nothing taken from the machine)
+         videoRenderer->SetMode(Mode::Gpu, onFrame);
+         videoRenderer->SetBothFields(getenv("SATRECOMP_INTERLACE") == nullptr);
+         videoRenderer->SetGpuFloor(!(getenv("SATRECOMP_FLOOR") && std::string(getenv("SATRECOMP_FLOOR")) == "image"));
