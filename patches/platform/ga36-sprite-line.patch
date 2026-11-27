@@ -1,0 +1,103 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 55459db..9440ae7 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -762,17 +762,67 @@ bool Renderer::SpriteLine(uint32 y,const uint8* alternateFb) {
+     const auto normal = static_cast<uint8>(SpriteSpecial::Normal);
+     const auto shadow = static_cast<uint8>(SpriteSpecial::Shadow);
+ 
++    // (GA36: plain pointers and the line's constants read once, as in NormalLine; the one-byte stores
++    // below would otherwise make the compiler read the vectors and the registers again for every dot)
++    uint32 *const colorOut = m_sprite.color.data();
++    uint8 *const priorityOut = m_sprite.priority.data();
++    uint8 *const specialOut = m_sprite.special.data();
++    uint8 *const sowOut = m_sprite.shadowOrWindow.data();
++    uint8 *const calcEnableOut = m_sprite.colorCalcEnable.data();
++    uint8 *const calcRatioOut = m_sprite.colorCalcRatio.data();
++    const uint8 *const windowIn = window.data();
++    const bool pixel8 = regs1.pixel8Bits;
++    const uint32 lineStart = y * regs1.fbSizeH;
++    const uint32 copies = doubleWidth ? 2u : 1u;
++    const bool calcEnable = params.colorCalcEnable;
++    const uint32 calcCondition = params.colorCalcCondition;
++    const uint32 calcPriority = params.colorCalcPriority;
++    const auto condition = [&](uint8 priority, bool colorMSB) {
++        return calcCondition == 0 ? priority <= calcPriority
++             : calcCondition == 1 ? priority == calcPriority
++             : calcCondition == 2 ? priority >= calcPriority : colorMSB;
++    };
++    // A zero word (the usual empty dot) gives the same values all along the line: worked out once
++    const bool zeroWindowed = params.useSpriteWindow && params.spriteWindowEnabled && params.spriteWindowInverted;
++    uint32 zeroColor = 0;
++    bool zeroMSB = false;
++    if (!zeroWindowed) {
++        const uint32 index = params.colorDataOffset;
++        if (colorMode == 2) {
++            zeroColor = CramLong((index * 4) & 0xFFC);
++            zeroMSB = (zeroColor & 0x80000000) != 0;
++        } else {
++            const uint16 entry = CramWord((index * 2) & (colorMode == 0 ? 0x7FE : 0xFFE));
++            zeroMSB = (entry & 0x8000) != 0;
++            zeroColor = ConvertRGB555to888(Color555{entry}).u32;
++        }
++    }
++    const uint8 zeroCalcEnable = calcEnable && condition(0, zeroMSB);
++    const uint8 zeroCalcRatio = params.colorCalcRatios[0];
++    const uint8 zeroSow = zeroWindowed ? 1 : 0;
++    const uint8 blankCalcEnable = calcEnable && condition(0, false);
+     for (uint32 x = 0; x < (width >> outputShift); x++) {
+         const uint32 xx = x << outputShift;
+-        const uint32 offset = (x << readShift) + y * regs1.fbSizeH;
++        const uint32 offset = (x << readShift) + lineStart;
++        const uint16 word = static_cast<uint16>((fb[(offset * 2) & 0x3FFFE] << 8) | fb[((offset * 2) & 0x3FFFE) + 1]);
++        if (windowIn[xx] || (word == 0 && !pixel8)) {
++            // (outside the sprite window: nothing; a zero word: the line's empty dot)
++            const bool outside = windowIn[xx] != 0;
++            for (uint32 i = 0; i < copies; i++) {
++                colorOut[xx + i] = outside ? 0 : zeroColor;
++                priorityOut[xx + i] = 0;
++                specialOut[xx + i] = transparent;
++                sowOut[xx + i] = outside ? 0 : zeroSow;
++                calcEnableOut[xx + i] = outside ? blankCalcEnable : zeroCalcEnable;
++                calcRatioOut[xx + i] = zeroCalcRatio;
++            }
++            continue;
++        }
+         uint32 color = 0;
+         uint8 priority = 0, special = transparent, sow = 0;
+         uint8 calcIndex = 0;
+         bool colorMSB = false;
+-        const uint16 word = static_cast<uint16>((fb[(offset * 2) & 0x3FFFE] << 8) | fb[((offset * 2) & 0x3FFFE) + 1]);
+-        if (window[xx]) {
+-            // (outside the sprite window: nothing)
+-        } else if (params.mixedFormat && (word & 0x8000) &&
++        if (params.mixedFormat && (word & 0x8000) &&
+                    !(params.type >= 8 ? (word & 0xFF) == 0 : params.type >= 2 && params.useSpriteWindow && (word & 0x7FFF) == 0)) {
+             // An RGB pixel: its colour as it is, the first priority
+             color = ConvertRGB555to888(Color555{word}).u32;
+@@ -813,16 +863,15 @@ bool Renderer::SpriteLine(uint32 y,const uint8* alternateFb) {
+                 priority = special == transparent && !sow ? 0 : params.priorities[priorityIndex];
+             }
+         }
+-        for (uint32 i = 0; i <= (doubleWidth ? 1u : 0u); i++) {
+-            m_sprite.color[xx + i] = color;
+-            m_sprite.priority[xx + i] = priority;
+-            m_sprite.special[xx + i] = special;
+-            m_sprite.shadowOrWindow[xx + i] = sow;
+-            const bool condition = params.colorCalcCondition == 0 ? priority <= params.colorCalcPriority
+-                                 : params.colorCalcCondition == 1 ? priority == params.colorCalcPriority
+-                                 : params.colorCalcCondition == 2 ? priority >= params.colorCalcPriority : colorMSB;
+-            m_sprite.colorCalcEnable[xx + i] = params.colorCalcEnable && condition;
+-            m_sprite.colorCalcRatio[xx + i] = params.colorCalcRatios[calcIndex];
++        const uint8 calcOn = calcEnable && condition(priority, colorMSB);
++        const uint8 calcRatio = params.colorCalcRatios[calcIndex];
++        for (uint32 i = 0; i < copies; i++) {
++            colorOut[xx + i] = color;
++            priorityOut[xx + i] = priority;
++            specialOut[xx + i] = special;
++            sowOut[xx + i] = sow;
++            calcEnableOut[xx + i] = calcOn;
++            calcRatioOut[xx + i] = calcRatio;
+         }
+     }
+ 

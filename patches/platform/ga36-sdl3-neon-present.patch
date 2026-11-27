@@ -1,0 +1,83 @@
+--- a/src/video/SDL_blit_N.c
++++ b/src/video/SDL_blit_N.c
+@@ -24,6 +24,9 @@
+ 
+ #include "SDL_pixels_c.h"
+ #include "SDL_surface_c.h"
++#if defined(__ARM_NEON) && !defined(SDL_GA36_NO_NEON_2X)
++#include <arm_neon.h>
++#endif
+ #include "SDL_blit_copy.h"
+ 
+ // General optimized routines that write char by char
+@@ -2915,6 +2918,30 @@
+         }
+     } else {
+         // NO_ALPHA
++#if defined(__ARM_NEON) && !defined(SDL_GA36_NO_NEON_2X) && SDL_BYTEORDER == SDL_LIL_ENDIAN
++        /* GA36: 4 to 4 bytes, 8 pixels at a time; the destination's fourth byte stays as it was */
++        if (srcbpp == 4 && dstbpp == 4) {
++            while (height--) {
++                int x = 0;
++                for (; x + 8 <= width; x += 8) {
++                    const uint8x8x4_t s = vld4_u8(src + 4 * x);
++                    uint8x8x4_t d = vld4_u8(dst + 4 * x);
++                    d.val[0] = s.val[2];
++                    d.val[1] = s.val[1];
++                    d.val[2] = s.val[0];
++                    vst4_u8(dst + 4 * x, d);
++                }
++                for (; x < width; x++) {
++                    dst[4 * x + 2] = src[4 * x + 0];
++                    dst[4 * x + 1] = src[4 * x + 1];
++                    dst[4 * x + 0] = src[4 * x + 2];
++                }
++                src += 4 * width + srcskip;
++                dst += 4 * width + dstskip;
++            }
++            return;
++        }
++#endif
+ #if SDL_BYTEORDER == SDL_LIL_ENDIAN
+         int i0 = 0, i1 = 1, i2 = 2;
+         int j0 = 2, j1 = 1, j2 = 0;
+--- a/src/video/SDL_stretch.c
++++ b/src/video/SDL_stretch.c
+@@ -21,6 +21,9 @@
+ #include "SDL_internal.h"
+ 
+ #include "SDL_surface_c.h"
++#if defined(__ARM_NEON) && !defined(SDL_GA36_NO_NEON_2X)
++#include <arm_neon.h>
++#endif
+ 
+ static bool SDL_StretchSurfaceUncheckedNearest(SDL_Surface *src, const SDL_Rect *srcrect, SDL_Surface *dst, const SDL_Rect *dstrect);
+ static bool SDL_StretchSurfaceUncheckedLinear(SDL_Surface *src, const SDL_Rect *srcrect, SDL_Surface *dst, const SDL_Rect *dstrect);
+@@ -956,6 +959,27 @@
+     Uint32 *src = (Uint32 *)((Uint8 *)s->pixels + srcrect->x * bpp + srcrect->y * src_pitch);
+     Uint32 *dst = (Uint32 *)((Uint8 *)d->pixels + dstrect->x * bpp + dstrect->y * dst_pitch);
+ 
++#if defined(__ARM_NEON) && !defined(SDL_GA36_NO_NEON_2X)
++    /* GA36: an exact 2x of 4-byte pixels: each pixel twice, each row twice */
++    if (bpp == 4 && dst_w == 2 * src_w && dst_h == 2 * src_h && src_w > 0 && src_h > 0) {
++        for (int y = 0; y < src_h; y++) {
++            const Uint32 *in = (const Uint32 *)((const Uint8 *)src + (size_t)y * src_pitch);
++            Uint32 *out = (Uint32 *)((Uint8 *)dst + (size_t)(2 * y) * dst_pitch);
++            int x = 0;
++            for (; x + 4 <= src_w; x += 4) {
++                const uint32x4_t p = vld1q_u32(in + x);
++                const uint32x4x2_t q = vzipq_u32(p, p);
++                vst1q_u32(out + 2 * x, q.val[0]);
++                vst1q_u32(out + 2 * x + 4, q.val[1]);
++            }
++            for (; x < src_w; x++) {
++                out[2 * x] = out[2 * x + 1] = in[x];
++            }
++            SDL_memcpy((Uint8 *)out + dst_pitch, out, (size_t)dst_w * 4);
++        }
++        return true;
++    }
++#endif
+     if (bpp == 4) {
+         return scale_mat_nearest_4(src, src_w, src_h, src_pitch, dst, dst_w, dst_h, dst_pitch);
+     } else if (bpp == 3) {

@@ -1,0 +1,39 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 9440ae7..911a10d 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -632,7 +632,21 @@ void Renderer::SetResolution(uint32 h, uint32 v, bool exclusive) {
+     }
+ }
+ 
++// SATRECOMP_FRAME_SKIP=N (GA36): the picture is composed in 1 frame of N; the machine still runs every frame,
++// and the layers' line state (rotation flags, line scroll tables) still moves on every line, so a composed
++// frame is the same as without skipping. A skipped frame shows the last composed picture.
++static const uint32 g_composeEvery = [] {
++    const char *s = getenv("SATRECOMP_FRAME_SKIP");
++    const long n = s ? strtol(s, nullptr, 10) : 1;
++    return static_cast<uint32>(n >= 1 && n <= 8 ? n : 1);
++}();
++static uint32 g_composeFrame = 0;
++static bool g_composeSkip = false;
++
+ void Renderer::BeginFrame() {
++    if (g_composeEvery > 1 && !m_gpu) {
++        g_composeSkip = (g_composeFrame++ % g_composeEvery) != 0;
++    }
+     m_reuse.pending = true;
+     m_bg2093Blend.clear();
+     m_lipsBodyCover.clear();
+@@ -694,6 +708,12 @@ void Renderer::RenderLine(uint32 y) {
+     if (!m_compose) {
+         return;
+     }
++    if (g_composeSkip) [[unlikely]] {
++        LayersBeforeLine();
++        LayersPrepareLine(y);
++        LayersFinishLine();
++        return;
++    }
+     if (m_reuse.pending) {
+         ReuseFrameStart();
+     }

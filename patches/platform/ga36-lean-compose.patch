@@ -1,0 +1,103 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 62cf10c..55459db 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -1301,6 +1301,7 @@ bool Renderer::ReuseCompareLine(uint32 y) {
+     return same;
+ }
+ 
++static uint64_t g_leanLines = 0; // (GA36 lab statistic; one video thread)
+ void Renderer::ComposeLine(uint32 y) {
+     const Vdp2Regs &regs2 = m_regs2;
+     const Vdp2Regs &state2 = m_regs2;
+@@ -1574,6 +1575,82 @@ void Renderer::ComposeLine(uint32 y) {
+     const bool loadArrows=bracketLine && drawnBrackets.arrows[0].y==system_hud::kLoadY;
+     const auto* drawnItem=itemLine?&*m_drawnItemCard[m_displayFB]:nullptr;
+     const auto* commandFrame = drawnItem ? ::port::CommandFrame(drawnItem->entry) : nullptr;
++    // Lean path (GA36): with nothing captured for the HD presentation on this line, only the picture is
++    // wanted. Same choice of layers, colour calculation, offset and shadow as composite(), pixel for pixel.
++    static const bool leanOff = getenv("SATRECOMP_NO_LEAN_COMPOSE") != nullptr;
++    if (!leanOff && !m_capturePresentation && m_lipsBodyCover.empty() && !captureDream && !glyphLine &&
++        !itemLine && !horizontalLine && !bracketLine) {
++        uint32 enabled[5];
++        uint32 count = 0;
++        for (uint32 layer = kRBG0; layer <= 5u; layer++) {
++            if (state2.layerEnabled[layer]) {
++                enabled[count++] = layer;
++            }
++        }
++        const bool spritesOn = state2.layerEnabled[kSprites];
++        const auto &sprite = m_sprite;
++        const bool calcExtended = regs2.colorCalcExtended, calcAdd = regs2.colorCalcAdd;
++        const bool secondRatio = regs2.colorCalcUseSecondRatio;
++        bool layerCalc[8] = {};
++        bool layerShadow[8] = {};
++        for (uint32 layer = kRBG0; layer <= 5u; layer++) {
++            layerCalc[layer] = regs2.bgParams[layer - kRBG0].colorCalcEnable &&
++                               regs2.specialColorCalcMode[layer - kRBG0] == 0 &&
++                               !regs2.bgParams[layer - kRBG0].lineColorScreenEnable;
++            layerShadow[layer] = regs2.bgParams[layer - kRBG0].shadowEnable;
++        }
++        layerShadow[kBack] = regs2.backScreenParams.shadowEnable;
++        const bool spriteLineColor = regs2.spriteParams.lineColorScreenEnable;
++        g_leanLines++;
++        for (uint32 x = 0; x < width; x++) {
++            uint32 top = kBack, topPriority = 0, second = kBack, secondPriority = 0;
++            for (uint32 i = 0; i < count; i++) {
++                const uint32 layer = enabled[i];
++                const uint8 priority = layers[layer].priority[x];
++                if (priority > topPriority) {
++                    second = top;
++                    secondPriority = topPriority;
++                    top = layer;
++                    topPriority = priority;
++                } else if (priority > secondPriority) {
++                    second = layer;
++                    secondPriority = priority;
++                }
++            }
++            const uint8 special = sprite.special[x];
++            if (spritesOn && special == normal) {
++                const uint32 priority = sprite.priority[x];
++                if (priority && priority >= topPriority) {
++                    second = top;
++                    top = kSprites;
++                } else if (priority && priority >= secondPriority) {
++                    second = kSprites;
++                }
++            }
++            Color888 color = top == kBack ? back : top == kSprites ? Color888{.u32 = sprite.color[x]} : Color888{.u32 = layers[top].color[x]};
++            const bool calcTop = top == kSprites ? sprite.colorCalcEnable[x] && !spriteLineColor : layerCalc[top];
++            if (calcTop && !calcExtended && !m_colorCalcWindow[x]) {
++                const Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
++                const uint32 ratioLayer = secondRatio ? second : top;
++                const uint32 ratio = ratioLayer == kSprites ? sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
++                auto mix = [&](uint32 a, uint32 b) {
++                    return calcAdd ? std::min(a + b, 255u) : (a * (31u - ratio) + b * (ratio + 1u)) >> 5;
++                };
++                color.u32 = mix(color.r, below.r) | (mix(color.g, below.g) << 8) | (mix(color.b, below.b) << 16);
++            }
++            color = applyOffset(color, top);
++            const bool normalShadow = special == static_cast<uint8>(SpriteSpecial::Shadow);
++            const bool msbShadow = !spriteWindow && sprite.shadowOrWindow[x];
++            if (normalShadow || msbShadow) {
++                const bool takesShadow = top == kSprites ? static_cast<bool>(sprite.shadowOrWindow[x]) : layerShadow[top];
++                if (takesShadow) {
++                    color.u32 = (color.u32 >> 1) & 0x7F7F7F7F;
++                }
++            }
++            out[x] = color.u32;
++        }
++        return;
++    }
+     for (uint32 x = 0; x < width; x++) {
+         const auto [color,top,presentationSource,backgroundTop,backgroundSecond,whiteWeight,panel,floralCover,floralRgb,mapWeight,episodeWeight,capturesUnshadowedPanel]=composite(x,m_sprite);
+         if(glyphLine && presentationSource==kSprites && m_glyphLineOwners[x]) {
+@@ -1772,6 +1849,7 @@ void Renderer::EndFrame() {
+ }
+ 
+ void Renderer::Report() const {
++    if (g_leanLines) fprintf(stderr, "video: lean composition %llu lines\n", static_cast<unsigned long long>(g_leanLines));
+     if (!m_compose) {
+         return;
+     }

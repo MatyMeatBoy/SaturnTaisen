@@ -1,0 +1,21 @@
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -647,6 +647,18 @@
+     // Block code is compared against memory on every dispatch, so this is the hottest loop of the runtime
+     inline bool SameCode(const uint8_t *a, const uint8_t *b, unsigned size) {
+         unsigned i = 0;
++#if defined(__arm__) && !defined(__aarch64__)
++        // ARMv7 (GA36/R36S): 32-bit words. A 64-bit compare there is two loads, two compares and a branch per
++        // half anyway; word steps with an early out keep it to LDR/LDR/CMP/BNE and avoid register-pair pressure.
++        for (; i + 4 <= size; i += 4) {
++            uint32_t x, y;
++            memcpy(&x, a + i, 4);
++            memcpy(&y, b + i, 4);
++            if (x != y) {
++                return false;
++            }
++        }
++#endif
+         for (; i + 8 <= size; i += 8) {
+             uint64_t x, y;
+             memcpy(&x, a + i, 8);

@@ -1,0 +1,62 @@
+--- a/src/video/SDL_surface.c
++++ b/src/video/SDL_surface.c
+@@ -1245,6 +1245,47 @@
+  *  This is a semi-private blit function and it performs low-level surface
+  *  scaled blitting only.
+  */
++#if defined(__ARM_NEON) && !defined(SDL_GA36_NO_NEON_2X)
++#include <arm_neon.h>
++/* GA36: the per-pixel SDL_Blit_*_XRGB8888_Scale path does 64-bit position math for every pixel.
++ * For an exact 2x nearest copy it maps destination (2x, 2y) and its neighbours to source (x, y),
++ * so the result is the source row with R/B swapped, each pixel doubled, the row written twice
++ * and the X byte cleared, as the generic blit does. */
++static bool SDL_GA36_Blit2x(SDL_Surface *src, const SDL_Rect *srcrect, SDL_Surface *dst, const SDL_Rect *dstrect)
++{
++    if ((src->format != SDL_PIXELFORMAT_XBGR8888 && src->format != SDL_PIXELFORMAT_ABGR8888) ||
++        dst->format != SDL_PIXELFORMAT_XRGB8888 ||
++        dstrect->w != srcrect->w * 2 || dstrect->h != srcrect->h * 2 || srcrect->w <= 0 || srcrect->h <= 0) {
++        return false;
++    }
++    const uint8x8_t zero = vdup_n_u8(0);
++    for (int y = 0; y < srcrect->h; ++y) {
++        const Uint8 *in = (const Uint8 *)src->pixels + (size_t)(srcrect->y + y) * src->pitch + (size_t)srcrect->x * 4;
++        Uint32 *out = (Uint32 *)((Uint8 *)dst->pixels + (size_t)(dstrect->y + 2 * y) * dst->pitch) + dstrect->x;
++        int x = 0;
++        for (; x + 8 <= srcrect->w; x += 8) {
++            const uint8x8x4_t p = vld4_u8(in + 4 * x);   /* R, G, B, X planes of 8 pixels */
++            const uint8x8x2_t r = vzip_u8(p.val[0], p.val[0]);
++            const uint8x8x2_t g = vzip_u8(p.val[1], p.val[1]);
++            const uint8x8x2_t b = vzip_u8(p.val[2], p.val[2]);
++            uint8x16x4_t q;
++            q.val[0] = vcombine_u8(b.val[0], b.val[1]);  /* XRGB8888 in memory: B, G, R, X */
++            q.val[1] = vcombine_u8(g.val[0], g.val[1]);
++            q.val[2] = vcombine_u8(r.val[0], r.val[1]);
++            q.val[3] = vcombine_u8(zero, zero);
++            vst4q_u8((Uint8 *)(out + 2 * x), q);
++        }
++        for (; x < srcrect->w; ++x) {
++            const Uint32 p = ((const Uint32 *)in)[x];
++            const Uint32 v = ((p & 0xFF) << 16) | (p & 0xFF00) | ((p >> 16) & 0xFF);
++            out[2 * x] = out[2 * x + 1] = v;
++        }
++        SDL_memcpy((Uint8 *)out + dst->pitch, out, (size_t)dstrect->w * 4);
++    }
++    return true;
++}
++#endif
++
+ bool SDL_BlitSurfaceUncheckedScaled(SDL_Surface *src, const SDL_Rect *srcrect, SDL_Surface *dst, const SDL_Rect *dstrect, SDL_ScaleMode scaleMode)
+ {
+     static const Uint32 complex_copy_flags = (SDL_COPY_MODULATE_MASK | SDL_COPY_BLEND_MASK | SDL_COPY_COLORKEY);
+@@ -1260,6 +1301,11 @@
+     }
+ 
+     if (scaleMode == SDL_SCALEMODE_NEAREST || scaleMode == SDL_SCALEMODE_PIXELART) {
++#if defined(__ARM_NEON) && !defined(SDL_GA36_NO_NEON_2X)
++        if (!(src->map.info.flags & complex_copy_flags) && SDL_GA36_Blit2x(src, srcrect, dst, dstrect)) {
++            return true;
++        }
++#endif
+         if (!(src->map.info.flags & complex_copy_flags) &&
+             src->format == dst->format &&
+             (!SDL_ISPIXELFORMAT_INDEXED(src->format) ||

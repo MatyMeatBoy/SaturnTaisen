@@ -24,6 +24,12 @@
 !/tools/*.py
 !/tools/es/
 !/tools/es/*.py
+!/tools/ga36/
+!/tools/ga36/*.c
+!/tools/ga36/*.py
+!/tools/ga36/*.sh
+!/tools/ga36/usbdiag/
+!/tools/ga36/usbdiag/*.sh
 !/tools/controller_mapper.cpp
 !/tools/controller_capture.h
 !/tools/vdp_profile_sampler.h

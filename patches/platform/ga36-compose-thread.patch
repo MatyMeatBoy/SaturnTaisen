@@ -1,0 +1,411 @@
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 911a10d..b0a9973 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -15,9 +15,204 @@
+ #include <cstring>
+ #include <string>
+ #include <set>
++#include <atomic>
++#include <chrono>
++#include <condition_variable>
++#include <mutex>
++#include <thread>
+ 
+ namespace satrecomp::video {
+ 
++// ---------------------------------------------------------------------------------------------------------
++// GA36: the lean composition of a line (no HD presentation capture), on this thread or, with
++// SATRECOMP_COMPOSE_THREAD=1, on a core of its own a few lines behind. A queued line carries copies of all it
++// reads (the layers' and the sprites' lines, the colour calculation window, the registers it uses), so the
++// pixels are the same whichever thread makes them. Whatever reads or resizes the picture waits for the queue.
++namespace {
++struct LeanLine {
++    uint32 *out = nullptr;
++    uint32 width = 0, back = 0, count = 0;
++    uint32 enabled[5] = {};
++    bool spritesOn = false, calcExtended = false, calcAdd = false, secondRatio = false, spriteLineColor = false,
++         spriteWindow = false;
++    bool layerCalc[8] = {}, layerShadow[8] = {}, offsetOn[8] = {};
++    uint8 calcRatio[8] = {};
++    sint32 offset[8][3] = {};
++    const uint32 *color[8] = {};
++    const uint8 *priority[8] = {};
++    const uint32 *spriteColor = nullptr;
++    const uint8 *spritePriority = nullptr, *spriteSpecial = nullptr, *spriteSow = nullptr, *spriteCalcEnable = nullptr,
++                *spriteCalcRatio = nullptr, *calcWindow = nullptr;
++    // (a queued line's buffers: swapped with the renderer's, so nothing is copied)
++    std::vector<uint32> layerColor[6], spriteColorLine;
++    std::vector<uint8> layerPriority[6], spriteBytes[5], calcWindowLine;
++};
++
++void LeanCompose(const LeanLine &L) {
++    constexpr uint32 kSprites = 0, kBack = 6;
++    const auto normal = static_cast<uint8>(SpriteSpecial::Normal);
++    const auto shadowDot = static_cast<uint8>(SpriteSpecial::Shadow);
++    const Color888 back{.u32 = L.back};
++    for (uint32 x = 0; x < L.width; x++) {
++        uint32 top = kBack, topPriority = 0, second = kBack, secondPriority = 0;
++        for (uint32 i = 0; i < L.count; i++) {
++            const uint32 layer = L.enabled[i];
++            const uint8 priority = L.priority[layer][x];
++            if (priority > topPriority) {
++                second = top;
++                secondPriority = topPriority;
++                top = layer;
++                topPriority = priority;
++            } else if (priority > secondPriority) {
++                second = layer;
++                secondPriority = priority;
++            }
++        }
++        const uint8 special = L.spriteSpecial[x];
++        if (L.spritesOn && special == normal) {
++            const uint32 priority = L.spritePriority[x];
++            if (priority && priority >= topPriority) {
++                second = top;
++                top = kSprites;
++            } else if (priority && priority >= secondPriority) {
++                second = kSprites;
++            }
++        }
++        Color888 color = top == kBack ? back : top == kSprites ? Color888{.u32 = L.spriteColor[x]} : Color888{.u32 = L.color[top][x]};
++        const bool calcTop = top == kSprites ? L.spriteCalcEnable[x] && !L.spriteLineColor : L.layerCalc[top];
++        if (calcTop && !L.calcExtended && !L.calcWindow[x]) {
++            const Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = L.spriteColor[x]} : Color888{.u32 = L.color[second][x]};
++            const uint32 ratioLayer = L.secondRatio ? second : top;
++            const uint32 ratio = ratioLayer == kSprites ? L.spriteCalcRatio[x] : L.calcRatio[ratioLayer];
++            const bool add = L.calcAdd;
++            auto mix = [&](uint32 a, uint32 b) {
++                return add ? std::min(a + b, 255u) : (a * (31u - ratio) + b * (ratio + 1u)) >> 5;
++            };
++            color.u32 = mix(color.r, below.r) | (mix(color.g, below.g) << 8) | (mix(color.b, below.b) << 16);
++        }
++        if (L.offsetOn[top]) {
++            auto shift = [](uint32 channel, sint32 by) { return static_cast<uint32>(std::clamp<sint32>(static_cast<sint32>(channel) + by, 0, 255)); };
++            color.u32 = shift(color.r, L.offset[top][0]) | (shift(color.g, L.offset[top][1]) << 8) | (shift(color.b, L.offset[top][2]) << 16);
++        }
++        if (special == shadowDot || (!L.spriteWindow && L.spriteSow[x])) {
++            const bool takesShadow = top == kSprites ? static_cast<bool>(L.spriteSow[x]) : L.layerShadow[top];
++            if (takesShadow) {
++                color.u32 = (color.u32 >> 1) & 0x7F7F7F7F;
++            }
++        }
++        L.out[x] = color.u32;
++    }
++}
++
++class LeanWorker {
++public:
++    static constexpr uint32 kJobs = 512;
++    uint64_t lines = 0, drains = 0, drainNs = 0, fullWaits = 0;
++
++    LeanWorker() : m_jobs(kJobs) { m_thread = std::thread([this] { Work(); }); }
++    ~LeanWorker() {
++        Drain();
++        {
++            std::lock_guard<std::mutex> lock(m_mutex);
++            m_stop.store(true);
++        }
++        m_wake.notify_one();
++        m_thread.join();
++    }
++    // A free slot for the next line (filled by the caller, then Commit)
++    LeanLine &Slot() {
++        const uint32 head = m_head.load(std::memory_order_relaxed);
++        if (head - m_tail.load(std::memory_order_acquire) >= kJobs) [[unlikely]] {
++            fullWaits++;
++            while (head - m_tail.load(std::memory_order_acquire) >= kJobs) Relax();
++        }
++        return m_jobs[head & (kJobs - 1)];
++    }
++    void Commit() {
++        m_head.store(m_head.load(std::memory_order_relaxed) + 1, std::memory_order_seq_cst);
++        lines++;
++        if (m_sleeping.load(std::memory_order_seq_cst)) [[unlikely]] {
++            std::lock_guard<std::mutex> lock(m_mutex);
++            m_wake.notify_one();
++        }
++    }
++    void Drain() {
++        const uint32 head = m_head.load(std::memory_order_relaxed);
++        if (m_tail.load(std::memory_order_acquire) == head) return;
++        drains++;
++        const auto start = std::chrono::steady_clock::now();
++        for (unsigned spins = 0; m_tail.load(std::memory_order_acquire) != head; spins++) {
++            if (spins < 20000) Relax();
++            else std::this_thread::yield();
++        }
++        drainNs += static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
++            std::chrono::steady_clock::now() - start).count());
++    }
++
++private:
++    std::vector<LeanLine> m_jobs;
++    alignas(64) std::atomic<uint32> m_head{0};
++    alignas(64) std::atomic<uint32> m_tail{0};
++    std::atomic<bool> m_sleeping{false}, m_stop{false};
++    std::mutex m_mutex;
++    std::condition_variable m_wake;
++    std::thread m_thread;
++
++    static void Relax() {
++#if defined(__arm__) || defined(__aarch64__)
++        __asm__ __volatile__("yield");
++#elif defined(__x86_64__) || defined(__i386__)
++        __builtin_ia32_pause();
++#endif
++    }
++    void Work() {
++        uint32 tail = 0;
++        for (;;) {
++            uint32 head = m_head.load(std::memory_order_acquire);
++            if (head == tail) {
++                for (unsigned spins = 0; spins < 4000 && head == tail; spins++) {
++                    Relax();
++                    head = m_head.load(std::memory_order_acquire);
++                }
++                if (head == tail) {
++                    std::unique_lock<std::mutex> lock(m_mutex);
++                    m_sleeping.store(true, std::memory_order_seq_cst);
++                    m_wake.wait(lock, [&] { return m_head.load(std::memory_order_seq_cst) != tail || m_stop.load(); });
++                    m_sleeping.store(false, std::memory_order_seq_cst);
++                    if (m_stop.load() && m_head.load() == tail) return;
++                    continue;
++                }
++            }
++            while (tail != head) {
++                LeanCompose(m_jobs[tail & (kJobs - 1)]);
++                tail++;
++                m_tail.store(tail, std::memory_order_release);
++            }
++        }
++    }
++};
++
++LeanWorker *g_leanWorker = nullptr;
++bool g_leanWorkerChecked = false;
++
++inline void LeanDrain() {
++    if (g_leanWorker) g_leanWorker->Drain();
++}
++} // namespace
++
++// (the machine stops it when it goes away: queued lines point into a renderer)
++void StopComposeThread() {
++    if (g_leanWorker) {
++        if (std::getenv("SATRECOMP_VIDEO_THREAD_STATS")) {
++            fprintf(stderr, "compose thread: %llu lines, %llu waits for it (%.1f ms), %llu times full\n",
++                    static_cast<unsigned long long>(g_leanWorker->lines), static_cast<unsigned long long>(g_leanWorker->drains),
++                    g_leanWorker->drainNs / 1e6, static_cast<unsigned long long>(g_leanWorker->fullWaits));
++        }
++        delete g_leanWorker;
++        g_leanWorker = nullptr;
++    }
++}
++
+ namespace {
+ struct LayerProbe {
+     std::vector<uint32> image[6], mask[6];
+@@ -31,6 +226,7 @@ Renderer::Renderer(const Memory &memory)
+     : m_mem(memory) {}
+ 
+ void Renderer::Reset(bool hard) {
++    LeanDrain();
+     m_stateGen++;
+     m_reuse.valid = false;
+     if (hard) {
+@@ -73,6 +269,7 @@ void Renderer::Reset(bool hard) {
+ }
+ 
+ void Renderer::SetMode(Mode mode, FrameCallback onFrame, Reference *reference) {
++    LeanDrain();
+     ++m_stateGen;
+     m_reuse.valid = false;
+     m_compose = mode != Mode::Reference;
+@@ -86,6 +283,7 @@ void Renderer::SetMode(Mode mode, FrameCallback onFrame, Reference *reference) {
+ }
+ 
+ void Renderer::Serialize(Archive &ar) {
++    LeanDrain();
+     ar.Mark(0x56494445);
+     ar.Pod(m_raw2);
+     ar.Pod(m_regs1);
+@@ -617,6 +815,7 @@ void Renderer::EndDrawing() {
+ // --- VDP2 ---
+ 
+ void Renderer::SetResolution(uint32 h, uint32 v, bool exclusive) {
++    LeanDrain();
+     m_stateGen += m_width != h || m_height != v || m_exclusive != exclusive;
+     m_width = h;
+     m_height = v;
+@@ -1649,74 +1848,93 @@ void Renderer::ComposeLine(uint32 y) {
+     static const bool leanOff = getenv("SATRECOMP_NO_LEAN_COMPOSE") != nullptr;
+     if (!leanOff && !m_capturePresentation && m_lipsBodyCover.empty() && !captureDream && !glyphLine &&
+         !itemLine && !horizontalLine && !bracketLine) {
+-        uint32 enabled[5];
+-        uint32 count = 0;
++        const bool spritesOn = state2.layerEnabled[kSprites];
++        const auto &sprite = m_sprite;
++        g_leanLines++;
++        if (!g_leanWorkerChecked) {
++            g_leanWorkerChecked = true;
++            const char *on = getenv("SATRECOMP_COMPOSE_THREAD");
++            if (on && *on && *on != '0') {
++                g_leanWorker = new LeanWorker;
++            }
++        }
++        // (a line kept for reuse is read back from the picture right away: composed here)
++        const bool queued = g_leanWorker && m_reuse.mode == LineReuse::Off;
++        LeanLine inlineLine;
++        LeanLine &L = queued ? g_leanWorker->Slot() : inlineLine;
++        L.out = out;
++        L.width = width;
++        L.back = back.u32;
++        L.count = 0;
+         for (uint32 layer = kRBG0; layer <= 5u; layer++) {
+             if (state2.layerEnabled[layer]) {
+-                enabled[count++] = layer;
++                L.enabled[L.count++] = layer;
+             }
+         }
+-        const bool spritesOn = state2.layerEnabled[kSprites];
+-        const auto &sprite = m_sprite;
+-        const bool calcExtended = regs2.colorCalcExtended, calcAdd = regs2.colorCalcAdd;
+-        const bool secondRatio = regs2.colorCalcUseSecondRatio;
+-        bool layerCalc[8] = {};
+-        bool layerShadow[8] = {};
+-        for (uint32 layer = kRBG0; layer <= 5u; layer++) {
+-            layerCalc[layer] = regs2.bgParams[layer - kRBG0].colorCalcEnable &&
+-                               regs2.specialColorCalcMode[layer - kRBG0] == 0 &&
+-                               !regs2.bgParams[layer - kRBG0].lineColorScreenEnable;
+-            layerShadow[layer] = regs2.bgParams[layer - kRBG0].shadowEnable;
++        L.spritesOn = spritesOn;
++        L.calcExtended = regs2.colorCalcExtended;
++        L.calcAdd = regs2.colorCalcAdd;
++        L.secondRatio = regs2.colorCalcUseSecondRatio;
++        L.spriteLineColor = regs2.spriteParams.lineColorScreenEnable;
++        L.spriteWindow = spriteWindow;
++        for (uint32 layer = 0; layer < 8; layer++) {
++            L.layerCalc[layer] = false;
++            L.layerShadow[layer] = false;
++            L.offsetOn[layer] = false;
++            L.calcRatio[layer] = 0;
+         }
+-        layerShadow[kBack] = regs2.backScreenParams.shadowEnable;
+-        const bool spriteLineColor = regs2.spriteParams.lineColorScreenEnable;
+-        g_leanLines++;
+-        for (uint32 x = 0; x < width; x++) {
+-            uint32 top = kBack, topPriority = 0, second = kBack, secondPriority = 0;
+-            for (uint32 i = 0; i < count; i++) {
+-                const uint32 layer = enabled[i];
+-                const uint8 priority = layers[layer].priority[x];
+-                if (priority > topPriority) {
+-                    second = top;
+-                    secondPriority = topPriority;
+-                    top = layer;
+-                    topPriority = priority;
+-                } else if (priority > secondPriority) {
+-                    second = layer;
+-                    secondPriority = priority;
+-                }
+-            }
+-            const uint8 special = sprite.special[x];
+-            if (spritesOn && special == normal) {
+-                const uint32 priority = sprite.priority[x];
+-                if (priority && priority >= topPriority) {
+-                    second = top;
+-                    top = kSprites;
+-                } else if (priority && priority >= secondPriority) {
+-                    second = kSprites;
+-                }
++        for (uint32 layer = kRBG0; layer <= 5u; layer++) {
++            L.layerCalc[layer] = regs2.bgParams[layer - kRBG0].colorCalcEnable &&
++                                 regs2.specialColorCalcMode[layer - kRBG0] == 0 &&
++                                 !regs2.bgParams[layer - kRBG0].lineColorScreenEnable;
++            L.layerShadow[layer] = regs2.bgParams[layer - kRBG0].shadowEnable;
++        }
++        L.layerShadow[kBack] = regs2.backScreenParams.shadowEnable;
++        for (uint32 layer = 0; layer <= kBack; layer++) {
++            L.calcRatio[layer] = regs2.colorCalcRatio[layer];
++            if (regs2.colorOffsetEnable[layer]) {
++                const auto &offset = regs2.colorOffset[regs2.colorOffsetSelect[layer]];
++                L.offsetOn[layer] = offset.nonZero;
++                L.offset[layer][0] = static_cast<sint32>(bit::sign_extend<9>(offset.r));
++                L.offset[layer][1] = static_cast<sint32>(bit::sign_extend<9>(offset.g));
++                L.offset[layer][2] = static_cast<sint32>(bit::sign_extend<9>(offset.b));
+             }
+-            Color888 color = top == kBack ? back : top == kSprites ? Color888{.u32 = sprite.color[x]} : Color888{.u32 = layers[top].color[x]};
+-            const bool calcTop = top == kSprites ? sprite.colorCalcEnable[x] && !spriteLineColor : layerCalc[top];
+-            if (calcTop && !calcExtended && !m_colorCalcWindow[x]) {
+-                const Color888 below = second == kBack ? back : second == kSprites ? Color888{.u32 = sprite.color[x]} : Color888{.u32 = layers[second].color[x]};
+-                const uint32 ratioLayer = secondRatio ? second : top;
+-                const uint32 ratio = ratioLayer == kSprites ? sprite.colorCalcRatio[x] : regs2.colorCalcRatio[ratioLayer];
+-                auto mix = [&](uint32 a, uint32 b) {
+-                    return calcAdd ? std::min(a + b, 255u) : (a * (31u - ratio) + b * (ratio + 1u)) >> 5;
+-                };
+-                color.u32 = mix(color.r, below.r) | (mix(color.g, below.g) << 8) | (mix(color.b, below.b) << 16);
++        }
++        if (queued) {
++            // (the layers' lines are drawn again for the next line while this one is composed: the queued line
++            // takes the renderer's buffers and leaves it its own, which every line writes in full before reading)
++            auto take = [](auto &mine, auto &live) {
++                mine.swap(live);
++                if (live.size() < mine.size()) live.resize(mine.size());
++                return mine.data();
++            };
++            for (uint32 i = 0; i < L.count; i++) {
++                const uint32 layer = L.enabled[i];
++                L.color[layer] = take(L.layerColor[layer], m_layer[layer].color);
++                L.priority[layer] = take(L.layerPriority[layer], m_layer[layer].priority);
+             }
+-            color = applyOffset(color, top);
+-            const bool normalShadow = special == static_cast<uint8>(SpriteSpecial::Shadow);
+-            const bool msbShadow = !spriteWindow && sprite.shadowOrWindow[x];
+-            if (normalShadow || msbShadow) {
+-                const bool takesShadow = top == kSprites ? static_cast<bool>(sprite.shadowOrWindow[x]) : layerShadow[top];
+-                if (takesShadow) {
+-                    color.u32 = (color.u32 >> 1) & 0x7F7F7F7F;
+-                }
++            L.spriteColor = take(L.spriteColorLine, m_sprite.color);
++            L.spritePriority = take(L.spriteBytes[0], m_sprite.priority);
++            L.spriteSpecial = take(L.spriteBytes[1], m_sprite.special);
++            L.spriteSow = take(L.spriteBytes[2], m_sprite.shadowOrWindow);
++            L.spriteCalcEnable = take(L.spriteBytes[3], m_sprite.colorCalcEnable);
++            L.spriteCalcRatio = take(L.spriteBytes[4], m_sprite.colorCalcRatio);
++            L.calcWindow = take(L.calcWindowLine, m_colorCalcWindow);
++            g_leanWorker->Commit();
++        } else {
++            for (uint32 i = 0; i < L.count; i++) {
++                const uint32 layer = L.enabled[i];
++                L.color[layer] = layers[layer].color.data();
++                L.priority[layer] = layers[layer].priority.data();
+             }
+-            out[x] = color.u32;
++            L.spriteColor = sprite.color.data();
++            L.spritePriority = sprite.priority.data();
++            L.spriteSpecial = sprite.special.data();
++            L.spriteSow = sprite.shadowOrWindow.data();
++            L.spriteCalcEnable = sprite.colorCalcEnable.data();
++            L.spriteCalcRatio = sprite.colorCalcRatio.data();
++            L.calcWindow = m_colorCalcWindow.data();
++            LeanCompose(L);
+         }
+         return;
+     }
+@@ -1860,6 +2078,7 @@ void Renderer::ComposeLine(uint32 y) {
+ }
+ 
+ void Renderer::EndFrame() {
++    LeanDrain();
+     if (!m_compose) {
+         return;
+     }
+@@ -1918,6 +2137,7 @@ void Renderer::EndFrame() {
+ }
+ 
+ void Renderer::Report() const {
++    LeanDrain();
+     if (g_leanLines) fprintf(stderr, "video: lean composition %llu lines\n", static_cast<unsigned long long>(g_leanLines));
+     if (!m_compose) {
+         return;

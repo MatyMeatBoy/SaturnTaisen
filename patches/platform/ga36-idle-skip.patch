@@ -1,0 +1,189 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index ed49078..230486b 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -149,6 +149,10 @@ namespace {
+             uint64_t activity = ~0ull;      // the activity count when `at` was taken
+             Access::Registers at;           // the registers at a block entry since then
+             unsigned age = 0;               // block entries since `at` was taken
++            // GA36: the CPU found back at `at` with nothing changed (see IdleFastForward)
++            uint64_t lastMatch = 0, cost = 0;
++            unsigned matches = 0;
++            bool tainted = false; // a block since the last match that ends a slice early or steps
+         } waiting[2];
+         // The loop a CPU is going round (it came back to where it came in last time), as its cache holds it.
+         // Each SH-2 has its own cache, and the other CPU's writes do not reach it: a CPU spinning in a few
+@@ -1061,6 +1065,142 @@ namespace {
+ 
+     // Runs blocks until the CPU has used up its time slice (`target` cycles). Returns false if it ran nothing
+     // and the interpreter must execute the next instruction itself.
++#ifdef SATRECOMP_OWN_MACHINE
++    // GA36: Sakura Taisen's main loop waits for the next frame in a loop that counts its passes (a word in work
++    // RAM, plus one each time round) and asks two flags whether to stop:
++    //   060041BA  mov.w @r8,r1 / add #1,r1 / jsr @r9 / mov.w r1,@r8      (r9 = 060338B8)
++    //   060338B8  mov.l @(060338FC),r3 / mov.b @(0,r3),r0 / tst r0,r0 / bt 060338B4 (rts)
++    //   060041C2  mov.l @(060041D8),r1 / mov.l @r1,r1 / tst r1,r1 / bt 060041BA
++    // The count is a memory write each pass, so the dispatcher's wait detection never sees it waiting and it
++    // goes round some 18,600 times a frame, four blocks a pass. While a CPU's time slice lasts, nothing else
++    // runs and nothing it reads changes, so passes that would end before the slice does are counted here at
++    // once, as SN_COUNTDOWN does for countdowns: the count goes up by as many, their cycles are added, and the
++    // last pass runs as code, so the slice ends exactly where it did. Only when the code is exactly this, the
++    // registers come back the same and the measured cost of a pass is the same twice running.
++    struct CountedWait {
++        uint64_t at = 0, cost = 0;
++        uint16_t counter = 0;
++        unsigned seen = 0;
++        Access::Registers regs{};
++    } g_countedWait[2];
++    uint64_t g_countedWaitPasses = 0, g_countedWaitSkips = 0;
++    struct CountedWaitReport {
++        ~CountedWaitReport() {
++            if (getenv("SATRECOMP_COUNTED_WAIT_STATS")) {
++                fprintf(stderr, "counted wait: %llu passes counted at once, in %llu skips\n",
++                        static_cast<unsigned long long>(g_countedWaitPasses), static_cast<unsigned long long>(g_countedWaitSkips));
++            }
++        }
++    } g_countedWaitReport;
++
++    inline bool HighRam(uint32_t a) {
++        return (a & 0xC6000000u) == 0x06000000u;
++    }
++    inline uint32_t RamLong(uint32_t a) {
++        return Native::Get32(g_ramHigh + (a & 0xFFFFCu));
++    }
++
++    void SkipCountedWait(SH2 &cpu, uint64_t target) {
++        static const bool off = getenv("SATRECOMP_NO_COUNTED_WAIT") != nullptr;
++        CountedWait &w = g_countedWait[cpu.IsMaster() ? 0 : 1];
++        static constexpr uint8_t kLoop[] = {0x61, 0x81, 0x71, 0x01, 0x49, 0x0B, 0x28, 0x11,
++                                            0xD1, 0x05, 0x61, 0x12, 0x21, 0x18, 0x89, 0xF7};
++        static constexpr uint8_t kCallee[] = {0x00, 0x0B, 0x00, 0x09, 0xD3, 0x10, 0x84, 0x30, 0x20, 0x08, 0x89, 0xF9};
++        const auto &R = Access::R(cpu);
++        const uint32_t counterAt = R[8];
++        if (off || !g_ramHigh || Access::InterruptRaised(cpu) || R[9] != 0x060338B8u || !HighRam(counterAt) || (counterAt & 1) ||
++            memcmp(g_ramHigh + 0x041BA, kLoop, sizeof kLoop) != 0 || memcmp(g_ramHigh + 0x338B4, kCallee, sizeof kCallee) != 0) {
++            w.seen = 0;
++            return;
++        }
++        const uint32_t byteFlagAt = RamLong(0x060338FC), longFlagAt = RamLong(0x060041D8);
++        // (the count must not be one of the things the loop reads)
++        const uint32_t c = counterAt & 0xFFFFF;
++        auto overlaps = [c](uint32_t at, uint32_t size) {
++            const uint32_t o = at & 0xFFFFF;
++            return c + 2 > o && c < o + size;
++        };
++        if (!HighRam(byteFlagAt) || !HighRam(longFlagAt) || (longFlagAt & 3) || overlaps(byteFlagAt, 1) || overlaps(longFlagAt, 4) ||
++            overlaps(0x060041BA, 0x24) || overlaps(0x060338B4, 0x0C) || overlaps(0x060338FC, 4) ||
++            g_ramHigh[byteFlagAt & 0xFFFFF] != 0 || RamLong(longFlagAt) != 0) {
++            w.seen = 0;
++            return;
++        }
++        uint8_t *count = g_ramHigh + c;
++        uint16_t counter = static_cast<uint16_t>((count[0] << 8) | count[1]);
++        uint64_t now = Access::Cycles(cpu);
++        const Access::Registers regs = Access::GetRegisters(cpu);
++        if (w.seen && regs == w.regs && counter == static_cast<uint16_t>(w.counter + 1) && now > w.at) {
++            const uint64_t cost = now - w.at;
++            if (w.seen >= 2 && cost == w.cost && target > now) {
++                uint64_t passes = (target - now) / cost;
++                if (passes >= 2) {
++                    passes -= 1; // (the last one as code)
++                    counter = static_cast<uint16_t>(counter + passes);
++                    count[0] = static_cast<uint8_t>(counter >> 8);
++                    count[1] = static_cast<uint8_t>(counter);
++                    SATRECOMP_NOTE_WRITE(count);
++                    SATRECOMP_ACTIVITY += passes; // (one write each)
++                    Access::AddCycles(cpu, passes * cost);
++                    now += passes * cost;
++                    g_countedWaitPasses += passes;
++                    g_countedWaitSkips++;
++                }
++            }
++            w.cost = cost;
++            w.seen++;
++        } else {
++            w.seen = 1;
++        }
++        w.at = now;
++        w.counter = counter;
++        w.regs = regs;
++    }
++#endif
++
++#ifdef SATRECOMP_OWN_MACHINE
++    // GA36: a CPU back where it was, with the same registers and no activity at all in between (no write, no
++    // hardware access, no interrupt: the wait detection's own test) has gone once round a loop that only reads
++    // memory nothing else can change during its time slice. Every further pass is the same pass: it takes the
++    // same cycles and leaves everything as it was. So the passes that would end before the slice does are
++    // charged here at once and the last runs as code, which ends the slice exactly where it ended. (Only once the
++    // cost of a pass has been measured the same twice, and not round blocks that end slices early or step.)
++    uint64_t g_idlePasses = 0, g_idleSkips = 0;
++    struct IdleReport {
++        ~IdleReport() {
++            if (getenv("SATRECOMP_COUNTED_WAIT_STATS")) {
++                fprintf(stderr, "idle loops: %llu passes charged at once, in %llu skips\n",
++                        static_cast<unsigned long long>(g_idlePasses), static_cast<unsigned long long>(g_idleSkips));
++            }
++        }
++    } g_idleReport;
++
++    template <class Waiting>
++    void IdleFastForward(SH2 &cpu, Waiting &w, uint64_t target) {
++        static const bool off = getenv("SATRECOMP_NO_IDLE_SKIP") != nullptr;
++        uint64_t now = Access::Cycles(cpu);
++        if (off || w.tainted || Access::InterruptRaised(cpu)) {
++            w.matches = 0;
++        } else if (w.matches && now > w.lastMatch) {
++            const uint64_t cost = now - w.lastMatch;
++            if (w.matches >= 2 && cost == w.cost && target > now) {
++                uint64_t passes = (target - now) / cost;
++                if (passes >= 2) {
++                    passes -= 1; // (the last one as code)
++                    Access::AddCycles(cpu, passes * cost);
++                    now += passes * cost;
++                    g_idlePasses += passes;
++                    g_idleSkips++;
++                }
++            }
++            w.cost = cost;
++        }
++        w.matches++;
++        w.lastMatch = now;
++        w.tainted = false;
++    }
++#endif
++
+     bool Dispatch(SH2 &cpu, uint64_t target, void *ctx) {
+         Runtime &rt = *static_cast<Runtime *>(ctx);
+         const bool recompiled = rt.opt.mode == Mode::Recompiled;
+@@ -1082,6 +1222,8 @@ namespace {
+ #ifdef SATRECOMP_OWN_MACHINE
+             if (native && (pc == 0x06014B60 || pc == 0x06014F5E) && EnhancedDialogueVoice(cpu, pc))
+                 continue;
++            if (native && pc == 0x060041BAu) [[unlikely]]
++                SkipCountedWait(cpu, target);
+ #endif
+             // An address in the ROM area that stands for a native BIOS routine (hle_bios.h)
+             if (r == &rt.regions[2] && rt.hle && hle::Run(cpu, offset)) {
+@@ -1255,13 +1397,21 @@ namespace {
+                     w.activity = SATRECOMP_ACTIVITY;
+                     w.at = Access::GetRegisters(cpu);
+                     w.age = 0;
++                    w.matches = 0;
+                     Access::SetWaiting(cpu, false);
+                 } else if (Access::SameRegisters(cpu, w.at)) {
+                     Access::SetWaiting(cpu, true);
++#ifdef SATRECOMP_OWN_MACHINE
++                    IdleFastForward(cpu, w, target);
++#endif
+                 } else if (++w.age > 256) {
+                     // (the point taken may not be one the CPU comes back to in the same state: take another)
+                     w.at = Access::GetRegisters(cpu);
+                     w.age = 0;
++                    w.matches = 0;
++                }
++                if (e->single || e->sync) [[unlikely]] {
++                    w.tainted = true;
+                 }
+             }
+             if (rt.logPC && (pc & 0x07FFFFFF) == rt.logPC) [[unlikely]] {
