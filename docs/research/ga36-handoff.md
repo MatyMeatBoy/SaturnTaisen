@@ -287,3 +287,25 @@ Herramientas en `tools/ga36/`:
 - `sdlpresent_test.c`: compara dos SDL píxel a píxel.
 - `qemu_*.sh`: pruebas A/B en QEMU‑user.
 - `usbdiag/`: `medir.sh` y los trabajos de la RC11 para la cola USBdiag.
+
+## Mejoras compartidas en la pila numerada, PC incluido (2026-11-27)
+
+Los diez parches de rendimiento que no dependen de la GA36 pasaron de `patches/platform/` a la pila como 0341–0350, en el mismo orden y sin cambios:
+- `samecode-words`, `scsp-parked-envelope` y `exact-wait-skips`;
+- `video-thread`, `sound-thread` y `compose-thread-machine`;
+- `lean-vdp2-compose`, `sprite-line-constants`, `optional-compose-skip` y `compose-thread`.
+
+**0351 (`sakura-tighter-wait-skips`).** En los dos saltos exactos se cobran `(fin − ahora − 1) / coste` pasadas, en vez de `(fin − ahora) / coste − 1`. Así la vuelta que cruza el final del tramo es la única que corre como código, y nunca se llega justo al final, donde correría el bloque siguiente. Un contador de despachos por dirección en QEMU mostró que el 82 % de los 8,0 millones de bloques despachados en 300 cuadros de combate eran las cuatro piezas del bucle de espera contada. Con el 0351 bajan a 6,55 millones, y los hashes de combate (`7586b394…`) y mapa (`82416007…`) son idénticos.
+
+`PLATFORM_ORDER` queda en `r36s-original-only`, `ga36-armhf-state`, `ga36-hd-2x-pilot`, `ga36-diagnostic-wide` y `ga36-perf-vdp`. `check_patch_stack.py --platform` da 337 parches más 5 de plataforma.
+
+PC (Windows x64, `build_runtime.py build` sobre la pila 0001–0351, en su propia worktree y con su propia worktree del SDK). Primer ataque, `chapter1-first-attack.state`, 1.200 cuadros sin pantalla y sin límite, `SATRECOMP_STRICT_NATIVE=1`, 0 bloques interpretados:
+
+| PC | Reloj | CPU | Hash |
+| --- | ---: | ---: | --- |
+| Todo apagado (`SATRECOMP_NO_COUNTED_WAIT`, `NO_IDLE_SKIP`, `NO_LEAN_COMPOSE`) | 12,5 s | 12,2 s | `E46E5D14…` |
+| Por defecto (saltos de espera) | 6,9 s | 6,8 s | idéntico |
+| Con `SATRECOMP_VIDEO_THREAD`, `SOUND_THREAD` y `COMPOSE_THREAD` | 5,2 s | 14,9 s | idéntico |
+
+En PC los hilos siguen apagados por defecto. En ventana el PC dibuja por GPU, la composición ligera no se usa porque hay captura de presentación, y el sonido en hilo se desactiva solo con las voces HD. Los hilos en ventana no se han probado.
+

@@ -75,5 +75,23 @@ int main(void) {
         printf("%-20s best %.2f ms, mean %.2f ms (%u bytes)\n", tests[k].name, best, sum / reps, (unsigned)bytes);
     }
     memcpy(fb, ram, bytes);
+
+    // The panel's refresh: the mode the kernel declares, and 120 waits for vertical blank if the driver has them
+    printf("var: pixclock %u ps, htotal %u, vtotal %u -> %.3f Hz\n", var.pixclock,
+           var.xres + var.left_margin + var.right_margin + var.hsync_len,
+           var.yres + var.upper_margin + var.lower_margin + var.vsync_len,
+           var.pixclock ? 1e12 / var.pixclock / (double)((var.xres + var.left_margin + var.right_margin + var.hsync_len) *
+                                                        (var.yres + var.upper_margin + var.lower_margin + var.vsync_len)) : 0.0);
+    printf("double page possible: yres_virtual %u (needs >= %u), smem %u\n", var.yres_virtual, 2 * var.yres, fix.smem_len);
+    unsigned zero = 0;
+    if (ioctl(fd, FBIO_WAITFORVSYNC, &zero) == 0) {
+        const double a = now_ms();
+        int n = 0;
+        for (; n < 120 && ioctl(fd, FBIO_WAITFORVSYNC, &zero) == 0; n++) {}
+        const double ms = now_ms() - a;
+        printf("FBIO_WAITFORVSYNC: %d waits in %.1f ms -> %.3f Hz\n", n, ms, n ? n * 1000.0 / ms : 0.0);
+    } else {
+        perror("FBIO_WAITFORVSYNC (no vertical blank wait on this fbdev)");
+    }
     return 0;
 }
