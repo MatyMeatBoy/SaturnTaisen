@@ -361,3 +361,15 @@ Se reutiliza si nada de eso cambió, ni cambió algo de colour RAM ni de los reg
 
 Mismos hashes: QEMU, con y sin hilos, combate de 600 cuadros (`d6d78df6…`) y mapa (`82416007…`); PC, `E46E5D14…`. En PC, los 1.200 cuadros pasan de 6,1 a 5,2 s por defecto y de 4,1 a 3,3 s con hilos.
 
+**0359 (`sakura-counted-wait-midpass-landing`).** Un tramo que empieza a mitad de una vuelta conocida ya no ejecuta como código los bloques que faltan hasta la cabeza. Aterriza desde ahí si se cumplen tres cosas:
+- el reloj está exactamente al principio de la vuelta más el coste de sus bloques ya hechos;
+- el contador está uno por encima del inicio de la vuelta;
+- los registros coinciden con los apuntados tras ese bloque, con `r1` calculado del contador.
+
+Las mismas comprobaciones del código y de las banderas que en la cabeza siguen vigentes. `SATRECOMP_NO_MIDPASS_LANDING=1` lo apaga.
+
+Resultados con los mismos hashes:
+- QEMU, combate de 600 cuadros (`d6d78df6…`): 870.805 aterrizajes desde mitad de vuelta, y los despachos bajan de 11,2 a 8,3 millones.
+- QEMU, mapa: `82416007…`.
+- PC: `E46E5D14…`.
+
