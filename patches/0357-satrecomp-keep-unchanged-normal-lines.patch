@@ -1,0 +1,274 @@
+diff --git a/machine/machine.cpp b/machine/machine.cpp
+index 5e47392..6181c4f 100644
+--- a/machine/machine.cpp
++++ b/machine/machine.cpp
+@@ -442,7 +442,7 @@ void Machine::BusWrite8(uint32 a, uint8 v) {
+     case 0x5E:
+         if (m_vram2[a & 0x7FFFF] != v) {
+             m_vram2[a & 0x7FFFF] = v;
+-            SATRECOMP_VIDEO((vt::kVram2Write8, a & 0x7FFFF, 0, v), NoteVideoMemoryWrite());
++            SATRECOMP_VIDEO((vt::kVram2Write8, a & 0x7FFFF, 0, v), NoteVram2Write(a & 0x7FFFF));
+         }
+         return;
+     case 0x5F:
+@@ -451,7 +451,7 @@ void Machine::BusWrite8(uint32 a, uint8 v) {
+             uint8 &cell = m_cram[at];
+             if (cell != v) {
+                 cell = v;
+-                SATRECOMP_VIDEO((vt::kCramWrite8, at, 0, v), NoteVideoMemoryWrite());
++                SATRECOMP_VIDEO((vt::kCramWrite8, at, 0, v), NoteCramWrite(at));
+             }
+             return;
+         }
+@@ -510,7 +510,7 @@ void Machine::BusWrite16(uint32 a, uint16 v) {
+     case 0x5E:
+         if (Get16(&m_vram2[a & 0x7FFFE]) != v) {
+             Put16(&m_vram2[a & 0x7FFFE], v);
+-            SATRECOMP_VIDEO((vt::kVram2Write16, a & 0x7FFFE, 0, v), NoteVideoMemoryWrite());
++            SATRECOMP_VIDEO((vt::kVram2Write16, a & 0x7FFFE, 0, v), NoteVram2Write(a & 0x7FFFE));
+         }
+         return;
+     case 0x5F:
+@@ -519,7 +519,7 @@ void Machine::BusWrite16(uint32 a, uint16 v) {
+             uint8 *cell = &m_cram[at];
+             if (Get16(cell) != v) {
+                 Put16(cell, v);
+-                SATRECOMP_VIDEO((vt::kCramWrite16, at, 0, v), NoteVideoMemoryWrite());
++                SATRECOMP_VIDEO((vt::kCramWrite16, at, 0, v), NoteCramWrite(at));
+             }
+         } else if (a < 0x05FE0000) {
+             Vdp2WriteRegister(a & 0x1FE, v);
+diff --git a/machine/video_thread.h b/machine/video_thread.h
+index 49d009a..e3853cb 100644
+--- a/machine/video_thread.h
++++ b/machine/video_thread.h
+@@ -119,6 +119,7 @@ public:
+         std::memcpy(vram1.data(), v1, vram1.size());
+         std::memcpy(vram2.data(), v2, vram2.size());
+         std::memcpy(cram.data(), c, cram.size());
++        video::g_vdp2Stamps.All();
+     }
+ 
+ private:
+@@ -171,10 +172,10 @@ private:
+         case kLine: r.RenderLine(cmd.a); break;
+         case kVram1Write8: vram1[cmd.a] = static_cast<uint8_t>(cmd.value); break;
+         case kVram1Write16: Put16(&vram1[cmd.a], cmd.value); break;
+-        case kVram2Write8: vram2[cmd.a] = static_cast<uint8_t>(cmd.value); r.NoteVideoMemoryWrite(); break;
+-        case kVram2Write16: Put16(&vram2[cmd.a], cmd.value); r.NoteVideoMemoryWrite(); break;
+-        case kCramWrite8: cram[cmd.a] = static_cast<uint8_t>(cmd.value); r.NoteVideoMemoryWrite(); break;
+-        case kCramWrite16: Put16(&cram[cmd.a], cmd.value); r.NoteVideoMemoryWrite(); break;
++        case kVram2Write8: vram2[cmd.a] = static_cast<uint8_t>(cmd.value); r.NoteVram2Write(cmd.a); break;
++        case kVram2Write16: Put16(&vram2[cmd.a], cmd.value); r.NoteVram2Write(cmd.a); break;
++        case kCramWrite8: cram[cmd.a] = static_cast<uint8_t>(cmd.value); r.NoteCramWrite(cmd.a); break;
++        case kCramWrite16: Put16(&cram[cmd.a], cmd.value); r.NoteCramWrite(cmd.a); break;
+         default: break;
+         }
+     }
+diff --git a/video/layers.cpp b/video/layers.cpp
+index 4aff830..5dff267 100644
+--- a/video/layers.cpp
++++ b/video/layers.cpp
+@@ -15,6 +15,23 @@
+ 
+ namespace satrecomp::video {
+ 
++Vdp2Stamps g_vdp2Stamps;
++
++namespace {
++// (which of a normal screen's lines this frame is coming: the kept lines of NormalLine are found by it)
++unsigned g_keptLineAt[4] = {};
++uint64 g_keptLinesUsed = 0, g_keptLinesMade = 0;
++const bool g_keepLines = getenv("SATRECOMP_NO_LINE_KEEP") == nullptr;
++struct KeptLineReport {
++    ~KeptLineReport() {
++        if (g_keptLinesMade && getenv("SATRECOMP_VIDEO_THREAD_STATS")) {
++            fprintf(stderr, "video: normal screen lines kept from the frame before %llu, made %llu\n",
++                    static_cast<unsigned long long>(g_keptLinesUsed), static_cast<unsigned long long>(g_keptLinesMade));
++        }
++    }
++} g_keptLineReport;
++} // namespace
++
+ namespace {
+     // Sizes of a page of pattern names in bytes, as a shift: [2x2 cell characters][two word names]
+     constexpr uint32 kPageBytesShift[2][2] = {{13, 14}, {11, 12}};
+@@ -36,6 +53,7 @@ void Renderer::Colors(uint32 *out) const {
+ }
+ 
+ void Renderer::LayersBeginFrame() {
++    for (unsigned &at : g_keptLineAt) at = 0;
+     const Vdp2Regs &regs2 = m_regs2;
+     for (uint32 i = 0; i < 4; i++) {
+         if (i == 0 && regs2.bgEnabled[5]) {
+@@ -658,6 +676,45 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+         const uint32 cramOffset = bg.cramOffset;
+         const bool transparency = bg.enableTransparency;
+         uint32 lastIndex = 0xFFFFFFFF, lastColor = 0;
++        // The same line as last frame, made from the same things: what it made then (see Vdp2Stamps)
++        struct KeptLine {
++            uint64 made = 0;
++            uint32 vramPages[4] = {}; // (a bit for each 4 KiB page read)
++            uint16 cramParts = 0;
++            uint32 fracX = 0, y = 0, incH = 0, width = 0;
++            std::vector<uint8> window, priority;
++            std::vector<uint32> color;
++            Char ch{};
++        };
++        static KeptLine keptLines[4][512];
++        KeptLine &kept = keptLines[index][g_keptLineAt[index]++ & 511];
++        const uint32 startX = fracX;
++        if (g_keepLines && kept.made && kept.made >= g_vdp2Stamps.everything && kept.fracX == startX && kept.y == y &&
++            kept.incH == scroll.incH && kept.width == width) {
++            bool unchanged = true;
++            for (uint32 word = 0; word < 4 && unchanged; word++) {
++                for (uint32 bits = kept.vramPages[word]; bits && unchanged; bits &= bits - 1) {
++                    unchanged = g_vdp2Stamps.vramPage[word * 32 + __builtin_ctz(bits)] <= kept.made;
++                }
++            }
++            for (uint32 bits = kept.cramParts; bits && unchanged; bits &= bits - 1) {
++                unchanged = g_vdp2Stamps.cramPart[__builtin_ctz(bits)] <= kept.made;
++            }
++            if (unchanged && std::memcmp(kept.window.data(), windowIn, width) == 0) {
++                std::memcpy(colorOut, kept.color.data(), size_t(width) * 4);
++                std::memcpy(priorityOut, kept.priority.data(), width);
++                fetcher.current = fetcher.next = kept.ch;
++                g_keptLinesUsed++;
++                return true;
++            }
++        }
++        const uint64 madeAt = g_vdp2Stamps.counter;
++        uint32 vramPages[4] = {};
++        uint16 cramParts = 0;
++        auto readVram = [&vramPages](uint32 address) {
++            const uint32 page = (address & 0x7FFFF) >> 12;
++            vramPages[page >> 5] |= 1u << (page & 31);
++        };
+         for (uint32 x = 0; x < width; x++, fracX += scroll.incH) {
+             const uint32 sx = fracX >> 8;
+             if ((sx >> 3) != current) {
+@@ -670,6 +727,8 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+                 if (bg.twoWordChar) {
+                     const uint32 address = pageAddress + charIndex * 4;
+                     if (bg.patNameAccess[(address >> 17) & 3]) {
++                        readVram(address);
++                        readVram(address + 3);
+                         const uint32 name = Vram2Long(address);
+                         ch.number = name & 0x7FFF;
+                         ch.palette = (name >> 16) & 0x7F;
+@@ -680,6 +739,8 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+                 } else {
+                     const uint32 address = pageAddress + charIndex * 2;
+                     if (bg.patNameAccess[(address >> 17) & 3]) {
++                        readVram(address);
++                        readVram(address + 1);
+                         ch = OneWordChar(bg, Vram2Word(address));
+                     }
+                 }
+@@ -691,7 +752,13 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+                     cell ^= fourCell << 1;
+                 }
+                 const uint32 row = ((ch.number + (wide ? cell << 1 : cell)) << 5) + (ch.flipV ? dotY ^ 7 : dotY) * (wide ? 8 : 4);
+-                dots = bg.charPatAccess[(row >> 17) & 3] ? &vram[row & 0x7FFFF] : kNoDots;
++                if (bg.charPatAccess[(row >> 17) & 3]) {
++                    readVram(row);
++                    readVram(row + 7);
++                    dots = &vram[row & 0x7FFFF];
++                } else {
++                    dots = kNoDots;
++                }
+                 palette = static_cast<uint32>(ch.palette) << 4;
+                 priority = bg.priorityNumber;
+                 if (bg.priorityMode == PriorityMode::PerCharacter) {
+@@ -715,13 +782,29 @@ bool Renderer::NormalLine(uint32 index, sint32 offsetY) {
+             // (the colour RAM does not change during a line: a colour read once is kept for the dots that repeat it)
+             if (index != lastIndex) {
+                 lastIndex = index;
+-                lastColor = cramMode >= 2 ? CramLong((index * 4) & 0xFFC) : To888(Be16(&cram[(index * 2) & cramMask]));
++                const uint32 at = cramMode >= 2 ? (index * 4) & 0xFFC : (index * 2) & cramMask;
++                cramParts |= static_cast<uint16>(1u << (at >> 8));
++                lastColor = cramMode >= 2 ? CramLong(at) : To888(Be16(&cram[at]));
+             }
+             colorOut[x] = lastColor;
+             priorityOut[x] = perDot ? static_cast<uint8>(priority | static_cast<uint8>(matches[(dot >> 1) & 7])) : priority;
+         }
+         // (what the dot by dot way leaves behind, should the next line be drawn that way)
+         fetcher.current = fetcher.next = ch;
++        if (g_keepLines) {
++            kept.made = madeAt;
++            for (uint32 word = 0; word < 4; word++) kept.vramPages[word] = vramPages[word];
++            kept.cramParts = cramParts;
++            kept.fracX = startX;
++            kept.y = y;
++            kept.incH = scroll.incH;
++            kept.width = width;
++            kept.window.assign(windowIn, windowIn + width);
++            kept.color.assign(colorOut, colorOut + width);
++            kept.priority.assign(priorityOut, priorityOut + width);
++            kept.ch = ch;
++            g_keptLinesMade++;
++        }
+         return true;
+     }
+     for (uint32 x = 0; x < width; x++, fracX += scroll.incH) {
+diff --git a/video/renderer.cpp b/video/renderer.cpp
+index 398ec88..2fd9fdf 100644
+--- a/video/renderer.cpp
++++ b/video/renderer.cpp
+@@ -243,6 +243,7 @@ Renderer::Renderer(const Memory &memory)
+     : m_mem(memory) {}
+ 
+ void Renderer::Reset(bool hard) {
++    g_vdp2Stamps.All();
+     LeanDrain();
+     m_stateGen++;
+     m_reuse.valid = false;
+@@ -300,6 +301,7 @@ void Renderer::SetMode(Mode mode, FrameCallback onFrame, Reference *reference) {
+ }
+ 
+ void Renderer::Serialize(Archive &ar) {
++    g_vdp2Stamps.All();
+     LeanDrain();
+     ar.Mark(0x56494445);
+     ar.Pod(m_raw2);
+@@ -384,6 +386,7 @@ void Renderer::WriteVdp2Reg(uint32 address, uint16 value) {
+     const auto scrollX=m_regs2.bgParams[3].scrollAmountH,scrollY=m_regs2.bgParams[3].scrollAmountV;
+     const bool sprites=m_regs2.layerEnabled[0];
+     m_stateGen += m_raw2[index] != value;
++    if (m_raw2[index] != value) g_vdp2Stamps.All();
+     m_raw2[index] = value;
+     m_regs2.Decode(m_raw2);
+     if(m_menuReplayStable && m_drawing) {
+diff --git a/video/renderer.h b/video/renderer.h
+index 483b383..f4fee98 100644
+--- a/video/renderer.h
++++ b/video/renderer.h
+@@ -34,6 +34,16 @@ class Archive;
+ 
+ namespace satrecomp::video {
+ 
++// When what a VDP2 normal screen line is made from last changed (layers.cpp keeps lines made since): one counter, and
++// the number it had at the last write to each 4 KiB page of VDP2 VRAM, each 256 bytes of colour RAM, and at the last
++// change to everything (a register, a write with no known address, a reset or a loaded state)
++struct Vdp2Stamps {
++    uint64 counter = 1, everything = 1;
++    uint64 vramPage[128] = {}, cramPart[16] = {};
++    void All() { everything = ++counter; }
++};
++extern Vdp2Stamps g_vdp2Stamps;
++
+ // Where the machine keeps the video chips' memory
+ struct Memory {
+     uint8 *vram1 = nullptr; // VDP1 VRAM, 0x80000 bytes
+@@ -254,7 +264,10 @@ public:
+     void CaptureTacticalGround(bool enabled) { m_captureTacticalGround = enabled; }
+     void Vdp1FramebufferWritten() {InvalidateGlyphPlate(m_displayFB^1u);}
+     // The machine calls this when a write changes VDP2 VRAM or colour RAM (T116: the reuse of unchanged lines)
+-    void NoteVideoMemoryWrite() { m_stateGen++; }
++    void NoteVideoMemoryWrite() { m_stateGen++; g_vdp2Stamps.All(); }
++    // (a write whose address is known: VDP2 VRAM at `address`, or colour RAM)
++    void NoteVram2Write(uint32 address) { m_stateGen++; g_vdp2Stamps.vramPage[(address >> 12) & 127] = ++g_vdp2Stamps.counter; }
++    void NoteCramWrite(uint32 address) { m_stateGen++; g_vdp2Stamps.cramPart[(address >> 8) & 15] = ++g_vdp2Stamps.counter; }
+     // The reuse of unchanged lines (SATRECOMP_VDP2_LINE_REUSE=0 turns it off by default; tests switch it per renderer)
+     void SetLineReuse(bool on) { m_reuseOn = on; m_reuse.valid = false; }
+     uint64 ReusedLines() const { return m_reuse.replayed; }

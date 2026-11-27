@@ -337,3 +337,18 @@ Descartado: conservar los costes por bloque entre interrupciones o al salir del 
 
 **0356 (`satrecomp-dsp-idle-steps-inline`).** `Chip::Step` llama 4 veces por voz a `Effects()`, es decir, 128 pasos del DSP por muestra. Si el PC está pasado el final del programa, sin escritura pendiente y sin estar en el último paso, el paso solo avanza el PC; ahora lo hace en línea, sin la llamada. En QEMU el hilo de sonido trabaja 7,16 s en vez de 7,54 s en el combate de 600 cuadros, y el principal lo espera 286 ms en vez de 837. Mismos hashes, sonido incluido: QEMU `d6d78df6…` y `82416007…`, PC `E46E5D14…`.
 
+**0357 (`satrecomp-keep-unchanged-normal-lines`).** Un contador temporal mostró que el 99,8 % de las líneas NBG del combate y del mapa salen idénticas a las del cuadro anterior. Ahora el camino plano de `NormalLine` guarda cada línea con lo que leyó:
+- las páginas de 4 KB de VDP2 VRAM (nombres de patrón y filas de carácter);
+- los tramos de 256 bytes de colour RAM;
+- el desplazamiento, la fila del mapa, el paso, el ancho y la línea de ventana.
+
+`Vdp2Stamps` (en `renderer.h`) numera cada escritura de VRAM2 o CRAM con dirección conocida, por página o tramo; un cambio de registro, un estado cargado, un reinicio o una copia de memoria lo numeran todo. Una línea se reutiliza si nada de lo que leyó se escribió después y el resto de su clave coincide; también se restaura el último carácter que deja para la línea siguiente. `SATRECOMP_NO_LINE_KEEP=1` lo apaga.
+
+En combate todas las escrituras de VRAM2 caen en la página `0x7F` (las tablas por línea), con unas 460 por cuadro, y en CRAM hay 578 escrituras en 300 cuadros.
+
+Resultados en QEMU, con los mismos hashes con y sin hilos:
+- Combate de 600 cuadros (`d6d78df6…`): se reutiliza el 56 % de las líneas y el dibujo del hilo de vídeo baja de 8,7 a 5,8 s.
+- Mapa (`82416007…`): se reutiliza el 89 % y el dibujo baja de 2,6 a 1,58 s.
+
+PC: mismo hash `E46E5D14…` en las tres variantes.
+
