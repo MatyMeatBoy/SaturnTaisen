@@ -13,10 +13,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEP = pathlib.Path(os.environ.get('SATRECOMP_DEP_DIR', ROOT / 'local/deps/satrecomp'))
 # Documented order of the SDK-side handheld patches (docs/research/ga36-handoff.md); the ga36-sdl3-*.patch files are for the
 # SDL3 tree. r36s-aot-pages and ga36-aot-fast-dispatch are kept for rebuilding the 0.3.8 RCs only: patch 0340 of the stack
-# now registers blocks by page and checks the pending page inline, which is what they did.
-PLATFORM_ORDER = ['r36s-original-only', 'ga36-armhf-state', 'ga36-hd-2x-pilot', 'ga36-diagnostic-wide',
-                  'ga36-perf-sh2', 'ga36-perf-sound', 'ga36-perf-vdp', 'ga36-idle-skip', 'ga36-video-thread', 'ga36-sound-thread',
-                  'ga36-compose-thread-machine', 'ga36-lean-compose', 'ga36-sprite-line', 'ga36-frame-skip', 'ga36-compose-thread']
+# now registers blocks by page and checks the pending page inline, which is what they did. The RC11 performance patches
+# (threads, lean composition, wait skips) moved into the stack as 0341..0350 and serve every platform.
+PLATFORM_ORDER = ['r36s-original-only', 'ga36-armhf-state', 'ga36-hd-2x-pilot', 'ga36-diagnostic-wide', 'ga36-perf-vdp']
 
 
 def main():

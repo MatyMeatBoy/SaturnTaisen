@@ -1,0 +1,32 @@
+diff --git a/runtime/recomp.cpp b/runtime/recomp.cpp
+index 4578d2b..827b711 100644
+--- a/runtime/recomp.cpp
++++ b/runtime/recomp.cpp
+@@ -1149,9 +1149,10 @@ namespace {
+         if (w.seen && regs == w.regs && counter == static_cast<uint16_t>(w.counter + 1) && now > w.at) {
+             const uint64_t cost = now - w.at;
+             if (w.seen >= 2 && cost == w.cost && target > now) {
+-                uint64_t passes = (target - now) / cost;
+-                if (passes >= 2) {
+-                    passes -= 1; // (the last one as code)
++                // (whole passes that end before the slice does: the pass that crosses its end runs as code, so
++                // the slice ends at the same block; never exactly at the end, where the next block would run)
++                uint64_t passes = (target - now - 1) / cost;
++                if (passes >= 1) {
+                     counter = static_cast<uint16_t>(counter + passes);
+                     count[0] = static_cast<uint8_t>(counter >> 8);
+                     count[1] = static_cast<uint8_t>(counter);
+@@ -1200,9 +1201,10 @@ namespace {
+         } else if (w.matches && now > w.lastMatch) {
+             const uint64_t cost = now - w.lastMatch;
+             if (w.matches >= 2 && cost == w.cost && target > now) {
+-                uint64_t passes = (target - now) / cost;
+-                if (passes >= 2) {
+-                    passes -= 1; // (the last one as code)
++                // (whole passes that end before the slice does: the pass that crosses its end runs as code, so
++                // the slice ends at the same block; never exactly at the end, where the next block would run)
++                uint64_t passes = (target - now - 1) / cost;
++                if (passes >= 1) {
+                     Access::AddCycles(cpu, passes * cost);
+                     now += passes * cost;
+                     g_idlePasses += passes;

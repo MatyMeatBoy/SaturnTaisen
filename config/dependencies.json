@@ -329,7 +329,18 @@
       "patches/0337-sakura-hd-bg2059-floral-fade.patch",
       "patches/0338-sakura-hd-bg4372-panoramic-cutout.patch",
       "patches/0339-sakura-hd-bg3060-bg3165-foregrounds.patch",
-      "patches/0340-satrecomp-lazy-aot-block-pages.patch"
+      "patches/0340-satrecomp-lazy-aot-block-pages.patch",
+      "patches/0341-satrecomp-samecode-words.patch",
+      "patches/0342-satrecomp-scsp-parked-envelope.patch",
+      "patches/0343-sakura-exact-wait-skips.patch",
+      "patches/0344-satrecomp-video-thread.patch",
+      "patches/0345-satrecomp-sound-thread.patch",
+      "patches/0346-satrecomp-compose-thread-machine.patch",
+      "patches/0347-satrecomp-lean-vdp2-compose.patch",
+      "patches/0348-satrecomp-sprite-line-constants.patch",
+      "patches/0349-satrecomp-optional-compose-skip.patch",
+      "patches/0350-satrecomp-compose-thread.patch",
+      "patches/0351-sakura-tighter-wait-skips.patch"
     ]
   }
 }
